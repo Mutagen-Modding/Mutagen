@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,36 +54,36 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region NavMeshVersion
-        public UInt32? NavMeshVersion { get; set; }
+        #region Version
+        public UInt32? Version { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? INavigationMeshInfoMapGetter.NavMeshVersion => this.NavMeshVersion;
+        UInt32? INavigationMeshInfoMapGetter.Version => this.Version;
         #endregion
-        #region NavMeshInfos
+        #region Infos
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavigationMapInfo> _NavMeshInfos = new ExtendedList<NavigationMapInfo>();
-        public ExtendedList<NavigationMapInfo> NavMeshInfos
+        private ExtendedList<NavigationMeshInfo> _Infos = new ExtendedList<NavigationMeshInfo>();
+        public ExtendedList<NavigationMeshInfo> Infos
         {
-            get => this._NavMeshInfos;
-            init => this._NavMeshInfos = value;
+            get => this._Infos;
+            init => this._Infos = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavigationMapInfoGetter> INavigationMeshInfoMapGetter.NavMeshInfos => _NavMeshInfos;
+        IReadOnlyList<INavigationMeshInfoGetter> INavigationMeshInfoMapGetter.Infos => _Infos;
         #endregion
 
         #endregion
-        #region NavMeshConnections
+        #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavigationConnectionInfo> _NavMeshConnections = new ExtendedList<NavigationConnectionInfo>();
-        public ExtendedList<NavigationConnectionInfo> NavMeshConnections
+        private ExtendedList<NavigationConnectionInfo> _Connections = new ExtendedList<NavigationConnectionInfo>();
+        public ExtendedList<NavigationConnectionInfo> Connections
         {
-            get => this._NavMeshConnections;
-            init => this._NavMeshConnections = value;
+            get => this._Connections;
+            init => this._Connections = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<INavigationConnectionInfoGetter> INavigationMeshInfoMapGetter.NavMeshConnections => _NavMeshConnections;
+        IReadOnlyList<INavigationConnectionInfoGetter> INavigationMeshInfoMapGetter.Connections => _Connections;
         #endregion
 
         #endregion
@@ -111,9 +112,9 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.NavMeshVersion = initialValue;
-                this.NavMeshInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(initialValue, []);
-                this.NavMeshConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationConnectionInfo.Mask<TItem>?>>?>(initialValue, []);
+                this.Version = initialValue;
+                this.Infos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshInfo.Mask<TItem>?>>?>(initialValue, []);
+                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationConnectionInfo.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -124,9 +125,9 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
-                TItem NavMeshVersion,
-                TItem NavMeshInfos,
-                TItem NavMeshConnections)
+                TItem Version,
+                TItem Infos,
+                TItem Connections)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -136,9 +137,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
-                this.NavMeshVersion = NavMeshVersion;
-                this.NavMeshInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>(NavMeshInfos, []);
-                this.NavMeshConnections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationConnectionInfo.Mask<TItem>?>>?>(NavMeshConnections, []);
+                this.Version = Version;
+                this.Infos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshInfo.Mask<TItem>?>>?>(Infos, []);
+                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationConnectionInfo.Mask<TItem>?>>?>(Connections, []);
             }
 
             #pragma warning disable CS8618
@@ -150,9 +151,9 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem NavMeshVersion;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMapInfo.Mask<TItem>?>>?>? NavMeshInfos;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationConnectionInfo.Mask<TItem>?>>?>? NavMeshConnections;
+            public TItem Version;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationMeshInfo.Mask<TItem>?>>?>? Infos;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavigationConnectionInfo.Mask<TItem>?>>?>? Connections;
             #endregion
 
             #region Equals
@@ -166,17 +167,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.NavMeshVersion, rhs.NavMeshVersion)) return false;
-                if (!object.Equals(this.NavMeshInfos, rhs.NavMeshInfos)) return false;
-                if (!object.Equals(this.NavMeshConnections, rhs.NavMeshConnections)) return false;
+                if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.Infos, rhs.Infos)) return false;
+                if (!object.Equals(this.Connections, rhs.Connections)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.NavMeshVersion);
-                hash.Add(this.NavMeshInfos);
-                hash.Add(this.NavMeshConnections);
+                hash.Add(this.Version);
+                hash.Add(this.Infos);
+                hash.Add(this.Connections);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -187,25 +188,25 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.NavMeshVersion)) return false;
-                if (this.NavMeshInfos != null)
+                if (!eval(this.Version)) return false;
+                if (this.Infos != null)
                 {
-                    if (!eval(this.NavMeshInfos.Overall)) return false;
-                    if (this.NavMeshInfos.Specific != null)
+                    if (!eval(this.Infos.Overall)) return false;
+                    if (this.Infos.Specific != null)
                     {
-                        foreach (var item in this.NavMeshInfos.Specific)
+                        foreach (var item in this.Infos.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.NavMeshConnections != null)
+                if (this.Connections != null)
                 {
-                    if (!eval(this.NavMeshConnections.Overall)) return false;
-                    if (this.NavMeshConnections.Specific != null)
+                    if (!eval(this.Connections.Overall)) return false;
+                    if (this.Connections.Specific != null)
                     {
-                        foreach (var item in this.NavMeshConnections.Specific)
+                        foreach (var item in this.Connections.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -220,25 +221,25 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.NavMeshVersion)) return true;
-                if (this.NavMeshInfos != null)
+                if (eval(this.Version)) return true;
+                if (this.Infos != null)
                 {
-                    if (eval(this.NavMeshInfos.Overall)) return true;
-                    if (this.NavMeshInfos.Specific != null)
+                    if (eval(this.Infos.Overall)) return true;
+                    if (this.Infos.Specific != null)
                     {
-                        foreach (var item in this.NavMeshInfos.Specific)
+                        foreach (var item in this.Infos.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.NavMeshConnections != null)
+                if (this.Connections != null)
                 {
-                    if (eval(this.NavMeshConnections.Overall)) return true;
-                    if (this.NavMeshConnections.Specific != null)
+                    if (eval(this.Connections.Overall)) return true;
+                    if (this.Connections.Specific != null)
                     {
-                        foreach (var item in this.NavMeshConnections.Specific)
+                        foreach (var item in this.Connections.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -260,30 +261,30 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.NavMeshVersion = eval(this.NavMeshVersion);
-                if (NavMeshInfos != null)
+                obj.Version = eval(this.Version);
+                if (Infos != null)
                 {
-                    obj.NavMeshInfos = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>?>(eval(this.NavMeshInfos.Overall), []);
-                    if (NavMeshInfos.Specific != null)
+                    obj.Infos = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationMeshInfo.Mask<R>?>>?>(eval(this.Infos.Overall), []);
+                    if (Infos.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>>();
-                        obj.NavMeshInfos.Specific = l;
-                        foreach (var item in NavMeshInfos.Specific)
+                        var l = new List<MaskItemIndexed<R, NavigationMeshInfo.Mask<R>?>>();
+                        obj.Infos.Specific = l;
+                        foreach (var item in Infos.Specific)
                         {
-                            MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMapInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, NavigationMeshInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationMeshInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (NavMeshConnections != null)
+                if (Connections != null)
                 {
-                    obj.NavMeshConnections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationConnectionInfo.Mask<R>?>>?>(eval(this.NavMeshConnections.Overall), []);
-                    if (NavMeshConnections.Specific != null)
+                    obj.Connections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavigationConnectionInfo.Mask<R>?>>?>(eval(this.Connections.Overall), []);
+                    if (Connections.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, NavigationConnectionInfo.Mask<R>?>>();
-                        obj.NavMeshConnections.Specific = l;
-                        foreach (var item in NavMeshConnections.Specific)
+                        obj.Connections.Specific = l;
+                        foreach (var item in Connections.Specific)
                         {
                             MaskItemIndexed<R, NavigationConnectionInfo.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavigationConnectionInfo.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -309,20 +310,20 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(NavigationMeshInfoMap.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.NavMeshVersion ?? true)
+                    if (printMask?.Version ?? true)
                     {
-                        sb.AppendItem(NavMeshVersion, "NavMeshVersion");
+                        sb.AppendItem(Version, "Version");
                     }
-                    if ((printMask?.NavMeshInfos?.Overall ?? true)
-                        && NavMeshInfos is {} NavMeshInfosItem)
+                    if ((printMask?.Infos?.Overall ?? true)
+                        && Infos is {} InfosItem)
                     {
-                        sb.AppendLine("NavMeshInfos =>");
+                        sb.AppendLine("Infos =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(NavMeshInfosItem.Overall);
-                            if (NavMeshInfosItem.Specific != null)
+                            sb.AppendItem(InfosItem.Overall);
+                            if (InfosItem.Specific != null)
                             {
-                                foreach (var subItem in NavMeshInfosItem.Specific)
+                                foreach (var subItem in InfosItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -332,16 +333,16 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
-                    if ((printMask?.NavMeshConnections?.Overall ?? true)
-                        && NavMeshConnections is {} NavMeshConnectionsItem)
+                    if ((printMask?.Connections?.Overall ?? true)
+                        && Connections is {} ConnectionsItem)
                     {
-                        sb.AppendLine("NavMeshConnections =>");
+                        sb.AppendLine("Connections =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(NavMeshConnectionsItem.Overall);
-                            if (NavMeshConnectionsItem.Specific != null)
+                            sb.AppendItem(ConnectionsItem.Overall);
+                            if (ConnectionsItem.Specific != null)
                             {
-                                foreach (var subItem in NavMeshConnectionsItem.Specific)
+                                foreach (var subItem in ConnectionsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -362,9 +363,9 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? NavMeshVersion;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>? NavMeshInfos;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>? NavMeshConnections;
+            public Exception? Version;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshInfo.ErrorMask?>>?>? Infos;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>? Connections;
             #endregion
 
             #region IErrorMask
@@ -373,12 +374,12 @@ namespace Mutagen.Bethesda.Fallout3
                 NavigationMeshInfoMap_FieldIndex enu = (NavigationMeshInfoMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
-                        return NavMeshVersion;
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshInfos:
-                        return NavMeshInfos;
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshConnections:
-                        return NavMeshConnections;
+                    case NavigationMeshInfoMap_FieldIndex.Version:
+                        return Version;
+                    case NavigationMeshInfoMap_FieldIndex.Infos:
+                        return Infos;
+                    case NavigationMeshInfoMap_FieldIndex.Connections:
+                        return Connections;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -389,14 +390,14 @@ namespace Mutagen.Bethesda.Fallout3
                 NavigationMeshInfoMap_FieldIndex enu = (NavigationMeshInfoMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
-                        this.NavMeshVersion = ex;
+                    case NavigationMeshInfoMap_FieldIndex.Version:
+                        this.Version = ex;
                         break;
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshInfos:
-                        this.NavMeshInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(ex, null);
+                    case NavigationMeshInfoMap_FieldIndex.Infos:
+                        this.Infos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshInfo.ErrorMask?>>?>(ex, null);
                         break;
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshConnections:
-                        this.NavMeshConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>(ex, null);
+                    case NavigationMeshInfoMap_FieldIndex.Connections:
+                        this.Connections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -409,14 +410,14 @@ namespace Mutagen.Bethesda.Fallout3
                 NavigationMeshInfoMap_FieldIndex enu = (NavigationMeshInfoMap_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
-                        this.NavMeshVersion = (Exception?)obj;
+                    case NavigationMeshInfoMap_FieldIndex.Version:
+                        this.Version = (Exception?)obj;
                         break;
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshInfos:
-                        this.NavMeshInfos = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>)obj;
+                    case NavigationMeshInfoMap_FieldIndex.Infos:
+                        this.Infos = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshInfo.ErrorMask?>>?>)obj;
                         break;
-                    case NavigationMeshInfoMap_FieldIndex.NavMeshConnections:
-                        this.NavMeshConnections = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>)obj;
+                    case NavigationMeshInfoMap_FieldIndex.Connections:
+                        this.Connections = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -427,9 +428,9 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (NavMeshVersion != null) return true;
-                if (NavMeshInfos != null) return true;
-                if (NavMeshConnections != null) return true;
+                if (Version != null) return true;
+                if (Infos != null) return true;
+                if (Connections != null) return true;
                 return false;
             }
             #endregion
@@ -457,17 +458,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(NavMeshVersion, "NavMeshVersion");
+                    sb.AppendItem(Version, "Version");
                 }
-                if (NavMeshInfos is {} NavMeshInfosItem)
+                if (Infos is {} InfosItem)
                 {
-                    sb.AppendLine("NavMeshInfos =>");
+                    sb.AppendLine("Infos =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(NavMeshInfosItem.Overall);
-                        if (NavMeshInfosItem.Specific != null)
+                        sb.AppendItem(InfosItem.Overall);
+                        if (InfosItem.Specific != null)
                         {
-                            foreach (var subItem in NavMeshInfosItem.Specific)
+                            foreach (var subItem in InfosItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -477,15 +478,15 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                if (NavMeshConnections is {} NavMeshConnectionsItem)
+                if (Connections is {} ConnectionsItem)
                 {
-                    sb.AppendLine("NavMeshConnections =>");
+                    sb.AppendLine("Connections =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(NavMeshConnectionsItem.Overall);
-                        if (NavMeshConnectionsItem.Specific != null)
+                        sb.AppendItem(ConnectionsItem.Overall);
+                        if (ConnectionsItem.Specific != null)
                         {
-                            foreach (var subItem in NavMeshConnectionsItem.Specific)
+                            foreach (var subItem in ConnectionsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -503,9 +504,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.NavMeshVersion = this.NavMeshVersion.Combine(rhs.NavMeshVersion);
-                ret.NavMeshInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMapInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavMeshInfos?.Overall, rhs.NavMeshInfos?.Overall), Noggog.ExceptionExt.Combine(this.NavMeshInfos?.Specific, rhs.NavMeshInfos?.Specific));
-                ret.NavMeshConnections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NavMeshConnections?.Overall, rhs.NavMeshConnections?.Overall), Noggog.ExceptionExt.Combine(this.NavMeshConnections?.Specific, rhs.NavMeshConnections?.Specific));
+                ret.Version = this.Version.Combine(rhs.Version);
+                ret.Infos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationMeshInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Infos?.Overall, rhs.Infos?.Overall), Noggog.ExceptionExt.Combine(this.Infos?.Specific, rhs.Infos?.Specific));
+                ret.Connections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavigationConnectionInfo.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), Noggog.ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -528,9 +529,9 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public bool NavMeshVersion;
-            public NavigationMapInfo.TranslationMask? NavMeshInfos;
-            public NavigationConnectionInfo.TranslationMask? NavMeshConnections;
+            public bool Version;
+            public NavigationMeshInfo.TranslationMask? Infos;
+            public NavigationConnectionInfo.TranslationMask? Connections;
             #endregion
 
             #region Ctors
@@ -539,7 +540,7 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.NavMeshVersion = defaultOn;
+                this.Version = defaultOn;
             }
 
             #endregion
@@ -547,9 +548,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((NavMeshVersion, null));
-                ret.Add((NavMeshInfos == null ? DefaultOn : !NavMeshInfos.GetCrystal().CopyNothing, NavMeshInfos?.GetCrystal()));
-                ret.Add((NavMeshConnections == null ? DefaultOn : !NavMeshConnections.GetCrystal().CopyNothing, NavMeshConnections?.GetCrystal()));
+                ret.Add((Version, null));
+                ret.Add((Infos == null ? DefaultOn : !Infos.GetCrystal().CopyNothing, Infos?.GetCrystal()));
+                ret.Add((Connections == null ? DefaultOn : !Connections.GetCrystal().CopyNothing, Connections?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -562,6 +563,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NavigationMeshInfoMapCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(
             FormKey formKey,
             Fallout3Release gameRelease)
@@ -680,12 +683,13 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface INavigationMeshInfoMap :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>,
         INavigationMeshInfoMapGetter
     {
-        new UInt32? NavMeshVersion { get; set; }
-        new ExtendedList<NavigationMapInfo> NavMeshInfos { get; }
-        new ExtendedList<NavigationConnectionInfo> NavMeshConnections { get; }
+        new UInt32? Version { get; set; }
+        new ExtendedList<NavigationMeshInfo> Infos { get; }
+        new ExtendedList<NavigationConnectionInfo> Connections { get; }
     }
 
     public partial interface INavigationMeshInfoMapInternal :
@@ -699,13 +703,14 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface INavigationMeshInfoMapGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<INavigationMeshInfoMapGetter>,
         IMapsToGetter<INavigationMeshInfoMapGetter>
     {
         static new ILoquiRegistration StaticRegistration => NavigationMeshInfoMap_Registration.Instance;
-        UInt32? NavMeshVersion { get; }
-        IReadOnlyList<INavigationMapInfoGetter> NavMeshInfos { get; }
-        IReadOnlyList<INavigationConnectionInfoGetter> NavMeshConnections { get; }
+        UInt32? Version { get; }
+        IReadOnlyList<INavigationMeshInfoGetter> Infos { get; }
+        IReadOnlyList<INavigationConnectionInfoGetter> Connections { get; }
 
     }
 
@@ -882,9 +887,9 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        NavMeshVersion = 7,
-        NavMeshInfos = 8,
-        NavMeshConnections = 9,
+        Version = 7,
+        Infos = 8,
+        Connections = 9,
     }
     #endregion
 
@@ -977,9 +982,9 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(INavigationMeshInfoMapInternal item)
         {
             ClearPartial();
-            item.NavMeshVersion = default;
-            item.NavMeshInfos.Clear();
-            item.NavMeshConnections.Clear();
+            item.Version = default;
+            item.Infos.Clear();
+            item.Connections.Clear();
             base.Clear(item);
         }
         
@@ -997,6 +1002,8 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(INavigationMeshInfoMap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Infos.RemapLinks(mapping);
+            obj.Connections.RemapLinks(mapping);
         }
         
         #endregion
@@ -1064,13 +1071,13 @@ namespace Mutagen.Bethesda.Fallout3
             NavigationMeshInfoMap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.NavMeshVersion = item.NavMeshVersion == rhs.NavMeshVersion;
-            ret.NavMeshInfos = item.NavMeshInfos.CollectionEqualsHelper(
-                rhs.NavMeshInfos,
+            ret.Version = item.Version == rhs.Version;
+            ret.Infos = item.Infos.CollectionEqualsHelper(
+                rhs.Infos,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.NavMeshConnections = item.NavMeshConnections.CollectionEqualsHelper(
-                rhs.NavMeshConnections,
+            ret.Connections = item.Connections.CollectionEqualsHelper(
+                rhs.Connections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1122,17 +1129,17 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.NavMeshVersion ?? true)
-                && item.NavMeshVersion is {} NavMeshVersionItem)
+            if ((printMask?.Version ?? true)
+                && item.Version is {} VersionItem)
             {
-                sb.AppendItem(NavMeshVersionItem, "NavMeshVersion");
+                sb.AppendItem(VersionItem, "Version");
             }
-            if (printMask?.NavMeshInfos?.Overall ?? true)
+            if (printMask?.Infos?.Overall ?? true)
             {
-                sb.AppendLine("NavMeshInfos =>");
+                sb.AppendLine("Infos =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.NavMeshInfos)
+                    foreach (var subItem in item.Infos)
                     {
                         using (sb.Brace())
                         {
@@ -1141,12 +1148,12 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
-            if (printMask?.NavMeshConnections?.Overall ?? true)
+            if (printMask?.Connections?.Overall ?? true)
             {
-                sb.AppendLine("NavMeshConnections =>");
+                sb.AppendLine("Connections =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.NavMeshConnections)
+                    foreach (var subItem in item.Connections)
                     {
                         using (sb.Brace())
                         {
@@ -1205,17 +1212,17 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Version) ?? true))
             {
-                if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
+                if (lhs.Version != rhs.Version) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshInfos) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Infos) ?? true))
             {
-                if (!lhs.NavMeshInfos.SequenceEqual(rhs.NavMeshInfos, (l, r) => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.NavMeshInfos)))) return false;
+                if (!lhs.Infos.SequenceEqual(rhs.Infos, (l, r) => ((NavigationMeshInfoCommon)((INavigationMeshInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.Infos)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshConnections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Connections) ?? true))
             {
-                if (!lhs.NavMeshConnections.SequenceEqual(rhs.NavMeshConnections, (l, r) => ((NavigationConnectionInfoCommon)((INavigationConnectionInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.NavMeshConnections)))) return false;
+                if (!lhs.Connections.SequenceEqual(rhs.Connections, (l, r) => ((NavigationConnectionInfoCommon)((INavigationConnectionInfoGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.Connections)))) return false;
             }
             return true;
         }
@@ -1245,12 +1252,12 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(INavigationMeshInfoMapGetter item)
         {
             var hash = new HashCode();
-            if (item.NavMeshVersion is {} NavMeshVersionitem)
+            if (item.Version is {} Versionitem)
             {
-                hash.Add(NavMeshVersionitem);
+                hash.Add(Versionitem);
             }
-            hash.Add(item.NavMeshInfos);
-            hash.Add(item.NavMeshConnections);
+            hash.Add(item.Infos);
+            hash.Add(item.Connections);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1279,6 +1286,14 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Infos.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Connections.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -1354,17 +1369,17 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Version) ?? true))
             {
-                item.NavMeshVersion = rhs.NavMeshVersion;
+                item.Version = rhs.Version;
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshInfos) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Infos) ?? true))
             {
-                errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.NavMeshInfos);
+                errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.Infos);
                 try
                 {
-                    item.NavMeshInfos.SetTo(
-                        rhs.NavMeshInfos
+                    item.Infos.SetTo(
+                        rhs.Infos
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1382,13 +1397,13 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshConnections) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.Connections) ?? true))
             {
-                errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.NavMeshConnections);
+                errorMask?.PushIndex((int)NavigationMeshInfoMap_FieldIndex.Connections);
                 try
                 {
-                    item.NavMeshConnections.SetTo(
-                        rhs.NavMeshConnections
+                    item.Connections.SetTo(
+                        rhs.Connections
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1577,22 +1592,22 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.NavMeshVersion,
+                item: item.Version,
                 header: translationParams.ConvertToCustom(RecordTypes.NVER));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMapInfoGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMeshInfoGetter>.Instance.Write(
                 writer: writer,
-                items: item.NavMeshInfos,
-                transl: (MutagenWriter subWriter, INavigationMapInfoGetter subItem, TypedWriteParams conv) =>
+                items: item.Infos,
+                transl: (MutagenWriter subWriter, INavigationMeshInfoGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((NavigationMapInfoBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((NavigationMeshInfoBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationConnectionInfoGetter>.Instance.Write(
                 writer: writer,
-                items: item.NavMeshConnections,
+                items: item.Connections,
                 transl: (MutagenWriter subWriter, INavigationConnectionInfoGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -1672,28 +1687,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NVER:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NavMeshVersion = frame.ReadUInt32();
-                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
+                    item.Version = frame.ReadUInt32();
+                    return (int)NavigationMeshInfoMap_FieldIndex.Version;
                 }
                 case RecordTypeInts.NVMI:
                 {
-                    item.NavMeshInfos.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
+                    item.Infos.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMeshInfo>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: NavigationMapInfo_Registration.TriggerSpecs,
+                            triggeringRecord: NavigationMeshInfo_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: NavigationMapInfo.TryCreateFromBinary));
-                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshInfos;
+                            transl: NavigationMeshInfo.TryCreateFromBinary));
+                    return (int)NavigationMeshInfoMap_FieldIndex.Infos;
                 }
                 case RecordTypeInts.NVCI:
                 {
-                    item.NavMeshConnections.SetTo(
+                    item.Connections.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationConnectionInfo>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: NavigationConnectionInfo_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: NavigationConnectionInfo.TryCreateFromBinary));
-                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshConnections;
+                    return (int)NavigationMeshInfoMap_FieldIndex.Connections;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1739,6 +1754,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NavigationMeshInfoMapCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1753,12 +1769,12 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(INavigationMeshInfoMapGetter);
 
 
-        #region NavMeshVersion
-        private int? _NavMeshVersionLocation;
-        public UInt32? NavMeshVersion => _NavMeshVersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NavMeshVersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region Version
+        private int? _VersionLocation;
+        public UInt32? Version => _VersionLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VersionLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        public IReadOnlyList<INavigationMapInfoGetter> NavMeshInfos { get; private set; } = [];
-        public IReadOnlyList<INavigationConnectionInfoGetter> NavMeshConnections { get; private set; } = [];
+        public IReadOnlyList<INavigationMeshInfoGetter> Infos { get; private set; } = [];
+        public IReadOnlyList<INavigationConnectionInfoGetter> Connections { get; private set; } = [];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1830,27 +1846,27 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.NVER:
                 {
-                    _NavMeshVersionLocation = (stream.Position - offset);
-                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
+                    _VersionLocation = (stream.Position - offset);
+                    return (int)NavigationMeshInfoMap_FieldIndex.Version;
                 }
                 case RecordTypeInts.NVMI:
                 {
-                    this.NavMeshInfos = BinaryOverlayList.FactoryByArray<INavigationMapInfoGetter>(
+                    this.Infos = BinaryOverlayList.FactoryByArray<INavigationMeshInfoGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         translationParams: translationParams,
-                        getter: (s, p, recConv) => NavigationMapInfoBinaryOverlay.NavigationMapInfoFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p, recConv) => NavigationMeshInfoBinaryOverlay.NavigationMeshInfoFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: NavigationMapInfo_Registration.TriggerSpecs,
+                            trigger: NavigationMeshInfo_Registration.TriggerSpecs,
                             triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshInfos;
+                    return (int)NavigationMeshInfoMap_FieldIndex.Infos;
                 }
                 case RecordTypeInts.NVCI:
                 {
-                    this.NavMeshConnections = BinaryOverlayList.FactoryByArray<INavigationConnectionInfoGetter>(
+                    this.Connections = BinaryOverlayList.FactoryByArray<INavigationConnectionInfoGetter>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         translationParams: translationParams,
@@ -1861,7 +1877,7 @@ namespace Mutagen.Bethesda.Fallout3
                             triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshConnections;
+                    return (int)NavigationMeshInfoMap_FieldIndex.Connections;
                 }
                 default:
                     return base.FillRecordType(

@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -50,16 +51,57 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Data = new byte[0];
-        public MemorySlice<Byte> Data
+        #region NavigationMesh
+        private readonly IFormLink<INavigationMeshGetter> _NavigationMesh = new FormLink<INavigationMeshGetter>();
+        public IFormLink<INavigationMeshGetter> NavigationMesh
         {
-            get => _Data;
-            set => this._Data = value;
+            get => _NavigationMesh;
+            set => _NavigationMesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> INavigationConnectionInfoGetter.Data => this.Data;
+        IFormLinkGetter<INavigationMeshGetter> INavigationConnectionInfoGetter.NavigationMesh => this.NavigationMesh;
+        #endregion
+        #region StandardLinks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _StandardLinks = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> StandardLinks
+        {
+            get => this._StandardLinks;
+            init => this._StandardLinks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavigationConnectionInfoGetter.StandardLinks => _StandardLinks;
+        #endregion
+
+        #endregion
+        #region PreferredLinks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<INavigationMeshGetter>> _PreferredLinks = new ExtendedList<IFormLinkGetter<INavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<INavigationMeshGetter>> PreferredLinks
+        {
+            get => this._PreferredLinks;
+            init => this._PreferredLinks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> INavigationConnectionInfoGetter.PreferredLinks => _PreferredLinks;
+        #endregion
+
+        #endregion
+        #region DoorLinks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> _DoorLinks = new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>>();
+        public ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> DoorLinks
+        {
+            get => this._DoorLinks;
+            init => this._DoorLinks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> INavigationConnectionInfoGetter.DoorLinks => _DoorLinks;
+        #endregion
+
         #endregion
 
         #region To String
@@ -98,9 +140,24 @@ namespace Mutagen.Bethesda.Fallout3
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem Data)
+            public Mask(TItem initialValue)
             {
-                this.Data = Data;
+                this.NavigationMesh = initialValue;
+                this.StandardLinks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.PreferredLinks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.DoorLinks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+            }
+
+            public Mask(
+                TItem NavigationMesh,
+                TItem StandardLinks,
+                TItem PreferredLinks,
+                TItem DoorLinks)
+            {
+                this.NavigationMesh = NavigationMesh;
+                this.StandardLinks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(StandardLinks, []);
+                this.PreferredLinks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PreferredLinks, []);
+                this.DoorLinks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(DoorLinks, []);
             }
 
             #pragma warning disable CS8618
@@ -112,7 +169,10 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Data;
+            public TItem NavigationMesh;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? StandardLinks;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PreferredLinks;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? DoorLinks;
             #endregion
 
             #region Equals
@@ -125,13 +185,19 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.NavigationMesh, rhs.NavigationMesh)) return false;
+                if (!object.Equals(this.StandardLinks, rhs.StandardLinks)) return false;
+                if (!object.Equals(this.PreferredLinks, rhs.PreferredLinks)) return false;
+                if (!object.Equals(this.DoorLinks, rhs.DoorLinks)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
+                hash.Add(this.NavigationMesh);
+                hash.Add(this.StandardLinks);
+                hash.Add(this.PreferredLinks);
+                hash.Add(this.DoorLinks);
                 return hash.ToHashCode();
             }
 
@@ -140,7 +206,40 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Data)) return false;
+                if (!eval(this.NavigationMesh)) return false;
+                if (this.StandardLinks != null)
+                {
+                    if (!eval(this.StandardLinks.Overall)) return false;
+                    if (this.StandardLinks.Specific != null)
+                    {
+                        foreach (var item in this.StandardLinks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.PreferredLinks != null)
+                {
+                    if (!eval(this.PreferredLinks.Overall)) return false;
+                    if (this.PreferredLinks.Specific != null)
+                    {
+                        foreach (var item in this.PreferredLinks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.DoorLinks != null)
+                {
+                    if (!eval(this.DoorLinks.Overall)) return false;
+                    if (this.DoorLinks.Specific != null)
+                    {
+                        foreach (var item in this.DoorLinks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -148,7 +247,40 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Data)) return true;
+                if (eval(this.NavigationMesh)) return true;
+                if (this.StandardLinks != null)
+                {
+                    if (eval(this.StandardLinks.Overall)) return true;
+                    if (this.StandardLinks.Specific != null)
+                    {
+                        foreach (var item in this.StandardLinks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.PreferredLinks != null)
+                {
+                    if (eval(this.PreferredLinks.Overall)) return true;
+                    if (this.PreferredLinks.Specific != null)
+                    {
+                        foreach (var item in this.PreferredLinks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.DoorLinks != null)
+                {
+                    if (eval(this.DoorLinks.Overall)) return true;
+                    if (this.DoorLinks.Specific != null)
+                    {
+                        foreach (var item in this.DoorLinks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -163,7 +295,49 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = eval(this.Data);
+                obj.NavigationMesh = eval(this.NavigationMesh);
+                if (StandardLinks != null)
+                {
+                    obj.StandardLinks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.StandardLinks.Overall), []);
+                    if (StandardLinks.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.StandardLinks.Specific = l;
+                        foreach (var item in StandardLinks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (PreferredLinks != null)
+                {
+                    obj.PreferredLinks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PreferredLinks.Overall), []);
+                    if (PreferredLinks.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.PreferredLinks.Specific = l;
+                        foreach (var item in PreferredLinks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (DoorLinks != null)
+                {
+                    obj.DoorLinks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.DoorLinks.Overall), []);
+                    if (DoorLinks.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.DoorLinks.Specific = l;
+                        foreach (var item in DoorLinks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -182,9 +356,72 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(NavigationConnectionInfo.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Data ?? true)
+                    if (printMask?.NavigationMesh ?? true)
                     {
-                        sb.AppendItem(Data, "Data");
+                        sb.AppendItem(NavigationMesh, "NavigationMesh");
+                    }
+                    if ((printMask?.StandardLinks?.Overall ?? true)
+                        && StandardLinks is {} StandardLinksItem)
+                    {
+                        sb.AppendLine("StandardLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(StandardLinksItem.Overall);
+                            if (StandardLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in StandardLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.PreferredLinks?.Overall ?? true)
+                        && PreferredLinks is {} PreferredLinksItem)
+                    {
+                        sb.AppendLine("PreferredLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PreferredLinksItem.Overall);
+                            if (PreferredLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in PreferredLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.DoorLinks?.Overall ?? true)
+                        && DoorLinks is {} DoorLinksItem)
+                    {
+                        sb.AppendLine("DoorLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DoorLinksItem.Overall);
+                            if (DoorLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in DoorLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -210,7 +447,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? Data;
+            public Exception? NavigationMesh;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? StandardLinks;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PreferredLinks;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? DoorLinks;
             #endregion
 
             #region IErrorMask
@@ -219,8 +459,14 @@ namespace Mutagen.Bethesda.Fallout3
                 NavigationConnectionInfo_FieldIndex enu = (NavigationConnectionInfo_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationConnectionInfo_FieldIndex.Data:
-                        return Data;
+                    case NavigationConnectionInfo_FieldIndex.NavigationMesh:
+                        return NavigationMesh;
+                    case NavigationConnectionInfo_FieldIndex.StandardLinks:
+                        return StandardLinks;
+                    case NavigationConnectionInfo_FieldIndex.PreferredLinks:
+                        return PreferredLinks;
+                    case NavigationConnectionInfo_FieldIndex.DoorLinks:
+                        return DoorLinks;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -231,8 +477,17 @@ namespace Mutagen.Bethesda.Fallout3
                 NavigationConnectionInfo_FieldIndex enu = (NavigationConnectionInfo_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationConnectionInfo_FieldIndex.Data:
-                        this.Data = ex;
+                    case NavigationConnectionInfo_FieldIndex.NavigationMesh:
+                        this.NavigationMesh = ex;
+                        break;
+                    case NavigationConnectionInfo_FieldIndex.StandardLinks:
+                        this.StandardLinks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case NavigationConnectionInfo_FieldIndex.PreferredLinks:
+                        this.PreferredLinks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case NavigationConnectionInfo_FieldIndex.DoorLinks:
+                        this.DoorLinks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -244,8 +499,17 @@ namespace Mutagen.Bethesda.Fallout3
                 NavigationConnectionInfo_FieldIndex enu = (NavigationConnectionInfo_FieldIndex)index;
                 switch (enu)
                 {
-                    case NavigationConnectionInfo_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
+                    case NavigationConnectionInfo_FieldIndex.NavigationMesh:
+                        this.NavigationMesh = (Exception?)obj;
+                        break;
+                    case NavigationConnectionInfo_FieldIndex.StandardLinks:
+                        this.StandardLinks = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case NavigationConnectionInfo_FieldIndex.PreferredLinks:
+                        this.PreferredLinks = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case NavigationConnectionInfo_FieldIndex.DoorLinks:
+                        this.DoorLinks = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -255,7 +519,10 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
+                if (NavigationMesh != null) return true;
+                if (StandardLinks != null) return true;
+                if (PreferredLinks != null) return true;
+                if (DoorLinks != null) return true;
                 return false;
             }
             #endregion
@@ -282,7 +549,67 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Data, "Data");
+                    sb.AppendItem(NavigationMesh, "NavigationMesh");
+                }
+                if (StandardLinks is {} StandardLinksItem)
+                {
+                    sb.AppendLine("StandardLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(StandardLinksItem.Overall);
+                        if (StandardLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in StandardLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (PreferredLinks is {} PreferredLinksItem)
+                {
+                    sb.AppendLine("PreferredLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PreferredLinksItem.Overall);
+                        if (PreferredLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in PreferredLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (DoorLinks is {} DoorLinksItem)
+                {
+                    sb.AppendLine("DoorLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DoorLinksItem.Overall);
+                        if (DoorLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in DoorLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -292,7 +619,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data);
+                ret.NavigationMesh = this.NavigationMesh.Combine(rhs.NavigationMesh);
+                ret.StandardLinks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.StandardLinks?.Overall, rhs.StandardLinks?.Overall), Noggog.ExceptionExt.Combine(this.StandardLinks?.Specific, rhs.StandardLinks?.Specific));
+                ret.PreferredLinks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PreferredLinks?.Overall, rhs.PreferredLinks?.Overall), Noggog.ExceptionExt.Combine(this.PreferredLinks?.Specific, rhs.PreferredLinks?.Specific));
+                ret.DoorLinks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.DoorLinks?.Overall, rhs.DoorLinks?.Overall), Noggog.ExceptionExt.Combine(this.DoorLinks?.Specific, rhs.DoorLinks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -316,7 +646,10 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Data;
+            public bool NavigationMesh;
+            public bool StandardLinks;
+            public bool PreferredLinks;
+            public bool DoorLinks;
             #endregion
 
             #region Ctors
@@ -326,7 +659,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Data = defaultOn;
+                this.NavigationMesh = defaultOn;
+                this.StandardLinks = defaultOn;
+                this.PreferredLinks = defaultOn;
+                this.DoorLinks = defaultOn;
             }
 
             #endregion
@@ -342,7 +678,10 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data, null));
+                ret.Add((NavigationMesh, null));
+                ret.Add((StandardLinks, null));
+                ret.Add((PreferredLinks, null));
+                ret.Add((DoorLinks, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -351,6 +690,11 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NavigationConnectionInfoCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationConnectionInfoSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -412,15 +756,20 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface INavigationConnectionInfo :
+        IFormLinkContainer,
         ILoquiObjectSetter<INavigationConnectionInfo>,
         INavigationConnectionInfoGetter
     {
-        new MemorySlice<Byte> Data { get; set; }
+        new IFormLink<INavigationMeshGetter> NavigationMesh { get; set; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> StandardLinks { get; }
+        new ExtendedList<IFormLinkGetter<INavigationMeshGetter>> PreferredLinks { get; }
+        new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> DoorLinks { get; }
     }
 
     public partial interface INavigationConnectionInfoGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<INavigationConnectionInfoGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -430,7 +779,10 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavigationConnectionInfo_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> Data { get; }
+        IFormLinkGetter<INavigationMeshGetter> NavigationMesh { get; }
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> StandardLinks { get; }
+        IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredLinks { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> DoorLinks { get; }
 
     }
 
@@ -600,7 +952,10 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum NavigationConnectionInfo_FieldIndex
     {
-        Data = 0,
+        NavigationMesh = 0,
+        StandardLinks = 1,
+        PreferredLinks = 2,
+        DoorLinks = 3,
     }
     #endregion
 
@@ -611,9 +966,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(NavigationConnectionInfo.Mask<>);
 
@@ -686,12 +1041,19 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(INavigationConnectionInfo item)
         {
             ClearPartial();
-            item.Data = [];
+            item.NavigationMesh.Clear();
+            item.StandardLinks.Clear();
+            item.PreferredLinks.Clear();
+            item.DoorLinks.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(INavigationConnectionInfo obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.NavigationMesh.Relink(mapping);
+            obj.StandardLinks.RemapLinks(mapping);
+            obj.PreferredLinks.RemapLinks(mapping);
+            obj.DoorLinks.RemapLinks(mapping);
         }
         
         #endregion
@@ -740,7 +1102,19 @@ namespace Mutagen.Bethesda.Fallout3
             NavigationConnectionInfo.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Data = MemoryExtensions.SequenceEqual(item.Data.Span, rhs.Data.Span);
+            ret.NavigationMesh = item.NavigationMesh.Equals(rhs.NavigationMesh);
+            ret.StandardLinks = item.StandardLinks.CollectionEqualsHelper(
+                rhs.StandardLinks,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.PreferredLinks = item.PreferredLinks.CollectionEqualsHelper(
+                rhs.PreferredLinks,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.DoorLinks = item.DoorLinks.CollectionEqualsHelper(
+                rhs.DoorLinks,
+                (l, r) => object.Equals(l, r),
+                include);
         }
         
         public string Print(
@@ -785,9 +1159,51 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             NavigationConnectionInfo.Mask<bool>? printMask = null)
         {
-            if (printMask?.Data ?? true)
+            if (printMask?.NavigationMesh ?? true)
             {
-                sb.AppendLine($"Data => {SpanExt.ToHexString(item.Data)}");
+                sb.AppendItem(item.NavigationMesh.FormKey, "NavigationMesh");
+            }
+            if (printMask?.StandardLinks?.Overall ?? true)
+            {
+                sb.AppendLine("StandardLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.StandardLinks)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.PreferredLinks?.Overall ?? true)
+            {
+                sb.AppendLine("PreferredLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.PreferredLinks)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.DoorLinks?.Overall ?? true)
+            {
+                sb.AppendLine("DoorLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.DoorLinks)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
         }
         
@@ -798,9 +1214,21 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.NavigationMesh) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
+                if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.StandardLinks) ?? true))
+            {
+                if (!lhs.StandardLinks.SequenceEqualNullable(rhs.StandardLinks)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.PreferredLinks) ?? true))
+            {
+                if (!lhs.PreferredLinks.SequenceEqualNullable(rhs.PreferredLinks)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.DoorLinks) ?? true))
+            {
+                if (!lhs.DoorLinks.SequenceEqualNullable(rhs.DoorLinks)) return false;
             }
             return true;
         }
@@ -808,7 +1236,10 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(INavigationConnectionInfoGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Data);
+            hash.Add(item.NavigationMesh);
+            hash.Add(item.StandardLinks);
+            hash.Add(item.PreferredLinks);
+            hash.Add(item.DoorLinks);
             return hash.ToHashCode();
         }
         
@@ -823,6 +1254,19 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationConnectionInfoGetter obj, bool iterateNestedRecords = true)
         {
+            yield return FormLinkInformation.Factory(obj.NavigationMesh);
+            foreach (var item in obj.StandardLinks)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.PreferredLinks)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.DoorLinks)
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
         }
         
@@ -841,9 +1285,66 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.NavigationMesh) ?? true))
             {
-                item.Data = rhs.Data.ToArray();
+                item.NavigationMesh.SetTo(rhs.NavigationMesh.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.StandardLinks) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationConnectionInfo_FieldIndex.StandardLinks);
+                try
+                {
+                    item.StandardLinks.SetTo(
+                        rhs.StandardLinks
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.PreferredLinks) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationConnectionInfo_FieldIndex.PreferredLinks);
+                try
+                {
+                    item.PreferredLinks.SetTo(
+                        rhs.PreferredLinks
+                            .Select(b => (IFormLinkGetter<INavigationMeshGetter>)new FormLink<INavigationMeshGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)NavigationConnectionInfo_FieldIndex.DoorLinks) ?? true))
+            {
+                errorMask?.PushIndex((int)NavigationConnectionInfo_FieldIndex.DoorLinks);
+                try
+                {
+                    item.DoorLinks.SetTo(
+                        rhs.DoorLinks
+                            .Select(b => (IFormLinkGetter<IPlacedObjectGetter>)new FormLink<IPlacedObjectGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -953,9 +1454,39 @@ namespace Mutagen.Bethesda.Fallout3
             INavigationConnectionInfoGetter item,
             MutagenWriter writer)
         {
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Data);
+                item: item.NavigationMesh);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
+                writer: writer,
+                items: item.StandardLinks,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Write(
+                writer: writer,
+                items: item.PreferredLinks,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INavigationMeshGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Write(
+                writer: writer,
+                items: item.DoorLinks,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedObjectGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
         }
 
         public void Write(
@@ -996,7 +1527,22 @@ namespace Mutagen.Bethesda.Fallout3
             INavigationConnectionInfo item,
             MutagenFrame frame)
         {
-            item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NavigationMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.StandardLinks.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
+                    amount: checked((int)frame.ReadUInt32()),
+                    reader: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
+            item.PreferredLinks.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
+                    amount: checked((int)frame.ReadUInt32()),
+                    reader: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
+            item.DoorLinks.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Parse(
+                    amount: checked((int)frame.ReadUInt32()),
+                    reader: frame,
+                    transl: FormLinkBinaryTranslation.Instance.Parse));
         }
 
     }
@@ -1048,6 +1594,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => NavigationConnectionInfoCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationConnectionInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1062,9 +1609,18 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        #region Data
-        public ReadOnlyMemorySlice<Byte> Data => _structData.Span.ToArray();
-        protected int DataEndingPos;
+        public IFormLinkGetter<INavigationMeshGetter> NavigationMesh => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        #region StandardLinks
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> StandardLinks => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(0x4), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(p, s));
+        protected int StandardLinksEndingPos;
+        #endregion
+        #region PreferredLinks
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> PreferredLinks => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData.Slice(StandardLinksEndingPos), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(p, s));
+        protected int PreferredLinksEndingPos;
+        #endregion
+        #region DoorLinks
+        public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> DoorLinks => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IPlacedObjectGetter>>(_structData.Slice(PreferredLinksEndingPos), _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(p, s));
+        protected int DoorLinksEndingPos;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1082,6 +1638,15 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
+        public static void NavigationConnectionInfoParseEndingPositions(
+            NavigationConnectionInfoBinaryOverlay ret,
+            BinaryOverlayFactoryPackage package)
+        {
+            ret.StandardLinksEndingPos = 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x4)) * 4 + 4;
+            ret.PreferredLinksEndingPos = ret.StandardLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.StandardLinksEndingPos)) * 4 + 4;
+            ret.DoorLinksEndingPos = ret.PreferredLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.PreferredLinksEndingPos)) * 4 + 4;
+        }
+
         public static INavigationConnectionInfoGetter NavigationConnectionInfoFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
@@ -1097,6 +1662,7 @@ namespace Mutagen.Bethesda.Fallout3
             var ret = new NavigationConnectionInfoBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            NavigationConnectionInfoParseEndingPositions(ret, package);
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

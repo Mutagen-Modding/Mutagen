@@ -5762,6 +5762,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Weather.RemapLinks(mapping);
             obj.Climates.RemapLinks(mapping);
             obj.Regions.RemapLinks(mapping);
+            obj.NavigationMeshInfoMaps.RemapLinks(mapping);
             obj.Cells.RemapLinks(mapping);
             obj.Worldspaces.RemapLinks(mapping);
             obj.DialogTopics.RemapLinks(mapping);
@@ -9197,6 +9198,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Regions.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.NavigationMeshInfoMaps.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }

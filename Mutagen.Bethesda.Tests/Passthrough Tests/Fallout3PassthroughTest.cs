@@ -263,7 +263,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("LVLI"),
             new RecordType("WTHR"),
             new RecordType("CLMT"),
-            new RecordType("REGN"));
+            new RecordType("REGN"),
+            new RecordType("NAVI"));
         return ret;
     }
 }

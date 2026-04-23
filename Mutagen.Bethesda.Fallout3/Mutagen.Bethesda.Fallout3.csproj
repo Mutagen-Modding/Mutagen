@@ -777,7 +777,13 @@
     <Compile Include="Records\Major Records\NavigationMeshInfoMap_Generated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\NavigationMapInfo_Generated.cs">
+    <Compile Include="Records\Major Records\NavigationMeshInfo.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavigationMeshInfo_Generated.cs">
+      <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\IslandData_Generated.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NavigationConnectionInfo_Generated.cs">
