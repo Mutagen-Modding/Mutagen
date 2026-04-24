@@ -1,136 +1,154 @@
-﻿using System.Text;
-using Mutagen.Bethesda.Plugins.Analysis;
+using System.Buffers.Binary;
+using System.Text;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Utility;
-using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Processing;
 
 public static class ModGroupMerger
 {
+    private readonly record struct SiblingGroup(long Start, long TotalLength);
+
     public static void MergeGroups(
         Func<IMutagenReadStream> streamCreator,
         Stream outputStream,
         RecordInterest? interest = null)
     {
         using var inputStream = streamCreator();
-        using var inputStreamJumpback = streamCreator();
         using var writer = new BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
+        var constants = inputStream.MetaData.Constants;
 
-        long runningDiff = 0;
-        var fileLocs = RecordLocator.GetLocations(
-            inputStream,
-            interest: interest,
-            additionalCriteria: (_, majorHeader) =>
-            {
-                return majorHeader.IsCompressed;
-            });
-        
+        // Copy the mod header verbatim
         inputStream.Position = 0;
-
-        var dict = new Dictionary<RecordType, List<GroupLocationMarker>>();
-        foreach (var loc in fileLocs.GrupLocations)
-        {
-            inputStream.Position = loc.Key;
-            var group = inputStream.ReadGroupHeader();
-            if (!group.IsTopLevel) continue;
-            dict.GetOrAdd(loc.Value.ContainedRecordType).Add(loc.Value);
-        }
-
-        foreach (var val in dict.ToList())
-        {
-            if (val.Value.Count <= 1)
-            {
-                dict.Remove(val.Key);
-            }
-        }
-
-        if (dict.Count == 0)
-        {
-            inputStream.BaseStream.Position = 0;
-            inputStream.BaseStream.CopyTo(outputStream);
-            return;
-        }
-        
+        var modHeader = inputStream.GetModHeaderFrame();
+        var modHeaderLen = checked((int)(modHeader.HeaderLength + modHeader.ContentLength));
         inputStream.Position = 0;
+        inputStream.WriteTo(writer.BaseStream, modHeaderLen);
 
-        var passedSet = new HashSet<RecordType>();
-        while (!inputStream.Complete)
+        // Collect top-level groups, grouping by ContainedRecordType (preserving first-seen order)
+        var topLevelByType = new Dictionary<uint, List<SiblingGroup>>();
+        var topLevelOrder = new List<uint>();
+
+        while (inputStream.TryGetGroupHeader(out var groupHeader))
         {
-            // Import until next listed group
-            long noRecordLength;
-            if (fileLocs.GrupLocations.TryGetInDirection(
-                    inputStream.Position,
-                    higher: true,
-                    result: out var nextRec))
+            var key = BinaryPrimitives.ReadUInt32LittleEndian(groupHeader.ContainedRecordTypeData);
+            if (!topLevelByType.TryGetValue(key, out var list))
             {
-                noRecordLength = nextRec.Value.Location.Min - inputStream.Position;
+                list = new List<SiblingGroup>();
+                topLevelByType[key] = list;
+                topLevelOrder.Add(key);
             }
-            else
+            list.Add(new SiblingGroup(inputStream.Position, groupHeader.TotalLength));
+            inputStream.Position += groupHeader.TotalLength;
+        }
+
+        foreach (var key in topLevelOrder)
+        {
+            var siblings = topLevelByType[key];
+            if (interest != null)
             {
-                noRecordLength = inputStream.Remaining;
+                inputStream.Position = siblings[0].Start;
+                var header = inputStream.GetGroupHeader();
+                if (!interest.IsInterested(header.ContainedRecordType))
+                {
+                    foreach (var sib in siblings)
+                    {
+                        inputStream.Position = sib.Start;
+                        inputStream.WriteTo(writer.BaseStream, checked((int)sib.TotalLength));
+                    }
+                    continue;
+                }
             }
-
-            inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
-
-            if (inputStream.Complete) break;
-            
-            var groupMeta = inputStream.GetGroupHeader();
-
-            if (!dict.TryGetValue(groupMeta.ContainedRecordType, out var groupLocations))
-            {
-                inputStream.WriteTo(writer.BaseStream, checked((int)groupMeta.TotalLength));
-                continue;
-            }
-
-            if (!passedSet.Add(groupMeta.ContainedRecordType))
-            {
-                inputStream.Position += groupMeta.TotalLength;
-                continue;
-            }
-            
-            // Write last group header
-            var readPos = inputStream.Position;
-            var writePos = writer.BaseStream.Position;
-            long totalLen = groupMeta.HeaderLength;
-
-            inputStream.Position = groupLocations.Last().Location.Min;
-            inputStream.WriteTo(writer.BaseStream, groupMeta.HeaderLength);
-
-            // Write all group contents
-            foreach (var groupLoc in groupLocations)
-            {
-                inputStream.Position = groupLoc.Location.Min;
-                var targetGroupMeta = inputStream.GetGroup(readSafe: false);
-                totalLen += targetGroupMeta.Content.Length;
-                writer.BaseStream.Write(targetGroupMeta.Content);
-            }
-
-            // Update group length
-            writer.BaseStream.Position = writePos + 4;
-            writer.Write(checked((uint)totalLen));
-            
-            // reset for next
-            writer.BaseStream.Position = writePos + totalLen;
-            inputStream.Position = readPos + groupMeta.TotalLength;
+            WriteMergedGroupList(inputStream, writer, constants, siblings);
         }
     }
 
-    private static void CopyOverHeader(RecordLocatorResults fileLocs, IMutagenReadStream inputStream, BinaryWriter writer)
+    /// <summary>
+    /// Writes a set of sibling GRUPs that share a merge key (GroupType + Label).
+    /// - If there's one sibling, emits it, recursing into its sub-groups so nested duplicates are still merged.
+    /// - If multiple, emits the last sibling's header (preserving its label/last-modified stamp),
+    ///   then merges their contents.  For leaf groups, contents are concatenated.  For container
+    ///   groups (content begins with GRUP), children from every sibling are gathered, re-grouped
+    ///   by their merge key, and recursively processed — so duplicates at any depth get merged.
+    /// </summary>
+    private static void WriteMergedGroupList(
+        IMutagenReadStream inputStream,
+        BinaryWriter writer,
+        GameConstants constants,
+        List<SiblingGroup> siblings)
     {
-        long noRecordLength;
-        if (fileLocs.GrupLocations.TryGetInDirection(
-                inputStream.Position,
-                higher: true,
-                result: out var nextRec))
+        if (siblings.Count == 0) return;
+
+        var last = siblings[^1];
+        inputStream.Position = last.Start;
+        var lastHeader = inputStream.GetGroupHeader();
+        var headerLen = lastHeader.HeaderLength;
+
+        long outputHeaderPos = writer.BaseStream.Position;
+        inputStream.WriteTo(writer.BaseStream, headerLen);
+
+        bool hasSubGroups = FirstSiblingContainsSubGroups(inputStream, constants, siblings[0], headerLen);
+
+        if (!hasSubGroups)
         {
-            noRecordLength = nextRec.Value.Location.Min - inputStream.Position;
+            foreach (var sib in siblings)
+            {
+                long contentLen = sib.TotalLength - headerLen;
+                if (contentLen <= 0) continue;
+                inputStream.Position = sib.Start + headerLen;
+                inputStream.WriteTo(writer.BaseStream, checked((int)contentLen));
+            }
         }
         else
         {
-            noRecordLength = inputStream.Remaining;
+            var childrenByKey = new Dictionary<(int GroupType, uint Label), List<SiblingGroup>>();
+            var childOrder = new List<(int GroupType, uint Label)>();
+
+            foreach (var sib in siblings)
+            {
+                long pos = sib.Start + headerLen;
+                long endPos = sib.Start + sib.TotalLength;
+                while (pos < endPos)
+                {
+                    inputStream.Position = pos;
+                    var childHeader = inputStream.GetGroupHeader();
+                    var key = (childHeader.GroupType,
+                        BinaryPrimitives.ReadUInt32LittleEndian(childHeader.ContainedRecordTypeData));
+                    if (!childrenByKey.TryGetValue(key, out var list))
+                    {
+                        list = new List<SiblingGroup>();
+                        childrenByKey[key] = list;
+                        childOrder.Add(key);
+                    }
+                    list.Add(new SiblingGroup(pos, childHeader.TotalLength));
+                    pos += childHeader.TotalLength;
+                }
+            }
+
+            foreach (var key in childOrder)
+            {
+                WriteMergedGroupList(inputStream, writer, constants, childrenByKey[key]);
+            }
         }
 
-        inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
+        long contentEnd = writer.BaseStream.Position;
+        long totalLen = contentEnd - outputHeaderPos;
+        writer.BaseStream.Position = outputHeaderPos + 4;
+        writer.Write(checked((uint)totalLen));
+        writer.BaseStream.Position = contentEnd;
+    }
+
+    private static bool FirstSiblingContainsSubGroups(
+        IMutagenReadStream inputStream,
+        GameConstants constants,
+        SiblingGroup sibling,
+        int headerLen)
+    {
+        long contentLen = sibling.TotalLength - headerLen;
+        if (contentLen < constants.GroupConstants.HeaderLength) return false;
+        inputStream.Position = sibling.Start + headerLen;
+        return inputStream.TryGetGroupHeader(out _);
     }
 }
