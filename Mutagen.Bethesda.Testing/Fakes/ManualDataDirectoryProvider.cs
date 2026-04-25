@@ -6,5 +6,5 @@ namespace Mutagen.Bethesda.Testing.Fakes;
 
 public class ManualDataDirectoryProvider : IDataDirectoryProvider
 {
-    public DirectoryPath Path { get; set; } = $"{PathingUtil.DrivePrefix}DataDirectory";
+    public DirectoryPath Path { get; set; } = $"{PathingUtil.DrivePrefix}Data";
 }

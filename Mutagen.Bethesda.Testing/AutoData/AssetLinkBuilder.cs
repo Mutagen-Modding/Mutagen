@@ -39,7 +39,7 @@ public class AssetLinkBuilder : ISpecimenBuilder
         var existing = name != null && name.ContainsInsensitive("existing");
         var fileName =
             $"{name}{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{link.Type.FileExtensions.First()}";
-        
+
         link.GivenPath = fileName;
         if (existing)
         {
