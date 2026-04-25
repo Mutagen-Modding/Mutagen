@@ -36,7 +36,7 @@ public class MutagenDefaultPaths : DefaultFileSystemEnvironmentInstructions
         var gameDirPath = gameDir.Path;
         if (gameDirPath != null)
         {
-            yield return Path.Combine(gameDirPath, "DataDirectory");
+            yield return Path.Combine(gameDirPath, "Data");
         }
     }
 }
