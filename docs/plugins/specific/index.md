@@ -34,6 +34,16 @@ Some records are abstract and have multiple concrete subclasses (placed objects,
 
 [:octicons-arrow-right-24: Abstract Subclassing](../Abstract-Subclassing.md)
 
+## XML Definitions
+Mutagen's record classes are not handwritten:  they are generated from XML definition files that describe each record's fields, subrecord types, nullability, and structure.  These files live alongside the records they define and are a useful reference if you want a compact, top-down view of a record without scrolling through generated code.
+
+For example, here is the definition for `Npc` in Skyrim:
+
+[:octicons-arrow-right-24: Npc.xml on GitHub](https://github.com/Mutagen-Modding/Mutagen/blob/dev/Mutagen.Bethesda.Skyrim/Records/Major%20Records/Npc.xml)
+
+!!! warning "Custom Fields and Snippets"
+    The XML is an accurate reference for roughly 99% of records, but it does not tell the whole story.  Many records have custom fields and hand-rolled parsing logic that complicate the end resulting API when investigating the structure from this angle. 
+
 ## Specific Documentation
 The Specific Records section is about the abnormal record structures that inspire special documentation to cover specific concepts that might complicate things.
 
