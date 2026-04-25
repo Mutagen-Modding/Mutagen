@@ -879,13 +879,11 @@ public static class ParameterTypeMixIn
             case ParameterType.Float:
             case ParameterType.VariableName:
             case ParameterType.Sex:
-            case ParameterType.ActorValue:
             case ParameterType.CrimeType:
             case ParameterType.Axis:
             case ParameterType.QuestStage:
             case ParameterType.MiscStat:
             case ParameterType.Alignment:
-            case ParameterType.EquipType:
             case ParameterType.FormType:
             case ParameterType.CriticalStage:
             case ParameterType.VATSValueFunction:
@@ -931,6 +929,8 @@ public static class ParameterTypeMixIn
             case ParameterType.Scene:
             case ParameterType.EventData:
             case ParameterType.DamageType:
+            case ParameterType.ActorValue:
+            case ParameterType.EquipType:
                 return ParameterCategory.Form;
             case ParameterType.String:
                 return ParameterCategory.String;
