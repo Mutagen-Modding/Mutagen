@@ -802,8 +802,6 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             Shout_Registration.Instance,
             ShoutWord_Registration.Instance,
             SimpleModel_Registration.Instance,
-            SimpleModelBehavior_Registration.Instance,
-            SimpleModelBodyTexture_Registration.Instance,
             SkillBoost_Registration.Instance,
             SkyrimGroup_Registration.Instance,
             SkyrimListGroup_Registration.Instance,

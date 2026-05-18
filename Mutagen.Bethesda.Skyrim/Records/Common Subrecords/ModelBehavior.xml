@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SimpleModelBehavior" objType="Subrecord">
+  <Object name="ModelBehavior" objType="Subrecord">
     <Fields>
       <AssetLink name="File" recordType="MODL" nullable="False" assetType="SkyrimBehavior" />
       <ByteArray name="Data" recordType="MODT" />
-    </Fields>
-  </Object>
-  <Object name="ModelBehavior" objType="Subrecord" baseClass="SimpleModelBehavior">
-    <Fields>
       <RefList name="AlternateTextures" refName="AlternateTexture" counterLength="4" recordType="MODS" />
     </Fields>
   </Object>

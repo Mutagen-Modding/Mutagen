@@ -4747,14 +4747,8 @@
     <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\SimpleModelBehavior_Generated.cs">
-      <DependentUpon>ModelBehavior.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ModelBehavior_Generated.cs">
       <DependentUpon>ModelBehavior.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\SimpleModelBodyTexture_Generated.cs">
-      <DependentUpon>ModelBodyTexture.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ModelBodyTexture_Generated.cs">
       <DependentUpon>ModelBodyTexture.xml</DependentUpon>
