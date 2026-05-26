@@ -1458,7 +1458,8 @@ namespace Mutagen.Bethesda.Fallout4
                 default:
                     if (nextRecordType.Equals(Fallout4ListGroup<T>.T_RecordType))
                     {
-                        item.Records.SetTo(
+                        CellBlockConsolidator.MergeInto(
+                            item.Records,
                             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                                 reader: frame,
                                 triggeringRecord: Fallout4ListGroup<T>.T_RecordType,
@@ -1570,6 +1571,27 @@ namespace Mutagen.Bethesda.Fallout4
                 package: package)
         {
             this.CustomCtor();
+        }
+
+        public static IFallout4ListGroupGetter<T> Fallout4ListGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            if (locs.Count == 1)
+            {
+                return Fallout4ListGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
+                    package);
+            }
+            var subs = new IFallout4ListGroupGetter<T>[locs.Count];
+            for (int i = 0; i < locs.Count; i++)
+            {
+                subs[i] = Fallout4ListGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package),
+                    package);
+            }
+            return (IFallout4ListGroupGetter<T>)(object)new Fallout4ListGroupMergedOverlay(subs);
         }
 
         public static IFallout4ListGroupGetter<T> Fallout4ListGroupFactory(

@@ -52,28 +52,20 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Navmesh
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Navmesh = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Navmesh
+        private readonly IFormLink<INavigationMeshGetter> _Navmesh = new FormLink<INavigationMeshGetter>();
+        public IFormLink<INavigationMeshGetter> Navmesh
         {
             get => _Navmesh;
             set => _Navmesh.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> INavigationDoorLinkGetter.Navmesh => this.Navmesh;
+        IFormLinkGetter<INavigationMeshGetter> INavigationDoorLinkGetter.Navmesh => this.Navmesh;
         #endregion
         #region TriangleIndex
         public Int16 TriangleIndex { get; set; } = default(Int16);
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[2];
-        public MemorySlice<Byte> Unused
-        {
-            get => _Unused;
-            set => this._Unused = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> INavigationDoorLinkGetter.Unused => this.Unused;
+        public Int16 Unused { get; set; } = default(Int16);
         #endregion
 
         #region To String
@@ -501,9 +493,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<INavigationDoorLink>,
         INavigationDoorLinkGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Navmesh { get; set; }
+        new IFormLink<INavigationMeshGetter> Navmesh { get; set; }
         new Int16 TriangleIndex { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
+        new Int16 Unused { get; set; }
     }
 
     public partial interface INavigationDoorLinkGetter :
@@ -519,9 +511,9 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => NavigationDoorLink_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Navmesh { get; }
+        IFormLinkGetter<INavigationMeshGetter> Navmesh { get; }
         Int16 TriangleIndex { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        Int16 Unused { get; }
 
     }
 
@@ -781,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Navmesh.Clear();
             item.TriangleIndex = default(Int16);
-            item.Unused = new byte[2];
+            item.Unused = default(Int16);
         }
         
         #region Mutagen
@@ -838,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Navmesh = item.Navmesh.Equals(rhs.Navmesh);
             ret.TriangleIndex = item.TriangleIndex == rhs.TriangleIndex;
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Unused = item.Unused == rhs.Unused;
         }
         
         public string Print(
@@ -893,7 +885,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendItem(item.Unused, "Unused");
             }
         }
         
@@ -914,7 +906,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             return true;
         }
@@ -968,7 +960,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.Unused = rhs.Unused;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1082,9 +1074,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Navmesh);
             writer.Write(item.TriangleIndex);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused);
+            writer.Write(item.Unused);
         }
 
         public void Write(
@@ -1127,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.Navmesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.TriangleIndex = frame.ReadInt16();
-            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Unused = frame.ReadInt16();
         }
 
     }
@@ -1194,9 +1184,9 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Navmesh => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<INavigationMeshGetter> Navmesh => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x4, 0x2));
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x6, 0x2).ToArray();
+        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

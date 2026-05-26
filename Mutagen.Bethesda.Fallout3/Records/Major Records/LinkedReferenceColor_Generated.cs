@@ -29,6 +29,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout3.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -50,29 +51,11 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region LinkStartColorRed
-        public Byte LinkStartColorRed { get; set; } = default(Byte);
+        #region LinkStartColor
+        public Color LinkStartColor { get; set; } = default(Color);
         #endregion
-        #region LinkStartColorGreen
-        public Byte LinkStartColorGreen { get; set; } = default(Byte);
-        #endregion
-        #region LinkStartColorBlue
-        public Byte LinkStartColorBlue { get; set; } = default(Byte);
-        #endregion
-        #region LinkStartColorAlpha
-        public Byte LinkStartColorAlpha { get; set; } = default(Byte);
-        #endregion
-        #region LinkEndColorRed
-        public Byte LinkEndColorRed { get; set; } = default(Byte);
-        #endregion
-        #region LinkEndColorGreen
-        public Byte LinkEndColorGreen { get; set; } = default(Byte);
-        #endregion
-        #region LinkEndColorBlue
-        public Byte LinkEndColorBlue { get; set; } = default(Byte);
-        #endregion
-        #region LinkEndColorAlpha
-        public Byte LinkEndColorAlpha { get; set; } = default(Byte);
+        #region LinkEndColor
+        public Color LinkEndColor { get; set; } = default(Color);
         #endregion
 
         #region To String
@@ -113,34 +96,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.LinkStartColorRed = initialValue;
-                this.LinkStartColorGreen = initialValue;
-                this.LinkStartColorBlue = initialValue;
-                this.LinkStartColorAlpha = initialValue;
-                this.LinkEndColorRed = initialValue;
-                this.LinkEndColorGreen = initialValue;
-                this.LinkEndColorBlue = initialValue;
-                this.LinkEndColorAlpha = initialValue;
+                this.LinkStartColor = initialValue;
+                this.LinkEndColor = initialValue;
             }
 
             public Mask(
-                TItem LinkStartColorRed,
-                TItem LinkStartColorGreen,
-                TItem LinkStartColorBlue,
-                TItem LinkStartColorAlpha,
-                TItem LinkEndColorRed,
-                TItem LinkEndColorGreen,
-                TItem LinkEndColorBlue,
-                TItem LinkEndColorAlpha)
+                TItem LinkStartColor,
+                TItem LinkEndColor)
             {
-                this.LinkStartColorRed = LinkStartColorRed;
-                this.LinkStartColorGreen = LinkStartColorGreen;
-                this.LinkStartColorBlue = LinkStartColorBlue;
-                this.LinkStartColorAlpha = LinkStartColorAlpha;
-                this.LinkEndColorRed = LinkEndColorRed;
-                this.LinkEndColorGreen = LinkEndColorGreen;
-                this.LinkEndColorBlue = LinkEndColorBlue;
-                this.LinkEndColorAlpha = LinkEndColorAlpha;
+                this.LinkStartColor = LinkStartColor;
+                this.LinkEndColor = LinkEndColor;
             }
 
             #pragma warning disable CS8618
@@ -152,14 +117,8 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem LinkStartColorRed;
-            public TItem LinkStartColorGreen;
-            public TItem LinkStartColorBlue;
-            public TItem LinkStartColorAlpha;
-            public TItem LinkEndColorRed;
-            public TItem LinkEndColorGreen;
-            public TItem LinkEndColorBlue;
-            public TItem LinkEndColorAlpha;
+            public TItem LinkStartColor;
+            public TItem LinkEndColor;
             #endregion
 
             #region Equals
@@ -172,27 +131,15 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.LinkStartColorRed, rhs.LinkStartColorRed)) return false;
-                if (!object.Equals(this.LinkStartColorGreen, rhs.LinkStartColorGreen)) return false;
-                if (!object.Equals(this.LinkStartColorBlue, rhs.LinkStartColorBlue)) return false;
-                if (!object.Equals(this.LinkStartColorAlpha, rhs.LinkStartColorAlpha)) return false;
-                if (!object.Equals(this.LinkEndColorRed, rhs.LinkEndColorRed)) return false;
-                if (!object.Equals(this.LinkEndColorGreen, rhs.LinkEndColorGreen)) return false;
-                if (!object.Equals(this.LinkEndColorBlue, rhs.LinkEndColorBlue)) return false;
-                if (!object.Equals(this.LinkEndColorAlpha, rhs.LinkEndColorAlpha)) return false;
+                if (!object.Equals(this.LinkStartColor, rhs.LinkStartColor)) return false;
+                if (!object.Equals(this.LinkEndColor, rhs.LinkEndColor)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.LinkStartColorRed);
-                hash.Add(this.LinkStartColorGreen);
-                hash.Add(this.LinkStartColorBlue);
-                hash.Add(this.LinkStartColorAlpha);
-                hash.Add(this.LinkEndColorRed);
-                hash.Add(this.LinkEndColorGreen);
-                hash.Add(this.LinkEndColorBlue);
-                hash.Add(this.LinkEndColorAlpha);
+                hash.Add(this.LinkStartColor);
+                hash.Add(this.LinkEndColor);
                 return hash.ToHashCode();
             }
 
@@ -201,14 +148,8 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.LinkStartColorRed)) return false;
-                if (!eval(this.LinkStartColorGreen)) return false;
-                if (!eval(this.LinkStartColorBlue)) return false;
-                if (!eval(this.LinkStartColorAlpha)) return false;
-                if (!eval(this.LinkEndColorRed)) return false;
-                if (!eval(this.LinkEndColorGreen)) return false;
-                if (!eval(this.LinkEndColorBlue)) return false;
-                if (!eval(this.LinkEndColorAlpha)) return false;
+                if (!eval(this.LinkStartColor)) return false;
+                if (!eval(this.LinkEndColor)) return false;
                 return true;
             }
             #endregion
@@ -216,14 +157,8 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.LinkStartColorRed)) return true;
-                if (eval(this.LinkStartColorGreen)) return true;
-                if (eval(this.LinkStartColorBlue)) return true;
-                if (eval(this.LinkStartColorAlpha)) return true;
-                if (eval(this.LinkEndColorRed)) return true;
-                if (eval(this.LinkEndColorGreen)) return true;
-                if (eval(this.LinkEndColorBlue)) return true;
-                if (eval(this.LinkEndColorAlpha)) return true;
+                if (eval(this.LinkStartColor)) return true;
+                if (eval(this.LinkEndColor)) return true;
                 return false;
             }
             #endregion
@@ -238,14 +173,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.LinkStartColorRed = eval(this.LinkStartColorRed);
-                obj.LinkStartColorGreen = eval(this.LinkStartColorGreen);
-                obj.LinkStartColorBlue = eval(this.LinkStartColorBlue);
-                obj.LinkStartColorAlpha = eval(this.LinkStartColorAlpha);
-                obj.LinkEndColorRed = eval(this.LinkEndColorRed);
-                obj.LinkEndColorGreen = eval(this.LinkEndColorGreen);
-                obj.LinkEndColorBlue = eval(this.LinkEndColorBlue);
-                obj.LinkEndColorAlpha = eval(this.LinkEndColorAlpha);
+                obj.LinkStartColor = eval(this.LinkStartColor);
+                obj.LinkEndColor = eval(this.LinkEndColor);
             }
             #endregion
 
@@ -264,37 +193,13 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(LinkedReferenceColor.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.LinkStartColorRed ?? true)
+                    if (printMask?.LinkStartColor ?? true)
                     {
-                        sb.AppendItem(LinkStartColorRed, "LinkStartColorRed");
+                        sb.AppendItem(LinkStartColor, "LinkStartColor");
                     }
-                    if (printMask?.LinkStartColorGreen ?? true)
+                    if (printMask?.LinkEndColor ?? true)
                     {
-                        sb.AppendItem(LinkStartColorGreen, "LinkStartColorGreen");
-                    }
-                    if (printMask?.LinkStartColorBlue ?? true)
-                    {
-                        sb.AppendItem(LinkStartColorBlue, "LinkStartColorBlue");
-                    }
-                    if (printMask?.LinkStartColorAlpha ?? true)
-                    {
-                        sb.AppendItem(LinkStartColorAlpha, "LinkStartColorAlpha");
-                    }
-                    if (printMask?.LinkEndColorRed ?? true)
-                    {
-                        sb.AppendItem(LinkEndColorRed, "LinkEndColorRed");
-                    }
-                    if (printMask?.LinkEndColorGreen ?? true)
-                    {
-                        sb.AppendItem(LinkEndColorGreen, "LinkEndColorGreen");
-                    }
-                    if (printMask?.LinkEndColorBlue ?? true)
-                    {
-                        sb.AppendItem(LinkEndColorBlue, "LinkEndColorBlue");
-                    }
-                    if (printMask?.LinkEndColorAlpha ?? true)
-                    {
-                        sb.AppendItem(LinkEndColorAlpha, "LinkEndColorAlpha");
+                        sb.AppendItem(LinkEndColor, "LinkEndColor");
                     }
                 }
             }
@@ -320,14 +225,8 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? LinkStartColorRed;
-            public Exception? LinkStartColorGreen;
-            public Exception? LinkStartColorBlue;
-            public Exception? LinkStartColorAlpha;
-            public Exception? LinkEndColorRed;
-            public Exception? LinkEndColorGreen;
-            public Exception? LinkEndColorBlue;
-            public Exception? LinkEndColorAlpha;
+            public Exception? LinkStartColor;
+            public Exception? LinkEndColor;
             #endregion
 
             #region IErrorMask
@@ -336,22 +235,10 @@ namespace Mutagen.Bethesda.Fallout3
                 LinkedReferenceColor_FieldIndex enu = (LinkedReferenceColor_FieldIndex)index;
                 switch (enu)
                 {
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorRed:
-                        return LinkStartColorRed;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorGreen:
-                        return LinkStartColorGreen;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorBlue:
-                        return LinkStartColorBlue;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorAlpha:
-                        return LinkStartColorAlpha;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorRed:
-                        return LinkEndColorRed;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorGreen:
-                        return LinkEndColorGreen;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorBlue:
-                        return LinkEndColorBlue;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorAlpha:
-                        return LinkEndColorAlpha;
+                    case LinkedReferenceColor_FieldIndex.LinkStartColor:
+                        return LinkStartColor;
+                    case LinkedReferenceColor_FieldIndex.LinkEndColor:
+                        return LinkEndColor;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -362,29 +249,11 @@ namespace Mutagen.Bethesda.Fallout3
                 LinkedReferenceColor_FieldIndex enu = (LinkedReferenceColor_FieldIndex)index;
                 switch (enu)
                 {
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorRed:
-                        this.LinkStartColorRed = ex;
+                    case LinkedReferenceColor_FieldIndex.LinkStartColor:
+                        this.LinkStartColor = ex;
                         break;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorGreen:
-                        this.LinkStartColorGreen = ex;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorBlue:
-                        this.LinkStartColorBlue = ex;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorAlpha:
-                        this.LinkStartColorAlpha = ex;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorRed:
-                        this.LinkEndColorRed = ex;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorGreen:
-                        this.LinkEndColorGreen = ex;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorBlue:
-                        this.LinkEndColorBlue = ex;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorAlpha:
-                        this.LinkEndColorAlpha = ex;
+                    case LinkedReferenceColor_FieldIndex.LinkEndColor:
+                        this.LinkEndColor = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -396,29 +265,11 @@ namespace Mutagen.Bethesda.Fallout3
                 LinkedReferenceColor_FieldIndex enu = (LinkedReferenceColor_FieldIndex)index;
                 switch (enu)
                 {
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorRed:
-                        this.LinkStartColorRed = (Exception?)obj;
+                    case LinkedReferenceColor_FieldIndex.LinkStartColor:
+                        this.LinkStartColor = (Exception?)obj;
                         break;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorGreen:
-                        this.LinkStartColorGreen = (Exception?)obj;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorBlue:
-                        this.LinkStartColorBlue = (Exception?)obj;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkStartColorAlpha:
-                        this.LinkStartColorAlpha = (Exception?)obj;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorRed:
-                        this.LinkEndColorRed = (Exception?)obj;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorGreen:
-                        this.LinkEndColorGreen = (Exception?)obj;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorBlue:
-                        this.LinkEndColorBlue = (Exception?)obj;
-                        break;
-                    case LinkedReferenceColor_FieldIndex.LinkEndColorAlpha:
-                        this.LinkEndColorAlpha = (Exception?)obj;
+                    case LinkedReferenceColor_FieldIndex.LinkEndColor:
+                        this.LinkEndColor = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -428,14 +279,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (LinkStartColorRed != null) return true;
-                if (LinkStartColorGreen != null) return true;
-                if (LinkStartColorBlue != null) return true;
-                if (LinkStartColorAlpha != null) return true;
-                if (LinkEndColorRed != null) return true;
-                if (LinkEndColorGreen != null) return true;
-                if (LinkEndColorBlue != null) return true;
-                if (LinkEndColorAlpha != null) return true;
+                if (LinkStartColor != null) return true;
+                if (LinkEndColor != null) return true;
                 return false;
             }
             #endregion
@@ -462,28 +307,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(LinkStartColorRed, "LinkStartColorRed");
+                    sb.AppendItem(LinkStartColor, "LinkStartColor");
                 }
                 {
-                    sb.AppendItem(LinkStartColorGreen, "LinkStartColorGreen");
-                }
-                {
-                    sb.AppendItem(LinkStartColorBlue, "LinkStartColorBlue");
-                }
-                {
-                    sb.AppendItem(LinkStartColorAlpha, "LinkStartColorAlpha");
-                }
-                {
-                    sb.AppendItem(LinkEndColorRed, "LinkEndColorRed");
-                }
-                {
-                    sb.AppendItem(LinkEndColorGreen, "LinkEndColorGreen");
-                }
-                {
-                    sb.AppendItem(LinkEndColorBlue, "LinkEndColorBlue");
-                }
-                {
-                    sb.AppendItem(LinkEndColorAlpha, "LinkEndColorAlpha");
+                    sb.AppendItem(LinkEndColor, "LinkEndColor");
                 }
             }
             #endregion
@@ -493,14 +320,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LinkStartColorRed = this.LinkStartColorRed.Combine(rhs.LinkStartColorRed);
-                ret.LinkStartColorGreen = this.LinkStartColorGreen.Combine(rhs.LinkStartColorGreen);
-                ret.LinkStartColorBlue = this.LinkStartColorBlue.Combine(rhs.LinkStartColorBlue);
-                ret.LinkStartColorAlpha = this.LinkStartColorAlpha.Combine(rhs.LinkStartColorAlpha);
-                ret.LinkEndColorRed = this.LinkEndColorRed.Combine(rhs.LinkEndColorRed);
-                ret.LinkEndColorGreen = this.LinkEndColorGreen.Combine(rhs.LinkEndColorGreen);
-                ret.LinkEndColorBlue = this.LinkEndColorBlue.Combine(rhs.LinkEndColorBlue);
-                ret.LinkEndColorAlpha = this.LinkEndColorAlpha.Combine(rhs.LinkEndColorAlpha);
+                ret.LinkStartColor = this.LinkStartColor.Combine(rhs.LinkStartColor);
+                ret.LinkEndColor = this.LinkEndColor.Combine(rhs.LinkEndColor);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -524,14 +345,8 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool LinkStartColorRed;
-            public bool LinkStartColorGreen;
-            public bool LinkStartColorBlue;
-            public bool LinkStartColorAlpha;
-            public bool LinkEndColorRed;
-            public bool LinkEndColorGreen;
-            public bool LinkEndColorBlue;
-            public bool LinkEndColorAlpha;
+            public bool LinkStartColor;
+            public bool LinkEndColor;
             #endregion
 
             #region Ctors
@@ -541,14 +356,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.LinkStartColorRed = defaultOn;
-                this.LinkStartColorGreen = defaultOn;
-                this.LinkStartColorBlue = defaultOn;
-                this.LinkStartColorAlpha = defaultOn;
-                this.LinkEndColorRed = defaultOn;
-                this.LinkEndColorGreen = defaultOn;
-                this.LinkEndColorBlue = defaultOn;
-                this.LinkEndColorAlpha = defaultOn;
+                this.LinkStartColor = defaultOn;
+                this.LinkEndColor = defaultOn;
             }
 
             #endregion
@@ -564,14 +373,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((LinkStartColorRed, null));
-                ret.Add((LinkStartColorGreen, null));
-                ret.Add((LinkStartColorBlue, null));
-                ret.Add((LinkStartColorAlpha, null));
-                ret.Add((LinkEndColorRed, null));
-                ret.Add((LinkEndColorGreen, null));
-                ret.Add((LinkEndColorBlue, null));
-                ret.Add((LinkEndColorAlpha, null));
+                ret.Add((LinkStartColor, null));
+                ret.Add((LinkEndColor, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -644,14 +447,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILinkedReferenceColorGetter,
         ILoquiObjectSetter<ILinkedReferenceColor>
     {
-        new Byte LinkStartColorRed { get; set; }
-        new Byte LinkStartColorGreen { get; set; }
-        new Byte LinkStartColorBlue { get; set; }
-        new Byte LinkStartColorAlpha { get; set; }
-        new Byte LinkEndColorRed { get; set; }
-        new Byte LinkEndColorGreen { get; set; }
-        new Byte LinkEndColorBlue { get; set; }
-        new Byte LinkEndColorAlpha { get; set; }
+        new Color LinkStartColor { get; set; }
+        new Color LinkEndColor { get; set; }
     }
 
     public partial interface ILinkedReferenceColorGetter :
@@ -666,14 +463,8 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LinkedReferenceColor_Registration.Instance;
-        Byte LinkStartColorRed { get; }
-        Byte LinkStartColorGreen { get; }
-        Byte LinkStartColorBlue { get; }
-        Byte LinkStartColorAlpha { get; }
-        Byte LinkEndColorRed { get; }
-        Byte LinkEndColorGreen { get; }
-        Byte LinkEndColorBlue { get; }
-        Byte LinkEndColorAlpha { get; }
+        Color LinkStartColor { get; }
+        Color LinkEndColor { get; }
 
     }
 
@@ -843,14 +634,8 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum LinkedReferenceColor_FieldIndex
     {
-        LinkStartColorRed = 0,
-        LinkStartColorGreen = 1,
-        LinkStartColorBlue = 2,
-        LinkStartColorAlpha = 3,
-        LinkEndColorRed = 4,
-        LinkEndColorGreen = 5,
-        LinkEndColorBlue = 6,
-        LinkEndColorAlpha = 7,
+        LinkStartColor = 0,
+        LinkEndColor = 1,
     }
     #endregion
 
@@ -861,9 +646,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(LinkedReferenceColor.Mask<>);
 
@@ -936,14 +721,8 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ILinkedReferenceColor item)
         {
             ClearPartial();
-            item.LinkStartColorRed = default(Byte);
-            item.LinkStartColorGreen = default(Byte);
-            item.LinkStartColorBlue = default(Byte);
-            item.LinkStartColorAlpha = default(Byte);
-            item.LinkEndColorRed = default(Byte);
-            item.LinkEndColorGreen = default(Byte);
-            item.LinkEndColorBlue = default(Byte);
-            item.LinkEndColorAlpha = default(Byte);
+            item.LinkStartColor = default(Color);
+            item.LinkEndColor = default(Color);
         }
         
         #region Mutagen
@@ -997,14 +776,8 @@ namespace Mutagen.Bethesda.Fallout3
             LinkedReferenceColor.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.LinkStartColorRed = item.LinkStartColorRed == rhs.LinkStartColorRed;
-            ret.LinkStartColorGreen = item.LinkStartColorGreen == rhs.LinkStartColorGreen;
-            ret.LinkStartColorBlue = item.LinkStartColorBlue == rhs.LinkStartColorBlue;
-            ret.LinkStartColorAlpha = item.LinkStartColorAlpha == rhs.LinkStartColorAlpha;
-            ret.LinkEndColorRed = item.LinkEndColorRed == rhs.LinkEndColorRed;
-            ret.LinkEndColorGreen = item.LinkEndColorGreen == rhs.LinkEndColorGreen;
-            ret.LinkEndColorBlue = item.LinkEndColorBlue == rhs.LinkEndColorBlue;
-            ret.LinkEndColorAlpha = item.LinkEndColorAlpha == rhs.LinkEndColorAlpha;
+            ret.LinkStartColor = item.LinkStartColor.ColorOnlyEquals(rhs.LinkStartColor);
+            ret.LinkEndColor = item.LinkEndColor.ColorOnlyEquals(rhs.LinkEndColor);
         }
         
         public string Print(
@@ -1049,37 +822,13 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             LinkedReferenceColor.Mask<bool>? printMask = null)
         {
-            if (printMask?.LinkStartColorRed ?? true)
+            if (printMask?.LinkStartColor ?? true)
             {
-                sb.AppendItem(item.LinkStartColorRed, "LinkStartColorRed");
+                sb.AppendItem(item.LinkStartColor, "LinkStartColor");
             }
-            if (printMask?.LinkStartColorGreen ?? true)
+            if (printMask?.LinkEndColor ?? true)
             {
-                sb.AppendItem(item.LinkStartColorGreen, "LinkStartColorGreen");
-            }
-            if (printMask?.LinkStartColorBlue ?? true)
-            {
-                sb.AppendItem(item.LinkStartColorBlue, "LinkStartColorBlue");
-            }
-            if (printMask?.LinkStartColorAlpha ?? true)
-            {
-                sb.AppendItem(item.LinkStartColorAlpha, "LinkStartColorAlpha");
-            }
-            if (printMask?.LinkEndColorRed ?? true)
-            {
-                sb.AppendItem(item.LinkEndColorRed, "LinkEndColorRed");
-            }
-            if (printMask?.LinkEndColorGreen ?? true)
-            {
-                sb.AppendItem(item.LinkEndColorGreen, "LinkEndColorGreen");
-            }
-            if (printMask?.LinkEndColorBlue ?? true)
-            {
-                sb.AppendItem(item.LinkEndColorBlue, "LinkEndColorBlue");
-            }
-            if (printMask?.LinkEndColorAlpha ?? true)
-            {
-                sb.AppendItem(item.LinkEndColorAlpha, "LinkEndColorAlpha");
+                sb.AppendItem(item.LinkEndColor, "LinkEndColor");
             }
         }
         
@@ -1090,37 +839,13 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorRed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColor) ?? true))
             {
-                if (lhs.LinkStartColorRed != rhs.LinkStartColorRed) return false;
+                if (!lhs.LinkStartColor.ColorOnlyEquals(rhs.LinkStartColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorGreen) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColor) ?? true))
             {
-                if (lhs.LinkStartColorGreen != rhs.LinkStartColorGreen) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorBlue) ?? true))
-            {
-                if (lhs.LinkStartColorBlue != rhs.LinkStartColorBlue) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorAlpha) ?? true))
-            {
-                if (lhs.LinkStartColorAlpha != rhs.LinkStartColorAlpha) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorRed) ?? true))
-            {
-                if (lhs.LinkEndColorRed != rhs.LinkEndColorRed) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorGreen) ?? true))
-            {
-                if (lhs.LinkEndColorGreen != rhs.LinkEndColorGreen) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorBlue) ?? true))
-            {
-                if (lhs.LinkEndColorBlue != rhs.LinkEndColorBlue) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorAlpha) ?? true))
-            {
-                if (lhs.LinkEndColorAlpha != rhs.LinkEndColorAlpha) return false;
+                if (!lhs.LinkEndColor.ColorOnlyEquals(rhs.LinkEndColor)) return false;
             }
             return true;
         }
@@ -1128,14 +853,8 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ILinkedReferenceColorGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.LinkStartColorRed);
-            hash.Add(item.LinkStartColorGreen);
-            hash.Add(item.LinkStartColorBlue);
-            hash.Add(item.LinkStartColorAlpha);
-            hash.Add(item.LinkEndColorRed);
-            hash.Add(item.LinkEndColorGreen);
-            hash.Add(item.LinkEndColorBlue);
-            hash.Add(item.LinkEndColorAlpha);
+            hash.Add(item.LinkStartColor);
+            hash.Add(item.LinkEndColor);
             return hash.ToHashCode();
         }
         
@@ -1168,37 +887,13 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorRed) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColor) ?? true))
             {
-                item.LinkStartColorRed = rhs.LinkStartColorRed;
+                item.LinkStartColor = rhs.LinkStartColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorGreen) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColor) ?? true))
             {
-                item.LinkStartColorGreen = rhs.LinkStartColorGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorBlue) ?? true))
-            {
-                item.LinkStartColorBlue = rhs.LinkStartColorBlue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkStartColorAlpha) ?? true))
-            {
-                item.LinkStartColorAlpha = rhs.LinkStartColorAlpha;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorRed) ?? true))
-            {
-                item.LinkEndColorRed = rhs.LinkEndColorRed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorGreen) ?? true))
-            {
-                item.LinkEndColorGreen = rhs.LinkEndColorGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorBlue) ?? true))
-            {
-                item.LinkEndColorBlue = rhs.LinkEndColorBlue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.LinkEndColorAlpha) ?? true))
-            {
-                item.LinkEndColorAlpha = rhs.LinkEndColorAlpha;
+                item.LinkEndColor = rhs.LinkEndColor;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1308,14 +1003,12 @@ namespace Mutagen.Bethesda.Fallout3
             ILinkedReferenceColorGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.LinkStartColorRed);
-            writer.Write(item.LinkStartColorGreen);
-            writer.Write(item.LinkStartColorBlue);
-            writer.Write(item.LinkStartColorAlpha);
-            writer.Write(item.LinkEndColorRed);
-            writer.Write(item.LinkEndColorGreen);
-            writer.Write(item.LinkEndColorBlue);
-            writer.Write(item.LinkEndColorAlpha);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.LinkStartColor);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.LinkEndColor);
         }
 
         public void Write(
@@ -1356,14 +1049,8 @@ namespace Mutagen.Bethesda.Fallout3
             ILinkedReferenceColor item,
             MutagenFrame frame)
         {
-            item.LinkStartColorRed = frame.ReadUInt8();
-            item.LinkStartColorGreen = frame.ReadUInt8();
-            item.LinkStartColorBlue = frame.ReadUInt8();
-            item.LinkStartColorAlpha = frame.ReadUInt8();
-            item.LinkEndColorRed = frame.ReadUInt8();
-            item.LinkEndColorGreen = frame.ReadUInt8();
-            item.LinkEndColorBlue = frame.ReadUInt8();
-            item.LinkEndColorAlpha = frame.ReadUInt8();
+            item.LinkStartColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.LinkEndColor = frame.ReadColor(ColorBinaryType.Alpha);
         }
 
     }
@@ -1429,14 +1116,8 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Byte LinkStartColorRed => _structData.Span[0x0];
-        public Byte LinkStartColorGreen => _structData.Span[0x1];
-        public Byte LinkStartColorBlue => _structData.Span[0x2];
-        public Byte LinkStartColorAlpha => _structData.Span[0x3];
-        public Byte LinkEndColorRed => _structData.Span[0x4];
-        public Byte LinkEndColorGreen => _structData.Span[0x5];
-        public Byte LinkEndColorBlue => _structData.Span[0x6];
-        public Byte LinkEndColorAlpha => _structData.Span[0x7];
+        public Color LinkStartColor => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color LinkEndColor => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

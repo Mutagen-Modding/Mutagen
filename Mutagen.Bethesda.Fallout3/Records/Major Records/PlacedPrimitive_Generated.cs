@@ -29,6 +29,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout3.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -50,37 +51,17 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region BoundsX
-        public Single BoundsX { get; set; } = default(Single);
+        #region Bounds
+        public P3Float Bounds { get; set; } = default(P3Float);
         #endregion
-        #region BoundsY
-        public Single BoundsY { get; set; } = default(Single);
-        #endregion
-        #region BoundsZ
-        public Single BoundsZ { get; set; } = default(Single);
-        #endregion
-        #region ColorRed
-        public Single ColorRed { get; set; } = default(Single);
-        #endregion
-        #region ColorGreen
-        public Single ColorGreen { get; set; } = default(Single);
-        #endregion
-        #region ColorBlue
-        public Single ColorBlue { get; set; } = default(Single);
+        #region Color
+        public Color Color { get; set; } = default(Color);
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[4];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPlacedPrimitiveGetter.Unknown => this.Unknown;
+        public Int32 Unknown { get; set; } = default(Int32);
         #endregion
         #region PrimitiveType
-        public UInt32 PrimitiveType { get; set; } = default(UInt32);
+        public PlacedPrimitive.TypeEnum PrimitiveType { get; set; } = default(PlacedPrimitive.TypeEnum);
         #endregion
 
         #region To String
@@ -121,32 +102,20 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.BoundsX = initialValue;
-                this.BoundsY = initialValue;
-                this.BoundsZ = initialValue;
-                this.ColorRed = initialValue;
-                this.ColorGreen = initialValue;
-                this.ColorBlue = initialValue;
+                this.Bounds = initialValue;
+                this.Color = initialValue;
                 this.Unknown = initialValue;
                 this.PrimitiveType = initialValue;
             }
 
             public Mask(
-                TItem BoundsX,
-                TItem BoundsY,
-                TItem BoundsZ,
-                TItem ColorRed,
-                TItem ColorGreen,
-                TItem ColorBlue,
+                TItem Bounds,
+                TItem Color,
                 TItem Unknown,
                 TItem PrimitiveType)
             {
-                this.BoundsX = BoundsX;
-                this.BoundsY = BoundsY;
-                this.BoundsZ = BoundsZ;
-                this.ColorRed = ColorRed;
-                this.ColorGreen = ColorGreen;
-                this.ColorBlue = ColorBlue;
+                this.Bounds = Bounds;
+                this.Color = Color;
                 this.Unknown = Unknown;
                 this.PrimitiveType = PrimitiveType;
             }
@@ -160,12 +129,8 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem BoundsX;
-            public TItem BoundsY;
-            public TItem BoundsZ;
-            public TItem ColorRed;
-            public TItem ColorGreen;
-            public TItem ColorBlue;
+            public TItem Bounds;
+            public TItem Color;
             public TItem Unknown;
             public TItem PrimitiveType;
             #endregion
@@ -180,12 +145,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.BoundsX, rhs.BoundsX)) return false;
-                if (!object.Equals(this.BoundsY, rhs.BoundsY)) return false;
-                if (!object.Equals(this.BoundsZ, rhs.BoundsZ)) return false;
-                if (!object.Equals(this.ColorRed, rhs.ColorRed)) return false;
-                if (!object.Equals(this.ColorGreen, rhs.ColorGreen)) return false;
-                if (!object.Equals(this.ColorBlue, rhs.ColorBlue)) return false;
+                if (!object.Equals(this.Bounds, rhs.Bounds)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.PrimitiveType, rhs.PrimitiveType)) return false;
                 return true;
@@ -193,12 +154,8 @@ namespace Mutagen.Bethesda.Fallout3
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.BoundsX);
-                hash.Add(this.BoundsY);
-                hash.Add(this.BoundsZ);
-                hash.Add(this.ColorRed);
-                hash.Add(this.ColorGreen);
-                hash.Add(this.ColorBlue);
+                hash.Add(this.Bounds);
+                hash.Add(this.Color);
                 hash.Add(this.Unknown);
                 hash.Add(this.PrimitiveType);
                 return hash.ToHashCode();
@@ -209,12 +166,8 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.BoundsX)) return false;
-                if (!eval(this.BoundsY)) return false;
-                if (!eval(this.BoundsZ)) return false;
-                if (!eval(this.ColorRed)) return false;
-                if (!eval(this.ColorGreen)) return false;
-                if (!eval(this.ColorBlue)) return false;
+                if (!eval(this.Bounds)) return false;
+                if (!eval(this.Color)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.PrimitiveType)) return false;
                 return true;
@@ -224,12 +177,8 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.BoundsX)) return true;
-                if (eval(this.BoundsY)) return true;
-                if (eval(this.BoundsZ)) return true;
-                if (eval(this.ColorRed)) return true;
-                if (eval(this.ColorGreen)) return true;
-                if (eval(this.ColorBlue)) return true;
+                if (eval(this.Bounds)) return true;
+                if (eval(this.Color)) return true;
                 if (eval(this.Unknown)) return true;
                 if (eval(this.PrimitiveType)) return true;
                 return false;
@@ -246,12 +195,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.BoundsX = eval(this.BoundsX);
-                obj.BoundsY = eval(this.BoundsY);
-                obj.BoundsZ = eval(this.BoundsZ);
-                obj.ColorRed = eval(this.ColorRed);
-                obj.ColorGreen = eval(this.ColorGreen);
-                obj.ColorBlue = eval(this.ColorBlue);
+                obj.Bounds = eval(this.Bounds);
+                obj.Color = eval(this.Color);
                 obj.Unknown = eval(this.Unknown);
                 obj.PrimitiveType = eval(this.PrimitiveType);
             }
@@ -272,29 +217,13 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PlacedPrimitive.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.BoundsX ?? true)
+                    if (printMask?.Bounds ?? true)
                     {
-                        sb.AppendItem(BoundsX, "BoundsX");
+                        sb.AppendItem(Bounds, "Bounds");
                     }
-                    if (printMask?.BoundsY ?? true)
+                    if (printMask?.Color ?? true)
                     {
-                        sb.AppendItem(BoundsY, "BoundsY");
-                    }
-                    if (printMask?.BoundsZ ?? true)
-                    {
-                        sb.AppendItem(BoundsZ, "BoundsZ");
-                    }
-                    if (printMask?.ColorRed ?? true)
-                    {
-                        sb.AppendItem(ColorRed, "ColorRed");
-                    }
-                    if (printMask?.ColorGreen ?? true)
-                    {
-                        sb.AppendItem(ColorGreen, "ColorGreen");
-                    }
-                    if (printMask?.ColorBlue ?? true)
-                    {
-                        sb.AppendItem(ColorBlue, "ColorBlue");
+                        sb.AppendItem(Color, "Color");
                     }
                     if (printMask?.Unknown ?? true)
                     {
@@ -328,12 +257,8 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? BoundsX;
-            public Exception? BoundsY;
-            public Exception? BoundsZ;
-            public Exception? ColorRed;
-            public Exception? ColorGreen;
-            public Exception? ColorBlue;
+            public Exception? Bounds;
+            public Exception? Color;
             public Exception? Unknown;
             public Exception? PrimitiveType;
             #endregion
@@ -344,18 +269,10 @@ namespace Mutagen.Bethesda.Fallout3
                 PlacedPrimitive_FieldIndex enu = (PlacedPrimitive_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedPrimitive_FieldIndex.BoundsX:
-                        return BoundsX;
-                    case PlacedPrimitive_FieldIndex.BoundsY:
-                        return BoundsY;
-                    case PlacedPrimitive_FieldIndex.BoundsZ:
-                        return BoundsZ;
-                    case PlacedPrimitive_FieldIndex.ColorRed:
-                        return ColorRed;
-                    case PlacedPrimitive_FieldIndex.ColorGreen:
-                        return ColorGreen;
-                    case PlacedPrimitive_FieldIndex.ColorBlue:
-                        return ColorBlue;
+                    case PlacedPrimitive_FieldIndex.Bounds:
+                        return Bounds;
+                    case PlacedPrimitive_FieldIndex.Color:
+                        return Color;
                     case PlacedPrimitive_FieldIndex.Unknown:
                         return Unknown;
                     case PlacedPrimitive_FieldIndex.PrimitiveType:
@@ -370,23 +287,11 @@ namespace Mutagen.Bethesda.Fallout3
                 PlacedPrimitive_FieldIndex enu = (PlacedPrimitive_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedPrimitive_FieldIndex.BoundsX:
-                        this.BoundsX = ex;
+                    case PlacedPrimitive_FieldIndex.Bounds:
+                        this.Bounds = ex;
                         break;
-                    case PlacedPrimitive_FieldIndex.BoundsY:
-                        this.BoundsY = ex;
-                        break;
-                    case PlacedPrimitive_FieldIndex.BoundsZ:
-                        this.BoundsZ = ex;
-                        break;
-                    case PlacedPrimitive_FieldIndex.ColorRed:
-                        this.ColorRed = ex;
-                        break;
-                    case PlacedPrimitive_FieldIndex.ColorGreen:
-                        this.ColorGreen = ex;
-                        break;
-                    case PlacedPrimitive_FieldIndex.ColorBlue:
-                        this.ColorBlue = ex;
+                    case PlacedPrimitive_FieldIndex.Color:
+                        this.Color = ex;
                         break;
                     case PlacedPrimitive_FieldIndex.Unknown:
                         this.Unknown = ex;
@@ -404,23 +309,11 @@ namespace Mutagen.Bethesda.Fallout3
                 PlacedPrimitive_FieldIndex enu = (PlacedPrimitive_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlacedPrimitive_FieldIndex.BoundsX:
-                        this.BoundsX = (Exception?)obj;
+                    case PlacedPrimitive_FieldIndex.Bounds:
+                        this.Bounds = (Exception?)obj;
                         break;
-                    case PlacedPrimitive_FieldIndex.BoundsY:
-                        this.BoundsY = (Exception?)obj;
-                        break;
-                    case PlacedPrimitive_FieldIndex.BoundsZ:
-                        this.BoundsZ = (Exception?)obj;
-                        break;
-                    case PlacedPrimitive_FieldIndex.ColorRed:
-                        this.ColorRed = (Exception?)obj;
-                        break;
-                    case PlacedPrimitive_FieldIndex.ColorGreen:
-                        this.ColorGreen = (Exception?)obj;
-                        break;
-                    case PlacedPrimitive_FieldIndex.ColorBlue:
-                        this.ColorBlue = (Exception?)obj;
+                    case PlacedPrimitive_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
                         break;
                     case PlacedPrimitive_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
@@ -436,12 +329,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (BoundsX != null) return true;
-                if (BoundsY != null) return true;
-                if (BoundsZ != null) return true;
-                if (ColorRed != null) return true;
-                if (ColorGreen != null) return true;
-                if (ColorBlue != null) return true;
+                if (Bounds != null) return true;
+                if (Color != null) return true;
                 if (Unknown != null) return true;
                 if (PrimitiveType != null) return true;
                 return false;
@@ -470,22 +359,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(BoundsX, "BoundsX");
+                    sb.AppendItem(Bounds, "Bounds");
                 }
                 {
-                    sb.AppendItem(BoundsY, "BoundsY");
-                }
-                {
-                    sb.AppendItem(BoundsZ, "BoundsZ");
-                }
-                {
-                    sb.AppendItem(ColorRed, "ColorRed");
-                }
-                {
-                    sb.AppendItem(ColorGreen, "ColorGreen");
-                }
-                {
-                    sb.AppendItem(ColorBlue, "ColorBlue");
+                    sb.AppendItem(Color, "Color");
                 }
                 {
                     sb.AppendItem(Unknown, "Unknown");
@@ -501,12 +378,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.BoundsX = this.BoundsX.Combine(rhs.BoundsX);
-                ret.BoundsY = this.BoundsY.Combine(rhs.BoundsY);
-                ret.BoundsZ = this.BoundsZ.Combine(rhs.BoundsZ);
-                ret.ColorRed = this.ColorRed.Combine(rhs.ColorRed);
-                ret.ColorGreen = this.ColorGreen.Combine(rhs.ColorGreen);
-                ret.ColorBlue = this.ColorBlue.Combine(rhs.ColorBlue);
+                ret.Bounds = this.Bounds.Combine(rhs.Bounds);
+                ret.Color = this.Color.Combine(rhs.Color);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.PrimitiveType = this.PrimitiveType.Combine(rhs.PrimitiveType);
                 return ret;
@@ -532,12 +405,8 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool BoundsX;
-            public bool BoundsY;
-            public bool BoundsZ;
-            public bool ColorRed;
-            public bool ColorGreen;
-            public bool ColorBlue;
+            public bool Bounds;
+            public bool Color;
             public bool Unknown;
             public bool PrimitiveType;
             #endregion
@@ -549,12 +418,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.BoundsX = defaultOn;
-                this.BoundsY = defaultOn;
-                this.BoundsZ = defaultOn;
-                this.ColorRed = defaultOn;
-                this.ColorGreen = defaultOn;
-                this.ColorBlue = defaultOn;
+                this.Bounds = defaultOn;
+                this.Color = defaultOn;
                 this.Unknown = defaultOn;
                 this.PrimitiveType = defaultOn;
             }
@@ -572,12 +437,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((BoundsX, null));
-                ret.Add((BoundsY, null));
-                ret.Add((BoundsZ, null));
-                ret.Add((ColorRed, null));
-                ret.Add((ColorGreen, null));
-                ret.Add((ColorBlue, null));
+                ret.Add((Bounds, null));
+                ret.Add((Color, null));
                 ret.Add((Unknown, null));
                 ret.Add((PrimitiveType, null));
             }
@@ -652,14 +513,10 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPlacedPrimitive>,
         IPlacedPrimitiveGetter
     {
-        new Single BoundsX { get; set; }
-        new Single BoundsY { get; set; }
-        new Single BoundsZ { get; set; }
-        new Single ColorRed { get; set; }
-        new Single ColorGreen { get; set; }
-        new Single ColorBlue { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
-        new UInt32 PrimitiveType { get; set; }
+        new P3Float Bounds { get; set; }
+        new Color Color { get; set; }
+        new Int32 Unknown { get; set; }
+        new PlacedPrimitive.TypeEnum PrimitiveType { get; set; }
     }
 
     public partial interface IPlacedPrimitiveGetter :
@@ -674,14 +531,10 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
-        Single BoundsX { get; }
-        Single BoundsY { get; }
-        Single BoundsZ { get; }
-        Single ColorRed { get; }
-        Single ColorGreen { get; }
-        Single ColorBlue { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
-        UInt32 PrimitiveType { get; }
+        P3Float Bounds { get; }
+        Color Color { get; }
+        Int32 Unknown { get; }
+        PlacedPrimitive.TypeEnum PrimitiveType { get; }
 
     }
 
@@ -851,14 +704,10 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum PlacedPrimitive_FieldIndex
     {
-        BoundsX = 0,
-        BoundsY = 1,
-        BoundsZ = 2,
-        ColorRed = 3,
-        ColorGreen = 4,
-        ColorBlue = 5,
-        Unknown = 6,
-        PrimitiveType = 7,
+        Bounds = 0,
+        Color = 1,
+        Unknown = 2,
+        PrimitiveType = 3,
     }
     #endregion
 
@@ -869,9 +718,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(PlacedPrimitive.Mask<>);
 
@@ -944,14 +793,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPlacedPrimitive item)
         {
             ClearPartial();
-            item.BoundsX = default(Single);
-            item.BoundsY = default(Single);
-            item.BoundsZ = default(Single);
-            item.ColorRed = default(Single);
-            item.ColorGreen = default(Single);
-            item.ColorBlue = default(Single);
-            item.Unknown = new byte[4];
-            item.PrimitiveType = default(UInt32);
+            item.Bounds = default(P3Float);
+            item.Color = default(Color);
+            item.Unknown = default(Int32);
+            item.PrimitiveType = default(PlacedPrimitive.TypeEnum);
         }
         
         #region Mutagen
@@ -1005,13 +850,9 @@ namespace Mutagen.Bethesda.Fallout3
             PlacedPrimitive.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.BoundsX = item.BoundsX.EqualsWithin(rhs.BoundsX);
-            ret.BoundsY = item.BoundsY.EqualsWithin(rhs.BoundsY);
-            ret.BoundsZ = item.BoundsZ.EqualsWithin(rhs.BoundsZ);
-            ret.ColorRed = item.ColorRed.EqualsWithin(rhs.ColorRed);
-            ret.ColorGreen = item.ColorGreen.EqualsWithin(rhs.ColorGreen);
-            ret.ColorBlue = item.ColorBlue.EqualsWithin(rhs.ColorBlue);
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Bounds = item.Bounds.Equals(rhs.Bounds);
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.PrimitiveType = item.PrimitiveType == rhs.PrimitiveType;
         }
         
@@ -1057,33 +898,17 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             PlacedPrimitive.Mask<bool>? printMask = null)
         {
-            if (printMask?.BoundsX ?? true)
+            if (printMask?.Bounds ?? true)
             {
-                sb.AppendItem(item.BoundsX, "BoundsX");
+                sb.AppendItem(item.Bounds, "Bounds");
             }
-            if (printMask?.BoundsY ?? true)
+            if (printMask?.Color ?? true)
             {
-                sb.AppendItem(item.BoundsY, "BoundsY");
-            }
-            if (printMask?.BoundsZ ?? true)
-            {
-                sb.AppendItem(item.BoundsZ, "BoundsZ");
-            }
-            if (printMask?.ColorRed ?? true)
-            {
-                sb.AppendItem(item.ColorRed, "ColorRed");
-            }
-            if (printMask?.ColorGreen ?? true)
-            {
-                sb.AppendItem(item.ColorGreen, "ColorGreen");
-            }
-            if (printMask?.ColorBlue ?? true)
-            {
-                sb.AppendItem(item.ColorBlue, "ColorBlue");
+                sb.AppendItem(item.Color, "Color");
             }
             if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.PrimitiveType ?? true)
             {
@@ -1098,33 +923,17 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.BoundsX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Bounds) ?? true))
             {
-                if (!lhs.BoundsX.EqualsWithin(rhs.BoundsX)) return false;
+                if (!lhs.Bounds.Equals(rhs.Bounds)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.BoundsY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Color) ?? true))
             {
-                if (!lhs.BoundsY.EqualsWithin(rhs.BoundsY)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.BoundsZ) ?? true))
-            {
-                if (!lhs.BoundsZ.EqualsWithin(rhs.BoundsZ)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.ColorRed) ?? true))
-            {
-                if (!lhs.ColorRed.EqualsWithin(rhs.ColorRed)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.ColorGreen) ?? true))
-            {
-                if (!lhs.ColorGreen.EqualsWithin(rhs.ColorGreen)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.ColorBlue) ?? true))
-            {
-                if (!lhs.ColorBlue.EqualsWithin(rhs.ColorBlue)) return false;
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.PrimitiveType) ?? true))
             {
@@ -1136,12 +945,8 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPlacedPrimitiveGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.BoundsX);
-            hash.Add(item.BoundsY);
-            hash.Add(item.BoundsZ);
-            hash.Add(item.ColorRed);
-            hash.Add(item.ColorGreen);
-            hash.Add(item.ColorBlue);
+            hash.Add(item.Bounds);
+            hash.Add(item.Color);
             hash.Add(item.Unknown);
             hash.Add(item.PrimitiveType);
             return hash.ToHashCode();
@@ -1176,33 +981,17 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.BoundsX) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Bounds) ?? true))
             {
-                item.BoundsX = rhs.BoundsX;
+                item.Bounds = rhs.Bounds;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.BoundsY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Color) ?? true))
             {
-                item.BoundsY = rhs.BoundsY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.BoundsZ) ?? true))
-            {
-                item.BoundsZ = rhs.BoundsZ;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.ColorRed) ?? true))
-            {
-                item.ColorRed = rhs.ColorRed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.ColorGreen) ?? true))
-            {
-                item.ColorGreen = rhs.ColorGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.ColorBlue) ?? true))
-            {
-                item.ColorBlue = rhs.ColorBlue;
+                item.Color = rhs.Color;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.PrimitiveType) ?? true))
             {
@@ -1316,28 +1105,18 @@ namespace Mutagen.Bethesda.Fallout3
             IPlacedPrimitiveGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.BoundsX);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.Bounds);
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BoundsY);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.BoundsZ);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ColorRed);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ColorGreen);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ColorBlue);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
-            writer.Write(item.PrimitiveType);
+                item: item.Color,
+                binaryType: ColorBinaryType.NoAlphaFloat);
+            writer.Write(item.Unknown);
+            EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.PrimitiveType,
+                length: 4);
         }
 
         public void Write(
@@ -1378,14 +1157,12 @@ namespace Mutagen.Bethesda.Fallout3
             IPlacedPrimitive item,
             MutagenFrame frame)
         {
-            item.BoundsX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.BoundsY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.BoundsZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.ColorRed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.ColorGreen = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.ColorBlue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.PrimitiveType = frame.ReadUInt32();
+            item.Bounds = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
+            item.Unknown = frame.ReadInt32();
+            item.PrimitiveType = EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1451,14 +1228,10 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Single BoundsX => _structData.Slice(0x0, 0x4).Float();
-        public Single BoundsY => _structData.Slice(0x4, 0x4).Float();
-        public Single BoundsZ => _structData.Slice(0x8, 0x4).Float();
-        public Single ColorRed => _structData.Slice(0xC, 0x4).Float();
-        public Single ColorGreen => _structData.Slice(0x10, 0x4).Float();
-        public Single ColorBlue => _structData.Slice(0x14, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x18, 0x4).ToArray();
-        public UInt32 PrimitiveType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
+        public P3Float Bounds => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
+        public Color Color => _structData.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
+        public PlacedPrimitive.TypeEnum PrimitiveType => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

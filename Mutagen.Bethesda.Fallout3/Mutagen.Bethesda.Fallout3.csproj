@@ -130,6 +130,10 @@
     <Compile Include="Records\Fallout3ListGroup.cs">
       <DependentUpon>Fallout3Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\CellBlockConsolidator.cs" />
+    <Compile Include="Records\Fallout3ListGroupOverlay.cs">
+      <DependentUpon>Fallout3Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
     </Compile>
@@ -1162,9 +1166,6 @@
     <Compile Include="Records\Major Records\PlacedPrimitive_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\TeleportDestination.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\TeleportDestination_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -1174,6 +1175,12 @@
     <Compile Include="Records\Major Records\MapMarker_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PatrolData_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RadioData.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\RadioData_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -1181,6 +1188,9 @@
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LockData_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WaterReflection.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WaterReflection_Generated.cs">
@@ -1238,9 +1248,6 @@
     <Compile Include="Enum\MoodFnv.cs" />
     <Compile Include="Enum\ServiceFlag.cs" />
     <!-- FNV-only Common Subrecords -->
-    <Compile Include="Records\Common Subrecords\ActivateParents.cs">
-      <DependentUpon>ActivateParents.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\EnableParent.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
@@ -1432,6 +1439,30 @@
     <Compile Include="Interfaces\Link\IRegionTarget_Generated.cs" />
     <Compile Include="Records\Major Records\RegionLand_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellFootstepMaterials_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AudioData_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Ownership_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectAmmo_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LinkedDecal_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Bounding_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LinkedOcclusionPlanes_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\RagdollData_Generated.cs">
+      <DependentUpon>RagdollData.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

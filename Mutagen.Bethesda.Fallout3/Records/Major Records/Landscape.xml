@@ -4,9 +4,13 @@
           recordType="LAND">
     <Fields>
       <Enum name="Flags" enumName="Landscape.Flag" recordType="DATA" byteLength="4" />
-      <ByteArray name="VertexNormals" recordType="VNML" />
+      <Array2d name="VertexNormals" recordType="VNML" fixedWidth="33" fixedHeight="33">
+        <P3UInt8 />
+      </Array2d>
       <RefDirect name="VertexHeightMap" refName="LandscapeVertexHeightMap" />
-      <ByteArray name="VertexColors" recordType="VCLR" />
+      <Array2d name="VertexColors" recordType="VCLR" fixedWidth="33" fixedHeight="33">
+        <P3UInt8 />
+      </Array2d>
       <RefList name="Layers" refName="BaseLayer" />
       <List name="Textures" recordType="VTEX">
         <FormLink refName="LandscapeTexture" />
@@ -37,7 +41,9 @@
   <Object name="LandscapeVertexHeightMap" recordType="VHGT" objType="Subrecord">
     <Fields>
       <Float name="Offset" />
-      <ByteArray name="HeightMap" byteLength="1089" nullable="False" />
+      <Array2d name="HeightMap" fixedWidth="33" fixedHeight="33">
+        <UInt8 />
+      </Array2d>
       <P3UInt8 name="Unknown" />
     </Fields>
   </Object>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
@@ -166,6 +167,10 @@
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Fallout4ListGroup.cs">
+      <DependentUpon>Fallout4Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\CellBlockConsolidator.cs" />
+    <Compile Include="Records\Fallout4ListGroupOverlay.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">

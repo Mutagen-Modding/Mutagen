@@ -25,7 +25,7 @@
       <CustomLogic byteLength="4" name="ContainedRecordType" />
       <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
-      <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true">
+      <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true" additive="true">
         <Ref>
           <Generic>T</Generic>
         </Ref>

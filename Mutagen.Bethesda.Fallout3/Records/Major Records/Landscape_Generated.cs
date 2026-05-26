@@ -60,15 +60,19 @@ namespace Mutagen.Bethesda.Fallout3
         Landscape.Flag? ILandscapeGetter.Flags => this.Flags;
         #endregion
         #region VertexNormals
+        public static readonly P2Int VertexNormalsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _VertexNormals;
-        public MemorySlice<Byte>? VertexNormals
+        private IArray2d<P3UInt8>? _VertexNormals;
+        public IArray2d<P3UInt8>? VertexNormals
         {
             get => this._VertexNormals;
             set => this._VertexNormals = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.VertexNormals => this.VertexNormals;
+        IReadOnlyArray2d<P3UInt8>? ILandscapeGetter.VertexNormals => _VertexNormals;
+        #endregion
+
         #endregion
         #region VertexHeightMap
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,15 +86,19 @@ namespace Mutagen.Bethesda.Fallout3
         ILandscapeVertexHeightMapGetter? ILandscapeGetter.VertexHeightMap => this.VertexHeightMap;
         #endregion
         #region VertexColors
+        public static readonly P2Int VertexColorsFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _VertexColors;
-        public MemorySlice<Byte>? VertexColors
+        private IArray2d<P3UInt8>? _VertexColors;
+        public IArray2d<P3UInt8>? VertexColors
         {
             get => this._VertexColors;
             set => this._VertexColors = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILandscapeGetter.VertexColors => this.VertexColors;
+        IReadOnlyArray2d<P3UInt8>? ILandscapeGetter.VertexColors => _VertexColors;
+        #endregion
+
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -146,9 +154,9 @@ namespace Mutagen.Bethesda.Fallout3
             : base(initialValue)
             {
                 this.Flags = initialValue;
-                this.VertexNormals = initialValue;
+                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
                 this.VertexHeightMap = new MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>(initialValue, new LandscapeVertexHeightMap.Mask<TItem>(initialValue));
-                this.VertexColors = initialValue;
+                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
                 this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(initialValue, []);
                 this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
@@ -177,9 +185,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Flags = Flags;
-                this.VertexNormals = VertexNormals;
+                this.VertexNormals = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexNormals, []);
                 this.VertexHeightMap = new MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>(VertexHeightMap, new LandscapeVertexHeightMap.Mask<TItem>(VertexHeightMap));
-                this.VertexColors = VertexColors;
+                this.VertexColors = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(VertexColors, []);
                 this.Layers = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>(Layers, []);
                 this.Textures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Textures, []);
             }
@@ -194,9 +202,9 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Flags;
-            public TItem VertexNormals;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? VertexNormals;
             public MaskItem<TItem, LandscapeVertexHeightMap.Mask<TItem>?>? VertexHeightMap { get; set; }
-            public TItem VertexColors;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? VertexColors;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BaseLayer.Mask<TItem>?>>?>? Layers;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Textures;
             #endregion
@@ -240,13 +248,33 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.VertexNormals)) return false;
+                if (this.VertexNormals != null)
+                {
+                    if (!eval(this.VertexNormals.Overall)) return false;
+                    if (this.VertexNormals.Specific != null)
+                    {
+                        foreach (var item in this.VertexNormals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (VertexHeightMap != null)
                 {
                     if (!eval(this.VertexHeightMap.Overall)) return false;
                     if (this.VertexHeightMap.Specific != null && !this.VertexHeightMap.Specific.All(eval)) return false;
                 }
-                if (!eval(this.VertexColors)) return false;
+                if (this.VertexColors != null)
+                {
+                    if (!eval(this.VertexColors.Overall)) return false;
+                    if (this.VertexColors.Specific != null)
+                    {
+                        foreach (var item in this.VertexColors.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Layers != null)
                 {
                     if (!eval(this.Layers.Overall)) return false;
@@ -279,13 +307,33 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.VertexNormals)) return true;
+                if (this.VertexNormals != null)
+                {
+                    if (eval(this.VertexNormals.Overall)) return true;
+                    if (this.VertexNormals.Specific != null)
+                    {
+                        foreach (var item in this.VertexNormals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (VertexHeightMap != null)
                 {
                     if (eval(this.VertexHeightMap.Overall)) return true;
                     if (this.VertexHeightMap.Specific != null && this.VertexHeightMap.Specific.Any(eval)) return true;
                 }
-                if (eval(this.VertexColors)) return true;
+                if (this.VertexColors != null)
+                {
+                    if (eval(this.VertexColors.Overall)) return true;
+                    if (this.VertexColors.Specific != null)
+                    {
+                        foreach (var item in this.VertexColors.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Layers != null)
                 {
                     if (eval(this.Layers.Overall)) return true;
@@ -325,9 +373,35 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Flags = eval(this.Flags);
-                obj.VertexNormals = eval(this.VertexNormals);
+                if (VertexNormals != null)
+                {
+                    obj.VertexNormals = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexNormals.Overall), []);
+                    if (VertexNormals.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.VertexNormals.Specific = l;
+                        foreach (var item in VertexNormals.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.VertexHeightMap = this.VertexHeightMap == null ? null : new MaskItem<R, LandscapeVertexHeightMap.Mask<R>?>(eval(this.VertexHeightMap.Overall), this.VertexHeightMap.Specific?.Translate(eval));
-                obj.VertexColors = eval(this.VertexColors);
+                if (VertexColors != null)
+                {
+                    obj.VertexColors = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.VertexColors.Overall), []);
+                    if (VertexColors.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.VertexColors.Specific = l;
+                        foreach (var item in VertexColors.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 if (Layers != null)
                 {
                     obj.Layers = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BaseLayer.Mask<R>?>>?>(eval(this.Layers.Overall), []);
@@ -379,17 +453,51 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.VertexNormals ?? true)
+                    if ((printMask?.VertexNormals?.Overall ?? true)
+                        && VertexNormals is {} VertexNormalsItem)
                     {
-                        sb.AppendItem(VertexNormals, "VertexNormals");
+                        sb.AppendLine("VertexNormals =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(VertexNormalsItem.Overall);
+                            if (VertexNormalsItem.Specific != null)
+                            {
+                                foreach (var subItem in VertexNormalsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.VertexHeightMap?.Overall ?? true)
                     {
                         VertexHeightMap?.Print(sb);
                     }
-                    if (printMask?.VertexColors ?? true)
+                    if ((printMask?.VertexColors?.Overall ?? true)
+                        && VertexColors is {} VertexColorsItem)
                     {
-                        sb.AppendItem(VertexColors, "VertexColors");
+                        sb.AppendLine("VertexColors =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(VertexColorsItem.Overall);
+                            if (VertexColorsItem.Specific != null)
+                            {
+                                foreach (var subItem in VertexColorsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Layers?.Overall ?? true)
                         && Layers is {} LayersItem)
@@ -443,9 +551,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public Exception? Flags;
-            public Exception? VertexNormals;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? VertexNormals;
             public MaskItem<Exception?, LandscapeVertexHeightMap.ErrorMask?>? VertexHeightMap;
-            public Exception? VertexColors;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? VertexColors;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>? Layers;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Textures;
             #endregion
@@ -482,13 +590,13 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Flags = ex;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
-                        this.VertexNormals = ex;
+                        this.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
                     case Landscape_FieldIndex.VertexHeightMap:
                         this.VertexHeightMap = new MaskItem<Exception?, LandscapeVertexHeightMap.ErrorMask?>(ex, null);
                         break;
                     case Landscape_FieldIndex.VertexColors:
-                        this.VertexColors = ex;
+                        this.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
                     case Landscape_FieldIndex.Layers:
                         this.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(ex, null);
@@ -511,13 +619,13 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Flags = (Exception?)obj;
                         break;
                     case Landscape_FieldIndex.VertexNormals:
-                        this.VertexNormals = (Exception?)obj;
+                        this.VertexNormals = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
                     case Landscape_FieldIndex.VertexHeightMap:
                         this.VertexHeightMap = (MaskItem<Exception?, LandscapeVertexHeightMap.ErrorMask?>?)obj;
                         break;
                     case Landscape_FieldIndex.VertexColors:
-                        this.VertexColors = (Exception?)obj;
+                        this.VertexColors = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
                     case Landscape_FieldIndex.Layers:
                         this.Layers = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>)obj;
@@ -569,12 +677,46 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
+                if (VertexNormals is {} VertexNormalsItem)
                 {
-                    sb.AppendItem(VertexNormals, "VertexNormals");
+                    sb.AppendLine("VertexNormals =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(VertexNormalsItem.Overall);
+                        if (VertexNormalsItem.Specific != null)
+                        {
+                            foreach (var subItem in VertexNormalsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 VertexHeightMap?.Print(sb);
+                if (VertexColors is {} VertexColorsItem)
                 {
-                    sb.AppendItem(VertexColors, "VertexColors");
+                    sb.AppendLine("VertexColors =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(VertexColorsItem.Overall);
+                        if (VertexColorsItem.Specific != null)
+                        {
+                            foreach (var subItem in VertexColorsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (Layers is {} LayersItem)
                 {
@@ -623,9 +765,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.VertexNormals = this.VertexNormals.Combine(rhs.VertexNormals);
+                ret.VertexNormals = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexNormals?.Overall, rhs.VertexNormals?.Overall), Noggog.ExceptionExt.Combine(this.VertexNormals?.Specific, rhs.VertexNormals?.Specific));
                 ret.VertexHeightMap = this.VertexHeightMap.Combine(rhs.VertexHeightMap, (l, r) => l.Combine(r));
-                ret.VertexColors = this.VertexColors.Combine(rhs.VertexColors);
+                ret.VertexColors = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.VertexColors?.Overall, rhs.VertexColors?.Overall), Noggog.ExceptionExt.Combine(this.VertexColors?.Specific, rhs.VertexColors?.Specific));
                 ret.Layers = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BaseLayer.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Layers?.Overall, rhs.Layers?.Overall), Noggog.ExceptionExt.Combine(this.Layers?.Specific, rhs.Layers?.Specific));
                 ret.Textures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Textures?.Overall, rhs.Textures?.Overall), Noggog.ExceptionExt.Combine(this.Textures?.Specific, rhs.Textures?.Specific));
                 return ret;
@@ -818,9 +960,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ILandscapeInternal>
     {
         new Landscape.Flag? Flags { get; set; }
-        new MemorySlice<Byte>? VertexNormals { get; set; }
+        new IArray2d<P3UInt8>? VertexNormals { get; set; }
         new LandscapeVertexHeightMap? VertexHeightMap { get; set; }
-        new MemorySlice<Byte>? VertexColors { get; set; }
+        new IArray2d<P3UInt8>? VertexColors { get; set; }
         new ExtendedList<BaseLayer> Layers { get; }
         new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; set; }
     }
@@ -842,9 +984,9 @@ namespace Mutagen.Bethesda.Fallout3
     {
         static new ILoquiRegistration StaticRegistration => Landscape_Registration.Instance;
         Landscape.Flag? Flags { get; }
-        ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
+        IReadOnlyArray2d<P3UInt8>? VertexNormals { get; }
         ILandscapeVertexHeightMapGetter? VertexHeightMap { get; }
-        ReadOnlyMemorySlice<Byte>? VertexColors { get; }
+        IReadOnlyArray2d<P3UInt8>? VertexColors { get; }
         IReadOnlyList<IBaseLayerGetter> Layers { get; }
         IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; }
 
@@ -1126,9 +1268,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Flags = default;
-            item.VertexNormals = default;
+            item.VertexNormals = null;
             item.VertexHeightMap = null;
-            item.VertexColors = default;
+            item.VertexColors = null;
             item.Layers.Clear();
             item.Textures = null;
             base.Clear(item);
@@ -1218,13 +1360,19 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Flags = item.Flags == rhs.Flags;
-            ret.VertexNormals = MemorySliceExt.SequenceEqual(item.VertexNormals, rhs.VertexNormals);
+            ret.VertexNormals = item.VertexNormals.Array2dEqualsHelper(
+                rhs.VertexNormals,
+                (l, r) => l.Equals(r),
+                include);
             ret.VertexHeightMap = EqualsMaskHelper.EqualsHelper(
                 item.VertexHeightMap,
                 rhs.VertexHeightMap,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.VertexColors = MemorySliceExt.SequenceEqual(item.VertexColors, rhs.VertexColors);
+            ret.VertexColors = item.VertexColors.Array2dEqualsHelper(
+                rhs.VertexColors,
+                (l, r) => l.Equals(r),
+                include);
             ret.Layers = item.Layers.CollectionEqualsHelper(
                 rhs.Layers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1287,20 +1435,42 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.VertexNormals ?? true)
+            if ((printMask?.VertexNormals?.Overall ?? true)
                 && item.VertexNormals is {} VertexNormalsItem)
             {
-                sb.AppendLine($"VertexNormals => {SpanExt.ToHexString(VertexNormalsItem)}");
+                sb.AppendLine("VertexNormals =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in VertexNormalsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
+                        }
+                    }
+                }
             }
             if ((printMask?.VertexHeightMap?.Overall ?? true)
                 && item.VertexHeightMap is {} VertexHeightMapItem)
             {
                 VertexHeightMapItem?.Print(sb, "VertexHeightMap");
             }
-            if ((printMask?.VertexColors ?? true)
+            if ((printMask?.VertexColors?.Overall ?? true)
                 && item.VertexColors is {} VertexColorsItem)
             {
-                sb.AppendLine($"VertexColors => {SpanExt.ToHexString(VertexColorsItem)}");
+                sb.AppendLine("VertexColors =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in VertexColorsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
+                        }
+                    }
+                }
             }
             if (printMask?.Layers?.Overall ?? true)
             {
@@ -1387,7 +1557,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.VertexNormals, rhs.VertexNormals)) return false;
+                if (!lhs.VertexNormals.SequenceEqualNullable(rhs.VertexNormals)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
             {
@@ -1399,7 +1569,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.VertexColors, rhs.VertexColors)) return false;
+                if (!lhs.VertexColors.SequenceEqualNullable(rhs.VertexColors)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
             {
@@ -1441,18 +1611,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Flagsitem);
             }
-            if (item.VertexNormals is {} VertexNormalsItem)
-            {
-                hash.Add(VertexNormalsItem);
-            }
+            hash.Add(item.VertexNormals);
             if (item.VertexHeightMap is {} VertexHeightMapitem)
             {
                 hash.Add(VertexHeightMapitem);
             }
-            if (item.VertexColors is {} VertexColorsItem)
-            {
-                hash.Add(VertexColorsItem);
-            }
+            hash.Add(item.VertexColors);
             hash.Add(item.Layers);
             hash.Add(item.Textures);
             hash.Add(base.GetHashCode());
@@ -1575,13 +1739,27 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
             {
-                if(rhs.VertexNormals is {} VertexNormalsrhs)
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexNormals);
+                try
                 {
-                    item.VertexNormals = VertexNormalsrhs.ToArray();
+                    if ((rhs.VertexNormals != null))
+                    {
+                        item.VertexNormals = 
+                            rhs.VertexNormals.ShallowClone();
+                    }
+                    else
+                    {
+                        item.VertexNormals = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.VertexNormals = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
@@ -1612,13 +1790,27 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
             {
-                if(rhs.VertexColors is {} VertexColorsrhs)
+                errorMask?.PushIndex((int)Landscape_FieldIndex.VertexColors);
+                try
                 {
-                    item.VertexColors = VertexColorsrhs.ToArray();
+                    if ((rhs.VertexColors != null))
+                    {
+                        item.VertexColors = 
+                            rhs.VertexColors.ShallowClone();
+                    }
+                    else
+                    {
+                        item.VertexColors = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.VertexColors = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
@@ -1846,10 +2038,11 @@ namespace Mutagen.Bethesda.Fallout3
                 item.Flags,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.DATA));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Write(
                 writer: writer,
-                item: item.VertexNormals,
-                header: translationParams.ConvertToCustom(RecordTypes.VNML));
+                items: item.VertexNormals,
+                recordType: translationParams.ConvertToCustom(RecordTypes.VNML),
+                transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             if (item.VertexHeightMap is {} VertexHeightMapItem)
             {
                 ((LandscapeVertexHeightMapBinaryWriteTranslation)((IBinaryItem)VertexHeightMapItem).BinaryWriteTranslator).Write(
@@ -1857,10 +2050,11 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Write(
                 writer: writer,
-                item: item.VertexColors,
-                header: translationParams.ConvertToCustom(RecordTypes.VCLR));
+                items: item.VertexColors,
+                recordType: translationParams.ConvertToCustom(RecordTypes.VCLR),
+                transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.Layers,
@@ -1961,7 +2155,12 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.VNML:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexNormals = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.VertexNormals = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
+                            reader: frame,
+                            size: Landscape.VertexNormalsFixedSize,
+                            transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        ;
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
@@ -1972,7 +2171,12 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexColors = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.VertexColors = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<P3UInt8>.Instance.Parse(
+                            reader: frame,
+                            size: Landscape.VertexColorsFixedSize,
+                            transl: P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        ;
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
@@ -2078,18 +2282,12 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _FlagsLocation;
         public Landscape.Flag? Flags => EnumBinaryTranslation<Landscape.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
-        #region VertexNormals
-        private int? _VertexNormalsLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexNormals => _VertexNormalsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VertexNormalsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyArray2d<P3UInt8>? VertexNormals { get; private set; }
         #region VertexHeightMap
         private RangeInt32? _VertexHeightMapLocation;
         public ILandscapeVertexHeightMapGetter? VertexHeightMap => _VertexHeightMapLocation.HasValue ? LandscapeVertexHeightMapBinaryOverlay.LandscapeVertexHeightMapFactory(_recordData.Slice(_VertexHeightMapLocation!.Value.Min), _package) : default;
         #endregion
-        #region VertexColors
-        private int? _VertexColorsLocation;
-        public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VertexColorsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyArray2d<P3UInt8>? VertexColors { get; private set; }
         public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
@@ -2168,7 +2366,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.VNML:
                 {
-                    _VertexNormalsLocation = (stream.Position - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.VertexNormals = BinaryOverlayArray2d.Factory<P3UInt8>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 3,
+                        size: Landscape.VertexNormalsFixedSize,
+                        getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
@@ -2178,7 +2382,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.VCLR:
                 {
-                    _VertexColorsLocation = (stream.Position - offset);
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.VertexColors = BinaryOverlayArray2d.Factory<P3UInt8>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 3,
+                        size: Landscape.VertexColorsFixedSize,
+                        getter: (s, p) => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:

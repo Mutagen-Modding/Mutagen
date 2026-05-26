@@ -17622,8 +17622,8 @@ namespace Mutagen.Bethesda.Fallout3
         public IFallout3GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Fallout3Group<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
-        private RangeInt64? _CellsLocation;
-        private IFallout3ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? Fallout3ListGroupBinaryOverlay<ICellBlockGetter>.Fallout3ListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
+        private List<RangeInt64>? _CellsLocations;
+        private IFallout3ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? Fallout3ListGroupBinaryOverlay<ICellBlockGetter>.Fallout3ListGroupFactory(_stream, _CellsLocations, _package) : default;
         public IFallout3ListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new Fallout3ListGroup<CellBlock>();
         #endregion
         #region Worldspaces
@@ -18168,7 +18168,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CellsLocations ??= new();
+                    _CellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:

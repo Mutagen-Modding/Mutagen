@@ -385,7 +385,9 @@ namespace Mutagen.Bethesda.Fallout3
                     PlacedMissile_Registration.Instance,
                     PlacedNpc_Registration.Instance,
                     Placement_Registration.Instance,
+                    RagdollData_Registration.Instance,
                     StaticPlacement_Registration.Instance,
+                    TeleportDestination_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(IPositionRotation),

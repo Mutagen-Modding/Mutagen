@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ActivateParents" objType="Subrecord">
     <Fields>
-      <Enum name="Flags" enumName="ActivateParents.Flag" byteLength="1" recordType="XAPD" nullable="False" />
+      <Bool name="ParentActivateOnly" recordType="XAPD" nullable="False" />
       <RefList name="Parents" refName="ActivateParent" />
     </Fields>
   </Object>

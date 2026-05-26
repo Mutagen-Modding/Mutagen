@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public CellLighting.VersioningBreaks Versioning { get; set; } = default(CellLighting.VersioningBreaks);
+        #endregion
         #region AmbientColor
         public Color AmbientColor { get; set; } = default(Color);
         #endregion
@@ -72,16 +75,14 @@ namespace Mutagen.Bethesda.Fallout3
         #region DirectionalRotationZ
         public Int32 DirectionalRotationZ { get; set; } = default(Int32);
         #endregion
-        #region Remaining
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
-        {
-            get => _Remaining;
-            set => this._Remaining = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellLightingGetter.Remaining => this.Remaining;
+        #region DirectionalFade
+        public Single DirectionalFade { get; set; } = default(Single);
+        #endregion
+        #region FogClipDistance
+        public Single FogClipDistance { get; set; } = default(Single);
+        #endregion
+        #region FogPower
+        public Single FogPower { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -122,6 +123,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.AmbientColor = initialValue;
                 this.DirectionalColor = initialValue;
                 this.FogColor = initialValue;
@@ -129,10 +131,13 @@ namespace Mutagen.Bethesda.Fallout3
                 this.FogFar = initialValue;
                 this.DirectionalRotationXY = initialValue;
                 this.DirectionalRotationZ = initialValue;
-                this.Remaining = initialValue;
+                this.DirectionalFade = initialValue;
+                this.FogClipDistance = initialValue;
+                this.FogPower = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem AmbientColor,
                 TItem DirectionalColor,
                 TItem FogColor,
@@ -140,8 +145,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FogFar,
                 TItem DirectionalRotationXY,
                 TItem DirectionalRotationZ,
-                TItem Remaining)
+                TItem DirectionalFade,
+                TItem FogClipDistance,
+                TItem FogPower)
             {
+                this.Versioning = Versioning;
                 this.AmbientColor = AmbientColor;
                 this.DirectionalColor = DirectionalColor;
                 this.FogColor = FogColor;
@@ -149,7 +157,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.FogFar = FogFar;
                 this.DirectionalRotationXY = DirectionalRotationXY;
                 this.DirectionalRotationZ = DirectionalRotationZ;
-                this.Remaining = Remaining;
+                this.DirectionalFade = DirectionalFade;
+                this.FogClipDistance = FogClipDistance;
+                this.FogPower = FogPower;
             }
 
             #pragma warning disable CS8618
@@ -161,6 +171,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem AmbientColor;
             public TItem DirectionalColor;
             public TItem FogColor;
@@ -168,7 +179,9 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem FogFar;
             public TItem DirectionalRotationXY;
             public TItem DirectionalRotationZ;
-            public TItem Remaining;
+            public TItem DirectionalFade;
+            public TItem FogClipDistance;
+            public TItem FogPower;
             #endregion
 
             #region Equals
@@ -181,6 +194,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
                 if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
                 if (!object.Equals(this.FogColor, rhs.FogColor)) return false;
@@ -188,12 +202,15 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.FogFar, rhs.FogFar)) return false;
                 if (!object.Equals(this.DirectionalRotationXY, rhs.DirectionalRotationXY)) return false;
                 if (!object.Equals(this.DirectionalRotationZ, rhs.DirectionalRotationZ)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
+                if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
+                if (!object.Equals(this.FogPower, rhs.FogPower)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.AmbientColor);
                 hash.Add(this.DirectionalColor);
                 hash.Add(this.FogColor);
@@ -201,7 +218,9 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.FogFar);
                 hash.Add(this.DirectionalRotationXY);
                 hash.Add(this.DirectionalRotationZ);
-                hash.Add(this.Remaining);
+                hash.Add(this.DirectionalFade);
+                hash.Add(this.FogClipDistance);
+                hash.Add(this.FogPower);
                 return hash.ToHashCode();
             }
 
@@ -210,6 +229,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.AmbientColor)) return false;
                 if (!eval(this.DirectionalColor)) return false;
                 if (!eval(this.FogColor)) return false;
@@ -217,7 +237,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.FogFar)) return false;
                 if (!eval(this.DirectionalRotationXY)) return false;
                 if (!eval(this.DirectionalRotationZ)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.DirectionalFade)) return false;
+                if (!eval(this.FogClipDistance)) return false;
+                if (!eval(this.FogPower)) return false;
                 return true;
             }
             #endregion
@@ -225,6 +247,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.AmbientColor)) return true;
                 if (eval(this.DirectionalColor)) return true;
                 if (eval(this.FogColor)) return true;
@@ -232,7 +255,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.FogFar)) return true;
                 if (eval(this.DirectionalRotationXY)) return true;
                 if (eval(this.DirectionalRotationZ)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.DirectionalFade)) return true;
+                if (eval(this.FogClipDistance)) return true;
+                if (eval(this.FogPower)) return true;
                 return false;
             }
             #endregion
@@ -247,6 +272,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.AmbientColor = eval(this.AmbientColor);
                 obj.DirectionalColor = eval(this.DirectionalColor);
                 obj.FogColor = eval(this.FogColor);
@@ -254,7 +280,9 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.FogFar = eval(this.FogFar);
                 obj.DirectionalRotationXY = eval(this.DirectionalRotationXY);
                 obj.DirectionalRotationZ = eval(this.DirectionalRotationZ);
-                obj.Remaining = eval(this.Remaining);
+                obj.DirectionalFade = eval(this.DirectionalFade);
+                obj.FogClipDistance = eval(this.FogClipDistance);
+                obj.FogPower = eval(this.FogPower);
             }
             #endregion
 
@@ -273,6 +301,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(CellLighting.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.AmbientColor ?? true)
                     {
                         sb.AppendItem(AmbientColor, "AmbientColor");
@@ -301,9 +333,17 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
                     }
-                    if (printMask?.Remaining ?? true)
+                    if (printMask?.DirectionalFade ?? true)
                     {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(DirectionalFade, "DirectionalFade");
+                    }
+                    if (printMask?.FogClipDistance ?? true)
+                    {
+                        sb.AppendItem(FogClipDistance, "FogClipDistance");
+                    }
+                    if (printMask?.FogPower ?? true)
+                    {
+                        sb.AppendItem(FogPower, "FogPower");
                     }
                 }
             }
@@ -329,6 +369,7 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? AmbientColor;
             public Exception? DirectionalColor;
             public Exception? FogColor;
@@ -336,7 +377,9 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? FogFar;
             public Exception? DirectionalRotationXY;
             public Exception? DirectionalRotationZ;
-            public Exception? Remaining;
+            public Exception? DirectionalFade;
+            public Exception? FogClipDistance;
+            public Exception? FogPower;
             #endregion
 
             #region IErrorMask
@@ -345,6 +388,8 @@ namespace Mutagen.Bethesda.Fallout3
                 CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case CellLighting_FieldIndex.Versioning:
+                        return Versioning;
                     case CellLighting_FieldIndex.AmbientColor:
                         return AmbientColor;
                     case CellLighting_FieldIndex.DirectionalColor:
@@ -359,8 +404,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return DirectionalRotationXY;
                     case CellLighting_FieldIndex.DirectionalRotationZ:
                         return DirectionalRotationZ;
-                    case CellLighting_FieldIndex.Remaining:
-                        return Remaining;
+                    case CellLighting_FieldIndex.DirectionalFade:
+                        return DirectionalFade;
+                    case CellLighting_FieldIndex.FogClipDistance:
+                        return FogClipDistance;
+                    case CellLighting_FieldIndex.FogPower:
+                        return FogPower;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -371,6 +420,9 @@ namespace Mutagen.Bethesda.Fallout3
                 CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case CellLighting_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case CellLighting_FieldIndex.AmbientColor:
                         this.AmbientColor = ex;
                         break;
@@ -392,8 +444,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case CellLighting_FieldIndex.DirectionalRotationZ:
                         this.DirectionalRotationZ = ex;
                         break;
-                    case CellLighting_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case CellLighting_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = ex;
+                        break;
+                    case CellLighting_FieldIndex.FogPower:
+                        this.FogPower = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -405,6 +463,9 @@ namespace Mutagen.Bethesda.Fallout3
                 CellLighting_FieldIndex enu = (CellLighting_FieldIndex)index;
                 switch (enu)
                 {
+                    case CellLighting_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case CellLighting_FieldIndex.AmbientColor:
                         this.AmbientColor = (Exception?)obj;
                         break;
@@ -426,8 +487,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case CellLighting_FieldIndex.DirectionalRotationZ:
                         this.DirectionalRotationZ = (Exception?)obj;
                         break;
-                    case CellLighting_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case CellLighting_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = (Exception?)obj;
+                        break;
+                    case CellLighting_FieldIndex.FogPower:
+                        this.FogPower = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -437,6 +504,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (AmbientColor != null) return true;
                 if (DirectionalColor != null) return true;
                 if (FogColor != null) return true;
@@ -444,7 +512,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (FogFar != null) return true;
                 if (DirectionalRotationXY != null) return true;
                 if (DirectionalRotationZ != null) return true;
-                if (Remaining != null) return true;
+                if (DirectionalFade != null) return true;
+                if (FogClipDistance != null) return true;
+                if (FogPower != null) return true;
                 return false;
             }
             #endregion
@@ -471,6 +541,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(AmbientColor, "AmbientColor");
                 }
                 {
@@ -492,7 +565,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
                 }
                 {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(DirectionalFade, "DirectionalFade");
+                }
+                {
+                    sb.AppendItem(FogClipDistance, "FogClipDistance");
+                }
+                {
+                    sb.AppendItem(FogPower, "FogPower");
                 }
             }
             #endregion
@@ -502,6 +581,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
                 ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
                 ret.FogColor = this.FogColor.Combine(rhs.FogColor);
@@ -509,7 +589,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.FogFar = this.FogFar.Combine(rhs.FogFar);
                 ret.DirectionalRotationXY = this.DirectionalRotationXY.Combine(rhs.DirectionalRotationXY);
                 ret.DirectionalRotationZ = this.DirectionalRotationZ.Combine(rhs.DirectionalRotationZ);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
+                ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
+                ret.FogPower = this.FogPower.Combine(rhs.FogPower);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -533,6 +615,7 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool AmbientColor;
             public bool DirectionalColor;
             public bool FogColor;
@@ -540,7 +623,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool FogFar;
             public bool DirectionalRotationXY;
             public bool DirectionalRotationZ;
-            public bool Remaining;
+            public bool DirectionalFade;
+            public bool FogClipDistance;
+            public bool FogPower;
             #endregion
 
             #region Ctors
@@ -550,6 +635,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.AmbientColor = defaultOn;
                 this.DirectionalColor = defaultOn;
                 this.FogColor = defaultOn;
@@ -557,7 +643,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.FogFar = defaultOn;
                 this.DirectionalRotationXY = defaultOn;
                 this.DirectionalRotationZ = defaultOn;
-                this.Remaining = defaultOn;
+                this.DirectionalFade = defaultOn;
+                this.FogClipDistance = defaultOn;
+                this.FogPower = defaultOn;
             }
 
             #endregion
@@ -573,6 +661,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((AmbientColor, null));
                 ret.Add((DirectionalColor, null));
                 ret.Add((FogColor, null));
@@ -580,7 +669,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((FogFar, null));
                 ret.Add((DirectionalRotationXY, null));
                 ret.Add((DirectionalRotationZ, null));
-                ret.Add((Remaining, null));
+                ret.Add((DirectionalFade, null));
+                ret.Add((FogClipDistance, null));
+                ret.Add((FogPower, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -588,6 +679,16 @@ namespace Mutagen.Bethesda.Fallout3
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1,
+            Break1 = 2,
+            Break2 = 4
         }
         #endregion
 
@@ -653,6 +754,7 @@ namespace Mutagen.Bethesda.Fallout3
         ICellLightingGetter,
         ILoquiObjectSetter<ICellLighting>
     {
+        new CellLighting.VersioningBreaks Versioning { get; set; }
         new Color AmbientColor { get; set; }
         new Color DirectionalColor { get; set; }
         new Color FogColor { get; set; }
@@ -660,7 +762,9 @@ namespace Mutagen.Bethesda.Fallout3
         new Single FogFar { get; set; }
         new Int32 DirectionalRotationXY { get; set; }
         new Int32 DirectionalRotationZ { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new Single DirectionalFade { get; set; }
+        new Single FogClipDistance { get; set; }
+        new Single FogPower { get; set; }
     }
 
     public partial interface ICellLightingGetter :
@@ -675,6 +779,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => CellLighting_Registration.Instance;
+        CellLighting.VersioningBreaks Versioning { get; }
         Color AmbientColor { get; }
         Color DirectionalColor { get; }
         Color FogColor { get; }
@@ -682,7 +787,9 @@ namespace Mutagen.Bethesda.Fallout3
         Single FogFar { get; }
         Int32 DirectionalRotationXY { get; }
         Int32 DirectionalRotationZ { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        Single DirectionalFade { get; }
+        Single FogClipDistance { get; }
+        Single FogPower { get; }
 
     }
 
@@ -852,14 +959,17 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum CellLighting_FieldIndex
     {
-        AmbientColor = 0,
-        DirectionalColor = 1,
-        FogColor = 2,
-        FogNear = 3,
-        FogFar = 4,
-        DirectionalRotationXY = 5,
-        DirectionalRotationZ = 6,
-        Remaining = 7,
+        Versioning = 0,
+        AmbientColor = 1,
+        DirectionalColor = 2,
+        FogColor = 3,
+        FogNear = 4,
+        FogFar = 5,
+        DirectionalRotationXY = 6,
+        DirectionalRotationZ = 7,
+        DirectionalFade = 8,
+        FogClipDistance = 9,
+        FogPower = 10,
     }
     #endregion
 
@@ -870,9 +980,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(CellLighting.Mask<>);
 
@@ -945,6 +1055,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICellLighting item)
         {
             ClearPartial();
+            item.Versioning = default(CellLighting.VersioningBreaks);
             item.AmbientColor = default(Color);
             item.DirectionalColor = default(Color);
             item.FogColor = default(Color);
@@ -952,7 +1063,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.FogFar = default(Single);
             item.DirectionalRotationXY = default(Int32);
             item.DirectionalRotationZ = default(Int32);
-            item.Remaining = [];
+            item.DirectionalFade = default(Single);
+            item.FogClipDistance = default(Single);
+            item.FogPower = default(Single);
         }
         
         #region Mutagen
@@ -1006,6 +1119,7 @@ namespace Mutagen.Bethesda.Fallout3
             CellLighting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.AmbientColor = item.AmbientColor.ColorOnlyEquals(rhs.AmbientColor);
             ret.DirectionalColor = item.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor);
             ret.FogColor = item.FogColor.ColorOnlyEquals(rhs.FogColor);
@@ -1013,7 +1127,9 @@ namespace Mutagen.Bethesda.Fallout3
             ret.FogFar = item.FogFar.EqualsWithin(rhs.FogFar);
             ret.DirectionalRotationXY = item.DirectionalRotationXY == rhs.DirectionalRotationXY;
             ret.DirectionalRotationZ = item.DirectionalRotationZ == rhs.DirectionalRotationZ;
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.DirectionalFade = item.DirectionalFade.EqualsWithin(rhs.DirectionalFade);
+            ret.FogClipDistance = item.FogClipDistance.EqualsWithin(rhs.FogClipDistance);
+            ret.FogPower = item.FogPower.EqualsWithin(rhs.FogPower);
         }
         
         public string Print(
@@ -1058,6 +1174,10 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             CellLighting.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.AmbientColor ?? true)
             {
                 sb.AppendItem(item.AmbientColor, "AmbientColor");
@@ -1086,9 +1206,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
             }
-            if (printMask?.Remaining ?? true)
+            if (printMask?.DirectionalFade ?? true)
             {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendItem(item.DirectionalFade, "DirectionalFade");
+            }
+            if (printMask?.FogClipDistance ?? true)
+            {
+                sb.AppendItem(item.FogClipDistance, "FogClipDistance");
+            }
+            if (printMask?.FogPower ?? true)
+            {
+                sb.AppendItem(item.FogPower, "FogPower");
             }
         }
         
@@ -1099,6 +1227,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
             {
                 if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
@@ -1127,9 +1259,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Remaining) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
+            {
+                if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogPower) ?? true))
+            {
+                if (!lhs.FogPower.EqualsWithin(rhs.FogPower)) return false;
             }
             return true;
         }
@@ -1137,6 +1277,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ICellLightingGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.AmbientColor);
             hash.Add(item.DirectionalColor);
             hash.Add(item.FogColor);
@@ -1144,7 +1285,9 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.FogFar);
             hash.Add(item.DirectionalRotationXY);
             hash.Add(item.DirectionalRotationZ);
-            hash.Add(item.Remaining);
+            hash.Add(item.DirectionalFade);
+            hash.Add(item.FogClipDistance);
+            hash.Add(item.FogPower);
             return hash.ToHashCode();
         }
         
@@ -1177,6 +1320,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
             {
                 item.AmbientColor = rhs.AmbientColor;
@@ -1205,9 +1352,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.DirectionalRotationZ = rhs.DirectionalRotationZ;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Remaining) ?? true))
+            if (rhs.Versioning.HasFlag(CellLighting.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
             {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.DirectionalFade = rhs.DirectionalFade;
+            }
+            if (rhs.Versioning.HasFlag(CellLighting.VersioningBreaks.Break1)) return;
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
+            {
+                item.FogClipDistance = rhs.FogClipDistance;
+            }
+            if (rhs.Versioning.HasFlag(CellLighting.VersioningBreaks.Break2)) return;
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.FogPower) ?? true))
+            {
+                item.FogPower = rhs.FogPower;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1334,9 +1492,24 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.FogFar);
             writer.Write(item.DirectionalRotationXY);
             writer.Write(item.DirectionalRotationZ);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Remaining);
+            if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DirectionalFade);
+                if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break1))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.FogClipDistance);
+                    if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break2))
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.FogPower);
+                    }
+                }
+            }
         }
 
         public void Write(
@@ -1384,7 +1557,24 @@ namespace Mutagen.Bethesda.Fallout3
             item.FogFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.DirectionalRotationXY = frame.ReadInt32();
             item.DirectionalRotationZ = frame.ReadInt32();
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break0;
+                return;
+            }
+            item.DirectionalFade = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break1;
+                return;
+            }
+            item.FogClipDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= CellLighting.VersioningBreaks.Break2;
+                return;
+            }
+            item.FogPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1450,6 +1640,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public CellLighting.VersioningBreaks Versioning { get; private set; }
         public Color AmbientColor => _structData.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalColor => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color FogColor => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
@@ -1457,10 +1648,9 @@ namespace Mutagen.Bethesda.Fallout3
         public Single FogFar => _structData.Slice(0x10, 0x4).Float();
         public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
         public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Slice(0x1C).ToArray();
-        protected int RemainingEndingPos;
-        #endregion
+        public Single DirectionalFade => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
+        public Single FogClipDistance => _structData.Length <= 0x20 ? default : _structData.Slice(0x20, 0x4).Float();
+        public Single FogPower => _structData.Length <= 0x24 ? default : _structData.Slice(0x24, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1486,12 +1676,24 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x28,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new CellLightingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0x1C)
+            {
+                ret.Versioning |= CellLighting.VersioningBreaks.Break0;
+            }
+            if (ret._structData.Length <= 0x20)
+            {
+                ret.Versioning |= CellLighting.VersioningBreaks.Break1;
+            }
+            if (ret._structData.Length <= 0x24)
+            {
+                ret.Versioning |= CellLighting.VersioningBreaks.Break2;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

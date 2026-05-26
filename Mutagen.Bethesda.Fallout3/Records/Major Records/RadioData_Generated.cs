@@ -55,20 +55,20 @@ namespace Mutagen.Bethesda.Fallout3
         public Single RangeRadius { get; set; } = default(Single);
         #endregion
         #region BroadcastRangeType
-        public UInt32 BroadcastRangeType { get; set; } = default(UInt32);
+        public RadioData.BroadcastRangeTypeEnum BroadcastRangeType { get; set; } = default(RadioData.BroadcastRangeTypeEnum);
         #endregion
         #region StaticPercentage
         public Single StaticPercentage { get; set; } = default(Single);
         #endregion
         #region PositionReference
-        private readonly IFormLink<IFallout3MajorRecordGetter> _PositionReference = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> PositionReference
+        private readonly IFormLink<IPlacedGetter> _PositionReference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> PositionReference
         {
             get => _PositionReference;
             set => _PositionReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IRadioDataGetter.PositionReference => this.PositionReference;
+        IFormLinkGetter<IPlacedGetter> IRadioDataGetter.PositionReference => this.PositionReference;
         #endregion
 
         #region To String
@@ -527,9 +527,9 @@ namespace Mutagen.Bethesda.Fallout3
         IRadioDataGetter
     {
         new Single RangeRadius { get; set; }
-        new UInt32 BroadcastRangeType { get; set; }
+        new RadioData.BroadcastRangeTypeEnum BroadcastRangeType { get; set; }
         new Single StaticPercentage { get; set; }
-        new IFormLink<IFallout3MajorRecordGetter> PositionReference { get; set; }
+        new IFormLink<IPlacedGetter> PositionReference { get; set; }
     }
 
     public partial interface IRadioDataGetter :
@@ -546,9 +546,9 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RadioData_Registration.Instance;
         Single RangeRadius { get; }
-        UInt32 BroadcastRangeType { get; }
+        RadioData.BroadcastRangeTypeEnum BroadcastRangeType { get; }
         Single StaticPercentage { get; }
-        IFormLinkGetter<IFallout3MajorRecordGetter> PositionReference { get; }
+        IFormLinkGetter<IPlacedGetter> PositionReference { get; }
 
     }
 
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.RangeRadius = default(Single);
-            item.BroadcastRangeType = default(UInt32);
+            item.BroadcastRangeType = default(RadioData.BroadcastRangeTypeEnum);
             item.StaticPercentage = default(Single);
             item.PositionReference.Clear();
         }
@@ -1124,7 +1124,10 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RangeRadius);
-            writer.Write(item.BroadcastRangeType);
+            EnumBinaryTranslation<RadioData.BroadcastRangeTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.BroadcastRangeType,
+                length: 4);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.StaticPercentage);
@@ -1172,7 +1175,9 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.RangeRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.BroadcastRangeType = frame.ReadUInt32();
+            item.BroadcastRangeType = EnumBinaryTranslation<RadioData.BroadcastRangeTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.StaticPercentage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.PositionReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
@@ -1242,9 +1247,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public Single RangeRadius => _structData.Slice(0x0, 0x4).Float();
-        public UInt32 BroadcastRangeType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public RadioData.BroadcastRangeTypeEnum BroadcastRangeType => (RadioData.BroadcastRangeTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Single StaticPercentage => _structData.Slice(0x8, 0x4).Float();
-        public IFormLinkGetter<IFallout3MajorRecordGetter> PositionReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0xC, 0x4));
+        public IFormLinkGetter<IPlacedGetter> PositionReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

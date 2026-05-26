@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public ActivateParents.Flag Flags { get; set; } = default(ActivateParents.Flag);
+        #region ParentActivateOnly
+        public Boolean ParentActivateOnly { get; set; } = default(Boolean);
         #endregion
         #region Parents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,15 +108,15 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Flags = initialValue;
+                this.ParentActivateOnly = initialValue;
                 this.Parents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
-                TItem Flags,
+                TItem ParentActivateOnly,
                 TItem Parents)
             {
-                this.Flags = Flags;
+                this.ParentActivateOnly = ParentActivateOnly;
                 this.Parents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>(Parents, []);
             }
 
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Flags;
+            public TItem ParentActivateOnly;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActivateParent.Mask<TItem>?>>?>? Parents;
             #endregion
 
@@ -143,14 +143,14 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ParentActivateOnly, rhs.ParentActivateOnly)) return false;
                 if (!object.Equals(this.Parents, rhs.Parents)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
+                hash.Add(this.ParentActivateOnly);
                 hash.Add(this.Parents);
                 return hash.ToHashCode();
             }
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.ParentActivateOnly)) return false;
                 if (this.Parents != null)
                 {
                     if (!eval(this.Parents.Overall)) return false;
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Flags)) return true;
+                if (eval(this.ParentActivateOnly)) return true;
                 if (this.Parents != null)
                 {
                     if (eval(this.Parents.Overall)) return true;
@@ -207,7 +207,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Flags = eval(this.Flags);
+                obj.ParentActivateOnly = eval(this.ParentActivateOnly);
                 if (Parents != null)
                 {
                     obj.Parents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActivateParent.Mask<R>?>>?>(eval(this.Parents.Overall), []);
@@ -241,9 +241,9 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(ActivateParents.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.ParentActivateOnly ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(ParentActivateOnly, "ParentActivateOnly");
                     }
                     if ((printMask?.Parents?.Overall ?? true)
                         && Parents is {} ParentsItem)
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? Flags;
+            public Exception? ParentActivateOnly;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActivateParent.ErrorMask?>>?>? Parents;
             #endregion
 
@@ -298,8 +298,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActivateParents_FieldIndex.Flags:
-                        return Flags;
+                    case ActivateParents_FieldIndex.ParentActivateOnly:
+                        return ParentActivateOnly;
                     case ActivateParents_FieldIndex.Parents:
                         return Parents;
                     default:
@@ -312,8 +312,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActivateParents_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ActivateParents_FieldIndex.ParentActivateOnly:
+                        this.ParentActivateOnly = ex;
                         break;
                     case ActivateParents_FieldIndex.Parents:
                         this.Parents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActivateParent.ErrorMask?>>?>(ex, null);
@@ -328,8 +328,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ActivateParents_FieldIndex enu = (ActivateParents_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActivateParents_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ActivateParents_FieldIndex.ParentActivateOnly:
+                        this.ParentActivateOnly = (Exception?)obj;
                         break;
                     case ActivateParents_FieldIndex.Parents:
                         this.Parents = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActivateParent.ErrorMask?>>?>)obj;
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
+                if (ParentActivateOnly != null) return true;
                 if (Parents != null) return true;
                 return false;
             }
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(ParentActivateOnly, "ParentActivateOnly");
                 }
                 if (Parents is {} ParentsItem)
                 {
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ParentActivateOnly = this.ParentActivateOnly.Combine(rhs.ParentActivateOnly);
                 ret.Parents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActivateParent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Parents?.Overall, rhs.Parents?.Overall), Noggog.ExceptionExt.Combine(this.Parents?.Specific, rhs.Parents?.Specific));
                 return ret;
             }
@@ -423,7 +423,7 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Flags;
+            public bool ParentActivateOnly;
             public ActivateParent.TranslationMask? Parents;
             #endregion
 
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Flags = defaultOn;
+                this.ParentActivateOnly = defaultOn;
             }
 
             #endregion
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Flags, null));
+                ret.Add((ParentActivateOnly, null));
                 ret.Add((Parents == null ? DefaultOn : !Parents.GetCrystal().CopyNothing, Parents?.GetCrystal()));
             }
 
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<IActivateParents>
     {
-        new ActivateParents.Flag Flags { get; set; }
+        new Boolean ParentActivateOnly { get; set; }
         new ExtendedList<ActivateParent> Parents { get; }
     }
 
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ActivateParents_Registration.Instance;
-        ActivateParents.Flag Flags { get; }
+        Boolean ParentActivateOnly { get; }
         IReadOnlyList<IActivateParentGetter> Parents { get; }
 
     }
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum ActivateParents_FieldIndex
     {
-        Flags = 0,
+        ParentActivateOnly = 0,
         Parents = 1,
     }
     #endregion
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IActivateParents item)
         {
             ClearPartial();
-            item.Flags = default(ActivateParents.Flag);
+            item.ParentActivateOnly = default(Boolean);
             item.Parents.Clear();
         }
         
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Fallout3
             ActivateParents.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.ParentActivateOnly = item.ParentActivateOnly == rhs.ParentActivateOnly;
             ret.Parents = item.Parents.CollectionEqualsHelper(
                 rhs.Parents,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -911,9 +911,9 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             ActivateParents.Mask<bool>? printMask = null)
         {
-            if (printMask?.Flags ?? true)
+            if (printMask?.ParentActivateOnly ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.ParentActivateOnly, "ParentActivateOnly");
             }
             if (printMask?.Parents?.Overall ?? true)
             {
@@ -938,9 +938,9 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ActivateParents_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActivateParents_FieldIndex.ParentActivateOnly) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.ParentActivateOnly != rhs.ParentActivateOnly) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ActivateParents_FieldIndex.Parents) ?? true))
             {
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IActivateParentsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Flags);
+            hash.Add(item.ParentActivateOnly);
             hash.Add(item.Parents);
             return hash.ToHashCode();
         }
@@ -990,9 +990,9 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ActivateParents_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActivateParents_FieldIndex.ParentActivateOnly) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.ParentActivateOnly = rhs.ParentActivateOnly;
             }
             if ((copyMask?.GetShouldTranslate((int)ActivateParents_FieldIndex.Parents) ?? true))
             {
@@ -1127,10 +1127,9 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            EnumBinaryTranslation<ActivateParents.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 1,
+            BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
+                writer: writer,
+                item: item.ParentActivateOnly,
                 header: translationParams.ConvertToCustom(RecordTypes.XAPD));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActivateParentGetter>.Instance.Write(
                 writer: writer,
@@ -1187,12 +1186,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.XAPD:
                 {
-                    if (lastParsed.ShortCircuit((int)ActivateParents_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActivateParents_FieldIndex.ParentActivateOnly, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<ActivateParents.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)ActivateParents_FieldIndex.Flags;
+                    item.ParentActivateOnly = frame.ReadBoolean();
+                    return (int)ActivateParents_FieldIndex.ParentActivateOnly;
                 }
                 case RecordTypeInts.XAPR:
                 {
@@ -1273,9 +1270,9 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        #region Flags
-        private int? _FlagsLocation;
-        public ActivateParents.Flag Flags => EnumBinaryTranslation<ActivateParents.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
+        #region ParentActivateOnly
+        private int? _ParentActivateOnlyLocation;
+        public Boolean ParentActivateOnly => _ParentActivateOnlyLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParentActivateOnlyLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
         #endregion
         public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = [];
         partial void CustomFactoryEnd(
@@ -1343,9 +1340,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.XAPD:
                 {
-                    if (lastParsed.ShortCircuit((int)ActivateParents_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)ActivateParents_FieldIndex.Flags;
+                    if (lastParsed.ShortCircuit((int)ActivateParents_FieldIndex.ParentActivateOnly, translationParams)) return ParseResult.Stop;
+                    _ParentActivateOnlyLocation = (stream.Position - offset);
+                    return (int)ActivateParents_FieldIndex.ParentActivateOnly;
                 }
                 case RecordTypeInts.XAPR:
                 {

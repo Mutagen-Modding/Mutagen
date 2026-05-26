@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Reference
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Reference = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IPlacedNpcEnableParentGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IPlacedNpcEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public Byte Flags { get; set; } = default(Byte);
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPlacedNpcEnableParent>,
         IPlacedNpcEnableParentGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new Byte Flags { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
     }
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlacedNpcEnableParent_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         Byte Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
 
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Byte Flags => _structData.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

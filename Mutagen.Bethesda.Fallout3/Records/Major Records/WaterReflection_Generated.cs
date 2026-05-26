@@ -52,17 +52,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region WaterReference
-        private readonly IFormLink<IFallout3MajorRecordGetter> _WaterReference = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> WaterReference
+        private readonly IFormLink<IPlacedObjectGetter> _WaterReference = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> WaterReference
         {
             get => _WaterReference;
             set => _WaterReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IWaterReflectionGetter.WaterReference => this.WaterReference;
+        IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.WaterReference => this.WaterReference;
         #endregion
-        #region Flags
-        public UInt32 Flags { get; set; } = default(UInt32);
+        #region Type
+        public WaterReflection.Flag Type { get; set; } = default(WaterReflection.Flag);
         #endregion
 
         #region To String
@@ -104,15 +104,15 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.WaterReference = initialValue;
-                this.Flags = initialValue;
+                this.Type = initialValue;
             }
 
             public Mask(
                 TItem WaterReference,
-                TItem Flags)
+                TItem Type)
             {
                 this.WaterReference = WaterReference;
-                this.Flags = Flags;
+                this.Type = Type;
             }
 
             #pragma warning disable CS8618
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem WaterReference;
-            public TItem Flags;
+            public TItem Type;
             #endregion
 
             #region Equals
@@ -139,14 +139,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.WaterReference, rhs.WaterReference)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.WaterReference);
-                hash.Add(this.Flags);
+                hash.Add(this.Type);
                 return hash.ToHashCode();
             }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.WaterReference)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
                 return true;
             }
             #endregion
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.WaterReference)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
                 return false;
             }
             #endregion
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.WaterReference = eval(this.WaterReference);
-                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
             }
             #endregion
 
@@ -204,9 +204,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(WaterReference, "WaterReference");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(Type, "Type");
                     }
                 }
             }
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? WaterReference;
-            public Exception? Flags;
+            public Exception? Type;
             #endregion
 
             #region IErrorMask
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case WaterReflection_FieldIndex.WaterReference:
                         return WaterReference;
-                    case WaterReflection_FieldIndex.Flags:
-                        return Flags;
+                    case WaterReflection_FieldIndex.Type:
+                        return Type;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -259,8 +259,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterReflection_FieldIndex.WaterReference:
                         this.WaterReference = ex;
                         break;
-                    case WaterReflection_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case WaterReflection_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -275,8 +275,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterReflection_FieldIndex.WaterReference:
                         this.WaterReference = (Exception?)obj;
                         break;
-                    case WaterReflection_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case WaterReflection_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (WaterReference != null) return true;
-                if (Flags != null) return true;
+                if (Type != null) return true;
                 return false;
             }
             #endregion
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(WaterReference, "WaterReference");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(Type, "Type");
                 }
             }
             #endregion
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.WaterReference = this.WaterReference.Combine(rhs.WaterReference);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool WaterReference;
-            public bool Flags;
+            public bool Type;
             #endregion
 
             #region Ctors
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.WaterReference = defaultOn;
-                this.Flags = defaultOn;
+                this.Type = defaultOn;
             }
 
             #endregion
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((WaterReference, null));
-                ret.Add((Flags, null));
+                ret.Add((Type, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -460,8 +460,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IWaterReflection>,
         IWaterReflectionGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> WaterReference { get; set; }
-        new UInt32 Flags { get; set; }
+        new IFormLink<IPlacedObjectGetter> WaterReference { get; set; }
+        new WaterReflection.Flag Type { get; set; }
     }
 
     public partial interface IWaterReflectionGetter :
@@ -477,8 +477,8 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WaterReflection_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> WaterReference { get; }
-        UInt32 Flags { get; }
+        IFormLinkGetter<IPlacedObjectGetter> WaterReference { get; }
+        WaterReflection.Flag Type { get; }
 
     }
 
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum WaterReflection_FieldIndex
     {
         WaterReference = 0,
-        Flags = 1,
+        Type = 1,
     }
     #endregion
 
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.WaterReference.Clear();
-            item.Flags = default(UInt32);
+            item.Type = default(WaterReflection.Flag);
         }
         
         #region Mutagen
@@ -792,7 +792,7 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.WaterReference = item.WaterReference.Equals(rhs.WaterReference);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
         }
         
         public string Print(
@@ -841,9 +841,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.WaterReference.FormKey, "WaterReference");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.Type ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.Type, "Type");
             }
         }
         
@@ -858,9 +858,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.WaterReference.Equals(rhs.WaterReference)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.Type != rhs.Type) return false;
             }
             return true;
         }
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.WaterReference);
-            hash.Add(item.Flags);
+            hash.Add(item.Type);
             return hash.ToHashCode();
         }
         
@@ -907,9 +907,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.WaterReference.SetTo(rhs.WaterReference.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Type = rhs.Type;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1022,7 +1022,10 @@ namespace Mutagen.Bethesda.Fallout3
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.WaterReference);
-            writer.Write(item.Flags);
+            EnumBinaryTranslation<WaterReflection.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4);
         }
 
         public void Write(
@@ -1064,7 +1067,9 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.WaterReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Flags = frame.ReadUInt32();
+            item.Type = EnumBinaryTranslation<WaterReflection.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1131,8 +1136,8 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> WaterReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public UInt32 Flags => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedObjectGetter> WaterReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public WaterReflection.Flag Type => (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

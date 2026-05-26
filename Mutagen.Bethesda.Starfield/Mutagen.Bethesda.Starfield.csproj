@@ -2604,6 +2604,10 @@
     <Compile Include="Records\StarfieldListGroup.cs">
       <DependentUpon>StarfieldGroup.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\CellBlockConsolidator.cs" />
+    <Compile Include="Records\StarfieldListGroupOverlay.cs">
+      <DependentUpon>StarfieldGroup.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\TransientType_Generated.cs">
       <DependentUpon>StarfieldModHeader.xml</DependentUpon>
     </Compile>

@@ -54,15 +54,19 @@ namespace Mutagen.Bethesda.Fallout3
         public Single Offset { get; set; } = default(Single);
         #endregion
         #region HeightMap
+        public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _HeightMap = new byte[1089];
-        public MemorySlice<Byte> HeightMap
+        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33, default(Byte));
+        public IArray2d<Byte> HeightMap
         {
-            get => _HeightMap;
-            set => this._HeightMap = value;
+            get => this._HeightMap;
+            init => this._HeightMap = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ILandscapeVertexHeightMapGetter.HeightMap => this.HeightMap;
+        IReadOnlyArray2d<Byte> ILandscapeVertexHeightMapGetter.HeightMap => _HeightMap;
+        #endregion
+
         #endregion
         #region Unknown
         public P3UInt8 Unknown { get; set; } = default(P3UInt8);
@@ -107,7 +111,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Offset = initialValue;
-                this.HeightMap = initialValue;
+                this.HeightMap = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, []);
                 this.Unknown = initialValue;
             }
 
@@ -117,7 +121,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Unknown)
             {
                 this.Offset = Offset;
-                this.HeightMap = HeightMap;
+                this.HeightMap = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(HeightMap, []);
                 this.Unknown = Unknown;
             }
 
@@ -131,7 +135,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Offset;
-            public TItem HeightMap;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? HeightMap;
             public TItem Unknown;
             #endregion
 
@@ -165,7 +169,17 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Offset)) return false;
-                if (!eval(this.HeightMap)) return false;
+                if (this.HeightMap != null)
+                {
+                    if (!eval(this.HeightMap.Overall)) return false;
+                    if (this.HeightMap.Specific != null)
+                    {
+                        foreach (var item in this.HeightMap.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.Unknown)) return false;
                 return true;
             }
@@ -175,7 +189,17 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Offset)) return true;
-                if (eval(this.HeightMap)) return true;
+                if (this.HeightMap != null)
+                {
+                    if (eval(this.HeightMap.Overall)) return true;
+                    if (this.HeightMap.Specific != null)
+                    {
+                        foreach (var item in this.HeightMap.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (eval(this.Unknown)) return true;
                 return false;
             }
@@ -192,7 +216,20 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Offset = eval(this.Offset);
-                obj.HeightMap = eval(this.HeightMap);
+                if (HeightMap != null)
+                {
+                    obj.HeightMap = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.HeightMap.Overall), []);
+                    if (HeightMap.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.HeightMap.Specific = l;
+                        foreach (var item in HeightMap.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.Unknown = eval(this.Unknown);
             }
             #endregion
@@ -216,9 +253,26 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Offset, "Offset");
                     }
-                    if (printMask?.HeightMap ?? true)
+                    if ((printMask?.HeightMap?.Overall ?? true)
+                        && HeightMap is {} HeightMapItem)
                     {
-                        sb.AppendItem(HeightMap, "HeightMap");
+                        sb.AppendLine("HeightMap =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(HeightMapItem.Overall);
+                            if (HeightMapItem.Specific != null)
+                            {
+                                foreach (var subItem in HeightMapItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.Unknown ?? true)
                     {
@@ -249,7 +303,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Offset;
-            public Exception? HeightMap;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? HeightMap;
             public Exception? Unknown;
             #endregion
 
@@ -279,7 +333,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Offset = ex;
                         break;
                     case LandscapeVertexHeightMap_FieldIndex.HeightMap:
-                        this.HeightMap = ex;
+                        this.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
                     case LandscapeVertexHeightMap_FieldIndex.Unknown:
                         this.Unknown = ex;
@@ -298,7 +352,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Offset = (Exception?)obj;
                         break;
                     case LandscapeVertexHeightMap_FieldIndex.HeightMap:
-                        this.HeightMap = (Exception?)obj;
+                        this.HeightMap = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
                     case LandscapeVertexHeightMap_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
@@ -342,8 +396,25 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Offset, "Offset");
                 }
+                if (HeightMap is {} HeightMapItem)
                 {
-                    sb.AppendItem(HeightMap, "HeightMap");
+                    sb.AppendLine("HeightMap =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(HeightMapItem.Overall);
+                        if (HeightMapItem.Specific != null)
+                        {
+                            foreach (var subItem in HeightMapItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 {
                     sb.AppendItem(Unknown, "Unknown");
@@ -357,7 +428,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Offset = this.Offset.Combine(rhs.Offset);
-                ret.HeightMap = this.HeightMap.Combine(rhs.HeightMap);
+                ret.HeightMap = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.HeightMap?.Overall, rhs.HeightMap?.Overall), Noggog.ExceptionExt.Combine(this.HeightMap?.Specific, rhs.HeightMap?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
@@ -488,7 +559,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ILandscapeVertexHeightMap>
     {
         new Single Offset { get; set; }
-        new MemorySlice<Byte> HeightMap { get; set; }
+        new IArray2d<Byte> HeightMap { get; }
         new P3UInt8 Unknown { get; set; }
     }
 
@@ -505,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         Single Offset { get; }
-        ReadOnlyMemorySlice<Byte> HeightMap { get; }
+        IReadOnlyArray2d<Byte> HeightMap { get; }
         P3UInt8 Unknown { get; }
 
     }
@@ -765,7 +836,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Offset = default(Single);
-            item.HeightMap = new byte[1089];
+            item.HeightMap.SetAllTo(default(Byte));
             item.Unknown = default(P3UInt8);
         }
         
@@ -821,7 +892,10 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Offset = item.Offset.EqualsWithin(rhs.Offset);
-            ret.HeightMap = MemoryExtensions.SequenceEqual(item.HeightMap.Span, rhs.HeightMap.Span);
+            ret.HeightMap = item.HeightMap.Array2dEqualsHelper(
+                rhs.HeightMap,
+                (l, r) => l == r,
+                include);
             ret.Unknown = item.Unknown.Equals(rhs.Unknown);
         }
         
@@ -871,9 +945,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Offset, "Offset");
             }
-            if (printMask?.HeightMap ?? true)
+            if (printMask?.HeightMap?.Overall ?? true)
             {
-                sb.AppendLine($"HeightMap => {SpanExt.ToHexString(item.HeightMap)}");
+                sb.AppendLine("HeightMap =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.HeightMap)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
+                        }
+                    }
+                }
             }
             if (printMask?.Unknown ?? true)
             {
@@ -894,7 +979,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.HeightMap.Span, rhs.HeightMap.Span)) return false;
+                if (!lhs.HeightMap.SequenceEqualNullable(rhs.HeightMap)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
             {
@@ -947,7 +1032,20 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.HeightMap) ?? true))
             {
-                item.HeightMap = rhs.HeightMap.ToArray();
+                errorMask?.PushIndex((int)LandscapeVertexHeightMap_FieldIndex.HeightMap);
+                try
+                {
+                    item.HeightMap.SetTo(rhs.HeightMap);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeVertexHeightMap_FieldIndex.Unknown) ?? true))
             {
@@ -1064,9 +1162,10 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Offset);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
-                item: item.HeightMap);
+                items: item.HeightMap,
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
@@ -1111,7 +1210,11 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.Offset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.HeightMap = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(1089));
+            item.HeightMap.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Parse(
+                    reader: frame,
+                    size: LandscapeVertexHeightMap.HeightMapFixedSize,
+                    transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Unknown = P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
@@ -1179,7 +1282,14 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public Single Offset => _structData.Slice(0x0, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> HeightMap => _structData.Span.Slice(0x4, 0x441).ToArray();
+        #region HeightMap
+        public IReadOnlyArray2d<Byte> HeightMap => BinaryOverlayArray2d.Factory<Byte>(
+            mem: _structData.Slice(4),
+            package: _package,
+            itemLength: 1,
+            size: LandscapeVertexHeightMap.HeightMapFixedSize,
+            getter: (s, p) => s[0]);
+        #endregion
         public P3UInt8 Unknown => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x445, 0x3));
         partial void CustomFactoryEnd(
             OverlayStream stream,

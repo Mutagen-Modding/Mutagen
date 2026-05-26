@@ -16,15 +16,46 @@ namespace Mutagen.Bethesda.Fallout3;
 public partial class Cell
 {
     [Flags]
+    public enum MajorFlag
+    {
+        Persistent = 0x0000_0400,
+        OffLimits = 0x0002_0000,
+        CantWait = 0x0008_0000,
+    }
+
+    [Flags]
     public enum Flag
     {
         IsInteriorCell = 0x0001,
         HasWater = 0x0002,
-        CanTravelFromHere= 0x0004,
+        InvertFastTravelBehavior = 0x0004,
         NoLODWater = 0x0008,
         PublicPlace = 0x0020,
         HandChanged = 0x0040,
-        BehaveLikeExteriod = 0x0080,
+        BehaveLikeExterior = 0x0080,
+    }
+
+    [Flags]
+    public enum LightingInheritFlag
+    {
+        AmbientColor = 0x0001,
+        DirectionalColor = 0x0002,
+        FogColor = 0x0004,
+        FogNear = 0x0008,
+        FogFar = 0x0010,
+        DirectionalRotation = 0x0020,
+        DirectionalFade = 0x0040,
+        ClipDistance = 0x0080,
+        FogPower = 0x0100,
+    }
+
+    [Flags]
+    public enum LandFlag
+    {
+        HideQuad1 = 0x01,
+        HideQuad2 = 0x02,
+        HideQuad3 = 0x04,
+        HideQuad4 = 0x08,
     }
 }
 

@@ -99,6 +99,10 @@
     <Compile Include="Records\OblivionListGroup.cs">
       <DependentUpon>OblivionGroup.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\CellBlockConsolidator.cs" />
+    <Compile Include="Records\OblivionListGroupOverlay.cs">
+      <DependentUpon>OblivionGroup.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AIPackage.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>

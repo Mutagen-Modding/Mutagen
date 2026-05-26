@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Reference
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Reference = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Reference
+        private readonly IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
         {
             get => _Reference;
             set => _Reference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IPlacedNpcActivateParentGetter.Reference => this.Reference;
+        IFormLinkGetter<IPlacedGetter> IPlacedNpcActivateParentGetter.Reference => this.Reference;
         #endregion
         #region Delay
         public Single Delay { get; set; } = default(Single);
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPlacedNpcActivateParent>,
         IPlacedNpcActivateParentGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; set; }
         new Single Delay { get; set; }
     }
 
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlacedNpcActivateParent_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         Single Delay { get; }
 
     }
@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single Delay => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

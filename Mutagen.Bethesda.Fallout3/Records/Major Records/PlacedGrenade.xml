@@ -5,8 +5,8 @@
     <Fields>
       <FormLink name="Base" recordType="NAME" refName="Projectile" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
-      <ByteArray name="XRGD" recordType="XRGD" />
-      <ByteArray name="XRGB" recordType="XRGB" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <Float name="XPRD" recordType="XPRD" />
       <ByteArray name="XPPA" recordType="XPPA" />
       <FormLink name="IdleMarker" recordType="INAM" refName="IdleAnimation" />
@@ -16,13 +16,17 @@
       <FormLink name="GlobalReference" recordType="SCRO" refName="Fallout3MajorRecord" />
       <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
       <Int32 name="LevelModifier" recordType="XLCM" />
-      <FormLink name="Owner" recordType="XOWN" refName="Fallout3MajorRecord" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
       <Int32 name="FactionRank" recordType="XRNK" />
       <Int32 name="Count" recordType="XCNT" />
       <Float name="Radius" recordType="XRDS" />
       <Float name="Health" recordType="XHLP" />
       <ByteArray name="XDCR" recordType="XDCR" />
-      <FormLink name="LinkedReferenceColor" recordType="XLKR" refName="Fallout3MajorRecord" />
+      <FormLink name="LinkedReference" recordType="XLKR">
+        <Interface>IPlaced</Interface>
+      </FormLink>
       <ByteArray name="XCLP" recordType="XCLP" />
       <Bool name="ParentActivateOnly" recordType="XAPD" />
       <ByteArray name="XAPR" recordType="XAPR" />

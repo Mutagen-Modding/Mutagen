@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
+using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
@@ -52,6 +53,150 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.TERM, ProcessTerminals);
         AddDynamicProcessing(RecordTypes.WTHR, ProcessWeather);
         AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
+        AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
+        AddDynamicProcessing(
+            ProcessPlaced,
+            PlacedObject_Registration.TriggeringRecordType,
+            PlacedNpc_Registration.TriggeringRecordType,
+            PlacedCreature_Registration.TriggeringRecordType,
+            PlacedGrenade_Registration.TriggeringRecordType,
+            PlacedMissile_Registration.TriggeringRecordType,
+            PlacedBeam_Registration.TriggeringRecordType);
+    }
+
+    private void ProcessCells(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
+        CleanEmptyCellGroups(
+            stream,
+            formKey,
+            fileOffset,
+            numSubGroups: 2);
+    }
+
+    private void ProcessPlaced(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        var sizeChange = 0;
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
+        {
+            ProcessZeroFloats(dataRec, fileOffset, 6);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XTEL, out var xtelRec))
+        {
+            var offset = 4;
+            ProcessZeroFloats(xtelRec, fileOffset, ref offset, 6);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XPRM, out var xprmRec))
+        {
+            int offset = 0;
+            ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
+            ProcessColorFloat(xprmRec, fileOffset, ref offset, alpha: false);
+            ProcessZeroFloat(xprmRec, fileOffset, ref offset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XMBO, out var xmboRec))
+        {
+            ProcessZeroFloats(xmboRec, fileOffset, 3);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGB, out var xrgbRec))
+        {
+            ProcessZeroFloats(xrgbRec, fileOffset, 3);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRGD, out var xrgdRec))
+        {
+            int loc = 0;
+            while (loc < xrgdRec.ContentLength)
+            {
+                loc += 4;
+                ProcessZeroFloats(xrgdRec, fileOffset, ref loc, 6);
+            }
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XSCL, out var xsclRec))
+        {
+            ProcessZeroFloat(xsclRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XPRD, out var xprdRec))
+        {
+            ProcessZeroFloat(xprdRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRDS, out var xrdsRec))
+        {
+            ProcessZeroFloat(xrdsRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XHLP, out var xhlpRec))
+        {
+            ProcessZeroFloat(xhlpRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRAD, out var xradRec))
+        {
+            ProcessZeroFloat(xradRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XCHG, out var xchgRec))
+        {
+            ProcessZeroFloat(xchgRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XCLW, out var xclwRec))
+        {
+            ProcessZeroFloat(xclwRec, fileOffset);
+        }
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XAPD, out var xapdRec))
+        {
+            ProcessBool(xapdRec, fileOffset, loc: 0, length: 1, importantBytes: 1);
+        }
+
+        // Normalize FormIDs whose master index is out of range (e.g. GRA has stray master 2 refs
+        // in a file that declares only one master; Mutagen clamps them to _numMasters on write).
+        foreach (var formIdSub in new[]
+                 {
+                     RecordTypes.NAME, RecordTypes.XEZN, RecordTypes.XTRG, RecordTypes.XOWN,
+                     RecordTypes.XAMT, RecordTypes.XLKR, RecordTypes.XEMI, RecordTypes.XMBR,
+                     RecordTypes.INAM, RecordTypes.TNAM, RecordTypes.LTMP, RecordTypes.XCCM,
+                     RecordTypes.XCIM, RecordTypes.XCWT, RecordTypes.CNAM, RecordTypes.WMI1,
+                     RecordTypes.XCAS, RecordTypes.XCMO, RecordTypes.XMRC, RecordTypes.SCRO,
+                 })
+        {
+            if (majorFrame.TryFindSubrecord(formIdSub, out var sub)
+                && sub.ContentLength == 4)
+            {
+                ProcessFormIDOverflow(sub, fileOffset);
+            }
+        }
+
+        // Mutagen skips XRMR (BoundData) entirely when LinkedRoomsCount and Unknown are both zero.
+        // Mirror that by removing a fully-zero XRMR subrecord from the reference.
+        if (majorFrame.TryFindSubrecord(RecordTypes.XRMR, out var xrmrRec)
+            && xrmrRec.ContentLength == 4
+            && xrmrRec.AsInt32() == 0)
+        {
+            Instructions.SetRemove(
+                RangeInt64.FromLength(
+                    fileOffset + xrmrRec.Location,
+                    xrmrRec.TotalLength));
+            sizeChange -= (int)xrmrRec.TotalLength;
+        }
+
+        ProcessLengths(
+            majorFrame,
+            sizeChange,
+            fileOffset);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)

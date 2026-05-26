@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -52,35 +53,23 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Door
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Door = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Door
+        private readonly IFormLink<IPlacedObjectGetter> _Door = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Door
         {
             get => _Door;
             set => _Door.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> ITeleportDestinationGetter.Door => this.Door;
+        IFormLinkGetter<IPlacedObjectGetter> ITeleportDestinationGetter.Door => this.Door;
         #endregion
-        #region PositionX
-        public Single PositionX { get; set; } = default(Single);
+        #region Position
+        public P3Float Position { get; set; } = default(P3Float);
         #endregion
-        #region PositionY
-        public Single PositionY { get; set; } = default(Single);
-        #endregion
-        #region PositionZ
-        public Single PositionZ { get; set; } = default(Single);
-        #endregion
-        #region RotationX
-        public Single RotationX { get; set; } = default(Single);
-        #endregion
-        #region RotationY
-        public Single RotationY { get; set; } = default(Single);
-        #endregion
-        #region RotationZ
-        public Single RotationZ { get; set; } = default(Single);
+        #region Rotation
+        public P3Float Rotation { get; set; } = default(P3Float);
         #endregion
         #region NoAlarm
-        public UInt32 NoAlarm { get; set; } = default(UInt32);
+        public Boolean NoAlarm { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -122,32 +111,20 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Door = initialValue;
-                this.PositionX = initialValue;
-                this.PositionY = initialValue;
-                this.PositionZ = initialValue;
-                this.RotationX = initialValue;
-                this.RotationY = initialValue;
-                this.RotationZ = initialValue;
+                this.Position = initialValue;
+                this.Rotation = initialValue;
                 this.NoAlarm = initialValue;
             }
 
             public Mask(
                 TItem Door,
-                TItem PositionX,
-                TItem PositionY,
-                TItem PositionZ,
-                TItem RotationX,
-                TItem RotationY,
-                TItem RotationZ,
+                TItem Position,
+                TItem Rotation,
                 TItem NoAlarm)
             {
                 this.Door = Door;
-                this.PositionX = PositionX;
-                this.PositionY = PositionY;
-                this.PositionZ = PositionZ;
-                this.RotationX = RotationX;
-                this.RotationY = RotationY;
-                this.RotationZ = RotationZ;
+                this.Position = Position;
+                this.Rotation = Rotation;
                 this.NoAlarm = NoAlarm;
             }
 
@@ -161,12 +138,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Door;
-            public TItem PositionX;
-            public TItem PositionY;
-            public TItem PositionZ;
-            public TItem RotationX;
-            public TItem RotationY;
-            public TItem RotationZ;
+            public TItem Position;
+            public TItem Rotation;
             public TItem NoAlarm;
             #endregion
 
@@ -181,12 +154,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Door, rhs.Door)) return false;
-                if (!object.Equals(this.PositionX, rhs.PositionX)) return false;
-                if (!object.Equals(this.PositionY, rhs.PositionY)) return false;
-                if (!object.Equals(this.PositionZ, rhs.PositionZ)) return false;
-                if (!object.Equals(this.RotationX, rhs.RotationX)) return false;
-                if (!object.Equals(this.RotationY, rhs.RotationY)) return false;
-                if (!object.Equals(this.RotationZ, rhs.RotationZ)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 if (!object.Equals(this.NoAlarm, rhs.NoAlarm)) return false;
                 return true;
             }
@@ -194,12 +163,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.Door);
-                hash.Add(this.PositionX);
-                hash.Add(this.PositionY);
-                hash.Add(this.PositionZ);
-                hash.Add(this.RotationX);
-                hash.Add(this.RotationY);
-                hash.Add(this.RotationZ);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
                 hash.Add(this.NoAlarm);
                 return hash.ToHashCode();
             }
@@ -210,12 +175,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Door)) return false;
-                if (!eval(this.PositionX)) return false;
-                if (!eval(this.PositionY)) return false;
-                if (!eval(this.PositionZ)) return false;
-                if (!eval(this.RotationX)) return false;
-                if (!eval(this.RotationY)) return false;
-                if (!eval(this.RotationZ)) return false;
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
                 if (!eval(this.NoAlarm)) return false;
                 return true;
             }
@@ -225,12 +186,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Door)) return true;
-                if (eval(this.PositionX)) return true;
-                if (eval(this.PositionY)) return true;
-                if (eval(this.PositionZ)) return true;
-                if (eval(this.RotationX)) return true;
-                if (eval(this.RotationY)) return true;
-                if (eval(this.RotationZ)) return true;
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
                 if (eval(this.NoAlarm)) return true;
                 return false;
             }
@@ -247,12 +204,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Door = eval(this.Door);
-                obj.PositionX = eval(this.PositionX);
-                obj.PositionY = eval(this.PositionY);
-                obj.PositionZ = eval(this.PositionZ);
-                obj.RotationX = eval(this.RotationX);
-                obj.RotationY = eval(this.RotationY);
-                obj.RotationZ = eval(this.RotationZ);
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
                 obj.NoAlarm = eval(this.NoAlarm);
             }
             #endregion
@@ -276,29 +229,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Door, "Door");
                     }
-                    if (printMask?.PositionX ?? true)
+                    if (printMask?.Position ?? true)
                     {
-                        sb.AppendItem(PositionX, "PositionX");
+                        sb.AppendItem(Position, "Position");
                     }
-                    if (printMask?.PositionY ?? true)
+                    if (printMask?.Rotation ?? true)
                     {
-                        sb.AppendItem(PositionY, "PositionY");
-                    }
-                    if (printMask?.PositionZ ?? true)
-                    {
-                        sb.AppendItem(PositionZ, "PositionZ");
-                    }
-                    if (printMask?.RotationX ?? true)
-                    {
-                        sb.AppendItem(RotationX, "RotationX");
-                    }
-                    if (printMask?.RotationY ?? true)
-                    {
-                        sb.AppendItem(RotationY, "RotationY");
-                    }
-                    if (printMask?.RotationZ ?? true)
-                    {
-                        sb.AppendItem(RotationZ, "RotationZ");
+                        sb.AppendItem(Rotation, "Rotation");
                     }
                     if (printMask?.NoAlarm ?? true)
                     {
@@ -329,12 +266,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Door;
-            public Exception? PositionX;
-            public Exception? PositionY;
-            public Exception? PositionZ;
-            public Exception? RotationX;
-            public Exception? RotationY;
-            public Exception? RotationZ;
+            public Exception? Position;
+            public Exception? Rotation;
             public Exception? NoAlarm;
             #endregion
 
@@ -346,18 +279,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case TeleportDestination_FieldIndex.Door:
                         return Door;
-                    case TeleportDestination_FieldIndex.PositionX:
-                        return PositionX;
-                    case TeleportDestination_FieldIndex.PositionY:
-                        return PositionY;
-                    case TeleportDestination_FieldIndex.PositionZ:
-                        return PositionZ;
-                    case TeleportDestination_FieldIndex.RotationX:
-                        return RotationX;
-                    case TeleportDestination_FieldIndex.RotationY:
-                        return RotationY;
-                    case TeleportDestination_FieldIndex.RotationZ:
-                        return RotationZ;
+                    case TeleportDestination_FieldIndex.Position:
+                        return Position;
+                    case TeleportDestination_FieldIndex.Rotation:
+                        return Rotation;
                     case TeleportDestination_FieldIndex.NoAlarm:
                         return NoAlarm;
                     default:
@@ -373,23 +298,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case TeleportDestination_FieldIndex.Door:
                         this.Door = ex;
                         break;
-                    case TeleportDestination_FieldIndex.PositionX:
-                        this.PositionX = ex;
+                    case TeleportDestination_FieldIndex.Position:
+                        this.Position = ex;
                         break;
-                    case TeleportDestination_FieldIndex.PositionY:
-                        this.PositionY = ex;
-                        break;
-                    case TeleportDestination_FieldIndex.PositionZ:
-                        this.PositionZ = ex;
-                        break;
-                    case TeleportDestination_FieldIndex.RotationX:
-                        this.RotationX = ex;
-                        break;
-                    case TeleportDestination_FieldIndex.RotationY:
-                        this.RotationY = ex;
-                        break;
-                    case TeleportDestination_FieldIndex.RotationZ:
-                        this.RotationZ = ex;
+                    case TeleportDestination_FieldIndex.Rotation:
+                        this.Rotation = ex;
                         break;
                     case TeleportDestination_FieldIndex.NoAlarm:
                         this.NoAlarm = ex;
@@ -407,23 +320,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case TeleportDestination_FieldIndex.Door:
                         this.Door = (Exception?)obj;
                         break;
-                    case TeleportDestination_FieldIndex.PositionX:
-                        this.PositionX = (Exception?)obj;
+                    case TeleportDestination_FieldIndex.Position:
+                        this.Position = (Exception?)obj;
                         break;
-                    case TeleportDestination_FieldIndex.PositionY:
-                        this.PositionY = (Exception?)obj;
-                        break;
-                    case TeleportDestination_FieldIndex.PositionZ:
-                        this.PositionZ = (Exception?)obj;
-                        break;
-                    case TeleportDestination_FieldIndex.RotationX:
-                        this.RotationX = (Exception?)obj;
-                        break;
-                    case TeleportDestination_FieldIndex.RotationY:
-                        this.RotationY = (Exception?)obj;
-                        break;
-                    case TeleportDestination_FieldIndex.RotationZ:
-                        this.RotationZ = (Exception?)obj;
+                    case TeleportDestination_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
                         break;
                     case TeleportDestination_FieldIndex.NoAlarm:
                         this.NoAlarm = (Exception?)obj;
@@ -437,12 +338,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Door != null) return true;
-                if (PositionX != null) return true;
-                if (PositionY != null) return true;
-                if (PositionZ != null) return true;
-                if (RotationX != null) return true;
-                if (RotationY != null) return true;
-                if (RotationZ != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
                 if (NoAlarm != null) return true;
                 return false;
             }
@@ -473,22 +370,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Door, "Door");
                 }
                 {
-                    sb.AppendItem(PositionX, "PositionX");
+                    sb.AppendItem(Position, "Position");
                 }
                 {
-                    sb.AppendItem(PositionY, "PositionY");
-                }
-                {
-                    sb.AppendItem(PositionZ, "PositionZ");
-                }
-                {
-                    sb.AppendItem(RotationX, "RotationX");
-                }
-                {
-                    sb.AppendItem(RotationY, "RotationY");
-                }
-                {
-                    sb.AppendItem(RotationZ, "RotationZ");
+                    sb.AppendItem(Rotation, "Rotation");
                 }
                 {
                     sb.AppendItem(NoAlarm, "NoAlarm");
@@ -502,12 +387,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Door = this.Door.Combine(rhs.Door);
-                ret.PositionX = this.PositionX.Combine(rhs.PositionX);
-                ret.PositionY = this.PositionY.Combine(rhs.PositionY);
-                ret.PositionZ = this.PositionZ.Combine(rhs.PositionZ);
-                ret.RotationX = this.RotationX.Combine(rhs.RotationX);
-                ret.RotationY = this.RotationY.Combine(rhs.RotationY);
-                ret.RotationZ = this.RotationZ.Combine(rhs.RotationZ);
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.NoAlarm = this.NoAlarm.Combine(rhs.NoAlarm);
                 return ret;
             }
@@ -533,12 +414,8 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Door;
-            public bool PositionX;
-            public bool PositionY;
-            public bool PositionZ;
-            public bool RotationX;
-            public bool RotationY;
-            public bool RotationZ;
+            public bool Position;
+            public bool Rotation;
             public bool NoAlarm;
             #endregion
 
@@ -550,12 +427,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Door = defaultOn;
-                this.PositionX = defaultOn;
-                this.PositionY = defaultOn;
-                this.PositionZ = defaultOn;
-                this.RotationX = defaultOn;
-                this.RotationY = defaultOn;
-                this.RotationZ = defaultOn;
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
                 this.NoAlarm = defaultOn;
             }
 
@@ -573,12 +446,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Door, null));
-                ret.Add((PositionX, null));
-                ret.Add((PositionY, null));
-                ret.Add((PositionZ, null));
-                ret.Add((RotationX, null));
-                ret.Add((RotationY, null));
-                ret.Add((RotationZ, null));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
                 ret.Add((NoAlarm, null));
             }
 
@@ -656,23 +525,21 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ITeleportDestination :
         IFormLinkContainer,
         ILoquiObjectSetter<ITeleportDestination>,
+        IPositionRotation,
         ITeleportDestinationGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Door { get; set; }
-        new Single PositionX { get; set; }
-        new Single PositionY { get; set; }
-        new Single PositionZ { get; set; }
-        new Single RotationX { get; set; }
-        new Single RotationY { get; set; }
-        new Single RotationZ { get; set; }
-        new UInt32 NoAlarm { get; set; }
+        new IFormLink<IPlacedObjectGetter> Door { get; set; }
+        new P3Float Position { get; set; }
+        new P3Float Rotation { get; set; }
+        new Boolean NoAlarm { get; set; }
     }
 
     public partial interface ITeleportDestinationGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ITeleportDestinationGetter>
+        ILoquiObject<ITeleportDestinationGetter>,
+        IPositionRotationGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -681,14 +548,10 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => TeleportDestination_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Door { get; }
-        Single PositionX { get; }
-        Single PositionY { get; }
-        Single PositionZ { get; }
-        Single RotationX { get; }
-        Single RotationY { get; }
-        Single RotationZ { get; }
-        UInt32 NoAlarm { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Door { get; }
+        P3Float Position { get; }
+        P3Float Rotation { get; }
+        Boolean NoAlarm { get; }
 
     }
 
@@ -859,13 +722,9 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum TeleportDestination_FieldIndex
     {
         Door = 0,
-        PositionX = 1,
-        PositionY = 2,
-        PositionZ = 3,
-        RotationX = 4,
-        RotationY = 5,
-        RotationZ = 6,
-        NoAlarm = 7,
+        Position = 1,
+        Rotation = 2,
+        NoAlarm = 3,
     }
     #endregion
 
@@ -876,9 +735,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(TeleportDestination.Mask<>);
 
@@ -952,13 +811,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Door.Clear();
-            item.PositionX = default(Single);
-            item.PositionY = default(Single);
-            item.PositionZ = default(Single);
-            item.RotationX = default(Single);
-            item.RotationY = default(Single);
-            item.RotationZ = default(Single);
-            item.NoAlarm = default(UInt32);
+            item.Position = default(P3Float);
+            item.Rotation = default(P3Float);
+            item.NoAlarm = default(Boolean);
         }
         
         #region Mutagen
@@ -1014,12 +869,8 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Door = item.Door.Equals(rhs.Door);
-            ret.PositionX = item.PositionX.EqualsWithin(rhs.PositionX);
-            ret.PositionY = item.PositionY.EqualsWithin(rhs.PositionY);
-            ret.PositionZ = item.PositionZ.EqualsWithin(rhs.PositionZ);
-            ret.RotationX = item.RotationX.EqualsWithin(rhs.RotationX);
-            ret.RotationY = item.RotationY.EqualsWithin(rhs.RotationY);
-            ret.RotationZ = item.RotationZ.EqualsWithin(rhs.RotationZ);
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.NoAlarm = item.NoAlarm == rhs.NoAlarm;
         }
         
@@ -1069,29 +920,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Door.FormKey, "Door");
             }
-            if (printMask?.PositionX ?? true)
+            if (printMask?.Position ?? true)
             {
-                sb.AppendItem(item.PositionX, "PositionX");
+                sb.AppendItem(item.Position, "Position");
             }
-            if (printMask?.PositionY ?? true)
+            if (printMask?.Rotation ?? true)
             {
-                sb.AppendItem(item.PositionY, "PositionY");
-            }
-            if (printMask?.PositionZ ?? true)
-            {
-                sb.AppendItem(item.PositionZ, "PositionZ");
-            }
-            if (printMask?.RotationX ?? true)
-            {
-                sb.AppendItem(item.RotationX, "RotationX");
-            }
-            if (printMask?.RotationY ?? true)
-            {
-                sb.AppendItem(item.RotationY, "RotationY");
-            }
-            if (printMask?.RotationZ ?? true)
-            {
-                sb.AppendItem(item.RotationZ, "RotationZ");
+                sb.AppendItem(item.Rotation, "Rotation");
             }
             if (printMask?.NoAlarm ?? true)
             {
@@ -1110,29 +945,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Door.Equals(rhs.Door)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.PositionX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
-                if (!lhs.PositionX.EqualsWithin(rhs.PositionX)) return false;
+                if (!lhs.Position.Equals(rhs.Position)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.PositionY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
             {
-                if (!lhs.PositionY.EqualsWithin(rhs.PositionY)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.PositionZ) ?? true))
-            {
-                if (!lhs.PositionZ.EqualsWithin(rhs.PositionZ)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.RotationX) ?? true))
-            {
-                if (!lhs.RotationX.EqualsWithin(rhs.RotationX)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.RotationY) ?? true))
-            {
-                if (!lhs.RotationY.EqualsWithin(rhs.RotationY)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.RotationZ) ?? true))
-            {
-                if (!lhs.RotationZ.EqualsWithin(rhs.RotationZ)) return false;
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.NoAlarm) ?? true))
             {
@@ -1145,12 +964,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.Door);
-            hash.Add(item.PositionX);
-            hash.Add(item.PositionY);
-            hash.Add(item.PositionZ);
-            hash.Add(item.RotationX);
-            hash.Add(item.RotationY);
-            hash.Add(item.RotationZ);
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
             hash.Add(item.NoAlarm);
             return hash.ToHashCode();
         }
@@ -1189,29 +1004,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Door.SetTo(rhs.Door.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.PositionX) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
-                item.PositionX = rhs.PositionX;
+                item.Position = rhs.Position;
             }
-            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.PositionY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Rotation) ?? true))
             {
-                item.PositionY = rhs.PositionY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.PositionZ) ?? true))
-            {
-                item.PositionZ = rhs.PositionZ;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.RotationX) ?? true))
-            {
-                item.RotationX = rhs.RotationX;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.RotationY) ?? true))
-            {
-                item.RotationY = rhs.RotationY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.RotationZ) ?? true))
-            {
-                item.RotationZ = rhs.RotationZ;
+                item.Rotation = rhs.Rotation;
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.NoAlarm) ?? true))
             {
@@ -1328,25 +1127,13 @@ namespace Mutagen.Bethesda.Fallout3
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Door);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.PositionX);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.Position);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.PositionY);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.PositionZ);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.RotationX);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.RotationY);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.RotationZ);
-            writer.Write(item.NoAlarm);
+                item: item.Rotation);
+            writer.Write(item.NoAlarm, length: 4);
         }
 
         public void Write(
@@ -1388,13 +1175,11 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame)
         {
             item.Door.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.PositionX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.PositionY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.PositionZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.RotationX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.RotationY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.RotationZ = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.NoAlarm = frame.ReadUInt32();
+            item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NoAlarm = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                reader: frame,
+                byteLength: 4);
         }
 
     }
@@ -1461,14 +1246,10 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Door => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public Single PositionX => _structData.Slice(0x4, 0x4).Float();
-        public Single PositionY => _structData.Slice(0x8, 0x4).Float();
-        public Single PositionZ => _structData.Slice(0xC, 0x4).Float();
-        public Single RotationX => _structData.Slice(0x10, 0x4).Float();
-        public Single RotationY => _structData.Slice(0x14, 0x4).Float();
-        public Single RotationZ => _structData.Slice(0x18, 0x4).Float();
-        public UInt32 NoAlarm => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
+        public IFormLinkGetter<IPlacedObjectGetter> Door => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
+        public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x10, 0xC));
+        public Boolean NoAlarm => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4)) >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

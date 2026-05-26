@@ -5,7 +5,7 @@
     <Fields>
       <FormLink name="Base" refName="Npc" recordType="NAME" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
-      <ByteArray name="XRGD" recordType="XRGD" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
       <Float name="PatrolIdleTime" recordType="XPRD" />
       <Bool name="PatrolScriptMarker" boolAsMarker="XPPA" />
@@ -21,7 +21,9 @@
       <Float name="Radius" recordType="XRDS" />
       <Float name="Health" recordType="XHLP" />
       <ByteArray name="LinkedDecals" recordType="XDCR" />
-      <FormLink name="LinkedReference" recordType="XLKR" refName="Fallout3MajorRecord" />
+      <FormLink name="LinkedReference" recordType="XLKR">
+        <Interface>IPlaced</Interface>
+      </FormLink>
       <RefDirect name="LinkedReferenceColor" refName="PlacedNpcLinkedReferenceColor" />
       <UInt8 name="ActivateParentFlags" recordType="XAPD" />
       <RefDirect name="ActivateParentRef" refName="PlacedNpcActivateParent" />
@@ -48,13 +50,17 @@
   </Object>
   <Object name="PlacedNpcActivateParent" objType="Subrecord" recordType="XAPR">
     <Fields>
-      <FormLink name="Reference" refName="Fallout3MajorRecord" />
+      <FormLink name="Reference">
+        <Interface>IPlaced</Interface>
+      </FormLink>
       <Float name="Delay" />
     </Fields>
   </Object>
   <Object name="PlacedNpcEnableParent" objType="Subrecord" recordType="XESP">
     <Fields>
-      <FormLink name="Reference" refName="Fallout3MajorRecord" />
+      <FormLink name="Reference">
+        <Interface>IPlaced</Interface>
+      </FormLink>
       <UInt8 name="Flags" />
       <ByteArray name="Unused" byteLength="3" nullable="False" />
     </Fields>

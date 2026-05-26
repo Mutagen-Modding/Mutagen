@@ -1458,7 +1458,8 @@ namespace Mutagen.Bethesda.Starfield
                 default:
                     if (nextRecordType.Equals(StarfieldListGroup<T>.T_RecordType))
                     {
-                        item.Records.SetTo(
+                        CellBlockConsolidator.MergeInto(
+                            item.Records,
                             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                                 reader: frame,
                                 triggeringRecord: StarfieldListGroup<T>.T_RecordType,
@@ -1570,6 +1571,27 @@ namespace Mutagen.Bethesda.Starfield
                 package: package)
         {
             this.CustomCtor();
+        }
+
+        public static IStarfieldListGroupGetter<T> StarfieldListGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            if (locs.Count == 1)
+            {
+                return StarfieldListGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
+                    package);
+            }
+            var subs = new IStarfieldListGroupGetter<T>[locs.Count];
+            for (int i = 0; i < locs.Count; i++)
+            {
+                subs[i] = StarfieldListGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package),
+                    package);
+            }
+            return (IStarfieldListGroupGetter<T>)(object)new StarfieldListGroupMergedOverlay(subs);
         }
 
         public static IStarfieldListGroupGetter<T> StarfieldListGroupFactory(

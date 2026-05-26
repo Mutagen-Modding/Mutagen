@@ -52,24 +52,24 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Origin
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Origin = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Origin
+        private readonly IFormLink<IPlacedObjectGetter> _Origin = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Origin
         {
             get => _Origin;
             set => _Origin.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IPortalGetter.Origin => this.Origin;
+        IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Origin => this.Origin;
         #endregion
         #region Destination
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Destination = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Destination
+        private readonly IFormLink<IPlacedObjectGetter> _Destination = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Destination
         {
             get => _Destination;
             set => _Destination.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IPortalGetter.Destination => this.Destination;
+        IFormLinkGetter<IPlacedObjectGetter> IPortalGetter.Destination => this.Destination;
         #endregion
 
         #region To String
@@ -467,8 +467,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPortal>,
         IPortalGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Origin { get; set; }
-        new IFormLink<IFallout3MajorRecordGetter> Destination { get; set; }
+        new IFormLink<IPlacedObjectGetter> Origin { get; set; }
+        new IFormLink<IPlacedObjectGetter> Destination { get; set; }
     }
 
     public partial interface IPortalGetter :
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Portal_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Origin { get; }
-        IFormLinkGetter<IFallout3MajorRecordGetter> Destination { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Origin { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Destination { get; }
 
     }
 
@@ -1124,8 +1124,8 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Origin => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Destination => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedObjectGetter> Origin => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedObjectGetter> Destination => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

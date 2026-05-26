@@ -2070,6 +2070,11 @@ public class PluginTranslationModule : BinaryTranslationModule
 
     private bool NeedsClear(ObjectGeneration obj)
     {
+        // Top-level list groups (e.g. Fallout3ListGroup for Cells) may have CopyInFromBinary
+        // called multiple times when a file contains multiple top-level GRUPs of the same record
+        // type — the additive list field is intentionally accumulating across those calls, so we
+        // must NOT clear on entry.
+        if (obj.IsTopLevelListGroup()) return false;
         foreach (var item in obj.IterateFields(includeBaseClass: true))
         {
             if (item is ListType l
@@ -2722,6 +2727,48 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
                         }
+                    }
+                    sb.AppendLine();
+                }
+
+                if (obj.IsTopLevelListGroup())
+                {
+                    // Multi-location factory used by the Mod overlay when a plugin contains more
+                    // than one top-level CELL GRUP (HonestHearts.esm is the canonical case).
+                    // Each location is materialized as its own sub-overlay; the wrapper exposes
+                    // their Records concatenated. Duplicate-numbered blocks/sub-blocks are
+                    // collapsed at write time by the per-game CellBlockConsolidator.
+                    using (var args = sb.Function(
+                               $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
+                    {
+                        args.Add($"{nameof(IBinaryReadStream)} stream");
+                        args.Add("IReadOnlyList<RangeInt64> locs");
+                        args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                    }
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (locs.Count == 1)");
+                        using (sb.CurlyBrace())
+                        {
+                            using (var args = sb.Call(
+                                       $"return {obj.Name}Factory"))
+                            {
+                                args.Add("new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package)");
+                                args.Add("package");
+                            }
+                        }
+                        sb.AppendLine($"var subs = new {obj.Interface(getter: true)}[locs.Count];");
+                        sb.AppendLine("for (int i = 0; i < locs.Count; i++)");
+                        using (sb.CurlyBrace())
+                        {
+                            using (var args = sb.Call(
+                                       $"subs[i] = {obj.Name}Factory"))
+                            {
+                                args.Add("new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package)");
+                                args.Add("package");
+                            }
+                        }
+                        sb.AppendLine($"return new {obj.Name}MergedOverlay<T>(subs);");
                     }
                     sb.AppendLine();
                 }

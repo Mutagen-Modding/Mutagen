@@ -208,7 +208,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - PlacedMissile
 - PlacedNpc
 - Placement
+- RagdollData
 - StaticPlacement
+- TeleportDestination
 ### IWeightValue
 - ItemMod
 - Light
@@ -455,6 +457,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Race
 - INamed
+### RagdollData
+- IPositionRotation
 ### Recipe
 - INamed
 ### RecipeCategory
@@ -481,6 +485,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - INamed
 - IObjectBounded
+### TeleportDestination
+- IPositionRotation
 ### Terminal
 - IHasDestructible
 - IModeled

@@ -1458,7 +1458,8 @@ namespace Mutagen.Bethesda.Skyrim
                 default:
                     if (nextRecordType.Equals(SkyrimListGroup<T>.T_RecordType))
                     {
-                        item.Records.SetTo(
+                        CellBlockConsolidator.MergeInto(
+                            item.Records,
                             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                                 reader: frame,
                                 triggeringRecord: SkyrimListGroup<T>.T_RecordType,
@@ -1570,6 +1571,27 @@ namespace Mutagen.Bethesda.Skyrim
                 package: package)
         {
             this.CustomCtor();
+        }
+
+        public static ISkyrimListGroupGetter<T> SkyrimListGroupFactory(
+            IBinaryReadStream stream,
+            IReadOnlyList<RangeInt64> locs,
+            BinaryOverlayFactoryPackage package)
+        {
+            if (locs.Count == 1)
+            {
+                return SkyrimListGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
+                    package);
+            }
+            var subs = new ISkyrimListGroupGetter<T>[locs.Count];
+            for (int i = 0; i < locs.Count; i++)
+            {
+                subs[i] = SkyrimListGroupFactory(
+                    new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package),
+                    package);
+            }
+            return (ISkyrimListGroupGetter<T>)(object)new SkyrimListGroupMergedOverlay(subs);
         }
 
         public static ISkyrimListGroupGetter<T> SkyrimListGroupFactory(

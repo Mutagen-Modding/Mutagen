@@ -60,18 +60,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Int32 GridY { get; set; } = default(Int32);
         #endregion
         #region LandFlags
-        public Byte LandFlags { get; set; } = default(Byte);
-        #endregion
-        #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[3];
-        public MemorySlice<Byte> Unused
-        {
-            get => _Unused;
-            set => this._Unused = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellGridGetter.Unused => this.Unused;
+        public Cell.LandFlag LandFlags { get; set; } = default(Cell.LandFlag);
         #endregion
 
         #region To String
@@ -116,21 +105,18 @@ namespace Mutagen.Bethesda.Fallout3
                 this.GridX = initialValue;
                 this.GridY = initialValue;
                 this.LandFlags = initialValue;
-                this.Unused = initialValue;
             }
 
             public Mask(
                 TItem Versioning,
                 TItem GridX,
                 TItem GridY,
-                TItem LandFlags,
-                TItem Unused)
+                TItem LandFlags)
             {
                 this.Versioning = Versioning;
                 this.GridX = GridX;
                 this.GridY = GridY;
                 this.LandFlags = LandFlags;
-                this.Unused = Unused;
             }
 
             #pragma warning disable CS8618
@@ -146,7 +132,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem GridX;
             public TItem GridY;
             public TItem LandFlags;
-            public TItem Unused;
             #endregion
 
             #region Equals
@@ -163,7 +148,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.GridX, rhs.GridX)) return false;
                 if (!object.Equals(this.GridY, rhs.GridY)) return false;
                 if (!object.Equals(this.LandFlags, rhs.LandFlags)) return false;
-                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -173,7 +157,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.GridX);
                 hash.Add(this.GridY);
                 hash.Add(this.LandFlags);
-                hash.Add(this.Unused);
                 return hash.ToHashCode();
             }
 
@@ -186,7 +169,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.GridX)) return false;
                 if (!eval(this.GridY)) return false;
                 if (!eval(this.LandFlags)) return false;
-                if (!eval(this.Unused)) return false;
                 return true;
             }
             #endregion
@@ -198,7 +180,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.GridX)) return true;
                 if (eval(this.GridY)) return true;
                 if (eval(this.LandFlags)) return true;
-                if (eval(this.Unused)) return true;
                 return false;
             }
             #endregion
@@ -217,7 +198,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.GridX = eval(this.GridX);
                 obj.GridY = eval(this.GridY);
                 obj.LandFlags = eval(this.LandFlags);
-                obj.Unused = eval(this.Unused);
             }
             #endregion
 
@@ -252,10 +232,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(LandFlags, "LandFlags");
                     }
-                    if (printMask?.Unused ?? true)
-                    {
-                        sb.AppendItem(Unused, "Unused");
-                    }
                 }
             }
             #endregion
@@ -284,7 +260,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? GridX;
             public Exception? GridY;
             public Exception? LandFlags;
-            public Exception? Unused;
             #endregion
 
             #region IErrorMask
@@ -301,8 +276,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return GridY;
                     case CellGrid_FieldIndex.LandFlags:
                         return LandFlags;
-                    case CellGrid_FieldIndex.Unused:
-                        return Unused;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -324,9 +297,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case CellGrid_FieldIndex.LandFlags:
                         this.LandFlags = ex;
-                        break;
-                    case CellGrid_FieldIndex.Unused:
-                        this.Unused = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -350,9 +320,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case CellGrid_FieldIndex.LandFlags:
                         this.LandFlags = (Exception?)obj;
                         break;
-                    case CellGrid_FieldIndex.Unused:
-                        this.Unused = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -365,7 +332,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (GridX != null) return true;
                 if (GridY != null) return true;
                 if (LandFlags != null) return true;
-                if (Unused != null) return true;
                 return false;
             }
             #endregion
@@ -403,9 +369,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(LandFlags, "LandFlags");
                 }
-                {
-                    sb.AppendItem(Unused, "Unused");
-                }
             }
             #endregion
 
@@ -418,7 +381,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.GridX = this.GridX.Combine(rhs.GridX);
                 ret.GridY = this.GridY.Combine(rhs.GridY);
                 ret.LandFlags = this.LandFlags.Combine(rhs.LandFlags);
-                ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -446,7 +408,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool GridX;
             public bool GridY;
             public bool LandFlags;
-            public bool Unused;
             #endregion
 
             #region Ctors
@@ -460,7 +421,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.GridX = defaultOn;
                 this.GridY = defaultOn;
                 this.LandFlags = defaultOn;
-                this.Unused = defaultOn;
             }
 
             #endregion
@@ -480,7 +440,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((GridX, null));
                 ret.Add((GridY, null));
                 ret.Add((LandFlags, null));
-                ret.Add((Unused, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -564,8 +523,7 @@ namespace Mutagen.Bethesda.Fallout3
         new CellGrid.VersioningBreaks Versioning { get; set; }
         new Int32 GridX { get; set; }
         new Int32 GridY { get; set; }
-        new Byte LandFlags { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
+        new Cell.LandFlag LandFlags { get; set; }
     }
 
     public partial interface ICellGridGetter :
@@ -583,8 +541,7 @@ namespace Mutagen.Bethesda.Fallout3
         CellGrid.VersioningBreaks Versioning { get; }
         Int32 GridX { get; }
         Int32 GridY { get; }
-        Byte LandFlags { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        Cell.LandFlag LandFlags { get; }
 
     }
 
@@ -758,7 +715,6 @@ namespace Mutagen.Bethesda.Fallout3
         GridX = 1,
         GridY = 2,
         LandFlags = 3,
-        Unused = 4,
     }
     #endregion
 
@@ -769,9 +725,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(CellGrid.Mask<>);
 
@@ -847,8 +803,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Versioning = default(CellGrid.VersioningBreaks);
             item.GridX = default(Int32);
             item.GridY = default(Int32);
-            item.LandFlags = default(Byte);
-            item.Unused = new byte[3];
+            item.LandFlags = default(Cell.LandFlag);
         }
         
         #region Mutagen
@@ -906,7 +861,6 @@ namespace Mutagen.Bethesda.Fallout3
             ret.GridX = item.GridX == rhs.GridX;
             ret.GridY = item.GridY == rhs.GridY;
             ret.LandFlags = item.LandFlags == rhs.LandFlags;
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
         }
         
         public string Print(
@@ -967,10 +921,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.LandFlags, "LandFlags");
             }
-            if (printMask?.Unused ?? true)
-            {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
-            }
         }
         
         #region Equals and Hash
@@ -996,10 +946,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.LandFlags != rhs.LandFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellGrid_FieldIndex.Unused) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            }
             return true;
         }
         
@@ -1010,7 +956,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.GridX);
             hash.Add(item.GridY);
             hash.Add(item.LandFlags);
-            hash.Add(item.Unused);
             return hash.ToHashCode();
         }
         
@@ -1059,10 +1004,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)CellGrid_FieldIndex.LandFlags) ?? true))
             {
                 item.LandFlags = rhs.LandFlags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CellGrid_FieldIndex.Unused) ?? true))
-            {
-                item.Unused = rhs.Unused.ToArray();
             }
             DeepCopyInCustom(
                 item: item,
@@ -1176,10 +1117,10 @@ namespace Mutagen.Bethesda.Fallout3
             writer.Write(item.GridY);
             if (!item.Versioning.HasFlag(CellGrid.VersioningBreaks.Break0))
             {
-                writer.Write(item.LandFlags);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused);
+                EnumBinaryTranslation<Cell.LandFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.LandFlags,
+                    length: 4);
             }
         }
 
@@ -1228,8 +1169,9 @@ namespace Mutagen.Bethesda.Fallout3
                 item.Versioning |= CellGrid.VersioningBreaks.Break0;
                 return;
             }
-            item.LandFlags = frame.ReadUInt8();
-            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.LandFlags = EnumBinaryTranslation<Cell.LandFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1298,8 +1240,7 @@ namespace Mutagen.Bethesda.Fallout3
         public CellGrid.VersioningBreaks Versioning { get; private set; }
         public Int32 GridX => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public Int32 GridY => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public Byte LandFlags => _structData.Length <= 0x8 ? default : _structData.Span[0x8];
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Length <= 0x9 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x9, 0x3).ToArray();
+        public Cell.LandFlag LandFlags => _structData.Span.Length <= 0x8 ? default : (Cell.LandFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Flags
-        public Byte Flags { get; set; } = default(Byte);
+        public MapMarker.Flag Flags { get; set; } = default(MapMarker.Flag);
         #endregion
         #region Name
         /// <summary>
@@ -72,11 +73,20 @@ namespace Mutagen.Bethesda.Fallout3
         }
         #endregion
         #endregion
-        #region IconType
-        public Byte IconType { get; set; } = default(Byte);
+        #region Type
+        public MapMarker.MarkerType? Type { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        MapMarker.MarkerType? IMapMarkerGetter.Type => this.Type;
         #endregion
-        #region Unused
-        public Byte Unused { get; set; } = default(Byte);
+        #region Reputation
+        private readonly IFormLinkNullable<IReputationGetter> _Reputation = new FormLinkNullable<IReputationGetter>();
+        public IFormLinkNullable<IReputationGetter> Reputation
+        {
+            get => _Reputation;
+            set => _Reputation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IReputationGetter> IMapMarkerGetter.Reputation => this.Reputation;
         #endregion
 
         #region To String
@@ -119,20 +129,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Flags = initialValue;
                 this.Name = initialValue;
-                this.IconType = initialValue;
-                this.Unused = initialValue;
+                this.Type = initialValue;
+                this.Reputation = initialValue;
             }
 
             public Mask(
                 TItem Flags,
                 TItem Name,
-                TItem IconType,
-                TItem Unused)
+                TItem Type,
+                TItem Reputation)
             {
                 this.Flags = Flags;
                 this.Name = Name;
-                this.IconType = IconType;
-                this.Unused = Unused;
+                this.Type = Type;
+                this.Reputation = Reputation;
             }
 
             #pragma warning disable CS8618
@@ -146,8 +156,8 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Flags;
             public TItem Name;
-            public TItem IconType;
-            public TItem Unused;
+            public TItem Type;
+            public TItem Reputation;
             #endregion
 
             #region Equals
@@ -162,8 +172,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.IconType, rhs.IconType)) return false;
-                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Reputation, rhs.Reputation)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -171,8 +181,8 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.Flags);
                 hash.Add(this.Name);
-                hash.Add(this.IconType);
-                hash.Add(this.Unused);
+                hash.Add(this.Type);
+                hash.Add(this.Reputation);
                 return hash.ToHashCode();
             }
 
@@ -183,8 +193,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Name)) return false;
-                if (!eval(this.IconType)) return false;
-                if (!eval(this.Unused)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Reputation)) return false;
                 return true;
             }
             #endregion
@@ -194,8 +204,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (eval(this.Flags)) return true;
                 if (eval(this.Name)) return true;
-                if (eval(this.IconType)) return true;
-                if (eval(this.Unused)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Reputation)) return true;
                 return false;
             }
             #endregion
@@ -212,8 +222,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 obj.Flags = eval(this.Flags);
                 obj.Name = eval(this.Name);
-                obj.IconType = eval(this.IconType);
-                obj.Unused = eval(this.Unused);
+                obj.Type = eval(this.Type);
+                obj.Reputation = eval(this.Reputation);
             }
             #endregion
 
@@ -240,13 +250,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.IconType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        sb.AppendItem(IconType, "IconType");
+                        sb.AppendItem(Type, "Type");
                     }
-                    if (printMask?.Unused ?? true)
+                    if (printMask?.Reputation ?? true)
                     {
-                        sb.AppendItem(Unused, "Unused");
+                        sb.AppendItem(Reputation, "Reputation");
                     }
                 }
             }
@@ -274,8 +284,8 @@ namespace Mutagen.Bethesda.Fallout3
             }
             public Exception? Flags;
             public Exception? Name;
-            public Exception? IconType;
-            public Exception? Unused;
+            public Exception? Type;
+            public Exception? Reputation;
             #endregion
 
             #region IErrorMask
@@ -288,10 +298,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return Flags;
                     case MapMarker_FieldIndex.Name:
                         return Name;
-                    case MapMarker_FieldIndex.IconType:
-                        return IconType;
-                    case MapMarker_FieldIndex.Unused:
-                        return Unused;
+                    case MapMarker_FieldIndex.Type:
+                        return Type;
+                    case MapMarker_FieldIndex.Reputation:
+                        return Reputation;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -308,11 +318,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case MapMarker_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case MapMarker_FieldIndex.IconType:
-                        this.IconType = ex;
+                    case MapMarker_FieldIndex.Type:
+                        this.Type = ex;
                         break;
-                    case MapMarker_FieldIndex.Unused:
-                        this.Unused = ex;
+                    case MapMarker_FieldIndex.Reputation:
+                        this.Reputation = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -330,11 +340,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case MapMarker_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case MapMarker_FieldIndex.IconType:
-                        this.IconType = (Exception?)obj;
+                    case MapMarker_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
-                    case MapMarker_FieldIndex.Unused:
-                        this.Unused = (Exception?)obj;
+                    case MapMarker_FieldIndex.Reputation:
+                        this.Reputation = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -346,8 +356,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (Flags != null) return true;
                 if (Name != null) return true;
-                if (IconType != null) return true;
-                if (Unused != null) return true;
+                if (Type != null) return true;
+                if (Reputation != null) return true;
                 return false;
             }
             #endregion
@@ -380,10 +390,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Name, "Name");
                 }
                 {
-                    sb.AppendItem(IconType, "IconType");
+                    sb.AppendItem(Type, "Type");
                 }
                 {
-                    sb.AppendItem(Unused, "Unused");
+                    sb.AppendItem(Reputation, "Reputation");
                 }
             }
             #endregion
@@ -395,8 +405,8 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.IconType = this.IconType.Combine(rhs.IconType);
-                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Reputation = this.Reputation.Combine(rhs.Reputation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -422,8 +432,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool OnOverall;
             public bool Flags;
             public bool Name;
-            public bool IconType;
-            public bool Unused;
+            public bool Type;
+            public bool Reputation;
             #endregion
 
             #region Ctors
@@ -435,8 +445,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.OnOverall = onOverall;
                 this.Flags = defaultOn;
                 this.Name = defaultOn;
-                this.IconType = defaultOn;
-                this.Unused = defaultOn;
+                this.Type = defaultOn;
+                this.Reputation = defaultOn;
             }
 
             #endregion
@@ -454,8 +464,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ret.Add((Flags, null));
                 ret.Add((Name, null));
-                ret.Add((IconType, null));
-                ret.Add((Unused, null));
+                ret.Add((Type, null));
+                ret.Add((Reputation, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -464,6 +474,11 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MapMarkerCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MapMarkerSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -525,23 +540,25 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IMapMarker :
+        IFormLinkContainer,
         ILoquiObjectSetter<IMapMarker>,
         IMapMarkerGetter,
         INamed,
         INamedRequired
     {
-        new Byte Flags { get; set; }
+        new MapMarker.Flag Flags { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new Byte IconType { get; set; }
-        new Byte Unused { get; set; }
+        new MapMarker.MarkerType? Type { get; set; }
+        new IFormLinkNullable<IReputationGetter> Reputation { get; set; }
     }
 
     public partial interface IMapMarkerGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IMapMarkerGetter>,
         INamedGetter,
         INamedRequiredGetter
@@ -553,15 +570,15 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MapMarker_Registration.Instance;
-        Byte Flags { get; }
+        MapMarker.Flag Flags { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion
-        Byte IconType { get; }
-        Byte Unused { get; }
+        MapMarker.MarkerType? Type { get; }
+        IFormLinkNullableGetter<IReputationGetter> Reputation { get; }
 
     }
 
@@ -733,8 +750,8 @@ namespace Mutagen.Bethesda.Fallout3
     {
         Flags = 0,
         Name = 1,
-        IconType = 2,
-        Unused = 3,
+        Type = 2,
+        Reputation = 3,
     }
     #endregion
 
@@ -781,7 +798,8 @@ namespace Mutagen.Bethesda.Fallout3
             var all = RecordCollection.Factory(
                 RecordTypes.FNAM,
                 RecordTypes.FULL,
-                RecordTypes.TNAM);
+                RecordTypes.TNAM,
+                RecordTypes.WMI1);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -826,15 +844,16 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IMapMarker item)
         {
             ClearPartial();
-            item.Flags = default(Byte);
+            item.Flags = default(MapMarker.Flag);
             item.Name = default;
-            item.IconType = default(Byte);
-            item.Unused = default(Byte);
+            item.Type = default;
+            item.Reputation.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IMapMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Reputation.Relink(mapping);
         }
         
         #endregion
@@ -881,8 +900,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Flags = item.Flags == rhs.Flags;
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.IconType = item.IconType == rhs.IconType;
-            ret.Unused = item.Unused == rhs.Unused;
+            ret.Type = item.Type == rhs.Type;
+            ret.Reputation = item.Reputation.Equals(rhs.Reputation);
         }
         
         public string Print(
@@ -936,13 +955,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if (printMask?.IconType ?? true)
+            if ((printMask?.Type ?? true)
+                && item.Type is {} TypeItem)
             {
-                sb.AppendItem(item.IconType, "IconType");
+                sb.AppendItem(TypeItem, "Type");
             }
-            if (printMask?.Unused ?? true)
+            if (printMask?.Reputation ?? true)
             {
-                sb.AppendItem(item.Unused, "Unused");
+                sb.AppendItem(item.Reputation.FormKeyNullable, "Reputation");
             }
         }
         
@@ -961,13 +981,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MapMarker_FieldIndex.IconType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Type) ?? true))
             {
-                if (lhs.IconType != rhs.IconType) return false;
+                if (lhs.Type != rhs.Type) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Reputation) ?? true))
             {
-                if (lhs.Unused != rhs.Unused) return false;
+                if (!lhs.Reputation.Equals(rhs.Reputation)) return false;
             }
             return true;
         }
@@ -980,8 +1000,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.IconType);
-            hash.Add(item.Unused);
+            if (item.Type is {} Typeitem)
+            {
+                hash.Add(Typeitem);
+            }
+            hash.Add(item.Reputation);
             return hash.ToHashCode();
         }
         
@@ -996,6 +1019,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMapMarkerGetter obj, bool iterateNestedRecords = true)
         {
+            if (FormLinkInformation.TryFactory(obj.Reputation, out var ReputationInfo))
+            {
+                yield return ReputationInfo;
+            }
             yield break;
         }
         
@@ -1022,13 +1049,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.IconType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Type) ?? true))
             {
-                item.IconType = rhs.IconType;
+                item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Unused) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MapMarker_FieldIndex.Reputation) ?? true))
             {
-                item.Unused = rhs.Unused;
+                item.Reputation.SetTo(rhs.Reputation.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1139,19 +1166,27 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Flags,
+            EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.TNAM)))
+            EnumBinaryTranslation<MapMarker.MarkerType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 2,
+                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
             {
-                writer.Write(item.IconType);
-                writer.Write(item.Unused);
+                FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.Reputation,
+                    header: translationParams.ConvertToCustom(RecordTypes.WMI1));
             }
         }
 
@@ -1199,7 +1234,9 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)MapMarker_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = frame.ReadUInt8();
+                    item.Flags = EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)MapMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.FULL:
@@ -1214,12 +1251,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.IconType = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Unused = dataFrame.ReadUInt8();
-                    return (int)MapMarker_FieldIndex.Unused;
+                    item.Type = EnumBinaryTranslation<MapMarker.MarkerType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)MapMarker_FieldIndex.Type;
+                }
+                case RecordTypeInts.WMI1:
+                {
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.Reputation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
+                    return (int)MapMarker_FieldIndex.Reputation;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1275,6 +1319,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MapMarkerCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MapMarkerBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1291,7 +1336,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Flags
         private int? _FlagsLocation;
-        public Byte Flags => _FlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public MapMarker.Flag Flags => EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1301,16 +1346,13 @@ namespace Mutagen.Bethesda.Fallout3
         string INamedRequiredGetter.Name => this.Name ?? string.Empty;
         #endregion
         #endregion
-        private RangeInt32? _TNAMLocation;
-        #region IconType
-        private int _IconTypeLocation => _TNAMLocation!.Value.Min;
-        private bool _IconType_IsSet => _TNAMLocation.HasValue;
-        public Byte IconType => _IconType_IsSet ? _recordData.Span[_IconTypeLocation] : default;
+        #region Type
+        private int? _TypeLocation;
+        public MapMarker.MarkerType? Type => EnumBinaryTranslation<MapMarker.MarkerType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 2);
         #endregion
-        #region Unused
-        private int _UnusedLocation => _TNAMLocation!.Value.Min + 0x1;
-        private bool _Unused_IsSet => _TNAMLocation.HasValue;
-        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
+        #region Reputation
+        private int? _ReputationLocation;
+        public IFormLinkNullableGetter<IReputationGetter> Reputation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReputationGetter>(_package, _recordData, _ReputationLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1388,8 +1430,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)MapMarker_FieldIndex.Unused;
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)MapMarker_FieldIndex.Type;
+                }
+                case RecordTypeInts.WMI1:
+                {
+                    _ReputationLocation = (stream.Position - offset);
+                    return (int)MapMarker_FieldIndex.Reputation;
                 }
                 default:
                     return ParseResult.Stop;

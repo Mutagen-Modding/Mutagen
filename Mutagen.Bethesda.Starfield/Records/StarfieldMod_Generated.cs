@@ -34086,7 +34086,8 @@ namespace Mutagen.Bethesda.Starfield
                 StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride,
-                Header = item
+                Header = item,
+                ModHeaderVersion = item.ModHeader.Stats.Version
             };
             if (param.Encodings != null)
             {
@@ -34122,7 +34123,7 @@ namespace Mutagen.Bethesda.Starfield
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.StarfieldRelease.ToGameRelease()),
+                new WritingBundle(item.StarfieldRelease.ToGameRelease()) { ModHeaderVersion = item.ModHeader.Stats.Version },
                 dispose: false))
             {
                 StarfieldModBinaryWriteTranslation.Instance.Write(
@@ -34523,8 +34524,8 @@ namespace Mutagen.Bethesda.Starfield
         public IStarfieldGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new StarfieldGroup<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
-        private RangeInt64? _CellsLocation;
-        private IStarfieldListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? StarfieldListGroupBinaryOverlay<ICellBlockGetter>.StarfieldListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
+        private List<RangeInt64>? _CellsLocations;
+        private IStarfieldListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? StarfieldListGroupBinaryOverlay<ICellBlockGetter>.StarfieldListGroupFactory(_stream, _CellsLocations, _package) : default;
         public IStarfieldListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new StarfieldListGroup<CellBlock>();
         #endregion
         #region Worldspaces
@@ -35550,7 +35551,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CellsLocations ??= new();
+                    _CellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)StarfieldMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:

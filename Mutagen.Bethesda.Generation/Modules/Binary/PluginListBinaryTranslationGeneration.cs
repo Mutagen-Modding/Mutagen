@@ -1318,6 +1318,27 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
     public void WrapSet(StructuredStringBuilder sb, Accessor accessor, ListType list, Action<StructuredStringBuilder> a)
     {
         var additive = (bool)list.CustomData[Additive];
+
+        // Top-level list groups (CELL containers) need a merge-by-BlockNumber semantic on read,
+        // not a plain AddRange.  When a plugin contains several top-level CELL GRUPs (HonestHearts
+        // is the canonical case) `CopyInFromBinary` is called once per GRUP, and naively appending
+        // would leave duplicate-numbered blocks in `Records`.  Route through the per-game
+        // CellBlockConsolidator so the in-memory list stays canonical (one Block per BlockNumber,
+        // sub-blocks recursively merged, cells concatenated).
+        if (list.ObjectGen != null
+            && list.ObjectGen.IsTopLevelListGroup()
+            && additive
+            && !list.Nullable)
+        {
+            using (var args = sb.Call(
+                       $"CellBlockConsolidator.MergeInto"))
+            {
+                args.Add($"{accessor}");
+                args.Add(subFg => a(subFg));
+            }
+            return;
+        }
+
         if (list.Nullable)
         {
             if (additive)

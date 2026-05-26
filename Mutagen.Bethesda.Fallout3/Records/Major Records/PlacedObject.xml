@@ -1,265 +1,225 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="PlacedObject" baseClass="Fallout3MajorRecord" recordType="REFR" objType="Record">
+  <Object name="PlacedObject" baseClass="Fallout3MajorRecord" recordType="REFR" objType="Record" majorFlag="true">
     <Fields>
-      <!-- Unused / Linked Reference Color (Old Format) -->
       <ByteArray name="RCLR" recordType="RCLR" />
+      <FormLink name="Base" recordType="NAME">
+        <Interface>IPlaceableObject</Interface>
+      </FormLink>
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
-
-      <!-- Base -->
-      <FormLink name="Base" recordType="NAME" refName="Fallout3MajorRecord" />
-
-      <!-- Display Name (FNV: some REFR records have a name override) -->
-      <String name="DisplayName" recordType="FULL" nullable="True">
+      <RefDirect name="Primitive" refName="PlacedPrimitive" />
+      <Enum name="CollisionLayer" enumName="PlacedObject.CollisionLayerEnum" recordType="XTRI" byteLength="4" />
+      <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
+      <P3Float name="BoundHalfExtents" recordType="XMBO" />
+      <RefDirect name="TeleportDestination" refName="TeleportDestination" />
+      <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
+      <RefDirect name="AudioData" refName="AudioData" markerType="MMRK" />
+      <Enum name="SpecialRenderingFlags" enumName="PlacedObject.SpecialRenderingFlag" recordType="XSRF" byteLength="4" />
+      <Int32 name="SpecialRenderingData" recordType="XSRD" />
+      <FormLink name="Target" recordType="XTRG">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <Int32 name="LevelModifier" recordType="XLCM" />
+      <RefDirect name="Patrol" refName="PatrolData" />
+      <RefDirect name="RadioData" refName="RadioData" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <RefDirect name="Lock" refName="LockData" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <Float name="Radiation" recordType="XRAD" />
+      <Float name="Charge" recordType="XCHG" />
+      <RefDirect name="Ammo" refName="PlacedObjectAmmo" />
+      <RefList name="Reflections" refName="WaterReflection" />
+      <List name="LitWater">
+        <FormLink refName="PlacedObject" recordType="XLTW" />
+      </List>
+      <RefList name="LinkedDecals" refName="LinkedDecal" />
+      <FormLink name="LinkedReference" recordType="XLKR">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <String name="ActivationPrompt" recordType="XATO">
         <ModHeaderVersioning version="1.32" />
       </String>
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <FormLink name="MultiBoundReference" recordType="XMBR" refName="PlacedObject" />
+      <Enum name="ActionFlag" enumName="PlacedObject.ActionFlagEnum" recordType="XACT" byteLength="4" />
+      <Bool name="IsOpenByDefault" boolAsMarker="ONAM" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
+      <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
+      <RefList name="Portals" refName="Portal" recordType="XPOD" />
+      <RefDirect name="PortalRoom" refName="Bounding" recordType="XPTL" />
+      <UInt8 name="SpeedTreeSeed" recordType="XSED" />
+      <CustomLogic name="BoundData" recordType="XRMR" />
+      <Int16 name="Unknown" binary="NoGeneration" />
+      <List name="LinkedRooms" binary="NoGeneration">
+        <FormLink recordType="XLRM" refName="PlacedObject" />
+      </List>
+      <RefDirect name="OcclusionPlane" refName="Bounding" recordType="XOCP" />
+      <RefDirect name="LinkedOcclusionPlanes" refName="LinkedOcclusionPlanes" recordType="XORD" />
+      <List name="DistantLodData" recordType="XLOD">
+        <Float />
+      </List>
+      <Float name="Scale" recordType="XSCL" />
+      <RefDirect name="Placement" refName="Placement" />
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+  </Object>
 
-      <!-- Encounter Zone -->
-      <FormLink name="EncounterZone" recordType="XEZN" refName="Fallout3MajorRecord" />
+  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
+    <Fields>
+      <P3Float name="Bounds" />
+      <Color name="Color" binaryType="NoAlphaFloat" />
+      <Int32 name="Unknown" />
+      <Enum name="PrimitiveType" enumName="PlacedPrimitive.TypeEnum" byteLength="4" />
+    </Fields>
+  </Object>
 
-      <!-- Ragdoll Data -->
-      <ByteArray name="RagdollData" recordType="XRGD" />
+  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL">
+    <Fields>
+      <FormLink name="Door" refName="PlacedObject" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+      <Bool name="NoAlarm" byteLength="4" />
+    </Fields>
+  </Object>
 
-      <!-- Primitive -->
-      <RefDirect name="Primitive" refName="PlacedPrimitive" />
-      <UInt32 name="CollisionLayer" recordType="XTRI" />
-      <Bool name="IsMultiBoundPrimitive" boolAsMarker="XMBP" />
-
-      <!-- Bound Half Extents -->
-      <P3Float name="BoundHalfExtents" recordType="XMBO" />
-
-      <!-- Teleport Destination -->
-      <RefDirect name="TeleportDestination" refName="TeleportDestination" />
-
-      <!-- Map Marker -->
-      <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
-
-      <!-- Audio Marker (FNV) -->
-      <Marker name="AudioMarker" recordType="MMRK">
-        <ModHeaderVersioning version="1.32" />
-      </Marker>
-      <FormLink name="AudioLocation" recordType="CNAM" refName="Fallout3MajorRecord">
+  <Object name="MapMarker" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="MapMarker.Flag" recordType="FNAM" byteLength="1" nullable="False" />
+      <String name="Name" recordType="FULL" nullable="True" />
+      <Enum name="Type" enumName="MapMarker.MarkerType" recordType="TNAM" byteLength="2" />
+      <FormLink name="Reputation" recordType="WMI1" refName="Reputation">
         <ModHeaderVersioning version="1.32" />
       </FormLink>
-      <UInt32 name="AudioFlags" recordType="BNAM">
-        <ModHeaderVersioning version="1.32" />
-      </UInt32>
-      <Float name="AudioLayer2TriggerPercent" recordType="MNAM">
-        <ModHeaderVersioning version="1.32" />
-      </Float>
-      <Float name="AudioLayer3TriggerPercent" recordType="NNAM">
-        <ModHeaderVersioning version="1.32" />
-      </Float>
+    </Fields>
+  </Object>
 
-      <!-- Reputation (FNV) -->
-      <FormLink name="Reputation" recordType="WMI1" refName="Fallout3MajorRecord">
-        <ModHeaderVersioning version="1.32" />
-      </FormLink>
+  <Object name="AudioData" objType="Subrecord">
+    <Fields>
+      <String name="LocationName" recordType="FULL" />
+      <FormLink name="Location" recordType="CNAM" refName="MediaLocationController" />
+      <Bool name="UseControllerValues" recordType="BNAM" byteLength="4" />
+      <Float name="Layer2TriggerPercent" recordType="MNAM" />
+      <Float name="Layer3TriggerPercent" recordType="NNAM" />
+    </Fields>
+  </Object>
 
-      <!-- Special Rendering -->
-      <UInt32 name="SpecialRenderingFlags" recordType="XSRF" />
-      <ByteArray name="SpecialRenderingData" recordType="XSRD" />
-
-      <!-- Target -->
-      <FormLink name="Target" recordType="XTRG" refName="Fallout3MajorRecord" />
-
-      <!-- Level Modifier -->
-      <Int32 name="LevelModifier" recordType="XLCM" />
-
-      <!-- Patrol Data -->
-      <Float name="PatrolIdleTime" recordType="XPRD" />
-      <Bool name="PatrolScriptMarker" boolAsMarker="XPPA" />
-      <FormLink name="PatrolIdle" recordType="INAM" refName="Fallout3MajorRecord" />
-
-      <!-- Embedded Script (Patrol) -->
+  <Object name="PatrolData" objType="Subrecord">
+    <Fields>
+      <Float name="IdleTime" recordType="XPRD" />
+      <Bool name="ScriptMarker" boolAsMarker="XPPA" />
+      <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" />
       <ByteArray name="ScriptHeader" recordType="SCHR" />
       <ByteArray name="CompiledScript" recordType="SCDA" />
       <String name="ScriptSource" recordType="SCTX" binaryType="Plain" />
       <ByteArray name="LocalVariable" recordType="SLSD" />
       <String name="LocalVariableName" recordType="SCVR" />
       <RefList name="ScriptReferences" refName="AScriptReference" />
-      <FormLink name="PatrolTopic" recordType="TNAM" refName="Fallout3MajorRecord" />
-
-      <!-- Radio Data -->
-      <RefDirect name="RadioData" refName="RadioData" />
-
-      <!-- Ownership -->
-      <FormLink name="Owner" recordType="XOWN" refName="Fallout3MajorRecord" />
-      <Int32 name="FactionRank" recordType="XRNK" />
-
-      <!-- Lock Data -->
-      <RefDirect name="Lock" refName="LockData" />
-
-      <!-- Extra -->
-      <Int32 name="Count" recordType="XCNT" />
-      <Float name="Radius" recordType="XRDS" />
-      <Float name="Health" recordType="XHLP" />
-      <Float name="Radiation" recordType="XRAD" />
-      <Float name="Charge" recordType="XCHG" />
-
-      <!-- Ammo -->
-      <FormLink name="AmmoType" recordType="XAMT" refName="Fallout3MajorRecord" />
-      <Int32 name="AmmoCount" recordType="XAMC" />
-
-      <!-- Reflected/Refracted By Water -->
-      <RefList name="Reflections" refName="WaterReflection" />
-
-      <!-- Lit Water -->
-      <List name="LitWater">
-        <FormLink refName="Fallout3MajorRecord" recordType="XLTW" />
-      </List>
-
-      <!-- Linked Decals -->
-      <ByteArray name="LinkedDecals" recordType="XDCR" />
-
-      <!-- Linked Reference -->
-      <FormLink name="LinkedReference" recordType="XLKR" refName="Fallout3MajorRecord" />
-      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
-
-      <!-- Activate Parents -->
-      <RefDirect name="ActivateParents" refName="ActivateParents" />
-
-      <!-- Activation Prompt (FNV) -->
-      <String name="ActivationPrompt" recordType="XATO">
-        <ModHeaderVersioning version="1.32" />
-      </String>
-
-      <!-- Enable Parent -->
-      <RefDirect name="EnableParent" refName="EnableParent" />
-
-      <!-- Emittance -->
-      <FormLink name="Emittance" recordType="XEMI" refName="Fallout3MajorRecord" />
-
-      <!-- MultiBound Reference -->
-      <FormLink name="MultiBoundReference" recordType="XMBR" refName="Fallout3MajorRecord" />
-
-      <!-- Flags -->
-      <UInt32 name="ActionFlag" recordType="XACT" />
-      <Bool name="IsOpenByDefault" boolAsMarker="ONAM" />
-      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
-
-      <!-- Navmesh Door Link -->
-      <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
-
-      <!-- Portal Data -->
-      <RefList name="Portals" refName="Portal" recordType="XPOD" />
-      <ByteArray name="PortalData" recordType="XPTL" />
-
-      <!-- SpeedTree Seed -->
-      <UInt8 name="SpeedTreeSeed" recordType="XSED" />
-
-      <!-- Room Data -->
-      <CustomLogic name="BoundData" recordType="XRMR" />
-      <Int16 name="Unknown" binary="NoGeneration" />
-      <List name="LinkedRooms" binary="NoGeneration">
-        <FormLink recordType="XLRM" refName="PlacedObject" />
-      </List>
-
-      <!-- Occlusion -->
-      <ByteArray name="OcclusionPlaneData" recordType="XOCP" />
-      <ByteArray name="XORD" recordType="XORD" />
-
-      <!-- Distant LOD -->
-      <ByteArray name="DistantLodData" recordType="XLOD" />
-
-      <!-- 3D Data -->
-      <Float name="Scale" recordType="XSCL" />
-      <Data recordType="DATA" nullable="False">
-        <Fields>
-          <Float name="PositionX" />
-          <Float name="PositionY" />
-          <Float name="PositionZ" />
-          <Float name="RotationX" />
-          <Float name="RotationY" />
-          <Float name="RotationZ" />
-        </Fields>
-      </Data>
-    </Fields>
-    <LinkInterface>IPlaced</LinkInterface>
-  </Object>
-  <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
-    <Fields>
-      <Float name="BoundsX" />
-      <Float name="BoundsY" />
-      <Float name="BoundsZ" />
-      <Float name="ColorRed" />
-      <Float name="ColorGreen" />
-      <Float name="ColorBlue" />
-      <ByteArray name="Unknown" byteLength="4" nullable="False" />
-      <UInt32 name="PrimitiveType" />
+      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
     </Fields>
   </Object>
-  <Object name="TeleportDestination" objType="Subrecord" recordType="XTEL">
-    <Fields>
-      <FormLink name="Door" refName="Fallout3MajorRecord" />
-      <Float name="PositionX" />
-      <Float name="PositionY" />
-      <Float name="PositionZ" />
-      <Float name="RotationX" />
-      <Float name="RotationY" />
-      <Float name="RotationZ" />
-      <UInt32 name="NoAlarm" />
-    </Fields>
-  </Object>
-  <Object name="MapMarker" objType="Subrecord">
-    <Fields>
-      <UInt8 name="Flags" recordType="FNAM" nullable="False" />
-      <String name="Name" recordType="FULL" nullable="True" />
-      <Data recordType="TNAM" nullable="False">
-        <Fields>
-          <UInt8 name="IconType" />
-          <UInt8 name="Unused" />
-        </Fields>
-      </Data>
-    </Fields>
-  </Object>
+
   <Object name="RadioData" objType="Subrecord" recordType="XRDO">
     <Fields>
       <Float name="RangeRadius" />
-      <UInt32 name="BroadcastRangeType" />
+      <Enum name="BroadcastRangeType" enumName="RadioData.BroadcastRangeTypeEnum" byteLength="4" />
       <Float name="StaticPercentage" />
-      <FormLink name="PositionReference" refName="Fallout3MajorRecord" />
+      <FormLink name="PositionReference">
+        <Interface>IPlaced</Interface>
+      </FormLink>
     </Fields>
   </Object>
+
+  <Object name="Ownership" objType="Subrecord">
+    <Fields>
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
+    </Fields>
+  </Object>
+
   <Object name="LockData" objType="Subrecord" recordType="XLOC">
     <Fields>
       <UInt8 name="Level" />
       <ByteArray name="Unused1" byteLength="3" nullable="False" />
-      <FormLink name="Key" refName="Fallout3MajorRecord" />
-      <UInt8 name="LockFlags" />
+      <FormLink name="Key" refName="Key" />
+      <Enum name="LockFlags" enumName="LockData.Flag" byteLength="1" />
       <ByteArray name="Unused2" byteLength="3" nullable="False" />
+      <Break />
       <ByteArray name="Unknown" />
     </Fields>
   </Object>
+
+  <Object name="PlacedObjectAmmo" objType="Subrecord">
+    <Fields>
+      <FormLink name="Type" recordType="XAMT" refName="Ammunition" nullable="False" />
+      <Int32 name="Count" recordType="XAMC" nullable="False" />
+    </Fields>
+  </Object>
+
   <Object name="WaterReflection" objType="Subrecord" recordType="XPWR">
     <Fields>
-      <FormLink name="WaterReference" refName="Fallout3MajorRecord" />
-      <UInt32 name="Flags" />
+      <FormLink name="WaterReference" refName="PlacedObject" />
+      <Enum name="Type" enumName="WaterReflection.Flag" byteLength="4" />
     </Fields>
   </Object>
+
+  <Object name="LinkedDecal" objType="Subrecord" recordType="XDCR">
+    <Fields>
+      <FormLink name="Reference" refName="PlacedObject" />
+      <ByteArray name="Unknown" />
+    </Fields>
+  </Object>
+
   <Object name="LinkedReferenceColor" objType="Subrecord" recordType="XCLP">
     <Fields>
-      <UInt8 name="LinkStartColorRed" />
-      <UInt8 name="LinkStartColorGreen" />
-      <UInt8 name="LinkStartColorBlue" />
-      <UInt8 name="LinkStartColorAlpha" />
-      <UInt8 name="LinkEndColorRed" />
-      <UInt8 name="LinkEndColorGreen" />
-      <UInt8 name="LinkEndColorBlue" />
-      <UInt8 name="LinkEndColorAlpha" />
+      <Color name="LinkStartColor" binaryType="Alpha" />
+      <Color name="LinkEndColor" binaryType="Alpha" />
     </Fields>
   </Object>
+
   <Object name="NavigationDoorLink" objType="Subrecord" recordType="XNDP">
     <Fields>
-      <FormLink name="Navmesh" refName="Fallout3MajorRecord" />
+      <FormLink name="Navmesh" refName="NavigationMesh" />
       <Int16 name="TriangleIndex" />
-      <ByteArray name="Unused" byteLength="2" nullable="False" />
+      <Int16 name="Unused" />
     </Fields>
   </Object>
+
   <Object name="Portal" objType="Subrecord">
     <Fields>
-      <FormLink name="Origin" refName="Fallout3MajorRecord" />
-      <FormLink name="Destination" refName="Fallout3MajorRecord" />
+      <FormLink name="Origin" refName="PlacedObject" />
+      <FormLink name="Destination" refName="PlacedObject" />
+    </Fields>
+  </Object>
+
+  <Object name="Bounding" objType="Subrecord">
+    <Fields>
+      <Float name="Width" />
+      <Float name="Height" />
+      <P3Float name="Position" />
+      <Float name="RotationQ1" />
+      <Float name="RotationQ2" />
+      <Float name="RotationQ3" />
+      <Float name="RotationQ4" />
+    </Fields>
+  </Object>
+
+  <Object name="LinkedOcclusionPlanes" objType="Subrecord">
+    <Fields>
+      <FormLink name="Right" refName="PlacedObject" />
+      <FormLink name="Left" refName="PlacedObject" />
+      <FormLink name="Bottom" refName="PlacedObject" />
+      <FormLink name="Top" refName="PlacedObject" />
     </Fields>
   </Object>
 </Loqui>
