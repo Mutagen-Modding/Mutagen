@@ -89,7 +89,7 @@ public static class ModGroupMerger
         long outputHeaderPos = writer.BaseStream.Position;
         inputStream.WriteTo(writer.BaseStream, headerLen);
 
-        bool hasSubGroups = FirstSiblingContainsSubGroups(inputStream, constants, siblings[0], headerLen);
+        bool hasSubGroups = AllChildrenAreSubGroups(inputStream, constants, siblings, headerLen);
 
         if (!hasSubGroups)
         {
@@ -140,15 +140,24 @@ public static class ModGroupMerger
         writer.BaseStream.Position = contentEnd;
     }
 
-    private static bool FirstSiblingContainsSubGroups(
+    private static bool AllChildrenAreSubGroups(
         IMutagenReadStream inputStream,
         GameConstants constants,
-        SiblingGroup sibling,
+        List<SiblingGroup> siblings,
         int headerLen)
     {
-        long contentLen = sibling.TotalLength - headerLen;
-        if (contentLen < constants.GroupConstants.HeaderLength) return false;
-        inputStream.Position = sibling.Start + headerLen;
-        return inputStream.TryGetGroupHeader(out _);
+        foreach (var sib in siblings)
+        {
+            long pos = sib.Start + headerLen;
+            long endPos = sib.Start + sib.TotalLength;
+            while (pos < endPos)
+            {
+                if (endPos - pos < constants.GroupConstants.HeaderLength) return false;
+                inputStream.Position = pos;
+                if (!inputStream.TryGetGroupHeader(out var childHeader)) return false;
+                pos += childHeader.TotalLength;
+            }
+        }
+        return siblings.Any(s => s.TotalLength > headerLen);
     }
 }

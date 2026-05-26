@@ -362,4 +362,71 @@ public class ModGroupMergerTests
 
         Assert.Equal(expectedBytes.ToArray(), output);
     }
+
+    [Fact]
+    public void MixedContent_RecordsAndSubGroups_CopiedVerbatim()
+    {
+        // A top-level group whose children are a mix of GRUPs and records
+        // (e.g. QUST in Fallout4: GRUP children interleaved with QUST records).
+        // The merger must NOT attempt to recurse into such a group.
+        var inputBytes = new MemoryStream();
+        using (var w = new MutagenWriter(inputBytes, Constants, dispose: false))
+        {
+            WriteModHeader(w);
+            WriteTopLevelGroup(w, "QUST", g =>
+            {
+                WriteSubGroup(g, label: 0x100, groupType: 10, content: c =>
+                    WriteMajorRecord(c, "DIAL", formId: 0xF01));
+                WriteMajorRecord(g, "QUST", formId: 0xF02);
+                WriteSubGroup(g, label: 0x200, groupType: 10, content: c =>
+                    WriteMajorRecord(c, "DIAL", formId: 0xF03));
+            });
+        }
+
+        var output = RunMerger(inputBytes.ToArray());
+
+        Assert.Equal(inputBytes.ToArray(), output);
+    }
+
+    [Fact]
+    public void MixedContent_DuplicateTopLevel_MergedAsLeaf()
+    {
+        // Two duplicate top-level groups with mixed content — should concatenate
+        // children without trying to merge sub-groups by key.
+        Action<MutagenWriter> firstContent = g =>
+        {
+            WriteSubGroup(g, label: 0x100, groupType: 10, content: c =>
+                WriteMajorRecord(c, "DIAL", formId: 0xF01));
+            WriteMajorRecord(g, "QUST", formId: 0xF02);
+        };
+        Action<MutagenWriter> secondContent = g =>
+        {
+            WriteMajorRecord(g, "QUST", formId: 0xF03);
+            WriteSubGroup(g, label: 0x200, groupType: 10, content: c =>
+                WriteMajorRecord(c, "DIAL", formId: 0xF04));
+        };
+
+        var inputBytes = new MemoryStream();
+        using (var w = new MutagenWriter(inputBytes, Constants, dispose: false))
+        {
+            WriteModHeader(w);
+            WriteTopLevelGroup(w, "QUST", firstContent, stamp: 1);
+            WriteTopLevelGroup(w, "QUST", secondContent, stamp: 5);
+        }
+
+        var output = RunMerger(inputBytes.ToArray());
+
+        var expectedBytes = new MemoryStream();
+        using (var w = new MutagenWriter(expectedBytes, Constants, dispose: false))
+        {
+            WriteModHeader(w);
+            WriteTopLevelGroup(w, "QUST", g =>
+            {
+                firstContent(g);
+                secondContent(g);
+            }, stamp: 5);
+        }
+
+        Assert.Equal(expectedBytes.ToArray(), output);
+    }
 }
