@@ -268,6 +268,16 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
+        #region FeaturedItemMessage
+        private readonly IFormLinkNullable<IMessageGetter> _FeaturedItemMessage = new FormLinkNullable<IMessageGetter>();
+        public IFormLinkNullable<IMessageGetter> FeaturedItemMessage
+        {
+            get => _FeaturedItemMessage;
+            set => _FeaturedItemMessage.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMessageGetter> IMiscItemGetter.FeaturedItemMessage => this.FeaturedItemMessage;
+        #endregion
         #region Resources
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<ItemResource>? _Resources;
@@ -343,6 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.FeaturedItemMessage = initialValue;
                 this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(initialValue, []);
                 this.Value = initialValue;
                 this.Weight = initialValue;
@@ -372,6 +383,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem PickupSound,
                 TItem DropdownSound,
                 TItem Keywords,
+                TItem FeaturedItemMessage,
                 TItem Resources,
                 TItem Value,
                 TItem Weight,
@@ -400,6 +412,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
+                this.FeaturedItemMessage = FeaturedItemMessage;
                 this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(Resources, []);
                 this.Value = Value;
                 this.Weight = Weight;
@@ -430,6 +443,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem FeaturedItemMessage;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>? Resources;
             public TItem Value;
             public TItem Weight;
@@ -462,6 +476,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
                 if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.FeaturedItemMessage, rhs.FeaturedItemMessage)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
@@ -486,6 +501,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.PickupSound);
                 hash.Add(this.DropdownSound);
                 hash.Add(this.Keywords);
+                hash.Add(this.FeaturedItemMessage);
                 hash.Add(this.Resources);
                 hash.Add(this.Value);
                 hash.Add(this.Weight);
@@ -572,6 +588,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.FeaturedItemMessage)) return false;
                 if (this.Resources != null)
                 {
                     if (!eval(this.Resources.Overall)) return false;
@@ -667,6 +684,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.FeaturedItemMessage)) return true;
                 if (this.Resources != null)
                 {
                     if (eval(this.Resources.Overall)) return true;
@@ -739,6 +757,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.FeaturedItemMessage = eval(this.FeaturedItemMessage);
                 if (Resources != null)
                 {
                     obj.Resources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemResource.Mask<R>?>>?>(eval(this.Resources.Overall), []);
@@ -864,6 +883,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.FeaturedItemMessage ?? true)
+                    {
+                        sb.AppendItem(FeaturedItemMessage, "FeaturedItemMessage");
+                    }
                     if ((printMask?.Resources?.Overall ?? true)
                         && Resources is {} ResourcesItem)
                     {
@@ -924,6 +947,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? FeaturedItemMessage;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>? Resources;
             public Exception? Value;
             public Exception? Weight;
@@ -965,6 +989,8 @@ namespace Mutagen.Bethesda.Starfield
                         return DropdownSound;
                     case MiscItem_FieldIndex.Keywords:
                         return Keywords;
+                    case MiscItem_FieldIndex.FeaturedItemMessage:
+                        return FeaturedItemMessage;
                     case MiscItem_FieldIndex.Resources:
                         return Resources;
                     case MiscItem_FieldIndex.Value:
@@ -1026,6 +1052,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case MiscItem_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.FeaturedItemMessage:
+                        this.FeaturedItemMessage = ex;
                         break;
                     case MiscItem_FieldIndex.Resources:
                         this.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(ex, null);
@@ -1095,6 +1124,9 @@ namespace Mutagen.Bethesda.Starfield
                     case MiscItem_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
+                    case MiscItem_FieldIndex.FeaturedItemMessage:
+                        this.FeaturedItemMessage = (Exception?)obj;
+                        break;
                     case MiscItem_FieldIndex.Resources:
                         this.Resources = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>)obj;
                         break;
@@ -1133,6 +1165,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (PickupSound != null) return true;
                 if (DropdownSound != null) return true;
                 if (Keywords != null) return true;
+                if (FeaturedItemMessage != null) return true;
                 if (Resources != null) return true;
                 if (Value != null) return true;
                 if (Weight != null) return true;
@@ -1220,6 +1253,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(FeaturedItemMessage, "FeaturedItemMessage");
+                }
                 if (Resources is {} ResourcesItem)
                 {
                     sb.AppendLine("Resources =>");
@@ -1272,6 +1308,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
                 ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.FeaturedItemMessage = this.FeaturedItemMessage.Combine(rhs.FeaturedItemMessage);
                 ret.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resources?.Overall, rhs.Resources?.Overall), Noggog.ExceptionExt.Combine(this.Resources?.Specific, rhs.Resources?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
@@ -1313,6 +1350,7 @@ namespace Mutagen.Bethesda.Starfield
             public SoundReference.TranslationMask? PickupSound;
             public SoundReference.TranslationMask? DropdownSound;
             public bool Keywords;
+            public bool FeaturedItemMessage;
             public ItemResource.TranslationMask? Resources;
             public bool Value;
             public bool Weight;
@@ -1330,6 +1368,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
+                this.FeaturedItemMessage = defaultOn;
                 this.Value = defaultOn;
                 this.Weight = defaultOn;
                 this.FLAG = defaultOn;
@@ -1355,6 +1394,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
                 ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
                 ret.Add((Keywords, null));
+                ret.Add((FeaturedItemMessage, null));
                 ret.Add((Resources == null ? DefaultOn : !Resources.GetCrystal().CopyNothing, Resources?.GetCrystal()));
                 ret.Add((Value, null));
                 ret.Add((Weight, null));
@@ -1565,6 +1605,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IMessageGetter> FeaturedItemMessage { get; set; }
         new ExtendedList<ItemResource>? Resources { get; set; }
         new Int32 Value { get; set; }
         new Single Weight { get; set; }
@@ -1653,6 +1694,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
+        IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage { get; }
         IReadOnlyList<IItemResourceGetter>? Resources { get; }
         Int32 Value { get; }
         Single Weight { get; }
@@ -1852,11 +1894,12 @@ namespace Mutagen.Bethesda.Starfield
         PickupSound = 18,
         DropdownSound = 19,
         Keywords = 20,
-        Resources = 21,
-        Value = 22,
-        Weight = 23,
-        FLAG = 24,
-        ShortName = 25,
+        FeaturedItemMessage = 21,
+        Resources = 22,
+        Value = 23,
+        Weight = 24,
+        FLAG = 25,
+        ShortName = 26,
     }
     #endregion
 
@@ -1867,9 +1910,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(MiscItem.Mask<>);
 
@@ -1928,6 +1971,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PDSH,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
+                RecordTypes.FIMD,
                 RecordTypes.CVPA,
                 RecordTypes.DATA,
                 RecordTypes.FLAG,
@@ -1990,6 +2034,7 @@ namespace Mutagen.Bethesda.Starfield
             item.PickupSound = null;
             item.DropdownSound = null;
             item.Keywords = null;
+            item.FeaturedItemMessage.Clear();
             item.Resources = null;
             item.Value = default(Int32);
             item.Weight = default(Single);
@@ -2021,6 +2066,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.PickupSound?.RemapLinks(mapping);
             obj.DropdownSound?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.FeaturedItemMessage.Relink(mapping);
             obj.Resources?.RemapLinks(mapping);
         }
         
@@ -2181,6 +2227,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.FeaturedItemMessage = item.FeaturedItemMessage.Equals(rhs.FeaturedItemMessage);
             ret.Resources = item.Resources.CollectionEqualsHelper(
                 rhs.Resources,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2324,6 +2371,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.FeaturedItemMessage ?? true)
+            {
+                sb.AppendItem(item.FeaturedItemMessage.FormKeyNullable, "FeaturedItemMessage");
             }
             if ((printMask?.Resources?.Overall ?? true)
                 && item.Resources is {} ResourcesItem)
@@ -2500,6 +2551,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.FeaturedItemMessage) ?? true))
+            {
+                if (!lhs.FeaturedItemMessage.Equals(rhs.FeaturedItemMessage)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Resources) ?? true))
             {
                 if (!lhs.Resources.SequenceEqualNullable(rhs.Resources, (l, r) => ((ItemResourceCommon)((IItemResourceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MiscItem_FieldIndex.Resources)))) return false;
@@ -2592,6 +2647,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(DropdownSounditem);
             }
             hash.Add(item.Keywords);
+            hash.Add(item.FeaturedItemMessage);
             hash.Add(item.Resources);
             hash.Add(item.Value);
             hash.Add(item.Weight);
@@ -2692,6 +2748,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.FeaturedItemMessage, out var FeaturedItemMessageInfo))
+            {
+                yield return FeaturedItemMessageInfo;
             }
             if (obj.Resources is {} ResourcesItem)
             {
@@ -3095,6 +3155,10 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.FeaturedItemMessage) ?? true))
+            {
+                item.FeaturedItemMessage.SetTo(rhs.FeaturedItemMessage.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Resources) ?? true))
             {
                 errorMask?.PushIndex((int)MiscItem_FieldIndex.Resources);
@@ -3427,6 +3491,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FeaturedItemMessage,
+                header: translationParams.ConvertToCustom(RecordTypes.FIMD));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IItemResourceGetter>.Instance.Write(
                 writer: writer,
                 items: item.Resources,
@@ -3635,6 +3703,12 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)MiscItem_FieldIndex.Keywords;
                 }
+                case RecordTypeInts.FIMD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FeaturedItemMessage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)MiscItem_FieldIndex.FeaturedItemMessage;
+                }
                 case RecordTypeInts.CVPA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3786,6 +3860,10 @@ namespace Mutagen.Bethesda.Starfield
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        #endregion
+        #region FeaturedItemMessage
+        private int? _FeaturedItemMessageLocation;
+        public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _FeaturedItemMessageLocation);
         #endregion
         public IReadOnlyList<IItemResourceGetter>? Resources { get; private set; }
         private RangeInt32? _DATALocation;
@@ -3989,6 +4067,11 @@ namespace Mutagen.Bethesda.Starfield
                         trigger: RecordTypes.KWDA,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)MiscItem_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.FIMD:
+                {
+                    _FeaturedItemMessageLocation = (stream.Position - offset);
+                    return (int)MiscItem_FieldIndex.FeaturedItemMessage;
                 }
                 case RecordTypeInts.CVPA:
                 {

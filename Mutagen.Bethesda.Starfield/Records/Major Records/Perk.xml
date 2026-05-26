@@ -49,6 +49,7 @@
       <RefList name="Conditions" refName="Condition" />
       <RefList name="Activities" refName="Activity" counterRecType="ATCP" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
+      <FormLink name="UnknownStatic" refName="Static" recordType="PRUC" nullable="True" />
     </Fields>
   </Object>
   <Object name="APerkEffect" objType="Subrecord" abstract="true" endMarkerType="PRKF" >
@@ -142,6 +143,11 @@
   <Object name="PerkEntryPointLegendaryMagicEffectEvent" objType="Subrecord" baseClass="APerkEntryPointEffect">
     <Fields>
       <FormLink name="Projectile" refName="Projectile" />
+    </Fields>
+  </Object>
+  <Object name="PerkEntryPointLegendaryGravitational" objType="Subrecord" baseClass="APerkEntryPointEffect">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" />
     </Fields>
   </Object>
   <Object name="PerkCondition" objType="Subrecord">

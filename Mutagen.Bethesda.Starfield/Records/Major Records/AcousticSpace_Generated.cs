@@ -98,6 +98,17 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
+        {
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPaletteDefaultsGetter? IAcousticSpaceGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
+        #endregion
         #region LoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoundReference? _LoopingSound;
@@ -213,6 +224,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.InteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.ExteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
@@ -238,6 +250,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
+                TItem ObjectPaletteDefaults,
                 TItem LoopingSound,
                 TItem InteriorSound,
                 TItem ExteriorSound,
@@ -262,6 +275,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LoopingSound, new SoundReference.Mask<TItem>(LoopingSound));
                 this.InteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(InteriorSound, new SoundReference.Mask<TItem>(InteriorSound));
                 this.ExteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ExteriorSound, new SoundReference.Mask<TItem>(ExteriorSound));
@@ -288,6 +302,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? LoopingSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? InteriorSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? ExteriorSound { get; set; }
@@ -316,6 +331,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
                 if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
                 if (!object.Equals(this.InteriorSound, rhs.InteriorSound)) return false;
                 if (!object.Equals(this.ExteriorSound, rhs.ExteriorSound)) return false;
@@ -336,6 +352,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
+                hash.Add(this.ObjectPaletteDefaults);
                 hash.Add(this.LoopingSound);
                 hash.Add(this.InteriorSound);
                 hash.Add(this.ExteriorSound);
@@ -369,6 +386,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
+                }
                 if (LoopingSound != null)
                 {
                     if (!eval(this.LoopingSound.Overall)) return false;
@@ -412,6 +434,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
+                }
                 if (LoopingSound != null)
                 {
                     if (eval(this.LoopingSound.Overall)) return true;
@@ -454,6 +481,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
                 obj.LoopingSound = this.LoopingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.LoopingSound.Overall), this.LoopingSound.Specific?.Translate(eval));
                 obj.InteriorSound = this.InteriorSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.InteriorSound.Overall), this.InteriorSound.Specific?.Translate(eval));
                 obj.ExteriorSound = this.ExteriorSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ExteriorSound.Overall), this.ExteriorSound.Specific?.Translate(eval));
@@ -495,6 +523,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DirtinessScale ?? true)
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
+                    }
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                    {
+                        ObjectPaletteDefaults?.Print(sb);
                     }
                     if (printMask?.LoopingSound?.Overall ?? true)
                     {
@@ -558,6 +590,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? LoopingSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? InteriorSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? ExteriorSound;
@@ -584,6 +617,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case AcousticSpace_FieldIndex.DirtinessScale:
                         return DirtinessScale;
+                    case AcousticSpace_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
                     case AcousticSpace_FieldIndex.LoopingSound:
                         return LoopingSound;
                     case AcousticSpace_FieldIndex.InteriorSound:
@@ -626,6 +661,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AcousticSpace_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
+                        break;
+                    case AcousticSpace_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case AcousticSpace_FieldIndex.LoopingSound:
                         this.LoopingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
@@ -683,6 +721,9 @@ namespace Mutagen.Bethesda.Starfield
                     case AcousticSpace_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
+                    case AcousticSpace_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                        break;
                     case AcousticSpace_FieldIndex.LoopingSound:
                         this.LoopingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
@@ -731,6 +772,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
                 if (LoopingSound != null) return true;
                 if (InteriorSound != null) return true;
                 if (ExteriorSound != null) return true;
@@ -774,6 +816,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
+                ObjectPaletteDefaults?.Print(sb);
                 LoopingSound?.Print(sb);
                 InteriorSound?.Print(sb);
                 ExteriorSound?.Print(sb);
@@ -815,6 +858,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound, (l, r) => l.Combine(r));
                 ret.InteriorSound = this.InteriorSound.Combine(rhs.InteriorSound, (l, r) => l.Combine(r));
                 ret.ExteriorSound = this.ExteriorSound.Combine(rhs.ExteriorSound, (l, r) => l.Combine(r));
@@ -852,6 +896,7 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
             public SoundReference.TranslationMask? LoopingSound;
             public SoundReference.TranslationMask? InteriorSound;
             public SoundReference.TranslationMask? ExteriorSound;
@@ -892,6 +937,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
                 ret.Add((LoopingSound != null ? LoopingSound.OnOverall : DefaultOn, LoopingSound?.GetCrystal()));
                 ret.Add((InteriorSound != null ? InteriorSound.OnOverall : DefaultOn, InteriorSound?.GetCrystal()));
                 ret.Add((ExteriorSound != null ? ExteriorSound.OnOverall : DefaultOn, ExteriorSound?.GetCrystal()));
@@ -1064,6 +1110,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
         new SoundReference? LoopingSound { get; set; }
         new SoundReference? InteriorSound { get; set; }
         new SoundReference? ExteriorSound { get; set; }
@@ -1111,6 +1158,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
         ISoundReferenceGetter? LoopingSound { get; }
         ISoundReferenceGetter? InteriorSound { get; }
         ISoundReferenceGetter? ExteriorSound { get; }
@@ -1302,18 +1350,19 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         DirtinessScale = 9,
-        LoopingSound = 10,
-        InteriorSound = 11,
-        ExteriorSound = 12,
-        AmbientSet = 13,
-        MusicType = 14,
-        EnvironmentType = 15,
-        ExteriorWeatherAttenuation = 16,
-        InteriorExteriorRatio = 17,
-        IsInterior = 18,
-        AllowExterior = 19,
-        SoundDetectionLevel = 20,
-        DisableFlags = 21,
+        ObjectPaletteDefaults = 10,
+        LoopingSound = 11,
+        InteriorSound = 12,
+        ExteriorSound = 13,
+        AmbientSet = 14,
+        MusicType = 15,
+        EnvironmentType = 16,
+        ExteriorWeatherAttenuation = 17,
+        InteriorExteriorRatio = 18,
+        IsInterior = 19,
+        AllowExterior = 20,
+        SoundDetectionLevel = 21,
+        DisableFlags = 22,
     }
     #endregion
 
@@ -1324,9 +1373,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(AcousticSpace.Mask<>);
 
@@ -1363,6 +1412,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.OPDS,
                 RecordTypes.ASLS,
                 RecordTypes.WED0,
                 RecordTypes.WED1,
@@ -1422,6 +1472,7 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
+            item.ObjectPaletteDefaults = null;
             item.LoopingSound = null;
             item.InteriorSound = null;
             item.ExteriorSound = null;
@@ -1532,6 +1583,11 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.LoopingSound = EqualsMaskHelper.EqualsHelper(
                 item.LoopingSound,
                 rhs.LoopingSound,
@@ -1617,6 +1673,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.DirtinessScale ?? true)
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
+            }
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
             }
             if ((printMask?.LoopingSound?.Overall ?? true)
                 && item.LoopingSound is {} LoopingSoundItem)
@@ -1742,6 +1803,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
+                {
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectPaletteDefaults))) return false;
+                }
+                else if (!isObjectPaletteDefaultsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.LoopingSound, rhs.LoopingSound, out var lhsLoopingSound, out var rhsLoopingSound, out var isLoopingSoundEqual))
@@ -1836,6 +1905,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
+            {
+                hash.Add(ObjectPaletteDefaultsitem);
+            }
             if (item.LoopingSound is {} LoopingSounditem)
             {
                 hash.Add(LoopingSounditem);
@@ -2060,6 +2133,32 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DirtinessScale) ?? true))
             {
                 item.DirtinessScale = rhs.DirtinessScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.ObjectPaletteDefaults);
+                try
+                {
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
+                    {
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectPaletteDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPaletteDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
@@ -2361,6 +2460,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.LoopingSound is {} LoopingSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ASLS))
@@ -2517,6 +2623,11 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)AcousticSpace_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)AcousticSpace_FieldIndex.ObjectPaletteDefaults;
+                }
                 case RecordTypeInts.ASLS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
@@ -2672,6 +2783,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
         public ISoundReferenceGetter? LoopingSound { get; private set; }
         public ISoundReferenceGetter? InteriorSound { get; private set; }
         public ISoundReferenceGetter? ExteriorSound { get; private set; }
@@ -2799,6 +2914,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)AcousticSpace_FieldIndex.DirtinessScale;
+                }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)AcousticSpace_FieldIndex.ObjectPaletteDefaults;
                 }
                 case RecordTypeInts.ASLS:
                 {

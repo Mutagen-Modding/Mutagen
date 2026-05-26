@@ -556,10 +556,11 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 }
                 else
                 {
-                    var lo = LoadOrder.Import<TModGetter>(
-                        dataFolder: dataFolder.Value, 
+                    var lo = LoadOrder.Import<IModMasterStyledGetter>(
+                        dataFolder: dataFolder.Value,
                         loadOrder: _mod.MasterReferences.Select(x => x.Master),
                         m.GameRelease,
+                        factory: (modPath) => KeyedMasterStyle.FromPath(modPath, m.GameRelease, p._param.FileSystem),
                         p._param.FileSystem);
 
                     return p._param with
@@ -782,9 +783,11 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             _loadOrderSetter = (m, p, alreadyKnownMasters) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
                     dataFolder, loadOrder,
-                    m.GameRelease, p._param.FileSystem);
+                    m.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, m.GameRelease, p._param.FileSystem),
+                    p._param.FileSystem);
                 return p._param with
                 {
                     MasterFlagsLookup = lo
@@ -796,7 +799,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             }
         });
     }
-    
+
     /// <summary>
     /// Writes the mod with the default load order and given data folder as reference.
     /// </summary>
@@ -815,10 +818,12 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
             _loadOrderSetter = static (m, p, alreadyKnownMasters) =>
             {
                 var dataFolder = p._dataFolderGetter?.Invoke(m, p._param) ?? throw new ArgumentNullException("Data folder source was not set");
-                var lo = LoadOrder.Import<TModGetter>(
+                var lo = LoadOrder.Import<IModMasterStyledGetter>(
                     dataFolder, m.MasterReferences.Select(x => x.Master),
-                    m.GameRelease, p._param.FileSystem);   
-                
+                    m.GameRelease,
+                    factory: (modPath) => KeyedMasterStyle.FromPath(modPath, m.GameRelease, p._param.FileSystem),
+                    p._param.FileSystem);
+
                 return p._param with
                 {
                     MasterFlagsLookup = lo

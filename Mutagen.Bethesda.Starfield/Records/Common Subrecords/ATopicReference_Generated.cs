@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [TopicReference, TopicReferenceSubtype]
+    /// Implemented by: [TopicReference]
     /// </summary>
     public abstract partial class ATopicReference :
         IATopicReference,
@@ -354,7 +354,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [TopicReference, TopicReferenceSubtype]
+    /// Implemented by: [TopicReference]
     /// </summary>
     public partial interface IATopicReference :
         IATopicReferenceGetter,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [TopicReference, TopicReferenceSubtype]
+    /// Implemented by: [TopicReference]
     /// </summary>
     public partial interface IATopicReferenceGetter :
         ILoquiObject,

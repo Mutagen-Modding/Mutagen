@@ -205,6 +205,10 @@ public static class Implicits
             "SFBGS003.esm",
             "SFBGS008.esm",
             "SFBGS004.esm",
+            "SFBGS00D.esm",
+            "SFBGS047.esm",
+            "SFBGS050.esm",
+            "BlueprintShips-SFBGS050.esm",
         };
         Starfield = new ImplicitRegistration(
             GameRelease.Starfield,

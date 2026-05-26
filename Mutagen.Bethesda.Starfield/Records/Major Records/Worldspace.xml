@@ -16,14 +16,9 @@
       <Float name="LodWaterHeight" recordType="NAM4" />
       <RefDirect name="LandDefaults" refName="WorldspaceLandDefaults" />
       <RefDirect name="MapData" refName="WorldspaceMap" />
-      <Data recordType="ONAM">
-        <Fields>
-          <Float name="WorldMapOffsetScale" />
-          <P3Float name="WorldMapCellOffset" />
-        </Fields>
-      </Data>
+      <RefDirect name="WorldMapOffset" refName="WorldspaceWorldMapOffset" />
       <Float name="DistantLodMultiplier" recordType="NAMA" />
-      <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" nullable="False" />
+      <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <Data recordType="NAM0">
         <Fields>
@@ -109,6 +104,12 @@
       <P2Int32 name="UsableDimensions" />
       <P2Int16 name="NorthwestCellCoords" />
       <P2Int16 name="SoutheastCellCoords" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceWorldMapOffset" recordType="ONAM" objType="Subrecord">
+    <Fields>
+      <Float name="WorldMapOffsetScale" />
+      <P3Float name="WorldMapCellOffset" />
     </Fields>
   </Object>
 </Loqui>

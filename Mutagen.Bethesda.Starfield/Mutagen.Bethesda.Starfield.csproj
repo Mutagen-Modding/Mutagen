@@ -5066,6 +5066,9 @@
     <Compile Include="Records\Major Records\ForceData_Generated.cs">
       <DependentUpon>ForceData.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GravityWielderEffectData_Generated.cs">
+      <DependentUpon>GravityWielderEffectData.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\FormFolderKeywordList_Generated.cs">
       <DependentUpon>FormFolderKeywordList.xml</DependentUpon>
     </Compile>
@@ -5163,6 +5166,9 @@
       <DependentUpon>LegendaryItem.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LegendaryFilter_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LegendaryItemHNAMEntry_Generated.cs">
       <DependentUpon>LegendaryItem.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LensFlare_Generated.cs">
@@ -5564,6 +5570,9 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointLegendaryMagicEffectEvent_Generated.cs">
+      <DependentUpon>Perk.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PerkEntryPointLegendaryGravitational_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ItemResource_Generated.cs">
@@ -6219,6 +6228,9 @@
     <Compile Include="Records\Major Records\WorldspaceMap_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\WorldspaceWorldMapOffset_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\WorldSpaceOverlayComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -6678,6 +6690,12 @@
     <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\AdaptiveTriggerDataComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\QualityUpgradeComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PlacedObjectGoboAnimatedProperties_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -6884,6 +6902,9 @@
     <Compile Include="StarfieldMultiModOverlay_Generated.cs" />
     <Compile Include="Records\Common Subrecords\UntypedOwner_Generated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LegendaryItemLnamEntry_Generated.cs">
+      <DependentUpon>LegendaryItem.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

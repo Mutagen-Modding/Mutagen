@@ -17,6 +17,7 @@
   <Object name="MessageButton" objType="Subrecord">
     <Fields>
       <String name="Text" recordType="ITXT" translated="Normal" />
+      <String name="ButtonText" recordType="IBIN" />
       <RefList name="Conditions" refName="Condition" />
       <FormLink name="Reference" refName="PlacedObject" recordType="DODT" />
     </Fields>

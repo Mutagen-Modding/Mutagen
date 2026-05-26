@@ -466,6 +466,7 @@ public partial class RecordTypeInts
     public const int GRUP = 0x50555247;
     public const int GTYP = 0x50595447;
     public const int GVAL = 0x4C415647;
+    public const int GWED = 0x44455747;
     public const int GWEI = 0x49455747;
     public const int GWOR = 0x524F5747;
     public const int HACK = 0x4B434148;
@@ -484,6 +485,7 @@ public partial class RecordTypeInts
     public const int HSTT = 0x54545348;
     public const int HTID = 0x44495448;
     public const int HULL = 0x4C4C5548;
+    public const int IBIN = 0x4E494249;
     public const int ICON = 0x4E4F4349;
     public const int IDAT = 0x54414449;
     public const int IDLA = 0x414C4449;
@@ -821,6 +823,7 @@ public partial class RecordTypeInts
     public const int PRRF = 0x46525250;
     public const int PRRK = 0x4B525250;
     public const int PRTN = 0x4E545250;
+    public const int PRUC = 0x43555250;
     public const int PRVN = 0x4E565250;
     public const int PSDC = 0x43445350;
     public const int PSDF = 0x46445350;
@@ -856,6 +859,7 @@ public partial class RecordTypeInts
     public const int QTLM = 0x4D4C5451;
     public const int QTYP = 0x50595451;
     public const int QUAL = 0x4C415551;
+    public const int QUPA = 0x41505551;
     public const int QUST = 0x54535551;
     public const int RABG = 0x47424152;
     public const int RACE = 0x45434152;

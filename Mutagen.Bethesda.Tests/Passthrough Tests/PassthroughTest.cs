@@ -657,6 +657,7 @@ public abstract class PassthroughTest
             ? withLoadOrder.WithDataFolder(DataFolder)
             : withLoadOrder.WithDefaultDataFolder();
         return withDataFolder
+            .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
             .WithStringsWriter(stringsWriter)
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.NoCheck)

@@ -76,6 +76,8 @@ public partial class AComponent
         BGSVehicleManagement,
         BGSVehicleConfig,
         BGSOverlayDesignatedPlacementInfo_Component,
+        BGSAdaptiveTriggerData_Component,
+        BGSQualityUpgrade_Component,
     }
 
     public static bool TryCreateFromBinary(
@@ -226,6 +228,10 @@ public partial class AComponent
                 return VehicleConfigComponent.CreateFromBinary(frame, translationParams);
             case ComponentType.BGSOverlayDesignatedPlacementInfo_Component:
                 return OverlayDesignatedPlacementInfoComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSAdaptiveTriggerData_Component:
+                return AdaptiveTriggerDataComponent.CreateFromBinary(frame, translationParams);
+            case ComponentType.BGSQualityUpgrade_Component:
+                return QualityUpgradeComponent.CreateFromBinary(frame, translationParams);
             default:
                 throw new NotImplementedException();
         }
@@ -333,6 +339,8 @@ partial class AComponentBinaryWriteTranslation
             IVehicleManagementComponentGetter _ => AComponent.ComponentType.BGSVehicleManagement,
             IVehicleConfigComponentGetter _ => AComponent.ComponentType.BGSVehicleConfig,
             IOverlayDesignatedPlacementInfoComponentGetter _ => AComponent.ComponentType.BGSOverlayDesignatedPlacementInfo_Component,
+            IAdaptiveTriggerDataComponentGetter _ => AComponent.ComponentType.BGSAdaptiveTriggerData_Component,
+            IQualityUpgradeComponentGetter _ => AComponent.ComponentType.BGSQualityUpgrade_Component,
             _ => throw new NotImplementedException()
         };
 
@@ -481,6 +489,10 @@ partial class AComponentBinaryOverlay
                 return VehicleConfigComponentBinaryOverlay.VehicleConfigComponentFactory(stream, package);
             case AComponent.ComponentType.BGSOverlayDesignatedPlacementInfo_Component:
                 return OverlayDesignatedPlacementInfoComponentBinaryOverlay.OverlayDesignatedPlacementInfoComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSAdaptiveTriggerData_Component:
+                return AdaptiveTriggerDataComponentBinaryOverlay.AdaptiveTriggerDataComponentFactory(stream, package);
+            case AComponent.ComponentType.BGSQualityUpgrade_Component:
+                return QualityUpgradeComponentBinaryOverlay.QualityUpgradeComponentFactory(stream, package);
             default:
                 throw new NotImplementedException();
         }

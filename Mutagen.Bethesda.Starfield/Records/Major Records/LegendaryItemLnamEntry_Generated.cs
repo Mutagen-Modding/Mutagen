@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
-using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -40,52 +39,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class MessageButton :
-        IEquatable<IMessageButtonGetter>,
-        ILoquiObjectSetter<MessageButton>,
-        IMessageButton
+    public partial class LegendaryItemLnamEntry :
+        IEquatable<ILegendaryItemLnamEntryGetter>,
+        ILegendaryItemLnamEntry,
+        ILoquiObjectSetter<LegendaryItemLnamEntry>
     {
         #region Ctor
-        public MessageButton()
+        public LegendaryItemLnamEntry()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Text
-        public TranslatedString? Text { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IMessageButtonGetter.Text => this.Text;
+        #region Slot
+        public LegendaryItem.StarSlot Slot { get; set; } = default(LegendaryItem.StarSlot);
         #endregion
-        #region ButtonText
-        public String? ButtonText { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMessageButtonGetter.ButtonText => this.ButtonText;
+        #region Unknown
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
-            init => this._Conditions = value;
+            set => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter> IMessageButtonGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter>? ILegendaryItemLnamEntryGetter.Conditions => _Conditions;
         #endregion
 
-        #endregion
-        #region Reference
-        private readonly IFormLinkNullable<IPlacedObjectGetter> _Reference = new FormLinkNullable<IPlacedObjectGetter>();
-        public IFormLinkNullable<IPlacedObjectGetter> Reference
-        {
-            get => _Reference;
-            set => _Reference.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IMessageButtonGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -94,7 +79,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MessageButtonMixIn.Print(
+            LegendaryItemLnamEntryMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -105,16 +90,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMessageButtonGetter rhs) return false;
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILegendaryItemLnamEntryGetter rhs) return false;
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IMessageButtonGetter? obj)
+        public bool Equals(ILegendaryItemLnamEntryGetter? obj)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -126,22 +111,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Text = initialValue;
-                this.ButtonText = initialValue;
+                this.Slot = initialValue;
+                this.Unknown = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
-                this.Reference = initialValue;
             }
 
             public Mask(
-                TItem Text,
-                TItem ButtonText,
-                TItem Conditions,
-                TItem Reference)
+                TItem Slot,
+                TItem Unknown,
+                TItem Conditions)
             {
-                this.Text = Text;
-                this.ButtonText = ButtonText;
+                this.Slot = Slot;
+                this.Unknown = Unknown;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
-                this.Reference = Reference;
             }
 
             #pragma warning disable CS8618
@@ -153,10 +135,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Text;
-            public TItem ButtonText;
+            public TItem Slot;
+            public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem Reference;
             #endregion
 
             #region Equals
@@ -169,19 +150,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Text, rhs.Text)) return false;
-                if (!object.Equals(this.ButtonText, rhs.ButtonText)) return false;
+                if (!object.Equals(this.Slot, rhs.Slot)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.Reference, rhs.Reference)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Text);
-                hash.Add(this.ButtonText);
+                hash.Add(this.Slot);
+                hash.Add(this.Unknown);
                 hash.Add(this.Conditions);
-                hash.Add(this.Reference);
                 return hash.ToHashCode();
             }
 
@@ -190,8 +169,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Text)) return false;
-                if (!eval(this.ButtonText)) return false;
+                if (!eval(this.Slot)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -204,7 +183,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.Reference)) return false;
                 return true;
             }
             #endregion
@@ -212,8 +190,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Text)) return true;
-                if (eval(this.ButtonText)) return true;
+                if (eval(this.Slot)) return true;
+                if (eval(this.Unknown)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -226,7 +204,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.Reference)) return true;
                 return false;
             }
             #endregion
@@ -234,15 +211,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MessageButton.Mask<R>();
+                var ret = new LegendaryItemLnamEntry.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Text = eval(this.Text);
-                obj.ButtonText = eval(this.ButtonText);
+                obj.Slot = eval(this.Slot);
+                obj.Unknown = eval(this.Unknown);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
@@ -258,32 +235,31 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.Reference = eval(this.Reference);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(MessageButton.Mask<bool>? printMask = null)
+            public string Print(LegendaryItemLnamEntry.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, MessageButton.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LegendaryItemLnamEntry.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(MessageButton.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(LegendaryItemLnamEntry.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Text ?? true)
+                    if (printMask?.Slot ?? true)
                     {
-                        sb.AppendItem(Text, "Text");
+                        sb.AppendItem(Slot, "Slot");
                     }
-                    if (printMask?.ButtonText ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(ButtonText, "ButtonText");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
@@ -303,10 +279,6 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
-                    }
-                    if (printMask?.Reference ?? true)
-                    {
-                        sb.AppendItem(Reference, "Reference");
                     }
                 }
             }
@@ -332,26 +304,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Text;
-            public Exception? ButtonText;
+            public Exception? Slot;
+            public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? Reference;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                MessageButton_FieldIndex enu = (MessageButton_FieldIndex)index;
+                LegendaryItemLnamEntry_FieldIndex enu = (LegendaryItemLnamEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case MessageButton_FieldIndex.Text:
-                        return Text;
-                    case MessageButton_FieldIndex.ButtonText:
-                        return ButtonText;
-                    case MessageButton_FieldIndex.Conditions:
+                    case LegendaryItemLnamEntry_FieldIndex.Slot:
+                        return Slot;
+                    case LegendaryItemLnamEntry_FieldIndex.Unknown:
+                        return Unknown;
+                    case LegendaryItemLnamEntry_FieldIndex.Conditions:
                         return Conditions;
-                    case MessageButton_FieldIndex.Reference:
-                        return Reference;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -359,20 +328,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                MessageButton_FieldIndex enu = (MessageButton_FieldIndex)index;
+                LegendaryItemLnamEntry_FieldIndex enu = (LegendaryItemLnamEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case MessageButton_FieldIndex.Text:
-                        this.Text = ex;
+                    case LegendaryItemLnamEntry_FieldIndex.Slot:
+                        this.Slot = ex;
                         break;
-                    case MessageButton_FieldIndex.ButtonText:
-                        this.ButtonText = ex;
+                    case LegendaryItemLnamEntry_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
-                    case MessageButton_FieldIndex.Conditions:
+                    case LegendaryItemLnamEntry_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case MessageButton_FieldIndex.Reference:
-                        this.Reference = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -381,20 +347,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                MessageButton_FieldIndex enu = (MessageButton_FieldIndex)index;
+                LegendaryItemLnamEntry_FieldIndex enu = (LegendaryItemLnamEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case MessageButton_FieldIndex.Text:
-                        this.Text = (Exception?)obj;
+                    case LegendaryItemLnamEntry_FieldIndex.Slot:
+                        this.Slot = (Exception?)obj;
                         break;
-                    case MessageButton_FieldIndex.ButtonText:
-                        this.ButtonText = (Exception?)obj;
+                    case LegendaryItemLnamEntry_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
-                    case MessageButton_FieldIndex.Conditions:
+                    case LegendaryItemLnamEntry_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
-                        break;
-                    case MessageButton_FieldIndex.Reference:
-                        this.Reference = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -404,10 +367,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Text != null) return true;
-                if (ButtonText != null) return true;
+                if (Slot != null) return true;
+                if (Unknown != null) return true;
                 if (Conditions != null) return true;
-                if (Reference != null) return true;
                 return false;
             }
             #endregion
@@ -434,10 +396,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Text, "Text");
+                    sb.AppendItem(Slot, "Slot");
                 }
                 {
-                    sb.AppendItem(ButtonText, "ButtonText");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
@@ -457,9 +419,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                {
-                    sb.AppendItem(Reference, "Reference");
-                }
             }
             #endregion
 
@@ -468,10 +427,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Text = this.Text.Combine(rhs.Text);
-                ret.ButtonText = this.ButtonText.Combine(rhs.ButtonText);
+                ret.Slot = this.Slot.Combine(rhs.Slot);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Reference = this.Reference.Combine(rhs.Reference);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -495,10 +453,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Text;
-            public bool ButtonText;
+            public bool Slot;
+            public bool Unknown;
             public Condition.TranslationMask? Conditions;
-            public bool Reference;
             #endregion
 
             #region Ctors
@@ -508,9 +465,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Text = defaultOn;
-                this.ButtonText = defaultOn;
-                this.Reference = defaultOn;
+                this.Slot = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -526,10 +482,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Text, null));
-                ret.Add((ButtonText, null));
+                ret.Add((Slot, null));
+                ret.Add((Unknown, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((Reference, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -541,31 +496,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MessageButtonCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageButtonSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LegendaryItemLnamEntryCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LegendaryItemLnamEntrySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => MessageButtonBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LegendaryItemLnamEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MessageButtonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LegendaryItemLnamEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static MessageButton CreateFromBinary(
+        public static LegendaryItemLnamEntry CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new MessageButton();
-            ((MessageButtonSetterCommon)((IMessageButtonGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LegendaryItemLnamEntry();
+            ((LegendaryItemLnamEntrySetterCommon)((ILegendaryItemLnamEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -576,7 +531,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out MessageButton item,
+            out LegendaryItemLnamEntry item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -591,34 +546,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((MessageButtonSetterCommon)((IMessageButtonGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LegendaryItemLnamEntrySetterCommon)((ILegendaryItemLnamEntryGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static MessageButton GetNew()
+        internal static LegendaryItemLnamEntry GetNew()
         {
-            return new MessageButton();
+            return new LegendaryItemLnamEntry();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMessageButton :
+    public partial interface ILegendaryItemLnamEntry :
         IFormLinkContainer,
-        ILoquiObjectSetter<IMessageButton>,
-        IMessageButtonGetter
+        ILegendaryItemLnamEntryGetter,
+        ILoquiObjectSetter<ILegendaryItemLnamEntry>
     {
-        new TranslatedString? Text { get; set; }
-        new String? ButtonText { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
-        new IFormLinkNullable<IPlacedObjectGetter> Reference { get; set; }
+        new LegendaryItem.StarSlot Slot { get; set; }
+        new UInt32 Unknown { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
     }
 
-    public partial interface IMessageButtonGetter :
+    public partial interface ILegendaryItemLnamEntryGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IMessageButtonGetter>
+        ILoquiObject<ILegendaryItemLnamEntryGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -626,53 +580,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => MessageButton_Registration.Instance;
-        ITranslatedStringGetter? Text { get; }
-        String? ButtonText { get; }
-        IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> Reference { get; }
+        static ILoquiRegistration StaticRegistration => LegendaryItemLnamEntry_Registration.Instance;
+        LegendaryItem.StarSlot Slot { get; }
+        UInt32 Unknown { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MessageButtonMixIn
+    public static partial class LegendaryItemLnamEntryMixIn
     {
-        public static void Clear(this IMessageButton item)
+        public static void Clear(this ILegendaryItemLnamEntry item)
         {
-            ((MessageButtonSetterCommon)((IMessageButtonGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LegendaryItemLnamEntrySetterCommon)((ILegendaryItemLnamEntryGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MessageButton.Mask<bool> GetEqualsMask(
-            this IMessageButtonGetter item,
-            IMessageButtonGetter rhs,
+        public static LegendaryItemLnamEntry.Mask<bool> GetEqualsMask(
+            this ILegendaryItemLnamEntryGetter item,
+            ILegendaryItemLnamEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IMessageButtonGetter item,
+            this ILegendaryItemLnamEntryGetter item,
             string? name = null,
-            MessageButton.Mask<bool>? printMask = null)
+            LegendaryItemLnamEntry.Mask<bool>? printMask = null)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).Print(
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IMessageButtonGetter item,
+            this ILegendaryItemLnamEntryGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            MessageButton.Mask<bool>? printMask = null)
+            LegendaryItemLnamEntry.Mask<bool>? printMask = null)
         {
-            ((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).Print(
+            ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -680,21 +633,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IMessageButtonGetter item,
-            IMessageButtonGetter rhs,
-            MessageButton.TranslationMask? equalsMask = null)
+            this ILegendaryItemLnamEntryGetter item,
+            ILegendaryItemLnamEntryGetter rhs,
+            LegendaryItemLnamEntry.TranslationMask? equalsMask = null)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).Equals(
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IMessageButton lhs,
-            IMessageButtonGetter rhs)
+            this ILegendaryItemLnamEntry lhs,
+            ILegendaryItemLnamEntryGetter rhs)
         {
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -703,11 +656,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IMessageButton lhs,
-            IMessageButtonGetter rhs,
-            MessageButton.TranslationMask? copyMask = null)
+            this ILegendaryItemLnamEntry lhs,
+            ILegendaryItemLnamEntryGetter rhs,
+            LegendaryItemLnamEntry.TranslationMask? copyMask = null)
         {
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -716,28 +669,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IMessageButton lhs,
-            IMessageButtonGetter rhs,
-            out MessageButton.ErrorMask errorMask,
-            MessageButton.TranslationMask? copyMask = null)
+            this ILegendaryItemLnamEntry lhs,
+            ILegendaryItemLnamEntryGetter rhs,
+            out LegendaryItemLnamEntry.ErrorMask errorMask,
+            LegendaryItemLnamEntry.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = MessageButton.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LegendaryItemLnamEntry.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMessageButton lhs,
-            IMessageButtonGetter rhs,
+            this ILegendaryItemLnamEntry lhs,
+            ILegendaryItemLnamEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -745,32 +698,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static MessageButton DeepCopy(
-            this IMessageButtonGetter item,
-            MessageButton.TranslationMask? copyMask = null)
+        public static LegendaryItemLnamEntry DeepCopy(
+            this ILegendaryItemLnamEntryGetter item,
+            LegendaryItemLnamEntry.TranslationMask? copyMask = null)
         {
-            return ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MessageButton DeepCopy(
-            this IMessageButtonGetter item,
-            out MessageButton.ErrorMask errorMask,
-            MessageButton.TranslationMask? copyMask = null)
+        public static LegendaryItemLnamEntry DeepCopy(
+            this ILegendaryItemLnamEntryGetter item,
+            out LegendaryItemLnamEntry.ErrorMask errorMask,
+            LegendaryItemLnamEntry.TranslationMask? copyMask = null)
         {
-            return ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MessageButton DeepCopy(
-            this IMessageButtonGetter item,
+        public static LegendaryItemLnamEntry DeepCopy(
+            this ILegendaryItemLnamEntryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -778,11 +731,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IMessageButton item,
+            this ILegendaryItemLnamEntry item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((MessageButtonSetterCommon)((IMessageButtonGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LegendaryItemLnamEntrySetterCommon)((ILegendaryItemLnamEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -798,43 +751,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum MessageButton_FieldIndex
+    internal enum LegendaryItemLnamEntry_FieldIndex
     {
-        Text = 0,
-        ButtonText = 1,
+        Slot = 0,
+        Unknown = 1,
         Conditions = 2,
-        Reference = 3,
     }
     #endregion
 
     #region Registration
-    internal partial class MessageButton_Registration : ILoquiRegistration
+    internal partial class LegendaryItemLnamEntry_Registration : ILoquiRegistration
     {
-        public static readonly MessageButton_Registration Instance = new MessageButton_Registration();
+        public static readonly LegendaryItemLnamEntry_Registration Instance = new LegendaryItemLnamEntry_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(MessageButton.Mask<>);
+        public static readonly Type MaskType = typeof(LegendaryItemLnamEntry.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MessageButton.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LegendaryItemLnamEntry.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MessageButton);
+        public static readonly Type ClassType = typeof(LegendaryItemLnamEntry);
 
-        public static readonly Type GetterType = typeof(IMessageButtonGetter);
+        public static readonly Type GetterType = typeof(ILegendaryItemLnamEntryGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMessageButton);
+        public static readonly Type SetterType = typeof(ILegendaryItemLnamEntry);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.MessageButton";
+        public const string FullName = "Mutagen.Bethesda.Starfield.LegendaryItemLnamEntry";
 
-        public const string Name = "MessageButton";
+        public const string Name = "LegendaryItemLnamEntry";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -845,16 +797,9 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.ITXT,
-                RecordTypes.IBIN,
-                RecordTypes.CTDA,
-                RecordTypes.DODT);
+            var triggers = RecordCollection.Factory();
             var all = RecordCollection.Factory(
-                RecordTypes.ITXT,
-                RecordTypes.IBIN,
                 RecordTypes.CTDA,
-                RecordTypes.DODT,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2);
@@ -862,7 +807,7 @@ namespace Mutagen.Bethesda.Starfield
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(MessageButtonBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LegendaryItemLnamEntryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -893,33 +838,31 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class MessageButtonSetterCommon
+    internal partial class LegendaryItemLnamEntrySetterCommon
     {
-        public static readonly MessageButtonSetterCommon Instance = new MessageButtonSetterCommon();
+        public static readonly LegendaryItemLnamEntrySetterCommon Instance = new LegendaryItemLnamEntrySetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMessageButton item)
+        public void Clear(ILegendaryItemLnamEntry item)
         {
             ClearPartial();
-            item.Text = default;
-            item.ButtonText = default;
-            item.Conditions.Clear();
-            item.Reference.Clear();
+            item.Slot = default(LegendaryItem.StarSlot);
+            item.Unknown = default(UInt32);
+            item.Conditions = null;
         }
         
         #region Mutagen
-        public void RemapLinks(IMessageButton obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILegendaryItemLnamEntry obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Conditions.RemapLinks(mapping);
-            obj.Reference.Relink(mapping);
+            obj.Conditions?.RemapLinks(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMessageButton item,
+            ILegendaryItemLnamEntry item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -927,23 +870,24 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: MessageButtonBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: LegendaryItemLnamEntryBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: LegendaryItemLnamEntryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class MessageButtonCommon
+    internal partial class LegendaryItemLnamEntryCommon
     {
-        public static readonly MessageButtonCommon Instance = new MessageButtonCommon();
+        public static readonly LegendaryItemLnamEntryCommon Instance = new LegendaryItemLnamEntryCommon();
 
-        public MessageButton.Mask<bool> GetEqualsMask(
-            IMessageButtonGetter item,
-            IMessageButtonGetter rhs,
+        public LegendaryItemLnamEntry.Mask<bool> GetEqualsMask(
+            ILegendaryItemLnamEntryGetter item,
+            ILegendaryItemLnamEntryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MessageButton.Mask<bool>(false);
-            ((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LegendaryItemLnamEntry.Mask<bool>(false);
+            ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -952,24 +896,23 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IMessageButtonGetter item,
-            IMessageButtonGetter rhs,
-            MessageButton.Mask<bool> ret,
+            ILegendaryItemLnamEntryGetter item,
+            ILegendaryItemLnamEntryGetter rhs,
+            LegendaryItemLnamEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Text = object.Equals(item.Text, rhs.Text);
-            ret.ButtonText = string.Equals(item.ButtonText, rhs.ButtonText);
+            ret.Slot = item.Slot == rhs.Slot;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Reference = item.Reference.Equals(rhs.Reference);
         }
         
         public string Print(
-            IMessageButtonGetter item,
+            ILegendaryItemLnamEntryGetter item,
             string? name = null,
-            MessageButton.Mask<bool>? printMask = null)
+            LegendaryItemLnamEntry.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -981,18 +924,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IMessageButtonGetter item,
+            ILegendaryItemLnamEntryGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            MessageButton.Mask<bool>? printMask = null)
+            LegendaryItemLnamEntry.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"MessageButton =>");
+                sb.AppendLine($"LegendaryItemLnamEntry =>");
             }
             else
             {
-                sb.AppendLine($"{name} (MessageButton) =>");
+                sb.AppendLine($"{name} (LegendaryItemLnamEntry) =>");
             }
             using (sb.Brace())
             {
@@ -1004,26 +947,25 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IMessageButtonGetter item,
+            ILegendaryItemLnamEntryGetter item,
             StructuredStringBuilder sb,
-            MessageButton.Mask<bool>? printMask = null)
+            LegendaryItemLnamEntry.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Text ?? true)
-                && item.Text is {} TextItem)
+            if (printMask?.Slot ?? true)
             {
-                sb.AppendItem(TextItem, "Text");
+                sb.AppendItem(item.Slot, "Slot");
             }
-            if ((printMask?.ButtonText ?? true)
-                && item.ButtonText is {} ButtonTextItem)
+            if (printMask?.Unknown ?? true)
             {
-                sb.AppendItem(ButtonTextItem, "ButtonText");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.Conditions?.Overall ?? true)
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions is {} ConditionsItem)
             {
                 sb.AppendLine("Conditions =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Conditions)
+                    foreach (var subItem in ConditionsItem)
                     {
                         using (sb.Brace())
                         {
@@ -1032,51 +974,36 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.Reference ?? true)
-            {
-                sb.AppendItem(item.Reference.FormKeyNullable, "Reference");
-            }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMessageButtonGetter? lhs,
-            IMessageButtonGetter? rhs,
+            ILegendaryItemLnamEntryGetter? lhs,
+            ILegendaryItemLnamEntryGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItemLnamEntry_FieldIndex.Slot) ?? true))
             {
-                if (!object.Equals(lhs.Text, rhs.Text)) return false;
+                if (lhs.Slot != rhs.Slot) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.ButtonText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItemLnamEntry_FieldIndex.Unknown) ?? true))
             {
-                if (!string.Equals(lhs.ButtonText, rhs.ButtonText)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItemLnamEntry_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MessageButton_FieldIndex.Conditions)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Reference) ?? true))
-            {
-                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItemLnamEntry_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IMessageButtonGetter item)
+        public virtual int GetHashCode(ILegendaryItemLnamEntryGetter item)
         {
             var hash = new HashCode();
-            if (item.Text is {} Textitem)
-            {
-                hash.Add(Textitem);
-            }
-            if (item.ButtonText is {} ButtonTextitem)
-            {
-                hash.Add(ButtonTextitem);
-            }
+            hash.Add(item.Slot);
+            hash.Add(item.Unknown);
             hash.Add(item.Conditions);
-            hash.Add(item.Reference);
             return hash.ToHashCode();
         }
         
@@ -1085,19 +1012,18 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return MessageButton.GetNew();
+            return LegendaryItemLnamEntry.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMessageButtonGetter obj, bool iterateNestedRecords = true)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILegendaryItemLnamEntryGetter obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            if (obj.Conditions is {} ConditionsItem)
             {
-                yield return FormLinkInformation.Factory(item);
-            }
-            if (FormLinkInformation.TryFactory(obj.Reference, out var ReferenceInfo))
-            {
-                yield return ReferenceInfo;
+                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -1105,39 +1031,47 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class MessageButtonSetterTranslationCommon
+    internal partial class LegendaryItemLnamEntrySetterTranslationCommon
     {
-        public static readonly MessageButtonSetterTranslationCommon Instance = new MessageButtonSetterTranslationCommon();
+        public static readonly LegendaryItemLnamEntrySetterTranslationCommon Instance = new LegendaryItemLnamEntrySetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IMessageButton item,
-            IMessageButtonGetter rhs,
+            ILegendaryItemLnamEntry item,
+            ILegendaryItemLnamEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItemLnamEntry_FieldIndex.Slot) ?? true))
             {
-                item.Text = rhs.Text?.DeepCopy();
+                item.Slot = rhs.Slot;
             }
-            if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.ButtonText) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItemLnamEntry_FieldIndex.Unknown) ?? true))
             {
-                item.ButtonText = rhs.ButtonText;
+                item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Conditions) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItemLnamEntry_FieldIndex.Conditions) ?? true))
             {
-                errorMask?.PushIndex((int)MessageButton_FieldIndex.Conditions);
+                errorMask?.PushIndex((int)LegendaryItemLnamEntry_FieldIndex.Conditions);
                 try
                 {
-                    item.Conditions.SetTo(
-                        rhs.Conditions
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.Conditions != null))
+                    {
+                        item.Conditions = 
+                            rhs.Conditions
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<Condition>();
+                    }
+                    else
+                    {
+                        item.Conditions = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1149,10 +1083,6 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MessageButton_FieldIndex.Reference) ?? true))
-            {
-                item.Reference.SetTo(rhs.Reference.FormKeyNullable);
-            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1162,19 +1092,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IMessageButton item,
-            IMessageButtonGetter rhs,
+            ILegendaryItemLnamEntry item,
+            ILegendaryItemLnamEntryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public MessageButton DeepCopy(
-            IMessageButtonGetter item,
-            MessageButton.TranslationMask? copyMask = null)
+        public LegendaryItemLnamEntry DeepCopy(
+            ILegendaryItemLnamEntryGetter item,
+            LegendaryItemLnamEntry.TranslationMask? copyMask = null)
         {
-            MessageButton ret = (MessageButton)((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).GetNew();
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LegendaryItemLnamEntry ret = (LegendaryItemLnamEntry)((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).GetNew();
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1183,30 +1113,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public MessageButton DeepCopy(
-            IMessageButtonGetter item,
-            out MessageButton.ErrorMask errorMask,
-            MessageButton.TranslationMask? copyMask = null)
+        public LegendaryItemLnamEntry DeepCopy(
+            ILegendaryItemLnamEntryGetter item,
+            out LegendaryItemLnamEntry.ErrorMask errorMask,
+            LegendaryItemLnamEntry.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            MessageButton ret = (MessageButton)((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).GetNew();
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LegendaryItemLnamEntry ret = (LegendaryItemLnamEntry)((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).GetNew();
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = MessageButton.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LegendaryItemLnamEntry.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public MessageButton DeepCopy(
-            IMessageButtonGetter item,
+        public LegendaryItemLnamEntry DeepCopy(
+            ILegendaryItemLnamEntryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MessageButton ret = (MessageButton)((MessageButtonCommon)((IMessageButtonGetter)item).CommonInstance()!).GetNew();
-            ((MessageButtonSetterTranslationCommon)((IMessageButtonGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LegendaryItemLnamEntry ret = (LegendaryItemLnamEntry)((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)item).CommonInstance()!).GetNew();
+            ((LegendaryItemLnamEntrySetterTranslationCommon)((ILegendaryItemLnamEntryGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1222,27 +1152,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class MessageButton
+    public partial class LegendaryItemLnamEntry
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MessageButton_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => MessageButton_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LegendaryItemLnamEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LegendaryItemLnamEntry_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => MessageButtonCommon.Instance;
+        protected object CommonInstance() => LegendaryItemLnamEntryCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return MessageButtonSetterCommon.Instance;
+            return LegendaryItemLnamEntrySetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => MessageButtonSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LegendaryItemLnamEntrySetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IMessageButtonGetter.CommonInstance() => this.CommonInstance();
+        object ILegendaryItemLnamEntryGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IMessageButtonGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILegendaryItemLnamEntryGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IMessageButtonGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILegendaryItemLnamEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1253,29 +1183,31 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class MessageButtonBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LegendaryItemLnamEntryBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly MessageButtonBinaryWriteTranslation Instance = new();
+        public static readonly LegendaryItemLnamEntryBinaryWriteTranslation Instance = new();
+
+        public static void WriteEmbedded(
+            ILegendaryItemLnamEntryGetter item,
+            MutagenWriter writer)
+        {
+            EnumBinaryTranslation<LegendaryItem.StarSlot, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Slot,
+                length: 4);
+            writer.Write(item.Unknown);
+        }
 
         public static void WriteRecordTypes(
-            IMessageButtonGetter item,
+            ILegendaryItemLnamEntryGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Text,
-                header: translationParams.ConvertToCustom(RecordTypes.ITXT),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ButtonText,
-                header: translationParams.ConvertToCustom(RecordTypes.IBIN),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -1284,17 +1216,16 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Reference,
-                header: translationParams.ConvertToCustom(RecordTypes.DODT));
         }
 
         public void Write(
             MutagenWriter writer,
-            IMessageButtonGetter item,
+            ILegendaryItemLnamEntryGetter item,
             TypedWriteParams translationParams)
         {
+            WriteEmbedded(
+                item: item,
+                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -1307,19 +1238,29 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IMessageButtonGetter)item,
+                item: (ILegendaryItemLnamEntryGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class MessageButtonBinaryCreateTranslation
+    internal partial class LegendaryItemLnamEntryBinaryCreateTranslation
     {
-        public static readonly MessageButtonBinaryCreateTranslation Instance = new MessageButtonBinaryCreateTranslation();
+        public static readonly LegendaryItemLnamEntryBinaryCreateTranslation Instance = new LegendaryItemLnamEntryBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            ILegendaryItemLnamEntry item,
+            MutagenFrame frame)
+        {
+            item.Slot = EnumBinaryTranslation<LegendaryItem.StarSlot, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Unknown = frame.ReadUInt32();
+        }
 
         public static ParseResult FillBinaryRecordTypes(
-            IMessageButton item,
+            ILegendaryItemLnamEntry item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1330,45 +1271,19 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.ITXT:
-                {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Text, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Text = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        eager: true,
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)MessageButton_FieldIndex.Text;
-                }
-                case RecordTypeInts.IBIN:
-                {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.ButtonText, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ButtonText = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)MessageButton_FieldIndex.ButtonText;
-                }
                 case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
                 {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
-                    item.Conditions.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                    item.Conditions = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
                             reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
                             triggeringRecord: Condition_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: Condition.TryCreateFromBinary));
-                    return (int)MessageButton_FieldIndex.Conditions;
-                }
-                case RecordTypeInts.DODT:
-                {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Reference, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)MessageButton_FieldIndex.Reference;
+                            transl: Condition.TryCreateFromBinary)
+                        .CastExtendedList<Condition>();
+                    return (int)LegendaryItemLnamEntry_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1381,14 +1296,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class MessageButtonBinaryTranslationMixIn
+    public static class LegendaryItemLnamEntryBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IMessageButtonGetter item,
+            this ILegendaryItemLnamEntryGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MessageButtonBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LegendaryItemLnamEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1401,64 +1316,54 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class MessageButtonBinaryOverlay :
+    internal partial class LegendaryItemLnamEntryBinaryOverlay :
         PluginBinaryOverlay,
-        IMessageButtonGetter
+        ILegendaryItemLnamEntryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MessageButton_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => MessageButton_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LegendaryItemLnamEntry_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LegendaryItemLnamEntry_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => MessageButtonCommon.Instance;
+        protected object CommonInstance() => LegendaryItemLnamEntryCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => MessageButtonSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LegendaryItemLnamEntrySetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IMessageButtonGetter.CommonInstance() => this.CommonInstance();
+        object ILegendaryItemLnamEntryGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IMessageButtonGetter.CommonSetterInstance() => null;
+        object? ILegendaryItemLnamEntryGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IMessageButtonGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILegendaryItemLnamEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MessageButtonCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LegendaryItemLnamEntryCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => MessageButtonBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LegendaryItemLnamEntryBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((MessageButtonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LegendaryItemLnamEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region Text
-        private int? _TextLocation;
-        public ITranslatedStringGetter? Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
-        #endregion
-        #region ButtonText
-        private int? _ButtonTextLocation;
-        public String? ButtonText => _ButtonTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ButtonTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
-        #region Reference
-        private int? _ReferenceLocation;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _ReferenceLocation);
-        #endregion
+        public LegendaryItem.StarSlot Slot => (LegendaryItem.StarSlot)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected MessageButtonBinaryOverlay(
+        protected LegendaryItemLnamEntryBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1468,7 +1373,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IMessageButtonGetter MessageButtonFactory(
+        public static ILegendaryItemLnamEntryGetter LegendaryItemLnamEntryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1480,7 +1385,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new MessageButtonBinaryOverlay(
+            var ret = new LegendaryItemLnamEntryBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1492,12 +1397,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IMessageButtonGetter MessageButtonFactory(
+        public static ILegendaryItemLnamEntryGetter LegendaryItemLnamEntryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return MessageButtonFactory(
+            return LegendaryItemLnamEntryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1515,39 +1420,19 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.ITXT:
-                {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Text, translationParams)) return ParseResult.Stop;
-                    _TextLocation = (stream.Position - offset);
-                    return (int)MessageButton_FieldIndex.Text;
-                }
-                case RecordTypeInts.IBIN:
-                {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.ButtonText, translationParams)) return ParseResult.Stop;
-                    _ButtonTextLocation = (stream.Position - offset);
-                    return (int)MessageButton_FieldIndex.ButtonText;
-                }
                 case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
                 {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Conditions, translationParams)) return ParseResult.Stop;
-                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
-                        mem: stream.RemainingMemory,
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
+                        stream: stream,
                         package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
                         translationParams: translationParams,
                         getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
-                        locs: ParseRecordLocations(
-                            stream: stream,
-                            trigger: Condition_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
-                    return (int)MessageButton_FieldIndex.Conditions;
-                }
-                case RecordTypeInts.DODT:
-                {
-                    if (lastParsed.ShortCircuit((int)MessageButton_FieldIndex.Reference, translationParams)) return ParseResult.Stop;
-                    _ReferenceLocation = (stream.Position - offset);
-                    return (int)MessageButton_FieldIndex.Reference;
+                        skipHeader: false);
+                    return (int)LegendaryItemLnamEntry_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1559,7 +1444,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            MessageButtonMixIn.Print(
+            LegendaryItemLnamEntryMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1570,16 +1455,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IMessageButtonGetter rhs) return false;
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILegendaryItemLnamEntryGetter rhs) return false;
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IMessageButtonGetter? obj)
+        public bool Equals(ILegendaryItemLnamEntryGetter? obj)
         {
-            return ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((MessageButtonCommon)((IMessageButtonGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LegendaryItemLnamEntryCommon)((ILegendaryItemLnamEntryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

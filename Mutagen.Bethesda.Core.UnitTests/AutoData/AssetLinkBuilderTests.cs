@@ -2,6 +2,7 @@
 using AutoFixture.Kernel;
 using Shouldly;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -23,7 +24,7 @@ public class AssetLinkBuilderTests
         AssetLinkBuilder sut)
     {
         var assetLink = (IAssetLinkGetter)sut.Create(typeof(AssetLink<TestAssetType>), context);
-        assetLink.GivenPath.ShouldContain(Path.Combine("Data", TestAssetType.Instance.BaseFolder));
+        assetLink.DataRelativePath.Path.ShouldContain(TestAssetType.Instance.BaseFolder);
         Path.GetExtension(assetLink.GivenPath).ShouldBe(TestAssetType.Instance.FileExtensions.First());
     }
 
@@ -38,8 +39,10 @@ public class AssetLinkBuilderTests
     [Theory, MutagenAutoData]
     public void Existing(
         IFileSystem fileSystem,
+        IDataDirectoryProvider dataDirectoryProvider,
         AssetLink<TestAssetType> existingLink)
     {
-        fileSystem.File.Exists(existingLink.GivenPath).ShouldBeTrue();
+        var fullPath = Path.Combine(dataDirectoryProvider.Path, existingLink.DataRelativePath.Path);
+        fileSystem.File.Exists(fullPath).ShouldBeTrue();
     }
 }

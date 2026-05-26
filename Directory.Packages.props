@@ -32,7 +32,7 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Noggog.Autofac" Version="4.2.0-alpha.9" />
-    <PackageVersion Include="Noggog.CSharpExt" Version="4.2.0-alpha.9" />
+    <PackageVersion Include="Noggog.CSharpExt" Version="4.2.0" />
     <PackageVersion Include="Noggog.Testing" Version="4.2.0-alpha.9" />
     <PackageVersion Include="Noggog.WPF" Version="4.2.0-alpha.9" />
     <PackageVersion Include="ReactiveUI" Version="21.0.1" />

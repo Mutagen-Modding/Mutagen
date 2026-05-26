@@ -52,7 +52,7 @@ public class BaseEnvironmentBuilder : ISpecimenBuilder
             var ret = Substitute.For<IDataDirectoryProvider>();
             ret.Path.Returns(x =>
             {
-                return new DirectoryPath(Path.Combine(dir.Path, "DataDirectory"));
+                return new DirectoryPath(Path.Combine(dir.Path, "Data"));
             });
             return ret;
         }

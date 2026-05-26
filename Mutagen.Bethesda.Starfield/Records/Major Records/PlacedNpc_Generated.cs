@@ -241,6 +241,11 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.EncounterLocation => this.EncounterLocation;
         #endregion
+        #region GeometryDirtinessScale
+        public Single? GeometryDirtinessScale { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPlacedNpcGetter.GeometryDirtinessScale => this.GeometryDirtinessScale;
+        #endregion
         #region Layer
         private readonly IFormLinkNullable<ILayerGetter> _Layer = new FormLinkNullable<ILayerGetter>();
         public IFormLinkNullable<ILayerGetter> Layer
@@ -364,6 +369,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(initialValue, new ExternalEmittance.Mask<TItem>(initialValue));
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.EncounterLocation = initialValue;
+                this.GeometryDirtinessScale = initialValue;
                 this.Layer = initialValue;
                 this.Location = initialValue;
                 this.HeadTrackingWeight = initialValue;
@@ -405,6 +411,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ExternalEmittance,
                 TItem Ownership,
                 TItem EncounterLocation,
+                TItem GeometryDirtinessScale,
                 TItem Layer,
                 TItem Location,
                 TItem HeadTrackingWeight,
@@ -445,6 +452,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ExternalEmittance = new MaskItem<TItem, ExternalEmittance.Mask<TItem>?>(ExternalEmittance, new ExternalEmittance.Mask<TItem>(ExternalEmittance));
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.EncounterLocation = EncounterLocation;
+                this.GeometryDirtinessScale = GeometryDirtinessScale;
                 this.Layer = Layer;
                 this.Location = Location;
                 this.HeadTrackingWeight = HeadTrackingWeight;
@@ -487,6 +495,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, ExternalEmittance.Mask<TItem>?>? ExternalEmittance { get; set; }
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public TItem EncounterLocation;
+            public TItem GeometryDirtinessScale;
             public TItem Layer;
             public TItem Location;
             public TItem HeadTrackingWeight;
@@ -531,6 +540,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ExternalEmittance, rhs.ExternalEmittance)) return false;
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.EncounterLocation, rhs.EncounterLocation)) return false;
+                if (!object.Equals(this.GeometryDirtinessScale, rhs.GeometryDirtinessScale)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
@@ -567,6 +577,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ExternalEmittance);
                 hash.Add(this.Ownership);
                 hash.Add(this.EncounterLocation);
+                hash.Add(this.GeometryDirtinessScale);
                 hash.Add(this.Layer);
                 hash.Add(this.Location);
                 hash.Add(this.HeadTrackingWeight);
@@ -664,6 +675,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Ownership.Specific != null && !this.Ownership.Specific.All(eval)) return false;
                 }
                 if (!eval(this.EncounterLocation)) return false;
+                if (!eval(this.GeometryDirtinessScale)) return false;
                 if (!eval(this.Layer)) return false;
                 if (!eval(this.Location)) return false;
                 if (!eval(this.HeadTrackingWeight)) return false;
@@ -773,6 +785,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Ownership.Specific != null && this.Ownership.Specific.Any(eval)) return true;
                 }
                 if (eval(this.EncounterLocation)) return true;
+                if (eval(this.GeometryDirtinessScale)) return true;
                 if (eval(this.Layer)) return true;
                 if (eval(this.Location)) return true;
                 if (eval(this.HeadTrackingWeight)) return true;
@@ -889,6 +902,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ExternalEmittance = this.ExternalEmittance == null ? null : new MaskItem<R, ExternalEmittance.Mask<R>?>(eval(this.ExternalEmittance.Overall), this.ExternalEmittance.Specific?.Translate(eval));
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 obj.EncounterLocation = eval(this.EncounterLocation);
+                obj.GeometryDirtinessScale = eval(this.GeometryDirtinessScale);
                 obj.Layer = eval(this.Layer);
                 obj.Location = eval(this.Location);
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
@@ -1068,6 +1082,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(EncounterLocation, "EncounterLocation");
                     }
+                    if (printMask?.GeometryDirtinessScale ?? true)
+                    {
+                        sb.AppendItem(GeometryDirtinessScale, "GeometryDirtinessScale");
+                    }
                     if (printMask?.Layer ?? true)
                     {
                         sb.AppendItem(Layer, "Layer");
@@ -1163,6 +1181,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, ExternalEmittance.ErrorMask?>? ExternalEmittance;
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public Exception? EncounterLocation;
+            public Exception? GeometryDirtinessScale;
             public Exception? Layer;
             public Exception? Location;
             public Exception? HeadTrackingWeight;
@@ -1221,6 +1240,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Ownership;
                     case PlacedNpc_FieldIndex.EncounterLocation:
                         return EncounterLocation;
+                    case PlacedNpc_FieldIndex.GeometryDirtinessScale:
+                        return GeometryDirtinessScale;
                     case PlacedNpc_FieldIndex.Layer:
                         return Layer;
                     case PlacedNpc_FieldIndex.Location:
@@ -1311,6 +1332,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedNpc_FieldIndex.EncounterLocation:
                         this.EncounterLocation = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.GeometryDirtinessScale:
+                        this.GeometryDirtinessScale = ex;
                         break;
                     case PlacedNpc_FieldIndex.Layer:
                         this.Layer = ex;
@@ -1416,6 +1440,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedNpc_FieldIndex.EncounterLocation:
                         this.EncounterLocation = (Exception?)obj;
                         break;
+                    case PlacedNpc_FieldIndex.GeometryDirtinessScale:
+                        this.GeometryDirtinessScale = (Exception?)obj;
+                        break;
                     case PlacedNpc_FieldIndex.Layer:
                         this.Layer = (Exception?)obj;
                         break;
@@ -1480,6 +1507,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ExternalEmittance != null) return true;
                 if (Ownership != null) return true;
                 if (EncounterLocation != null) return true;
+                if (GeometryDirtinessScale != null) return true;
                 if (Layer != null) return true;
                 if (Location != null) return true;
                 if (HeadTrackingWeight != null) return true;
@@ -1630,6 +1658,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(EncounterLocation, "EncounterLocation");
                 }
                 {
+                    sb.AppendItem(GeometryDirtinessScale, "GeometryDirtinessScale");
+                }
+                {
                     sb.AppendItem(Layer, "Layer");
                 }
                 {
@@ -1707,6 +1738,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ExternalEmittance = this.ExternalEmittance.Combine(rhs.ExternalEmittance, (l, r) => l.Combine(r));
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.EncounterLocation = this.EncounterLocation.Combine(rhs.EncounterLocation);
+                ret.GeometryDirtinessScale = this.GeometryDirtinessScale.Combine(rhs.GeometryDirtinessScale);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
@@ -1760,6 +1792,7 @@ namespace Mutagen.Bethesda.Starfield
             public ExternalEmittance.TranslationMask? ExternalEmittance;
             public Ownership.TranslationMask? Ownership;
             public bool EncounterLocation;
+            public bool GeometryDirtinessScale;
             public bool Layer;
             public bool Location;
             public bool HeadTrackingWeight;
@@ -1792,6 +1825,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FactionRank = defaultOn;
                 this.IsLinkedRefTransient = defaultOn;
                 this.EncounterLocation = defaultOn;
+                this.GeometryDirtinessScale = defaultOn;
                 this.Layer = defaultOn;
                 this.Location = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
@@ -1829,6 +1863,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ExternalEmittance != null ? ExternalEmittance.OnOverall : DefaultOn, ExternalEmittance?.GetCrystal()));
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((EncounterLocation, null));
+                ret.Add((GeometryDirtinessScale, null));
                 ret.Add((Layer, null));
                 ret.Add((Location, null));
                 ret.Add((HeadTrackingWeight, null));
@@ -2027,6 +2062,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExternalEmittance? ExternalEmittance { get; set; }
         new Ownership? Ownership { get; set; }
         new IFormLinkNullable<ILocationGetter> EncounterLocation { get; set; }
+        new Single? GeometryDirtinessScale { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
         new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new Single? HeadTrackingWeight { get; set; }
@@ -2093,6 +2129,7 @@ namespace Mutagen.Bethesda.Starfield
         IExternalEmittanceGetter? ExternalEmittance { get; }
         IOwnershipGetter? Ownership { get; }
         IFormLinkNullableGetter<ILocationGetter> EncounterLocation { get; }
+        Single? GeometryDirtinessScale { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
         IFormLinkNullableGetter<ILocationGetter> Location { get; }
         Single? HeadTrackingWeight { get; }
@@ -2304,18 +2341,19 @@ namespace Mutagen.Bethesda.Starfield
         ExternalEmittance = 23,
         Ownership = 24,
         EncounterLocation = 25,
-        Layer = 26,
-        Location = 27,
-        HeadTrackingWeight = 28,
-        LocationRefTypes = 29,
-        RagdollBipedRotation = 30,
-        Health = 31,
-        EnableParent = 32,
-        IsActivationPoint = 33,
-        Scale = 34,
-        Position = 35,
-        Rotation = 36,
-        Comments = 37,
+        GeometryDirtinessScale = 26,
+        Layer = 27,
+        Location = 28,
+        HeadTrackingWeight = 29,
+        LocationRefTypes = 30,
+        RagdollBipedRotation = 31,
+        Health = 32,
+        EnableParent = 33,
+        IsActivationPoint = 34,
+        Scale = 35,
+        Position = 36,
+        Rotation = 37,
+        Comments = 38,
     }
     #endregion
 
@@ -2326,9 +2364,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2382,6 +2420,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XEED,
                 RecordTypes.XOWN,
                 RecordTypes.XEZN,
+                RecordTypes.XGDS,
                 RecordTypes.XLYR,
                 RecordTypes.XLRL,
                 RecordTypes.XHTW,
@@ -2456,6 +2495,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ExternalEmittance = null;
             item.Ownership = null;
             item.EncounterLocation.Clear();
+            item.GeometryDirtinessScale = default;
             item.Layer.Clear();
             item.Location.Clear();
             item.HeadTrackingWeight = default;
@@ -2634,6 +2674,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.EncounterLocation = item.EncounterLocation.Equals(rhs.EncounterLocation);
+            ret.GeometryDirtinessScale = item.GeometryDirtinessScale.EqualsWithin(rhs.GeometryDirtinessScale);
             ret.Layer = item.Layer.Equals(rhs.Layer);
             ret.Location = item.Location.Equals(rhs.Location);
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
@@ -2825,6 +2866,11 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.EncounterLocation ?? true)
             {
                 sb.AppendItem(item.EncounterLocation.FormKeyNullable, "EncounterLocation");
+            }
+            if ((printMask?.GeometryDirtinessScale ?? true)
+                && item.GeometryDirtinessScale is {} GeometryDirtinessScaleItem)
+            {
+                sb.AppendItem(GeometryDirtinessScaleItem, "GeometryDirtinessScale");
             }
             if (printMask?.Layer ?? true)
             {
@@ -3029,6 +3075,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.EncounterLocation.Equals(rhs.EncounterLocation)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.GeometryDirtinessScale) ?? true))
+            {
+                if (!lhs.GeometryDirtinessScale.EqualsWithin(rhs.GeometryDirtinessScale)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Layer) ?? true))
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
@@ -3149,6 +3199,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Ownershipitem);
             }
             hash.Add(item.EncounterLocation);
+            if (item.GeometryDirtinessScale is {} GeometryDirtinessScaleitem)
+            {
+                hash.Add(GeometryDirtinessScaleitem);
+            }
             hash.Add(item.Layer);
             hash.Add(item.Location);
             if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
@@ -3596,6 +3650,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EncounterLocation.SetTo(rhs.EncounterLocation.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.GeometryDirtinessScale) ?? true))
+            {
+                item.GeometryDirtinessScale = rhs.GeometryDirtinessScale;
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Layer) ?? true))
             {
                 item.Layer.SetTo(rhs.Layer.FormKeyNullable);
@@ -3973,6 +4031,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.EncounterLocation,
                 header: translationParams.ConvertToCustom(RecordTypes.XEZN));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.GeometryDirtinessScale,
+                header: translationParams.ConvertToCustom(RecordTypes.XGDS));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Layer,
@@ -4230,6 +4292,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedNpc_FieldIndex.EncounterLocation;
                 }
+                case RecordTypeInts.XGDS:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.GeometryDirtinessScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedNpc_FieldIndex.GeometryDirtinessScale;
+                }
                 case RecordTypeInts.XLYR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -4435,6 +4503,10 @@ namespace Mutagen.Bethesda.Starfield
         #region EncounterLocation
         private int? _EncounterLocationLocation;
         public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterLocationLocation);
+        #endregion
+        #region GeometryDirtinessScale
+        private int? _GeometryDirtinessScaleLocation;
+        public Single? GeometryDirtinessScale => _GeometryDirtinessScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GeometryDirtinessScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Layer
         private int? _LayerLocation;
@@ -4684,6 +4756,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _EncounterLocationLocation = (stream.Position - offset);
                     return (int)PlacedNpc_FieldIndex.EncounterLocation;
+                }
+                case RecordTypeInts.XGDS:
+                {
+                    _GeometryDirtinessScaleLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.GeometryDirtinessScale;
                 }
                 case RecordTypeInts.XLYR:
                 {
