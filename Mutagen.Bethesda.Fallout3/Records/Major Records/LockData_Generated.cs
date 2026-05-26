@@ -55,18 +55,7 @@ namespace Mutagen.Bethesda.Fallout3
         public LockData.VersioningBreaks Versioning { get; set; } = default(LockData.VersioningBreaks);
         #endregion
         #region Level
-        public Byte Level { get; set; } = default(Byte);
-        #endregion
-        #region Unused1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused1 = new byte[3];
-        public MemorySlice<Byte> Unused1
-        {
-            get => _Unused1;
-            set => this._Unused1 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ILockDataGetter.Unused1 => this.Unused1;
+        public UInt32 Level { get; set; } = default(UInt32);
         #endregion
         #region Key
         private readonly IFormLink<IKeyGetter> _Key = new FormLink<IKeyGetter>();
@@ -81,16 +70,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region LockFlags
         public LockData.Flag LockFlags { get; set; } = default(LockData.Flag);
         #endregion
-        #region Unused2
+        #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused2 = new byte[3];
-        public MemorySlice<Byte> Unused2
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
-            get => _Unused2;
-            set => this._Unused2 = value;
+            get => _Unused;
+            set => this._Unused = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ILockDataGetter.Unused2 => this.Unused2;
+        ReadOnlyMemorySlice<Byte> ILockDataGetter.Unused => this.Unused;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -144,28 +133,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Versioning = initialValue;
                 this.Level = initialValue;
-                this.Unused1 = initialValue;
                 this.Key = initialValue;
                 this.LockFlags = initialValue;
-                this.Unused2 = initialValue;
+                this.Unused = initialValue;
                 this.Unknown = initialValue;
             }
 
             public Mask(
                 TItem Versioning,
                 TItem Level,
-                TItem Unused1,
                 TItem Key,
                 TItem LockFlags,
-                TItem Unused2,
+                TItem Unused,
                 TItem Unknown)
             {
                 this.Versioning = Versioning;
                 this.Level = Level;
-                this.Unused1 = Unused1;
                 this.Key = Key;
                 this.LockFlags = LockFlags;
-                this.Unused2 = Unused2;
+                this.Unused = Unused;
                 this.Unknown = Unknown;
             }
 
@@ -180,10 +166,9 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Versioning;
             public TItem Level;
-            public TItem Unused1;
             public TItem Key;
             public TItem LockFlags;
-            public TItem Unused2;
+            public TItem Unused;
             public TItem Unknown;
             #endregion
 
@@ -199,10 +184,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return false;
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Level, rhs.Level)) return false;
-                if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
                 if (!object.Equals(this.Key, rhs.Key)) return false;
                 if (!object.Equals(this.LockFlags, rhs.LockFlags)) return false;
-                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
@@ -211,10 +195,9 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.Versioning);
                 hash.Add(this.Level);
-                hash.Add(this.Unused1);
                 hash.Add(this.Key);
                 hash.Add(this.LockFlags);
-                hash.Add(this.Unused2);
+                hash.Add(this.Unused);
                 hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
@@ -226,10 +209,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!eval(this.Versioning)) return false;
                 if (!eval(this.Level)) return false;
-                if (!eval(this.Unused1)) return false;
                 if (!eval(this.Key)) return false;
                 if (!eval(this.LockFlags)) return false;
-                if (!eval(this.Unused2)) return false;
+                if (!eval(this.Unused)) return false;
                 if (!eval(this.Unknown)) return false;
                 return true;
             }
@@ -240,10 +222,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (eval(this.Versioning)) return true;
                 if (eval(this.Level)) return true;
-                if (eval(this.Unused1)) return true;
                 if (eval(this.Key)) return true;
                 if (eval(this.LockFlags)) return true;
-                if (eval(this.Unused2)) return true;
+                if (eval(this.Unused)) return true;
                 if (eval(this.Unknown)) return true;
                 return false;
             }
@@ -261,10 +242,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 obj.Versioning = eval(this.Versioning);
                 obj.Level = eval(this.Level);
-                obj.Unused1 = eval(this.Unused1);
                 obj.Key = eval(this.Key);
                 obj.LockFlags = eval(this.LockFlags);
-                obj.Unused2 = eval(this.Unused2);
+                obj.Unused = eval(this.Unused);
                 obj.Unknown = eval(this.Unknown);
             }
             #endregion
@@ -292,10 +272,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Level, "Level");
                     }
-                    if (printMask?.Unused1 ?? true)
-                    {
-                        sb.AppendItem(Unused1, "Unused1");
-                    }
                     if (printMask?.Key ?? true)
                     {
                         sb.AppendItem(Key, "Key");
@@ -304,9 +280,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(LockFlags, "LockFlags");
                     }
-                    if (printMask?.Unused2 ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Unknown ?? true)
                     {
@@ -338,10 +314,9 @@ namespace Mutagen.Bethesda.Fallout3
             }
             public Exception? Versioning;
             public Exception? Level;
-            public Exception? Unused1;
             public Exception? Key;
             public Exception? LockFlags;
-            public Exception? Unused2;
+            public Exception? Unused;
             public Exception? Unknown;
             #endregion
 
@@ -355,14 +330,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return Versioning;
                     case LockData_FieldIndex.Level:
                         return Level;
-                    case LockData_FieldIndex.Unused1:
-                        return Unused1;
                     case LockData_FieldIndex.Key:
                         return Key;
                     case LockData_FieldIndex.LockFlags:
                         return LockFlags;
-                    case LockData_FieldIndex.Unused2:
-                        return Unused2;
+                    case LockData_FieldIndex.Unused:
+                        return Unused;
                     case LockData_FieldIndex.Unknown:
                         return Unknown;
                     default:
@@ -381,17 +354,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case LockData_FieldIndex.Level:
                         this.Level = ex;
                         break;
-                    case LockData_FieldIndex.Unused1:
-                        this.Unused1 = ex;
-                        break;
                     case LockData_FieldIndex.Key:
                         this.Key = ex;
                         break;
                     case LockData_FieldIndex.LockFlags:
                         this.LockFlags = ex;
                         break;
-                    case LockData_FieldIndex.Unused2:
-                        this.Unused2 = ex;
+                    case LockData_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case LockData_FieldIndex.Unknown:
                         this.Unknown = ex;
@@ -412,17 +382,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case LockData_FieldIndex.Level:
                         this.Level = (Exception?)obj;
                         break;
-                    case LockData_FieldIndex.Unused1:
-                        this.Unused1 = (Exception?)obj;
-                        break;
                     case LockData_FieldIndex.Key:
                         this.Key = (Exception?)obj;
                         break;
                     case LockData_FieldIndex.LockFlags:
                         this.LockFlags = (Exception?)obj;
                         break;
-                    case LockData_FieldIndex.Unused2:
-                        this.Unused2 = (Exception?)obj;
+                    case LockData_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case LockData_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
@@ -437,10 +404,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (Versioning != null) return true;
                 if (Level != null) return true;
-                if (Unused1 != null) return true;
                 if (Key != null) return true;
                 if (LockFlags != null) return true;
-                if (Unused2 != null) return true;
+                if (Unused != null) return true;
                 if (Unknown != null) return true;
                 return false;
             }
@@ -474,16 +440,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Level, "Level");
                 }
                 {
-                    sb.AppendItem(Unused1, "Unused1");
-                }
-                {
                     sb.AppendItem(Key, "Key");
                 }
                 {
                     sb.AppendItem(LockFlags, "LockFlags");
                 }
                 {
-                    sb.AppendItem(Unused2, "Unused2");
+                    sb.AppendItem(Unused, "Unused");
                 }
                 {
                     sb.AppendItem(Unknown, "Unknown");
@@ -498,10 +461,9 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Level = this.Level.Combine(rhs.Level);
-                ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
                 ret.Key = this.Key.Combine(rhs.Key);
                 ret.LockFlags = this.LockFlags.Combine(rhs.LockFlags);
-                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
@@ -528,10 +490,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool OnOverall;
             public bool Versioning;
             public bool Level;
-            public bool Unused1;
             public bool Key;
             public bool LockFlags;
-            public bool Unused2;
+            public bool Unused;
             public bool Unknown;
             #endregion
 
@@ -544,10 +505,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.OnOverall = onOverall;
                 this.Versioning = defaultOn;
                 this.Level = defaultOn;
-                this.Unused1 = defaultOn;
                 this.Key = defaultOn;
                 this.LockFlags = defaultOn;
-                this.Unused2 = defaultOn;
+                this.Unused = defaultOn;
                 this.Unknown = defaultOn;
             }
 
@@ -566,10 +526,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ret.Add((Versioning, null));
                 ret.Add((Level, null));
-                ret.Add((Unused1, null));
                 ret.Add((Key, null));
                 ret.Add((LockFlags, null));
-                ret.Add((Unused2, null));
+                ret.Add((Unused, null));
                 ret.Add((Unknown, null));
             }
 
@@ -655,11 +614,10 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ILockData>
     {
         new LockData.VersioningBreaks Versioning { get; set; }
-        new Byte Level { get; set; }
-        new MemorySlice<Byte> Unused1 { get; set; }
+        new UInt32 Level { get; set; }
         new IFormLink<IKeyGetter> Key { get; set; }
         new LockData.Flag LockFlags { get; set; }
-        new MemorySlice<Byte> Unused2 { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
 
@@ -677,11 +635,10 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LockData_Registration.Instance;
         LockData.VersioningBreaks Versioning { get; }
-        Byte Level { get; }
-        ReadOnlyMemorySlice<Byte> Unused1 { get; }
+        UInt32 Level { get; }
         IFormLinkGetter<IKeyGetter> Key { get; }
         LockData.Flag LockFlags { get; }
-        ReadOnlyMemorySlice<Byte> Unused2 { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
     }
@@ -854,11 +811,10 @@ namespace Mutagen.Bethesda.Fallout3
     {
         Versioning = 0,
         Level = 1,
-        Unused1 = 2,
-        Key = 3,
-        LockFlags = 4,
-        Unused2 = 5,
-        Unknown = 6,
+        Key = 2,
+        LockFlags = 3,
+        Unused = 4,
+        Unknown = 5,
     }
     #endregion
 
@@ -869,9 +825,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(LockData.Mask<>);
 
@@ -945,11 +901,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Versioning = default(LockData.VersioningBreaks);
-            item.Level = default(Byte);
-            item.Unused1 = new byte[3];
+            item.Level = default(UInt32);
             item.Key.Clear();
             item.LockFlags = default(LockData.Flag);
-            item.Unused2 = new byte[3];
+            item.Unused = new byte[3];
             item.Unknown = [];
         }
         
@@ -1007,10 +962,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Level = item.Level == rhs.Level;
-            ret.Unused1 = MemoryExtensions.SequenceEqual(item.Unused1.Span, rhs.Unused1.Span);
             ret.Key = item.Key.Equals(rhs.Key);
             ret.LockFlags = item.LockFlags == rhs.LockFlags;
-            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }
         
@@ -1064,10 +1018,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Level, "Level");
             }
-            if (printMask?.Unused1 ?? true)
-            {
-                sb.AppendLine($"Unused1 => {SpanExt.ToHexString(item.Unused1)}");
-            }
             if (printMask?.Key ?? true)
             {
                 sb.AppendItem(item.Key.FormKey, "Key");
@@ -1076,9 +1026,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.LockFlags, "LockFlags");
             }
-            if (printMask?.Unused2 ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Unknown ?? true)
             {
@@ -1101,10 +1051,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Level != rhs.Level) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LockData_FieldIndex.Unused1) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused1.Span, rhs.Unused1.Span)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)LockData_FieldIndex.Key) ?? true))
             {
                 if (!lhs.Key.Equals(rhs.Key)) return false;
@@ -1113,9 +1059,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.LockFlags != rhs.LockFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LockData_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LockData_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LockData_FieldIndex.Unknown) ?? true))
             {
@@ -1129,10 +1075,9 @@ namespace Mutagen.Bethesda.Fallout3
             var hash = new HashCode();
             hash.Add(item.Versioning);
             hash.Add(item.Level);
-            hash.Add(item.Unused1);
             hash.Add(item.Key);
             hash.Add(item.LockFlags);
-            hash.Add(item.Unused2);
+            hash.Add(item.Unused);
             hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
@@ -1175,10 +1120,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Level = rhs.Level;
             }
-            if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Unused1) ?? true))
-            {
-                item.Unused1 = rhs.Unused1.ToArray();
-            }
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Key) ?? true))
             {
                 item.Key.SetTo(rhs.Key.FormKey);
@@ -1187,9 +1128,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.LockFlags = rhs.LockFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Unused2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Unused) ?? true))
             {
-                item.Unused2 = rhs.Unused2.ToArray();
+                item.Unused = rhs.Unused.ToArray();
             }
             if (rhs.Versioning.HasFlag(LockData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LockData_FieldIndex.Unknown) ?? true))
@@ -1305,9 +1246,6 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer)
         {
             writer.Write(item.Level);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused1);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Key);
@@ -1317,7 +1255,7 @@ namespace Mutagen.Bethesda.Fallout3
                 length: 1);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Unused2);
+                item: item.Unused);
             if (!item.Versioning.HasFlag(LockData.VersioningBreaks.Break0))
             {
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1364,13 +1302,12 @@ namespace Mutagen.Bethesda.Fallout3
             ILockData item,
             MutagenFrame frame)
         {
-            item.Level = frame.ReadUInt8();
-            item.Unused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Level = frame.ReadUInt32();
             item.Key.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.LockFlags = EnumBinaryTranslation<LockData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);
-            item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             if (frame.Complete)
             {
                 item.Versioning |= LockData.VersioningBreaks.Break0;
@@ -1444,11 +1381,10 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public LockData.VersioningBreaks Versioning { get; private set; }
-        public Byte Level => _structData.Span[0x0];
-        public ReadOnlyMemorySlice<Byte> Unused1 => _structData.Span.Slice(0x1, 0x3).ToArray();
+        public UInt32 Level => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         public IFormLinkGetter<IKeyGetter> Key => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeyGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public LockData.Flag LockFlags => (LockData.Flag)_structData.Span.Slice(0x8, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0x9, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x9, 0x3).ToArray();
         #region Unknown
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0xC ? [] : _structData.Span.Slice(0xC).ToArray();
         protected int UnknownEndingPos;

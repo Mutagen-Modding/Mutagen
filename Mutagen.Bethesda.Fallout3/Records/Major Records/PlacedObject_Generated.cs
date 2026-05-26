@@ -255,16 +255,20 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
-        #region Ammo
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlacedObjectAmmo? _Ammo;
-        public PlacedObjectAmmo? Ammo
+        #region AmmoType
+        private readonly IFormLinkNullable<IAmmunitionGetter> _AmmoType = new FormLinkNullable<IAmmunitionGetter>();
+        public IFormLinkNullable<IAmmunitionGetter> AmmoType
         {
-            get => _Ammo;
-            set => _Ammo = value;
+            get => _AmmoType;
+            set => _AmmoType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlacedObjectAmmoGetter? IPlacedObjectGetter.Ammo => this.Ammo;
+        IFormLinkNullableGetter<IAmmunitionGetter> IPlacedObjectGetter.AmmoType => this.AmmoType;
+        #endregion
+        #region AmmoCount
+        public Int32? AmmoCount { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int32? IPlacedObjectGetter.AmmoCount => this.AmmoCount;
         #endregion
         #region Reflections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -547,7 +551,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Health = initialValue;
                 this.Radiation = initialValue;
                 this.Charge = initialValue;
-                this.Ammo = new MaskItem<TItem, PlacedObjectAmmo.Mask<TItem>?>(initialValue, new PlacedObjectAmmo.Mask<TItem>(initialValue));
+                this.AmmoType = initialValue;
+                this.AmmoCount = initialValue;
                 this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(initialValue, []);
                 this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.LinkedDecals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDecal.Mask<TItem>?>>?>(initialValue, []);
@@ -607,7 +612,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Health,
                 TItem Radiation,
                 TItem Charge,
-                TItem Ammo,
+                TItem AmmoType,
+                TItem AmmoCount,
                 TItem Reflections,
                 TItem LitWater,
                 TItem LinkedDecals,
@@ -666,7 +672,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Health = Health;
                 this.Radiation = Radiation;
                 this.Charge = Charge;
-                this.Ammo = new MaskItem<TItem, PlacedObjectAmmo.Mask<TItem>?>(Ammo, new PlacedObjectAmmo.Mask<TItem>(Ammo));
+                this.AmmoType = AmmoType;
+                this.AmmoCount = AmmoCount;
                 this.Reflections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>(Reflections, []);
                 this.LitWater = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LitWater, []);
                 this.LinkedDecals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDecal.Mask<TItem>?>>?>(LinkedDecals, []);
@@ -727,7 +734,8 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Health;
             public TItem Radiation;
             public TItem Charge;
-            public MaskItem<TItem, PlacedObjectAmmo.Mask<TItem>?>? Ammo { get; set; }
+            public TItem AmmoType;
+            public TItem AmmoCount;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WaterReflection.Mask<TItem>?>>?>? Reflections;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LitWater;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LinkedDecal.Mask<TItem>?>>?>? LinkedDecals;
@@ -790,7 +798,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Health, rhs.Health)) return false;
                 if (!object.Equals(this.Radiation, rhs.Radiation)) return false;
                 if (!object.Equals(this.Charge, rhs.Charge)) return false;
-                if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
+                if (!object.Equals(this.AmmoType, rhs.AmmoType)) return false;
+                if (!object.Equals(this.AmmoCount, rhs.AmmoCount)) return false;
                 if (!object.Equals(this.Reflections, rhs.Reflections)) return false;
                 if (!object.Equals(this.LitWater, rhs.LitWater)) return false;
                 if (!object.Equals(this.LinkedDecals, rhs.LinkedDecals)) return false;
@@ -845,7 +854,8 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Health);
                 hash.Add(this.Radiation);
                 hash.Add(this.Charge);
-                hash.Add(this.Ammo);
+                hash.Add(this.AmmoType);
+                hash.Add(this.AmmoCount);
                 hash.Add(this.Reflections);
                 hash.Add(this.LitWater);
                 hash.Add(this.LinkedDecals);
@@ -948,11 +958,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Health)) return false;
                 if (!eval(this.Radiation)) return false;
                 if (!eval(this.Charge)) return false;
-                if (Ammo != null)
-                {
-                    if (!eval(this.Ammo.Overall)) return false;
-                    if (this.Ammo.Specific != null && !this.Ammo.Specific.All(eval)) return false;
-                }
+                if (!eval(this.AmmoType)) return false;
+                if (!eval(this.AmmoCount)) return false;
                 if (this.Reflections != null)
                 {
                     if (!eval(this.Reflections.Overall)) return false;
@@ -1148,11 +1155,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Health)) return true;
                 if (eval(this.Radiation)) return true;
                 if (eval(this.Charge)) return true;
-                if (Ammo != null)
-                {
-                    if (eval(this.Ammo.Overall)) return true;
-                    if (this.Ammo.Specific != null && this.Ammo.Specific.Any(eval)) return true;
-                }
+                if (eval(this.AmmoType)) return true;
+                if (eval(this.AmmoCount)) return true;
                 if (this.Reflections != null)
                 {
                     if (eval(this.Reflections.Overall)) return true;
@@ -1326,7 +1330,8 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Health = eval(this.Health);
                 obj.Radiation = eval(this.Radiation);
                 obj.Charge = eval(this.Charge);
-                obj.Ammo = this.Ammo == null ? null : new MaskItem<R, PlacedObjectAmmo.Mask<R>?>(eval(this.Ammo.Overall), this.Ammo.Specific?.Translate(eval));
+                obj.AmmoType = eval(this.AmmoType);
+                obj.AmmoCount = eval(this.AmmoCount);
                 if (Reflections != null)
                 {
                     obj.Reflections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WaterReflection.Mask<R>?>>?>(eval(this.Reflections.Overall), []);
@@ -1565,9 +1570,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Charge, "Charge");
                     }
-                    if (printMask?.Ammo?.Overall ?? true)
+                    if (printMask?.AmmoType ?? true)
                     {
-                        Ammo?.Print(sb);
+                        sb.AppendItem(AmmoType, "AmmoType");
+                    }
+                    if (printMask?.AmmoCount ?? true)
+                    {
+                        sb.AppendItem(AmmoCount, "AmmoCount");
                     }
                     if ((printMask?.Reflections?.Overall ?? true)
                         && Reflections is {} ReflectionsItem)
@@ -1797,7 +1806,8 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Health;
             public Exception? Radiation;
             public Exception? Charge;
-            public MaskItem<Exception?, PlacedObjectAmmo.ErrorMask?>? Ammo;
+            public Exception? AmmoType;
+            public Exception? AmmoCount;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>? Reflections;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LitWater;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDecal.ErrorMask?>>?>? LinkedDecals;
@@ -1880,8 +1890,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return Radiation;
                     case PlacedObject_FieldIndex.Charge:
                         return Charge;
-                    case PlacedObject_FieldIndex.Ammo:
-                        return Ammo;
+                    case PlacedObject_FieldIndex.AmmoType:
+                        return AmmoType;
+                    case PlacedObject_FieldIndex.AmmoCount:
+                        return AmmoCount;
                     case PlacedObject_FieldIndex.Reflections:
                         return Reflections;
                     case PlacedObject_FieldIndex.LitWater:
@@ -2015,8 +2027,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case PlacedObject_FieldIndex.Charge:
                         this.Charge = ex;
                         break;
-                    case PlacedObject_FieldIndex.Ammo:
-                        this.Ammo = new MaskItem<Exception?, PlacedObjectAmmo.ErrorMask?>(ex, null);
+                    case PlacedObject_FieldIndex.AmmoType:
+                        this.AmmoType = ex;
+                        break;
+                    case PlacedObject_FieldIndex.AmmoCount:
+                        this.AmmoCount = ex;
                         break;
                     case PlacedObject_FieldIndex.Reflections:
                         this.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(ex, null);
@@ -2176,8 +2191,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case PlacedObject_FieldIndex.Charge:
                         this.Charge = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Ammo:
-                        this.Ammo = (MaskItem<Exception?, PlacedObjectAmmo.ErrorMask?>?)obj;
+                    case PlacedObject_FieldIndex.AmmoType:
+                        this.AmmoType = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.AmmoCount:
+                        this.AmmoCount = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.Reflections:
                         this.Reflections = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>)obj;
@@ -2285,7 +2303,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Health != null) return true;
                 if (Radiation != null) return true;
                 if (Charge != null) return true;
-                if (Ammo != null) return true;
+                if (AmmoType != null) return true;
+                if (AmmoCount != null) return true;
                 if (Reflections != null) return true;
                 if (LitWater != null) return true;
                 if (LinkedDecals != null) return true;
@@ -2410,7 +2429,12 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Charge, "Charge");
                 }
-                Ammo?.Print(sb);
+                {
+                    sb.AppendItem(AmmoType, "AmmoType");
+                }
+                {
+                    sb.AppendItem(AmmoCount, "AmmoCount");
+                }
                 if (Reflections is {} ReflectionsItem)
                 {
                     sb.AppendLine("Reflections =>");
@@ -2596,7 +2620,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Health = this.Health.Combine(rhs.Health);
                 ret.Radiation = this.Radiation.Combine(rhs.Radiation);
                 ret.Charge = this.Charge.Combine(rhs.Charge);
-                ret.Ammo = this.Ammo.Combine(rhs.Ammo, (l, r) => l.Combine(r));
+                ret.AmmoType = this.AmmoType.Combine(rhs.AmmoType);
+                ret.AmmoCount = this.AmmoCount.Combine(rhs.AmmoCount);
                 ret.Reflections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WaterReflection.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Reflections?.Overall, rhs.Reflections?.Overall), Noggog.ExceptionExt.Combine(this.Reflections?.Specific, rhs.Reflections?.Specific));
                 ret.LitWater = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LitWater?.Overall, rhs.LitWater?.Overall), Noggog.ExceptionExt.Combine(this.LitWater?.Specific, rhs.LitWater?.Specific));
                 ret.LinkedDecals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LinkedDecal.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LinkedDecals?.Overall, rhs.LinkedDecals?.Overall), Noggog.ExceptionExt.Combine(this.LinkedDecals?.Specific, rhs.LinkedDecals?.Specific));
@@ -2668,7 +2693,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Health;
             public bool Radiation;
             public bool Charge;
-            public PlacedObjectAmmo.TranslationMask? Ammo;
+            public bool AmmoType;
+            public bool AmmoCount;
             public WaterReflection.TranslationMask? Reflections;
             public bool LitWater;
             public LinkedDecal.TranslationMask? LinkedDecals;
@@ -2717,6 +2743,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Health = defaultOn;
                 this.Radiation = defaultOn;
                 this.Charge = defaultOn;
+                this.AmmoType = defaultOn;
+                this.AmmoCount = defaultOn;
                 this.LitWater = defaultOn;
                 this.LinkedReference = defaultOn;
                 this.ActivationPrompt = defaultOn;
@@ -2762,7 +2790,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Health, null));
                 ret.Add((Radiation, null));
                 ret.Add((Charge, null));
-                ret.Add((Ammo != null ? Ammo.OnOverall : DefaultOn, Ammo?.GetCrystal()));
+                ret.Add((AmmoType, null));
+                ret.Add((AmmoCount, null));
                 ret.Add((Reflections == null ? DefaultOn : !Reflections.GetCrystal().CopyNothing, Reflections?.GetCrystal()));
                 ret.Add((LitWater, null));
                 ret.Add((LinkedDecals == null ? DefaultOn : !LinkedDecals.GetCrystal().CopyNothing, LinkedDecals?.GetCrystal()));
@@ -2954,7 +2983,8 @@ namespace Mutagen.Bethesda.Fallout3
         new Single? Health { get; set; }
         new Single? Radiation { get; set; }
         new Single? Charge { get; set; }
-        new PlacedObjectAmmo? Ammo { get; set; }
+        new IFormLinkNullable<IAmmunitionGetter> AmmoType { get; set; }
+        new Int32? AmmoCount { get; set; }
         new ExtendedList<WaterReflection> Reflections { get; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
         new ExtendedList<LinkedDecal> LinkedDecals { get; }
@@ -3027,7 +3057,8 @@ namespace Mutagen.Bethesda.Fallout3
         Single? Health { get; }
         Single? Radiation { get; }
         Single? Charge { get; }
-        IPlacedObjectAmmoGetter? Ammo { get; }
+        IFormLinkNullableGetter<IAmmunitionGetter> AmmoType { get; }
+        Int32? AmmoCount { get; }
         IReadOnlyList<IWaterReflectionGetter> Reflections { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; }
         IReadOnlyList<ILinkedDecalGetter> LinkedDecals { get; }
@@ -3257,31 +3288,32 @@ namespace Mutagen.Bethesda.Fallout3
         Health = 29,
         Radiation = 30,
         Charge = 31,
-        Ammo = 32,
-        Reflections = 33,
-        LitWater = 34,
-        LinkedDecals = 35,
-        LinkedReference = 36,
-        LinkedReferenceColor = 37,
-        ActivateParents = 38,
-        ActivationPrompt = 39,
-        EnableParent = 40,
-        Emittance = 41,
-        MultiBoundReference = 42,
-        ActionFlag = 43,
-        IsOpenByDefault = 44,
-        IsIgnoredBySandbox = 45,
-        NavigationDoorLink = 46,
-        Portals = 47,
-        PortalRoom = 48,
-        SpeedTreeSeed = 49,
-        Unknown = 50,
-        LinkedRooms = 51,
-        OcclusionPlane = 52,
-        LinkedOcclusionPlanes = 53,
-        DistantLodData = 54,
-        Scale = 55,
-        Placement = 56,
+        AmmoType = 32,
+        AmmoCount = 33,
+        Reflections = 34,
+        LitWater = 35,
+        LinkedDecals = 36,
+        LinkedReference = 37,
+        LinkedReferenceColor = 38,
+        ActivateParents = 39,
+        ActivationPrompt = 40,
+        EnableParent = 41,
+        Emittance = 42,
+        MultiBoundReference = 43,
+        ActionFlag = 44,
+        IsOpenByDefault = 45,
+        IsIgnoredBySandbox = 46,
+        NavigationDoorLink = 47,
+        Portals = 48,
+        PortalRoom = 49,
+        SpeedTreeSeed = 50,
+        Unknown = 51,
+        LinkedRooms = 52,
+        OcclusionPlane = 53,
+        LinkedOcclusionPlanes = 54,
+        DistantLodData = 55,
+        Scale = 56,
+        Placement = 57,
     }
     #endregion
 
@@ -3292,9 +3324,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 50;
+        public const ushort AdditionalFieldCount = 51;
 
-        public const ushort FieldCount = 57;
+        public const ushort FieldCount = 58;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -3364,6 +3396,7 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.XRAD,
                 RecordTypes.XCHG,
                 RecordTypes.XAMT,
+                RecordTypes.XAMC,
                 RecordTypes.XPWR,
                 RecordTypes.XLTW,
                 RecordTypes.XDCR,
@@ -3457,7 +3490,8 @@ namespace Mutagen.Bethesda.Fallout3
             item.Health = default;
             item.Radiation = default;
             item.Charge = default;
-            item.Ammo = null;
+            item.AmmoType.Clear();
+            item.AmmoCount = default;
             item.Reflections.Clear();
             item.LitWater.Clear();
             item.LinkedDecals.Clear();
@@ -3509,7 +3543,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.RadioData?.RemapLinks(mapping);
             obj.Ownership?.RemapLinks(mapping);
             obj.Lock?.RemapLinks(mapping);
-            obj.Ammo?.RemapLinks(mapping);
+            obj.AmmoType.Relink(mapping);
             obj.Reflections.RemapLinks(mapping);
             obj.LitWater.RemapLinks(mapping);
             obj.LinkedDecals.RemapLinks(mapping);
@@ -3649,11 +3683,8 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Health = item.Health.EqualsWithin(rhs.Health);
             ret.Radiation = item.Radiation.EqualsWithin(rhs.Radiation);
             ret.Charge = item.Charge.EqualsWithin(rhs.Charge);
-            ret.Ammo = EqualsMaskHelper.EqualsHelper(
-                item.Ammo,
-                rhs.Ammo,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.AmmoType = item.AmmoType.Equals(rhs.AmmoType);
+            ret.AmmoCount = item.AmmoCount == rhs.AmmoCount;
             ret.Reflections = item.Reflections.CollectionEqualsHelper(
                 rhs.Reflections,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3908,10 +3939,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(ChargeItem, "Charge");
             }
-            if ((printMask?.Ammo?.Overall ?? true)
-                && item.Ammo is {} AmmoItem)
+            if (printMask?.AmmoType ?? true)
             {
-                AmmoItem?.Print(sb, "Ammo");
+                sb.AppendItem(item.AmmoType.FormKeyNullable, "AmmoType");
+            }
+            if ((printMask?.AmmoCount ?? true)
+                && item.AmmoCount is {} AmmoCountItem)
+            {
+                sb.AppendItem(AmmoCountItem, "AmmoCount");
             }
             if (printMask?.Reflections?.Overall ?? true)
             {
@@ -4265,13 +4300,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ammo) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AmmoType) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Ammo, rhs.Ammo, out var lhsAmmo, out var rhsAmmo, out var isAmmoEqual))
-                {
-                    if (!((PlacedObjectAmmoCommon)((IPlacedObjectAmmoGetter)lhsAmmo).CommonInstance()!).Equals(lhsAmmo, rhsAmmo, equalsMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ammo))) return false;
-                }
-                else if (!isAmmoEqual) return false;
+                if (!lhs.AmmoType.Equals(rhs.AmmoType)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AmmoCount) ?? true))
+            {
+                if (lhs.AmmoCount != rhs.AmmoCount) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
             {
@@ -4514,9 +4549,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Chargeitem);
             }
-            if (item.Ammo is {} Ammoitem)
+            hash.Add(item.AmmoType);
+            if (item.AmmoCount is {} AmmoCountitem)
             {
-                hash.Add(Ammoitem);
+                hash.Add(AmmoCountitem);
             }
             hash.Add(item.Reflections);
             hash.Add(item.LitWater);
@@ -4668,12 +4704,9 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
-            if (obj.Ammo is {} AmmoItems)
+            if (FormLinkInformation.TryFactory(obj.AmmoType, out var AmmoTypeInfo))
             {
-                foreach (var item in AmmoItems.EnumerateFormLinks(iterateNestedRecords))
-                {
-                    yield return item;
-                }
+                yield return AmmoTypeInfo;
             }
             foreach (var item in obj.Reflections.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
@@ -5123,31 +5156,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Charge = rhs.Charge;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ammo) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AmmoType) ?? true))
             {
-                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Ammo);
-                try
-                {
-                    if(rhs.Ammo is {} rhsAmmo)
-                    {
-                        item.Ammo = rhsAmmo.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Ammo));
-                    }
-                    else
-                    {
-                        item.Ammo = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.AmmoType.SetTo(rhs.AmmoType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.AmmoCount) ?? true))
+            {
+                item.AmmoCount = rhs.AmmoCount;
             }
             if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Reflections) ?? true))
             {
@@ -5782,13 +5797,16 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.AudioData is {} AudioDataItem)
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
             {
-                using (HeaderExport.Subrecord(writer, RecordTypes.MMRK)) { }
-                ((AudioDataBinaryWriteTranslation)((IBinaryItem)AudioDataItem).BinaryWriteTranslator).Write(
-                    item: AudioDataItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                if (item.AudioData is {} AudioDataItem)
+                {
+                    using (HeaderExport.Subrecord(writer, RecordTypes.MMRK)) { }
+                    ((AudioDataBinaryWriteTranslation)((IBinaryItem)AudioDataItem).BinaryWriteTranslator).Write(
+                        item: AudioDataItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             EnumBinaryTranslation<PlacedObject.SpecialRenderingFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -5855,13 +5873,14 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Charge,
                 header: translationParams.ConvertToCustom(RecordTypes.XCHG));
-            if (item.Ammo is {} AmmoItem)
-            {
-                ((PlacedObjectAmmoBinaryWriteTranslation)((IBinaryItem)AmmoItem).BinaryWriteTranslator).Write(
-                    item: AmmoItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AmmoType,
+                header: translationParams.ConvertToCustom(RecordTypes.XAMT));
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.AmmoCount,
+                header: translationParams.ConvertToCustom(RecordTypes.XAMC));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWaterReflectionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Reflections,
@@ -6183,10 +6202,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.MMRK:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.AudioData = Mutagen.Bethesda.Fallout3.AudioData.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                        item.AudioData = Mutagen.Bethesda.Fallout3.AudioData.CreateFromBinary(
+                            frame: frame,
+                            translationParams: translationParams.DoNotShortCircuit());
+                    }
                     return (int)PlacedObject_FieldIndex.AudioData;
                 }
                 case RecordTypeInts.XSRF:
@@ -6282,10 +6304,15 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XAMT:
                 {
-                    item.Ammo = Mutagen.Bethesda.Fallout3.PlacedObjectAmmo.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)PlacedObject_FieldIndex.Ammo;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AmmoType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.AmmoType;
+                }
+                case RecordTypeInts.XAMC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AmmoCount = frame.ReadInt32();
+                    return (int)PlacedObject_FieldIndex.AmmoCount;
                 }
                 case RecordTypeInts.XPWR:
                 {
@@ -6598,7 +6625,14 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _ChargeLocation;
         public Single? Charge => _ChargeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChargeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IPlacedObjectAmmoGetter? Ammo { get; private set; }
+        #region AmmoType
+        private int? _AmmoTypeLocation;
+        public IFormLinkNullableGetter<IAmmunitionGetter> AmmoType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmmunitionGetter>(_package, _recordData, _AmmoTypeLocation);
+        #endregion
+        #region AmmoCount
+        private int? _AmmoCountLocation;
+        public Int32? AmmoCount => _AmmoCountLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AmmoCountLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #endregion
         public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LitWater { get; private set; } = [];
         public IReadOnlyList<ILinkedDecalGetter> LinkedDecals { get; private set; } = [];
@@ -6892,11 +6926,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XAMT:
                 {
-                    this.Ammo = PlacedObjectAmmoBinaryOverlay.PlacedObjectAmmoFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.DoNotShortCircuit());
-                    return (int)PlacedObject_FieldIndex.Ammo;
+                    _AmmoTypeLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.AmmoType;
+                }
+                case RecordTypeInts.XAMC:
+                {
+                    _AmmoCountLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.AmmoCount;
                 }
                 case RecordTypeInts.XPWR:
                 {
