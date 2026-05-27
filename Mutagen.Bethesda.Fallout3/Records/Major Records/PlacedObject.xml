@@ -120,12 +120,7 @@
       <Float name="IdleTime" recordType="XPRD" />
       <Bool name="ScriptMarker" boolAsMarker="XPPA" />
       <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" />
-      <ByteArray name="ScriptHeader" recordType="SCHR" />
-      <ByteArray name="CompiledScript" recordType="SCDA" />
-      <String name="ScriptSource" recordType="SCTX" binaryType="Plain" />
-      <ByteArray name="LocalVariable" recordType="SLSD" />
-      <String name="LocalVariableName" recordType="SCVR" />
-      <RefList name="ScriptReferences" refName="AScriptReference" />
+      <RefDirect name="EmbeddedScript" refName="ScriptFields" singleton="true" />
       <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
     </Fields>
   </Object>

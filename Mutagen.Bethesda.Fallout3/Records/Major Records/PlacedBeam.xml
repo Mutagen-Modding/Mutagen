@@ -7,15 +7,7 @@
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
       <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
-      <Float name="XPRD" recordType="XPRD" />
-      <ByteArray name="XPPA" recordType="XPPA" />
-      <FormLink name="IdleMarker" recordType="INAM" refName="IdleAnimation" />
-      <ByteArray name="SCHR" recordType="SCHR" />
-      <ByteArray name="SCDA" recordType="SCDA" />
-      <String name="ScriptSource" recordType="SCTX" binaryType="Plain" />
-      <FormLink name="GlobalReference" recordType="SCRO" refName="Fallout3MajorRecord" />
-      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
-      <Int32 name="LevelModifier" recordType="XLCM" />
+      <RefDirect name="Patrol" refName="PatrolData" />
       <FormLink name="Owner" recordType="XOWN">
         <Interface>IOwner</Interface>
       </FormLink>
@@ -23,17 +15,19 @@
       <Int32 name="Count" recordType="XCNT" />
       <Float name="Radius" recordType="XRDS" />
       <Float name="Health" recordType="XHLP" />
-      <ByteArray name="XDCR" recordType="XDCR" />
+      <RefList name="Reflections" refName="WaterReflection" />
+      <RefList name="LinkedDecals" refName="LinkedDecal" />
       <FormLink name="LinkedReference" recordType="XLKR">
         <Interface>IPlaced</Interface>
       </FormLink>
-      <ByteArray name="XCLP" recordType="XCLP" />
-      <Bool name="ParentActivateOnly" recordType="XAPD" />
-      <ByteArray name="XAPR" recordType="XAPR" />
-      <ByteArray name="XESP" recordType="XESP" />
+      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <String name="ActivationPrompt" recordType="XATO">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <RefDirect name="EnableParent" refName="EnableParent" />
       <FormLink name="EmittanceLight" recordType="XEMI" refName="Light" />
       <FormLink name="MultiboundReference" recordType="XMBR" refName="PlacedObject" />
-      <ByteArray name="WaterReflectionRefraction" recordType="XPWR" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
       <Float name="Scale" recordType="XSCL" />
       <Data recordType="DATA" nullable="False">

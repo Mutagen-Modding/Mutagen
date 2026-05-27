@@ -70,62 +70,12 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IPatrolDataGetter.Idle => this.Idle;
         #endregion
-        #region ScriptHeader
+        #region EmbeddedScript
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ScriptHeader;
-        public MemorySlice<Byte>? ScriptHeader
-        {
-            get => this._ScriptHeader;
-            set => this._ScriptHeader = value;
-        }
+        private readonly ScriptFields _EmbeddedScript_Object = new ScriptFields();
+        public ScriptFields EmbeddedScript => _EmbeddedScript_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPatrolDataGetter.ScriptHeader => this.ScriptHeader;
-        #endregion
-        #region CompiledScript
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CompiledScript;
-        public MemorySlice<Byte>? CompiledScript
-        {
-            get => this._CompiledScript;
-            set => this._CompiledScript = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPatrolDataGetter.CompiledScript => this.CompiledScript;
-        #endregion
-        #region ScriptSource
-        public String? ScriptSource { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPatrolDataGetter.ScriptSource => this.ScriptSource;
-        #endregion
-        #region LocalVariable
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _LocalVariable;
-        public MemorySlice<Byte>? LocalVariable
-        {
-            get => this._LocalVariable;
-            set => this._LocalVariable = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPatrolDataGetter.LocalVariable => this.LocalVariable;
-        #endregion
-        #region LocalVariableName
-        public String? LocalVariableName { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPatrolDataGetter.LocalVariableName => this.LocalVariableName;
-        #endregion
-        #region ScriptReferences
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AScriptReference> _ScriptReferences = new ExtendedList<AScriptReference>();
-        public ExtendedList<AScriptReference> ScriptReferences
-        {
-            get => this._ScriptReferences;
-            init => this._ScriptReferences = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAScriptReferenceGetter> IPatrolDataGetter.ScriptReferences => _ScriptReferences;
-        #endregion
-
+        IScriptFieldsGetter IPatrolDataGetter.EmbeddedScript => _EmbeddedScript_Object;
         #endregion
         #region Topic
         private readonly IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
@@ -179,12 +129,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IdleTime = initialValue;
                 this.ScriptMarker = initialValue;
                 this.Idle = initialValue;
-                this.ScriptHeader = initialValue;
-                this.CompiledScript = initialValue;
-                this.ScriptSource = initialValue;
-                this.LocalVariable = initialValue;
-                this.LocalVariableName = initialValue;
-                this.ScriptReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(initialValue, []);
+                this.EmbeddedScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
                 this.Topic = initialValue;
             }
 
@@ -192,23 +137,13 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem IdleTime,
                 TItem ScriptMarker,
                 TItem Idle,
-                TItem ScriptHeader,
-                TItem CompiledScript,
-                TItem ScriptSource,
-                TItem LocalVariable,
-                TItem LocalVariableName,
-                TItem ScriptReferences,
+                TItem EmbeddedScript,
                 TItem Topic)
             {
                 this.IdleTime = IdleTime;
                 this.ScriptMarker = ScriptMarker;
                 this.Idle = Idle;
-                this.ScriptHeader = ScriptHeader;
-                this.CompiledScript = CompiledScript;
-                this.ScriptSource = ScriptSource;
-                this.LocalVariable = LocalVariable;
-                this.LocalVariableName = LocalVariableName;
-                this.ScriptReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(ScriptReferences, []);
+                this.EmbeddedScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(EmbeddedScript, new ScriptFields.Mask<TItem>(EmbeddedScript));
                 this.Topic = Topic;
             }
 
@@ -224,12 +159,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem IdleTime;
             public TItem ScriptMarker;
             public TItem Idle;
-            public TItem ScriptHeader;
-            public TItem CompiledScript;
-            public TItem ScriptSource;
-            public TItem LocalVariable;
-            public TItem LocalVariableName;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>? ScriptReferences;
+            public MaskItem<TItem, ScriptFields.Mask<TItem>?>? EmbeddedScript { get; set; }
             public TItem Topic;
             #endregion
 
@@ -246,12 +176,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.IdleTime, rhs.IdleTime)) return false;
                 if (!object.Equals(this.ScriptMarker, rhs.ScriptMarker)) return false;
                 if (!object.Equals(this.Idle, rhs.Idle)) return false;
-                if (!object.Equals(this.ScriptHeader, rhs.ScriptHeader)) return false;
-                if (!object.Equals(this.CompiledScript, rhs.CompiledScript)) return false;
-                if (!object.Equals(this.ScriptSource, rhs.ScriptSource)) return false;
-                if (!object.Equals(this.LocalVariable, rhs.LocalVariable)) return false;
-                if (!object.Equals(this.LocalVariableName, rhs.LocalVariableName)) return false;
-                if (!object.Equals(this.ScriptReferences, rhs.ScriptReferences)) return false;
+                if (!object.Equals(this.EmbeddedScript, rhs.EmbeddedScript)) return false;
                 if (!object.Equals(this.Topic, rhs.Topic)) return false;
                 return true;
             }
@@ -261,12 +186,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.IdleTime);
                 hash.Add(this.ScriptMarker);
                 hash.Add(this.Idle);
-                hash.Add(this.ScriptHeader);
-                hash.Add(this.CompiledScript);
-                hash.Add(this.ScriptSource);
-                hash.Add(this.LocalVariable);
-                hash.Add(this.LocalVariableName);
-                hash.Add(this.ScriptReferences);
+                hash.Add(this.EmbeddedScript);
                 hash.Add(this.Topic);
                 return hash.ToHashCode();
             }
@@ -279,22 +199,10 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.IdleTime)) return false;
                 if (!eval(this.ScriptMarker)) return false;
                 if (!eval(this.Idle)) return false;
-                if (!eval(this.ScriptHeader)) return false;
-                if (!eval(this.CompiledScript)) return false;
-                if (!eval(this.ScriptSource)) return false;
-                if (!eval(this.LocalVariable)) return false;
-                if (!eval(this.LocalVariableName)) return false;
-                if (this.ScriptReferences != null)
+                if (EmbeddedScript != null)
                 {
-                    if (!eval(this.ScriptReferences.Overall)) return false;
-                    if (this.ScriptReferences.Specific != null)
-                    {
-                        foreach (var item in this.ScriptReferences.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (!eval(this.EmbeddedScript.Overall)) return false;
+                    if (this.EmbeddedScript.Specific != null && !this.EmbeddedScript.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Topic)) return false;
                 return true;
@@ -307,22 +215,10 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.IdleTime)) return true;
                 if (eval(this.ScriptMarker)) return true;
                 if (eval(this.Idle)) return true;
-                if (eval(this.ScriptHeader)) return true;
-                if (eval(this.CompiledScript)) return true;
-                if (eval(this.ScriptSource)) return true;
-                if (eval(this.LocalVariable)) return true;
-                if (eval(this.LocalVariableName)) return true;
-                if (this.ScriptReferences != null)
+                if (EmbeddedScript != null)
                 {
-                    if (eval(this.ScriptReferences.Overall)) return true;
-                    if (this.ScriptReferences.Specific != null)
-                    {
-                        foreach (var item in this.ScriptReferences.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (eval(this.EmbeddedScript.Overall)) return true;
+                    if (this.EmbeddedScript.Specific != null && this.EmbeddedScript.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Topic)) return true;
                 return false;
@@ -342,26 +238,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.IdleTime = eval(this.IdleTime);
                 obj.ScriptMarker = eval(this.ScriptMarker);
                 obj.Idle = eval(this.Idle);
-                obj.ScriptHeader = eval(this.ScriptHeader);
-                obj.CompiledScript = eval(this.CompiledScript);
-                obj.ScriptSource = eval(this.ScriptSource);
-                obj.LocalVariable = eval(this.LocalVariable);
-                obj.LocalVariableName = eval(this.LocalVariableName);
-                if (ScriptReferences != null)
-                {
-                    obj.ScriptReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AScriptReference.Mask<R>?>>?>(eval(this.ScriptReferences.Overall), []);
-                    if (ScriptReferences.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, AScriptReference.Mask<R>?>>();
-                        obj.ScriptReferences.Specific = l;
-                        foreach (var item in ScriptReferences.Specific)
-                        {
-                            MaskItemIndexed<R, AScriptReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AScriptReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.EmbeddedScript = this.EmbeddedScript == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.EmbeddedScript.Overall), this.EmbeddedScript.Specific?.Translate(eval));
                 obj.Topic = eval(this.Topic);
             }
             #endregion
@@ -393,44 +270,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Idle, "Idle");
                     }
-                    if (printMask?.ScriptHeader ?? true)
+                    if (printMask?.EmbeddedScript?.Overall ?? true)
                     {
-                        sb.AppendItem(ScriptHeader, "ScriptHeader");
-                    }
-                    if (printMask?.CompiledScript ?? true)
-                    {
-                        sb.AppendItem(CompiledScript, "CompiledScript");
-                    }
-                    if (printMask?.ScriptSource ?? true)
-                    {
-                        sb.AppendItem(ScriptSource, "ScriptSource");
-                    }
-                    if (printMask?.LocalVariable ?? true)
-                    {
-                        sb.AppendItem(LocalVariable, "LocalVariable");
-                    }
-                    if (printMask?.LocalVariableName ?? true)
-                    {
-                        sb.AppendItem(LocalVariableName, "LocalVariableName");
-                    }
-                    if ((printMask?.ScriptReferences?.Overall ?? true)
-                        && ScriptReferences is {} ScriptReferencesItem)
-                    {
-                        sb.AppendLine("ScriptReferences =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(ScriptReferencesItem.Overall);
-                            if (ScriptReferencesItem.Specific != null)
-                            {
-                                foreach (var subItem in ScriptReferencesItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
+                        EmbeddedScript?.Print(sb);
                     }
                     if (printMask?.Topic ?? true)
                     {
@@ -463,12 +305,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? IdleTime;
             public Exception? ScriptMarker;
             public Exception? Idle;
-            public Exception? ScriptHeader;
-            public Exception? CompiledScript;
-            public Exception? ScriptSource;
-            public Exception? LocalVariable;
-            public Exception? LocalVariableName;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>? ScriptReferences;
+            public MaskItem<Exception?, ScriptFields.ErrorMask?>? EmbeddedScript;
             public Exception? Topic;
             #endregion
 
@@ -484,18 +321,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return ScriptMarker;
                     case PatrolData_FieldIndex.Idle:
                         return Idle;
-                    case PatrolData_FieldIndex.ScriptHeader:
-                        return ScriptHeader;
-                    case PatrolData_FieldIndex.CompiledScript:
-                        return CompiledScript;
-                    case PatrolData_FieldIndex.ScriptSource:
-                        return ScriptSource;
-                    case PatrolData_FieldIndex.LocalVariable:
-                        return LocalVariable;
-                    case PatrolData_FieldIndex.LocalVariableName:
-                        return LocalVariableName;
-                    case PatrolData_FieldIndex.ScriptReferences:
-                        return ScriptReferences;
+                    case PatrolData_FieldIndex.EmbeddedScript:
+                        return EmbeddedScript;
                     case PatrolData_FieldIndex.Topic:
                         return Topic;
                     default:
@@ -517,23 +344,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case PatrolData_FieldIndex.Idle:
                         this.Idle = ex;
                         break;
-                    case PatrolData_FieldIndex.ScriptHeader:
-                        this.ScriptHeader = ex;
-                        break;
-                    case PatrolData_FieldIndex.CompiledScript:
-                        this.CompiledScript = ex;
-                        break;
-                    case PatrolData_FieldIndex.ScriptSource:
-                        this.ScriptSource = ex;
-                        break;
-                    case PatrolData_FieldIndex.LocalVariable:
-                        this.LocalVariable = ex;
-                        break;
-                    case PatrolData_FieldIndex.LocalVariableName:
-                        this.LocalVariableName = ex;
-                        break;
-                    case PatrolData_FieldIndex.ScriptReferences:
-                        this.ScriptReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(ex, null);
+                    case PatrolData_FieldIndex.EmbeddedScript:
+                        this.EmbeddedScript = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
                         break;
                     case PatrolData_FieldIndex.Topic:
                         this.Topic = ex;
@@ -557,23 +369,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case PatrolData_FieldIndex.Idle:
                         this.Idle = (Exception?)obj;
                         break;
-                    case PatrolData_FieldIndex.ScriptHeader:
-                        this.ScriptHeader = (Exception?)obj;
-                        break;
-                    case PatrolData_FieldIndex.CompiledScript:
-                        this.CompiledScript = (Exception?)obj;
-                        break;
-                    case PatrolData_FieldIndex.ScriptSource:
-                        this.ScriptSource = (Exception?)obj;
-                        break;
-                    case PatrolData_FieldIndex.LocalVariable:
-                        this.LocalVariable = (Exception?)obj;
-                        break;
-                    case PatrolData_FieldIndex.LocalVariableName:
-                        this.LocalVariableName = (Exception?)obj;
-                        break;
-                    case PatrolData_FieldIndex.ScriptReferences:
-                        this.ScriptReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>)obj;
+                    case PatrolData_FieldIndex.EmbeddedScript:
+                        this.EmbeddedScript = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
                         break;
                     case PatrolData_FieldIndex.Topic:
                         this.Topic = (Exception?)obj;
@@ -589,12 +386,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (IdleTime != null) return true;
                 if (ScriptMarker != null) return true;
                 if (Idle != null) return true;
-                if (ScriptHeader != null) return true;
-                if (CompiledScript != null) return true;
-                if (ScriptSource != null) return true;
-                if (LocalVariable != null) return true;
-                if (LocalVariableName != null) return true;
-                if (ScriptReferences != null) return true;
+                if (EmbeddedScript != null) return true;
                 if (Topic != null) return true;
                 return false;
             }
@@ -630,39 +422,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Idle, "Idle");
                 }
-                {
-                    sb.AppendItem(ScriptHeader, "ScriptHeader");
-                }
-                {
-                    sb.AppendItem(CompiledScript, "CompiledScript");
-                }
-                {
-                    sb.AppendItem(ScriptSource, "ScriptSource");
-                }
-                {
-                    sb.AppendItem(LocalVariable, "LocalVariable");
-                }
-                {
-                    sb.AppendItem(LocalVariableName, "LocalVariableName");
-                }
-                if (ScriptReferences is {} ScriptReferencesItem)
-                {
-                    sb.AppendLine("ScriptReferences =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(ScriptReferencesItem.Overall);
-                        if (ScriptReferencesItem.Specific != null)
-                        {
-                            foreach (var subItem in ScriptReferencesItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
-                }
+                EmbeddedScript?.Print(sb);
                 {
                     sb.AppendItem(Topic, "Topic");
                 }
@@ -677,12 +437,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.IdleTime = this.IdleTime.Combine(rhs.IdleTime);
                 ret.ScriptMarker = this.ScriptMarker.Combine(rhs.ScriptMarker);
                 ret.Idle = this.Idle.Combine(rhs.Idle);
-                ret.ScriptHeader = this.ScriptHeader.Combine(rhs.ScriptHeader);
-                ret.CompiledScript = this.CompiledScript.Combine(rhs.CompiledScript);
-                ret.ScriptSource = this.ScriptSource.Combine(rhs.ScriptSource);
-                ret.LocalVariable = this.LocalVariable.Combine(rhs.LocalVariable);
-                ret.LocalVariableName = this.LocalVariableName.Combine(rhs.LocalVariableName);
-                ret.ScriptReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ScriptReferences?.Overall, rhs.ScriptReferences?.Overall), Noggog.ExceptionExt.Combine(this.ScriptReferences?.Specific, rhs.ScriptReferences?.Specific));
+                ret.EmbeddedScript = this.EmbeddedScript.Combine(rhs.EmbeddedScript, (l, r) => l.Combine(r));
                 ret.Topic = this.Topic.Combine(rhs.Topic);
                 return ret;
             }
@@ -710,12 +465,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IdleTime;
             public bool ScriptMarker;
             public bool Idle;
-            public bool ScriptHeader;
-            public bool CompiledScript;
-            public bool ScriptSource;
-            public bool LocalVariable;
-            public bool LocalVariableName;
-            public AScriptReference.TranslationMask? ScriptReferences;
+            public ScriptFields.TranslationMask? EmbeddedScript;
             public bool Topic;
             #endregion
 
@@ -729,11 +479,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IdleTime = defaultOn;
                 this.ScriptMarker = defaultOn;
                 this.Idle = defaultOn;
-                this.ScriptHeader = defaultOn;
-                this.CompiledScript = defaultOn;
-                this.ScriptSource = defaultOn;
-                this.LocalVariable = defaultOn;
-                this.LocalVariableName = defaultOn;
                 this.Topic = defaultOn;
             }
 
@@ -753,12 +498,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((IdleTime, null));
                 ret.Add((ScriptMarker, null));
                 ret.Add((Idle, null));
-                ret.Add((ScriptHeader, null));
-                ret.Add((CompiledScript, null));
-                ret.Add((ScriptSource, null));
-                ret.Add((LocalVariable, null));
-                ret.Add((LocalVariableName, null));
-                ret.Add((ScriptReferences == null ? DefaultOn : !ScriptReferences.GetCrystal().CopyNothing, ScriptReferences?.GetCrystal()));
+                ret.Add((EmbeddedScript != null ? EmbeddedScript.OnOverall : DefaultOn, EmbeddedScript?.GetCrystal()));
                 ret.Add((Topic, null));
             }
 
@@ -841,12 +581,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Single? IdleTime { get; set; }
         new Boolean ScriptMarker { get; set; }
         new IFormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
-        new MemorySlice<Byte>? ScriptHeader { get; set; }
-        new MemorySlice<Byte>? CompiledScript { get; set; }
-        new String? ScriptSource { get; set; }
-        new MemorySlice<Byte>? LocalVariable { get; set; }
-        new String? LocalVariableName { get; set; }
-        new ExtendedList<AScriptReference> ScriptReferences { get; }
+        new ScriptFields EmbeddedScript { get; }
         new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
     }
 
@@ -866,12 +601,7 @@ namespace Mutagen.Bethesda.Fallout3
         Single? IdleTime { get; }
         Boolean ScriptMarker { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> Idle { get; }
-        ReadOnlyMemorySlice<Byte>? ScriptHeader { get; }
-        ReadOnlyMemorySlice<Byte>? CompiledScript { get; }
-        String? ScriptSource { get; }
-        ReadOnlyMemorySlice<Byte>? LocalVariable { get; }
-        String? LocalVariableName { get; }
-        IReadOnlyList<IAScriptReferenceGetter> ScriptReferences { get; }
+        IScriptFieldsGetter EmbeddedScript { get; }
         IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
 
     }
@@ -1045,13 +775,8 @@ namespace Mutagen.Bethesda.Fallout3
         IdleTime = 0,
         ScriptMarker = 1,
         Idle = 2,
-        ScriptHeader = 3,
-        CompiledScript = 4,
-        ScriptSource = 5,
-        LocalVariable = 6,
-        LocalVariableName = 7,
-        ScriptReferences = 8,
-        Topic = 9,
+        EmbeddedScript = 3,
+        Topic = 4,
     }
     #endregion
 
@@ -1062,9 +787,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(PatrolData.Mask<>);
 
@@ -1093,19 +818,20 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
+            var triggers = RecordCollection.Factory(
+                RecordTypes.XPRD,
+                RecordTypes.XPPA,
+                RecordTypes.INAM,
+                RecordTypes.SCHR);
             var all = RecordCollection.Factory(
                 RecordTypes.XPRD,
                 RecordTypes.XPPA,
                 RecordTypes.INAM,
                 RecordTypes.SCHR,
-                RecordTypes.SCDA,
-                RecordTypes.SCTX,
-                RecordTypes.SLSD,
-                RecordTypes.SCVR,
-                RecordTypes.SCRV,
-                RecordTypes.SCRO,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PatrolDataBinaryWriteTranslation);
         #region Interface
@@ -1150,12 +876,6 @@ namespace Mutagen.Bethesda.Fallout3
             item.IdleTime = default;
             item.ScriptMarker = default(Boolean);
             item.Idle.Clear();
-            item.ScriptHeader = default;
-            item.CompiledScript = default;
-            item.ScriptSource = default;
-            item.LocalVariable = default;
-            item.LocalVariableName = default;
-            item.ScriptReferences.Clear();
             item.Topic.Clear();
         }
         
@@ -1163,7 +883,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IPatrolData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Idle.Relink(mapping);
-            obj.ScriptReferences.RemapLinks(mapping);
+            obj.EmbeddedScript.RemapLinks(mapping);
             obj.Topic.Relink(mapping);
         }
         
@@ -1212,15 +932,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
             ret.ScriptMarker = item.ScriptMarker == rhs.ScriptMarker;
             ret.Idle = item.Idle.Equals(rhs.Idle);
-            ret.ScriptHeader = MemorySliceExt.SequenceEqual(item.ScriptHeader, rhs.ScriptHeader);
-            ret.CompiledScript = MemorySliceExt.SequenceEqual(item.CompiledScript, rhs.CompiledScript);
-            ret.ScriptSource = string.Equals(item.ScriptSource, rhs.ScriptSource);
-            ret.LocalVariable = MemorySliceExt.SequenceEqual(item.LocalVariable, rhs.LocalVariable);
-            ret.LocalVariableName = string.Equals(item.LocalVariableName, rhs.LocalVariableName);
-            ret.ScriptReferences = item.ScriptReferences.CollectionEqualsHelper(
-                rhs.ScriptReferences,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            ret.EmbeddedScript = MaskItemExt.Factory(item.EmbeddedScript.GetEqualsMask(rhs.EmbeddedScript, include), include);
             ret.Topic = item.Topic.Equals(rhs.Topic);
         }
         
@@ -1279,44 +991,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Idle.FormKeyNullable, "Idle");
             }
-            if ((printMask?.ScriptHeader ?? true)
-                && item.ScriptHeader is {} ScriptHeaderItem)
+            if (printMask?.EmbeddedScript?.Overall ?? true)
             {
-                sb.AppendLine($"ScriptHeader => {SpanExt.ToHexString(ScriptHeaderItem)}");
-            }
-            if ((printMask?.CompiledScript ?? true)
-                && item.CompiledScript is {} CompiledScriptItem)
-            {
-                sb.AppendLine($"CompiledScript => {SpanExt.ToHexString(CompiledScriptItem)}");
-            }
-            if ((printMask?.ScriptSource ?? true)
-                && item.ScriptSource is {} ScriptSourceItem)
-            {
-                sb.AppendItem(ScriptSourceItem, "ScriptSource");
-            }
-            if ((printMask?.LocalVariable ?? true)
-                && item.LocalVariable is {} LocalVariableItem)
-            {
-                sb.AppendLine($"LocalVariable => {SpanExt.ToHexString(LocalVariableItem)}");
-            }
-            if ((printMask?.LocalVariableName ?? true)
-                && item.LocalVariableName is {} LocalVariableNameItem)
-            {
-                sb.AppendItem(LocalVariableNameItem, "LocalVariableName");
-            }
-            if (printMask?.ScriptReferences?.Overall ?? true)
-            {
-                sb.AppendLine("ScriptReferences =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.ScriptReferences)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
+                item.EmbeddedScript?.Print(sb, "EmbeddedScript");
             }
             if (printMask?.Topic ?? true)
             {
@@ -1343,29 +1020,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Idle.Equals(rhs.Idle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.ScriptHeader) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.EmbeddedScript) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.ScriptHeader, rhs.ScriptHeader)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.CompiledScript) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.CompiledScript, rhs.CompiledScript)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.ScriptSource) ?? true))
-            {
-                if (!string.Equals(lhs.ScriptSource, rhs.ScriptSource)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.LocalVariable) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.LocalVariable, rhs.LocalVariable)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.LocalVariableName) ?? true))
-            {
-                if (!string.Equals(lhs.LocalVariableName, rhs.LocalVariableName)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.ScriptReferences) ?? true))
-            {
-                if (!lhs.ScriptReferences.SequenceEqual(rhs.ScriptReferences, (l, r) => ((AScriptReferenceCommon)((IAScriptReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PatrolData_FieldIndex.ScriptReferences)))) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EmbeddedScript, rhs.EmbeddedScript, out var lhsEmbeddedScript, out var rhsEmbeddedScript, out var isEmbeddedScriptEqual))
+                {
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsEmbeddedScript).CommonInstance()!).Equals(lhsEmbeddedScript, rhsEmbeddedScript, equalsMask?.GetSubCrystal((int)PatrolData_FieldIndex.EmbeddedScript))) return false;
+                }
+                else if (!isEmbeddedScriptEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PatrolData_FieldIndex.Topic) ?? true))
             {
@@ -1383,27 +1044,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             hash.Add(item.ScriptMarker);
             hash.Add(item.Idle);
-            if (item.ScriptHeader is {} ScriptHeaderItem)
-            {
-                hash.Add(ScriptHeaderItem);
-            }
-            if (item.CompiledScript is {} CompiledScriptItem)
-            {
-                hash.Add(CompiledScriptItem);
-            }
-            if (item.ScriptSource is {} ScriptSourceitem)
-            {
-                hash.Add(ScriptSourceitem);
-            }
-            if (item.LocalVariable is {} LocalVariableItem)
-            {
-                hash.Add(LocalVariableItem);
-            }
-            if (item.LocalVariableName is {} LocalVariableNameitem)
-            {
-                hash.Add(LocalVariableNameitem);
-            }
-            hash.Add(item.ScriptReferences);
+            hash.Add(item.EmbeddedScript);
             hash.Add(item.Topic);
             return hash.ToHashCode();
         }
@@ -1423,10 +1064,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return IdleInfo;
             }
-            foreach (var item in obj.ScriptReferences.WhereCastable<IAScriptReferenceGetter, IFormLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
+            if (obj.EmbeddedScript is IFormLinkContainerGetter EmbeddedScriptlinkCont)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in EmbeddedScriptlinkCont.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
             }
             if (FormLinkInformation.TryFactory(obj.Topic, out var TopicInfo))
             {
@@ -1462,60 +1105,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Idle.SetTo(rhs.Idle.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.ScriptHeader) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.EmbeddedScript) ?? true))
             {
-                if(rhs.ScriptHeader is {} ScriptHeaderrhs)
-                {
-                    item.ScriptHeader = ScriptHeaderrhs.ToArray();
-                }
-                else
-                {
-                    item.ScriptHeader = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.CompiledScript) ?? true))
-            {
-                if(rhs.CompiledScript is {} CompiledScriptrhs)
-                {
-                    item.CompiledScript = CompiledScriptrhs.ToArray();
-                }
-                else
-                {
-                    item.CompiledScript = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.ScriptSource) ?? true))
-            {
-                item.ScriptSource = rhs.ScriptSource;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.LocalVariable) ?? true))
-            {
-                if(rhs.LocalVariable is {} LocalVariablerhs)
-                {
-                    item.LocalVariable = LocalVariablerhs.ToArray();
-                }
-                else
-                {
-                    item.LocalVariable = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.LocalVariableName) ?? true))
-            {
-                item.LocalVariableName = rhs.LocalVariableName;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PatrolData_FieldIndex.ScriptReferences) ?? true))
-            {
-                errorMask?.PushIndex((int)PatrolData_FieldIndex.ScriptReferences);
+                errorMask?.PushIndex((int)PatrolData_FieldIndex.EmbeddedScript);
                 try
                 {
-                    item.ScriptReferences.SetTo(
-                        rhs.ScriptReferences
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    item.EmbeddedScript.DeepCopyIn(
+                        rhs: rhs.EmbeddedScript,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)PatrolData_FieldIndex.EmbeddedScript));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1652,39 +1250,11 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Idle,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            var EmbeddedScriptItem = item.EmbeddedScript;
+            ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)EmbeddedScriptItem).BinaryWriteTranslator).Write(
+                item: EmbeddedScriptItem,
                 writer: writer,
-                item: item.ScriptHeader,
-                header: translationParams.ConvertToCustom(RecordTypes.SCHR));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CompiledScript,
-                header: translationParams.ConvertToCustom(RecordTypes.SCDA));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ScriptSource,
-                header: translationParams.ConvertToCustom(RecordTypes.SCTX),
-                binaryType: StringBinaryType.Plain);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.LocalVariable,
-                header: translationParams.ConvertToCustom(RecordTypes.SLSD));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.LocalVariableName,
-                header: translationParams.ConvertToCustom(RecordTypes.SCVR),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
-                writer: writer,
-                items: item.ScriptReferences,
-                transl: (MutagenWriter subWriter, IAScriptReferenceGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((AScriptReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                translationParams: translationParams);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Topic,
@@ -1753,79 +1323,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.ScriptHeader, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScriptHeader = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PatrolData_FieldIndex.ScriptHeader;
-                }
-                case RecordTypeInts.SCDA:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.CompiledScript, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CompiledScript = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PatrolData_FieldIndex.CompiledScript;
-                }
-                case RecordTypeInts.SCTX:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.ScriptSource, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScriptSource = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.Plain,
-                        parseWhole: true);
-                    return (int)PatrolData_FieldIndex.ScriptSource;
-                }
-                case RecordTypeInts.SLSD:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.LocalVariable, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocalVariable = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PatrolData_FieldIndex.LocalVariable;
-                }
-                case RecordTypeInts.SCVR:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.LocalVariableName, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocalVariableName = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)PatrolData_FieldIndex.LocalVariableName;
-                }
-                case RecordTypeInts.SCRV:
-                case RecordTypeInts.SCRO:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.ScriptReferences, translationParams)) return ParseResult.Stop;
-                    item.ScriptReferences.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AScriptReference>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: AScriptReference_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: (MutagenFrame r, RecordType header, [MaybeNullWhen(false)] out AScriptReference listSubItem, TypedParseParams translationParams) =>
-                            {
-                                switch (header.TypeInt)
-                                {
-                                    case RecordTypeInts.SCRV:
-                                    {
-                                        var ret = ScriptVariableReference.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
-                                        listSubItem = tmplistSubItem;
-                                        return ret;
-                                    }
-                                    case RecordTypeInts.SCRO:
-                                    {
-                                        var ret = ScriptObjectReference.TryCreateFromBinary(r, out var tmplistSubItem, translationParams);
-                                        listSubItem = tmplistSubItem;
-                                        return ret;
-                                    }
-                                    default:
-                                        throw new NotImplementedException();
-                                }
-                            }));
-                    return (int)PatrolData_FieldIndex.ScriptReferences;
+                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.EmbeddedScript, translationParams)) return ParseResult.Stop;
+                    item.EmbeddedScript.CopyInFromBinary(
+                        frame: frame,
+                        translationParams: null);
+                    return (int)PatrolData_FieldIndex.EmbeddedScript;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.Topic, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PatrolData_FieldIndex.Topic;
@@ -1911,27 +1416,10 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _IdleLocation;
         public IFormLinkNullableGetter<IIdleAnimationGetter> Idle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleLocation);
         #endregion
-        #region ScriptHeader
-        private int? _ScriptHeaderLocation;
-        public ReadOnlyMemorySlice<Byte>? ScriptHeader => _ScriptHeaderLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptHeaderLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region EmbeddedScript
+        private IScriptFieldsGetter? _EmbeddedScript;
+        public IScriptFieldsGetter EmbeddedScript => _EmbeddedScript ?? new ScriptFields();
         #endregion
-        #region CompiledScript
-        private int? _CompiledScriptLocation;
-        public ReadOnlyMemorySlice<Byte>? CompiledScript => _CompiledScriptLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CompiledScriptLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region ScriptSource
-        private int? _ScriptSourceLocation;
-        public String? ScriptSource => _ScriptSourceLocation.HasValue ? BinaryStringUtility.ToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptSourceLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region LocalVariable
-        private int? _LocalVariableLocation;
-        public ReadOnlyMemorySlice<Byte>? LocalVariable => _LocalVariableLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocalVariableLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region LocalVariableName
-        private int? _LocalVariableNameLocation;
-        public String? LocalVariableName => _LocalVariableNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LocalVariableNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        public IReadOnlyList<IAScriptReferenceGetter> ScriptReferences { get; private set; } = [];
         #region Topic
         private int? _TopicLocation;
         public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
@@ -2019,59 +1507,15 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.ScriptHeader, translationParams)) return ParseResult.Stop;
-                    _ScriptHeaderLocation = (stream.Position - offset);
-                    return (int)PatrolData_FieldIndex.ScriptHeader;
-                }
-                case RecordTypeInts.SCDA:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.CompiledScript, translationParams)) return ParseResult.Stop;
-                    _CompiledScriptLocation = (stream.Position - offset);
-                    return (int)PatrolData_FieldIndex.CompiledScript;
-                }
-                case RecordTypeInts.SCTX:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.ScriptSource, translationParams)) return ParseResult.Stop;
-                    _ScriptSourceLocation = (stream.Position - offset);
-                    return (int)PatrolData_FieldIndex.ScriptSource;
-                }
-                case RecordTypeInts.SLSD:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.LocalVariable, translationParams)) return ParseResult.Stop;
-                    _LocalVariableLocation = (stream.Position - offset);
-                    return (int)PatrolData_FieldIndex.LocalVariable;
-                }
-                case RecordTypeInts.SCVR:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.LocalVariableName, translationParams)) return ParseResult.Stop;
-                    _LocalVariableNameLocation = (stream.Position - offset);
-                    return (int)PatrolData_FieldIndex.LocalVariableName;
-                }
-                case RecordTypeInts.SCRV:
-                case RecordTypeInts.SCRO:
-                {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.ScriptReferences, translationParams)) return ParseResult.Stop;
-                    this.ScriptReferences = this.ParseRepeatedTypelessSubrecord<IAScriptReferenceGetter>(
+                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.EmbeddedScript, translationParams)) return ParseResult.Stop;
+                    this._EmbeddedScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
-                        translationParams: translationParams,
-                        trigger: AScriptReference_Registration.TriggerSpecs,
-                        factory: (s, r, p, recConv) =>
-                        {
-                            switch (r.TypeInt)
-                            {
-                                case RecordTypeInts.SCRV:
-                                    return ScriptVariableReferenceBinaryOverlay.ScriptVariableReferenceFactory(s, p);
-                                case RecordTypeInts.SCRO:
-                                    return ScriptObjectReferenceBinaryOverlay.ScriptObjectReferenceFactory(s, p);
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                        });
-                    return (int)PatrolData_FieldIndex.ScriptReferences;
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)PatrolData_FieldIndex.EmbeddedScript;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.Topic, translationParams)) return ParseResult.Stop;
                     _TopicLocation = (stream.Position - offset);
                     return (int)PatrolData_FieldIndex.Topic;
                 }

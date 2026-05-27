@@ -7,28 +7,22 @@
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
       <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
       <P3Float name="RagdollBipedRotation" recordType="XRGB" />
-      <Float name="PatrolIdleTime" recordType="XPRD" />
-      <Bool name="PatrolScriptMarker" boolAsMarker="XPPA" />
-      <FormLink name="PatrolIdle" recordType="INAM" refName="IdleAnimation" />
-      <ByteArray name="PatrolSCHR" recordType="SCHR" />
-      <ByteArray name="PatrolSCDA" recordType="SCDA" />
-      <String name="PatrolSCTX" recordType="SCTX" binaryType="Plain" />
-      <RefList name="PatrolScriptReferences" refName="AScriptReference" />
-      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
+      <RefDirect name="Patrol" refName="PatrolData" />
       <Int32 name="LevelModifier" recordType="XLCM" />
       <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
       <Int32 name="Count" recordType="XCNT" />
       <Float name="Radius" recordType="XRDS" />
       <Float name="Health" recordType="XHLP" />
-      <ByteArray name="LinkedDecals" recordType="XDCR" />
+      <RefList name="LinkedDecals" refName="LinkedDecal" />
       <FormLink name="LinkedReference" recordType="XLKR">
         <Interface>IPlaced</Interface>
       </FormLink>
-      <RefDirect name="LinkedReferenceColor" refName="PlacedNpcLinkedReferenceColor" />
-      <UInt8 name="ActivateParentFlags" recordType="XAPD" />
-      <RefDirect name="ActivateParentRef" refName="PlacedNpcActivateParent" />
-      <String name="ActivationPrompt" recordType="XATO" />
-      <RefDirect name="EnableParent" refName="PlacedNpcEnableParent" />
+      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <String name="ActivationPrompt" recordType="XATO">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <RefDirect name="EnableParent" refName="EnableParent" />
       <FormLink name="Emittance" recordType="XEMI" refName="Light" />
       <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
@@ -41,28 +35,5 @@
       </Data>
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
-  </Object>
-  <Object name="PlacedNpcLinkedReferenceColor" objType="Subrecord" recordType="XCLP">
-    <Fields>
-      <Color name="LinkStartColor" binaryType="Alpha" />
-      <Color name="LinkEndColor" binaryType="Alpha" />
-    </Fields>
-  </Object>
-  <Object name="PlacedNpcActivateParent" objType="Subrecord" recordType="XAPR">
-    <Fields>
-      <FormLink name="Reference">
-        <Interface>IPlaced</Interface>
-      </FormLink>
-      <Float name="Delay" />
-    </Fields>
-  </Object>
-  <Object name="PlacedNpcEnableParent" objType="Subrecord" recordType="XESP">
-    <Fields>
-      <FormLink name="Reference">
-        <Interface>IPlaced</Interface>
-      </FormLink>
-      <UInt8 name="Flags" />
-      <ByteArray name="Unused" byteLength="3" nullable="False" />
-    </Fields>
   </Object>
 </Loqui>
