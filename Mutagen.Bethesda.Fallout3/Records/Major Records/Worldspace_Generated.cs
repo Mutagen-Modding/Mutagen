@@ -1600,6 +1600,11 @@ namespace Mutagen.Bethesda.Fallout3
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         #pragma warning disable CS0618 // Type or member is obsolete
@@ -1751,6 +1756,10 @@ namespace Mutagen.Bethesda.Fallout3
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknownGroupData { get; set; }
         new ExtendedList<WorldspaceBlock> SubCells { get; }
+        #region Mutagen
+        new Worldspace.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IWorldspaceInternal :
@@ -1808,6 +1817,10 @@ namespace Mutagen.Bethesda.Fallout3
         Int32 SubCellsTimestamp { get; }
         Int32 SubCellsUnknownGroupData { get; }
         IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
+
+        #region Mutagen
+        Worldspace.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -5252,6 +5265,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         protected override Type LinkType => typeof(IWorldspaceGetter);
 
+        public Worldspace.MajorFlag MajorFlags => (Worldspace.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
         private int? _NameLocation;

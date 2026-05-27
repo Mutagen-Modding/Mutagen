@@ -14,6 +14,12 @@ namespace Mutagen.Bethesda.Fallout3;
 public partial class Worldspace
 {
     [Flags]
+    public enum MajorFlag
+    {
+        CanNotWait = 0x0008_0000,
+    }
+
+    [Flags]
     public enum WorldspaceFlag
     {
         SmallWorld = 0x01,

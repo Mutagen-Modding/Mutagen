@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Color Color { get; set; } = default(Color);
         #endregion
         #region Unknown
-        public Int32 Unknown { get; set; } = default(Int32);
+        public Single Unknown { get; set; } = default(Single);
         #endregion
         #region PrimitiveType
         public PlacedPrimitive.TypeEnum PrimitiveType { get; set; } = default(PlacedPrimitive.TypeEnum);
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new P3Float Bounds { get; set; }
         new Color Color { get; set; }
-        new Int32 Unknown { get; set; }
+        new Single Unknown { get; set; }
         new PlacedPrimitive.TypeEnum PrimitiveType { get; set; }
     }
 
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Fallout3
         static ILoquiRegistration StaticRegistration => PlacedPrimitive_Registration.Instance;
         P3Float Bounds { get; }
         Color Color { get; }
-        Int32 Unknown { get; }
+        Single Unknown { get; }
         PlacedPrimitive.TypeEnum PrimitiveType { get; }
 
     }
@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Bounds = default(P3Float);
             item.Color = default(Color);
-            item.Unknown = default(Int32);
+            item.Unknown = default(Single);
             item.PrimitiveType = default(PlacedPrimitive.TypeEnum);
         }
         
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Bounds = item.Bounds.Equals(rhs.Bounds);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
             ret.PrimitiveType = item.PrimitiveType == rhs.PrimitiveType;
         }
         
@@ -933,7 +933,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.Unknown) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlacedPrimitive_FieldIndex.PrimitiveType) ?? true))
             {
@@ -1112,7 +1112,9 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Color,
                 binaryType: ColorBinaryType.NoAlphaFloat);
-            writer.Write(item.Unknown);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown);
             EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.PrimitiveType,
@@ -1159,7 +1161,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.Bounds = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
-            item.Unknown = frame.ReadInt32();
+            item.Unknown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.PrimitiveType = EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
@@ -1230,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public P3Float Bounds => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
         public Color Color => _structData.Slice(0xC, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
+        public Single Unknown => _structData.Slice(0x18, 0x4).Float();
         public PlacedPrimitive.TypeEnum PrimitiveType => (PlacedPrimitive.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

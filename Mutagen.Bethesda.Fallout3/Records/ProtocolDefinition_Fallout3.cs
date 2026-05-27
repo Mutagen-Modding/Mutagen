@@ -241,7 +241,6 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             PlacedNpcEnableParent_Registration.Instance,
             PlacedNpcLinkedReferenceColor_Registration.Instance,
             PlacedObject_Registration.Instance,
-            PlacedObjectAmmo_Registration.Instance,
             PlacedPrimitive_Registration.Instance,
             Placement_Registration.Instance,
             PlayerSkills_Registration.Instance,

@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion
             this.CustomCtor();
         }
 
-        public static IOblivionListGroupGetter<T> OblivionListGroupFactory(
+        public static IOblivionListGroupGetter<ICellBlockGetter> OblivionListGroupFactory(
             IBinaryReadStream stream,
             IReadOnlyList<RangeInt64> locs,
             BinaryOverlayFactoryPackage package)
@@ -1560,14 +1560,14 @@ namespace Mutagen.Bethesda.Oblivion
                     new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
                     package);
             }
-            var subs = new IOblivionListGroupGetter<T>[locs.Count];
+            var subs = new IOblivionListGroupGetter<ICellBlockGetter>[locs.Count];
             for (int i = 0; i < locs.Count; i++)
             {
                 subs[i] = OblivionListGroupFactory(
                     new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package),
                     package);
             }
-            return (IOblivionListGroupGetter<T>)(object)new OblivionListGroupMergedOverlay(subs);
+            return new OblivionListGroupMergedOverlay(subs);
         }
 
         public static IOblivionListGroupGetter<T> OblivionListGroupFactory(

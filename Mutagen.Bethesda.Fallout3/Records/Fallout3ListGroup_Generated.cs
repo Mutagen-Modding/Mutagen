@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static IFallout3ListGroupGetter<T> Fallout3ListGroupFactory(
+        public static IFallout3ListGroupGetter<ICellBlockGetter> Fallout3ListGroupFactory(
             IBinaryReadStream stream,
             IReadOnlyList<RangeInt64> locs,
             BinaryOverlayFactoryPackage package)
@@ -1584,14 +1584,14 @@ namespace Mutagen.Bethesda.Fallout3
                     new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
                     package);
             }
-            var subs = new IFallout3ListGroupGetter<T>[locs.Count];
+            var subs = new IFallout3ListGroupGetter<ICellBlockGetter>[locs.Count];
             for (int i = 0; i < locs.Count; i++)
             {
                 subs[i] = Fallout3ListGroupFactory(
                     new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package),
                     package);
             }
-            return (IFallout3ListGroupGetter<T>)(object)new Fallout3ListGroupMergedOverlay(subs);
+            return new Fallout3ListGroupMergedOverlay(subs);
         }
 
         public static IFallout3ListGroupGetter<T> Fallout3ListGroupFactory(

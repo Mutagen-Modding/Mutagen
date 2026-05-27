@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IStarfieldListGroupGetter<T> StarfieldListGroupFactory(
+        public static IStarfieldListGroupGetter<ICellBlockGetter> StarfieldListGroupFactory(
             IBinaryReadStream stream,
             IReadOnlyList<RangeInt64> locs,
             BinaryOverlayFactoryPackage package)
@@ -1584,14 +1584,14 @@ namespace Mutagen.Bethesda.Starfield
                     new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package),
                     package);
             }
-            var subs = new IStarfieldListGroupGetter<T>[locs.Count];
+            var subs = new IStarfieldListGroupGetter<ICellBlockGetter>[locs.Count];
             for (int i = 0; i < locs.Count; i++)
             {
                 subs[i] = StarfieldListGroupFactory(
                     new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package),
                     package);
             }
-            return (IStarfieldListGroupGetter<T>)(object)new StarfieldListGroupMergedOverlay(subs);
+            return new StarfieldListGroupMergedOverlay(subs);
         }
 
         public static IStarfieldListGroupGetter<T> StarfieldListGroupFactory(

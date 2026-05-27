@@ -2738,8 +2738,9 @@ public class PluginTranslationModule : BinaryTranslationModule
                     // Each location is materialized as its own sub-overlay; the wrapper exposes
                     // their Records concatenated. Duplicate-numbered blocks/sub-blocks are
                     // collapsed at write time by the per-game CellBlockConsolidator.
+                    var concreteInterface = $"I{obj.ProtoGen.Protocol.Namespace}ListGroupGetter<ICellBlockGetter>";
                     using (var args = sb.Function(
-                               $"public static {obj.Interface(getter: true)} {obj.Name}Factory"))
+                               $"public static {concreteInterface} {obj.Name}Factory"))
                     {
                         args.Add($"{nameof(IBinaryReadStream)} stream");
                         args.Add("IReadOnlyList<RangeInt64> locs");
@@ -2757,7 +2758,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.Add("package");
                             }
                         }
-                        sb.AppendLine($"var subs = new {obj.Interface(getter: true)}[locs.Count];");
+                        sb.AppendLine($"var subs = new {concreteInterface}[locs.Count];");
                         sb.AppendLine("for (int i = 0; i < locs.Count; i++)");
                         using (sb.CurlyBrace())
                         {
@@ -2768,7 +2769,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 args.Add("package");
                             }
                         }
-                        sb.AppendLine($"return new {obj.Name}MergedOverlay<T>(subs);");
+                        sb.AppendLine($"return new {obj.Name}MergedOverlay(subs);");
                     }
                     sb.AppendLine();
                 }
