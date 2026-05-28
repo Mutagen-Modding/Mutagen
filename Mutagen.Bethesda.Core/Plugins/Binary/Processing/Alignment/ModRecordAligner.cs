@@ -10,17 +10,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 
 public static class ModRecordAligner 
 {
-    public static void Align( 
-        ModPath inputPath, 
-        FilePath outputPath, 
-        ParsingMeta meta, 
-        AlignmentRules alignmentRules, 
-        DirectoryPath temp) 
-    { 
-        var interest = new RecordInterest(alignmentRules.Alignments.Keys) 
-        { 
-            EmptyMeansInterested = false 
-        }; 
+    public static void Align(
+        ModPath inputPath,
+        FilePath outputPath,
+        ParsingMeta meta,
+        AlignmentRules alignmentRules,
+        DirectoryPath temp)
+    {
+        var originalInput = inputPath;
+        var interest = new RecordInterest(alignmentRules.Alignments.Keys)
+        {
+            EmptyMeansInterested = false
+        };
         // Always interested in parent record types 
         interest.InterestingTypes.Add("CELL");
         interest.InterestingTypes.Add("WRLD");
@@ -29,6 +30,7 @@ public static class ModRecordAligner
 
         if (alignmentRules.TopLevelGroupOrder != null)
         {
+            var prevPath = inputPath;
             var alignedTopLevelFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedTopLevel"));
             using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
             {
@@ -36,30 +38,40 @@ public static class ModRecordAligner
                 AlignTopLevelGroups(inputStream, writer, alignmentRules.TopLevelGroupOrder);
             }
             inputPath = alignedTopLevelFile;
+            DeleteIfIntermediate(prevPath, originalInput);
         }
 
-        using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
         {
-            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
-            var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
-            using var writer = new MutagenWriter(alignedMajorRecordsFile, meta.Constants);
-            AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
-            inputPath = alignedMajorRecordsFile;
+            var prevPath = inputPath;
+            using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
+            {
+                var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
+                var alignedMajorRecordsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedRules"));
+                using var writer = new MutagenWriter(alignedMajorRecordsFile, meta.Constants);
+                AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
+                inputPath = alignedMajorRecordsFile;
+            }
+            DeleteIfIntermediate(prevPath, originalInput);
         }
 
-        using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
         {
-            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences);
-            var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups"));
-            using var writer = new MutagenWriter(alignedGroupsFile, meta.Constants);
-            AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
-            inputPath = alignedGroupsFile;
+            var prevPath = inputPath;
+            using (var inputStream = new MutagenBinaryReadStream(inputPath, meta))
+            {
+                var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences);
+                var alignedGroupsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedGroups"));
+                using var writer = new MutagenWriter(alignedGroupsFile, meta.Constants);
+                AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
+                inputPath = alignedGroupsFile;
+            }
+            DeleteIfIntermediate(prevPath, originalInput);
         }
-        
+
         if (meta.Constants.Release is GameRelease.Oblivion or GameRelease.Fallout4 or GameRelease.Starfield)
         {
+            var prevPath = inputPath;
             var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
-            
+
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedCells"));
             using (var mutaReader = new MutagenBinaryReadStream(inputPath, meta))
             {
@@ -70,7 +82,7 @@ public static class ModRecordAligner
                     var noRecordLength = grup - mutaReader.Position;
                     mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
 
-                    // If complete overall, return 
+                    // If complete overall, return
                     if (mutaReader.Complete) break;
 
                     var nextGrup = mutaReader.GetGroupHeader();
@@ -83,38 +95,51 @@ public static class ModRecordAligner
                 mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
             }
             inputPath = alignedCellsFile;
+            DeleteIfIntermediate(prevPath, originalInput);
         }
 
         if (meta.Constants.Release is GameRelease.Oblivion)
         {
+            var prevPath = inputPath;
             var alignedCellsFile = new ModPath(inputPath.ModKey, Path.Combine(temp, "alignedWorldspaces"));
-            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest); 
-            using (var mutaReader = new MutagenBinaryReadStream(inputPath, meta)) 
-            { 
-                using var writer = new MutagenWriter(alignedCellsFile, meta.Constants); 
-                foreach (var grup in fileLocs.GrupLocations.Keys) 
-                { 
-                    if (grup <= mutaReader.Position) continue; 
-                    var noRecordLength = grup - mutaReader.Position; 
-                    mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength); 
- 
-                    // If complete overall, return 
-                    if (mutaReader.Complete) break; 
- 
-                    mutaReader.WriteTo(writer.BaseStream, 12); 
-                    var grupType = mutaReader.ReadInt32(); 
-                    writer.Write(grupType); 
-                    if (writer.MetaData.Constants.GroupConstants.World.TopGroupType == grupType) 
-                    { 
-                        AlignWorldChildren(mutaReader, writer); 
-                    } 
-                } 
-                mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining)); 
-            } 
+            var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
+            using (var mutaReader = new MutagenBinaryReadStream(inputPath, meta))
+            {
+                using var writer = new MutagenWriter(alignedCellsFile, meta.Constants);
+                foreach (var grup in fileLocs.GrupLocations.Keys)
+                {
+                    if (grup <= mutaReader.Position) continue;
+                    var noRecordLength = grup - mutaReader.Position;
+                    mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                    // If complete overall, return
+                    if (mutaReader.Complete) break;
+
+                    mutaReader.WriteTo(writer.BaseStream, 12);
+                    var grupType = mutaReader.ReadInt32();
+                    writer.Write(grupType);
+                    if (writer.MetaData.Constants.GroupConstants.World.TopGroupType == grupType)
+                    {
+                        AlignWorldChildren(mutaReader, writer);
+                    }
+                }
+                mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
+            }
+            inputPath = alignedCellsFile;
+            DeleteIfIntermediate(prevPath, originalInput);
         }
 
         File.Copy(inputPath, outputPath, true);
-    } 
+        DeleteIfIntermediate(inputPath, originalInput);
+    }
+
+    private static void DeleteIfIntermediate(ModPath path, ModPath originalInput)
+    {
+        if (path.Path != originalInput.Path && File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
  
     private static void AlignMajorRecordsByRules( 
         IMutagenReadStream inputStream, 
