@@ -229,6 +229,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
+        #region FootstepMaterials
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private FootstepMaterials? _FootstepMaterials;
+        public FootstepMaterials? FootstepMaterials
+        {
+            get => _FootstepMaterials;
+            set => _FootstepMaterials = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFootstepMaterialsGetter? IWorldspaceGetter.FootstepMaterials => this.FootstepMaterials;
+        #endregion
         #region OffsetData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<UInt32>? _OffsetData;
@@ -321,6 +332,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CanopyShadow = initialValue;
                 this.WaterNoiseTexture = initialValue;
                 this.ImpactSwapData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceImpactSwap.Mask<TItem>?>>?>(initialValue, []);
+                this.FootstepMaterials = new MaskItem<TItem, FootstepMaterials.Mask<TItem>?>(initialValue, new FootstepMaterials.Mask<TItem>(initialValue));
                 this.OffsetData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
@@ -358,6 +370,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CanopyShadow,
                 TItem WaterNoiseTexture,
                 TItem ImpactSwapData,
+                TItem FootstepMaterials,
                 TItem OffsetData,
                 TItem TopCell,
                 TItem SubCellsTimestamp,
@@ -394,6 +407,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CanopyShadow = CanopyShadow;
                 this.WaterNoiseTexture = WaterNoiseTexture;
                 this.ImpactSwapData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceImpactSwap.Mask<TItem>?>>?>(ImpactSwapData, []);
+                this.FootstepMaterials = new MaskItem<TItem, FootstepMaterials.Mask<TItem>?>(FootstepMaterials, new FootstepMaterials.Mask<TItem>(FootstepMaterials));
                 this.OffsetData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OffsetData, []);
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
@@ -432,6 +446,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem CanopyShadow;
             public TItem WaterNoiseTexture;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceImpactSwap.Mask<TItem>?>>?>? ImpactSwapData;
+            public MaskItem<TItem, FootstepMaterials.Mask<TItem>?>? FootstepMaterials { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? OffsetData;
             public MaskItem<TItem, Cell.Mask<TItem>?>? TopCell { get; set; }
             public TItem SubCellsTimestamp;
@@ -472,6 +487,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CanopyShadow, rhs.CanopyShadow)) return false;
                 if (!object.Equals(this.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
                 if (!object.Equals(this.ImpactSwapData, rhs.ImpactSwapData)) return false;
+                if (!object.Equals(this.FootstepMaterials, rhs.FootstepMaterials)) return false;
                 if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
                 if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
                 if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
@@ -504,6 +520,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CanopyShadow);
                 hash.Add(this.WaterNoiseTexture);
                 hash.Add(this.ImpactSwapData);
+                hash.Add(this.FootstepMaterials);
                 hash.Add(this.OffsetData);
                 hash.Add(this.TopCell);
                 hash.Add(this.SubCellsTimestamp);
@@ -563,6 +580,11 @@ namespace Mutagen.Bethesda.Fallout3
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
+                }
+                if (FootstepMaterials != null)
+                {
+                    if (!eval(this.FootstepMaterials.Overall)) return false;
+                    if (this.FootstepMaterials.Specific != null && !this.FootstepMaterials.Specific.All(eval)) return false;
                 }
                 if (this.OffsetData != null)
                 {
@@ -647,6 +669,11 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (FootstepMaterials != null)
+                {
+                    if (eval(this.FootstepMaterials.Overall)) return true;
+                    if (this.FootstepMaterials.Specific != null && this.FootstepMaterials.Specific.Any(eval)) return true;
+                }
                 if (this.OffsetData != null)
                 {
                     if (eval(this.OffsetData.Overall)) return true;
@@ -728,6 +755,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                obj.FootstepMaterials = this.FootstepMaterials == null ? null : new MaskItem<R, FootstepMaterials.Mask<R>?>(eval(this.FootstepMaterials.Overall), this.FootstepMaterials.Specific?.Translate(eval));
                 if (OffsetData != null)
                 {
                     obj.OffsetData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.OffsetData.Overall), []);
@@ -881,6 +909,10 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
+                    if (printMask?.FootstepMaterials?.Overall ?? true)
+                    {
+                        FootstepMaterials?.Print(sb);
+                    }
                     if ((printMask?.OffsetData?.Overall ?? true)
                         && OffsetData is {} OffsetDataItem)
                     {
@@ -966,6 +998,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? CanopyShadow;
             public Exception? WaterNoiseTexture;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>? ImpactSwapData;
+            public MaskItem<Exception?, FootstepMaterials.ErrorMask?>? FootstepMaterials;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OffsetData;
             public MaskItem<Exception?, Cell.ErrorMask?>? TopCell;
             public Exception? SubCellsTimestamp;
@@ -1023,6 +1056,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return WaterNoiseTexture;
                     case Worldspace_FieldIndex.ImpactSwapData:
                         return ImpactSwapData;
+                    case Worldspace_FieldIndex.FootstepMaterials:
+                        return FootstepMaterials;
                     case Worldspace_FieldIndex.OffsetData:
                         return OffsetData;
                     case Worldspace_FieldIndex.TopCell:
@@ -1108,6 +1143,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Worldspace_FieldIndex.ImpactSwapData:
                         this.ImpactSwapData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Worldspace_FieldIndex.FootstepMaterials:
+                        this.FootstepMaterials = new MaskItem<Exception?, FootstepMaterials.ErrorMask?>(ex, null);
                         break;
                     case Worldspace_FieldIndex.OffsetData:
                         this.OffsetData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -1201,6 +1239,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Worldspace_FieldIndex.ImpactSwapData:
                         this.ImpactSwapData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>)obj;
                         break;
+                    case Worldspace_FieldIndex.FootstepMaterials:
+                        this.FootstepMaterials = (MaskItem<Exception?, FootstepMaterials.ErrorMask?>?)obj;
+                        break;
                     case Worldspace_FieldIndex.OffsetData:
                         this.OffsetData = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -1247,6 +1288,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CanopyShadow != null) return true;
                 if (WaterNoiseTexture != null) return true;
                 if (ImpactSwapData != null) return true;
+                if (FootstepMaterials != null) return true;
                 if (OffsetData != null) return true;
                 if (TopCell != null) return true;
                 if (SubCellsTimestamp != null) return true;
@@ -1353,6 +1395,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                FootstepMaterials?.Print(sb);
                 if (OffsetData is {} OffsetDataItem)
                 {
                     sb.AppendLine("OffsetData =>");
@@ -1428,6 +1471,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CanopyShadow = this.CanopyShadow.Combine(rhs.CanopyShadow);
                 ret.WaterNoiseTexture = this.WaterNoiseTexture.Combine(rhs.WaterNoiseTexture);
                 ret.ImpactSwapData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ImpactSwapData?.Overall, rhs.ImpactSwapData?.Overall), Noggog.ExceptionExt.Combine(this.ImpactSwapData?.Specific, rhs.ImpactSwapData?.Specific));
+                ret.FootstepMaterials = this.FootstepMaterials.Combine(rhs.FootstepMaterials, (l, r) => l.Combine(r));
                 ret.OffsetData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OffsetData?.Overall, rhs.OffsetData?.Overall), Noggog.ExceptionExt.Combine(this.OffsetData?.Specific, rhs.OffsetData?.Specific));
                 ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
@@ -1477,6 +1521,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool CanopyShadow;
             public bool WaterNoiseTexture;
             public WorldspaceImpactSwap.TranslationMask? ImpactSwapData;
+            public FootstepMaterials.TranslationMask? FootstepMaterials;
             public bool OffsetData;
             public Cell.TranslationMask? TopCell;
             public bool SubCellsTimestamp;
@@ -1540,6 +1585,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CanopyShadow, null));
                 ret.Add((WaterNoiseTexture, null));
                 ret.Add((ImpactSwapData == null ? DefaultOn : !ImpactSwapData.GetCrystal().CopyNothing, ImpactSwapData?.GetCrystal()));
+                ret.Add((FootstepMaterials != null ? FootstepMaterials.OnOverall : DefaultOn, FootstepMaterials?.GetCrystal()));
                 ret.Add((OffsetData, null));
                 ret.Add((TopCell != null ? TopCell.OnOverall : DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
@@ -1758,6 +1804,7 @@ namespace Mutagen.Bethesda.Fallout3
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new ExtendedList<WorldspaceImpactSwap> ImpactSwapData { get; }
+        new FootstepMaterials? FootstepMaterials { get; set; }
         new ExtendedList<UInt32>? OffsetData { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
@@ -1817,6 +1864,7 @@ namespace Mutagen.Bethesda.Fallout3
         String? CanopyShadow { get; }
         String? WaterNoiseTexture { get; }
         IReadOnlyList<IWorldspaceImpactSwapGetter> ImpactSwapData { get; }
+        IFootstepMaterialsGetter? FootstepMaterials { get; }
         IReadOnlyList<UInt32>? OffsetData { get; }
         ICellGetter? TopCell { get; }
         Int32 SubCellsTimestamp { get; }
@@ -2250,11 +2298,12 @@ namespace Mutagen.Bethesda.Fallout3
         CanopyShadow = 26,
         WaterNoiseTexture = 27,
         ImpactSwapData = 28,
-        OffsetData = 29,
-        TopCell = 30,
-        SubCellsTimestamp = 31,
-        SubCellsUnknownGroupData = 32,
-        SubCells = 33,
+        FootstepMaterials = 29,
+        OffsetData = 30,
+        TopCell = 31,
+        SubCellsTimestamp = 32,
+        SubCellsUnknownGroupData = 33,
+        SubCells = 34,
     }
     #endregion
 
@@ -2265,9 +2314,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 27;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -2320,13 +2369,13 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.NNAM,
                 RecordTypes.XNAM,
                 RecordTypes.IMPS,
+                RecordTypes.IMPF,
                 RecordTypes.OFST,
                 RecordTypes.XXXX,
                 RecordTypes.CELL,
                 RecordTypes.GRUP,
                 RecordTypes.XCLC,
                 RecordTypes.XCLL,
-                RecordTypes.IMPF,
                 RecordTypes.LTMP,
                 RecordTypes.LNAM,
                 RecordTypes.XCLW,
@@ -2422,6 +2471,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CanopyShadow = default;
             item.WaterNoiseTexture = default;
             item.ImpactSwapData.Clear();
+            item.FootstepMaterials = null;
             item.OffsetData = null;
             item.TopCell = null;
             item.SubCellsTimestamp = default(Int32);
@@ -2848,6 +2898,11 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.ImpactSwapData,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.FootstepMaterials = EqualsMaskHelper.EqualsHelper(
+                item.FootstepMaterials,
+                rhs.FootstepMaterials,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.OffsetData = item.OffsetData.CollectionEqualsHelper(
                 rhs.OffsetData,
                 (l, r) => l == r,
@@ -3020,6 +3075,11 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+            }
+            if ((printMask?.FootstepMaterials?.Overall ?? true)
+                && item.FootstepMaterials is {} FootstepMaterialsItem)
+            {
+                FootstepMaterialsItem?.Print(sb, "FootstepMaterials");
             }
             if ((printMask?.OffsetData?.Overall ?? true)
                 && item.OffsetData is {} OffsetDataItem)
@@ -3213,6 +3273,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.ImpactSwapData.SequenceEqual(rhs.ImpactSwapData, (l, r) => ((WorldspaceImpactSwapCommon)((IWorldspaceImpactSwapGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.ImpactSwapData)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FootstepMaterials) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.FootstepMaterials, rhs.FootstepMaterials, out var lhsFootstepMaterials, out var rhsFootstepMaterials, out var isFootstepMaterialsEqual))
+                {
+                    if (!((FootstepMaterialsCommon)((IFootstepMaterialsGetter)lhsFootstepMaterials).CommonInstance()!).Equals(lhsFootstepMaterials, rhsFootstepMaterials, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.FootstepMaterials))) return false;
+                }
+                else if (!isFootstepMaterialsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 if (!lhs.OffsetData.SequenceEqualNullable(rhs.OffsetData)) return false;
@@ -3320,6 +3388,10 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(WaterNoiseTextureitem);
             }
             hash.Add(item.ImpactSwapData);
+            if (item.FootstepMaterials is {} FootstepMaterialsitem)
+            {
+                hash.Add(FootstepMaterialsitem);
+            }
             hash.Add(item.OffsetData);
             if (item.TopCell is {} TopCellitem)
             {
@@ -4568,6 +4640,32 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FootstepMaterials) ?? true))
+            {
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.FootstepMaterials);
+                try
+                {
+                    if(rhs.FootstepMaterials is {} rhsFootstepMaterials)
+                    {
+                        item.FootstepMaterials = rhsFootstepMaterials.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.FootstepMaterials));
+                    }
+                    else
+                    {
+                        item.FootstepMaterials = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.OffsetData);
@@ -4940,6 +5038,13 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
+            if (item.FootstepMaterials is {} FootstepMaterialsItem)
+            {
+                ((FootstepMaterialsBinaryWriteTranslation)((IBinaryItem)FootstepMaterialsItem).BinaryWriteTranslator).Write(
+                    item: FootstepMaterialsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Write(
                 writer: writer,
                 items: item.OffsetData,
@@ -5183,6 +5288,11 @@ namespace Mutagen.Bethesda.Fallout3
                             transl: WorldspaceImpactSwap.TryCreateFromBinary));
                     return (int)Worldspace_FieldIndex.ImpactSwapData;
                 }
+                case RecordTypeInts.IMPF:
+                {
+                    item.FootstepMaterials = Mutagen.Bethesda.Fallout3.FootstepMaterials.CreateFromBinary(frame: frame);
+                    return (int)Worldspace_FieldIndex.FootstepMaterials;
+                }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -5366,6 +5476,10 @@ namespace Mutagen.Bethesda.Fallout3
         public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IWorldspaceImpactSwapGetter> ImpactSwapData { get; private set; } = [];
+        #region FootstepMaterials
+        private RangeInt32? _FootstepMaterialsLocation;
+        public IFootstepMaterialsGetter? FootstepMaterials => _FootstepMaterialsLocation.HasValue ? FootstepMaterialsBinaryOverlay.FootstepMaterialsFactory(_recordData.Slice(_FootstepMaterialsLocation!.Value.Min), _package) : default;
+        #endregion
         public IReadOnlyList<UInt32>? OffsetData { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5557,6 +5671,11 @@ namespace Mutagen.Bethesda.Fallout3
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)Worldspace_FieldIndex.ImpactSwapData;
+                }
+                case RecordTypeInts.IMPF:
+                {
+                    _FootstepMaterialsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Worldspace_FieldIndex.FootstepMaterials;
                 }
                 case RecordTypeInts.OFST:
                 {

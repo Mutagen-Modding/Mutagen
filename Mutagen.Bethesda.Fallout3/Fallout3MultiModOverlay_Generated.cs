@@ -1137,6 +1137,7 @@ internal class MergedWorldspace : IWorldspaceGetter
     public String? CanopyShadow => _primary.CanopyShadow;
     public String? WaterNoiseTexture => _primary.WaterNoiseTexture;
     public IReadOnlyList<IWorldspaceImpactSwapGetter> ImpactSwapData => _primary.ImpactSwapData;
+    public IFootstepMaterialsGetter? FootstepMaterials => _primary.FootstepMaterials;
     public IReadOnlyList<UInt32>? OffsetData => _primary.OffsetData;
     public ICellGetter? TopCell => _primary.TopCell;
     public Int32 SubCellsTimestamp => _primary.SubCellsTimestamp;

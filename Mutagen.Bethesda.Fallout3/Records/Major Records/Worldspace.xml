@@ -29,6 +29,7 @@
       <String name="CanopyShadow" recordType="NNAM" />
       <String name="WaterNoiseTexture" recordType="XNAM" />
       <RefList name="ImpactSwapData" refName="WorldspaceImpactSwap" />
+      <RefDirect name="FootstepMaterials" refName="FootstepMaterials" />
       <List name="OffsetData" recordType="OFST" overflowRecordType="XXXX">
         <UInt32 />
       </List>
