@@ -9205,9 +9205,8 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
             }
-            if (obj.Cells is IAssetLinkContainer CellslinkCont)
             {
-                foreach (var item in CellslinkCont.EnumerateListedAssetLinks())
+                foreach (var item in obj.Cells.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -17111,12 +17110,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            foreach (var item in obj.Cells.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
-                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             foreach (var item in obj.Worldspaces.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
