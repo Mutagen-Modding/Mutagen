@@ -1440,7 +1440,7 @@
     <Compile Include="Records\Major Records\RegionLand_Generated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\CellFootstepMaterials_Generated.cs">
+    <Compile Include="Records\Major Records\FootstepMaterials_Generated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AudioData_Generated.cs">
@@ -1463,6 +1463,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\RagdollData_Generated.cs">
       <DependentUpon>RagdollData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceLandData_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

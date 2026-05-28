@@ -1819,6 +1819,7 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.XPPA,
                 RecordTypes.INAM,
                 RecordTypes.SCHR,
+                RecordTypes.TNAM,
                 RecordTypes.XLCM,
                 RecordTypes.XOWN,
                 RecordTypes.XRNK,
@@ -3259,6 +3260,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XPPA:
                 case RecordTypeInts.INAM:
                 case RecordTypeInts.SCHR:
+                case RecordTypeInts.TNAM:
                 {
                     item.Patrol = Mutagen.Bethesda.Fallout3.PatrolData.CreateFromBinary(
                         frame: frame,
@@ -3629,6 +3631,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XPPA:
                 case RecordTypeInts.INAM:
                 case RecordTypeInts.SCHR:
+                case RecordTypeInts.TNAM:
                 {
                     this.Patrol = PatrolDataBinaryOverlay.PatrolDataFactory(
                         stream: stream,

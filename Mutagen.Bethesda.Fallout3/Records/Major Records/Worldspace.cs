@@ -24,11 +24,10 @@ public partial class Worldspace
     {
         SmallWorld = 0x01,
         CannotFastTravel = 0x02,
-        NoLodWater = 0x08,
-        NoLandscape = 0x10,
-        NoSky = 0x20,
-        FixedDimensions = 0x40,
-        NoGrass = 0x80,
+        NoLodWater = 0x10,
+        NoLodNoise = 0x20,
+        DontAllowNpcFallDamage = 0x40,
+        NeedsWaterAdjustment = 0x80,
     }
 }
 

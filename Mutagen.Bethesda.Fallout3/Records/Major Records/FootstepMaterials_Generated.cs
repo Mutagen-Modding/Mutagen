@@ -37,13 +37,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class CellFootstepMaterials :
-        ICellFootstepMaterials,
-        IEquatable<ICellFootstepMaterialsGetter>,
-        ILoquiObjectSetter<CellFootstepMaterials>
+    public partial class FootstepMaterials :
+        IEquatable<IFootstepMaterialsGetter>,
+        IFootstepMaterials,
+        ILoquiObjectSetter<FootstepMaterials>
     {
         #region Ctor
-        public CellFootstepMaterials()
+        public FootstepMaterials()
         {
             CustomCtor();
         }
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellFootstepMaterialsMixIn.Print(
+            FootstepMaterialsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -98,16 +98,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellFootstepMaterialsGetter rhs) return false;
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFootstepMaterialsGetter rhs) return false;
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ICellFootstepMaterialsGetter? obj)
+        public bool Equals(IFootstepMaterialsGetter? obj)
         {
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new CellFootstepMaterials.Mask<R>();
+                var ret = new FootstepMaterials.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -276,16 +276,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(CellFootstepMaterials.Mask<bool>? printMask = null)
+            public string Print(FootstepMaterials.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, CellFootstepMaterials.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FootstepMaterials.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(CellFootstepMaterials.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(FootstepMaterials.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.ConcreteSolid ?? true)
@@ -367,28 +367,28 @@ namespace Mutagen.Bethesda.Fallout3
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                CellFootstepMaterials_FieldIndex enu = (CellFootstepMaterials_FieldIndex)index;
+                FootstepMaterials_FieldIndex enu = (FootstepMaterials_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellFootstepMaterials_FieldIndex.ConcreteSolid:
+                    case FootstepMaterials_FieldIndex.ConcreteSolid:
                         return ConcreteSolid;
-                    case CellFootstepMaterials_FieldIndex.ConcreteBroken:
+                    case FootstepMaterials_FieldIndex.ConcreteBroken:
                         return ConcreteBroken;
-                    case CellFootstepMaterials_FieldIndex.MetalSolid:
+                    case FootstepMaterials_FieldIndex.MetalSolid:
                         return MetalSolid;
-                    case CellFootstepMaterials_FieldIndex.MetalHollow:
+                    case FootstepMaterials_FieldIndex.MetalHollow:
                         return MetalHollow;
-                    case CellFootstepMaterials_FieldIndex.MetalSheet:
+                    case FootstepMaterials_FieldIndex.MetalSheet:
                         return MetalSheet;
-                    case CellFootstepMaterials_FieldIndex.Wood:
+                    case FootstepMaterials_FieldIndex.Wood:
                         return Wood;
-                    case CellFootstepMaterials_FieldIndex.Sand:
+                    case FootstepMaterials_FieldIndex.Sand:
                         return Sand;
-                    case CellFootstepMaterials_FieldIndex.Dirt:
+                    case FootstepMaterials_FieldIndex.Dirt:
                         return Dirt;
-                    case CellFootstepMaterials_FieldIndex.Grass:
+                    case FootstepMaterials_FieldIndex.Grass:
                         return Grass;
-                    case CellFootstepMaterials_FieldIndex.Water:
+                    case FootstepMaterials_FieldIndex.Water:
                         return Water;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -397,37 +397,37 @@ namespace Mutagen.Bethesda.Fallout3
 
             public void SetNthException(int index, Exception ex)
             {
-                CellFootstepMaterials_FieldIndex enu = (CellFootstepMaterials_FieldIndex)index;
+                FootstepMaterials_FieldIndex enu = (FootstepMaterials_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellFootstepMaterials_FieldIndex.ConcreteSolid:
+                    case FootstepMaterials_FieldIndex.ConcreteSolid:
                         this.ConcreteSolid = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.ConcreteBroken:
+                    case FootstepMaterials_FieldIndex.ConcreteBroken:
                         this.ConcreteBroken = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.MetalSolid:
+                    case FootstepMaterials_FieldIndex.MetalSolid:
                         this.MetalSolid = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.MetalHollow:
+                    case FootstepMaterials_FieldIndex.MetalHollow:
                         this.MetalHollow = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.MetalSheet:
+                    case FootstepMaterials_FieldIndex.MetalSheet:
                         this.MetalSheet = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Wood:
+                    case FootstepMaterials_FieldIndex.Wood:
                         this.Wood = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Sand:
+                    case FootstepMaterials_FieldIndex.Sand:
                         this.Sand = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Dirt:
+                    case FootstepMaterials_FieldIndex.Dirt:
                         this.Dirt = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Grass:
+                    case FootstepMaterials_FieldIndex.Grass:
                         this.Grass = ex;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Water:
+                    case FootstepMaterials_FieldIndex.Water:
                         this.Water = ex;
                         break;
                     default:
@@ -437,37 +437,37 @@ namespace Mutagen.Bethesda.Fallout3
 
             public void SetNthMask(int index, object obj)
             {
-                CellFootstepMaterials_FieldIndex enu = (CellFootstepMaterials_FieldIndex)index;
+                FootstepMaterials_FieldIndex enu = (FootstepMaterials_FieldIndex)index;
                 switch (enu)
                 {
-                    case CellFootstepMaterials_FieldIndex.ConcreteSolid:
+                    case FootstepMaterials_FieldIndex.ConcreteSolid:
                         this.ConcreteSolid = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.ConcreteBroken:
+                    case FootstepMaterials_FieldIndex.ConcreteBroken:
                         this.ConcreteBroken = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.MetalSolid:
+                    case FootstepMaterials_FieldIndex.MetalSolid:
                         this.MetalSolid = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.MetalHollow:
+                    case FootstepMaterials_FieldIndex.MetalHollow:
                         this.MetalHollow = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.MetalSheet:
+                    case FootstepMaterials_FieldIndex.MetalSheet:
                         this.MetalSheet = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Wood:
+                    case FootstepMaterials_FieldIndex.Wood:
                         this.Wood = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Sand:
+                    case FootstepMaterials_FieldIndex.Sand:
                         this.Sand = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Dirt:
+                    case FootstepMaterials_FieldIndex.Dirt:
                         this.Dirt = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Grass:
+                    case FootstepMaterials_FieldIndex.Grass:
                         this.Grass = (Exception?)obj;
                         break;
-                    case CellFootstepMaterials_FieldIndex.Water:
+                    case FootstepMaterials_FieldIndex.Water:
                         this.Water = (Exception?)obj;
                         break;
                     default:
@@ -650,25 +650,25 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellFootstepMaterialsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FootstepMaterialsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellFootstepMaterialsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FootstepMaterialsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static CellFootstepMaterials CreateFromBinary(
+        public static FootstepMaterials CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new CellFootstepMaterials();
-            ((CellFootstepMaterialsSetterCommon)((ICellFootstepMaterialsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FootstepMaterials();
+            ((FootstepMaterialsSetterCommon)((IFootstepMaterialsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out CellFootstepMaterials item,
+            out FootstepMaterials item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -694,21 +694,21 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((CellFootstepMaterialsSetterCommon)((ICellFootstepMaterialsGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FootstepMaterialsSetterCommon)((IFootstepMaterialsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static CellFootstepMaterials GetNew()
+        internal static FootstepMaterials GetNew()
         {
-            return new CellFootstepMaterials();
+            return new FootstepMaterials();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ICellFootstepMaterials :
-        ICellFootstepMaterialsGetter,
-        ILoquiObjectSetter<ICellFootstepMaterials>
+    public partial interface IFootstepMaterials :
+        IFootstepMaterialsGetter,
+        ILoquiObjectSetter<IFootstepMaterials>
     {
         new String ConcreteSolid { get; set; }
         new String ConcreteBroken { get; set; }
@@ -722,10 +722,10 @@ namespace Mutagen.Bethesda.Fallout3
         new String Water { get; set; }
     }
 
-    public partial interface ICellFootstepMaterialsGetter :
+    public partial interface IFootstepMaterialsGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ICellFootstepMaterialsGetter>
+        ILoquiObject<IFootstepMaterialsGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Fallout3
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => CellFootstepMaterials_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => FootstepMaterials_Registration.Instance;
         String ConcreteSolid { get; }
         String ConcreteBroken { get; }
         String MetalSolid { get; }
@@ -750,42 +750,42 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common MixIn
-    public static partial class CellFootstepMaterialsMixIn
+    public static partial class FootstepMaterialsMixIn
     {
-        public static void Clear(this ICellFootstepMaterials item)
+        public static void Clear(this IFootstepMaterials item)
         {
-            ((CellFootstepMaterialsSetterCommon)((ICellFootstepMaterialsGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FootstepMaterialsSetterCommon)((IFootstepMaterialsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static CellFootstepMaterials.Mask<bool> GetEqualsMask(
-            this ICellFootstepMaterialsGetter item,
-            ICellFootstepMaterialsGetter rhs,
+        public static FootstepMaterials.Mask<bool> GetEqualsMask(
+            this IFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ICellFootstepMaterialsGetter item,
+            this IFootstepMaterialsGetter item,
             string? name = null,
-            CellFootstepMaterials.Mask<bool>? printMask = null)
+            FootstepMaterials.Mask<bool>? printMask = null)
         {
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).Print(
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ICellFootstepMaterialsGetter item,
+            this IFootstepMaterialsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellFootstepMaterials.Mask<bool>? printMask = null)
+            FootstepMaterials.Mask<bool>? printMask = null)
         {
-            ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).Print(
+            ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -793,21 +793,21 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this ICellFootstepMaterialsGetter item,
-            ICellFootstepMaterialsGetter rhs,
-            CellFootstepMaterials.TranslationMask? equalsMask = null)
+            this IFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter rhs,
+            FootstepMaterials.TranslationMask? equalsMask = null)
         {
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).Equals(
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ICellFootstepMaterials lhs,
-            ICellFootstepMaterialsGetter rhs)
+            this IFootstepMaterials lhs,
+            IFootstepMaterialsGetter rhs)
         {
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -816,11 +816,11 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ICellFootstepMaterials lhs,
-            ICellFootstepMaterialsGetter rhs,
-            CellFootstepMaterials.TranslationMask? copyMask = null)
+            this IFootstepMaterials lhs,
+            IFootstepMaterialsGetter rhs,
+            FootstepMaterials.TranslationMask? copyMask = null)
         {
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -829,28 +829,28 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ICellFootstepMaterials lhs,
-            ICellFootstepMaterialsGetter rhs,
-            out CellFootstepMaterials.ErrorMask errorMask,
-            CellFootstepMaterials.TranslationMask? copyMask = null)
+            this IFootstepMaterials lhs,
+            IFootstepMaterialsGetter rhs,
+            out FootstepMaterials.ErrorMask errorMask,
+            FootstepMaterials.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = CellFootstepMaterials.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FootstepMaterials.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ICellFootstepMaterials lhs,
-            ICellFootstepMaterialsGetter rhs,
+            this IFootstepMaterials lhs,
+            IFootstepMaterialsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -858,32 +858,32 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static CellFootstepMaterials DeepCopy(
-            this ICellFootstepMaterialsGetter item,
-            CellFootstepMaterials.TranslationMask? copyMask = null)
+        public static FootstepMaterials DeepCopy(
+            this IFootstepMaterialsGetter item,
+            FootstepMaterials.TranslationMask? copyMask = null)
         {
-            return ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static CellFootstepMaterials DeepCopy(
-            this ICellFootstepMaterialsGetter item,
-            out CellFootstepMaterials.ErrorMask errorMask,
-            CellFootstepMaterials.TranslationMask? copyMask = null)
+        public static FootstepMaterials DeepCopy(
+            this IFootstepMaterialsGetter item,
+            out FootstepMaterials.ErrorMask errorMask,
+            FootstepMaterials.TranslationMask? copyMask = null)
         {
-            return ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static CellFootstepMaterials DeepCopy(
-            this ICellFootstepMaterialsGetter item,
+        public static FootstepMaterials DeepCopy(
+            this IFootstepMaterialsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -891,11 +891,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ICellFootstepMaterials item,
+            this IFootstepMaterials item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((CellFootstepMaterialsSetterCommon)((ICellFootstepMaterialsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FootstepMaterialsSetterCommon)((IFootstepMaterialsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum CellFootstepMaterials_FieldIndex
+    internal enum FootstepMaterials_FieldIndex
     {
         ConcreteSolid = 0,
         ConcreteBroken = 1,
@@ -927,9 +927,9 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Registration
-    internal partial class CellFootstepMaterials_Registration : ILoquiRegistration
+    internal partial class FootstepMaterials_Registration : ILoquiRegistration
     {
-        public static readonly CellFootstepMaterials_Registration Instance = new CellFootstepMaterials_Registration();
+        public static readonly FootstepMaterials_Registration Instance = new FootstepMaterials_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -937,23 +937,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 10;
 
-        public static readonly Type MaskType = typeof(CellFootstepMaterials.Mask<>);
+        public static readonly Type MaskType = typeof(FootstepMaterials.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(CellFootstepMaterials.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FootstepMaterials.ErrorMask);
 
-        public static readonly Type ClassType = typeof(CellFootstepMaterials);
+        public static readonly Type ClassType = typeof(FootstepMaterials);
 
-        public static readonly Type GetterType = typeof(ICellFootstepMaterialsGetter);
+        public static readonly Type GetterType = typeof(IFootstepMaterialsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ICellFootstepMaterials);
+        public static readonly Type SetterType = typeof(IFootstepMaterials);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.CellFootstepMaterials";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.FootstepMaterials";
 
-        public const string Name = "CellFootstepMaterials";
+        public const string Name = "FootstepMaterials";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -968,7 +968,7 @@ namespace Mutagen.Bethesda.Fallout3
             var all = RecordCollection.Factory(RecordTypes.IMPF);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(CellFootstepMaterialsBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(FootstepMaterialsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -999,13 +999,13 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class CellFootstepMaterialsSetterCommon
+    internal partial class FootstepMaterialsSetterCommon
     {
-        public static readonly CellFootstepMaterialsSetterCommon Instance = new CellFootstepMaterialsSetterCommon();
+        public static readonly FootstepMaterialsSetterCommon Instance = new FootstepMaterialsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ICellFootstepMaterials item)
+        public void Clear(IFootstepMaterials item)
         {
             ClearPartial();
             item.ConcreteSolid = string.Empty;
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Mutagen
-        public void RemapLinks(ICellFootstepMaterials obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFootstepMaterials obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ICellFootstepMaterials item,
+            IFootstepMaterials item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -1041,23 +1041,23 @@ namespace Mutagen.Bethesda.Fallout3
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: CellFootstepMaterialsBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: FootstepMaterialsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class CellFootstepMaterialsCommon
+    internal partial class FootstepMaterialsCommon
     {
-        public static readonly CellFootstepMaterialsCommon Instance = new CellFootstepMaterialsCommon();
+        public static readonly FootstepMaterialsCommon Instance = new FootstepMaterialsCommon();
 
-        public CellFootstepMaterials.Mask<bool> GetEqualsMask(
-            ICellFootstepMaterialsGetter item,
-            ICellFootstepMaterialsGetter rhs,
+        public FootstepMaterials.Mask<bool> GetEqualsMask(
+            IFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new CellFootstepMaterials.Mask<bool>(false);
-            ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FootstepMaterials.Mask<bool>(false);
+            ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1066,9 +1066,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            ICellFootstepMaterialsGetter item,
-            ICellFootstepMaterialsGetter rhs,
-            CellFootstepMaterials.Mask<bool> ret,
+            IFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter rhs,
+            FootstepMaterials.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ConcreteSolid = string.Equals(item.ConcreteSolid, rhs.ConcreteSolid);
@@ -1084,9 +1084,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public string Print(
-            ICellFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter item,
             string? name = null,
-            CellFootstepMaterials.Mask<bool>? printMask = null)
+            FootstepMaterials.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1098,18 +1098,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            ICellFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            CellFootstepMaterials.Mask<bool>? printMask = null)
+            FootstepMaterials.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"CellFootstepMaterials =>");
+                sb.AppendLine($"FootstepMaterials =>");
             }
             else
             {
-                sb.AppendLine($"{name} (CellFootstepMaterials) =>");
+                sb.AppendLine($"{name} (FootstepMaterials) =>");
             }
             using (sb.Brace())
             {
@@ -1121,9 +1121,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            ICellFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter item,
             StructuredStringBuilder sb,
-            CellFootstepMaterials.Mask<bool>? printMask = null)
+            FootstepMaterials.Mask<bool>? printMask = null)
         {
             if (printMask?.ConcreteSolid ?? true)
             {
@@ -1169,55 +1169,55 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            ICellFootstepMaterialsGetter? lhs,
-            ICellFootstepMaterialsGetter? rhs,
+            IFootstepMaterialsGetter? lhs,
+            IFootstepMaterialsGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.ConcreteSolid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.ConcreteSolid) ?? true))
             {
                 if (!string.Equals(lhs.ConcreteSolid, rhs.ConcreteSolid)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.ConcreteBroken) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.ConcreteBroken) ?? true))
             {
                 if (!string.Equals(lhs.ConcreteBroken, rhs.ConcreteBroken)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.MetalSolid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.MetalSolid) ?? true))
             {
                 if (!string.Equals(lhs.MetalSolid, rhs.MetalSolid)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.MetalHollow) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.MetalHollow) ?? true))
             {
                 if (!string.Equals(lhs.MetalHollow, rhs.MetalHollow)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.MetalSheet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.MetalSheet) ?? true))
             {
                 if (!string.Equals(lhs.MetalSheet, rhs.MetalSheet)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Wood) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Wood) ?? true))
             {
                 if (!string.Equals(lhs.Wood, rhs.Wood)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Sand) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Sand) ?? true))
             {
                 if (!string.Equals(lhs.Sand, rhs.Sand)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Dirt) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Dirt) ?? true))
             {
                 if (!string.Equals(lhs.Dirt, rhs.Dirt)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Grass) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Grass) ?? true))
             {
                 if (!string.Equals(lhs.Grass, rhs.Grass)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Water) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Water) ?? true))
             {
                 if (!string.Equals(lhs.Water, rhs.Water)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ICellFootstepMaterialsGetter item)
+        public virtual int GetHashCode(IFootstepMaterialsGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.ConcreteSolid);
@@ -1238,11 +1238,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public object GetNew()
         {
-            return CellFootstepMaterials.GetNew();
+            return FootstepMaterials.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellFootstepMaterialsGetter obj, bool iterateNestedRecords = true)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFootstepMaterialsGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -1250,55 +1250,55 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class CellFootstepMaterialsSetterTranslationCommon
+    internal partial class FootstepMaterialsSetterTranslationCommon
     {
-        public static readonly CellFootstepMaterialsSetterTranslationCommon Instance = new CellFootstepMaterialsSetterTranslationCommon();
+        public static readonly FootstepMaterialsSetterTranslationCommon Instance = new FootstepMaterialsSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ICellFootstepMaterials item,
-            ICellFootstepMaterialsGetter rhs,
+            IFootstepMaterials item,
+            IFootstepMaterialsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.ConcreteSolid) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.ConcreteSolid) ?? true))
             {
                 item.ConcreteSolid = rhs.ConcreteSolid;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.ConcreteBroken) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.ConcreteBroken) ?? true))
             {
                 item.ConcreteBroken = rhs.ConcreteBroken;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.MetalSolid) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.MetalSolid) ?? true))
             {
                 item.MetalSolid = rhs.MetalSolid;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.MetalHollow) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.MetalHollow) ?? true))
             {
                 item.MetalHollow = rhs.MetalHollow;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.MetalSheet) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.MetalSheet) ?? true))
             {
                 item.MetalSheet = rhs.MetalSheet;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Wood) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Wood) ?? true))
             {
                 item.Wood = rhs.Wood;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Sand) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Sand) ?? true))
             {
                 item.Sand = rhs.Sand;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Dirt) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Dirt) ?? true))
             {
                 item.Dirt = rhs.Dirt;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Grass) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Grass) ?? true))
             {
                 item.Grass = rhs.Grass;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellFootstepMaterials_FieldIndex.Water) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FootstepMaterials_FieldIndex.Water) ?? true))
             {
                 item.Water = rhs.Water;
             }
@@ -1311,19 +1311,19 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            ICellFootstepMaterials item,
-            ICellFootstepMaterialsGetter rhs,
+            IFootstepMaterials item,
+            IFootstepMaterialsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public CellFootstepMaterials DeepCopy(
-            ICellFootstepMaterialsGetter item,
-            CellFootstepMaterials.TranslationMask? copyMask = null)
+        public FootstepMaterials DeepCopy(
+            IFootstepMaterialsGetter item,
+            FootstepMaterials.TranslationMask? copyMask = null)
         {
-            CellFootstepMaterials ret = (CellFootstepMaterials)((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).GetNew();
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FootstepMaterials ret = (FootstepMaterials)((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).GetNew();
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1332,30 +1332,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public CellFootstepMaterials DeepCopy(
-            ICellFootstepMaterialsGetter item,
-            out CellFootstepMaterials.ErrorMask errorMask,
-            CellFootstepMaterials.TranslationMask? copyMask = null)
+        public FootstepMaterials DeepCopy(
+            IFootstepMaterialsGetter item,
+            out FootstepMaterials.ErrorMask errorMask,
+            FootstepMaterials.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            CellFootstepMaterials ret = (CellFootstepMaterials)((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).GetNew();
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FootstepMaterials ret = (FootstepMaterials)((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).GetNew();
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = CellFootstepMaterials.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FootstepMaterials.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public CellFootstepMaterials DeepCopy(
-            ICellFootstepMaterialsGetter item,
+        public FootstepMaterials DeepCopy(
+            IFootstepMaterialsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            CellFootstepMaterials ret = (CellFootstepMaterials)((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)item).CommonInstance()!).GetNew();
-            ((CellFootstepMaterialsSetterTranslationCommon)((ICellFootstepMaterialsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FootstepMaterials ret = (FootstepMaterials)((FootstepMaterialsCommon)((IFootstepMaterialsGetter)item).CommonInstance()!).GetNew();
+            ((FootstepMaterialsSetterTranslationCommon)((IFootstepMaterialsGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1371,27 +1371,27 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class CellFootstepMaterials
+    public partial class FootstepMaterials
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellFootstepMaterials_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellFootstepMaterials_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FootstepMaterials_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FootstepMaterials_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellFootstepMaterialsCommon.Instance;
+        protected object CommonInstance() => FootstepMaterialsCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return CellFootstepMaterialsSetterCommon.Instance;
+            return FootstepMaterialsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellFootstepMaterialsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FootstepMaterialsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellFootstepMaterialsGetter.CommonInstance() => this.CommonInstance();
+        object IFootstepMaterialsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ICellFootstepMaterialsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFootstepMaterialsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ICellFootstepMaterialsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFootstepMaterialsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1402,12 +1402,12 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class CellFootstepMaterialsBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class FootstepMaterialsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly CellFootstepMaterialsBinaryWriteTranslation Instance = new();
+        public static readonly FootstepMaterialsBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ICellFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter item,
             MutagenWriter writer)
         {
             StringBinaryTranslation.Instance.WriteNullPaddedFixedLength(
@@ -1454,7 +1454,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public void Write(
             MutagenWriter writer,
-            ICellFootstepMaterialsGetter item,
+            IFootstepMaterialsGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
@@ -1475,19 +1475,19 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ICellFootstepMaterialsGetter)item,
+                item: (IFootstepMaterialsGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class CellFootstepMaterialsBinaryCreateTranslation
+    internal partial class FootstepMaterialsBinaryCreateTranslation
     {
-        public static readonly CellFootstepMaterialsBinaryCreateTranslation Instance = new CellFootstepMaterialsBinaryCreateTranslation();
+        public static readonly FootstepMaterialsBinaryCreateTranslation Instance = new FootstepMaterialsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ICellFootstepMaterials item,
+            IFootstepMaterials item,
             MutagenFrame frame)
         {
             item.ConcreteSolid = StringBinaryTranslation.Instance.ParseNullPaddedFixedLength(frame, byteLength: 30);
@@ -1508,14 +1508,14 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class CellFootstepMaterialsBinaryTranslationMixIn
+    public static class FootstepMaterialsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ICellFootstepMaterialsGetter item,
+            this IFootstepMaterialsGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellFootstepMaterialsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((FootstepMaterialsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1528,38 +1528,38 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class CellFootstepMaterialsBinaryOverlay :
+    internal partial class FootstepMaterialsBinaryOverlay :
         PluginBinaryOverlay,
-        ICellFootstepMaterialsGetter
+        IFootstepMaterialsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => CellFootstepMaterials_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => CellFootstepMaterials_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FootstepMaterials_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FootstepMaterials_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => CellFootstepMaterialsCommon.Instance;
+        protected object CommonInstance() => FootstepMaterialsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => CellFootstepMaterialsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FootstepMaterialsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ICellFootstepMaterialsGetter.CommonInstance() => this.CommonInstance();
+        object IFootstepMaterialsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ICellFootstepMaterialsGetter.CommonSetterInstance() => null;
+        object? IFootstepMaterialsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ICellFootstepMaterialsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFootstepMaterialsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => CellFootstepMaterialsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FootstepMaterialsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((CellFootstepMaterialsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FootstepMaterialsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected CellFootstepMaterialsBinaryOverlay(
+        protected FootstepMaterialsBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static ICellFootstepMaterialsGetter CellFootstepMaterialsFactory(
+        public static IFootstepMaterialsGetter FootstepMaterialsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Fallout3
                 length: 0x12C,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new CellFootstepMaterialsBinaryOverlay(
+            var ret = new FootstepMaterialsBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0x12C + package.MetaData.Constants.SubConstants.HeaderLength;
@@ -1614,12 +1614,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static ICellFootstepMaterialsGetter CellFootstepMaterialsFactory(
+        public static IFootstepMaterialsGetter FootstepMaterialsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return CellFootstepMaterialsFactory(
+            return FootstepMaterialsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1631,7 +1631,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            CellFootstepMaterialsMixIn.Print(
+            FootstepMaterialsMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1642,16 +1642,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ICellFootstepMaterialsGetter rhs) return false;
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFootstepMaterialsGetter rhs) return false;
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ICellFootstepMaterialsGetter? obj)
+        public bool Equals(IFootstepMaterialsGetter? obj)
         {
-            return ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FootstepMaterialsCommon)((IFootstepMaterialsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

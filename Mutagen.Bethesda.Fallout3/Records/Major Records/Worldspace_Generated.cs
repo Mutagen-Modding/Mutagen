@@ -131,11 +131,16 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IWorldspaceGetter.LodWaterHeight => this.LodWaterHeight;
         #endregion
-        #region DefaultLandHeight
-        public Single DefaultLandHeight { get; set; } = default(Single);
-        #endregion
-        #region DefaultWaterHeight
-        public Single DefaultWaterHeight { get; set; } = default(Single);
+        #region LandData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WorldspaceLandData? _LandData;
+        public WorldspaceLandData? LandData
+        {
+            get => _LandData;
+            set => _LandData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWorldspaceLandDataGetter? IWorldspaceGetter.LandData => this.LandData;
         #endregion
         #region MapImage
         public String? MapImage { get; set; }
@@ -224,27 +229,19 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
-        #region FootstepMaterials
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FootstepMaterials;
-        public MemorySlice<Byte>? FootstepMaterials
-        {
-            get => this._FootstepMaterials;
-            set => this._FootstepMaterials = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.FootstepMaterials => this.FootstepMaterials;
-        #endregion
         #region OffsetData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _OffsetData;
-        public MemorySlice<Byte>? OffsetData
+        private ExtendedList<UInt32>? _OffsetData;
+        public ExtendedList<UInt32>? OffsetData
         {
             get => this._OffsetData;
             set => this._OffsetData = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IWorldspaceGetter.OffsetData => this.OffsetData;
+        IReadOnlyList<UInt32>? IWorldspaceGetter.OffsetData => _OffsetData;
+        #endregion
+
         #endregion
         #region TopCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -309,8 +306,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Water = initialValue;
                 this.LodWater = initialValue;
                 this.LodWaterHeight = initialValue;
-                this.DefaultLandHeight = initialValue;
-                this.DefaultWaterHeight = initialValue;
+                this.LandData = new MaskItem<TItem, WorldspaceLandData.Mask<TItem>?>(initialValue, new WorldspaceLandData.Mask<TItem>(initialValue));
                 this.MapImage = initialValue;
                 this.SmallMapImage = initialValue;
                 this.MapData = new MaskItem<TItem, WorldspaceMapData.Mask<TItem>?>(initialValue, new WorldspaceMapData.Mask<TItem>(initialValue));
@@ -325,8 +321,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CanopyShadow = initialValue;
                 this.WaterNoiseTexture = initialValue;
                 this.ImpactSwapData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceImpactSwap.Mask<TItem>?>>?>(initialValue, []);
-                this.FootstepMaterials = initialValue;
-                this.OffsetData = initialValue;
+                this.OffsetData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(initialValue, new Cell.Mask<TItem>(initialValue));
                 this.SubCellsTimestamp = initialValue;
                 this.SubCellsUnknownGroupData = initialValue;
@@ -348,8 +343,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Water,
                 TItem LodWater,
                 TItem LodWaterHeight,
-                TItem DefaultLandHeight,
-                TItem DefaultWaterHeight,
+                TItem LandData,
                 TItem MapImage,
                 TItem SmallMapImage,
                 TItem MapData,
@@ -364,7 +358,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CanopyShadow,
                 TItem WaterNoiseTexture,
                 TItem ImpactSwapData,
-                TItem FootstepMaterials,
                 TItem OffsetData,
                 TItem TopCell,
                 TItem SubCellsTimestamp,
@@ -386,8 +379,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Water = Water;
                 this.LodWater = LodWater;
                 this.LodWaterHeight = LodWaterHeight;
-                this.DefaultLandHeight = DefaultLandHeight;
-                this.DefaultWaterHeight = DefaultWaterHeight;
+                this.LandData = new MaskItem<TItem, WorldspaceLandData.Mask<TItem>?>(LandData, new WorldspaceLandData.Mask<TItem>(LandData));
                 this.MapImage = MapImage;
                 this.SmallMapImage = SmallMapImage;
                 this.MapData = new MaskItem<TItem, WorldspaceMapData.Mask<TItem>?>(MapData, new WorldspaceMapData.Mask<TItem>(MapData));
@@ -402,8 +394,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CanopyShadow = CanopyShadow;
                 this.WaterNoiseTexture = WaterNoiseTexture;
                 this.ImpactSwapData = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceImpactSwap.Mask<TItem>?>>?>(ImpactSwapData, []);
-                this.FootstepMaterials = FootstepMaterials;
-                this.OffsetData = OffsetData;
+                this.OffsetData = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(OffsetData, []);
                 this.TopCell = new MaskItem<TItem, Cell.Mask<TItem>?>(TopCell, new Cell.Mask<TItem>(TopCell));
                 this.SubCellsTimestamp = SubCellsTimestamp;
                 this.SubCellsUnknownGroupData = SubCellsUnknownGroupData;
@@ -426,8 +417,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Water;
             public TItem LodWater;
             public TItem LodWaterHeight;
-            public TItem DefaultLandHeight;
-            public TItem DefaultWaterHeight;
+            public MaskItem<TItem, WorldspaceLandData.Mask<TItem>?>? LandData { get; set; }
             public TItem MapImage;
             public TItem SmallMapImage;
             public MaskItem<TItem, WorldspaceMapData.Mask<TItem>?>? MapData { get; set; }
@@ -442,8 +432,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem CanopyShadow;
             public TItem WaterNoiseTexture;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WorldspaceImpactSwap.Mask<TItem>?>>?>? ImpactSwapData;
-            public TItem FootstepMaterials;
-            public TItem OffsetData;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? OffsetData;
             public MaskItem<TItem, Cell.Mask<TItem>?>? TopCell { get; set; }
             public TItem SubCellsTimestamp;
             public TItem SubCellsUnknownGroupData;
@@ -468,8 +457,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Water, rhs.Water)) return false;
                 if (!object.Equals(this.LodWater, rhs.LodWater)) return false;
                 if (!object.Equals(this.LodWaterHeight, rhs.LodWaterHeight)) return false;
-                if (!object.Equals(this.DefaultLandHeight, rhs.DefaultLandHeight)) return false;
-                if (!object.Equals(this.DefaultWaterHeight, rhs.DefaultWaterHeight)) return false;
+                if (!object.Equals(this.LandData, rhs.LandData)) return false;
                 if (!object.Equals(this.MapImage, rhs.MapImage)) return false;
                 if (!object.Equals(this.SmallMapImage, rhs.SmallMapImage)) return false;
                 if (!object.Equals(this.MapData, rhs.MapData)) return false;
@@ -484,7 +472,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CanopyShadow, rhs.CanopyShadow)) return false;
                 if (!object.Equals(this.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
                 if (!object.Equals(this.ImpactSwapData, rhs.ImpactSwapData)) return false;
-                if (!object.Equals(this.FootstepMaterials, rhs.FootstepMaterials)) return false;
                 if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
                 if (!object.Equals(this.TopCell, rhs.TopCell)) return false;
                 if (!object.Equals(this.SubCellsTimestamp, rhs.SubCellsTimestamp)) return false;
@@ -502,8 +489,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Water);
                 hash.Add(this.LodWater);
                 hash.Add(this.LodWaterHeight);
-                hash.Add(this.DefaultLandHeight);
-                hash.Add(this.DefaultWaterHeight);
+                hash.Add(this.LandData);
                 hash.Add(this.MapImage);
                 hash.Add(this.SmallMapImage);
                 hash.Add(this.MapData);
@@ -518,7 +504,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CanopyShadow);
                 hash.Add(this.WaterNoiseTexture);
                 hash.Add(this.ImpactSwapData);
-                hash.Add(this.FootstepMaterials);
                 hash.Add(this.OffsetData);
                 hash.Add(this.TopCell);
                 hash.Add(this.SubCellsTimestamp);
@@ -545,8 +530,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Water)) return false;
                 if (!eval(this.LodWater)) return false;
                 if (!eval(this.LodWaterHeight)) return false;
-                if (!eval(this.DefaultLandHeight)) return false;
-                if (!eval(this.DefaultWaterHeight)) return false;
+                if (LandData != null)
+                {
+                    if (!eval(this.LandData.Overall)) return false;
+                    if (this.LandData.Specific != null && !this.LandData.Specific.All(eval)) return false;
+                }
                 if (!eval(this.MapImage)) return false;
                 if (!eval(this.SmallMapImage)) return false;
                 if (MapData != null)
@@ -576,8 +564,17 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                if (!eval(this.FootstepMaterials)) return false;
-                if (!eval(this.OffsetData)) return false;
+                if (this.OffsetData != null)
+                {
+                    if (!eval(this.OffsetData.Overall)) return false;
+                    if (this.OffsetData.Specific != null)
+                    {
+                        foreach (var item in this.OffsetData.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (TopCell != null)
                 {
                     if (!eval(this.TopCell.Overall)) return false;
@@ -616,8 +613,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Water)) return true;
                 if (eval(this.LodWater)) return true;
                 if (eval(this.LodWaterHeight)) return true;
-                if (eval(this.DefaultLandHeight)) return true;
-                if (eval(this.DefaultWaterHeight)) return true;
+                if (LandData != null)
+                {
+                    if (eval(this.LandData.Overall)) return true;
+                    if (this.LandData.Specific != null && this.LandData.Specific.Any(eval)) return true;
+                }
                 if (eval(this.MapImage)) return true;
                 if (eval(this.SmallMapImage)) return true;
                 if (MapData != null)
@@ -647,8 +647,17 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                if (eval(this.FootstepMaterials)) return true;
-                if (eval(this.OffsetData)) return true;
+                if (this.OffsetData != null)
+                {
+                    if (eval(this.OffsetData.Overall)) return true;
+                    if (this.OffsetData.Specific != null)
+                    {
+                        foreach (var item in this.OffsetData.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (TopCell != null)
                 {
                     if (eval(this.TopCell.Overall)) return true;
@@ -690,8 +699,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Water = eval(this.Water);
                 obj.LodWater = eval(this.LodWater);
                 obj.LodWaterHeight = eval(this.LodWaterHeight);
-                obj.DefaultLandHeight = eval(this.DefaultLandHeight);
-                obj.DefaultWaterHeight = eval(this.DefaultWaterHeight);
+                obj.LandData = this.LandData == null ? null : new MaskItem<R, WorldspaceLandData.Mask<R>?>(eval(this.LandData.Overall), this.LandData.Specific?.Translate(eval));
                 obj.MapImage = eval(this.MapImage);
                 obj.SmallMapImage = eval(this.SmallMapImage);
                 obj.MapData = this.MapData == null ? null : new MaskItem<R, WorldspaceMapData.Mask<R>?>(eval(this.MapData.Overall), this.MapData.Specific?.Translate(eval));
@@ -720,8 +728,20 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                obj.FootstepMaterials = eval(this.FootstepMaterials);
-                obj.OffsetData = eval(this.OffsetData);
+                if (OffsetData != null)
+                {
+                    obj.OffsetData = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.OffsetData.Overall), []);
+                    if (OffsetData.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.OffsetData.Specific = l;
+                        foreach (var item in OffsetData.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.TopCell = this.TopCell == null ? null : new MaskItem<R, Cell.Mask<R>?>(eval(this.TopCell.Overall), this.TopCell.Specific?.Translate(eval));
                 obj.SubCellsTimestamp = eval(this.SubCellsTimestamp);
                 obj.SubCellsUnknownGroupData = eval(this.SubCellsUnknownGroupData);
@@ -786,13 +806,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(LodWaterHeight, "LodWaterHeight");
                     }
-                    if (printMask?.DefaultLandHeight ?? true)
+                    if (printMask?.LandData?.Overall ?? true)
                     {
-                        sb.AppendItem(DefaultLandHeight, "DefaultLandHeight");
-                    }
-                    if (printMask?.DefaultWaterHeight ?? true)
-                    {
-                        sb.AppendItem(DefaultWaterHeight, "DefaultWaterHeight");
+                        LandData?.Print(sb);
                     }
                     if (printMask?.MapImage ?? true)
                     {
@@ -865,13 +881,26 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
-                    if (printMask?.FootstepMaterials ?? true)
+                    if ((printMask?.OffsetData?.Overall ?? true)
+                        && OffsetData is {} OffsetDataItem)
                     {
-                        sb.AppendItem(FootstepMaterials, "FootstepMaterials");
-                    }
-                    if (printMask?.OffsetData ?? true)
-                    {
-                        sb.AppendItem(OffsetData, "OffsetData");
+                        sb.AppendLine("OffsetData =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(OffsetDataItem.Overall);
+                            if (OffsetDataItem.Specific != null)
+                            {
+                                foreach (var subItem in OffsetDataItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.TopCell?.Overall ?? true)
                     {
@@ -922,8 +951,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Water;
             public Exception? LodWater;
             public Exception? LodWaterHeight;
-            public Exception? DefaultLandHeight;
-            public Exception? DefaultWaterHeight;
+            public MaskItem<Exception?, WorldspaceLandData.ErrorMask?>? LandData;
             public Exception? MapImage;
             public Exception? SmallMapImage;
             public MaskItem<Exception?, WorldspaceMapData.ErrorMask?>? MapData;
@@ -938,8 +966,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? CanopyShadow;
             public Exception? WaterNoiseTexture;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>? ImpactSwapData;
-            public Exception? FootstepMaterials;
-            public Exception? OffsetData;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? OffsetData;
             public MaskItem<Exception?, Cell.ErrorMask?>? TopCell;
             public Exception? SubCellsTimestamp;
             public Exception? SubCellsUnknownGroupData;
@@ -966,10 +993,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return LodWater;
                     case Worldspace_FieldIndex.LodWaterHeight:
                         return LodWaterHeight;
-                    case Worldspace_FieldIndex.DefaultLandHeight:
-                        return DefaultLandHeight;
-                    case Worldspace_FieldIndex.DefaultWaterHeight:
-                        return DefaultWaterHeight;
+                    case Worldspace_FieldIndex.LandData:
+                        return LandData;
                     case Worldspace_FieldIndex.MapImage:
                         return MapImage;
                     case Worldspace_FieldIndex.SmallMapImage:
@@ -998,8 +1023,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return WaterNoiseTexture;
                     case Worldspace_FieldIndex.ImpactSwapData:
                         return ImpactSwapData;
-                    case Worldspace_FieldIndex.FootstepMaterials:
-                        return FootstepMaterials;
                     case Worldspace_FieldIndex.OffsetData:
                         return OffsetData;
                     case Worldspace_FieldIndex.TopCell:
@@ -1041,11 +1064,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Worldspace_FieldIndex.LodWaterHeight:
                         this.LodWaterHeight = ex;
                         break;
-                    case Worldspace_FieldIndex.DefaultLandHeight:
-                        this.DefaultLandHeight = ex;
-                        break;
-                    case Worldspace_FieldIndex.DefaultWaterHeight:
-                        this.DefaultWaterHeight = ex;
+                    case Worldspace_FieldIndex.LandData:
+                        this.LandData = new MaskItem<Exception?, WorldspaceLandData.ErrorMask?>(ex, null);
                         break;
                     case Worldspace_FieldIndex.MapImage:
                         this.MapImage = ex;
@@ -1089,11 +1109,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Worldspace_FieldIndex.ImpactSwapData:
                         this.ImpactSwapData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>(ex, null);
                         break;
-                    case Worldspace_FieldIndex.FootstepMaterials:
-                        this.FootstepMaterials = ex;
-                        break;
                     case Worldspace_FieldIndex.OffsetData:
-                        this.OffsetData = ex;
+                        this.OffsetData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Worldspace_FieldIndex.TopCell:
                         this.TopCell = new MaskItem<Exception?, Cell.ErrorMask?>(ex, null);
@@ -1139,11 +1156,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Worldspace_FieldIndex.LodWaterHeight:
                         this.LodWaterHeight = (Exception?)obj;
                         break;
-                    case Worldspace_FieldIndex.DefaultLandHeight:
-                        this.DefaultLandHeight = (Exception?)obj;
-                        break;
-                    case Worldspace_FieldIndex.DefaultWaterHeight:
-                        this.DefaultWaterHeight = (Exception?)obj;
+                    case Worldspace_FieldIndex.LandData:
+                        this.LandData = (MaskItem<Exception?, WorldspaceLandData.ErrorMask?>?)obj;
                         break;
                     case Worldspace_FieldIndex.MapImage:
                         this.MapImage = (Exception?)obj;
@@ -1187,11 +1201,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Worldspace_FieldIndex.ImpactSwapData:
                         this.ImpactSwapData = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>)obj;
                         break;
-                    case Worldspace_FieldIndex.FootstepMaterials:
-                        this.FootstepMaterials = (Exception?)obj;
-                        break;
                     case Worldspace_FieldIndex.OffsetData:
-                        this.OffsetData = (Exception?)obj;
+                        this.OffsetData = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Worldspace_FieldIndex.TopCell:
                         this.TopCell = (MaskItem<Exception?, Cell.ErrorMask?>?)obj;
@@ -1221,8 +1232,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Water != null) return true;
                 if (LodWater != null) return true;
                 if (LodWaterHeight != null) return true;
-                if (DefaultLandHeight != null) return true;
-                if (DefaultWaterHeight != null) return true;
+                if (LandData != null) return true;
                 if (MapImage != null) return true;
                 if (SmallMapImage != null) return true;
                 if (MapData != null) return true;
@@ -1237,7 +1247,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CanopyShadow != null) return true;
                 if (WaterNoiseTexture != null) return true;
                 if (ImpactSwapData != null) return true;
-                if (FootstepMaterials != null) return true;
                 if (OffsetData != null) return true;
                 if (TopCell != null) return true;
                 if (SubCellsTimestamp != null) return true;
@@ -1288,12 +1297,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(LodWaterHeight, "LodWaterHeight");
                 }
-                {
-                    sb.AppendItem(DefaultLandHeight, "DefaultLandHeight");
-                }
-                {
-                    sb.AppendItem(DefaultWaterHeight, "DefaultWaterHeight");
-                }
+                LandData?.Print(sb);
                 {
                     sb.AppendItem(MapImage, "MapImage");
                 }
@@ -1349,11 +1353,25 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
+                if (OffsetData is {} OffsetDataItem)
                 {
-                    sb.AppendItem(FootstepMaterials, "FootstepMaterials");
-                }
-                {
-                    sb.AppendItem(OffsetData, "OffsetData");
+                    sb.AppendLine("OffsetData =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(OffsetDataItem.Overall);
+                        if (OffsetDataItem.Specific != null)
+                        {
+                            foreach (var subItem in OffsetDataItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 TopCell?.Print(sb);
                 {
@@ -1395,8 +1413,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Water = this.Water.Combine(rhs.Water);
                 ret.LodWater = this.LodWater.Combine(rhs.LodWater);
                 ret.LodWaterHeight = this.LodWaterHeight.Combine(rhs.LodWaterHeight);
-                ret.DefaultLandHeight = this.DefaultLandHeight.Combine(rhs.DefaultLandHeight);
-                ret.DefaultWaterHeight = this.DefaultWaterHeight.Combine(rhs.DefaultWaterHeight);
+                ret.LandData = this.LandData.Combine(rhs.LandData, (l, r) => l.Combine(r));
                 ret.MapImage = this.MapImage.Combine(rhs.MapImage);
                 ret.SmallMapImage = this.SmallMapImage.Combine(rhs.SmallMapImage);
                 ret.MapData = this.MapData.Combine(rhs.MapData, (l, r) => l.Combine(r));
@@ -1411,8 +1428,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CanopyShadow = this.CanopyShadow.Combine(rhs.CanopyShadow);
                 ret.WaterNoiseTexture = this.WaterNoiseTexture.Combine(rhs.WaterNoiseTexture);
                 ret.ImpactSwapData = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WorldspaceImpactSwap.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ImpactSwapData?.Overall, rhs.ImpactSwapData?.Overall), Noggog.ExceptionExt.Combine(this.ImpactSwapData?.Specific, rhs.ImpactSwapData?.Specific));
-                ret.FootstepMaterials = this.FootstepMaterials.Combine(rhs.FootstepMaterials);
-                ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
+                ret.OffsetData = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OffsetData?.Overall, rhs.OffsetData?.Overall), Noggog.ExceptionExt.Combine(this.OffsetData?.Specific, rhs.OffsetData?.Specific));
                 ret.TopCell = this.TopCell.Combine(rhs.TopCell, (l, r) => l.Combine(r));
                 ret.SubCellsTimestamp = this.SubCellsTimestamp.Combine(rhs.SubCellsTimestamp);
                 ret.SubCellsUnknownGroupData = this.SubCellsUnknownGroupData.Combine(rhs.SubCellsUnknownGroupData);
@@ -1446,8 +1462,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Water;
             public bool LodWater;
             public bool LodWaterHeight;
-            public bool DefaultLandHeight;
-            public bool DefaultWaterHeight;
+            public WorldspaceLandData.TranslationMask? LandData;
             public bool MapImage;
             public bool SmallMapImage;
             public WorldspaceMapData.TranslationMask? MapData;
@@ -1462,7 +1477,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool CanopyShadow;
             public bool WaterNoiseTexture;
             public WorldspaceImpactSwap.TranslationMask? ImpactSwapData;
-            public bool FootstepMaterials;
             public bool OffsetData;
             public Cell.TranslationMask? TopCell;
             public bool SubCellsTimestamp;
@@ -1482,8 +1496,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Water = defaultOn;
                 this.LodWater = defaultOn;
                 this.LodWaterHeight = defaultOn;
-                this.DefaultLandHeight = defaultOn;
-                this.DefaultWaterHeight = defaultOn;
                 this.MapImage = defaultOn;
                 this.SmallMapImage = defaultOn;
                 this.WorldMapScale = defaultOn;
@@ -1496,7 +1508,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Music = defaultOn;
                 this.CanopyShadow = defaultOn;
                 this.WaterNoiseTexture = defaultOn;
-                this.FootstepMaterials = defaultOn;
                 this.OffsetData = defaultOn;
                 this.SubCellsTimestamp = defaultOn;
                 this.SubCellsUnknownGroupData = defaultOn;
@@ -1514,8 +1525,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Water, null));
                 ret.Add((LodWater, null));
                 ret.Add((LodWaterHeight, null));
-                ret.Add((DefaultLandHeight, null));
-                ret.Add((DefaultWaterHeight, null));
+                ret.Add((LandData != null ? LandData.OnOverall : DefaultOn, LandData?.GetCrystal()));
                 ret.Add((MapImage, null));
                 ret.Add((SmallMapImage, null));
                 ret.Add((MapData != null ? MapData.OnOverall : DefaultOn, MapData?.GetCrystal()));
@@ -1530,7 +1540,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CanopyShadow, null));
                 ret.Add((WaterNoiseTexture, null));
                 ret.Add((ImpactSwapData == null ? DefaultOn : !ImpactSwapData.GetCrystal().CopyNothing, ImpactSwapData?.GetCrystal()));
-                ret.Add((FootstepMaterials, null));
                 ret.Add((OffsetData, null));
                 ret.Add((TopCell != null ? TopCell.OnOverall : DefaultOn, TopCell?.GetCrystal()));
                 ret.Add((SubCellsTimestamp, null));
@@ -1734,8 +1743,7 @@ namespace Mutagen.Bethesda.Fallout3
         new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
-        new Single DefaultLandHeight { get; set; }
-        new Single DefaultWaterHeight { get; set; }
+        new WorldspaceLandData? LandData { get; set; }
         new String? MapImage { get; set; }
         new String? SmallMapImage { get; set; }
         new WorldspaceMapData? MapData { get; set; }
@@ -1750,8 +1758,7 @@ namespace Mutagen.Bethesda.Fallout3
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new ExtendedList<WorldspaceImpactSwap> ImpactSwapData { get; }
-        new MemorySlice<Byte>? FootstepMaterials { get; set; }
-        new MemorySlice<Byte>? OffsetData { get; set; }
+        new ExtendedList<UInt32>? OffsetData { get; set; }
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknownGroupData { get; set; }
@@ -1795,8 +1802,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkNullableGetter<IWaterGetter> Water { get; }
         IFormLinkNullableGetter<IWaterGetter> LodWater { get; }
         Single? LodWaterHeight { get; }
-        Single DefaultLandHeight { get; }
-        Single DefaultWaterHeight { get; }
+        IWorldspaceLandDataGetter? LandData { get; }
         String? MapImage { get; }
         String? SmallMapImage { get; }
         IWorldspaceMapDataGetter? MapData { get; }
@@ -1811,8 +1817,7 @@ namespace Mutagen.Bethesda.Fallout3
         String? CanopyShadow { get; }
         String? WaterNoiseTexture { get; }
         IReadOnlyList<IWorldspaceImpactSwapGetter> ImpactSwapData { get; }
-        ReadOnlyMemorySlice<Byte>? FootstepMaterials { get; }
-        ReadOnlyMemorySlice<Byte>? OffsetData { get; }
+        IReadOnlyList<UInt32>? OffsetData { get; }
         ICellGetter? TopCell { get; }
         Int32 SubCellsTimestamp { get; }
         Int32 SubCellsUnknownGroupData { get; }
@@ -2230,28 +2235,26 @@ namespace Mutagen.Bethesda.Fallout3
         Water = 11,
         LodWater = 12,
         LodWaterHeight = 13,
-        DefaultLandHeight = 14,
-        DefaultWaterHeight = 15,
-        MapImage = 16,
-        SmallMapImage = 17,
-        MapData = 18,
-        WorldMapScale = 19,
-        CellXOffset = 20,
-        CellYOffset = 21,
-        ImageSpace = 22,
-        Flags = 23,
-        ObjectBoundsMin = 24,
-        ObjectBoundsMax = 25,
-        Music = 26,
-        CanopyShadow = 27,
-        WaterNoiseTexture = 28,
-        ImpactSwapData = 29,
-        FootstepMaterials = 30,
-        OffsetData = 31,
-        TopCell = 32,
-        SubCellsTimestamp = 33,
-        SubCellsUnknownGroupData = 34,
-        SubCells = 35,
+        LandData = 14,
+        MapImage = 15,
+        SmallMapImage = 16,
+        MapData = 17,
+        WorldMapScale = 18,
+        CellXOffset = 19,
+        CellYOffset = 20,
+        ImageSpace = 21,
+        Flags = 22,
+        ObjectBoundsMin = 23,
+        ObjectBoundsMax = 24,
+        Music = 25,
+        CanopyShadow = 26,
+        WaterNoiseTexture = 27,
+        ImpactSwapData = 28,
+        OffsetData = 29,
+        TopCell = 30,
+        SubCellsTimestamp = 31,
+        SubCellsUnknownGroupData = 32,
+        SubCells = 33,
     }
     #endregion
 
@@ -2262,9 +2265,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Worldspace.Mask<>);
 
@@ -2317,13 +2320,13 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.NNAM,
                 RecordTypes.XNAM,
                 RecordTypes.IMPS,
-                RecordTypes.IMPF,
                 RecordTypes.OFST,
                 RecordTypes.XXXX,
                 RecordTypes.CELL,
                 RecordTypes.GRUP,
                 RecordTypes.XCLC,
                 RecordTypes.XCLL,
+                RecordTypes.IMPF,
                 RecordTypes.LTMP,
                 RecordTypes.LNAM,
                 RecordTypes.XCLW,
@@ -2347,12 +2350,12 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.NVGD,
                 RecordTypes.NVEX,
                 RecordTypes.PNAM,
-                RecordTypes.REFR,
-                RecordTypes.ACRE,
-                RecordTypes.ACHR,
-                RecordTypes.PMIS,
                 RecordTypes.PBEA,
-                RecordTypes.PGRE);
+                RecordTypes.ACRE,
+                RecordTypes.PGRE,
+                RecordTypes.PMIS,
+                RecordTypes.ACHR,
+                RecordTypes.REFR);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -2404,8 +2407,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Water.Clear();
             item.LodWater.Clear();
             item.LodWaterHeight = default;
-            item.DefaultLandHeight = default(Single);
-            item.DefaultWaterHeight = default(Single);
+            item.LandData = null;
             item.MapImage = default;
             item.SmallMapImage = default;
             item.MapData = null;
@@ -2420,8 +2422,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CanopyShadow = default;
             item.WaterNoiseTexture = default;
             item.ImpactSwapData.Clear();
-            item.FootstepMaterials = default;
-            item.OffsetData = default;
+            item.OffsetData = null;
             item.TopCell = null;
             item.SubCellsTimestamp = default(Int32);
             item.SubCellsUnknownGroupData = default(Int32);
@@ -2821,8 +2822,11 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Water = item.Water.Equals(rhs.Water);
             ret.LodWater = item.LodWater.Equals(rhs.LodWater);
             ret.LodWaterHeight = item.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight);
-            ret.DefaultLandHeight = item.DefaultLandHeight.EqualsWithin(rhs.DefaultLandHeight);
-            ret.DefaultWaterHeight = item.DefaultWaterHeight.EqualsWithin(rhs.DefaultWaterHeight);
+            ret.LandData = EqualsMaskHelper.EqualsHelper(
+                item.LandData,
+                rhs.LandData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.MapImage = string.Equals(item.MapImage, rhs.MapImage);
             ret.SmallMapImage = string.Equals(item.SmallMapImage, rhs.SmallMapImage);
             ret.MapData = EqualsMaskHelper.EqualsHelper(
@@ -2844,8 +2848,10 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.ImpactSwapData,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.FootstepMaterials = MemorySliceExt.SequenceEqual(item.FootstepMaterials, rhs.FootstepMaterials);
-            ret.OffsetData = MemorySliceExt.SequenceEqual(item.OffsetData, rhs.OffsetData);
+            ret.OffsetData = item.OffsetData.CollectionEqualsHelper(
+                rhs.OffsetData,
+                (l, r) => l == r,
+                include);
             ret.TopCell = EqualsMaskHelper.EqualsHelper(
                 item.TopCell,
                 rhs.TopCell,
@@ -2937,13 +2943,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(LodWaterHeightItem, "LodWaterHeight");
             }
-            if (printMask?.DefaultLandHeight ?? true)
+            if ((printMask?.LandData?.Overall ?? true)
+                && item.LandData is {} LandDataItem)
             {
-                sb.AppendItem(item.DefaultLandHeight, "DefaultLandHeight");
-            }
-            if (printMask?.DefaultWaterHeight ?? true)
-            {
-                sb.AppendItem(item.DefaultWaterHeight, "DefaultWaterHeight");
+                LandDataItem?.Print(sb, "LandData");
             }
             if ((printMask?.MapImage ?? true)
                 && item.MapImage is {} MapImageItem)
@@ -3018,15 +3021,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
-            if ((printMask?.FootstepMaterials ?? true)
-                && item.FootstepMaterials is {} FootstepMaterialsItem)
-            {
-                sb.AppendLine($"FootstepMaterials => {SpanExt.ToHexString(FootstepMaterialsItem)}");
-            }
-            if ((printMask?.OffsetData ?? true)
+            if ((printMask?.OffsetData?.Overall ?? true)
                 && item.OffsetData is {} OffsetDataItem)
             {
-                sb.AppendLine($"OffsetData => {SpanExt.ToHexString(OffsetDataItem)}");
+                sb.AppendLine("OffsetData =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in OffsetDataItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
             }
             if ((printMask?.TopCell?.Overall ?? true)
                 && item.TopCell is {} TopCellItem)
@@ -3137,13 +3145,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DefaultLandHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandData) ?? true))
             {
-                if (!lhs.DefaultLandHeight.EqualsWithin(rhs.DefaultLandHeight)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DefaultWaterHeight) ?? true))
-            {
-                if (!lhs.DefaultWaterHeight.EqualsWithin(rhs.DefaultWaterHeight)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LandData, rhs.LandData, out var lhsLandData, out var rhsLandData, out var isLandDataEqual))
+                {
+                    if (!((WorldspaceLandDataCommon)((IWorldspaceLandDataGetter)lhsLandData).CommonInstance()!).Equals(lhsLandData, rhsLandData, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.LandData))) return false;
+                }
+                else if (!isLandDataEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
             {
@@ -3205,13 +3213,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.ImpactSwapData.SequenceEqual(rhs.ImpactSwapData, (l, r) => ((WorldspaceImpactSwapCommon)((IWorldspaceImpactSwapGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Worldspace_FieldIndex.ImpactSwapData)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FootstepMaterials) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.FootstepMaterials, rhs.FootstepMaterials)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.OffsetData, rhs.OffsetData)) return false;
+                if (!lhs.OffsetData.SequenceEqualNullable(rhs.OffsetData)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
@@ -3277,8 +3281,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(LodWaterHeightitem);
             }
-            hash.Add(item.DefaultLandHeight);
-            hash.Add(item.DefaultWaterHeight);
+            if (item.LandData is {} LandDataitem)
+            {
+                hash.Add(LandDataitem);
+            }
             if (item.MapImage is {} MapImageitem)
             {
                 hash.Add(MapImageitem);
@@ -3314,14 +3320,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(WaterNoiseTextureitem);
             }
             hash.Add(item.ImpactSwapData);
-            if (item.FootstepMaterials is {} FootstepMaterialsItem)
-            {
-                hash.Add(FootstepMaterialsItem);
-            }
-            if (item.OffsetData is {} OffsetDataItem)
-            {
-                hash.Add(OffsetDataItem);
-            }
+            hash.Add(item.OffsetData);
             if (item.TopCell is {} TopCellitem)
             {
                 hash.Add(TopCellitem);
@@ -4445,13 +4444,31 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.LodWaterHeight = rhs.LodWaterHeight;
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DefaultLandHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.LandData) ?? true))
             {
-                item.DefaultLandHeight = rhs.DefaultLandHeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DefaultWaterHeight) ?? true))
-            {
-                item.DefaultWaterHeight = rhs.DefaultWaterHeight;
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.LandData);
+                try
+                {
+                    if(rhs.LandData is {} rhsLandData)
+                    {
+                        item.LandData = rhsLandData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Worldspace_FieldIndex.LandData));
+                    }
+                    else
+                    {
+                        item.LandData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
             {
@@ -4551,26 +4568,30 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.FootstepMaterials) ?? true))
-            {
-                if(rhs.FootstepMaterials is {} FootstepMaterialsrhs)
-                {
-                    item.FootstepMaterials = FootstepMaterialsrhs.ToArray();
-                }
-                else
-                {
-                    item.FootstepMaterials = default;
-                }
-            }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
             {
-                if(rhs.OffsetData is {} OffsetDatarhs)
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.OffsetData);
+                try
                 {
-                    item.OffsetData = OffsetDatarhs.ToArray();
+                    if ((rhs.OffsetData != null))
+                    {
+                        item.OffsetData = 
+                            rhs.OffsetData
+                            .ToExtendedList<UInt32>();
+                    }
+                    else
+                    {
+                        item.OffsetData = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.OffsetData = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
@@ -4841,14 +4862,12 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.LodWaterHeight,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM4));
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            if (item.LandData is {} LandDataItem)
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                ((WorldspaceLandDataBinaryWriteTranslation)((IBinaryItem)LandDataItem).BinaryWriteTranslator).Write(
+                    item: LandDataItem,
                     writer: writer,
-                    item: item.DefaultLandHeight);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.DefaultWaterHeight);
+                    translationParams: translationParams);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4921,15 +4940,12 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Write(
                 writer: writer,
-                item: item.FootstepMaterials,
-                header: translationParams.ConvertToCustom(RecordTypes.IMPF));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.OffsetData,
-                header: translationParams.ConvertToCustom(RecordTypes.OFST),
-                overflowRecord: RecordTypes.XXXX);
+                items: item.OffsetData,
+                recordType: translationParams.ConvertToCustom(RecordTypes.OFST),
+                overflowRecord: RecordTypes.XXXX,
+                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public static partial void CustomBinaryEndExport(
@@ -5069,13 +5085,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.DefaultLandHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.DefaultWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)Worldspace_FieldIndex.DefaultWaterHeight;
+                    item.LandData = Mutagen.Bethesda.Fallout3.WorldspaceLandData.CreateFromBinary(frame: frame);
+                    return (int)Worldspace_FieldIndex.LandData;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -5172,16 +5183,14 @@ namespace Mutagen.Bethesda.Fallout3
                             transl: WorldspaceImpactSwap.TryCreateFromBinary));
                     return (int)Worldspace_FieldIndex.ImpactSwapData;
                 }
-                case RecordTypeInts.IMPF:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootstepMaterials = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Worldspace_FieldIndex.FootstepMaterials;
-                }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OffsetData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.OffsetData = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<UInt32>();
                     return (int)Worldspace_FieldIndex.OffsetData;
                 }
                 case RecordTypeInts.XXXX:
@@ -5296,16 +5305,9 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _LodWaterHeightLocation;
         public Single? LodWaterHeight => _LodWaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodWaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        private RangeInt32? _DNAMLocation;
-        #region DefaultLandHeight
-        private int _DefaultLandHeightLocation => _DNAMLocation!.Value.Min;
-        private bool _DefaultLandHeight_IsSet => _DNAMLocation.HasValue;
-        public Single DefaultLandHeight => _DefaultLandHeight_IsSet ? _recordData.Slice(_DefaultLandHeightLocation, 4).Float() : default(Single);
-        #endregion
-        #region DefaultWaterHeight
-        private int _DefaultWaterHeightLocation => _DNAMLocation!.Value.Min + 0x4;
-        private bool _DefaultWaterHeight_IsSet => _DNAMLocation.HasValue;
-        public Single DefaultWaterHeight => _DefaultWaterHeight_IsSet ? _recordData.Slice(_DefaultWaterHeightLocation, 4).Float() : default(Single);
+        #region LandData
+        private RangeInt32? _LandDataLocation;
+        public IWorldspaceLandDataGetter? LandData => _LandDataLocation.HasValue ? WorldspaceLandDataBinaryOverlay.WorldspaceLandDataFactory(_recordData.Slice(_LandDataLocation!.Value.Min), _package) : default;
         #endregion
         #region MapImage
         private int? _MapImageLocation;
@@ -5364,19 +5366,7 @@ namespace Mutagen.Bethesda.Fallout3
         public String? WaterNoiseTexture => _WaterNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterNoiseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IWorldspaceImpactSwapGetter> ImpactSwapData { get; private set; } = [];
-        #region FootstepMaterials
-        private int? _FootstepMaterialsLocation;
-        public ReadOnlyMemorySlice<Byte>? FootstepMaterials => _FootstepMaterialsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepMaterialsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region OffsetData
-        private int? _OffsetDataLocation;
-        private int? _OffsetDataLengthOverride;
-        public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
-            _recordData,
-            _package.MetaData.Constants,
-            _OffsetDataLocation,
-            _OffsetDataLengthOverride);
-        #endregion
+        public IReadOnlyList<UInt32>? OffsetData { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -5495,8 +5485,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Worldspace_FieldIndex.DefaultWaterHeight;
+                    _LandDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Worldspace_FieldIndex.LandData;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -5568,19 +5558,14 @@ namespace Mutagen.Bethesda.Fallout3
                             skipHeader: false));
                     return (int)Worldspace_FieldIndex.ImpactSwapData;
                 }
-                case RecordTypeInts.IMPF:
-                {
-                    _FootstepMaterialsLocation = (stream.Position - offset);
-                    return (int)Worldspace_FieldIndex.FootstepMaterials;
-                }
                 case RecordTypeInts.OFST:
                 {
-                    _OffsetDataLocation = (stream.Position - offset);
-                    _OffsetDataLengthOverride = lastParsed.LengthOverride;
-                    if (lastParsed.LengthOverride.HasValue)
-                    {
-                        stream.Position += lastParsed.LengthOverride.Value;
-                    }
+                    this.OffsetData = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt32>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 4,
+                        getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
                     return (int)Worldspace_FieldIndex.OffsetData;
                 }
                 case RecordTypeInts.XXXX:

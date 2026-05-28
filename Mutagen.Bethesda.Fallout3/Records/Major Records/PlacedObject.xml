@@ -120,7 +120,7 @@
       <Float name="IdleTime" recordType="XPRD" />
       <Bool name="ScriptMarker" boolAsMarker="XPPA" />
       <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" />
-      <RefDirect name="EmbeddedScript" refName="ScriptFields" singleton="true" />
+      <RefDirect name="EmbeddedScript" refName="ScriptFields" />
       <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
     </Fields>
   </Object>

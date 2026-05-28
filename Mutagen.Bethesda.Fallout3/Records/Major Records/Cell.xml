@@ -24,7 +24,7 @@
       <Enum name="Flags" enumName="Cell.Flag" byteLength="1" recordType="DATA" nullable="False" />
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
-      <RefDirect name="FootstepMaterials" refName="CellFootstepMaterials" />
+      <RefDirect name="FootstepMaterials" refName="FootstepMaterials" />
       <FormLink name="LightTemplate" recordType="LTMP" refName="LightingTemplate" />
       <Enum name="LightInheritFlags" enumName="Cell.LightingInheritFlag" byteLength="4" recordType="LNAM" />
       <Float name="WaterHeight" recordType="XCLW" />
@@ -74,7 +74,7 @@
       <Enum name="LandFlags" enumName="Cell.LandFlag" byteLength="4" nullable="False" />
     </Fields>
   </Object>
-  <Object name="CellFootstepMaterials" recordType="IMPF" objType="Subrecord">
+  <Object name="FootstepMaterials" recordType="IMPF" objType="Subrecord">
     <Fields>
       <String name="ConcreteSolid"  nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
       <String name="ConcreteBroken" nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />

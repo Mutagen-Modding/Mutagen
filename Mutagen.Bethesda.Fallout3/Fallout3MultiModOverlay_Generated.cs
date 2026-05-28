@@ -1122,8 +1122,7 @@ internal class MergedWorldspace : IWorldspaceGetter
     public IFormLinkNullableGetter<IWaterGetter> Water => _primary.Water;
     public IFormLinkNullableGetter<IWaterGetter> LodWater => _primary.LodWater;
     public Single? LodWaterHeight => _primary.LodWaterHeight;
-    public Single DefaultLandHeight => _primary.DefaultLandHeight;
-    public Single DefaultWaterHeight => _primary.DefaultWaterHeight;
+    public IWorldspaceLandDataGetter? LandData => _primary.LandData;
     public String? MapImage => _primary.MapImage;
     public String? SmallMapImage => _primary.SmallMapImage;
     public IWorldspaceMapDataGetter? MapData => _primary.MapData;
@@ -1138,8 +1137,7 @@ internal class MergedWorldspace : IWorldspaceGetter
     public String? CanopyShadow => _primary.CanopyShadow;
     public String? WaterNoiseTexture => _primary.WaterNoiseTexture;
     public IReadOnlyList<IWorldspaceImpactSwapGetter> ImpactSwapData => _primary.ImpactSwapData;
-    public ReadOnlyMemorySlice<Byte>? FootstepMaterials => _primary.FootstepMaterials;
-    public ReadOnlyMemorySlice<Byte>? OffsetData => _primary.OffsetData;
+    public IReadOnlyList<UInt32>? OffsetData => _primary.OffsetData;
     public ICellGetter? TopCell => _primary.TopCell;
     public Int32 SubCellsTimestamp => _primary.SubCellsTimestamp;
     public Int32 SubCellsUnknownGroupData => _primary.SubCellsUnknownGroupData;
@@ -1342,7 +1340,7 @@ internal class MergedWorldspaceCell : ICellGetter
     public Cell.Flag Flags => _primary.Flags;
     public ICellGridGetter? Grid => _primary.Grid;
     public ICellLightingGetter? Lighting => _primary.Lighting;
-    public ICellFootstepMaterialsGetter? FootstepMaterials => _primary.FootstepMaterials;
+    public IFootstepMaterialsGetter? FootstepMaterials => _primary.FootstepMaterials;
     public IFormLinkNullableGetter<ILightingTemplateGetter> LightTemplate => _primary.LightTemplate;
     public Cell.LightingInheritFlag? LightInheritFlags => _primary.LightInheritFlags;
     public Single? WaterHeight => _primary.WaterHeight;

@@ -75,6 +75,12 @@ public class Fallout3Processor : Processor
             formKey,
             fileOffset,
             numSubGroups: 2);
+
+        if (majorFrame.TryFindSubrecord(RecordTypes.XCLR, out var xclrSub))
+        {
+            int xclrLoc = 0;
+            ProcessFormIDOverflows(xclrSub, fileOffset, ref xclrLoc);
+        }
     }
 
     private void ProcessPlaced(

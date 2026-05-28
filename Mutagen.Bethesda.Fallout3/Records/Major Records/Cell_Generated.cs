@@ -102,14 +102,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region FootstepMaterials
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private CellFootstepMaterials? _FootstepMaterials;
-        public CellFootstepMaterials? FootstepMaterials
+        private FootstepMaterials? _FootstepMaterials;
+        public FootstepMaterials? FootstepMaterials
         {
             get => _FootstepMaterials;
             set => _FootstepMaterials = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICellFootstepMaterialsGetter? ICellGetter.FootstepMaterials => this.FootstepMaterials;
+        IFootstepMaterialsGetter? ICellGetter.FootstepMaterials => this.FootstepMaterials;
         #endregion
         #region LightTemplate
         private readonly IFormLinkNullable<ILightingTemplateGetter> _LightTemplate = new FormLinkNullable<ILightingTemplateGetter>();
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = initialValue;
                 this.Grid = new MaskItem<TItem, CellGrid.Mask<TItem>?>(initialValue, new CellGrid.Mask<TItem>(initialValue));
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(initialValue, new CellLighting.Mask<TItem>(initialValue));
-                this.FootstepMaterials = new MaskItem<TItem, CellFootstepMaterials.Mask<TItem>?>(initialValue, new CellFootstepMaterials.Mask<TItem>(initialValue));
+                this.FootstepMaterials = new MaskItem<TItem, FootstepMaterials.Mask<TItem>?>(initialValue, new FootstepMaterials.Mask<TItem>(initialValue));
                 this.LightTemplate = initialValue;
                 this.LightInheritFlags = initialValue;
                 this.WaterHeight = initialValue;
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = Flags;
                 this.Grid = new MaskItem<TItem, CellGrid.Mask<TItem>?>(Grid, new CellGrid.Mask<TItem>(Grid));
                 this.Lighting = new MaskItem<TItem, CellLighting.Mask<TItem>?>(Lighting, new CellLighting.Mask<TItem>(Lighting));
-                this.FootstepMaterials = new MaskItem<TItem, CellFootstepMaterials.Mask<TItem>?>(FootstepMaterials, new CellFootstepMaterials.Mask<TItem>(FootstepMaterials));
+                this.FootstepMaterials = new MaskItem<TItem, FootstepMaterials.Mask<TItem>?>(FootstepMaterials, new FootstepMaterials.Mask<TItem>(FootstepMaterials));
                 this.LightTemplate = LightTemplate;
                 this.LightInheritFlags = LightInheritFlags;
                 this.WaterHeight = WaterHeight;
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Flags;
             public MaskItem<TItem, CellGrid.Mask<TItem>?>? Grid { get; set; }
             public MaskItem<TItem, CellLighting.Mask<TItem>?>? Lighting { get; set; }
-            public MaskItem<TItem, CellFootstepMaterials.Mask<TItem>?>? FootstepMaterials { get; set; }
+            public MaskItem<TItem, FootstepMaterials.Mask<TItem>?>? FootstepMaterials { get; set; }
             public TItem LightTemplate;
             public TItem LightInheritFlags;
             public TItem WaterHeight;
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Flags = eval(this.Flags);
                 obj.Grid = this.Grid == null ? null : new MaskItem<R, CellGrid.Mask<R>?>(eval(this.Grid.Overall), this.Grid.Specific?.Translate(eval));
                 obj.Lighting = this.Lighting == null ? null : new MaskItem<R, CellLighting.Mask<R>?>(eval(this.Lighting.Overall), this.Lighting.Specific?.Translate(eval));
-                obj.FootstepMaterials = this.FootstepMaterials == null ? null : new MaskItem<R, CellFootstepMaterials.Mask<R>?>(eval(this.FootstepMaterials.Overall), this.FootstepMaterials.Specific?.Translate(eval));
+                obj.FootstepMaterials = this.FootstepMaterials == null ? null : new MaskItem<R, FootstepMaterials.Mask<R>?>(eval(this.FootstepMaterials.Overall), this.FootstepMaterials.Specific?.Translate(eval));
                 obj.LightTemplate = eval(this.LightTemplate);
                 obj.LightInheritFlags = eval(this.LightInheritFlags);
                 obj.WaterHeight = eval(this.WaterHeight);
@@ -1195,7 +1195,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Flags;
             public MaskItem<Exception?, CellGrid.ErrorMask?>? Grid;
             public MaskItem<Exception?, CellLighting.ErrorMask?>? Lighting;
-            public MaskItem<Exception?, CellFootstepMaterials.ErrorMask?>? FootstepMaterials;
+            public MaskItem<Exception?, FootstepMaterials.ErrorMask?>? FootstepMaterials;
             public Exception? LightTemplate;
             public Exception? LightInheritFlags;
             public Exception? WaterHeight;
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Lighting = new MaskItem<Exception?, CellLighting.ErrorMask?>(ex, null);
                         break;
                     case Cell_FieldIndex.FootstepMaterials:
-                        this.FootstepMaterials = new MaskItem<Exception?, CellFootstepMaterials.ErrorMask?>(ex, null);
+                        this.FootstepMaterials = new MaskItem<Exception?, FootstepMaterials.ErrorMask?>(ex, null);
                         break;
                     case Cell_FieldIndex.LightTemplate:
                         this.LightTemplate = ex;
@@ -1431,7 +1431,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Lighting = (MaskItem<Exception?, CellLighting.ErrorMask?>?)obj;
                         break;
                     case Cell_FieldIndex.FootstepMaterials:
-                        this.FootstepMaterials = (MaskItem<Exception?, CellFootstepMaterials.ErrorMask?>?)obj;
+                        this.FootstepMaterials = (MaskItem<Exception?, FootstepMaterials.ErrorMask?>?)obj;
                         break;
                     case Cell_FieldIndex.LightTemplate:
                         this.LightTemplate = (Exception?)obj;
@@ -1820,7 +1820,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Flags;
             public CellGrid.TranslationMask? Grid;
             public CellLighting.TranslationMask? Lighting;
-            public CellFootstepMaterials.TranslationMask? FootstepMaterials;
+            public FootstepMaterials.TranslationMask? FootstepMaterials;
             public bool LightTemplate;
             public bool LightInheritFlags;
             public bool WaterHeight;
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Cell.Flag Flags { get; set; }
         new CellGrid? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new CellFootstepMaterials? FootstepMaterials { get; set; }
+        new FootstepMaterials? FootstepMaterials { get; set; }
         new IFormLinkNullable<ILightingTemplateGetter> LightTemplate { get; set; }
         new Cell.LightingInheritFlag? LightInheritFlags { get; set; }
         new Single? WaterHeight { get; set; }
@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Fallout3
         Cell.Flag Flags { get; }
         ICellGridGetter? Grid { get; }
         ICellLightingGetter? Lighting { get; }
-        ICellFootstepMaterialsGetter? FootstepMaterials { get; }
+        IFootstepMaterialsGetter? FootstepMaterials { get; }
         IFormLinkNullableGetter<ILightingTemplateGetter> LightTemplate { get; }
         Cell.LightingInheritFlag? LightInheritFlags { get; }
         Single? WaterHeight { get; }
@@ -2730,12 +2730,12 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.ONAM,
                 RecordTypes.PNAM,
                 RecordTypes.NNAM,
-                RecordTypes.REFR,
-                RecordTypes.ACRE,
-                RecordTypes.ACHR,
-                RecordTypes.PMIS,
                 RecordTypes.PBEA,
-                RecordTypes.PGRE);
+                RecordTypes.ACRE,
+                RecordTypes.PGRE,
+                RecordTypes.PMIS,
+                RecordTypes.ACHR,
+                RecordTypes.REFR);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -3495,7 +3495,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (EqualsMaskHelper.RefEquality(lhs.FootstepMaterials, rhs.FootstepMaterials, out var lhsFootstepMaterials, out var rhsFootstepMaterials, out var isFootstepMaterialsEqual))
                 {
-                    if (!((CellFootstepMaterialsCommon)((ICellFootstepMaterialsGetter)lhsFootstepMaterials).CommonInstance()!).Equals(lhsFootstepMaterials, rhsFootstepMaterials, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.FootstepMaterials))) return false;
+                    if (!((FootstepMaterialsCommon)((IFootstepMaterialsGetter)lhsFootstepMaterials).CommonInstance()!).Equals(lhsFootstepMaterials, rhsFootstepMaterials, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.FootstepMaterials))) return false;
                 }
                 else if (!isFootstepMaterialsEqual) return false;
             }
@@ -5582,7 +5582,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (item.FootstepMaterials is {} FootstepMaterialsItem)
             {
-                ((CellFootstepMaterialsBinaryWriteTranslation)((IBinaryItem)FootstepMaterialsItem).BinaryWriteTranslator).Write(
+                ((FootstepMaterialsBinaryWriteTranslation)((IBinaryItem)FootstepMaterialsItem).BinaryWriteTranslator).Write(
                     item: FootstepMaterialsItem,
                     writer: writer,
                     translationParams: translationParams);
@@ -5775,7 +5775,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.IMPF:
                 {
-                    item.FootstepMaterials = Mutagen.Bethesda.Fallout3.CellFootstepMaterials.CreateFromBinary(frame: frame);
+                    item.FootstepMaterials = Mutagen.Bethesda.Fallout3.FootstepMaterials.CreateFromBinary(frame: frame);
                     return (int)Cell_FieldIndex.FootstepMaterials;
                 }
                 case RecordTypeInts.LTMP:
@@ -5977,7 +5977,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region FootstepMaterials
         private RangeInt32? _FootstepMaterialsLocation;
-        public ICellFootstepMaterialsGetter? FootstepMaterials => _FootstepMaterialsLocation.HasValue ? CellFootstepMaterialsBinaryOverlay.CellFootstepMaterialsFactory(_recordData.Slice(_FootstepMaterialsLocation!.Value.Min), _package) : default;
+        public IFootstepMaterialsGetter? FootstepMaterials => _FootstepMaterialsLocation.HasValue ? FootstepMaterialsBinaryOverlay.FootstepMaterialsFactory(_recordData.Slice(_FootstepMaterialsLocation!.Value.Min), _package) : default;
         #endregion
         #region LightTemplate
         private int? _LightTemplateLocation;

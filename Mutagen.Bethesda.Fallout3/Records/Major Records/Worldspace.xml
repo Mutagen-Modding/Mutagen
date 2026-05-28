@@ -10,16 +10,11 @@
       <FormLink name="Water" recordType="NAM2" refName="Water" />
       <FormLink name="LodWater" recordType="NAM3" refName="Water" />
       <Float name="LodWaterHeight" recordType="NAM4" />
-      <Data recordType="DNAM" nullable="True">
-        <Fields>
-          <Float name="DefaultLandHeight" />
-          <Float name="DefaultWaterHeight" />
-        </Fields>
-      </Data>
+      <RefDirect name="LandData" refName="WorldspaceLandData" />
       <String name="MapImage" recordType="ICON" />
       <String name="SmallMapImage" recordType="MICO" />
       <RefDirect name="MapData" refName="WorldspaceMapData" />
-      <Data recordType="ONAM" nullable="False">
+      <Data recordType="ONAM" >
         <Fields>
           <Float name="WorldMapScale" />
           <Float name="CellXOffset" />
@@ -34,8 +29,9 @@
       <String name="CanopyShadow" recordType="NNAM" />
       <String name="WaterNoiseTexture" recordType="XNAM" />
       <RefList name="ImpactSwapData" refName="WorldspaceImpactSwap" />
-      <ByteArray name="FootstepMaterials" recordType="IMPF" />
-      <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
+      <List name="OffsetData" recordType="OFST" overflowRecordType="XXXX">
+        <UInt32 />
+      </List>
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
       <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
       <Int32 name="SubCellsUnknownGroupData" binary="NoGeneration" />
@@ -54,6 +50,12 @@
       <Enum name="MaterialType" enumName="WorldImpactMaterialType" byteLength="4" />
       <FormLink name="OldImpact" refName="Impact" />
       <FormLink name="NewImpact" refName="Impact" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceLandData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <Float name="DefaultLandHeight" />
+      <Float name="DefaultWaterHeight" />
     </Fields>
   </Object>
   <Object name="WorldspaceMapData" objType="Subrecord" recordType="MNAM">

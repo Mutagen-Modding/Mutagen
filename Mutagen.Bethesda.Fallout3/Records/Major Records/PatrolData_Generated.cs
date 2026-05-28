@@ -72,10 +72,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region EmbeddedScript
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ScriptFields _EmbeddedScript_Object = new ScriptFields();
-        public ScriptFields EmbeddedScript => _EmbeddedScript_Object;
+        private ScriptFields? _EmbeddedScript;
+        public ScriptFields? EmbeddedScript
+        {
+            get => _EmbeddedScript;
+            set => _EmbeddedScript = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFieldsGetter IPatrolDataGetter.EmbeddedScript => _EmbeddedScript_Object;
+        IScriptFieldsGetter? IPatrolDataGetter.EmbeddedScript => this.EmbeddedScript;
         #endregion
         #region Topic
         private readonly IFormLinkNullable<IDialogTopicGetter> _Topic = new FormLinkNullable<IDialogTopicGetter>();
@@ -581,7 +585,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Single? IdleTime { get; set; }
         new Boolean ScriptMarker { get; set; }
         new IFormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
-        new ScriptFields EmbeddedScript { get; }
+        new ScriptFields? EmbeddedScript { get; set; }
         new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
     }
 
@@ -601,7 +605,7 @@ namespace Mutagen.Bethesda.Fallout3
         Single? IdleTime { get; }
         Boolean ScriptMarker { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> Idle { get; }
-        IScriptFieldsGetter EmbeddedScript { get; }
+        IScriptFieldsGetter? EmbeddedScript { get; }
         IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
 
     }
@@ -818,20 +822,13 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(
-                RecordTypes.XPRD,
-                RecordTypes.XPPA,
-                RecordTypes.INAM,
-                RecordTypes.SCHR);
             var all = RecordCollection.Factory(
                 RecordTypes.XPRD,
                 RecordTypes.XPPA,
                 RecordTypes.INAM,
                 RecordTypes.SCHR,
                 RecordTypes.TNAM);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PatrolDataBinaryWriteTranslation);
         #region Interface
@@ -876,6 +873,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.IdleTime = default;
             item.ScriptMarker = default(Boolean);
             item.Idle.Clear();
+            item.EmbeddedScript = null;
             item.Topic.Clear();
         }
         
@@ -883,7 +881,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IPatrolData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Idle.Relink(mapping);
-            obj.EmbeddedScript.RemapLinks(mapping);
+            obj.EmbeddedScript?.RemapLinks(mapping);
             obj.Topic.Relink(mapping);
         }
         
@@ -932,7 +930,11 @@ namespace Mutagen.Bethesda.Fallout3
             ret.IdleTime = item.IdleTime.EqualsWithin(rhs.IdleTime);
             ret.ScriptMarker = item.ScriptMarker == rhs.ScriptMarker;
             ret.Idle = item.Idle.Equals(rhs.Idle);
-            ret.EmbeddedScript = MaskItemExt.Factory(item.EmbeddedScript.GetEqualsMask(rhs.EmbeddedScript, include), include);
+            ret.EmbeddedScript = EqualsMaskHelper.EqualsHelper(
+                item.EmbeddedScript,
+                rhs.EmbeddedScript,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Topic = item.Topic.Equals(rhs.Topic);
         }
         
@@ -991,9 +993,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Idle.FormKeyNullable, "Idle");
             }
-            if (printMask?.EmbeddedScript?.Overall ?? true)
+            if ((printMask?.EmbeddedScript?.Overall ?? true)
+                && item.EmbeddedScript is {} EmbeddedScriptItem)
             {
-                item.EmbeddedScript?.Print(sb, "EmbeddedScript");
+                EmbeddedScriptItem?.Print(sb, "EmbeddedScript");
             }
             if (printMask?.Topic ?? true)
             {
@@ -1044,7 +1047,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
             hash.Add(item.ScriptMarker);
             hash.Add(item.Idle);
-            hash.Add(item.EmbeddedScript);
+            if (item.EmbeddedScript is {} EmbeddedScriptitem)
+            {
+                hash.Add(EmbeddedScriptitem);
+            }
             hash.Add(item.Topic);
             return hash.ToHashCode();
         }
@@ -1110,10 +1116,16 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)PatrolData_FieldIndex.EmbeddedScript);
                 try
                 {
-                    item.EmbeddedScript.DeepCopyIn(
-                        rhs: rhs.EmbeddedScript,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)PatrolData_FieldIndex.EmbeddedScript));
+                    if(rhs.EmbeddedScript is {} rhsEmbeddedScript)
+                    {
+                        item.EmbeddedScript = rhsEmbeddedScript.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PatrolData_FieldIndex.EmbeddedScript));
+                    }
+                    else
+                    {
+                        item.EmbeddedScript = default;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1250,11 +1262,13 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Idle,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
-            var EmbeddedScriptItem = item.EmbeddedScript;
-            ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)EmbeddedScriptItem).BinaryWriteTranslator).Write(
-                item: EmbeddedScriptItem,
-                writer: writer,
-                translationParams: translationParams);
+            if (item.EmbeddedScript is {} EmbeddedScriptItem)
+            {
+                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)EmbeddedScriptItem).BinaryWriteTranslator).Write(
+                    item: EmbeddedScriptItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Topic,
@@ -1324,13 +1338,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.EmbeddedScript, translationParams)) return ParseResult.Stop;
-                    item.EmbeddedScript.CopyInFromBinary(
+                    item.EmbeddedScript = Mutagen.Bethesda.Fallout3.ScriptFields.CreateFromBinary(
                         frame: frame,
-                        translationParams: null);
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)PatrolData_FieldIndex.EmbeddedScript;
                 }
                 case RecordTypeInts.TNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.Topic, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PatrolData_FieldIndex.Topic;
@@ -1416,10 +1431,7 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _IdleLocation;
         public IFormLinkNullableGetter<IIdleAnimationGetter> Idle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _IdleLocation);
         #endregion
-        #region EmbeddedScript
-        private IScriptFieldsGetter? _EmbeddedScript;
-        public IScriptFieldsGetter EmbeddedScript => _EmbeddedScript ?? new ScriptFields();
-        #endregion
+        public IScriptFieldsGetter? EmbeddedScript { get; private set; }
         #region Topic
         private int? _TopicLocation;
         public IFormLinkNullableGetter<IDialogTopicGetter> Topic => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogTopicGetter>(_package, _recordData, _TopicLocation);
@@ -1508,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.EmbeddedScript, translationParams)) return ParseResult.Stop;
-                    this._EmbeddedScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
+                    this.EmbeddedScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
@@ -1516,6 +1528,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.TNAM:
                 {
+                    if (lastParsed.ShortCircuit((int)PatrolData_FieldIndex.Topic, translationParams)) return ParseResult.Stop;
                     _TopicLocation = (stream.Position - offset);
                     return (int)PatrolData_FieldIndex.Topic;
                 }
