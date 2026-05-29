@@ -54,21 +54,13 @@ namespace Mutagen.Bethesda.Fallout3
         public QuestData.VersioningBreaks Versioning { get; set; } = default(QuestData.VersioningBreaks);
         #endregion
         #region Flags
-        public Byte Flags { get; set; } = default(Byte);
+        public Quest.Flag Flags { get; set; } = default(Quest.Flag);
         #endregion
         #region Priority
         public Byte Priority { get; set; } = default(Byte);
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[2];
-        public MemorySlice<Byte> Unused
-        {
-            get => _Unused;
-            set => this._Unused = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IQuestDataGetter.Unused => this.Unused;
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
         #region QuestDelay
         public Single QuestDelay { get; set; } = default(Single);
@@ -563,9 +555,9 @@ namespace Mutagen.Bethesda.Fallout3
         IQuestDataGetter
     {
         new QuestData.VersioningBreaks Versioning { get; set; }
-        new Byte Flags { get; set; }
+        new Quest.Flag Flags { get; set; }
         new Byte Priority { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
+        new UInt16 Unused { get; set; }
         new Single QuestDelay { get; set; }
     }
 
@@ -582,9 +574,9 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => QuestData_Registration.Instance;
         QuestData.VersioningBreaks Versioning { get; }
-        Byte Flags { get; }
+        Quest.Flag Flags { get; }
         Byte Priority { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        UInt16 Unused { get; }
         Single QuestDelay { get; }
 
     }
@@ -846,9 +838,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Versioning = default(QuestData.VersioningBreaks);
-            item.Flags = default(Byte);
+            item.Flags = default(Quest.Flag);
             item.Priority = default(Byte);
-            item.Unused = new byte[2];
+            item.Unused = default(UInt16);
             item.QuestDelay = default(Single);
         }
         
@@ -906,7 +898,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Priority = item.Priority == rhs.Priority;
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Unused = item.Unused == rhs.Unused;
             ret.QuestDelay = item.QuestDelay.EqualsWithin(rhs.QuestDelay);
         }
         
@@ -966,7 +958,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.QuestDelay ?? true)
             {
@@ -995,7 +987,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)QuestData_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)QuestData_FieldIndex.QuestDelay) ?? true))
             {
@@ -1059,7 +1051,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (rhs.Versioning.HasFlag(QuestData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)QuestData_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.Unused = rhs.Unused;
             }
             if (rhs.Versioning.HasFlag(QuestData.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)QuestData_FieldIndex.QuestDelay) ?? true))
@@ -1174,13 +1166,14 @@ namespace Mutagen.Bethesda.Fallout3
             IQuestDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Flags);
+            EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1);
             writer.Write(item.Priority);
             if (!item.Versioning.HasFlag(QuestData.VersioningBreaks.Break0))
             {
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused);
+                writer.Write(item.Unused);
                 if (!item.Versioning.HasFlag(QuestData.VersioningBreaks.Break1))
                 {
                     FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1228,14 +1221,16 @@ namespace Mutagen.Bethesda.Fallout3
             IQuestData item,
             MutagenFrame frame)
         {
-            item.Flags = frame.ReadUInt8();
+            item.Flags = EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Priority = frame.ReadUInt8();
             if (frame.Complete)
             {
                 item.Versioning |= QuestData.VersioningBreaks.Break0;
                 return;
             }
-            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Unused = frame.ReadUInt16();
             if (frame.Complete)
             {
                 item.Versioning |= QuestData.VersioningBreaks.Break1;
@@ -1308,9 +1303,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public QuestData.VersioningBreaks Versioning { get; private set; }
-        public Byte Flags => _structData.Span[0x0];
+        public Quest.Flag Flags => (Quest.Flag)_structData.Span.Slice(0x0, 0x1)[0];
         public Byte Priority => _structData.Span[0x1];
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Length <= 0x2 ? UtilityTranslation.Zeros.Slice(2) : _structData.Span.Slice(0x2, 0x2).ToArray();
+        public UInt16 Unused => _structData.Length <= 0x2 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
         public Single QuestDelay => _structData.Length <= 0x4 ? default : _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

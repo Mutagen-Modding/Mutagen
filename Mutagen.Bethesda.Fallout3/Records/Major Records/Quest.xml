@@ -14,11 +14,7 @@
   </Object>
   <Object name="QuestStage" objType="Subrecord">
     <Fields>
-      <Data recordType="INDX">
-        <Fields>
-          <Int16 name="Index" />
-        </Fields>
-      </Data>
+      <Int16 name="Index" recordType="INDX" nullable="False" />
       <RefList name="LogEntries" refName="QuestLogEntry" />
     </Fields>
   </Object>
@@ -34,7 +30,7 @@
   <Object name="QuestObjective" objType="Subrecord">
     <Fields>
       <Int32 name="Index" recordType="QOBJ" nullable="False" />
-      <String name="DisplayText" recordType="NNAM" />
+      <String name="Description" recordType="NNAM" />
       <RefList name="Targets" refName="QuestObjectiveTarget" />
     </Fields>
   </Object>
@@ -42,8 +38,11 @@
     <Fields>
       <Data recordType="QSTA">
         <Fields>
-          <FormLink name="Target" refName="Fallout3MajorRecord" />
-          <UInt32 name="Flags" />
+          <FormLink name="Target">
+            <Interface>IPlaced</Interface>
+          </FormLink>
+          <Bool name="CompassMarkerIgnoresLocks" byteLength="1" />
+          <ByteArray name="Unused" byteLength="3" nullable="False" />
         </Fields>
       </Data>
       <RefList name="Conditions" refName="Condition" />
@@ -51,10 +50,10 @@
   </Object>
   <Object name="QuestData" objType="Subrecord" recordType="DATA">
     <Fields>
-      <UInt8 name="Flags" />
+      <Enum name="Flags" enumName="Quest.Flag" byteLength="1" />
       <UInt8 name="Priority" />
       <Break />
-      <ByteArray name="Unused" byteLength="2" nullable="False" />
+      <UInt16 name="Unused" />
       <Break />
       <Float name="QuestDelay" />
     </Fields>

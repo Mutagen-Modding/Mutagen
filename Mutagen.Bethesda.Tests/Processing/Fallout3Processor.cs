@@ -56,6 +56,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
         AddDynamicProcessing(RecordTypes.DIAL, ProcessDialogs);
         AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
+        AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(
             ProcessPlaced,
             PlacedObject_Registration.TriggeringRecordType,
@@ -130,6 +131,18 @@ public class Fallout3Processor : Processor
             RecordTypes.QSTI, RecordTypes.TPIC, RecordTypes.PNAM, RecordTypes.NAME,
             RecordTypes.TCLT, RecordTypes.TCLF, RecordTypes.TCFU, RecordTypes.SNDD,
             RecordTypes.ANAM, RecordTypes.KNAM, RecordTypes.SNAM, RecordTypes.LNAM);
+    }
+
+    private void ProcessQuests(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.IsDeleted) return;
+
+        foreach (var qsta in majorFrame.FindEnumerateSubrecords(RecordTypes.QSTA))
+        {
+            ProcessBool(qsta, fileOffset, loc: 4, length: 1, importantBytes: 1);
+        }
     }
 
     private void NormalizeFormIdOverflows(

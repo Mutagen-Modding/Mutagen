@@ -6,13 +6,8 @@ public partial class Quest
     public enum Flag
     {
         StartGameEnabled = 0x01,
-        AllowRepeatedStages = 0x04,
-        AllowRepeatedConversationTopics = 0x08,
-    }
-
-    [Flags]
-    public enum TargetFlag
-    {
-        CompassMarkerIgnoresLocks = 0x1,
+        AllowRepeatedConversationTopics = 0x04,
+        AllowRepeatedStages = 0x08,
+        DefaultScriptProcessingDelay = 0x10,
     }
 }

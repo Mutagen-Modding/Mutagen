@@ -1131,10 +1131,10 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.INDX)))
-            {
-                writer.Write(item.Index);
-            }
+            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Index,
+                header: translationParams.ConvertToCustom(RecordTypes.INDX));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestLogEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.LogEntries,
@@ -1192,9 +1192,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 2) return null;
-                    item.Index = dataFrame.ReadInt16();
+                    item.Index = frame.ReadInt16();
                     return (int)QuestStage_FieldIndex.Index;
                 }
                 case RecordTypeInts.QSDT:
@@ -1279,11 +1277,9 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        private RangeInt32? _INDXLocation;
         #region Index
-        private int _IndexLocation => _INDXLocation!.Value.Min;
-        private bool _Index_IsSet => _INDXLocation.HasValue;
-        public Int16 Index => _Index_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_IndexLocation, 2)) : default(Int16);
+        private int? _IndexLocation;
+        public Int16 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(Int16);
         #endregion
         public IReadOnlyList<IQuestLogEntryGetter> LogEntries { get; private set; } = [];
         partial void CustomFactoryEnd(
@@ -1352,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _INDXLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    _IndexLocation = (stream.Position - offset);
                     return (int)QuestStage_FieldIndex.Index;
                 }
                 case RecordTypeInts.QSDT:

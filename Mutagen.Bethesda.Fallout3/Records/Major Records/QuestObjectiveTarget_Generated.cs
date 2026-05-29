@@ -53,17 +53,28 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Target
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Target = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Target
+        private readonly IFormLink<IPlacedGetter> _Target = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Target
         {
             get => _Target;
             set => _Target.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IQuestObjectiveTargetGetter.Target => this.Target;
+        IFormLinkGetter<IPlacedGetter> IQuestObjectiveTargetGetter.Target => this.Target;
         #endregion
-        #region Flags
-        public UInt32 Flags { get; set; } = default(UInt32);
+        #region CompassMarkerIgnoresLocks
+        public Boolean CompassMarkerIgnoresLocks { get; set; } = default(Boolean);
+        #endregion
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
+        {
+            get => _Unused;
+            set => this._Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IQuestObjectiveTargetGetter.Unused => this.Unused;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,17 +130,20 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Target = initialValue;
-                this.Flags = initialValue;
+                this.CompassMarkerIgnoresLocks = initialValue;
+                this.Unused = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
                 TItem Target,
-                TItem Flags,
+                TItem CompassMarkerIgnoresLocks,
+                TItem Unused,
                 TItem Conditions)
             {
                 this.Target = Target;
-                this.Flags = Flags;
+                this.CompassMarkerIgnoresLocks = CompassMarkerIgnoresLocks;
+                this.Unused = Unused;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
             }
 
@@ -143,7 +157,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Target;
-            public TItem Flags;
+            public TItem CompassMarkerIgnoresLocks;
+            public TItem Unused;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
@@ -158,7 +173,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Target, rhs.Target)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.CompassMarkerIgnoresLocks, rhs.CompassMarkerIgnoresLocks)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 return true;
             }
@@ -166,7 +182,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.Target);
-                hash.Add(this.Flags);
+                hash.Add(this.CompassMarkerIgnoresLocks);
+                hash.Add(this.Unused);
                 hash.Add(this.Conditions);
                 return hash.ToHashCode();
             }
@@ -177,7 +194,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Target)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.CompassMarkerIgnoresLocks)) return false;
+                if (!eval(this.Unused)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -198,7 +216,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Target)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.CompassMarkerIgnoresLocks)) return true;
+                if (eval(this.Unused)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -226,7 +245,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Target = eval(this.Target);
-                obj.Flags = eval(this.Flags);
+                obj.CompassMarkerIgnoresLocks = eval(this.CompassMarkerIgnoresLocks);
+                obj.Unused = eval(this.Unused);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), []);
@@ -264,9 +284,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Target, "Target");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.CompassMarkerIgnoresLocks ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(CompassMarkerIgnoresLocks, "CompassMarkerIgnoresLocks");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
@@ -312,7 +336,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Target;
-            public Exception? Flags;
+            public Exception? CompassMarkerIgnoresLocks;
+            public Exception? Unused;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             #endregion
 
@@ -324,8 +349,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case QuestObjectiveTarget_FieldIndex.Target:
                         return Target;
-                    case QuestObjectiveTarget_FieldIndex.Flags:
-                        return Flags;
+                    case QuestObjectiveTarget_FieldIndex.CompassMarkerIgnoresLocks:
+                        return CompassMarkerIgnoresLocks;
+                    case QuestObjectiveTarget_FieldIndex.Unused:
+                        return Unused;
                     case QuestObjectiveTarget_FieldIndex.Conditions:
                         return Conditions;
                     default:
@@ -341,8 +368,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case QuestObjectiveTarget_FieldIndex.Target:
                         this.Target = ex;
                         break;
-                    case QuestObjectiveTarget_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case QuestObjectiveTarget_FieldIndex.CompassMarkerIgnoresLocks:
+                        this.CompassMarkerIgnoresLocks = ex;
+                        break;
+                    case QuestObjectiveTarget_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case QuestObjectiveTarget_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -360,8 +390,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case QuestObjectiveTarget_FieldIndex.Target:
                         this.Target = (Exception?)obj;
                         break;
-                    case QuestObjectiveTarget_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case QuestObjectiveTarget_FieldIndex.CompassMarkerIgnoresLocks:
+                        this.CompassMarkerIgnoresLocks = (Exception?)obj;
+                        break;
+                    case QuestObjectiveTarget_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case QuestObjectiveTarget_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -375,7 +408,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Target != null) return true;
-                if (Flags != null) return true;
+                if (CompassMarkerIgnoresLocks != null) return true;
+                if (Unused != null) return true;
                 if (Conditions != null) return true;
                 return false;
             }
@@ -406,7 +440,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Target, "Target");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(CompassMarkerIgnoresLocks, "CompassMarkerIgnoresLocks");
+                }
+                {
+                    sb.AppendItem(Unused, "Unused");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
@@ -435,7 +472,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Target = this.Target.Combine(rhs.Target);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.CompassMarkerIgnoresLocks = this.CompassMarkerIgnoresLocks.Combine(rhs.CompassMarkerIgnoresLocks);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
@@ -461,7 +499,8 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Target;
-            public bool Flags;
+            public bool CompassMarkerIgnoresLocks;
+            public bool Unused;
             public Condition.TranslationMask? Conditions;
             #endregion
 
@@ -473,7 +512,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Target = defaultOn;
-                this.Flags = defaultOn;
+                this.CompassMarkerIgnoresLocks = defaultOn;
+                this.Unused = defaultOn;
             }
 
             #endregion
@@ -490,7 +530,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Target, null));
-                ret.Add((Flags, null));
+                ret.Add((CompassMarkerIgnoresLocks, null));
+                ret.Add((Unused, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
@@ -570,8 +611,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IQuestObjectiveTarget>,
         IQuestObjectiveTargetGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Target { get; set; }
-        new UInt32 Flags { get; set; }
+        new IFormLink<IPlacedGetter> Target { get; set; }
+        new Boolean CompassMarkerIgnoresLocks { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
 
@@ -588,8 +630,9 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => QuestObjectiveTarget_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Target { get; }
-        UInt32 Flags { get; }
+        IFormLinkGetter<IPlacedGetter> Target { get; }
+        Boolean CompassMarkerIgnoresLocks { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
@@ -761,8 +804,9 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum QuestObjectiveTarget_FieldIndex
     {
         Target = 0,
-        Flags = 1,
-        Conditions = 2,
+        CompassMarkerIgnoresLocks = 1,
+        Unused = 2,
+        Conditions = 3,
     }
     #endregion
 
@@ -773,9 +817,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(QuestObjectiveTarget.Mask<>);
 
@@ -854,7 +898,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Target.Clear();
-            item.Flags = default(UInt32);
+            item.CompassMarkerIgnoresLocks = default(Boolean);
+            item.Unused = new byte[3];
             item.Conditions.Clear();
         }
         
@@ -908,7 +953,8 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Target = item.Target.Equals(rhs.Target);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.CompassMarkerIgnoresLocks = item.CompassMarkerIgnoresLocks == rhs.CompassMarkerIgnoresLocks;
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -961,9 +1007,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Target.FormKey, "Target");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.CompassMarkerIgnoresLocks ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.CompassMarkerIgnoresLocks, "CompassMarkerIgnoresLocks");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
@@ -992,9 +1042,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Target.Equals(rhs.Target)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.CompassMarkerIgnoresLocks) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.CompassMarkerIgnoresLocks != rhs.CompassMarkerIgnoresLocks) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Conditions) ?? true))
             {
@@ -1007,7 +1061,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.Target);
-            hash.Add(item.Flags);
+            hash.Add(item.CompassMarkerIgnoresLocks);
+            hash.Add(item.Unused);
             hash.Add(item.Conditions);
             return hash.ToHashCode();
         }
@@ -1050,9 +1105,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Target.SetTo(rhs.Target.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.CompassMarkerIgnoresLocks) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.CompassMarkerIgnoresLocks = rhs.CompassMarkerIgnoresLocks;
+            }
+            if ((copyMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Conditions) ?? true))
             {
@@ -1192,7 +1251,10 @@ namespace Mutagen.Bethesda.Fallout3
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Target);
-                writer.Write(item.Flags);
+                writer.Write(item.CompassMarkerIgnoresLocks);
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused);
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
@@ -1249,14 +1311,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Unused, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
                     item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    if (dataFrame.Remaining < 4) return null;
-                    item.Flags = dataFrame.ReadUInt32();
-                    return (int)QuestObjectiveTarget_FieldIndex.Flags;
+                    if (dataFrame.Remaining < 1) return null;
+                    item.CompassMarkerIgnoresLocks = dataFrame.ReadBoolean();
+                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    return (int)QuestObjectiveTarget_FieldIndex.Unused;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -1341,12 +1404,17 @@ namespace Mutagen.Bethesda.Fallout3
         #region Target
         private int _TargetLocation => _QSTALocation!.Value.Min;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Target => _Target_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData.Span.Slice(_TargetLocation, 0x4), isSet: _Target_IsSet) : FormLink<IFallout3MajorRecordGetter>.Null;
+        public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _recordData.Span.Slice(_TargetLocation, 0x4), isSet: _Target_IsSet) : FormLink<IPlacedGetter>.Null;
         #endregion
-        #region Flags
-        private int _FlagsLocation => _QSTALocation!.Value.Min + 0x4;
-        private bool _Flags_IsSet => _QSTALocation.HasValue;
-        public UInt32 Flags => _Flags_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation, 4)) : default(UInt32);
+        #region CompassMarkerIgnoresLocks
+        private int _CompassMarkerIgnoresLocksLocation => _QSTALocation!.Value.Min + 0x4;
+        private bool _CompassMarkerIgnoresLocks_IsSet => _QSTALocation.HasValue;
+        public Boolean CompassMarkerIgnoresLocks => _CompassMarkerIgnoresLocks_IsSet ? _recordData.Slice(_CompassMarkerIgnoresLocksLocation, 1)[0] >= 1 : default(Boolean);
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _QSTALocation!.Value.Min + 0x5;
+        private bool _Unused_IsSet => _QSTALocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(
@@ -1414,9 +1482,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.QSTA:
                 {
-                    if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)QuestObjectiveTarget_FieldIndex.Unused, translationParams)) return ParseResult.Stop;
                     _QSTALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)QuestObjectiveTarget_FieldIndex.Flags;
+                    return (int)QuestObjectiveTarget_FieldIndex.Unused;
                 }
                 case RecordTypeInts.CTDA:
                 {

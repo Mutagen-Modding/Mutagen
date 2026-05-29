@@ -55,10 +55,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region Index
         public Int32 Index { get; set; } = default(Int32);
         #endregion
-        #region DisplayText
-        public String? DisplayText { get; set; }
+        #region Description
+        public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IQuestObjectiveGetter.DisplayText => this.DisplayText;
+        String? IQuestObjectiveGetter.Description => this.Description;
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -114,17 +114,17 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.DisplayText = initialValue;
+                this.Description = initialValue;
                 this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
                 TItem Index,
-                TItem DisplayText,
+                TItem Description,
                 TItem Targets)
             {
                 this.Index = Index;
-                this.DisplayText = DisplayText;
+                this.Description = Description;
                 this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>(Targets, []);
             }
 
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Index;
-            public TItem DisplayText;
+            public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjectiveTarget.Mask<TItem>?>>?>? Targets;
             #endregion
 
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.DisplayText, rhs.DisplayText)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Targets, rhs.Targets)) return false;
                 return true;
             }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.Index);
-                hash.Add(this.DisplayText);
+                hash.Add(this.Description);
                 hash.Add(this.Targets);
                 return hash.ToHashCode();
             }
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
-                if (!eval(this.DisplayText)) return false;
+                if (!eval(this.Description)) return false;
                 if (this.Targets != null)
                 {
                     if (!eval(this.Targets.Overall)) return false;
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
-                if (eval(this.DisplayText)) return true;
+                if (eval(this.Description)) return true;
                 if (this.Targets != null)
                 {
                     if (eval(this.Targets.Overall)) return true;
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
-                obj.DisplayText = eval(this.DisplayText);
+                obj.Description = eval(this.Description);
                 if (Targets != null)
                 {
                     obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestObjectiveTarget.Mask<R>?>>?>(eval(this.Targets.Overall), []);
@@ -259,9 +259,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Index, "Index");
                     }
-                    if (printMask?.DisplayText ?? true)
+                    if (printMask?.Description ?? true)
                     {
-                        sb.AppendItem(DisplayText, "DisplayText");
+                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Targets?.Overall ?? true)
                         && Targets is {} TargetsItem)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Index;
-            public Exception? DisplayText;
+            public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjectiveTarget.ErrorMask?>>?>? Targets;
             #endregion
 
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case QuestObjective_FieldIndex.Index:
                         return Index;
-                    case QuestObjective_FieldIndex.DisplayText:
-                        return DisplayText;
+                    case QuestObjective_FieldIndex.Description:
+                        return Description;
                     case QuestObjective_FieldIndex.Targets:
                         return Targets;
                     default:
@@ -336,8 +336,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case QuestObjective_FieldIndex.Index:
                         this.Index = ex;
                         break;
-                    case QuestObjective_FieldIndex.DisplayText:
-                        this.DisplayText = ex;
+                    case QuestObjective_FieldIndex.Description:
+                        this.Description = ex;
                         break;
                     case QuestObjective_FieldIndex.Targets:
                         this.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjectiveTarget.ErrorMask?>>?>(ex, null);
@@ -355,8 +355,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case QuestObjective_FieldIndex.Index:
                         this.Index = (Exception?)obj;
                         break;
-                    case QuestObjective_FieldIndex.DisplayText:
-                        this.DisplayText = (Exception?)obj;
+                    case QuestObjective_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
                         break;
                     case QuestObjective_FieldIndex.Targets:
                         this.Targets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjectiveTarget.ErrorMask?>>?>)obj;
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Index != null) return true;
-                if (DisplayText != null) return true;
+                if (Description != null) return true;
                 if (Targets != null) return true;
                 return false;
             }
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Index, "Index");
                 }
                 {
-                    sb.AppendItem(DisplayText, "DisplayText");
+                    sb.AppendItem(Description, "Description");
                 }
                 if (Targets is {} TargetsItem)
                 {
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.DisplayText = this.DisplayText.Combine(rhs.DisplayText);
+                ret.Description = this.Description.Combine(rhs.Description);
                 ret.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjectiveTarget.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Targets?.Overall, rhs.Targets?.Overall), Noggog.ExceptionExt.Combine(this.Targets?.Specific, rhs.Targets?.Specific));
                 return ret;
             }
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Index;
-            public bool DisplayText;
+            public bool Description;
             public QuestObjectiveTarget.TranslationMask? Targets;
             #endregion
 
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Index = defaultOn;
-                this.DisplayText = defaultOn;
+                this.Description = defaultOn;
             }
 
             #endregion
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Index, null));
-                ret.Add((DisplayText, null));
+                ret.Add((Description, null));
                 ret.Add((Targets == null ? DefaultOn : !Targets.GetCrystal().CopyNothing, Targets?.GetCrystal()));
             }
 
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Fallout3
         IQuestObjectiveGetter
     {
         new Int32 Index { get; set; }
-        new String? DisplayText { get; set; }
+        new String? Description { get; set; }
         new ExtendedList<QuestObjectiveTarget> Targets { get; }
     }
 
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => QuestObjective_Registration.Instance;
         Int32 Index { get; }
-        String? DisplayText { get; }
+        String? Description { get; }
         IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; }
 
     }
@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum QuestObjective_FieldIndex
     {
         Index = 0,
-        DisplayText = 1,
+        Description = 1,
         Targets = 2,
     }
     #endregion
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Index = default(Int32);
-            item.DisplayText = default;
+            item.Description = default;
             item.Targets.Clear();
         }
         
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Index = item.Index == rhs.Index;
-            ret.DisplayText = string.Equals(item.DisplayText, rhs.DisplayText);
+            ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Targets = item.Targets.CollectionEqualsHelper(
                 rhs.Targets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -957,10 +957,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Index, "Index");
             }
-            if ((printMask?.DisplayText ?? true)
-                && item.DisplayText is {} DisplayTextItem)
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
             {
-                sb.AppendItem(DisplayTextItem, "DisplayText");
+                sb.AppendItem(DescriptionItem, "Description");
             }
             if (printMask?.Targets?.Overall ?? true)
             {
@@ -989,9 +989,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Index != rhs.Index) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.DisplayText) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Description) ?? true))
             {
-                if (!string.Equals(lhs.DisplayText, rhs.DisplayText)) return false;
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Targets) ?? true))
             {
@@ -1004,9 +1004,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.Index);
-            if (item.DisplayText is {} DisplayTextitem)
+            if (item.Description is {} Descriptionitem)
             {
-                hash.Add(DisplayTextitem);
+                hash.Add(Descriptionitem);
             }
             hash.Add(item.Targets);
             return hash.ToHashCode();
@@ -1049,9 +1049,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Index = rhs.Index;
             }
-            if ((copyMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.DisplayText) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Description) ?? true))
             {
-                item.DisplayText = rhs.DisplayText;
+                item.Description = rhs.Description;
             }
             if ((copyMask?.GetShouldTranslate((int)QuestObjective_FieldIndex.Targets) ?? true))
             {
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Fallout3
                 header: translationParams.ConvertToCustom(RecordTypes.QOBJ));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.DisplayText,
+                item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestObjectiveTargetGetter>.Instance.Write(
@@ -1258,11 +1258,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayText = StringBinaryTranslation.Instance.Parse(
+                    item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)QuestObjective_FieldIndex.DisplayText;
+                    return (int)QuestObjective_FieldIndex.Description;
                 }
                 case RecordTypeInts.QSTA:
                 {
@@ -1347,9 +1347,9 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _IndexLocation;
         public Int32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IndexLocation.Value, _package.MetaData.Constants)) : default(Int32);
         #endregion
-        #region DisplayText
-        private int? _DisplayTextLocation;
-        public String? DisplayText => _DisplayTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisplayTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Description
+        private int? _DescriptionLocation;
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IQuestObjectiveTargetGetter> Targets { get; private set; } = [];
         partial void CustomFactoryEnd(
@@ -1423,8 +1423,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _DisplayTextLocation = (stream.Position - offset);
-                    return (int)QuestObjective_FieldIndex.DisplayText;
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)QuestObjective_FieldIndex.Description;
                 }
                 case RecordTypeInts.QSTA:
                 {
