@@ -85,6 +85,8 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             DialogResponses_Registration.Instance,
             DialogResponsesData_Registration.Instance,
             DialogTopic_Registration.Instance,
+            DialogTopicAssociatedQuest_Registration.Instance,
+            DialogTopicSharedInfo_Registration.Instance,
             Door_Registration.Instance,
             Effect_Registration.Instance,
             EffectData_Registration.Instance,

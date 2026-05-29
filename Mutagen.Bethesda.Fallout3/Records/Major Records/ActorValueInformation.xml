@@ -8,5 +8,6 @@
       <RefDirect name="Icons" refName="Icons" />
       <String name="Abbreviation" recordType="ANAM" />
     </Fields>
+    <LinkInterface>IActorValueOrPerk</LinkInterface>
   </Object>
 </Loqui>

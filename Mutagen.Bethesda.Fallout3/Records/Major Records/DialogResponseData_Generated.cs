@@ -60,30 +60,22 @@ namespace Mutagen.Bethesda.Fallout3
         #region EmotionValue
         public Int32 EmotionValue { get; set; } = default(Int32);
         #endregion
-        #region TRDTUnused1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _TRDTUnused1 = new byte[4];
-        public MemorySlice<Byte> TRDTUnused1
-        {
-            get => _TRDTUnused1;
-            set => this._TRDTUnused1 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.TRDTUnused1 => this.TRDTUnused1;
+        #region Unused1
+        public UInt32 Unused1 { get; set; } = default(UInt32);
         #endregion
         #region ResponseNumber
         public Byte ResponseNumber { get; set; } = default(Byte);
         #endregion
-        #region TRDTUnused2
+        #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _TRDTUnused2 = new byte[3];
-        public MemorySlice<Byte> TRDTUnused2
+        private MemorySlice<Byte> _Unused2 = new byte[3];
+        public MemorySlice<Byte> Unused2
         {
-            get => _TRDTUnused2;
-            set => this._TRDTUnused2 = value;
+            get => _Unused2;
+            set => this._Unused2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.TRDTUnused2 => this.TRDTUnused2;
+        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.Unused2 => this.Unused2;
         #endregion
         #region ResponseSound
         private readonly IFormLink<ISoundGetter> _ResponseSound = new FormLink<ISoundGetter>();
@@ -96,62 +88,18 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<ISoundGetter> IDialogResponseDataGetter.ResponseSound => this.ResponseSound;
         #endregion
         #region UseEmotionAnimation
-        public Byte UseEmotionAnimation { get; set; } = default(Byte);
+        public Boolean UseEmotionAnimation { get; set; } = default(Boolean);
         #endregion
-        #region TRDTUnused3
+        #region Unused3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _TRDTUnused3 = new byte[3];
-        public MemorySlice<Byte> TRDTUnused3
+        private MemorySlice<Byte> _Unused3 = new byte[3];
+        public MemorySlice<Byte> Unused3
         {
-            get => _TRDTUnused3;
-            set => this._TRDTUnused3 = value;
+            get => _Unused3;
+            set => this._Unused3 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.TRDTUnused3 => this.TRDTUnused3;
-        #endregion
-        #region SCDA
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _SCDA;
-        public MemorySlice<Byte>? SCDA
-        {
-            get => this._SCDA;
-            set => this._SCDA = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponseDataGetter.SCDA => this.SCDA;
-        #endregion
-        #region SCHR
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _SCHR;
-        public MemorySlice<Byte>? SCHR
-        {
-            get => this._SCHR;
-            set => this._SCHR = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponseDataGetter.SCHR => this.SCHR;
-        #endregion
-        #region SCRO
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _SCRO;
-        public MemorySlice<Byte>? SCRO
-        {
-            get => this._SCRO;
-            set => this._SCRO = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponseDataGetter.SCRO => this.SCRO;
-        #endregion
-        #region SCTX
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _SCTX;
-        public MemorySlice<Byte>? SCTX
-        {
-            get => this._SCTX;
-            set => this._SCTX = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponseDataGetter.SCTX => this.SCTX;
+        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.Unused3 => this.Unused3;
         #endregion
 
         #region To String
@@ -195,46 +143,34 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Versioning = initialValue;
                 this.EmotionType = initialValue;
                 this.EmotionValue = initialValue;
-                this.TRDTUnused1 = initialValue;
+                this.Unused1 = initialValue;
                 this.ResponseNumber = initialValue;
-                this.TRDTUnused2 = initialValue;
+                this.Unused2 = initialValue;
                 this.ResponseSound = initialValue;
                 this.UseEmotionAnimation = initialValue;
-                this.TRDTUnused3 = initialValue;
-                this.SCDA = initialValue;
-                this.SCHR = initialValue;
-                this.SCRO = initialValue;
-                this.SCTX = initialValue;
+                this.Unused3 = initialValue;
             }
 
             public Mask(
                 TItem Versioning,
                 TItem EmotionType,
                 TItem EmotionValue,
-                TItem TRDTUnused1,
+                TItem Unused1,
                 TItem ResponseNumber,
-                TItem TRDTUnused2,
+                TItem Unused2,
                 TItem ResponseSound,
                 TItem UseEmotionAnimation,
-                TItem TRDTUnused3,
-                TItem SCDA,
-                TItem SCHR,
-                TItem SCRO,
-                TItem SCTX)
+                TItem Unused3)
             {
                 this.Versioning = Versioning;
                 this.EmotionType = EmotionType;
                 this.EmotionValue = EmotionValue;
-                this.TRDTUnused1 = TRDTUnused1;
+                this.Unused1 = Unused1;
                 this.ResponseNumber = ResponseNumber;
-                this.TRDTUnused2 = TRDTUnused2;
+                this.Unused2 = Unused2;
                 this.ResponseSound = ResponseSound;
                 this.UseEmotionAnimation = UseEmotionAnimation;
-                this.TRDTUnused3 = TRDTUnused3;
-                this.SCDA = SCDA;
-                this.SCHR = SCHR;
-                this.SCRO = SCRO;
-                this.SCTX = SCTX;
+                this.Unused3 = Unused3;
             }
 
             #pragma warning disable CS8618
@@ -249,16 +185,12 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Versioning;
             public TItem EmotionType;
             public TItem EmotionValue;
-            public TItem TRDTUnused1;
+            public TItem Unused1;
             public TItem ResponseNumber;
-            public TItem TRDTUnused2;
+            public TItem Unused2;
             public TItem ResponseSound;
             public TItem UseEmotionAnimation;
-            public TItem TRDTUnused3;
-            public TItem SCDA;
-            public TItem SCHR;
-            public TItem SCRO;
-            public TItem SCTX;
+            public TItem Unused3;
             #endregion
 
             #region Equals
@@ -274,16 +206,12 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.EmotionType, rhs.EmotionType)) return false;
                 if (!object.Equals(this.EmotionValue, rhs.EmotionValue)) return false;
-                if (!object.Equals(this.TRDTUnused1, rhs.TRDTUnused1)) return false;
+                if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
                 if (!object.Equals(this.ResponseNumber, rhs.ResponseNumber)) return false;
-                if (!object.Equals(this.TRDTUnused2, rhs.TRDTUnused2)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
                 if (!object.Equals(this.ResponseSound, rhs.ResponseSound)) return false;
                 if (!object.Equals(this.UseEmotionAnimation, rhs.UseEmotionAnimation)) return false;
-                if (!object.Equals(this.TRDTUnused3, rhs.TRDTUnused3)) return false;
-                if (!object.Equals(this.SCDA, rhs.SCDA)) return false;
-                if (!object.Equals(this.SCHR, rhs.SCHR)) return false;
-                if (!object.Equals(this.SCRO, rhs.SCRO)) return false;
-                if (!object.Equals(this.SCTX, rhs.SCTX)) return false;
+                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -292,16 +220,12 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Versioning);
                 hash.Add(this.EmotionType);
                 hash.Add(this.EmotionValue);
-                hash.Add(this.TRDTUnused1);
+                hash.Add(this.Unused1);
                 hash.Add(this.ResponseNumber);
-                hash.Add(this.TRDTUnused2);
+                hash.Add(this.Unused2);
                 hash.Add(this.ResponseSound);
                 hash.Add(this.UseEmotionAnimation);
-                hash.Add(this.TRDTUnused3);
-                hash.Add(this.SCDA);
-                hash.Add(this.SCHR);
-                hash.Add(this.SCRO);
-                hash.Add(this.SCTX);
+                hash.Add(this.Unused3);
                 return hash.ToHashCode();
             }
 
@@ -313,16 +237,12 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Versioning)) return false;
                 if (!eval(this.EmotionType)) return false;
                 if (!eval(this.EmotionValue)) return false;
-                if (!eval(this.TRDTUnused1)) return false;
+                if (!eval(this.Unused1)) return false;
                 if (!eval(this.ResponseNumber)) return false;
-                if (!eval(this.TRDTUnused2)) return false;
+                if (!eval(this.Unused2)) return false;
                 if (!eval(this.ResponseSound)) return false;
                 if (!eval(this.UseEmotionAnimation)) return false;
-                if (!eval(this.TRDTUnused3)) return false;
-                if (!eval(this.SCDA)) return false;
-                if (!eval(this.SCHR)) return false;
-                if (!eval(this.SCRO)) return false;
-                if (!eval(this.SCTX)) return false;
+                if (!eval(this.Unused3)) return false;
                 return true;
             }
             #endregion
@@ -333,16 +253,12 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Versioning)) return true;
                 if (eval(this.EmotionType)) return true;
                 if (eval(this.EmotionValue)) return true;
-                if (eval(this.TRDTUnused1)) return true;
+                if (eval(this.Unused1)) return true;
                 if (eval(this.ResponseNumber)) return true;
-                if (eval(this.TRDTUnused2)) return true;
+                if (eval(this.Unused2)) return true;
                 if (eval(this.ResponseSound)) return true;
                 if (eval(this.UseEmotionAnimation)) return true;
-                if (eval(this.TRDTUnused3)) return true;
-                if (eval(this.SCDA)) return true;
-                if (eval(this.SCHR)) return true;
-                if (eval(this.SCRO)) return true;
-                if (eval(this.SCTX)) return true;
+                if (eval(this.Unused3)) return true;
                 return false;
             }
             #endregion
@@ -360,16 +276,12 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Versioning = eval(this.Versioning);
                 obj.EmotionType = eval(this.EmotionType);
                 obj.EmotionValue = eval(this.EmotionValue);
-                obj.TRDTUnused1 = eval(this.TRDTUnused1);
+                obj.Unused1 = eval(this.Unused1);
                 obj.ResponseNumber = eval(this.ResponseNumber);
-                obj.TRDTUnused2 = eval(this.TRDTUnused2);
+                obj.Unused2 = eval(this.Unused2);
                 obj.ResponseSound = eval(this.ResponseSound);
                 obj.UseEmotionAnimation = eval(this.UseEmotionAnimation);
-                obj.TRDTUnused3 = eval(this.TRDTUnused3);
-                obj.SCDA = eval(this.SCDA);
-                obj.SCHR = eval(this.SCHR);
-                obj.SCRO = eval(this.SCRO);
-                obj.SCTX = eval(this.SCTX);
+                obj.Unused3 = eval(this.Unused3);
             }
             #endregion
 
@@ -400,17 +312,17 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(EmotionValue, "EmotionValue");
                     }
-                    if (printMask?.TRDTUnused1 ?? true)
+                    if (printMask?.Unused1 ?? true)
                     {
-                        sb.AppendItem(TRDTUnused1, "TRDTUnused1");
+                        sb.AppendItem(Unused1, "Unused1");
                     }
                     if (printMask?.ResponseNumber ?? true)
                     {
                         sb.AppendItem(ResponseNumber, "ResponseNumber");
                     }
-                    if (printMask?.TRDTUnused2 ?? true)
+                    if (printMask?.Unused2 ?? true)
                     {
-                        sb.AppendItem(TRDTUnused2, "TRDTUnused2");
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                     if (printMask?.ResponseSound ?? true)
                     {
@@ -420,25 +332,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(UseEmotionAnimation, "UseEmotionAnimation");
                     }
-                    if (printMask?.TRDTUnused3 ?? true)
+                    if (printMask?.Unused3 ?? true)
                     {
-                        sb.AppendItem(TRDTUnused3, "TRDTUnused3");
-                    }
-                    if (printMask?.SCDA ?? true)
-                    {
-                        sb.AppendItem(SCDA, "SCDA");
-                    }
-                    if (printMask?.SCHR ?? true)
-                    {
-                        sb.AppendItem(SCHR, "SCHR");
-                    }
-                    if (printMask?.SCRO ?? true)
-                    {
-                        sb.AppendItem(SCRO, "SCRO");
-                    }
-                    if (printMask?.SCTX ?? true)
-                    {
-                        sb.AppendItem(SCTX, "SCTX");
+                        sb.AppendItem(Unused3, "Unused3");
                     }
                 }
             }
@@ -467,16 +363,12 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Versioning;
             public Exception? EmotionType;
             public Exception? EmotionValue;
-            public Exception? TRDTUnused1;
+            public Exception? Unused1;
             public Exception? ResponseNumber;
-            public Exception? TRDTUnused2;
+            public Exception? Unused2;
             public Exception? ResponseSound;
             public Exception? UseEmotionAnimation;
-            public Exception? TRDTUnused3;
-            public Exception? SCDA;
-            public Exception? SCHR;
-            public Exception? SCRO;
-            public Exception? SCTX;
+            public Exception? Unused3;
             #endregion
 
             #region IErrorMask
@@ -491,26 +383,18 @@ namespace Mutagen.Bethesda.Fallout3
                         return EmotionType;
                     case DialogResponseData_FieldIndex.EmotionValue:
                         return EmotionValue;
-                    case DialogResponseData_FieldIndex.TRDTUnused1:
-                        return TRDTUnused1;
+                    case DialogResponseData_FieldIndex.Unused1:
+                        return Unused1;
                     case DialogResponseData_FieldIndex.ResponseNumber:
                         return ResponseNumber;
-                    case DialogResponseData_FieldIndex.TRDTUnused2:
-                        return TRDTUnused2;
+                    case DialogResponseData_FieldIndex.Unused2:
+                        return Unused2;
                     case DialogResponseData_FieldIndex.ResponseSound:
                         return ResponseSound;
                     case DialogResponseData_FieldIndex.UseEmotionAnimation:
                         return UseEmotionAnimation;
-                    case DialogResponseData_FieldIndex.TRDTUnused3:
-                        return TRDTUnused3;
-                    case DialogResponseData_FieldIndex.SCDA:
-                        return SCDA;
-                    case DialogResponseData_FieldIndex.SCHR:
-                        return SCHR;
-                    case DialogResponseData_FieldIndex.SCRO:
-                        return SCRO;
-                    case DialogResponseData_FieldIndex.SCTX:
-                        return SCTX;
+                    case DialogResponseData_FieldIndex.Unused3:
+                        return Unused3;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -530,14 +414,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case DialogResponseData_FieldIndex.EmotionValue:
                         this.EmotionValue = ex;
                         break;
-                    case DialogResponseData_FieldIndex.TRDTUnused1:
-                        this.TRDTUnused1 = ex;
+                    case DialogResponseData_FieldIndex.Unused1:
+                        this.Unused1 = ex;
                         break;
                     case DialogResponseData_FieldIndex.ResponseNumber:
                         this.ResponseNumber = ex;
                         break;
-                    case DialogResponseData_FieldIndex.TRDTUnused2:
-                        this.TRDTUnused2 = ex;
+                    case DialogResponseData_FieldIndex.Unused2:
+                        this.Unused2 = ex;
                         break;
                     case DialogResponseData_FieldIndex.ResponseSound:
                         this.ResponseSound = ex;
@@ -545,20 +429,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case DialogResponseData_FieldIndex.UseEmotionAnimation:
                         this.UseEmotionAnimation = ex;
                         break;
-                    case DialogResponseData_FieldIndex.TRDTUnused3:
-                        this.TRDTUnused3 = ex;
-                        break;
-                    case DialogResponseData_FieldIndex.SCDA:
-                        this.SCDA = ex;
-                        break;
-                    case DialogResponseData_FieldIndex.SCHR:
-                        this.SCHR = ex;
-                        break;
-                    case DialogResponseData_FieldIndex.SCRO:
-                        this.SCRO = ex;
-                        break;
-                    case DialogResponseData_FieldIndex.SCTX:
-                        this.SCTX = ex;
+                    case DialogResponseData_FieldIndex.Unused3:
+                        this.Unused3 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -579,14 +451,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case DialogResponseData_FieldIndex.EmotionValue:
                         this.EmotionValue = (Exception?)obj;
                         break;
-                    case DialogResponseData_FieldIndex.TRDTUnused1:
-                        this.TRDTUnused1 = (Exception?)obj;
+                    case DialogResponseData_FieldIndex.Unused1:
+                        this.Unused1 = (Exception?)obj;
                         break;
                     case DialogResponseData_FieldIndex.ResponseNumber:
                         this.ResponseNumber = (Exception?)obj;
                         break;
-                    case DialogResponseData_FieldIndex.TRDTUnused2:
-                        this.TRDTUnused2 = (Exception?)obj;
+                    case DialogResponseData_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
                         break;
                     case DialogResponseData_FieldIndex.ResponseSound:
                         this.ResponseSound = (Exception?)obj;
@@ -594,20 +466,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case DialogResponseData_FieldIndex.UseEmotionAnimation:
                         this.UseEmotionAnimation = (Exception?)obj;
                         break;
-                    case DialogResponseData_FieldIndex.TRDTUnused3:
-                        this.TRDTUnused3 = (Exception?)obj;
-                        break;
-                    case DialogResponseData_FieldIndex.SCDA:
-                        this.SCDA = (Exception?)obj;
-                        break;
-                    case DialogResponseData_FieldIndex.SCHR:
-                        this.SCHR = (Exception?)obj;
-                        break;
-                    case DialogResponseData_FieldIndex.SCRO:
-                        this.SCRO = (Exception?)obj;
-                        break;
-                    case DialogResponseData_FieldIndex.SCTX:
-                        this.SCTX = (Exception?)obj;
+                    case DialogResponseData_FieldIndex.Unused3:
+                        this.Unused3 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -620,16 +480,12 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Versioning != null) return true;
                 if (EmotionType != null) return true;
                 if (EmotionValue != null) return true;
-                if (TRDTUnused1 != null) return true;
+                if (Unused1 != null) return true;
                 if (ResponseNumber != null) return true;
-                if (TRDTUnused2 != null) return true;
+                if (Unused2 != null) return true;
                 if (ResponseSound != null) return true;
                 if (UseEmotionAnimation != null) return true;
-                if (TRDTUnused3 != null) return true;
-                if (SCDA != null) return true;
-                if (SCHR != null) return true;
-                if (SCRO != null) return true;
-                if (SCTX != null) return true;
+                if (Unused3 != null) return true;
                 return false;
             }
             #endregion
@@ -665,13 +521,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(EmotionValue, "EmotionValue");
                 }
                 {
-                    sb.AppendItem(TRDTUnused1, "TRDTUnused1");
+                    sb.AppendItem(Unused1, "Unused1");
                 }
                 {
                     sb.AppendItem(ResponseNumber, "ResponseNumber");
                 }
                 {
-                    sb.AppendItem(TRDTUnused2, "TRDTUnused2");
+                    sb.AppendItem(Unused2, "Unused2");
                 }
                 {
                     sb.AppendItem(ResponseSound, "ResponseSound");
@@ -680,19 +536,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(UseEmotionAnimation, "UseEmotionAnimation");
                 }
                 {
-                    sb.AppendItem(TRDTUnused3, "TRDTUnused3");
-                }
-                {
-                    sb.AppendItem(SCDA, "SCDA");
-                }
-                {
-                    sb.AppendItem(SCHR, "SCHR");
-                }
-                {
-                    sb.AppendItem(SCRO, "SCRO");
-                }
-                {
-                    sb.AppendItem(SCTX, "SCTX");
+                    sb.AppendItem(Unused3, "Unused3");
                 }
             }
             #endregion
@@ -705,16 +549,12 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.EmotionType = this.EmotionType.Combine(rhs.EmotionType);
                 ret.EmotionValue = this.EmotionValue.Combine(rhs.EmotionValue);
-                ret.TRDTUnused1 = this.TRDTUnused1.Combine(rhs.TRDTUnused1);
+                ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
                 ret.ResponseNumber = this.ResponseNumber.Combine(rhs.ResponseNumber);
-                ret.TRDTUnused2 = this.TRDTUnused2.Combine(rhs.TRDTUnused2);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
                 ret.ResponseSound = this.ResponseSound.Combine(rhs.ResponseSound);
                 ret.UseEmotionAnimation = this.UseEmotionAnimation.Combine(rhs.UseEmotionAnimation);
-                ret.TRDTUnused3 = this.TRDTUnused3.Combine(rhs.TRDTUnused3);
-                ret.SCDA = this.SCDA.Combine(rhs.SCDA);
-                ret.SCHR = this.SCHR.Combine(rhs.SCHR);
-                ret.SCRO = this.SCRO.Combine(rhs.SCRO);
-                ret.SCTX = this.SCTX.Combine(rhs.SCTX);
+                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -741,16 +581,12 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Versioning;
             public bool EmotionType;
             public bool EmotionValue;
-            public bool TRDTUnused1;
+            public bool Unused1;
             public bool ResponseNumber;
-            public bool TRDTUnused2;
+            public bool Unused2;
             public bool ResponseSound;
             public bool UseEmotionAnimation;
-            public bool TRDTUnused3;
-            public bool SCDA;
-            public bool SCHR;
-            public bool SCRO;
-            public bool SCTX;
+            public bool Unused3;
             #endregion
 
             #region Ctors
@@ -763,16 +599,12 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Versioning = defaultOn;
                 this.EmotionType = defaultOn;
                 this.EmotionValue = defaultOn;
-                this.TRDTUnused1 = defaultOn;
+                this.Unused1 = defaultOn;
                 this.ResponseNumber = defaultOn;
-                this.TRDTUnused2 = defaultOn;
+                this.Unused2 = defaultOn;
                 this.ResponseSound = defaultOn;
                 this.UseEmotionAnimation = defaultOn;
-                this.TRDTUnused3 = defaultOn;
-                this.SCDA = defaultOn;
-                this.SCHR = defaultOn;
-                this.SCRO = defaultOn;
-                this.SCTX = defaultOn;
+                this.Unused3 = defaultOn;
             }
 
             #endregion
@@ -791,16 +623,12 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Versioning, null));
                 ret.Add((EmotionType, null));
                 ret.Add((EmotionValue, null));
-                ret.Add((TRDTUnused1, null));
+                ret.Add((Unused1, null));
                 ret.Add((ResponseNumber, null));
-                ret.Add((TRDTUnused2, null));
+                ret.Add((Unused2, null));
                 ret.Add((ResponseSound, null));
                 ret.Add((UseEmotionAnimation, null));
-                ret.Add((TRDTUnused3, null));
-                ret.Add((SCDA, null));
-                ret.Add((SCHR, null));
-                ret.Add((SCRO, null));
-                ret.Add((SCTX, null));
+                ret.Add((Unused3, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -888,16 +716,12 @@ namespace Mutagen.Bethesda.Fallout3
         new DialogResponseData.VersioningBreaks Versioning { get; set; }
         new EmotionType EmotionType { get; set; }
         new Int32 EmotionValue { get; set; }
-        new MemorySlice<Byte> TRDTUnused1 { get; set; }
+        new UInt32 Unused1 { get; set; }
         new Byte ResponseNumber { get; set; }
-        new MemorySlice<Byte> TRDTUnused2 { get; set; }
+        new MemorySlice<Byte> Unused2 { get; set; }
         new IFormLink<ISoundGetter> ResponseSound { get; set; }
-        new Byte UseEmotionAnimation { get; set; }
-        new MemorySlice<Byte> TRDTUnused3 { get; set; }
-        new MemorySlice<Byte>? SCDA { get; set; }
-        new MemorySlice<Byte>? SCHR { get; set; }
-        new MemorySlice<Byte>? SCRO { get; set; }
-        new MemorySlice<Byte>? SCTX { get; set; }
+        new Boolean UseEmotionAnimation { get; set; }
+        new MemorySlice<Byte> Unused3 { get; set; }
     }
 
     public partial interface IDialogResponseDataGetter :
@@ -916,16 +740,12 @@ namespace Mutagen.Bethesda.Fallout3
         DialogResponseData.VersioningBreaks Versioning { get; }
         EmotionType EmotionType { get; }
         Int32 EmotionValue { get; }
-        ReadOnlyMemorySlice<Byte> TRDTUnused1 { get; }
+        UInt32 Unused1 { get; }
         Byte ResponseNumber { get; }
-        ReadOnlyMemorySlice<Byte> TRDTUnused2 { get; }
+        ReadOnlyMemorySlice<Byte> Unused2 { get; }
         IFormLinkGetter<ISoundGetter> ResponseSound { get; }
-        Byte UseEmotionAnimation { get; }
-        ReadOnlyMemorySlice<Byte> TRDTUnused3 { get; }
-        ReadOnlyMemorySlice<Byte>? SCDA { get; }
-        ReadOnlyMemorySlice<Byte>? SCHR { get; }
-        ReadOnlyMemorySlice<Byte>? SCRO { get; }
-        ReadOnlyMemorySlice<Byte>? SCTX { get; }
+        Boolean UseEmotionAnimation { get; }
+        ReadOnlyMemorySlice<Byte> Unused3 { get; }
 
     }
 
@@ -1098,16 +918,12 @@ namespace Mutagen.Bethesda.Fallout3
         Versioning = 0,
         EmotionType = 1,
         EmotionValue = 2,
-        TRDTUnused1 = 3,
+        Unused1 = 3,
         ResponseNumber = 4,
-        TRDTUnused2 = 5,
+        Unused2 = 5,
         ResponseSound = 6,
         UseEmotionAnimation = 7,
-        TRDTUnused3 = 8,
-        SCDA = 9,
-        SCHR = 10,
-        SCRO = 11,
-        SCTX = 12,
+        Unused3 = 8,
     }
     #endregion
 
@@ -1118,9 +934,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(DialogResponseData.Mask<>);
 
@@ -1150,16 +966,8 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.TRDT);
-            var all = RecordCollection.Factory(
-                RecordTypes.TRDT,
-                RecordTypes.SCDA,
-                RecordTypes.SCHR,
-                RecordTypes.SCRO,
-                RecordTypes.SCTX);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            var all = RecordCollection.Factory(RecordTypes.TRDT);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(DialogResponseDataBinaryWriteTranslation);
         #region Interface
@@ -1204,16 +1012,12 @@ namespace Mutagen.Bethesda.Fallout3
             item.Versioning = default(DialogResponseData.VersioningBreaks);
             item.EmotionType = default(EmotionType);
             item.EmotionValue = default(Int32);
-            item.TRDTUnused1 = new byte[4];
+            item.Unused1 = default(UInt32);
             item.ResponseNumber = default(Byte);
-            item.TRDTUnused2 = new byte[3];
+            item.Unused2 = new byte[3];
             item.ResponseSound.Clear();
-            item.UseEmotionAnimation = default(Byte);
-            item.TRDTUnused3 = new byte[3];
-            item.SCDA = default;
-            item.SCHR = default;
-            item.SCRO = default;
-            item.SCTX = default;
+            item.UseEmotionAnimation = default(Boolean);
+            item.Unused3 = new byte[3];
         }
         
         #region Mutagen
@@ -1230,13 +1034,15 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                translationParams.ConvertToCustom(RecordTypes.TRDT),
+                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: DialogResponseDataBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: DialogResponseDataBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: DialogResponseDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -1269,16 +1075,12 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.EmotionType = item.EmotionType == rhs.EmotionType;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
-            ret.TRDTUnused1 = MemoryExtensions.SequenceEqual(item.TRDTUnused1.Span, rhs.TRDTUnused1.Span);
+            ret.Unused1 = item.Unused1 == rhs.Unused1;
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
-            ret.TRDTUnused2 = MemoryExtensions.SequenceEqual(item.TRDTUnused2.Span, rhs.TRDTUnused2.Span);
+            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
             ret.ResponseSound = item.ResponseSound.Equals(rhs.ResponseSound);
             ret.UseEmotionAnimation = item.UseEmotionAnimation == rhs.UseEmotionAnimation;
-            ret.TRDTUnused3 = MemoryExtensions.SequenceEqual(item.TRDTUnused3.Span, rhs.TRDTUnused3.Span);
-            ret.SCDA = MemorySliceExt.SequenceEqual(item.SCDA, rhs.SCDA);
-            ret.SCHR = MemorySliceExt.SequenceEqual(item.SCHR, rhs.SCHR);
-            ret.SCRO = MemorySliceExt.SequenceEqual(item.SCRO, rhs.SCRO);
-            ret.SCTX = MemorySliceExt.SequenceEqual(item.SCTX, rhs.SCTX);
+            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
         }
         
         public string Print(
@@ -1335,17 +1137,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.EmotionValue, "EmotionValue");
             }
-            if (printMask?.TRDTUnused1 ?? true)
+            if (printMask?.Unused1 ?? true)
             {
-                sb.AppendLine($"TRDTUnused1 => {SpanExt.ToHexString(item.TRDTUnused1)}");
+                sb.AppendItem(item.Unused1, "Unused1");
             }
             if (printMask?.ResponseNumber ?? true)
             {
                 sb.AppendItem(item.ResponseNumber, "ResponseNumber");
             }
-            if (printMask?.TRDTUnused2 ?? true)
+            if (printMask?.Unused2 ?? true)
             {
-                sb.AppendLine($"TRDTUnused2 => {SpanExt.ToHexString(item.TRDTUnused2)}");
+                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
             }
             if (printMask?.ResponseSound ?? true)
             {
@@ -1355,29 +1157,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.UseEmotionAnimation, "UseEmotionAnimation");
             }
-            if (printMask?.TRDTUnused3 ?? true)
+            if (printMask?.Unused3 ?? true)
             {
-                sb.AppendLine($"TRDTUnused3 => {SpanExt.ToHexString(item.TRDTUnused3)}");
-            }
-            if ((printMask?.SCDA ?? true)
-                && item.SCDA is {} SCDAItem)
-            {
-                sb.AppendLine($"SCDA => {SpanExt.ToHexString(SCDAItem)}");
-            }
-            if ((printMask?.SCHR ?? true)
-                && item.SCHR is {} SCHRItem)
-            {
-                sb.AppendLine($"SCHR => {SpanExt.ToHexString(SCHRItem)}");
-            }
-            if ((printMask?.SCRO ?? true)
-                && item.SCRO is {} SCROItem)
-            {
-                sb.AppendLine($"SCRO => {SpanExt.ToHexString(SCROItem)}");
-            }
-            if ((printMask?.SCTX ?? true)
-                && item.SCTX is {} SCTXItem)
-            {
-                sb.AppendLine($"SCTX => {SpanExt.ToHexString(SCTXItem)}");
+                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
             }
         }
         
@@ -1400,17 +1182,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.EmotionValue != rhs.EmotionValue) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.TRDTUnused1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unused1) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.TRDTUnused1.Span, rhs.TRDTUnused1.Span)) return false;
+                if (lhs.Unused1 != rhs.Unused1) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseNumber) ?? true))
             {
                 if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.TRDTUnused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unused2) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.TRDTUnused2.Span, rhs.TRDTUnused2.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseSound) ?? true))
             {
@@ -1420,25 +1202,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.UseEmotionAnimation != rhs.UseEmotionAnimation) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.TRDTUnused3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unused3) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.TRDTUnused3.Span, rhs.TRDTUnused3.Span)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCDA) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.SCDA, rhs.SCDA)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCHR) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.SCHR, rhs.SCHR)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCRO) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.SCRO, rhs.SCRO)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCTX) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.SCTX, rhs.SCTX)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
             }
             return true;
         }
@@ -1449,28 +1215,12 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Versioning);
             hash.Add(item.EmotionType);
             hash.Add(item.EmotionValue);
-            hash.Add(item.TRDTUnused1);
+            hash.Add(item.Unused1);
             hash.Add(item.ResponseNumber);
-            hash.Add(item.TRDTUnused2);
+            hash.Add(item.Unused2);
             hash.Add(item.ResponseSound);
             hash.Add(item.UseEmotionAnimation);
-            hash.Add(item.TRDTUnused3);
-            if (item.SCDA is {} SCDAItem)
-            {
-                hash.Add(SCDAItem);
-            }
-            if (item.SCHR is {} SCHRItem)
-            {
-                hash.Add(SCHRItem);
-            }
-            if (item.SCRO is {} SCROItem)
-            {
-                hash.Add(SCROItem);
-            }
-            if (item.SCTX is {} SCTXItem)
-            {
-                hash.Add(SCTXItem);
-            }
+            hash.Add(item.Unused3);
             return hash.ToHashCode();
         }
         
@@ -1516,17 +1266,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.EmotionValue = rhs.EmotionValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.TRDTUnused1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unused1) ?? true))
             {
-                item.TRDTUnused1 = rhs.TRDTUnused1.ToArray();
+                item.Unused1 = rhs.Unused1;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseNumber) ?? true))
             {
                 item.ResponseNumber = rhs.ResponseNumber;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.TRDTUnused2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unused2) ?? true))
             {
-                item.TRDTUnused2 = rhs.TRDTUnused2.ToArray();
+                item.Unused2 = rhs.Unused2.ToArray();
             }
             if (rhs.Versioning.HasFlag(DialogResponseData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseSound) ?? true))
@@ -1538,53 +1288,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.UseEmotionAnimation = rhs.UseEmotionAnimation;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.TRDTUnused3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unused3) ?? true))
             {
-                item.TRDTUnused3 = rhs.TRDTUnused3.ToArray();
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCDA) ?? true))
-            {
-                if(rhs.SCDA is {} SCDArhs)
-                {
-                    item.SCDA = SCDArhs.ToArray();
-                }
-                else
-                {
-                    item.SCDA = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCHR) ?? true))
-            {
-                if(rhs.SCHR is {} SCHRrhs)
-                {
-                    item.SCHR = SCHRrhs.ToArray();
-                }
-                else
-                {
-                    item.SCHR = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCRO) ?? true))
-            {
-                if(rhs.SCRO is {} SCROrhs)
-                {
-                    item.SCRO = SCROrhs.ToArray();
-                }
-                else
-                {
-                    item.SCRO = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.SCTX) ?? true))
-            {
-                if(rhs.SCTX is {} SCTXrhs)
-                {
-                    item.SCTX = SCTXrhs.ToArray();
-                }
-                else
-                {
-                    item.SCTX = default;
-                }
+                item.Unused3 = rhs.Unused3.ToArray();
             }
             DeepCopyInCustom(
                 item: item,
@@ -1699,13 +1405,11 @@ namespace Mutagen.Bethesda.Fallout3
                 item.EmotionType,
                 length: 4);
             writer.Write(item.EmotionValue);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.TRDTUnused1);
+            writer.Write(item.Unused1);
             writer.Write(item.ResponseNumber);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.TRDTUnused2);
+                item: item.Unused2);
             if (!item.Versioning.HasFlag(DialogResponseData.VersioningBreaks.Break0))
             {
                 FormLinkBinaryTranslation.Instance.Write(
@@ -1716,32 +1420,9 @@ namespace Mutagen.Bethesda.Fallout3
                     writer.Write(item.UseEmotionAnimation);
                     ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
-                        item: item.TRDTUnused3);
+                        item: item.Unused3);
                 }
             }
-        }
-
-        public static void WriteRecordTypes(
-            IDialogResponseDataGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
-        {
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.SCDA,
-                header: translationParams.ConvertToCustom(RecordTypes.SCDA));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.SCHR,
-                header: translationParams.ConvertToCustom(RecordTypes.SCHR));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.SCRO,
-                header: translationParams.ConvertToCustom(RecordTypes.SCRO));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.SCTX,
-                header: translationParams.ConvertToCustom(RecordTypes.SCTX));
         }
 
         public void Write(
@@ -1758,10 +1439,6 @@ namespace Mutagen.Bethesda.Fallout3
                 WriteEmbedded(
                     item: item,
                     writer: writerToUse);
-                WriteRecordTypes(
-                    item: item,
-                    writer: writerToUse,
-                    translationParams: translationParams);
             }
         }
 
@@ -1790,9 +1467,9 @@ namespace Mutagen.Bethesda.Fallout3
                 reader: frame,
                 length: 4);
             item.EmotionValue = frame.ReadInt32();
-            item.TRDTUnused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Unused1 = frame.ReadUInt32();
             item.ResponseNumber = frame.ReadUInt8();
-            item.TRDTUnused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             if (frame.Complete)
             {
                 item.Versioning |= DialogResponseData.VersioningBreaks.Break0;
@@ -1804,49 +1481,8 @@ namespace Mutagen.Bethesda.Fallout3
                 item.Versioning |= DialogResponseData.VersioningBreaks.Break1;
                 return;
             }
-            item.UseEmotionAnimation = frame.ReadUInt8();
-            item.TRDTUnused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
-        }
-
-        public static ParseResult FillBinaryRecordTypes(
-            IDialogResponseData item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.SCDA:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCDA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponseData_FieldIndex.SCDA;
-                }
-                case RecordTypeInts.SCHR:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponseData_FieldIndex.SCHR;
-                }
-                case RecordTypeInts.SCRO:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCRO = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponseData_FieldIndex.SCRO;
-                }
-                case RecordTypeInts.SCTX:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCTX = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponseData_FieldIndex.SCTX;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
+            item.UseEmotionAnimation = frame.ReadBoolean();
+            item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1916,28 +1552,12 @@ namespace Mutagen.Bethesda.Fallout3
         public DialogResponseData.VersioningBreaks Versioning { get; private set; }
         public EmotionType EmotionType => (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         public Int32 EmotionValue => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public ReadOnlyMemorySlice<Byte> TRDTUnused1 => _structData.Span.Slice(0x8, 0x4).ToArray();
+        public UInt32 Unused1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public Byte ResponseNumber => _structData.Span[0xC];
-        public ReadOnlyMemorySlice<Byte> TRDTUnused2 => _structData.Span.Slice(0xD, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0xD, 0x3).ToArray();
         public IFormLinkGetter<ISoundGetter> ResponseSound => _structData.Length <= 0x10 ? FormLink<ISoundGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x10, 0x4));
-        public Byte UseEmotionAnimation => _structData.Length <= 0x14 ? default : _structData.Span[0x14];
-        public ReadOnlyMemorySlice<Byte> TRDTUnused3 => _structData.Span.Length <= 0x15 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x15, 0x3).ToArray();
-        #region SCDA
-        private int? _SCDALocation;
-        public ReadOnlyMemorySlice<Byte>? SCDA => _SCDALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCDALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region SCHR
-        private int? _SCHRLocation;
-        public ReadOnlyMemorySlice<Byte>? SCHR => _SCHRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCHRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region SCRO
-        private int? _SCROLocation;
-        public ReadOnlyMemorySlice<Byte>? SCRO => _SCROLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCROLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region SCTX
-        private int? _SCTXLocation;
-        public ReadOnlyMemorySlice<Byte>? SCTX => _SCTXLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SCTXLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public Boolean UseEmotionAnimation => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x1)[0] >= 1;
+        public ReadOnlyMemorySlice<Byte> Unused3 => _structData.Span.Length <= 0x15 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x15, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1963,22 +1583,24 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x18,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new DialogResponseDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0x10)
+            {
+                ret.Versioning |= DialogResponseData.VersioningBreaks.Break0;
+            }
+            if (ret._structData.Length <= 0x14)
+            {
+                ret.Versioning |= DialogResponseData.VersioningBreaks.Break1;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset);
-            ret.FillSubrecordTypes(
-                stream: stream,
-                finalPos: finalPos,
-                offset: offset,
-                translationParams: translationParams,
-                fill: ret.FillRecordType);
             return ret;
         }
 
@@ -1993,42 +1615,6 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams translationParams = default)
-        {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.SCDA:
-                {
-                    _SCDALocation = (stream.Position - offset);
-                    return (int)DialogResponseData_FieldIndex.SCDA;
-                }
-                case RecordTypeInts.SCHR:
-                {
-                    _SCHRLocation = (stream.Position - offset);
-                    return (int)DialogResponseData_FieldIndex.SCHR;
-                }
-                case RecordTypeInts.SCRO:
-                {
-                    _SCROLocation = (stream.Position - offset);
-                    return (int)DialogResponseData_FieldIndex.SCRO;
-                }
-                case RecordTypeInts.SCTX:
-                {
-                    _SCTXLocation = (stream.Position - offset);
-                    return (int)DialogResponseData_FieldIndex.SCTX;
-                }
-                default:
-                    return ParseResult.Stop;
-            }
-        }
         #region To String
 
         public void Print(

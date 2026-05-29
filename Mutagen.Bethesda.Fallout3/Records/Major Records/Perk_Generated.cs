@@ -834,6 +834,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IPerk :
+        IActorValueOrPerk,
         IAssetLinkContainer,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
@@ -867,6 +868,7 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.PERK)]
     public partial interface IPerkGetter :
         IFallout3MajorRecordGetter,
+        IActorValueOrPerkGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,

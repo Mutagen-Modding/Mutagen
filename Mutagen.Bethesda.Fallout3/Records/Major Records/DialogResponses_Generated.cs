@@ -55,25 +55,19 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Data
+        public DialogResponsesData Data { get; set; } = new DialogResponsesData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DialogResponsesData? _Data;
-        public DialogResponsesData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDialogResponsesDataGetter? IDialogResponsesGetter.Data => this.Data;
+        IDialogResponsesDataGetter IDialogResponsesGetter.Data => Data;
         #endregion
         #region Quest
-        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
-        public IFormLinkNullable<IQuestGetter> Quest
+        private readonly IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
         {
             get => _Quest;
             set => _Quest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IQuestGetter> IDialogResponsesGetter.Quest => this.Quest;
+        IFormLinkGetter<IQuestGetter> IDialogResponsesGetter.Quest => this.Quest;
         #endregion
         #region PreviousTopic
         private readonly IFormLinkNullable<IDialogTopicGetter> _PreviousTopic = new FormLinkNullable<IDialogTopicGetter>();
@@ -181,20 +175,25 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region BeginScript
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ScriptFields _BeginScript_Object = new ScriptFields();
-        public ScriptFields BeginScript => _BeginScript_Object;
+        private ScriptFields? _BeginScript;
+        public ScriptFields? BeginScript
+        {
+            get => _BeginScript;
+            set => _BeginScript = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFieldsGetter IDialogResponsesGetter.BeginScript => _BeginScript_Object;
-        #endregion
-        #region NextMarker
-        public Boolean NextMarker { get; set; } = default(Boolean);
+        IScriptFieldsGetter? IDialogResponsesGetter.BeginScript => this.BeginScript;
         #endregion
         #region EndScript
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ScriptFields _EndScript_Object = new ScriptFields();
-        public ScriptFields EndScript => _EndScript_Object;
+        private ScriptFields? _EndScript;
+        public ScriptFields? EndScript
+        {
+            get => _EndScript;
+            set => _EndScript = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFieldsGetter IDialogResponsesGetter.EndScript => _EndScript_Object;
+        IScriptFieldsGetter? IDialogResponsesGetter.EndScript => this.EndScript;
         #endregion
         #region UnusedSound
         private readonly IFormLinkNullable<ISoundGetter> _UnusedSound = new FormLinkNullable<ISoundGetter>();
@@ -212,24 +211,24 @@ namespace Mutagen.Bethesda.Fallout3
         String? IDialogResponsesGetter.Prompt => this.Prompt;
         #endregion
         #region Speaker
-        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _Speaker = new FormLinkNullable<IFallout3MajorRecordGetter>();
-        public IFormLinkNullable<IFallout3MajorRecordGetter> Speaker
+        private readonly IFormLinkNullable<INpcSpawnGetter> _Speaker = new FormLinkNullable<INpcSpawnGetter>();
+        public IFormLinkNullable<INpcSpawnGetter> Speaker
         {
             get => _Speaker;
             set => _Speaker.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IDialogResponsesGetter.Speaker => this.Speaker;
+        IFormLinkNullableGetter<INpcSpawnGetter> IDialogResponsesGetter.Speaker => this.Speaker;
         #endregion
         #region ActorValuePerk
-        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _ActorValuePerk = new FormLinkNullable<IFallout3MajorRecordGetter>();
-        public IFormLinkNullable<IFallout3MajorRecordGetter> ActorValuePerk
+        private readonly IFormLinkNullable<IActorValueOrPerkGetter> _ActorValuePerk = new FormLinkNullable<IActorValueOrPerkGetter>();
+        public IFormLinkNullable<IActorValueOrPerkGetter> ActorValuePerk
         {
             get => _ActorValuePerk;
             set => _ActorValuePerk.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IDialogResponsesGetter.ActorValuePerk => this.ActorValuePerk;
+        IFormLinkNullableGetter<IActorValueOrPerkGetter> IDialogResponsesGetter.ActorValuePerk => this.ActorValuePerk;
         #endregion
         #region SpeechChallenge
         public SpeechChallenge? SpeechChallenge { get; set; }
@@ -272,7 +271,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.FollowUp = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.BeginScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
-                this.NextMarker = initialValue;
                 this.EndScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
                 this.UnusedSound = initialValue;
                 this.Prompt = initialValue;
@@ -300,7 +298,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem LinkFrom,
                 TItem FollowUp,
                 TItem BeginScript,
-                TItem NextMarker,
                 TItem EndScript,
                 TItem UnusedSound,
                 TItem Prompt,
@@ -327,7 +324,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LinkFrom = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LinkFrom, []);
                 this.FollowUp = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FollowUp, []);
                 this.BeginScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(BeginScript, new ScriptFields.Mask<TItem>(BeginScript));
-                this.NextMarker = NextMarker;
                 this.EndScript = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(EndScript, new ScriptFields.Mask<TItem>(EndScript));
                 this.UnusedSound = UnusedSound;
                 this.Prompt = Prompt;
@@ -356,7 +352,6 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LinkFrom;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? FollowUp;
             public MaskItem<TItem, ScriptFields.Mask<TItem>?>? BeginScript { get; set; }
-            public TItem NextMarker;
             public MaskItem<TItem, ScriptFields.Mask<TItem>?>? EndScript { get; set; }
             public TItem UnusedSound;
             public TItem Prompt;
@@ -387,7 +382,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.LinkFrom, rhs.LinkFrom)) return false;
                 if (!object.Equals(this.FollowUp, rhs.FollowUp)) return false;
                 if (!object.Equals(this.BeginScript, rhs.BeginScript)) return false;
-                if (!object.Equals(this.NextMarker, rhs.NextMarker)) return false;
                 if (!object.Equals(this.EndScript, rhs.EndScript)) return false;
                 if (!object.Equals(this.UnusedSound, rhs.UnusedSound)) return false;
                 if (!object.Equals(this.Prompt, rhs.Prompt)) return false;
@@ -410,7 +404,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.LinkFrom);
                 hash.Add(this.FollowUp);
                 hash.Add(this.BeginScript);
-                hash.Add(this.NextMarker);
                 hash.Add(this.EndScript);
                 hash.Add(this.UnusedSound);
                 hash.Add(this.Prompt);
@@ -508,7 +501,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.BeginScript.Overall)) return false;
                     if (this.BeginScript.Specific != null && !this.BeginScript.Specific.All(eval)) return false;
                 }
-                if (!eval(this.NextMarker)) return false;
                 if (EndScript != null)
                 {
                     if (!eval(this.EndScript.Overall)) return false;
@@ -608,7 +600,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.BeginScript.Overall)) return true;
                     if (this.BeginScript.Specific != null && this.BeginScript.Specific.Any(eval)) return true;
                 }
-                if (eval(this.NextMarker)) return true;
                 if (EndScript != null)
                 {
                     if (eval(this.EndScript.Overall)) return true;
@@ -725,7 +716,6 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
                 obj.BeginScript = this.BeginScript == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.BeginScript.Overall), this.BeginScript.Specific?.Translate(eval));
-                obj.NextMarker = eval(this.NextMarker);
                 obj.EndScript = this.EndScript == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.EndScript.Overall), this.EndScript.Specific?.Translate(eval));
                 obj.UnusedSound = eval(this.UnusedSound);
                 obj.Prompt = eval(this.Prompt);
@@ -892,10 +882,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         BeginScript?.Print(sb);
                     }
-                    if (printMask?.NextMarker ?? true)
-                    {
-                        sb.AppendItem(NextMarker, "NextMarker");
-                    }
                     if (printMask?.EndScript?.Overall ?? true)
                     {
                         EndScript?.Print(sb);
@@ -942,7 +928,6 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LinkFrom;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? FollowUp;
             public MaskItem<Exception?, ScriptFields.ErrorMask?>? BeginScript;
-            public Exception? NextMarker;
             public MaskItem<Exception?, ScriptFields.ErrorMask?>? EndScript;
             public Exception? UnusedSound;
             public Exception? Prompt;
@@ -979,8 +964,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return FollowUp;
                     case DialogResponses_FieldIndex.BeginScript:
                         return BeginScript;
-                    case DialogResponses_FieldIndex.NextMarker:
-                        return NextMarker;
                     case DialogResponses_FieldIndex.EndScript:
                         return EndScript;
                     case DialogResponses_FieldIndex.UnusedSound:
@@ -1035,9 +1018,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case DialogResponses_FieldIndex.BeginScript:
                         this.BeginScript = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
-                        break;
-                    case DialogResponses_FieldIndex.NextMarker:
-                        this.NextMarker = ex;
                         break;
                     case DialogResponses_FieldIndex.EndScript:
                         this.EndScript = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
@@ -1101,9 +1081,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case DialogResponses_FieldIndex.BeginScript:
                         this.BeginScript = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
                         break;
-                    case DialogResponses_FieldIndex.NextMarker:
-                        this.NextMarker = (Exception?)obj;
-                        break;
                     case DialogResponses_FieldIndex.EndScript:
                         this.EndScript = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
                         break;
@@ -1142,7 +1119,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (LinkFrom != null) return true;
                 if (FollowUp != null) return true;
                 if (BeginScript != null) return true;
-                if (NextMarker != null) return true;
                 if (EndScript != null) return true;
                 if (UnusedSound != null) return true;
                 if (Prompt != null) return true;
@@ -1302,9 +1278,6 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
                 BeginScript?.Print(sb);
-                {
-                    sb.AppendItem(NextMarker, "NextMarker");
-                }
                 EndScript?.Print(sb);
                 {
                     sb.AppendItem(UnusedSound, "UnusedSound");
@@ -1340,7 +1313,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.LinkFrom = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LinkFrom?.Overall, rhs.LinkFrom?.Overall), Noggog.ExceptionExt.Combine(this.LinkFrom?.Specific, rhs.LinkFrom?.Specific));
                 ret.FollowUp = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FollowUp?.Overall, rhs.FollowUp?.Overall), Noggog.ExceptionExt.Combine(this.FollowUp?.Specific, rhs.FollowUp?.Specific));
                 ret.BeginScript = this.BeginScript.Combine(rhs.BeginScript, (l, r) => l.Combine(r));
-                ret.NextMarker = this.NextMarker.Combine(rhs.NextMarker);
                 ret.EndScript = this.EndScript.Combine(rhs.EndScript, (l, r) => l.Combine(r));
                 ret.UnusedSound = this.UnusedSound.Combine(rhs.UnusedSound);
                 ret.Prompt = this.Prompt.Combine(rhs.Prompt);
@@ -1380,7 +1352,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool LinkFrom;
             public bool FollowUp;
             public ScriptFields.TranslationMask? BeginScript;
-            public bool NextMarker;
             public ScriptFields.TranslationMask? EndScript;
             public bool UnusedSound;
             public bool Prompt;
@@ -1402,7 +1373,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Choices = defaultOn;
                 this.LinkFrom = defaultOn;
                 this.FollowUp = defaultOn;
-                this.NextMarker = defaultOn;
                 this.UnusedSound = defaultOn;
                 this.Prompt = defaultOn;
                 this.Speaker = defaultOn;
@@ -1426,7 +1396,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((LinkFrom, null));
                 ret.Add((FollowUp, null));
                 ret.Add((BeginScript != null ? BeginScript.OnOverall : DefaultOn, BeginScript?.GetCrystal()));
-                ret.Add((NextMarker, null));
                 ret.Add((EndScript != null ? EndScript.OnOverall : DefaultOn, EndScript?.GetCrystal()));
                 ret.Add((UnusedSound, null));
                 ret.Add((Prompt, null));
@@ -1569,8 +1538,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogResponsesInternal>
     {
-        new DialogResponsesData? Data { get; set; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new DialogResponsesData Data { get; set; }
+        new IFormLink<IQuestGetter> Quest { get; set; }
         new IFormLinkNullable<IDialogTopicGetter> PreviousTopic { get; set; }
         new IFormLinkNullable<IDialogResponsesGetter> PreviousInfo { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> AddTopics { get; }
@@ -1579,13 +1548,12 @@ namespace Mutagen.Bethesda.Fallout3
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; }
         new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; }
         new ExtendedList<IFormLinkGetter<IDialogResponsesGetter>> FollowUp { get; }
-        new ScriptFields BeginScript { get; }
-        new Boolean NextMarker { get; set; }
-        new ScriptFields EndScript { get; }
+        new ScriptFields? BeginScript { get; set; }
+        new ScriptFields? EndScript { get; set; }
         new IFormLinkNullable<ISoundGetter> UnusedSound { get; set; }
         new String? Prompt { get; set; }
-        new IFormLinkNullable<IFallout3MajorRecordGetter> Speaker { get; set; }
-        new IFormLinkNullable<IFallout3MajorRecordGetter> ActorValuePerk { get; set; }
+        new IFormLinkNullable<INpcSpawnGetter> Speaker { get; set; }
+        new IFormLinkNullable<IActorValueOrPerkGetter> ActorValuePerk { get; set; }
         new SpeechChallenge? SpeechChallenge { get; set; }
     }
 
@@ -1594,8 +1562,6 @@ namespace Mutagen.Bethesda.Fallout3
         IDialogResponses,
         IDialogResponsesGetter
     {
-        new ScriptFields BeginScript { get; }
-        new ScriptFields EndScript { get; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.INFO)]
@@ -1607,8 +1573,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IDialogResponsesGetter>
     {
         static new ILoquiRegistration StaticRegistration => DialogResponses_Registration.Instance;
-        IDialogResponsesDataGetter? Data { get; }
-        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        IDialogResponsesDataGetter Data { get; }
+        IFormLinkGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IDialogTopicGetter> PreviousTopic { get; }
         IFormLinkNullableGetter<IDialogResponsesGetter> PreviousInfo { get; }
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> AddTopics { get; }
@@ -1617,13 +1583,12 @@ namespace Mutagen.Bethesda.Fallout3
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; }
         IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; }
         IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>> FollowUp { get; }
-        IScriptFieldsGetter BeginScript { get; }
-        Boolean NextMarker { get; }
-        IScriptFieldsGetter EndScript { get; }
+        IScriptFieldsGetter? BeginScript { get; }
+        IScriptFieldsGetter? EndScript { get; }
         IFormLinkNullableGetter<ISoundGetter> UnusedSound { get; }
         String? Prompt { get; }
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> Speaker { get; }
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> ActorValuePerk { get; }
+        IFormLinkNullableGetter<INpcSpawnGetter> Speaker { get; }
+        IFormLinkNullableGetter<IActorValueOrPerkGetter> ActorValuePerk { get; }
         SpeechChallenge? SpeechChallenge { get; }
 
     }
@@ -1812,13 +1777,12 @@ namespace Mutagen.Bethesda.Fallout3
         LinkFrom = 15,
         FollowUp = 16,
         BeginScript = 17,
-        NextMarker = 18,
-        EndScript = 19,
-        UnusedSound = 20,
-        Prompt = 21,
-        Speaker = 22,
-        ActorValuePerk = 23,
-        SpeechChallenge = 24,
+        EndScript = 18,
+        UnusedSound = 19,
+        Prompt = 20,
+        Speaker = 21,
+        ActorValuePerk = 22,
+        SpeechChallenge = 23,
     }
     #endregion
 
@@ -1829,9 +1793,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(DialogResponses.Mask<>);
 
@@ -1930,7 +1894,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IDialogResponsesInternal item)
         {
             ClearPartial();
-            item.Data = null;
+            item.Data.Clear();
             item.Quest.Clear();
             item.PreviousTopic.Clear();
             item.PreviousInfo.Clear();
@@ -1940,7 +1904,8 @@ namespace Mutagen.Bethesda.Fallout3
             item.Choices.Clear();
             item.LinkFrom.Clear();
             item.FollowUp.Clear();
-            item.NextMarker = default(Boolean);
+            item.BeginScript = null;
+            item.EndScript = null;
             item.UnusedSound.Clear();
             item.Prompt = default;
             item.Speaker.Clear();
@@ -1972,8 +1937,8 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Choices.RemapLinks(mapping);
             obj.LinkFrom.RemapLinks(mapping);
             obj.FollowUp.RemapLinks(mapping);
-            obj.BeginScript.RemapLinks(mapping);
-            obj.EndScript.RemapLinks(mapping);
+            obj.BeginScript?.RemapLinks(mapping);
+            obj.EndScript?.RemapLinks(mapping);
             obj.UnusedSound.Relink(mapping);
             obj.Speaker.Relink(mapping);
             obj.ActorValuePerk.Relink(mapping);
@@ -2044,11 +2009,7 @@ namespace Mutagen.Bethesda.Fallout3
             DialogResponses.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.PreviousTopic = item.PreviousTopic.Equals(rhs.PreviousTopic);
             ret.PreviousInfo = item.PreviousInfo.Equals(rhs.PreviousInfo);
@@ -2076,9 +2037,16 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.FollowUp,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.BeginScript = MaskItemExt.Factory(item.BeginScript.GetEqualsMask(rhs.BeginScript, include), include);
-            ret.NextMarker = item.NextMarker == rhs.NextMarker;
-            ret.EndScript = MaskItemExt.Factory(item.EndScript.GetEqualsMask(rhs.EndScript, include), include);
+            ret.BeginScript = EqualsMaskHelper.EqualsHelper(
+                item.BeginScript,
+                rhs.BeginScript,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.EndScript = EqualsMaskHelper.EqualsHelper(
+                item.EndScript,
+                rhs.EndScript,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.UnusedSound = item.UnusedSound.Equals(rhs.UnusedSound);
             ret.Prompt = string.Equals(item.Prompt, rhs.Prompt);
             ret.Speaker = item.Speaker.Equals(rhs.Speaker);
@@ -2133,14 +2101,13 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data is {} DataItem)
+            if (printMask?.Data?.Overall ?? true)
             {
-                DataItem?.Print(sb, "Data");
+                item.Data?.Print(sb, "Data");
             }
             if (printMask?.Quest ?? true)
             {
-                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
+                sb.AppendItem(item.Quest.FormKey, "Quest");
             }
             if (printMask?.PreviousTopic ?? true)
             {
@@ -2234,17 +2201,15 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
-            if (printMask?.BeginScript?.Overall ?? true)
+            if ((printMask?.BeginScript?.Overall ?? true)
+                && item.BeginScript is {} BeginScriptItem)
             {
-                item.BeginScript?.Print(sb, "BeginScript");
+                BeginScriptItem?.Print(sb, "BeginScript");
             }
-            if (printMask?.NextMarker ?? true)
+            if ((printMask?.EndScript?.Overall ?? true)
+                && item.EndScript is {} EndScriptItem)
             {
-                sb.AppendItem(item.NextMarker, "NextMarker");
-            }
-            if (printMask?.EndScript?.Overall ?? true)
-            {
-                item.EndScript?.Print(sb, "EndScript");
+                EndScriptItem?.Print(sb, "EndScript");
             }
             if (printMask?.UnusedSound ?? true)
             {
@@ -2370,10 +2335,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isBeginScriptEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.NextMarker) ?? true))
-            {
-                if (lhs.NextMarker != rhs.NextMarker) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.EndScript) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.EndScript, rhs.EndScript, out var lhsEndScript, out var rhsEndScript, out var isEndScriptEqual))
@@ -2430,10 +2391,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IDialogResponsesGetter item)
         {
             var hash = new HashCode();
-            if (item.Data is {} Dataitem)
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Data);
             hash.Add(item.Quest);
             hash.Add(item.PreviousTopic);
             hash.Add(item.PreviousInfo);
@@ -2443,9 +2401,14 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Choices);
             hash.Add(item.LinkFrom);
             hash.Add(item.FollowUp);
-            hash.Add(item.BeginScript);
-            hash.Add(item.NextMarker);
-            hash.Add(item.EndScript);
+            if (item.BeginScript is {} BeginScriptitem)
+            {
+                hash.Add(BeginScriptitem);
+            }
+            if (item.EndScript is {} EndScriptitem)
+            {
+                hash.Add(EndScriptitem);
+            }
             hash.Add(item.UnusedSound);
             if (item.Prompt is {} Promptitem)
             {
@@ -2486,10 +2449,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
-            {
-                yield return QuestInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.Quest);
             if (FormLinkInformation.TryFactory(obj.PreviousTopic, out var PreviousTopicInfo))
             {
                 yield return PreviousTopicInfo;
@@ -2627,15 +2587,11 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data is {} rhsData)
+                    if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Data) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.Data),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2650,7 +2606,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Quest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.PreviousTopic) ?? true))
             {
@@ -2789,10 +2745,16 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.BeginScript);
                 try
                 {
-                    item.BeginScript.DeepCopyIn(
-                        rhs: rhs.BeginScript,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.BeginScript));
+                    if(rhs.BeginScript is {} rhsBeginScript)
+                    {
+                        item.BeginScript = rhsBeginScript.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.BeginScript));
+                    }
+                    else
+                    {
+                        item.BeginScript = default;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2804,19 +2766,21 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.NextMarker) ?? true))
-            {
-                item.NextMarker = rhs.NextMarker;
-            }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.EndScript) ?? true))
             {
                 errorMask?.PushIndex((int)DialogResponses_FieldIndex.EndScript);
                 try
                 {
-                    item.EndScript.DeepCopyIn(
-                        rhs: rhs.EndScript,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.EndScript));
+                    if(rhs.EndScript is {} rhsEndScript)
+                    {
+                        item.EndScript = rhsEndScript.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponses_FieldIndex.EndScript));
+                    }
+                    else
+                    {
+                        item.EndScript = default;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3017,14 +2981,12 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            if (item.Data is {} DataItem)
-            {
-                ((DialogResponsesDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            var DataItem = item.Data;
+            ((DialogResponsesDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Quest,
                 header: translationParams.ConvertToCustom(RecordTypes.QSTI));
@@ -3088,30 +3050,34 @@ namespace Mutagen.Bethesda.Fallout3
                         item: subItem,
                         header: translationParams.ConvertToCustom(RecordTypes.TCLF));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Write(
-                writer: writer,
-                items: item.FollowUp,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogResponsesGetter> subItem, TypedWriteParams conv) =>
-                {
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem,
-                        header: translationParams.ConvertToCustom(RecordTypes.TCFU));
-                });
-            var BeginScriptItem = item.BeginScript;
-            ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)BeginScriptItem).BinaryWriteTranslator).Write(
-                item: BeginScriptItem,
-                writer: writer,
-                translationParams: translationParams);
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.NextMarker,
-                header: translationParams.ConvertToCustom(RecordTypes.NEXT));
-            var EndScriptItem = item.EndScript;
-            ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)EndScriptItem).BinaryWriteTranslator).Write(
-                item: EndScriptItem,
-                writer: writer,
-                translationParams: translationParams);
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Write(
+                    writer: writer,
+                    items: item.FollowUp,
+                    transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogResponsesGetter> subItem, TypedWriteParams conv) =>
+                    {
+                        FormLinkBinaryTranslation.Instance.Write(
+                            writer: subWriter,
+                            item: subItem,
+                            header: translationParams.ConvertToCustom(RecordTypes.TCFU));
+                    });
+            }
+            if (item.BeginScript is {} BeginScriptItem)
+            {
+                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)BeginScriptItem).BinaryWriteTranslator).Write(
+                    item: BeginScriptItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.EndScript is {} EndScriptItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
+                ((ScriptFieldsBinaryWriteTranslation)((IBinaryItem)EndScriptItem).BinaryWriteTranslator).Write(
+                    item: EndScriptItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UnusedSound,
@@ -3274,53 +3240,30 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.TCFU:
                 {
-                    item.FollowUp.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.TCFU),
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        item.FollowUp.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: translationParams.ConvertToCustom(RecordTypes.TCFU),
+                                transl: FormLinkBinaryTranslation.Instance.Parse));
+                    }
                     return (int)DialogResponses_FieldIndex.FollowUp;
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)DialogResponses_FieldIndex.FollowUp)
-                    {
-                        item.BeginScript.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                        return new ParseResult((int)DialogResponses_FieldIndex.BeginScript, nextRecordType);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)DialogResponses_FieldIndex.NextMarker)
-                    {
-                        item.EndScript.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                        return new ParseResult((int)DialogResponses_FieldIndex.EndScript, nextRecordType);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
-                        {
-                            case 0:
-                                item.BeginScript.CopyInFromBinary(
-                                    frame: frame,
-                                    translationParams: null);
-                                return new ParseResult((int)DialogResponses_FieldIndex.BeginScript, nextRecordType);
-                            case 1:
-                                item.EndScript.CopyInFromBinary(
-                                    frame: frame,
-                                    translationParams: null);
-                                return new ParseResult((int)DialogResponses_FieldIndex.EndScript, nextRecordType);
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    item.BeginScript = Mutagen.Bethesda.Fallout3.ScriptFields.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponses_FieldIndex.BeginScript;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    item.NextMarker = true;
-                    return (int)DialogResponses_FieldIndex.NextMarker;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
+                    item.EndScript = Mutagen.Bethesda.Fallout3.ScriptFields.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponses_FieldIndex.EndScript;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -3418,11 +3361,12 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDialogResponsesDataGetter? Data => _DataLocation.HasValue ? DialogResponsesDataBinaryOverlay.DialogResponsesDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        private IDialogResponsesDataGetter? _Data => _DataLocation.HasValue ? DialogResponsesDataBinaryOverlay.DialogResponsesDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
+        public IDialogResponsesDataGetter Data => _Data ?? new DialogResponsesData();
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
+        public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
         #region PreviousTopic
         private int? _PreviousTopicLocation;
@@ -3438,18 +3382,8 @@ namespace Mutagen.Bethesda.Fallout3
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> Choices { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>> FollowUp { get; private set; } = [];
-        #region BeginScript
-        private IScriptFieldsGetter? _BeginScript;
-        public IScriptFieldsGetter BeginScript => _BeginScript ?? new ScriptFields();
-        #endregion
-        #region NextMarker
-        private int? _NextMarkerLocation;
-        public Boolean NextMarker => _NextMarkerLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region EndScript
-        private IScriptFieldsGetter? _EndScript;
-        public IScriptFieldsGetter EndScript => _EndScript ?? new ScriptFields();
-        #endregion
+        public IScriptFieldsGetter? BeginScript { get; private set; }
+        public IScriptFieldsGetter? EndScript { get; private set; }
         #region UnusedSound
         private int? _UnusedSoundLocation;
         public IFormLinkNullableGetter<ISoundGetter> UnusedSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _UnusedSoundLocation);
@@ -3460,11 +3394,11 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Speaker
         private int? _SpeakerLocation;
-        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> Speaker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _SpeakerLocation);
+        public IFormLinkNullableGetter<INpcSpawnGetter> Speaker => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcSpawnGetter>(_package, _recordData, _SpeakerLocation);
         #endregion
         #region ActorValuePerk
         private int? _ActorValuePerkLocation;
-        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> ActorValuePerk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _ActorValuePerkLocation);
+        public IFormLinkNullableGetter<IActorValueOrPerkGetter> ActorValuePerk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueOrPerkGetter>(_package, _recordData, _ActorValuePerkLocation);
         #endregion
         #region SpeechChallenge
         private int? _SpeechChallengeLocation;
@@ -3641,52 +3575,20 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCHR:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)DialogResponses_FieldIndex.FollowUp)
-                    {
-                        this._BeginScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
-                            stream: stream,
-                            package: _package,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)DialogResponses_FieldIndex.BeginScript, type);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)DialogResponses_FieldIndex.NextMarker)
-                    {
-                        this._EndScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
-                            stream: stream,
-                            package: _package,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)DialogResponses_FieldIndex.EndScript, type);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
-                        {
-                            case 0:
-                            {
-                                this._BeginScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
-                                    stream: stream,
-                                    package: _package,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)DialogResponses_FieldIndex.BeginScript, type);
-                            }
-                            case 1:
-                            {
-                                this._EndScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
-                                    stream: stream,
-                                    package: _package,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)DialogResponses_FieldIndex.EndScript, type);
-                            }
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    this.BeginScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponses_FieldIndex.BeginScript;
                 }
                 case RecordTypeInts.NEXT:
                 {
-                    _NextMarkerLocation = (stream.Position - offset);
-                    return (int)DialogResponses_FieldIndex.NextMarker;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
+                    this.EndScript = ScriptFieldsBinaryOverlay.ScriptFieldsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponses_FieldIndex.EndScript;
                 }
                 case RecordTypeInts.SNDD:
                 {

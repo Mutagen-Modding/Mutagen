@@ -2502,6 +2502,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                         lengths.PassedAccessor);
                     if (data.HasVersioning
                         && !lengths.Field.Nullable
+                        && !data.HasTrigger
+                        && lengths.FieldLength.HasValue
                         && lengths.Field is not DataType)
                     {
                         VersioningModule.AddVersionOffset(sb, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
@@ -2509,6 +2511,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                     }
                     if (data.HasModHeaderVersioning
                         && !lengths.Field.Nullable
+                        && !data.HasTrigger
+                        && lengths.FieldLength.HasValue
                         && lengths.Field is not DataType)
                     {
                         VersioningModule.AddModHeaderVersionOffset(sb, lengths.Field, lengths.FieldLength.Value, lastModHeaderVersionedField, $"_package.MetaData.ModHeaderVersion!.Value");

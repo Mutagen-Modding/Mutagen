@@ -10,6 +10,7 @@
       <RefDirect name="PerkData" refName="PerkMainData" />
       <RefList name="Effects" refName="APerkEffect" binary="Custom" />
     </Fields>
+    <LinkInterface>IActorValueOrPerk</LinkInterface>
   </Object>
   <Object name="PerkMainData" objType="Subrecord" recordType="DATA">
     <Fields>

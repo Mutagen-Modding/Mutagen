@@ -44,6 +44,8 @@ partial class DialogTopicBinaryCreateTranslation
             if (!frame.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
             {
+                obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
+                obj.Unknown = frame.GetInt32(offset: 20);
                 if (FormKey.Factory(
                         frame.MetaData.MasterReferences,
                         new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
@@ -93,8 +95,8 @@ partial class DialogTopicBinaryWriteTranslation
                     writer,
                     obj);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
-                writer.Write(0); // Timestamp
-                writer.Write(0); // Unknown
+                writer.Write(obj.Timestamp);
+                writer.Write(obj.Unknown);
                 ListBinaryTranslation<IDialogResponsesGetter>.Instance.Write(
                     writer: writer,
                     items: resp,
@@ -117,6 +119,10 @@ partial class DialogTopicBinaryOverlay
     public IReadOnlyList<IDialogResponsesGetter> Responses { get; private set; } = [];
 
     private ReadOnlyMemorySlice<byte>? _grupData;
+
+    public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.GroupHeader(_grupData.Value).LastModifiedData) : 0;
+
+    public int Unknown => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
     partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
     {

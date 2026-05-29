@@ -5,6 +5,9 @@ An interface would be defined such as 'IItem', which all Armor, Weapon, Ingredie
 
 A `FormLink<IItem>` could then point to all those record types by pointing to the interface instead.
 ## Interfaces to Concrete Classes
+### IActorValueOrPerk
+- ActorValueInformation
+- Perk
 ### IAmmoOrList
 - Ammunition
 - FormList
@@ -73,6 +76,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IExplodeSpawn
 - IPlaceableObject
 - IReferenceableObject
+### ActorValueInformation
+- IActorValueOrPerk
 ### Ammunition
 - IAmmoOrList
 - IItem
@@ -125,6 +130,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IOwner
 ### ObjectEffect
 - IEffectRecord
+### Perk
+- IActorValueOrPerk
 ### PlacedBeam
 - IPlaced
 ### PlacedCreature

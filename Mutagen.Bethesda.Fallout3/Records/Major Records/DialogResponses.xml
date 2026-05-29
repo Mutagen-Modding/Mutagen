@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="Fallout3MajorRecord">
     <Fields>
-      <RefDirect name="Data" refName="DialogResponsesData" />
-      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <RefDirect name="Data" refName="DialogResponsesData" nullable="False" />
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" nullable="False" />
       <FormLink name="PreviousTopic" recordType="TPIC" refName="DialogTopic" />
       <FormLink name="PreviousInfo" recordType="PNAM" refName="DialogResponses" />
       <List name="AddTopics">
@@ -19,31 +19,34 @@
       </List>
       <List name="FollowUp">
         <FormLink recordType="TCFU" refName="DialogResponses" />
+        <ModHeaderVersioning version="1.32" />
       </List>
-      <RefDirect name="BeginScript" refName="ScriptFields" singleton="true" nullable="False" />
-      <Bool name="NextMarker" boolAsMarker="NEXT" />
-      <RefDirect name="EndScript" refName="ScriptFields" singleton="true" nullable="False" />
+      <RefDirect name="BeginScript" refName="ScriptFields" />
+      <!-- The End script group is preceded by an empty NEXT marker; fold it into EndScript. -->
+      <RefDirect name="EndScript" refName="ScriptFields" markerType="NEXT" />
       <FormLink name="UnusedSound" recordType="SNDD" refName="Sound" />
       <String name="Prompt" recordType="RNAM" />
-      <FormLink name="Speaker" recordType="ANAM" refName="Fallout3MajorRecord" />
-      <FormLink name="ActorValuePerk" recordType="KNAM" refName="Fallout3MajorRecord" />
+      <FormLink name="Speaker" recordType="ANAM">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+      <FormLink name="ActorValuePerk" recordType="KNAM">
+        <Interface>IActorValueOrPerk</Interface>
+      </FormLink>
       <Enum name="SpeechChallenge" recordType="DNAM" enumName="SpeechChallenge" byteLength="4" />
     </Fields>
   </Object>
   <Object name="DialogResponsesData" objType="Subrecord" recordType="DATA">
     <Fields>
-      <UInt8 name="Type" />
-      <UInt8 name="NextSpeaker" />
-      <UInt8 name="Flags1" />
-      <Break />
-      <UInt8 name="Flags2" />
+      <Enum name="Type" enumName="DialogResponses.InfoType" byteLength="1" />
+      <Enum name="NextSpeaker" enumName="DialogResponses.NextSpeakerType" byteLength="1" />
+      <Enum name="Flags" enumName="DialogResponses.InfoFlag" byteLength="2" binary="Custom" />
     </Fields>
   </Object>
   <Object name="DialogResponse" objType="Subrecord">
     <Fields>
       <RefDirect name="ResponseData" refName="DialogResponseData" nullable="False" binary="Custom" />
-      <String name="ResponseText" recordType="NAM1" />
-      <String name="ScriptNotes" recordType="NAM2" />
+      <String name="ResponseText" recordType="NAM1" nullable="False" />
+      <String name="ScriptNotes" recordType="NAM2" nullable="False" />
       <String name="Edits" recordType="NAM3" />
       <FormLink name="SpeakerAnimation" recordType="SNAM" refName="IdleAnimation" />
       <FormLink name="ListenerAnimation" recordType="LNAM" refName="IdleAnimation" />
@@ -53,18 +56,14 @@
     <Fields>
       <Enum name="EmotionType" enumName="EmotionType" byteLength="4" />
       <Int32 name="EmotionValue" />
-      <ByteArray name="TRDTUnused1" byteLength="4" nullable="False" />
+      <UInt32 name="Unused1" />
       <UInt8 name="ResponseNumber" />
-      <ByteArray name="TRDTUnused2" byteLength="3" nullable="False" />
+      <ByteArray name="Unused2" byteLength="3" nullable="False" />
       <Break />
       <FormLink name="ResponseSound" refName="Sound" />
       <Break />
-      <UInt8 name="UseEmotionAnimation" />
-      <ByteArray name="TRDTUnused3" byteLength="3" nullable="False" />
-          <ByteArray name="SCDA" recordType="SCDA" />
-      <ByteArray name="SCHR" recordType="SCHR" />
-      <ByteArray name="SCRO" recordType="SCRO" />
-      <ByteArray name="SCTX" recordType="SCTX" />
-</Fields>
+      <Bool name="UseEmotionAnimation" byteLength="1" />
+      <ByteArray name="Unused3" byteLength="3" nullable="False" />
+    </Fields>
   </Object>
 </Loqui>

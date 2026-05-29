@@ -50,20 +50,14 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Versioning
-        public DialogResponsesData.VersioningBreaks Versioning { get; set; } = default(DialogResponsesData.VersioningBreaks);
-        #endregion
         #region Type
-        public Byte Type { get; set; } = default(Byte);
+        public DialogResponses.InfoType Type { get; set; } = default(DialogResponses.InfoType);
         #endregion
         #region NextSpeaker
-        public Byte NextSpeaker { get; set; } = default(Byte);
+        public DialogResponses.NextSpeakerType NextSpeaker { get; set; } = default(DialogResponses.NextSpeakerType);
         #endregion
-        #region Flags1
-        public Byte Flags1 { get; set; } = default(Byte);
-        #endregion
-        #region Flags2
-        public Byte Flags2 { get; set; } = default(Byte);
+        #region Flags
+        public DialogResponses.InfoFlag Flags { get; set; } = default(DialogResponses.InfoFlag);
         #endregion
 
         #region To String
@@ -104,25 +98,19 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Versioning = initialValue;
                 this.Type = initialValue;
                 this.NextSpeaker = initialValue;
-                this.Flags1 = initialValue;
-                this.Flags2 = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
-                TItem Versioning,
                 TItem Type,
                 TItem NextSpeaker,
-                TItem Flags1,
-                TItem Flags2)
+                TItem Flags)
             {
-                this.Versioning = Versioning;
                 this.Type = Type;
                 this.NextSpeaker = NextSpeaker;
-                this.Flags1 = Flags1;
-                this.Flags2 = Flags2;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -134,11 +122,9 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Versioning;
             public TItem Type;
             public TItem NextSpeaker;
-            public TItem Flags1;
-            public TItem Flags2;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -151,21 +137,17 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.NextSpeaker, rhs.NextSpeaker)) return false;
-                if (!object.Equals(this.Flags1, rhs.Flags1)) return false;
-                if (!object.Equals(this.Flags2, rhs.Flags2)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Versioning);
                 hash.Add(this.Type);
                 hash.Add(this.NextSpeaker);
-                hash.Add(this.Flags1);
-                hash.Add(this.Flags2);
+                hash.Add(this.Flags);
                 return hash.ToHashCode();
             }
 
@@ -174,11 +156,9 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Type)) return false;
                 if (!eval(this.NextSpeaker)) return false;
-                if (!eval(this.Flags1)) return false;
-                if (!eval(this.Flags2)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -186,11 +166,9 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Versioning)) return true;
                 if (eval(this.Type)) return true;
                 if (eval(this.NextSpeaker)) return true;
-                if (eval(this.Flags1)) return true;
-                if (eval(this.Flags2)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -205,11 +183,9 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Versioning = eval(this.Versioning);
                 obj.Type = eval(this.Type);
                 obj.NextSpeaker = eval(this.NextSpeaker);
-                obj.Flags1 = eval(this.Flags1);
-                obj.Flags2 = eval(this.Flags2);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -228,10 +204,6 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(DialogResponsesData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Versioning ?? true)
-                    {
-                        sb.AppendItem(Versioning, "Versioning");
-                    }
                     if (printMask?.Type ?? true)
                     {
                         sb.AppendItem(Type, "Type");
@@ -240,13 +212,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(NextSpeaker, "NextSpeaker");
                     }
-                    if (printMask?.Flags1 ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(Flags1, "Flags1");
-                    }
-                    if (printMask?.Flags2 ?? true)
-                    {
-                        sb.AppendItem(Flags2, "Flags2");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
             }
@@ -272,11 +240,9 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? Versioning;
             public Exception? Type;
             public Exception? NextSpeaker;
-            public Exception? Flags1;
-            public Exception? Flags2;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -285,16 +251,12 @@ namespace Mutagen.Bethesda.Fallout3
                 DialogResponsesData_FieldIndex enu = (DialogResponsesData_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesData_FieldIndex.Versioning:
-                        return Versioning;
                     case DialogResponsesData_FieldIndex.Type:
                         return Type;
                     case DialogResponsesData_FieldIndex.NextSpeaker:
                         return NextSpeaker;
-                    case DialogResponsesData_FieldIndex.Flags1:
-                        return Flags1;
-                    case DialogResponsesData_FieldIndex.Flags2:
-                        return Flags2;
+                    case DialogResponsesData_FieldIndex.Flags:
+                        return Flags;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -305,20 +267,14 @@ namespace Mutagen.Bethesda.Fallout3
                 DialogResponsesData_FieldIndex enu = (DialogResponsesData_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     case DialogResponsesData_FieldIndex.Type:
                         this.Type = ex;
                         break;
                     case DialogResponsesData_FieldIndex.NextSpeaker:
                         this.NextSpeaker = ex;
                         break;
-                    case DialogResponsesData_FieldIndex.Flags1:
-                        this.Flags1 = ex;
-                        break;
-                    case DialogResponsesData_FieldIndex.Flags2:
-                        this.Flags2 = ex;
+                    case DialogResponsesData_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -330,20 +286,14 @@ namespace Mutagen.Bethesda.Fallout3
                 DialogResponsesData_FieldIndex enu = (DialogResponsesData_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     case DialogResponsesData_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
                     case DialogResponsesData_FieldIndex.NextSpeaker:
                         this.NextSpeaker = (Exception?)obj;
                         break;
-                    case DialogResponsesData_FieldIndex.Flags1:
-                        this.Flags1 = (Exception?)obj;
-                        break;
-                    case DialogResponsesData_FieldIndex.Flags2:
-                        this.Flags2 = (Exception?)obj;
+                    case DialogResponsesData_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -353,11 +303,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Versioning != null) return true;
                 if (Type != null) return true;
                 if (NextSpeaker != null) return true;
-                if (Flags1 != null) return true;
-                if (Flags2 != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -384,19 +332,13 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Versioning, "Versioning");
-                }
-                {
                     sb.AppendItem(Type, "Type");
                 }
                 {
                     sb.AppendItem(NextSpeaker, "NextSpeaker");
                 }
                 {
-                    sb.AppendItem(Flags1, "Flags1");
-                }
-                {
-                    sb.AppendItem(Flags2, "Flags2");
+                    sb.AppendItem(Flags, "Flags");
                 }
             }
             #endregion
@@ -406,11 +348,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.NextSpeaker = this.NextSpeaker.Combine(rhs.NextSpeaker);
-                ret.Flags1 = this.Flags1.Combine(rhs.Flags1);
-                ret.Flags2 = this.Flags2.Combine(rhs.Flags2);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -434,11 +374,9 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Versioning;
             public bool Type;
             public bool NextSpeaker;
-            public bool Flags1;
-            public bool Flags2;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -448,11 +386,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Versioning = defaultOn;
                 this.Type = defaultOn;
                 this.NextSpeaker = defaultOn;
-                this.Flags1 = defaultOn;
-                this.Flags2 = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -468,11 +404,9 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Versioning, null));
                 ret.Add((Type, null));
                 ret.Add((NextSpeaker, null));
-                ret.Add((Flags1, null));
-                ret.Add((Flags2, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -480,14 +414,6 @@ namespace Mutagen.Bethesda.Fallout3
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
-        }
-        #endregion
-
-        #region Mutagen
-        [Flags]
-        public enum VersioningBreaks
-        {
-            Break0 = 1
         }
         #endregion
 
@@ -553,11 +479,9 @@ namespace Mutagen.Bethesda.Fallout3
         IDialogResponsesDataGetter,
         ILoquiObjectSetter<IDialogResponsesData>
     {
-        new DialogResponsesData.VersioningBreaks Versioning { get; set; }
-        new Byte Type { get; set; }
-        new Byte NextSpeaker { get; set; }
-        new Byte Flags1 { get; set; }
-        new Byte Flags2 { get; set; }
+        new DialogResponses.InfoType Type { get; set; }
+        new DialogResponses.NextSpeakerType NextSpeaker { get; set; }
+        new DialogResponses.InfoFlag Flags { get; set; }
     }
 
     public partial interface IDialogResponsesDataGetter :
@@ -572,11 +496,9 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DialogResponsesData_Registration.Instance;
-        DialogResponsesData.VersioningBreaks Versioning { get; }
-        Byte Type { get; }
-        Byte NextSpeaker { get; }
-        Byte Flags1 { get; }
-        Byte Flags2 { get; }
+        DialogResponses.InfoType Type { get; }
+        DialogResponses.NextSpeakerType NextSpeaker { get; }
+        DialogResponses.InfoFlag Flags { get; }
 
     }
 
@@ -746,11 +668,9 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum DialogResponsesData_FieldIndex
     {
-        Versioning = 0,
-        Type = 1,
-        NextSpeaker = 2,
-        Flags1 = 3,
-        Flags2 = 4,
+        Type = 0,
+        NextSpeaker = 1,
+        Flags = 2,
     }
     #endregion
 
@@ -761,9 +681,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(DialogResponsesData.Mask<>);
 
@@ -836,11 +756,9 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IDialogResponsesData item)
         {
             ClearPartial();
-            item.Versioning = default(DialogResponsesData.VersioningBreaks);
-            item.Type = default(Byte);
-            item.NextSpeaker = default(Byte);
-            item.Flags1 = default(Byte);
-            item.Flags2 = default(Byte);
+            item.Type = default(DialogResponses.InfoType);
+            item.NextSpeaker = default(DialogResponses.NextSpeakerType);
+            item.Flags = default(DialogResponses.InfoFlag);
         }
         
         #region Mutagen
@@ -894,11 +812,9 @@ namespace Mutagen.Bethesda.Fallout3
             DialogResponsesData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Type = item.Type == rhs.Type;
             ret.NextSpeaker = item.NextSpeaker == rhs.NextSpeaker;
-            ret.Flags1 = item.Flags1 == rhs.Flags1;
-            ret.Flags2 = item.Flags2 == rhs.Flags2;
+            ret.Flags = item.Flags == rhs.Flags;
         }
         
         public string Print(
@@ -943,10 +859,6 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             DialogResponsesData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Versioning ?? true)
-            {
-                sb.AppendItem(item.Versioning, "Versioning");
-            }
             if (printMask?.Type ?? true)
             {
                 sb.AppendItem(item.Type, "Type");
@@ -955,13 +867,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.NextSpeaker, "NextSpeaker");
             }
-            if (printMask?.Flags1 ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendItem(item.Flags1, "Flags1");
-            }
-            if (printMask?.Flags2 ?? true)
-            {
-                sb.AppendItem(item.Flags2, "Flags2");
+                sb.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -972,10 +880,6 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Versioning) ?? true))
-            {
-                if (lhs.Versioning != rhs.Versioning) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
@@ -984,13 +888,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.NextSpeaker != rhs.NextSpeaker) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Flags1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Flags) ?? true))
             {
-                if (lhs.Flags1 != rhs.Flags1) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Flags2) ?? true))
-            {
-                if (lhs.Flags2 != rhs.Flags2) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             return true;
         }
@@ -998,11 +898,9 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IDialogResponsesDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Versioning);
             hash.Add(item.Type);
             hash.Add(item.NextSpeaker);
-            hash.Add(item.Flags1);
-            hash.Add(item.Flags2);
+            hash.Add(item.Flags);
             return hash.ToHashCode();
         }
         
@@ -1035,10 +933,6 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
-            }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Type) ?? true))
             {
                 item.Type = rhs.Type;
@@ -1047,14 +941,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.NextSpeaker = rhs.NextSpeaker;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Flags1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Flags) ?? true))
             {
-                item.Flags1 = rhs.Flags1;
-            }
-            if (rhs.Versioning.HasFlag(DialogResponsesData.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesData_FieldIndex.Flags2) ?? true))
-            {
-                item.Flags2 = rhs.Flags2;
+                item.Flags = rhs.Flags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1164,13 +1053,30 @@ namespace Mutagen.Bethesda.Fallout3
             IDialogResponsesDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Type);
-            writer.Write(item.NextSpeaker);
-            writer.Write(item.Flags1);
-            if (!item.Versioning.HasFlag(DialogResponsesData.VersioningBreaks.Break0))
-            {
-                writer.Write(item.Flags2);
-            }
+            EnumBinaryTranslation<DialogResponses.InfoType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 1);
+            EnumBinaryTranslation<DialogResponses.NextSpeakerType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.NextSpeaker,
+                length: 1);
+            DialogResponsesDataBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IDialogResponsesDataGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IDialogResponsesDataGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1211,16 +1117,20 @@ namespace Mutagen.Bethesda.Fallout3
             IDialogResponsesData item,
             MutagenFrame frame)
         {
-            item.Type = frame.ReadUInt8();
-            item.NextSpeaker = frame.ReadUInt8();
-            item.Flags1 = frame.ReadUInt8();
-            if (frame.Complete)
-            {
-                item.Versioning |= DialogResponsesData.VersioningBreaks.Break0;
-                return;
-            }
-            item.Flags2 = frame.ReadUInt8();
+            item.Type = EnumBinaryTranslation<DialogResponses.InfoType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.NextSpeaker = EnumBinaryTranslation<DialogResponses.NextSpeakerType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            DialogResponsesDataBinaryCreateTranslation.FillBinaryFlagsCustom(
+                frame: frame,
+                item: item);
         }
+
+        public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IDialogResponsesData item);
 
     }
 
@@ -1285,11 +1195,12 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public DialogResponsesData.VersioningBreaks Versioning { get; private set; }
-        public Byte Type => _structData.Span[0x0];
-        public Byte NextSpeaker => _structData.Span[0x1];
-        public Byte Flags1 => _structData.Span[0x2];
-        public Byte Flags2 => _structData.Length <= 0x3 ? default : _structData.Span[0x3];
+        public DialogResponses.InfoType Type => (DialogResponses.InfoType)_structData.Span.Slice(0x0, 0x1)[0];
+        public DialogResponses.NextSpeakerType NextSpeaker => (DialogResponses.NextSpeakerType)_structData.Span.Slice(0x1, 0x1)[0];
+        #region Flags
+        public partial DialogResponses.InfoFlag GetFlagsCustom(int location);
+        public DialogResponses.InfoFlag Flags => GetFlagsCustom(location: 0x2);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1321,10 +1232,7 @@ namespace Mutagen.Bethesda.Fallout3
             var ret = new DialogResponsesDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            if (ret._structData.Length <= 0x3)
-            {
-                ret.Versioning |= DialogResponsesData.VersioningBreaks.Break0;
-            }
+            stream.Position += 0x4 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

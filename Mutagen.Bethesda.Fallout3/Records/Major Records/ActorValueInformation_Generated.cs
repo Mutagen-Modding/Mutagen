@@ -606,6 +606,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IActorValueInformation :
         IActorValueInformationGetter,
+        IActorValueOrPerk,
         IAssetLinkContainer,
         IFallout3MajorRecordInternal,
         IHasIcons,
@@ -635,6 +636,7 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.AVIF)]
     public partial interface IActorValueInformationGetter :
         IFallout3MajorRecordGetter,
+        IActorValueOrPerkGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
         IHasIconsGetter,

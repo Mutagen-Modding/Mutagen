@@ -733,6 +733,12 @@
     <Compile Include="Records\Major Records\DialogTopic_Generated.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DialogTopicAssociatedQuest_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogTopicSharedInfo_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\EncounterZone_Generated.cs">
       <DependentUpon>EncounterZone.xml</DependentUpon>
     </Compile>
@@ -1122,6 +1128,9 @@
     <Compile Include="Records\Major Records\DialogResponse.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DialogResponsesData.cs">
+      <DependentUpon>DialogResponses.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\DialogResponse_Generated.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
@@ -1467,5 +1476,6 @@
     <Compile Include="Records\Major Records\WorldspaceLandData_Generated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IActorValueOrPerk_Generated.cs" />
   </ItemGroup>
 </Project>

@@ -22,22 +22,21 @@ public partial class DialogResponses
     }
 
     [Flags]
-    public enum InfoFlag1
+    public enum InfoFlag
     {
-        Goodbye = 0x01,
-        Random = 0x02,
-        SayOnce = 0x04,
-        RunImmediately = 0x08,
-        InfoRefusal = 0x10,
-        RandomEnd = 0x20,
-        RunForRumors = 0x40,
-        SpeechChallenge = 0x80,
-    }
-
-    [Flags]
-    public enum InfoFlag2
-    {
-        SayOnceADay = 0x01,
-        AlwaysDarken = 0x02,
+        // Byte 0 (xEdit "Flags 1")
+        Goodbye = 0x0001,
+        Random = 0x0002,
+        SayOnce = 0x0004,
+        RunImmediately = 0x0008,
+        InfoRefusal = 0x0010,
+        RandomEnd = 0x0020,
+        RunForRumors = 0x0040,
+        SpeechChallenge = 0x0080,
+        // Byte 1 (xEdit "Flags 2"); FO3 defines only the first two, the rest are FNV-only
+        SayOnceADay = 0x0100,
+        AlwaysDarken = 0x0200,
+        LowIntelligence = 0x1000,
+        HighIntelligence = 0x2000,
     }
 }

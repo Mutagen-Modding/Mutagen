@@ -58,14 +58,10 @@ namespace Mutagen.Bethesda.Fallout3
         IDialogResponseDataGetter IDialogResponseGetter.ResponseData => ResponseData;
         #endregion
         #region ResponseText
-        public String? ResponseText { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IDialogResponseGetter.ResponseText => this.ResponseText;
+        public String ResponseText { get; set; } = string.Empty;
         #endregion
         #region ScriptNotes
-        public String? ScriptNotes { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IDialogResponseGetter.ScriptNotes => this.ScriptNotes;
+        public String ScriptNotes { get; set; } = string.Empty;
         #endregion
         #region Edits
         public String? Edits { get; set; }
@@ -614,8 +610,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IDialogResponse>
     {
         new DialogResponseData ResponseData { get; set; }
-        new String? ResponseText { get; set; }
-        new String? ScriptNotes { get; set; }
+        new String ResponseText { get; set; }
+        new String ScriptNotes { get; set; }
         new String? Edits { get; set; }
         new IFormLinkNullable<IIdleAnimationGetter> SpeakerAnimation { get; set; }
         new IFormLinkNullable<IIdleAnimationGetter> ListenerAnimation { get; set; }
@@ -635,8 +631,8 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DialogResponse_Registration.Instance;
         IDialogResponseDataGetter ResponseData { get; }
-        String? ResponseText { get; }
-        String? ScriptNotes { get; }
+        String ResponseText { get; }
+        String ScriptNotes { get; }
         String? Edits { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> SpeakerAnimation { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> ListenerAnimation { get; }
@@ -910,8 +906,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.ResponseData.Clear();
-            item.ResponseText = default;
-            item.ScriptNotes = default;
+            item.ResponseText = string.Empty;
+            item.ScriptNotes = string.Empty;
             item.Edits = default;
             item.SpeakerAnimation.Clear();
             item.ListenerAnimation.Clear();
@@ -1021,15 +1017,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ResponseData?.Print(sb, "ResponseData");
             }
-            if ((printMask?.ResponseText ?? true)
-                && item.ResponseText is {} ResponseTextItem)
+            if (printMask?.ResponseText ?? true)
             {
-                sb.AppendItem(ResponseTextItem, "ResponseText");
+                sb.AppendItem(item.ResponseText, "ResponseText");
             }
-            if ((printMask?.ScriptNotes ?? true)
-                && item.ScriptNotes is {} ScriptNotesItem)
+            if (printMask?.ScriptNotes ?? true)
             {
-                sb.AppendItem(ScriptNotesItem, "ScriptNotes");
+                sb.AppendItem(item.ScriptNotes, "ScriptNotes");
             }
             if ((printMask?.Edits ?? true)
                 && item.Edits is {} EditsItem)
@@ -1088,14 +1082,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.ResponseData);
-            if (item.ResponseText is {} ResponseTextitem)
-            {
-                hash.Add(ResponseTextitem);
-            }
-            if (item.ScriptNotes is {} ScriptNotesitem)
-            {
-                hash.Add(ScriptNotesitem);
-            }
+            hash.Add(item.ResponseText);
+            hash.Add(item.ScriptNotes);
             if (item.Edits is {} Editsitem)
             {
                 hash.Add(Editsitem);
@@ -1300,12 +1288,12 @@ namespace Mutagen.Bethesda.Fallout3
             DialogResponseBinaryWriteTranslation.WriteBinaryResponseData(
                 writer: writer,
                 item: item);
-            StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ResponseText,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ScriptNotes,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2),
@@ -1510,11 +1498,11 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region ResponseText
         private int? _ResponseTextLocation;
-        public String? ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResponseTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String ResponseText => _ResponseTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResponseTextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region ScriptNotes
         private int? _ScriptNotesLocation;
-        public String? ScriptNotes => _ScriptNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String ScriptNotes => _ScriptNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region Edits
         private int? _EditsLocation;

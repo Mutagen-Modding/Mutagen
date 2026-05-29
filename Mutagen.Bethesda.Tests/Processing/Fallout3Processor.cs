@@ -54,6 +54,8 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.WTHR, ProcessWeather);
         AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
         AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
+        AddDynamicProcessing(RecordTypes.DIAL, ProcessDialogs);
+        AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
         AddDynamicProcessing(
             ProcessPlaced,
             PlacedObject_Registration.TriggeringRecordType,
@@ -80,6 +82,70 @@ public class Fallout3Processor : Processor
         {
             int xclrLoc = 0;
             ProcessFormIDOverflows(xclrSub, fileOffset, ref xclrLoc);
+        }
+    }
+
+    private void ProcessDialogs(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // FO3/FNV emit a header-only TopicChildren GRUP for topics that have an
+        // empty-but-present children group. Mutagen (like every other game) skips
+        // writing empty child groups, so strip them from the reference to match.
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
+        CleanEmptyDialogGroups(
+            stream,
+            formKey,
+            fileOffset);
+
+        // Stray out-of-range master indices on the DIAL's own FormID links (Mutagen clamps
+        // these to numMasters on write).
+        NormalizeFormIdOverflows(majorFrame, fileOffset,
+            RecordTypes.QSTI, RecordTypes.QSTR, RecordTypes.INFC);
+    }
+
+    private void ProcessDialogResponses(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // Mutagen unifies the DATA Flags1/Flags2 bytes into one field and always exports the full
+        // 2-byte form. FO3 omits a zero Flags2 byte on some records (3-byte DATA), so pad those to
+        // 4 bytes in the reference to match the canonical output. (Mutagen's reader still accepts
+        // the 3-byte form from real data.)
+        if (!majorFrame.IsDeleted
+            && majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataSub)
+            && dataSub.ContentLength == 3)
+        {
+            var padded = new byte[4];
+            dataSub.Content.Span.CopyTo(padded);
+            SwapSubrecordContent(fileOffset, majorFrame, dataSub, padded);
+        }
+
+        // Some DLCs (e.g. ThePitt, Zeta) carry stray master-2 references on INFO FormID links
+        // in single-master files. Mutagen clamps out-of-range master indices to numMasters on
+        // write, so normalize the reference to match.
+        NormalizeFormIdOverflows(majorFrame, fileOffset,
+            RecordTypes.QSTI, RecordTypes.TPIC, RecordTypes.PNAM, RecordTypes.NAME,
+            RecordTypes.TCLT, RecordTypes.TCLF, RecordTypes.TCFU, RecordTypes.SNDD,
+            RecordTypes.ANAM, RecordTypes.KNAM, RecordTypes.SNAM, RecordTypes.LNAM);
+    }
+
+    private void NormalizeFormIdOverflows(
+        MajorRecordFrame majorFrame,
+        long fileOffset,
+        params RecordType[] formIdSubrecords)
+    {
+        foreach (var type in formIdSubrecords)
+        {
+            foreach (var sub in majorFrame.FindEnumerateSubrecords(type))
+            {
+                if (sub.ContentLength == 4)
+                {
+                    ProcessFormIDOverflow(sub, fileOffset);
+                }
+            }
         }
     }
 

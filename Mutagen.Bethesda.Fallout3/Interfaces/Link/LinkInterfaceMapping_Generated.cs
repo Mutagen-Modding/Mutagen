@@ -19,6 +19,17 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
     public Fallout3LinkInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IActorValueOrPerk)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                ActorValueInformation_Registration.Instance,
+                Perk_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IActorValueOrPerk),
+                Getter: typeof(IActorValueOrPerkGetter)));
+        dict[typeof(IActorValueOrPerkGetter)] = dict[typeof(IActorValueOrPerk)] with { Setter = false };
         dict[typeof(IAmmoOrList)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
