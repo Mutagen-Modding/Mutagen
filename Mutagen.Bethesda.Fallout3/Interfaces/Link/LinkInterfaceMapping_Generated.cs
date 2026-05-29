@@ -94,16 +94,6 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IExplodeSpawn),
                 Getter: typeof(IExplodeSpawnGetter)));
         dict[typeof(IExplodeSpawnGetter)] = dict[typeof(IExplodeSpawn)] with { Setter = false };
-        dict[typeof(IIdleRelation)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                IdleAnimation_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IIdleRelation),
-                Getter: typeof(IIdleRelationGetter)));
-        dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
         dict[typeof(IItem)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

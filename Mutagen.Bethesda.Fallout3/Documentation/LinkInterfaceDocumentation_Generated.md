@@ -24,8 +24,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Region
 ### IExplodeSpawn
 - AcousticSpace
-### IIdleRelation
-- IdleAnimation
 ### IItem
 - Ammunition
 - Armor
@@ -101,8 +99,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IRelatable
 ### FormList
 - IAmmoOrList
-### IdleAnimation
-- IIdleRelation
 ### Ingestible
 - IItem
 ### ItemMod

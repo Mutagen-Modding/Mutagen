@@ -1111,7 +1111,6 @@
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\Link\IIdleRelation_Generated.cs" />
     <Compile Include="Records\Major Records\DialogResponses.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>

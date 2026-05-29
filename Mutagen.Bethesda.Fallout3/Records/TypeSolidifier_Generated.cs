@@ -2867,30 +2867,6 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
-        /// Scope a load order query to IIdleRelation
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IIdleRelation</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IIdleRelation, IIdleRelationGetter> IIdleRelation(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IIdleRelation, IIdleRelationGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IIdleRelation, IIdleRelationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IIdleRelation
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IIdleRelation</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IIdleRelation, IIdleRelationGetter> IIdleRelation(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IIdleRelation, IIdleRelationGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IIdleRelation, IIdleRelationGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to IItem
         /// </summary>
         /// <param name="listings">ModListings to query</param>

@@ -8,7 +8,6 @@
       <RefDirect name="RelatedIdleAnimations" refName="IdleAnimationRelatedAnimations" nullable="False" />
       <RefDirect name="AnimationData" refName="IdleAnimationData" nullable="False" />
     </Fields>
-    <LinkInterface>IIdleRelation</LinkInterface>
   </Object>
   <Object name="IdleAnimationRelatedAnimations" objType="Subrecord" recordType="ANAM">
     <Fields>
@@ -18,12 +17,17 @@
   </Object>
   <Object name="IdleAnimationData" objType="Subrecord" recordType="DATA">
     <Fields>
-      <UInt8 name="AnimationGroupSection" />
+      <Enum name="AnimationGroupSection" enumName="IdleAnimation.AnimationGroupSection" binary="NoGeneration" />
+      <Bool name="LooseIdle" binary="NoGeneration" />
+      <Bool name="MustReturnFile" binary="NoGeneration" />
+      <CustomLogic name="GroupSectionParser" byteLength="1" />
       <UInt8 name="LoopingMin" />
       <UInt8 name="LoopingMax" />
       <UInt8 name="Unused1" />
       <Int16 name="ReplayDelay" />
-      <ByteArray name="Remaining" />
+      <Break />
+      <Bool name="NoAttacking" byteLength="1" />
+      <UInt8 name="Unused2" />
     </Fields>
   </Object>
 </Loqui>

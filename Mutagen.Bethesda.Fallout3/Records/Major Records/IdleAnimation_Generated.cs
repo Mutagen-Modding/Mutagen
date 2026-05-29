@@ -675,7 +675,6 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IIdleAnimationGetter,
-        IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>,
         IModeled
     {
@@ -700,7 +699,6 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        IIdleRelationGetter,
         ILoquiObject<IIdleAnimationGetter>,
         IMapsToGetter<IIdleAnimationGetter>,
         IModeledGetter

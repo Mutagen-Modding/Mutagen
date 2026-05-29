@@ -50,8 +50,17 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public IdleAnimationData.VersioningBreaks Versioning { get; set; } = default(IdleAnimationData.VersioningBreaks);
+        #endregion
         #region AnimationGroupSection
-        public Byte AnimationGroupSection { get; set; } = default(Byte);
+        public IdleAnimation.AnimationGroupSection AnimationGroupSection { get; set; } = default(IdleAnimation.AnimationGroupSection);
+        #endregion
+        #region LooseIdle
+        public Boolean LooseIdle { get; set; } = default(Boolean);
+        #endregion
+        #region MustReturnFile
+        public Boolean MustReturnFile { get; set; } = default(Boolean);
         #endregion
         #region LoopingMin
         public Byte LoopingMin { get; set; } = default(Byte);
@@ -65,16 +74,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region ReplayDelay
         public Int16 ReplayDelay { get; set; } = default(Int16);
         #endregion
-        #region Remaining
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
-        {
-            get => _Remaining;
-            set => this._Remaining = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IIdleAnimationDataGetter.Remaining => this.Remaining;
+        #region NoAttacking
+        public Boolean NoAttacking { get; set; } = default(Boolean);
+        #endregion
+        #region Unused2
+        public Byte Unused2 { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -115,28 +119,40 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.AnimationGroupSection = initialValue;
+                this.LooseIdle = initialValue;
+                this.MustReturnFile = initialValue;
                 this.LoopingMin = initialValue;
                 this.LoopingMax = initialValue;
                 this.Unused1 = initialValue;
                 this.ReplayDelay = initialValue;
-                this.Remaining = initialValue;
+                this.NoAttacking = initialValue;
+                this.Unused2 = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem AnimationGroupSection,
+                TItem LooseIdle,
+                TItem MustReturnFile,
                 TItem LoopingMin,
                 TItem LoopingMax,
                 TItem Unused1,
                 TItem ReplayDelay,
-                TItem Remaining)
+                TItem NoAttacking,
+                TItem Unused2)
             {
+                this.Versioning = Versioning;
                 this.AnimationGroupSection = AnimationGroupSection;
+                this.LooseIdle = LooseIdle;
+                this.MustReturnFile = MustReturnFile;
                 this.LoopingMin = LoopingMin;
                 this.LoopingMax = LoopingMax;
                 this.Unused1 = Unused1;
                 this.ReplayDelay = ReplayDelay;
-                this.Remaining = Remaining;
+                this.NoAttacking = NoAttacking;
+                this.Unused2 = Unused2;
             }
 
             #pragma warning disable CS8618
@@ -148,12 +164,16 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem AnimationGroupSection;
+            public TItem LooseIdle;
+            public TItem MustReturnFile;
             public TItem LoopingMin;
             public TItem LoopingMax;
             public TItem Unused1;
             public TItem ReplayDelay;
-            public TItem Remaining;
+            public TItem NoAttacking;
+            public TItem Unused2;
             #endregion
 
             #region Equals
@@ -166,23 +186,31 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.AnimationGroupSection, rhs.AnimationGroupSection)) return false;
+                if (!object.Equals(this.LooseIdle, rhs.LooseIdle)) return false;
+                if (!object.Equals(this.MustReturnFile, rhs.MustReturnFile)) return false;
                 if (!object.Equals(this.LoopingMin, rhs.LoopingMin)) return false;
                 if (!object.Equals(this.LoopingMax, rhs.LoopingMax)) return false;
                 if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
                 if (!object.Equals(this.ReplayDelay, rhs.ReplayDelay)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.NoAttacking, rhs.NoAttacking)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.AnimationGroupSection);
+                hash.Add(this.LooseIdle);
+                hash.Add(this.MustReturnFile);
                 hash.Add(this.LoopingMin);
                 hash.Add(this.LoopingMax);
                 hash.Add(this.Unused1);
                 hash.Add(this.ReplayDelay);
-                hash.Add(this.Remaining);
+                hash.Add(this.NoAttacking);
+                hash.Add(this.Unused2);
                 return hash.ToHashCode();
             }
 
@@ -191,12 +219,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.AnimationGroupSection)) return false;
+                if (!eval(this.LooseIdle)) return false;
+                if (!eval(this.MustReturnFile)) return false;
                 if (!eval(this.LoopingMin)) return false;
                 if (!eval(this.LoopingMax)) return false;
                 if (!eval(this.Unused1)) return false;
                 if (!eval(this.ReplayDelay)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.NoAttacking)) return false;
+                if (!eval(this.Unused2)) return false;
                 return true;
             }
             #endregion
@@ -204,12 +236,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.AnimationGroupSection)) return true;
+                if (eval(this.LooseIdle)) return true;
+                if (eval(this.MustReturnFile)) return true;
                 if (eval(this.LoopingMin)) return true;
                 if (eval(this.LoopingMax)) return true;
                 if (eval(this.Unused1)) return true;
                 if (eval(this.ReplayDelay)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.NoAttacking)) return true;
+                if (eval(this.Unused2)) return true;
                 return false;
             }
             #endregion
@@ -224,12 +260,16 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.AnimationGroupSection = eval(this.AnimationGroupSection);
+                obj.LooseIdle = eval(this.LooseIdle);
+                obj.MustReturnFile = eval(this.MustReturnFile);
                 obj.LoopingMin = eval(this.LoopingMin);
                 obj.LoopingMax = eval(this.LoopingMax);
                 obj.Unused1 = eval(this.Unused1);
                 obj.ReplayDelay = eval(this.ReplayDelay);
-                obj.Remaining = eval(this.Remaining);
+                obj.NoAttacking = eval(this.NoAttacking);
+                obj.Unused2 = eval(this.Unused2);
             }
             #endregion
 
@@ -248,9 +288,21 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(IdleAnimationData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.AnimationGroupSection ?? true)
                     {
                         sb.AppendItem(AnimationGroupSection, "AnimationGroupSection");
+                    }
+                    if (printMask?.LooseIdle ?? true)
+                    {
+                        sb.AppendItem(LooseIdle, "LooseIdle");
+                    }
+                    if (printMask?.MustReturnFile ?? true)
+                    {
+                        sb.AppendItem(MustReturnFile, "MustReturnFile");
                     }
                     if (printMask?.LoopingMin ?? true)
                     {
@@ -268,9 +320,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ReplayDelay, "ReplayDelay");
                     }
-                    if (printMask?.Remaining ?? true)
+                    if (printMask?.NoAttacking ?? true)
                     {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(NoAttacking, "NoAttacking");
+                    }
+                    if (printMask?.Unused2 ?? true)
+                    {
+                        sb.AppendItem(Unused2, "Unused2");
                     }
                 }
             }
@@ -296,12 +352,16 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? AnimationGroupSection;
+            public Exception? LooseIdle;
+            public Exception? MustReturnFile;
             public Exception? LoopingMin;
             public Exception? LoopingMax;
             public Exception? Unused1;
             public Exception? ReplayDelay;
-            public Exception? Remaining;
+            public Exception? NoAttacking;
+            public Exception? Unused2;
             #endregion
 
             #region IErrorMask
@@ -310,8 +370,14 @@ namespace Mutagen.Bethesda.Fallout3
                 IdleAnimationData_FieldIndex enu = (IdleAnimationData_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimationData_FieldIndex.Versioning:
+                        return Versioning;
                     case IdleAnimationData_FieldIndex.AnimationGroupSection:
                         return AnimationGroupSection;
+                    case IdleAnimationData_FieldIndex.LooseIdle:
+                        return LooseIdle;
+                    case IdleAnimationData_FieldIndex.MustReturnFile:
+                        return MustReturnFile;
                     case IdleAnimationData_FieldIndex.LoopingMin:
                         return LoopingMin;
                     case IdleAnimationData_FieldIndex.LoopingMax:
@@ -320,8 +386,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return Unused1;
                     case IdleAnimationData_FieldIndex.ReplayDelay:
                         return ReplayDelay;
-                    case IdleAnimationData_FieldIndex.Remaining:
-                        return Remaining;
+                    case IdleAnimationData_FieldIndex.NoAttacking:
+                        return NoAttacking;
+                    case IdleAnimationData_FieldIndex.Unused2:
+                        return Unused2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -332,8 +400,17 @@ namespace Mutagen.Bethesda.Fallout3
                 IdleAnimationData_FieldIndex enu = (IdleAnimationData_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimationData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case IdleAnimationData_FieldIndex.AnimationGroupSection:
                         this.AnimationGroupSection = ex;
+                        break;
+                    case IdleAnimationData_FieldIndex.LooseIdle:
+                        this.LooseIdle = ex;
+                        break;
+                    case IdleAnimationData_FieldIndex.MustReturnFile:
+                        this.MustReturnFile = ex;
                         break;
                     case IdleAnimationData_FieldIndex.LoopingMin:
                         this.LoopingMin = ex;
@@ -347,8 +424,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case IdleAnimationData_FieldIndex.ReplayDelay:
                         this.ReplayDelay = ex;
                         break;
-                    case IdleAnimationData_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case IdleAnimationData_FieldIndex.NoAttacking:
+                        this.NoAttacking = ex;
+                        break;
+                    case IdleAnimationData_FieldIndex.Unused2:
+                        this.Unused2 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -360,8 +440,17 @@ namespace Mutagen.Bethesda.Fallout3
                 IdleAnimationData_FieldIndex enu = (IdleAnimationData_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleAnimationData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case IdleAnimationData_FieldIndex.AnimationGroupSection:
                         this.AnimationGroupSection = (Exception?)obj;
+                        break;
+                    case IdleAnimationData_FieldIndex.LooseIdle:
+                        this.LooseIdle = (Exception?)obj;
+                        break;
+                    case IdleAnimationData_FieldIndex.MustReturnFile:
+                        this.MustReturnFile = (Exception?)obj;
                         break;
                     case IdleAnimationData_FieldIndex.LoopingMin:
                         this.LoopingMin = (Exception?)obj;
@@ -375,8 +464,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case IdleAnimationData_FieldIndex.ReplayDelay:
                         this.ReplayDelay = (Exception?)obj;
                         break;
-                    case IdleAnimationData_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case IdleAnimationData_FieldIndex.NoAttacking:
+                        this.NoAttacking = (Exception?)obj;
+                        break;
+                    case IdleAnimationData_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -386,12 +478,16 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (AnimationGroupSection != null) return true;
+                if (LooseIdle != null) return true;
+                if (MustReturnFile != null) return true;
                 if (LoopingMin != null) return true;
                 if (LoopingMax != null) return true;
                 if (Unused1 != null) return true;
                 if (ReplayDelay != null) return true;
-                if (Remaining != null) return true;
+                if (NoAttacking != null) return true;
+                if (Unused2 != null) return true;
                 return false;
             }
             #endregion
@@ -418,7 +514,16 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(AnimationGroupSection, "AnimationGroupSection");
+                }
+                {
+                    sb.AppendItem(LooseIdle, "LooseIdle");
+                }
+                {
+                    sb.AppendItem(MustReturnFile, "MustReturnFile");
                 }
                 {
                     sb.AppendItem(LoopingMin, "LoopingMin");
@@ -433,7 +538,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ReplayDelay, "ReplayDelay");
                 }
                 {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(NoAttacking, "NoAttacking");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
                 }
             }
             #endregion
@@ -443,12 +551,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.AnimationGroupSection = this.AnimationGroupSection.Combine(rhs.AnimationGroupSection);
+                ret.LooseIdle = this.LooseIdle.Combine(rhs.LooseIdle);
+                ret.MustReturnFile = this.MustReturnFile.Combine(rhs.MustReturnFile);
                 ret.LoopingMin = this.LoopingMin.Combine(rhs.LoopingMin);
                 ret.LoopingMax = this.LoopingMax.Combine(rhs.LoopingMax);
                 ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
                 ret.ReplayDelay = this.ReplayDelay.Combine(rhs.ReplayDelay);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.NoAttacking = this.NoAttacking.Combine(rhs.NoAttacking);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -472,12 +584,16 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool AnimationGroupSection;
+            public bool LooseIdle;
+            public bool MustReturnFile;
             public bool LoopingMin;
             public bool LoopingMax;
             public bool Unused1;
             public bool ReplayDelay;
-            public bool Remaining;
+            public bool NoAttacking;
+            public bool Unused2;
             #endregion
 
             #region Ctors
@@ -487,12 +603,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.AnimationGroupSection = defaultOn;
+                this.LooseIdle = defaultOn;
+                this.MustReturnFile = defaultOn;
                 this.LoopingMin = defaultOn;
                 this.LoopingMax = defaultOn;
                 this.Unused1 = defaultOn;
                 this.ReplayDelay = defaultOn;
-                this.Remaining = defaultOn;
+                this.NoAttacking = defaultOn;
+                this.Unused2 = defaultOn;
             }
 
             #endregion
@@ -508,12 +628,16 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((AnimationGroupSection, null));
+                ret.Add((LooseIdle, null));
+                ret.Add((MustReturnFile, null));
                 ret.Add((LoopingMin, null));
                 ret.Add((LoopingMax, null));
                 ret.Add((Unused1, null));
                 ret.Add((ReplayDelay, null));
-                ret.Add((Remaining, null));
+                ret.Add((NoAttacking, null));
+                ret.Add((Unused2, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -521,6 +645,14 @@ namespace Mutagen.Bethesda.Fallout3
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -586,12 +718,16 @@ namespace Mutagen.Bethesda.Fallout3
         IIdleAnimationDataGetter,
         ILoquiObjectSetter<IIdleAnimationData>
     {
-        new Byte AnimationGroupSection { get; set; }
+        new IdleAnimationData.VersioningBreaks Versioning { get; set; }
+        new IdleAnimation.AnimationGroupSection AnimationGroupSection { get; set; }
+        new Boolean LooseIdle { get; set; }
+        new Boolean MustReturnFile { get; set; }
         new Byte LoopingMin { get; set; }
         new Byte LoopingMax { get; set; }
         new Byte Unused1 { get; set; }
         new Int16 ReplayDelay { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new Boolean NoAttacking { get; set; }
+        new Byte Unused2 { get; set; }
     }
 
     public partial interface IIdleAnimationDataGetter :
@@ -606,12 +742,16 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => IdleAnimationData_Registration.Instance;
-        Byte AnimationGroupSection { get; }
+        IdleAnimationData.VersioningBreaks Versioning { get; }
+        IdleAnimation.AnimationGroupSection AnimationGroupSection { get; }
+        Boolean LooseIdle { get; }
+        Boolean MustReturnFile { get; }
         Byte LoopingMin { get; }
         Byte LoopingMax { get; }
         Byte Unused1 { get; }
         Int16 ReplayDelay { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        Boolean NoAttacking { get; }
+        Byte Unused2 { get; }
 
     }
 
@@ -781,12 +921,16 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum IdleAnimationData_FieldIndex
     {
-        AnimationGroupSection = 0,
-        LoopingMin = 1,
-        LoopingMax = 2,
-        Unused1 = 3,
-        ReplayDelay = 4,
-        Remaining = 5,
+        Versioning = 0,
+        AnimationGroupSection = 1,
+        LooseIdle = 2,
+        MustReturnFile = 3,
+        LoopingMin = 4,
+        LoopingMax = 5,
+        Unused1 = 6,
+        ReplayDelay = 7,
+        NoAttacking = 8,
+        Unused2 = 9,
     }
     #endregion
 
@@ -797,9 +941,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(IdleAnimationData.Mask<>);
 
@@ -872,12 +1016,16 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IIdleAnimationData item)
         {
             ClearPartial();
-            item.AnimationGroupSection = default(Byte);
+            item.Versioning = default(IdleAnimationData.VersioningBreaks);
+            item.AnimationGroupSection = default(IdleAnimation.AnimationGroupSection);
+            item.LooseIdle = default(Boolean);
+            item.MustReturnFile = default(Boolean);
             item.LoopingMin = default(Byte);
             item.LoopingMax = default(Byte);
             item.Unused1 = default(Byte);
             item.ReplayDelay = default(Int16);
-            item.Remaining = [];
+            item.NoAttacking = default(Boolean);
+            item.Unused2 = default(Byte);
         }
         
         #region Mutagen
@@ -931,12 +1079,16 @@ namespace Mutagen.Bethesda.Fallout3
             IdleAnimationData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.AnimationGroupSection = item.AnimationGroupSection == rhs.AnimationGroupSection;
+            ret.LooseIdle = item.LooseIdle == rhs.LooseIdle;
+            ret.MustReturnFile = item.MustReturnFile == rhs.MustReturnFile;
             ret.LoopingMin = item.LoopingMin == rhs.LoopingMin;
             ret.LoopingMax = item.LoopingMax == rhs.LoopingMax;
             ret.Unused1 = item.Unused1 == rhs.Unused1;
             ret.ReplayDelay = item.ReplayDelay == rhs.ReplayDelay;
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.NoAttacking = item.NoAttacking == rhs.NoAttacking;
+            ret.Unused2 = item.Unused2 == rhs.Unused2;
         }
         
         public string Print(
@@ -981,9 +1133,21 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             IdleAnimationData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.AnimationGroupSection ?? true)
             {
                 sb.AppendItem(item.AnimationGroupSection, "AnimationGroupSection");
+            }
+            if (printMask?.LooseIdle ?? true)
+            {
+                sb.AppendItem(item.LooseIdle, "LooseIdle");
+            }
+            if (printMask?.MustReturnFile ?? true)
+            {
+                sb.AppendItem(item.MustReturnFile, "MustReturnFile");
             }
             if (printMask?.LoopingMin ?? true)
             {
@@ -1001,9 +1165,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.ReplayDelay, "ReplayDelay");
             }
-            if (printMask?.Remaining ?? true)
+            if (printMask?.NoAttacking ?? true)
             {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendItem(item.NoAttacking, "NoAttacking");
+            }
+            if (printMask?.Unused2 ?? true)
+            {
+                sb.AppendItem(item.Unused2, "Unused2");
             }
         }
         
@@ -1014,9 +1182,21 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.AnimationGroupSection) ?? true))
             {
                 if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.LooseIdle) ?? true))
+            {
+                if (lhs.LooseIdle != rhs.LooseIdle) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.MustReturnFile) ?? true))
+            {
+                if (lhs.MustReturnFile != rhs.MustReturnFile) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.LoopingMin) ?? true))
             {
@@ -1034,9 +1214,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.ReplayDelay != rhs.ReplayDelay) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.Remaining) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.NoAttacking) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (lhs.NoAttacking != rhs.NoAttacking) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.Unused2) ?? true))
+            {
+                if (lhs.Unused2 != rhs.Unused2) return false;
             }
             return true;
         }
@@ -1044,12 +1228,16 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IIdleAnimationDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.AnimationGroupSection);
+            hash.Add(item.LooseIdle);
+            hash.Add(item.MustReturnFile);
             hash.Add(item.LoopingMin);
             hash.Add(item.LoopingMax);
             hash.Add(item.Unused1);
             hash.Add(item.ReplayDelay);
-            hash.Add(item.Remaining);
+            hash.Add(item.NoAttacking);
+            hash.Add(item.Unused2);
             return hash.ToHashCode();
         }
         
@@ -1082,9 +1270,21 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.AnimationGroupSection) ?? true))
             {
                 item.AnimationGroupSection = rhs.AnimationGroupSection;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.LooseIdle) ?? true))
+            {
+                item.LooseIdle = rhs.LooseIdle;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.MustReturnFile) ?? true))
+            {
+                item.MustReturnFile = rhs.MustReturnFile;
             }
             if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.LoopingMin) ?? true))
             {
@@ -1102,9 +1302,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ReplayDelay = rhs.ReplayDelay;
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.Remaining) ?? true))
+            if (rhs.Versioning.HasFlag(IdleAnimationData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.NoAttacking) ?? true))
             {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.NoAttacking = rhs.NoAttacking;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimationData_FieldIndex.Unused2) ?? true))
+            {
+                item.Unused2 = rhs.Unused2;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1214,14 +1419,31 @@ namespace Mutagen.Bethesda.Fallout3
             IIdleAnimationDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.AnimationGroupSection);
+            IdleAnimationDataBinaryWriteTranslation.WriteBinaryGroupSectionParser(
+                writer: writer,
+                item: item);
             writer.Write(item.LoopingMin);
             writer.Write(item.LoopingMax);
             writer.Write(item.Unused1);
             writer.Write(item.ReplayDelay);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            if (!item.Versioning.HasFlag(IdleAnimationData.VersioningBreaks.Break0))
+            {
+                writer.Write(item.NoAttacking);
+                writer.Write(item.Unused2);
+            }
+        }
+
+        public static partial void WriteBinaryGroupSectionParserCustom(
+            MutagenWriter writer,
+            IIdleAnimationDataGetter item);
+
+        public static void WriteBinaryGroupSectionParser(
+            MutagenWriter writer,
+            IIdleAnimationDataGetter item)
+        {
+            WriteBinaryGroupSectionParserCustom(
                 writer: writer,
-                item: item.Remaining);
+                item: item);
         }
 
         public void Write(
@@ -1262,13 +1484,25 @@ namespace Mutagen.Bethesda.Fallout3
             IIdleAnimationData item,
             MutagenFrame frame)
         {
-            item.AnimationGroupSection = frame.ReadUInt8();
+            IdleAnimationDataBinaryCreateTranslation.FillBinaryGroupSectionParserCustom(
+                frame: frame,
+                item: item);
             item.LoopingMin = frame.ReadUInt8();
             item.LoopingMax = frame.ReadUInt8();
             item.Unused1 = frame.ReadUInt8();
             item.ReplayDelay = frame.ReadInt16();
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= IdleAnimationData.VersioningBreaks.Break0;
+                return;
+            }
+            item.NoAttacking = frame.ReadBoolean();
+            item.Unused2 = frame.ReadUInt8();
         }
+
+        public static partial void FillBinaryGroupSectionParserCustom(
+            MutagenFrame frame,
+            IIdleAnimationData item);
 
     }
 
@@ -1333,15 +1567,18 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Byte AnimationGroupSection => _structData.Span[0x0];
+        public IdleAnimationData.VersioningBreaks Versioning { get; private set; }
+        #region GroupSectionParser
+        partial void GroupSectionParserCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         public Byte LoopingMin => _structData.Span[0x1];
         public Byte LoopingMax => _structData.Span[0x2];
         public Byte Unused1 => _structData.Span[0x3];
         public Int16 ReplayDelay => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x4, 0x2));
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Slice(0x6).ToArray();
-        protected int RemainingEndingPos;
-        #endregion
+        public Boolean NoAttacking => _structData.Length <= 0x6 ? default : _structData.Slice(0x6, 0x1)[0] >= 1;
+        public Byte Unused2 => _structData.Length <= 0x7 ? default : _structData.Span[0x7];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1367,12 +1604,16 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x8,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new IdleAnimationDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0x6)
+            {
+                ret.Versioning |= IdleAnimationData.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

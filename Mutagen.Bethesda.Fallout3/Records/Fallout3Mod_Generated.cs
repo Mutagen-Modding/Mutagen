@@ -6322,10 +6322,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IExplodeSpawnGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "IIdleRelation":
-                case "IIdleRelationGetter":
-                    Remove(obj, keys, typeof(IIdleAnimationGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IItem":
                 case "IItemGetter":
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
