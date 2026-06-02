@@ -3015,15 +3015,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return obj.WaterEnvironmentMap;
             }
-            if (obj.TopCell is IAssetLinkContainer TopCelllinkCont)
+            if (obj.TopCell is {} TopCellItems)
             {
-                foreach (var item in TopCelllinkCont.EnumerateListedAssetLinks())
+                foreach (var item in TopCellItems.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
@@ -4542,15 +4541,14 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return item;
                 }
             }
-            if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
+            if (obj.TopCell is {} TopCellItems)
             {
-                foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in TopCellItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }

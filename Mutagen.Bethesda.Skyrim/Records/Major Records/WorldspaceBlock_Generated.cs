@@ -1450,8 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim
         #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWorldspaceBlock obj)
         {
-            foreach (var item in obj.Items.WhereCastable<IWorldspaceSubBlockGetter, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
@@ -1828,8 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceBlockGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            foreach (var item in obj.Items.WhereCastable<IWorldspaceSubBlockGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
