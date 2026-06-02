@@ -127,7 +127,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - AnimatedObject
 - ArmorModel
 - ArtObject
-- BodyData
 - BodyPartData
 - Book
 - CameraShot
@@ -378,8 +377,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ArtObject
 - IModeled
 - IObjectBounded
-### BodyData
-- IModeled
 ### BodyPart
 - INamed
 ### BodyPartData

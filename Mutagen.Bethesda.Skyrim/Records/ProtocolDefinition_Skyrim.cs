@@ -641,6 +641,8 @@ internal class ProtocolDefinition_Skyrim : IProtocolRegistration
             MessageButton_Registration.Instance,
             MiscItem_Registration.Instance,
             Model_Registration.Instance,
+            ModelBehavior_Registration.Instance,
+            ModelBodyTexture_Registration.Instance,
             ModStats_Registration.Instance,
             Morph_Registration.Instance,
             MountData_Registration.Instance,

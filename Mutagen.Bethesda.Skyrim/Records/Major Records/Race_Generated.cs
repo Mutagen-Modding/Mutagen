@@ -386,8 +386,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IBodyPartDataGetter> IRaceGetter.BodyPartData => this.BodyPartData;
         #endregion
         #region BehaviorGraph
-        public IGenderedItem<Model?> BehaviorGraph { get; set; } = new GenderedItem<Model?>(default, default);
-        IGenderedItemGetter<IModelGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
+        public IGenderedItem<ModelBehavior?> BehaviorGraph { get; set; } = new GenderedItem<ModelBehavior?>(default, default);
+        IGenderedItemGetter<IModelBehaviorGetter?> IRaceGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region MaterialType
         private readonly IFormLinkNullable<IMaterialTypeGetter> _MaterialType = new FormLinkNullable<IMaterialTypeGetter>();
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.BodyPartData = initialValue;
-                this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
+                this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ModelBehavior.Mask<TItem>?>?>?>(initialValue, default);
                 this.MaterialType = initialValue;
                 this.ImpactDataSet = initialValue;
                 this.DecapitationFX = initialValue;
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hairs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Hairs, []);
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, []);
                 this.BodyPartData = BodyPartData;
-                this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(BehaviorGraph, default);
+                this.BehaviorGraph = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ModelBehavior.Mask<TItem>?>?>?>(BehaviorGraph, default);
                 this.MaterialType = MaterialType;
                 this.ImpactDataSet = ImpactDataSet;
                 this.DecapitationFX = DecapitationFX;
@@ -904,7 +904,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Hairs;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Eyes;
             public TItem BodyPartData;
-            public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? BehaviorGraph;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, ModelBehavior.Mask<TItem>?>?>?>? BehaviorGraph;
             public TItem MaterialType;
             public TItem ImpactDataSet;
             public TItem DecapitationFX;
@@ -3760,7 +3760,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Hairs;
             public bool Eyes;
             public bool BodyPartData;
-            public GenderedItem<Model.TranslationMask>? BehaviorGraph;
+            public GenderedItem<ModelBehavior.TranslationMask>? BehaviorGraph;
             public bool MaterialType;
             public bool ImpactDataSet;
             public bool DecapitationFX;
@@ -4144,7 +4144,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<IHairGetter>>? Hairs { get; set; }
         new ExtendedList<IFormLinkGetter<IEyesGetter>>? Eyes { get; set; }
         new IFormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
-        new IGenderedItem<Model?> BehaviorGraph { get; set; }
+        new IGenderedItem<ModelBehavior?> BehaviorGraph { get; set; }
         new IFormLinkNullable<IMaterialTypeGetter> MaterialType { get; set; }
         new IFormLinkNullable<IImpactDataSetGetter> ImpactDataSet { get; set; }
         new IFormLinkNullable<IArtObjectGetter> DecapitationFX { get; set; }
@@ -4186,7 +4186,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IGenderedItem<IFormLinkGetter<IArmorGetter>>? DecapitateArmors { get; set; }
         new IGenderedItem<IFormLinkGetter<IColorRecordGetter>>? DefaultHairColors { get; set; }
         new IGenderedItem<BodyData?> BodyData { get; set; }
-        new IGenderedItem<Model?> BehaviorGraph { get; set; }
+        new IGenderedItem<ModelBehavior?> BehaviorGraph { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
         new IGenderedItem<HeadData?>? HeadData { get; set; }
     }
@@ -4267,7 +4267,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; }
         IReadOnlyList<IFormLinkGetter<IEyesGetter>>? Eyes { get; }
         IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData { get; }
-        IGenderedItemGetter<IModelGetter?> BehaviorGraph { get; }
+        IGenderedItemGetter<IModelBehaviorGetter?> BehaviorGraph { get; }
         IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType { get; }
         IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet { get; }
         IFormLinkNullableGetter<IArtObjectGetter> DecapitationFX { get; }
@@ -6837,7 +6837,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.BodyPartData.SetTo(rhs.BodyPartData.FormKeyNullable);
             }
-            item.BehaviorGraph = new GenderedItem<Model?>(
+            item.BehaviorGraph = new GenderedItem<ModelBehavior?>(
                 male: rhs.BehaviorGraph.Male?.DeepCopy(
                     errorMask: errorMask,
                     default(TranslationCrystal)),
@@ -7471,11 +7471,11 @@ namespace Mutagen.Bethesda.Skyrim
                 maleMarker: RecordTypes.MNAM,
                 femaleMarker: RecordTypes.FNAM,
                 markerWrap: false,
-                transl: (MutagenWriter subWriter, IModelGetter? subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IModelBehaviorGetter? subItem, TypedWriteParams conv) =>
                 {
                     if (subItem is {} Item)
                     {
-                        ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        ((ModelBehaviorBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                             item: Item,
                             writer: subWriter,
                             translationParams: conv);
@@ -8033,11 +8033,11 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.BehaviorGraph = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
+                    item.BehaviorGraph = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ModelBehavior>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: Model.TryCreateFromBinary);
+                        transl: ModelBehavior.TryCreateFromBinary);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -8581,8 +8581,8 @@ namespace Mutagen.Bethesda.Skyrim
         protected int ExtraNAM2EndingPos;
         #endregion
         #region BehaviorGraph
-        private IGenderedItemGetter<IModelGetter?>? _BehaviorGraphOverlay;
-        public IGenderedItemGetter<IModelGetter?> BehaviorGraph => _BehaviorGraphOverlay ?? new GenderedItem<IModelGetter?>(default, default);
+        private IGenderedItemGetter<IModelBehaviorGetter?>? _BehaviorGraphOverlay;
+        public IGenderedItemGetter<IModelBehaviorGetter?> BehaviorGraph => _BehaviorGraphOverlay ?? new GenderedItem<IModelBehaviorGetter?>(default, default);
         #endregion
         #region MaterialType
         private int? _MaterialTypeLocation;
@@ -8902,12 +8902,12 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM3:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                    _BehaviorGraphOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IModelGetter>(
+                    _BehaviorGraphOverlay = GenderedItemBinaryOverlay.FactorySkipMarkersPreRead<IModelBehaviorGetter>(
                         package: _package,
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        creator: static (s, p, r) => ModelBehaviorBinaryOverlay.ModelBehaviorFactory(s, p, r),
                         translationParams: translationParams);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }

@@ -10,7 +10,6 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -62,21 +61,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _Model;
-        /// <summary>
-        /// Aspects: IModeled
-        /// </summary>
-        public Model? Model
+        private ModelBodyTexture? _Model;
+        public ModelBodyTexture? Model
         {
             get => _Model;
             set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IBodyDataGetter.Model => this.Model;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IModeledGetter.Model => this.Model;
-        #endregion
+        IModelBodyTextureGetter? IBodyDataGetter.Model => this.Model;
         #endregion
 
         #region To String
@@ -118,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, ModelBodyTexture.Mask<TItem>?>(initialValue, new ModelBodyTexture.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -126,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Model)
             {
                 this.Index = Index;
-                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Model = new MaskItem<TItem, ModelBodyTexture.Mask<TItem>?>(Model, new ModelBodyTexture.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -139,7 +131,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Index;
-            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, ModelBodyTexture.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -203,7 +195,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
-                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, ModelBodyTexture.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -255,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Index;
-            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, ModelBodyTexture.ErrorMask?>? Model;
             #endregion
 
             #region IErrorMask
@@ -282,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Index = ex;
                         break;
                     case BodyData_FieldIndex.Model:
-                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        this.Model = new MaskItem<Exception?, ModelBodyTexture.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -298,7 +290,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Index = (Exception?)obj;
                         break;
                     case BodyData_FieldIndex.Model:
-                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        this.Model = (MaskItem<Exception?, ModelBodyTexture.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -373,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Index;
-            public Model.TranslationMask? Model;
+            public ModelBodyTexture.TranslationMask? Model;
             #endregion
 
             #region Ctors
@@ -482,14 +474,10 @@ namespace Mutagen.Bethesda.Skyrim
         IAssetLinkContainer,
         IBodyDataGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IBodyData>,
-        IModeled
+        ILoquiObjectSetter<IBodyData>
     {
         new BodyData.PartIndex? Index { get; set; }
-        /// <summary>
-        /// Aspects: IModeled
-        /// </summary>
-        new Model? Model { get; set; }
+        new ModelBodyTexture? Model { get; set; }
     }
 
     public partial interface IBodyDataGetter :
@@ -497,8 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IBodyDataGetter>,
-        IModeledGetter
+        ILoquiObject<IBodyDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -508,12 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BodyData_Registration.Instance;
         BodyData.PartIndex? Index { get; }
-        #region Model
-        /// <summary>
-        /// Aspects: IModeledGetter
-        /// </summary>
-        IModelGetter? Model { get; }
-        #endregion
+        IModelBodyTextureGetter? Model { get; }
 
     }
 
@@ -921,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
                 {
-                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyData_FieldIndex.Model))) return false;
+                    if (!((ModelBodyTextureCommon)((IModelBodyTextureGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, equalsMask?.GetSubCrystal((int)BodyData_FieldIndex.Model))) return false;
                 }
                 else if (!isModelEqual) return false;
             }
@@ -1136,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.INDX));
             if (item.Model is {} ModelItem)
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                ((ModelBodyTextureBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
                     item: ModelItem,
                     writer: writer,
                     translationParams: translationParams);
@@ -1195,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MODL:
                 {
                     if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                    item.Model = Mutagen.Bethesda.Skyrim.ModelBodyTexture.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)BodyData_FieldIndex.Model;
@@ -1274,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _IndexLocation;
         public BodyData.PartIndex? Index => EnumBinaryTranslation<BodyData.PartIndex, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_IndexLocation, _recordData, _package, 4);
         #endregion
-        public IModelGetter? Model { get; private set; }
+        public IModelBodyTextureGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1347,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MODL:
                 {
                     if (lastParsed.ShortCircuit((int)BodyData_FieldIndex.Model, translationParams)) return ParseResult.Stop;
-                    this.Model = ModelBinaryOverlay.ModelFactory(
+                    this.Model = ModelBodyTextureBinaryOverlay.ModelBodyTextureFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
