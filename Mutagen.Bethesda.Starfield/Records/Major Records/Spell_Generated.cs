@@ -3134,13 +3134,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PUSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Spell_FieldIndex.PickupSound;
                 }
                 case RecordTypeInts.PDSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Spell_FieldIndex.DropdownSound;
                 }
                 case RecordTypeInts.DESC:

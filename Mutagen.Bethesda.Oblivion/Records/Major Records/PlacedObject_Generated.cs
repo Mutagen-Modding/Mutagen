@@ -3400,7 +3400,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Location = Mutagen.Bethesda.Oblivion.Location.CreateFromBinary(frame: frame);
+                    item.Location = Mutagen.Bethesda.Oblivion.Location.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.Location;
                 }
                 case RecordTypeInts.XAAG:

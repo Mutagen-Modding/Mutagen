@@ -9579,7 +9579,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LightArea = Mutagen.Bethesda.Starfield.AreaLight.CreateFromBinary(frame: frame);
+                    item.LightArea = Mutagen.Bethesda.Starfield.AreaLight.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.LightArea;
                 }
                 case RecordTypeInts.XCZC:
@@ -9834,7 +9834,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XLRD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LightRoundedness = Mutagen.Bethesda.Starfield.LightRoundness.CreateFromBinary(frame: frame);
+                    item.LightRoundedness = Mutagen.Bethesda.Starfield.LightRoundness.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.LightRoundedness;
                 }
                 case RecordTypeInts.XLKR:

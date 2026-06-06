@@ -2631,19 +2631,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ASLS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.WED0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.InteriorSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.InteriorSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)AcousticSpace_FieldIndex.InteriorSound;
                 }
                 case RecordTypeInts.WED1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.ExteriorSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.ExteriorSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)AcousticSpace_FieldIndex.ExteriorSound;
                 }
                 case RecordTypeInts.AAMB:

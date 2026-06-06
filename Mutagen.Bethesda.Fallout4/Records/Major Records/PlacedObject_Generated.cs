@@ -7951,7 +7951,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XPTL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.RoomPortal = Mutagen.Bethesda.Fallout4.Bounding.CreateFromBinary(frame: frame);
+                    item.RoomPortal = Mutagen.Bethesda.Fallout4.Bounding.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XORD:
@@ -7963,7 +7963,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XOCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.OcclusionPlane = Mutagen.Bethesda.Fallout4.Bounding.CreateFromBinary(frame: frame);
+                    item.OcclusionPlane = Mutagen.Bethesda.Fallout4.Bounding.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XRMR:

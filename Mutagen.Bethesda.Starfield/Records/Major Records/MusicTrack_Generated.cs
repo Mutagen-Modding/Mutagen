@@ -2369,7 +2369,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MTSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.MTSH = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.MTSH = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)MusicTrack_FieldIndex.MTSH;
                 }
                 case RecordTypeInts.FNAM:

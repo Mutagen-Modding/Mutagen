@@ -5020,7 +5020,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LLSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.SoundReference = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.SoundReference = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Light_FieldIndex.SoundReference;
                 }
                 case RecordTypeInts.LNAM:
@@ -5037,13 +5037,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLRD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Roundness = Mutagen.Bethesda.Starfield.LightRoundness.CreateFromBinary(frame: frame);
+                    item.Roundness = Mutagen.Bethesda.Starfield.LightRoundness.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Light_FieldIndex.Roundness;
                 }
                 case RecordTypeInts.FLGD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.GoboData = Mutagen.Bethesda.Starfield.LightGobo.CreateFromBinary(frame: frame);
+                    item.GoboData = Mutagen.Bethesda.Starfield.LightGobo.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Light_FieldIndex.GoboData;
                 }
                 case RecordTypeInts.LLLD:
@@ -5057,7 +5057,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.AreaLight = Mutagen.Bethesda.Starfield.AreaLight.CreateFromBinary(frame: frame);
+                    item.AreaLight = Mutagen.Bethesda.Starfield.AreaLight.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Light_FieldIndex.AreaLight;
                 }
                 case RecordTypeInts.FVLD:

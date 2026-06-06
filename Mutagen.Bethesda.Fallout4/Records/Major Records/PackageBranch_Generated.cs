@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PRCB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Root = Mutagen.Bethesda.Fallout4.PackageRoot.CreateFromBinary(frame: frame);
+                    item.Root = Mutagen.Bethesda.Fallout4.PackageRoot.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PackageBranch_FieldIndex.Root;
                 }
                 case RecordTypeInts.PNAM:

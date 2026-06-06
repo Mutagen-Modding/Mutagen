@@ -2518,7 +2518,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DALC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.DirectionalAmbientColors = Mutagen.Bethesda.Starfield.AmbientColors.CreateFromBinary(frame: frame);
+                    item.DirectionalAmbientColors = Mutagen.Bethesda.Starfield.AmbientColors.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
                 }
                 default:

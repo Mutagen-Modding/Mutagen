@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.RotationOffsetConstraints = Mutagen.Bethesda.Skyrim.Int16MinMax.CreateFromBinary(frame: frame);
+                    item.RotationOffsetConstraints = Mutagen.Bethesda.Skyrim.Int16MinMax.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:

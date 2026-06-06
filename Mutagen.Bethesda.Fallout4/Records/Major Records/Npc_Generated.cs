@@ -9592,7 +9592,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MRSV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.BodyMorphRegionValues = Mutagen.Bethesda.Fallout4.NpcBodyMorphRegionValues.CreateFromBinary(frame: frame);
+                    item.BodyMorphRegionValues = Mutagen.Bethesda.Fallout4.NpcBodyMorphRegionValues.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Npc_FieldIndex.BodyMorphRegionValues;
                 }
                 case RecordTypeInts.FMRI:

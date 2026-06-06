@@ -2459,7 +2459,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.NeckFatAdjustmentsScale, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.NeckFatAdjustmentsScale = Mutagen.Bethesda.Fallout4.NeckFatAdjustmentsScale.CreateFromBinary(frame: frame);
+                    item.NeckFatAdjustmentsScale = Mutagen.Bethesda.Fallout4.NeckFatAdjustmentsScale.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)HeadData_FieldIndex.NeckFatAdjustmentsScale;
                 }
                 case RecordTypeInts.INDX:

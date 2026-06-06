@@ -198,14 +198,17 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             }
             else
             {
-                if (NeedsHeaderProcessing(loqui))
+                var needsHeaderProcessing = NeedsHeaderProcessing(loqui);
+                if (needsHeaderProcessing)
                 {
                     sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                 }
                 using (var args = sb.Call(
                            $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                 {
-                    args.Add($"frame: {frameAccessor}");
+                    args.Add(needsHeaderProcessing
+                        ? $"frame: {frameAccessor}.SpawnWithLength(contentLength)"
+                        : $"frame: {frameAccessor}");
                     var trans = new List<string>();
                         
                     if (data?.RecordTypeConverter != null
