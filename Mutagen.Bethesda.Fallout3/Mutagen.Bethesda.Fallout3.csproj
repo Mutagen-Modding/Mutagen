@@ -1348,9 +1348,6 @@
     <Compile Include="Records\Major Records\PerkMainData_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WaterData_Generated.cs">
-      <DependentUpon>Water.xml</DependentUpon>
-    </Compile>
     <!-- FNV-only enums (version-gated to 1.32+) -->
     <Compile Include="Enum\AmmoEffectOperation.cs" />
     <Compile Include="Enum\AmmoEffectType.cs" />
@@ -1589,5 +1586,8 @@
     <Compile Include="Interfaces\Link\IActorValueOrPerk_Generated.cs" />
     <Compile Include="Interfaces\Link\IPackageLocationObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IPackageTargetObject_Generated.cs" />
+    <Compile Include="Records\Major Records\WaterData_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

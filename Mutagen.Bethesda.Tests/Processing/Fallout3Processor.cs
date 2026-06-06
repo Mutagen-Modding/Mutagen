@@ -58,6 +58,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
+        AddDynamicProcessing(RecordTypes.WATR, ProcessWaters);
         AddDynamicProcessing(
             ProcessPlaced,
             PlacedObject_Registration.TriggeringRecordType,
@@ -161,6 +162,35 @@ public class Fallout3Processor : Processor
             pkptSub.Content.Span.CopyTo(padded);
             SwapSubrecordContent(fileOffset, majorFrame, pkptSub, padded);
         }
+    }
+
+    private void ProcessWaters(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // Upgrade legacy WATR DATA(186) to the modern DATA(2) + DNAM pair Mutagen always writes
+        if (majorFrame.IsDeleted) return;
+        if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataSub)) return;
+        var len = dataSub.ContentLength;
+        if (len <= 2) return;
+
+        var visualLen = len - 2;
+        var subLoc = fileOffset + dataSub.Location;
+        var contentLoc = subLoc + dataSub.HeaderLength;
+
+        var newLen = new byte[2];
+        BinaryPrimitives.WriteUInt16LittleEndian(newLen, 2);
+        Instructions.SetSubstitution(subLoc + 4, newLen);
+        Instructions.SetSubstitution(contentLoc, dataSub.Content.Slice(visualLen, 2).ToArray());
+        Instructions.SetRemove(RangeInt64.FromLength(contentLoc + 2, visualLen));
+
+        var dnam = new byte[6 + visualLen];
+        BinaryPrimitives.WriteInt32LittleEndian(dnam, RecordTypes.DNAM.TypeInt);
+        BinaryPrimitives.WriteUInt16LittleEndian(dnam.AsSpan(4), checked((ushort)visualLen));
+        dataSub.Content.Slice(0, visualLen).Span.CopyTo(dnam.AsSpan(6));
+        Instructions.SetAddition(fileOffset + dataSub.EndLocation, dnam);
+
+        ProcessLengths(majorFrame, 6, fileOffset);
     }
 
     private void NormalizeFormIdOverflows(

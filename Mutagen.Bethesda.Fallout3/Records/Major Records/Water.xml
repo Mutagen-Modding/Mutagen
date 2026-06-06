@@ -4,63 +4,47 @@
           recordType="WATR">
     <Fields>
       <String name="Name" recordType="FULL" />
-      <String name="NoiseMapTexture" recordType="NNAM" />
-      <UInt8 name="Opacity" nullable="False" recordType="ANAM" />
-      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
-      <String name="MaterialId" recordType="MNAM" />
-      <FormLink name="Material" recordType="TNAM" refName="Fallout3MajorRecord" />
+      <String name="NoiseMap" recordType="NNAM" nullable="False" />
+      <UInt8 name="Opacity" recordType="ANAM" nullable="False" default="75" />
+      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" nullable="False" />
+      <String name="MaterialId" recordType="MNAM" nullable="False" />
       <FormLink name="Sound" recordType="SNAM" refName="Sound" />
-      <FormLink name="Effect" recordType="XNAM" refName="Spell" />
-      <UInt16 name="DamagePerSecond" recordType="DATA" />
-      <RefDirect name="VisualData" refName="WaterData" />
-      <RefDirect name="RelatedWaters" refName="RelatedWaters" />
-      <P3Float name="LinearVelocity" recordType="NAM0" />
-      <P3Float name="AngularVelocity" recordType="NAM1" />
+      <FormLink name="ActorEffect" recordType="XNAM" refName="Spell" />
+      <CustomLogic name="DataParse">
+        <RecordType>DATA</RecordType>
+        <RecordType>DNAM</RecordType>
+      </CustomLogic>
+      <RefDirect name="Data" refName="WaterData" nullable="False" binary="NoGeneration" />
+      <RefDirect name="RelatedWaters" refName="RelatedWaters" nullable="False" />
     </Fields>
   </Object>
-  <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM">
+  <Object name="WaterData" objType="Subrecord">
     <Fields>
-      <FormLink name="RelatedWaterDaytime" refName="Water" />
-      <FormLink name="RelatedWaterNighttime" refName="Water" />
-      <FormLink name="RelatedWaterUnderwater" refName="Water" />
-    </Fields>
-  </Object>
-  <Object name="WaterData" objType="Subrecord" recordType="DNAM">
-    <Fields>
-      <ByteArray name="Unused1" byteLength="16" nullable="False" />
-      <Float name="SunPower" />
-      <Float name="ReflectivityAmount" />
-      <Float name="FresnelAmount" />
-      <ByteArray name="Unused2" byteLength="4" nullable="False" />
-      <Float name="FogAboveNearPlane" />
-      <Float name="FogAboveFarPlane" />
-      <!-- Shallow Color (RGBA) -->
-      <UInt8 name="ShallowColorRed" />
-      <UInt8 name="ShallowColorGreen" />
-      <UInt8 name="ShallowColorBlue" />
-      <UInt8 name="ShallowColorAlpha" />
-      <!-- Deep Color (RGBA) -->
-      <UInt8 name="DeepColorRed" />
-      <UInt8 name="DeepColorGreen" />
-      <UInt8 name="DeepColorBlue" />
-      <UInt8 name="DeepColorAlpha" />
-      <!-- Reflection Color (RGBA) -->
-      <UInt8 name="ReflectionColorRed" />
-      <UInt8 name="ReflectionColorGreen" />
-      <UInt8 name="ReflectionColorBlue" />
-      <UInt8 name="ReflectionColorAlpha" />
-      <ByteArray name="Unused3" byteLength="4" nullable="False" />
-      <Float name="RainSimulatorForce" />
-      <Float name="RainSimulatorVelocity" />
-      <Float name="RainSimulatorFalloff" />
-      <Float name="RainSimulatorDampner" />
-      <Float name="DisplacementStartingSize" />
-      <Float name="DisplacementForce" />
-      <Float name="DisplacementVelocity" />
-      <Float name="DisplacementFalloff" />
-      <Float name="DisplacementDampner" />
-      <Float name="RainSimulatorStartingSize" />
-      <Float name="NormalsNoiseScale" />
+      <UInt32 name="Unused1" />
+      <UInt32 name="Unused2" />
+      <UInt32 name="Unused3" />
+      <UInt32 name="Unused4" />
+      <Float name="SunPower" default="50" />
+      <Float name="ReflectivityAmount" default="0.5f" />
+      <Float name="FresnelAmount" default="0.025f" />
+      <UInt32 name="Unused5" />
+      <Float name="FogAboveWaterDistanceNearPlane" />
+      <Float name="FogAboveWaterDistanceFarPlane" />
+      <Color name="ShallowColor" binaryType="Alpha" />
+      <Color name="DeepColor" binaryType="Alpha" />
+      <Color name="ReflectionColor" binaryType="Alpha" />
+      <UInt32 name="Unused6" />
+      <Float name="RainSimulatorForce" default="0.1f" />
+      <Float name="RainSimulatorVelocity" default="0.6f" />
+      <Float name="RainSimulatorFalloff" default="0.985f" />
+      <Float name="RainSimulatorDampner" default="2" />
+      <Float name="DisplacementSimulatorStartingSize" default="0.01f" />
+      <Float name="DisplacementSimulatorForce" default="0.4f" />
+      <Float name="DisplacementSimulatorVelocity" default="0.6f" />
+      <Float name="DisplacementSimulatorFalloff" default="0.985f" />
+      <Float name="DisplacementSimulatorDampner" default="10" />
+      <Float name="RainSimulatorStartingSize" default="0.05f" />
+      <Float name="NormalsNoiseScale" default="1" />
       <Float name="NoiseLayerOneWindDirection" />
       <Float name="NoiseLayerTwoWindDirection" />
       <Float name="NoiseLayerThreeWindDirection" />
@@ -69,21 +53,31 @@
       <Float name="NoiseLayerThreeWindSpeed" />
       <Float name="NormalsDepthFalloffStart" />
       <Float name="NormalsDepthFalloffEnd" />
-      <Float name="FogAboveAmount" />
-      <Float name="NormalsUVScale" />
-      <Float name="FogUnderAmount" />
-      <Float name="FogUnderNearPlane" />
-      <Float name="FogUnderFarPlane" />
-      <Float name="DistortionAmount" />
-      <Float name="Shininess" />
-      <Float name="ReflectionHDRMultiplier" />
-      <Float name="LightRadius" />
-      <Float name="LightBrightness" />
-      <Float name="NoiseLayerOneUVScale" />
-      <Float name="NoiseLayerTwoUVScale" />
-      <Float name="NoiseLayerThreeUVScale" />
-      <!-- Optional from xEdit element 43: amplitude scales -->
-      <ByteArray name="Remaining" />
+      <Float name="FogAboveWaterAmount" default="1" />
+      <Float name="NormalsUVScale" default="500" />
+      <Float name="FogUnderWaterAmount" default="1" />
+      <Float name="FogUnderWaterDistanceNearPlane" />
+      <Float name="FogUnderWaterDistanceFarPlane" default="1000" />
+      <Float name="DistortionAmount" default="250" />
+      <Float name="Shininess" default="100" />
+      <Float name="ReflectionHDRMultiplier" default="1" />
+      <Float name="LightRadius" default="10000" />
+      <Float name="LightBrightness" default="1" />
+      <Float name="NoiseLayerOneUVScale" default="100" />
+      <Float name="NoiseLayerTwoUVScale" default="100" />
+      <Float name="NoiseLayerThreeUVScale" default="100" />
+      <Break />
+      <Float name="NoiseLayerOneAmplitudeScale" />
+      <Float name="NoiseLayerTwoAmplitudeScale" />
+      <Float name="NoiseLayerThreeAmplitudeScale" />
+      <UInt16 name="Damage" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM">
+    <Fields>
+      <FormLink name="RelatedWaterDaytime" refName="Water" />
+      <FormLink name="RelatedWaterNighttime" refName="Water" />
+      <FormLink name="RelatedWaterUnderwater" refName="Water" />
     </Fields>
   </Object>
 </Loqui>

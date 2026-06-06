@@ -29,6 +29,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout3.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -50,122 +51,97 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public WaterData.VersioningBreaks Versioning { get; set; } = default(WaterData.VersioningBreaks);
+        #endregion
         #region Unused1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused1 = new byte[16];
-        public MemorySlice<Byte> Unused1
-        {
-            get => _Unused1;
-            set => this._Unused1 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IWaterDataGetter.Unused1 => this.Unused1;
-        #endregion
-        #region SunPower
-        public Single SunPower { get; set; } = default(Single);
-        #endregion
-        #region ReflectivityAmount
-        public Single ReflectivityAmount { get; set; } = default(Single);
-        #endregion
-        #region FresnelAmount
-        public Single FresnelAmount { get; set; } = default(Single);
+        public UInt32 Unused1 { get; set; } = default(UInt32);
         #endregion
         #region Unused2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused2 = new byte[4];
-        public MemorySlice<Byte> Unused2
-        {
-            get => _Unused2;
-            set => this._Unused2 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IWaterDataGetter.Unused2 => this.Unused2;
-        #endregion
-        #region FogAboveNearPlane
-        public Single FogAboveNearPlane { get; set; } = default(Single);
-        #endregion
-        #region FogAboveFarPlane
-        public Single FogAboveFarPlane { get; set; } = default(Single);
-        #endregion
-        #region ShallowColorRed
-        public Byte ShallowColorRed { get; set; } = default(Byte);
-        #endregion
-        #region ShallowColorGreen
-        public Byte ShallowColorGreen { get; set; } = default(Byte);
-        #endregion
-        #region ShallowColorBlue
-        public Byte ShallowColorBlue { get; set; } = default(Byte);
-        #endregion
-        #region ShallowColorAlpha
-        public Byte ShallowColorAlpha { get; set; } = default(Byte);
-        #endregion
-        #region DeepColorRed
-        public Byte DeepColorRed { get; set; } = default(Byte);
-        #endregion
-        #region DeepColorGreen
-        public Byte DeepColorGreen { get; set; } = default(Byte);
-        #endregion
-        #region DeepColorBlue
-        public Byte DeepColorBlue { get; set; } = default(Byte);
-        #endregion
-        #region DeepColorAlpha
-        public Byte DeepColorAlpha { get; set; } = default(Byte);
-        #endregion
-        #region ReflectionColorRed
-        public Byte ReflectionColorRed { get; set; } = default(Byte);
-        #endregion
-        #region ReflectionColorGreen
-        public Byte ReflectionColorGreen { get; set; } = default(Byte);
-        #endregion
-        #region ReflectionColorBlue
-        public Byte ReflectionColorBlue { get; set; } = default(Byte);
-        #endregion
-        #region ReflectionColorAlpha
-        public Byte ReflectionColorAlpha { get; set; } = default(Byte);
+        public UInt32 Unused2 { get; set; } = default(UInt32);
         #endregion
         #region Unused3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused3 = new byte[4];
-        public MemorySlice<Byte> Unused3
-        {
-            get => _Unused3;
-            set => this._Unused3 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IWaterDataGetter.Unused3 => this.Unused3;
+        public UInt32 Unused3 { get; set; } = default(UInt32);
+        #endregion
+        #region Unused4
+        public UInt32 Unused4 { get; set; } = default(UInt32);
+        #endregion
+        #region SunPower
+        public static readonly Single SunPowerDefault = 50;
+        public Single SunPower { get; set; } = SunPowerDefault;
+        #endregion
+        #region ReflectivityAmount
+        public static readonly Single ReflectivityAmountDefault = 0.5f;
+        public Single ReflectivityAmount { get; set; } = ReflectivityAmountDefault;
+        #endregion
+        #region FresnelAmount
+        public static readonly Single FresnelAmountDefault = 0.025f;
+        public Single FresnelAmount { get; set; } = FresnelAmountDefault;
+        #endregion
+        #region Unused5
+        public UInt32 Unused5 { get; set; } = default(UInt32);
+        #endregion
+        #region FogAboveWaterDistanceNearPlane
+        public Single FogAboveWaterDistanceNearPlane { get; set; } = default(Single);
+        #endregion
+        #region FogAboveWaterDistanceFarPlane
+        public Single FogAboveWaterDistanceFarPlane { get; set; } = default(Single);
+        #endregion
+        #region ShallowColor
+        public Color ShallowColor { get; set; } = default(Color);
+        #endregion
+        #region DeepColor
+        public Color DeepColor { get; set; } = default(Color);
+        #endregion
+        #region ReflectionColor
+        public Color ReflectionColor { get; set; } = default(Color);
+        #endregion
+        #region Unused6
+        public UInt32 Unused6 { get; set; } = default(UInt32);
         #endregion
         #region RainSimulatorForce
-        public Single RainSimulatorForce { get; set; } = default(Single);
+        public static readonly Single RainSimulatorForceDefault = 0.1f;
+        public Single RainSimulatorForce { get; set; } = RainSimulatorForceDefault;
         #endregion
         #region RainSimulatorVelocity
-        public Single RainSimulatorVelocity { get; set; } = default(Single);
+        public static readonly Single RainSimulatorVelocityDefault = 0.6f;
+        public Single RainSimulatorVelocity { get; set; } = RainSimulatorVelocityDefault;
         #endregion
         #region RainSimulatorFalloff
-        public Single RainSimulatorFalloff { get; set; } = default(Single);
+        public static readonly Single RainSimulatorFalloffDefault = 0.985f;
+        public Single RainSimulatorFalloff { get; set; } = RainSimulatorFalloffDefault;
         #endregion
         #region RainSimulatorDampner
-        public Single RainSimulatorDampner { get; set; } = default(Single);
+        public static readonly Single RainSimulatorDampnerDefault = 2;
+        public Single RainSimulatorDampner { get; set; } = RainSimulatorDampnerDefault;
         #endregion
-        #region DisplacementStartingSize
-        public Single DisplacementStartingSize { get; set; } = default(Single);
+        #region DisplacementSimulatorStartingSize
+        public static readonly Single DisplacementSimulatorStartingSizeDefault = 0.01f;
+        public Single DisplacementSimulatorStartingSize { get; set; } = DisplacementSimulatorStartingSizeDefault;
         #endregion
-        #region DisplacementForce
-        public Single DisplacementForce { get; set; } = default(Single);
+        #region DisplacementSimulatorForce
+        public static readonly Single DisplacementSimulatorForceDefault = 0.4f;
+        public Single DisplacementSimulatorForce { get; set; } = DisplacementSimulatorForceDefault;
         #endregion
-        #region DisplacementVelocity
-        public Single DisplacementVelocity { get; set; } = default(Single);
+        #region DisplacementSimulatorVelocity
+        public static readonly Single DisplacementSimulatorVelocityDefault = 0.6f;
+        public Single DisplacementSimulatorVelocity { get; set; } = DisplacementSimulatorVelocityDefault;
         #endregion
-        #region DisplacementFalloff
-        public Single DisplacementFalloff { get; set; } = default(Single);
+        #region DisplacementSimulatorFalloff
+        public static readonly Single DisplacementSimulatorFalloffDefault = 0.985f;
+        public Single DisplacementSimulatorFalloff { get; set; } = DisplacementSimulatorFalloffDefault;
         #endregion
-        #region DisplacementDampner
-        public Single DisplacementDampner { get; set; } = default(Single);
+        #region DisplacementSimulatorDampner
+        public static readonly Single DisplacementSimulatorDampnerDefault = 10;
+        public Single DisplacementSimulatorDampner { get; set; } = DisplacementSimulatorDampnerDefault;
         #endregion
         #region RainSimulatorStartingSize
-        public Single RainSimulatorStartingSize { get; set; } = default(Single);
+        public static readonly Single RainSimulatorStartingSizeDefault = 0.05f;
+        public Single RainSimulatorStartingSize { get; set; } = RainSimulatorStartingSizeDefault;
         #endregion
         #region NormalsNoiseScale
-        public Single NormalsNoiseScale { get; set; } = default(Single);
+        public static readonly Single NormalsNoiseScaleDefault = 1;
+        public Single NormalsNoiseScale { get; set; } = NormalsNoiseScaleDefault;
         #endregion
         #region NoiseLayerOneWindDirection
         public Single NoiseLayerOneWindDirection { get; set; } = default(Single);
@@ -191,55 +167,68 @@ namespace Mutagen.Bethesda.Fallout3
         #region NormalsDepthFalloffEnd
         public Single NormalsDepthFalloffEnd { get; set; } = default(Single);
         #endregion
-        #region FogAboveAmount
-        public Single FogAboveAmount { get; set; } = default(Single);
+        #region FogAboveWaterAmount
+        public static readonly Single FogAboveWaterAmountDefault = 1;
+        public Single FogAboveWaterAmount { get; set; } = FogAboveWaterAmountDefault;
         #endregion
         #region NormalsUVScale
-        public Single NormalsUVScale { get; set; } = default(Single);
+        public static readonly Single NormalsUVScaleDefault = 500;
+        public Single NormalsUVScale { get; set; } = NormalsUVScaleDefault;
         #endregion
-        #region FogUnderAmount
-        public Single FogUnderAmount { get; set; } = default(Single);
+        #region FogUnderWaterAmount
+        public static readonly Single FogUnderWaterAmountDefault = 1;
+        public Single FogUnderWaterAmount { get; set; } = FogUnderWaterAmountDefault;
         #endregion
-        #region FogUnderNearPlane
-        public Single FogUnderNearPlane { get; set; } = default(Single);
+        #region FogUnderWaterDistanceNearPlane
+        public Single FogUnderWaterDistanceNearPlane { get; set; } = default(Single);
         #endregion
-        #region FogUnderFarPlane
-        public Single FogUnderFarPlane { get; set; } = default(Single);
+        #region FogUnderWaterDistanceFarPlane
+        public static readonly Single FogUnderWaterDistanceFarPlaneDefault = 1000;
+        public Single FogUnderWaterDistanceFarPlane { get; set; } = FogUnderWaterDistanceFarPlaneDefault;
         #endregion
         #region DistortionAmount
-        public Single DistortionAmount { get; set; } = default(Single);
+        public static readonly Single DistortionAmountDefault = 250;
+        public Single DistortionAmount { get; set; } = DistortionAmountDefault;
         #endregion
         #region Shininess
-        public Single Shininess { get; set; } = default(Single);
+        public static readonly Single ShininessDefault = 100;
+        public Single Shininess { get; set; } = ShininessDefault;
         #endregion
         #region ReflectionHDRMultiplier
-        public Single ReflectionHDRMultiplier { get; set; } = default(Single);
+        public static readonly Single ReflectionHDRMultiplierDefault = 1;
+        public Single ReflectionHDRMultiplier { get; set; } = ReflectionHDRMultiplierDefault;
         #endregion
         #region LightRadius
-        public Single LightRadius { get; set; } = default(Single);
+        public static readonly Single LightRadiusDefault = 10000;
+        public Single LightRadius { get; set; } = LightRadiusDefault;
         #endregion
         #region LightBrightness
-        public Single LightBrightness { get; set; } = default(Single);
+        public static readonly Single LightBrightnessDefault = 1;
+        public Single LightBrightness { get; set; } = LightBrightnessDefault;
         #endregion
         #region NoiseLayerOneUVScale
-        public Single NoiseLayerOneUVScale { get; set; } = default(Single);
+        public static readonly Single NoiseLayerOneUVScaleDefault = 100;
+        public Single NoiseLayerOneUVScale { get; set; } = NoiseLayerOneUVScaleDefault;
         #endregion
         #region NoiseLayerTwoUVScale
-        public Single NoiseLayerTwoUVScale { get; set; } = default(Single);
+        public static readonly Single NoiseLayerTwoUVScaleDefault = 100;
+        public Single NoiseLayerTwoUVScale { get; set; } = NoiseLayerTwoUVScaleDefault;
         #endregion
         #region NoiseLayerThreeUVScale
-        public Single NoiseLayerThreeUVScale { get; set; } = default(Single);
+        public static readonly Single NoiseLayerThreeUVScaleDefault = 100;
+        public Single NoiseLayerThreeUVScale { get; set; } = NoiseLayerThreeUVScaleDefault;
         #endregion
-        #region Remaining
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
-        {
-            get => _Remaining;
-            set => this._Remaining = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IWaterDataGetter.Remaining => this.Remaining;
+        #region NoiseLayerOneAmplitudeScale
+        public Single NoiseLayerOneAmplitudeScale { get; set; } = default(Single);
+        #endregion
+        #region NoiseLayerTwoAmplitudeScale
+        public Single NoiseLayerTwoAmplitudeScale { get; set; } = default(Single);
+        #endregion
+        #region NoiseLayerThreeAmplitudeScale
+        public Single NoiseLayerThreeAmplitudeScale { get; set; } = default(Single);
+        #endregion
+        #region Damage
+        public UInt16 Damage { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -280,35 +269,30 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Unused1 = initialValue;
+                this.Unused2 = initialValue;
+                this.Unused3 = initialValue;
+                this.Unused4 = initialValue;
                 this.SunPower = initialValue;
                 this.ReflectivityAmount = initialValue;
                 this.FresnelAmount = initialValue;
-                this.Unused2 = initialValue;
-                this.FogAboveNearPlane = initialValue;
-                this.FogAboveFarPlane = initialValue;
-                this.ShallowColorRed = initialValue;
-                this.ShallowColorGreen = initialValue;
-                this.ShallowColorBlue = initialValue;
-                this.ShallowColorAlpha = initialValue;
-                this.DeepColorRed = initialValue;
-                this.DeepColorGreen = initialValue;
-                this.DeepColorBlue = initialValue;
-                this.DeepColorAlpha = initialValue;
-                this.ReflectionColorRed = initialValue;
-                this.ReflectionColorGreen = initialValue;
-                this.ReflectionColorBlue = initialValue;
-                this.ReflectionColorAlpha = initialValue;
-                this.Unused3 = initialValue;
+                this.Unused5 = initialValue;
+                this.FogAboveWaterDistanceNearPlane = initialValue;
+                this.FogAboveWaterDistanceFarPlane = initialValue;
+                this.ShallowColor = initialValue;
+                this.DeepColor = initialValue;
+                this.ReflectionColor = initialValue;
+                this.Unused6 = initialValue;
                 this.RainSimulatorForce = initialValue;
                 this.RainSimulatorVelocity = initialValue;
                 this.RainSimulatorFalloff = initialValue;
                 this.RainSimulatorDampner = initialValue;
-                this.DisplacementStartingSize = initialValue;
-                this.DisplacementForce = initialValue;
-                this.DisplacementVelocity = initialValue;
-                this.DisplacementFalloff = initialValue;
-                this.DisplacementDampner = initialValue;
+                this.DisplacementSimulatorStartingSize = initialValue;
+                this.DisplacementSimulatorForce = initialValue;
+                this.DisplacementSimulatorVelocity = initialValue;
+                this.DisplacementSimulatorFalloff = initialValue;
+                this.DisplacementSimulatorDampner = initialValue;
                 this.RainSimulatorStartingSize = initialValue;
                 this.NormalsNoiseScale = initialValue;
                 this.NoiseLayerOneWindDirection = initialValue;
@@ -319,11 +303,11 @@ namespace Mutagen.Bethesda.Fallout3
                 this.NoiseLayerThreeWindSpeed = initialValue;
                 this.NormalsDepthFalloffStart = initialValue;
                 this.NormalsDepthFalloffEnd = initialValue;
-                this.FogAboveAmount = initialValue;
+                this.FogAboveWaterAmount = initialValue;
                 this.NormalsUVScale = initialValue;
-                this.FogUnderAmount = initialValue;
-                this.FogUnderNearPlane = initialValue;
-                this.FogUnderFarPlane = initialValue;
+                this.FogUnderWaterAmount = initialValue;
+                this.FogUnderWaterDistanceNearPlane = initialValue;
+                this.FogUnderWaterDistanceFarPlane = initialValue;
                 this.DistortionAmount = initialValue;
                 this.Shininess = initialValue;
                 this.ReflectionHDRMultiplier = initialValue;
@@ -332,39 +316,37 @@ namespace Mutagen.Bethesda.Fallout3
                 this.NoiseLayerOneUVScale = initialValue;
                 this.NoiseLayerTwoUVScale = initialValue;
                 this.NoiseLayerThreeUVScale = initialValue;
-                this.Remaining = initialValue;
+                this.NoiseLayerOneAmplitudeScale = initialValue;
+                this.NoiseLayerTwoAmplitudeScale = initialValue;
+                this.NoiseLayerThreeAmplitudeScale = initialValue;
+                this.Damage = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Unused1,
+                TItem Unused2,
+                TItem Unused3,
+                TItem Unused4,
                 TItem SunPower,
                 TItem ReflectivityAmount,
                 TItem FresnelAmount,
-                TItem Unused2,
-                TItem FogAboveNearPlane,
-                TItem FogAboveFarPlane,
-                TItem ShallowColorRed,
-                TItem ShallowColorGreen,
-                TItem ShallowColorBlue,
-                TItem ShallowColorAlpha,
-                TItem DeepColorRed,
-                TItem DeepColorGreen,
-                TItem DeepColorBlue,
-                TItem DeepColorAlpha,
-                TItem ReflectionColorRed,
-                TItem ReflectionColorGreen,
-                TItem ReflectionColorBlue,
-                TItem ReflectionColorAlpha,
-                TItem Unused3,
+                TItem Unused5,
+                TItem FogAboveWaterDistanceNearPlane,
+                TItem FogAboveWaterDistanceFarPlane,
+                TItem ShallowColor,
+                TItem DeepColor,
+                TItem ReflectionColor,
+                TItem Unused6,
                 TItem RainSimulatorForce,
                 TItem RainSimulatorVelocity,
                 TItem RainSimulatorFalloff,
                 TItem RainSimulatorDampner,
-                TItem DisplacementStartingSize,
-                TItem DisplacementForce,
-                TItem DisplacementVelocity,
-                TItem DisplacementFalloff,
-                TItem DisplacementDampner,
+                TItem DisplacementSimulatorStartingSize,
+                TItem DisplacementSimulatorForce,
+                TItem DisplacementSimulatorVelocity,
+                TItem DisplacementSimulatorFalloff,
+                TItem DisplacementSimulatorDampner,
                 TItem RainSimulatorStartingSize,
                 TItem NormalsNoiseScale,
                 TItem NoiseLayerOneWindDirection,
@@ -375,11 +357,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem NoiseLayerThreeWindSpeed,
                 TItem NormalsDepthFalloffStart,
                 TItem NormalsDepthFalloffEnd,
-                TItem FogAboveAmount,
+                TItem FogAboveWaterAmount,
                 TItem NormalsUVScale,
-                TItem FogUnderAmount,
-                TItem FogUnderNearPlane,
-                TItem FogUnderFarPlane,
+                TItem FogUnderWaterAmount,
+                TItem FogUnderWaterDistanceNearPlane,
+                TItem FogUnderWaterDistanceFarPlane,
                 TItem DistortionAmount,
                 TItem Shininess,
                 TItem ReflectionHDRMultiplier,
@@ -388,37 +370,35 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem NoiseLayerOneUVScale,
                 TItem NoiseLayerTwoUVScale,
                 TItem NoiseLayerThreeUVScale,
-                TItem Remaining)
+                TItem NoiseLayerOneAmplitudeScale,
+                TItem NoiseLayerTwoAmplitudeScale,
+                TItem NoiseLayerThreeAmplitudeScale,
+                TItem Damage)
             {
+                this.Versioning = Versioning;
                 this.Unused1 = Unused1;
+                this.Unused2 = Unused2;
+                this.Unused3 = Unused3;
+                this.Unused4 = Unused4;
                 this.SunPower = SunPower;
                 this.ReflectivityAmount = ReflectivityAmount;
                 this.FresnelAmount = FresnelAmount;
-                this.Unused2 = Unused2;
-                this.FogAboveNearPlane = FogAboveNearPlane;
-                this.FogAboveFarPlane = FogAboveFarPlane;
-                this.ShallowColorRed = ShallowColorRed;
-                this.ShallowColorGreen = ShallowColorGreen;
-                this.ShallowColorBlue = ShallowColorBlue;
-                this.ShallowColorAlpha = ShallowColorAlpha;
-                this.DeepColorRed = DeepColorRed;
-                this.DeepColorGreen = DeepColorGreen;
-                this.DeepColorBlue = DeepColorBlue;
-                this.DeepColorAlpha = DeepColorAlpha;
-                this.ReflectionColorRed = ReflectionColorRed;
-                this.ReflectionColorGreen = ReflectionColorGreen;
-                this.ReflectionColorBlue = ReflectionColorBlue;
-                this.ReflectionColorAlpha = ReflectionColorAlpha;
-                this.Unused3 = Unused3;
+                this.Unused5 = Unused5;
+                this.FogAboveWaterDistanceNearPlane = FogAboveWaterDistanceNearPlane;
+                this.FogAboveWaterDistanceFarPlane = FogAboveWaterDistanceFarPlane;
+                this.ShallowColor = ShallowColor;
+                this.DeepColor = DeepColor;
+                this.ReflectionColor = ReflectionColor;
+                this.Unused6 = Unused6;
                 this.RainSimulatorForce = RainSimulatorForce;
                 this.RainSimulatorVelocity = RainSimulatorVelocity;
                 this.RainSimulatorFalloff = RainSimulatorFalloff;
                 this.RainSimulatorDampner = RainSimulatorDampner;
-                this.DisplacementStartingSize = DisplacementStartingSize;
-                this.DisplacementForce = DisplacementForce;
-                this.DisplacementVelocity = DisplacementVelocity;
-                this.DisplacementFalloff = DisplacementFalloff;
-                this.DisplacementDampner = DisplacementDampner;
+                this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
+                this.DisplacementSimulatorForce = DisplacementSimulatorForce;
+                this.DisplacementSimulatorVelocity = DisplacementSimulatorVelocity;
+                this.DisplacementSimulatorFalloff = DisplacementSimulatorFalloff;
+                this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
                 this.RainSimulatorStartingSize = RainSimulatorStartingSize;
                 this.NormalsNoiseScale = NormalsNoiseScale;
                 this.NoiseLayerOneWindDirection = NoiseLayerOneWindDirection;
@@ -429,11 +409,11 @@ namespace Mutagen.Bethesda.Fallout3
                 this.NoiseLayerThreeWindSpeed = NoiseLayerThreeWindSpeed;
                 this.NormalsDepthFalloffStart = NormalsDepthFalloffStart;
                 this.NormalsDepthFalloffEnd = NormalsDepthFalloffEnd;
-                this.FogAboveAmount = FogAboveAmount;
+                this.FogAboveWaterAmount = FogAboveWaterAmount;
                 this.NormalsUVScale = NormalsUVScale;
-                this.FogUnderAmount = FogUnderAmount;
-                this.FogUnderNearPlane = FogUnderNearPlane;
-                this.FogUnderFarPlane = FogUnderFarPlane;
+                this.FogUnderWaterAmount = FogUnderWaterAmount;
+                this.FogUnderWaterDistanceNearPlane = FogUnderWaterDistanceNearPlane;
+                this.FogUnderWaterDistanceFarPlane = FogUnderWaterDistanceFarPlane;
                 this.DistortionAmount = DistortionAmount;
                 this.Shininess = Shininess;
                 this.ReflectionHDRMultiplier = ReflectionHDRMultiplier;
@@ -442,7 +422,10 @@ namespace Mutagen.Bethesda.Fallout3
                 this.NoiseLayerOneUVScale = NoiseLayerOneUVScale;
                 this.NoiseLayerTwoUVScale = NoiseLayerTwoUVScale;
                 this.NoiseLayerThreeUVScale = NoiseLayerThreeUVScale;
-                this.Remaining = Remaining;
+                this.NoiseLayerOneAmplitudeScale = NoiseLayerOneAmplitudeScale;
+                this.NoiseLayerTwoAmplitudeScale = NoiseLayerTwoAmplitudeScale;
+                this.NoiseLayerThreeAmplitudeScale = NoiseLayerThreeAmplitudeScale;
+                this.Damage = Damage;
             }
 
             #pragma warning disable CS8618
@@ -454,35 +437,30 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Unused1;
+            public TItem Unused2;
+            public TItem Unused3;
+            public TItem Unused4;
             public TItem SunPower;
             public TItem ReflectivityAmount;
             public TItem FresnelAmount;
-            public TItem Unused2;
-            public TItem FogAboveNearPlane;
-            public TItem FogAboveFarPlane;
-            public TItem ShallowColorRed;
-            public TItem ShallowColorGreen;
-            public TItem ShallowColorBlue;
-            public TItem ShallowColorAlpha;
-            public TItem DeepColorRed;
-            public TItem DeepColorGreen;
-            public TItem DeepColorBlue;
-            public TItem DeepColorAlpha;
-            public TItem ReflectionColorRed;
-            public TItem ReflectionColorGreen;
-            public TItem ReflectionColorBlue;
-            public TItem ReflectionColorAlpha;
-            public TItem Unused3;
+            public TItem Unused5;
+            public TItem FogAboveWaterDistanceNearPlane;
+            public TItem FogAboveWaterDistanceFarPlane;
+            public TItem ShallowColor;
+            public TItem DeepColor;
+            public TItem ReflectionColor;
+            public TItem Unused6;
             public TItem RainSimulatorForce;
             public TItem RainSimulatorVelocity;
             public TItem RainSimulatorFalloff;
             public TItem RainSimulatorDampner;
-            public TItem DisplacementStartingSize;
-            public TItem DisplacementForce;
-            public TItem DisplacementVelocity;
-            public TItem DisplacementFalloff;
-            public TItem DisplacementDampner;
+            public TItem DisplacementSimulatorStartingSize;
+            public TItem DisplacementSimulatorForce;
+            public TItem DisplacementSimulatorVelocity;
+            public TItem DisplacementSimulatorFalloff;
+            public TItem DisplacementSimulatorDampner;
             public TItem RainSimulatorStartingSize;
             public TItem NormalsNoiseScale;
             public TItem NoiseLayerOneWindDirection;
@@ -493,11 +471,11 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem NoiseLayerThreeWindSpeed;
             public TItem NormalsDepthFalloffStart;
             public TItem NormalsDepthFalloffEnd;
-            public TItem FogAboveAmount;
+            public TItem FogAboveWaterAmount;
             public TItem NormalsUVScale;
-            public TItem FogUnderAmount;
-            public TItem FogUnderNearPlane;
-            public TItem FogUnderFarPlane;
+            public TItem FogUnderWaterAmount;
+            public TItem FogUnderWaterDistanceNearPlane;
+            public TItem FogUnderWaterDistanceFarPlane;
             public TItem DistortionAmount;
             public TItem Shininess;
             public TItem ReflectionHDRMultiplier;
@@ -506,7 +484,10 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem NoiseLayerOneUVScale;
             public TItem NoiseLayerTwoUVScale;
             public TItem NoiseLayerThreeUVScale;
-            public TItem Remaining;
+            public TItem NoiseLayerOneAmplitudeScale;
+            public TItem NoiseLayerTwoAmplitudeScale;
+            public TItem NoiseLayerThreeAmplitudeScale;
+            public TItem Damage;
             #endregion
 
             #region Equals
@@ -519,35 +500,30 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
+                if (!object.Equals(this.Unused4, rhs.Unused4)) return false;
                 if (!object.Equals(this.SunPower, rhs.SunPower)) return false;
                 if (!object.Equals(this.ReflectivityAmount, rhs.ReflectivityAmount)) return false;
                 if (!object.Equals(this.FresnelAmount, rhs.FresnelAmount)) return false;
-                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
-                if (!object.Equals(this.FogAboveNearPlane, rhs.FogAboveNearPlane)) return false;
-                if (!object.Equals(this.FogAboveFarPlane, rhs.FogAboveFarPlane)) return false;
-                if (!object.Equals(this.ShallowColorRed, rhs.ShallowColorRed)) return false;
-                if (!object.Equals(this.ShallowColorGreen, rhs.ShallowColorGreen)) return false;
-                if (!object.Equals(this.ShallowColorBlue, rhs.ShallowColorBlue)) return false;
-                if (!object.Equals(this.ShallowColorAlpha, rhs.ShallowColorAlpha)) return false;
-                if (!object.Equals(this.DeepColorRed, rhs.DeepColorRed)) return false;
-                if (!object.Equals(this.DeepColorGreen, rhs.DeepColorGreen)) return false;
-                if (!object.Equals(this.DeepColorBlue, rhs.DeepColorBlue)) return false;
-                if (!object.Equals(this.DeepColorAlpha, rhs.DeepColorAlpha)) return false;
-                if (!object.Equals(this.ReflectionColorRed, rhs.ReflectionColorRed)) return false;
-                if (!object.Equals(this.ReflectionColorGreen, rhs.ReflectionColorGreen)) return false;
-                if (!object.Equals(this.ReflectionColorBlue, rhs.ReflectionColorBlue)) return false;
-                if (!object.Equals(this.ReflectionColorAlpha, rhs.ReflectionColorAlpha)) return false;
-                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
+                if (!object.Equals(this.Unused5, rhs.Unused5)) return false;
+                if (!object.Equals(this.FogAboveWaterDistanceNearPlane, rhs.FogAboveWaterDistanceNearPlane)) return false;
+                if (!object.Equals(this.FogAboveWaterDistanceFarPlane, rhs.FogAboveWaterDistanceFarPlane)) return false;
+                if (!object.Equals(this.ShallowColor, rhs.ShallowColor)) return false;
+                if (!object.Equals(this.DeepColor, rhs.DeepColor)) return false;
+                if (!object.Equals(this.ReflectionColor, rhs.ReflectionColor)) return false;
+                if (!object.Equals(this.Unused6, rhs.Unused6)) return false;
                 if (!object.Equals(this.RainSimulatorForce, rhs.RainSimulatorForce)) return false;
                 if (!object.Equals(this.RainSimulatorVelocity, rhs.RainSimulatorVelocity)) return false;
                 if (!object.Equals(this.RainSimulatorFalloff, rhs.RainSimulatorFalloff)) return false;
                 if (!object.Equals(this.RainSimulatorDampner, rhs.RainSimulatorDampner)) return false;
-                if (!object.Equals(this.DisplacementStartingSize, rhs.DisplacementStartingSize)) return false;
-                if (!object.Equals(this.DisplacementForce, rhs.DisplacementForce)) return false;
-                if (!object.Equals(this.DisplacementVelocity, rhs.DisplacementVelocity)) return false;
-                if (!object.Equals(this.DisplacementFalloff, rhs.DisplacementFalloff)) return false;
-                if (!object.Equals(this.DisplacementDampner, rhs.DisplacementDampner)) return false;
+                if (!object.Equals(this.DisplacementSimulatorStartingSize, rhs.DisplacementSimulatorStartingSize)) return false;
+                if (!object.Equals(this.DisplacementSimulatorForce, rhs.DisplacementSimulatorForce)) return false;
+                if (!object.Equals(this.DisplacementSimulatorVelocity, rhs.DisplacementSimulatorVelocity)) return false;
+                if (!object.Equals(this.DisplacementSimulatorFalloff, rhs.DisplacementSimulatorFalloff)) return false;
+                if (!object.Equals(this.DisplacementSimulatorDampner, rhs.DisplacementSimulatorDampner)) return false;
                 if (!object.Equals(this.RainSimulatorStartingSize, rhs.RainSimulatorStartingSize)) return false;
                 if (!object.Equals(this.NormalsNoiseScale, rhs.NormalsNoiseScale)) return false;
                 if (!object.Equals(this.NoiseLayerOneWindDirection, rhs.NoiseLayerOneWindDirection)) return false;
@@ -558,11 +534,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.NoiseLayerThreeWindSpeed, rhs.NoiseLayerThreeWindSpeed)) return false;
                 if (!object.Equals(this.NormalsDepthFalloffStart, rhs.NormalsDepthFalloffStart)) return false;
                 if (!object.Equals(this.NormalsDepthFalloffEnd, rhs.NormalsDepthFalloffEnd)) return false;
-                if (!object.Equals(this.FogAboveAmount, rhs.FogAboveAmount)) return false;
+                if (!object.Equals(this.FogAboveWaterAmount, rhs.FogAboveWaterAmount)) return false;
                 if (!object.Equals(this.NormalsUVScale, rhs.NormalsUVScale)) return false;
-                if (!object.Equals(this.FogUnderAmount, rhs.FogUnderAmount)) return false;
-                if (!object.Equals(this.FogUnderNearPlane, rhs.FogUnderNearPlane)) return false;
-                if (!object.Equals(this.FogUnderFarPlane, rhs.FogUnderFarPlane)) return false;
+                if (!object.Equals(this.FogUnderWaterAmount, rhs.FogUnderWaterAmount)) return false;
+                if (!object.Equals(this.FogUnderWaterDistanceNearPlane, rhs.FogUnderWaterDistanceNearPlane)) return false;
+                if (!object.Equals(this.FogUnderWaterDistanceFarPlane, rhs.FogUnderWaterDistanceFarPlane)) return false;
                 if (!object.Equals(this.DistortionAmount, rhs.DistortionAmount)) return false;
                 if (!object.Equals(this.Shininess, rhs.Shininess)) return false;
                 if (!object.Equals(this.ReflectionHDRMultiplier, rhs.ReflectionHDRMultiplier)) return false;
@@ -571,41 +547,39 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.NoiseLayerOneUVScale, rhs.NoiseLayerOneUVScale)) return false;
                 if (!object.Equals(this.NoiseLayerTwoUVScale, rhs.NoiseLayerTwoUVScale)) return false;
                 if (!object.Equals(this.NoiseLayerThreeUVScale, rhs.NoiseLayerThreeUVScale)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.NoiseLayerOneAmplitudeScale, rhs.NoiseLayerOneAmplitudeScale)) return false;
+                if (!object.Equals(this.NoiseLayerTwoAmplitudeScale, rhs.NoiseLayerTwoAmplitudeScale)) return false;
+                if (!object.Equals(this.NoiseLayerThreeAmplitudeScale, rhs.NoiseLayerThreeAmplitudeScale)) return false;
+                if (!object.Equals(this.Damage, rhs.Damage)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Unused1);
+                hash.Add(this.Unused2);
+                hash.Add(this.Unused3);
+                hash.Add(this.Unused4);
                 hash.Add(this.SunPower);
                 hash.Add(this.ReflectivityAmount);
                 hash.Add(this.FresnelAmount);
-                hash.Add(this.Unused2);
-                hash.Add(this.FogAboveNearPlane);
-                hash.Add(this.FogAboveFarPlane);
-                hash.Add(this.ShallowColorRed);
-                hash.Add(this.ShallowColorGreen);
-                hash.Add(this.ShallowColorBlue);
-                hash.Add(this.ShallowColorAlpha);
-                hash.Add(this.DeepColorRed);
-                hash.Add(this.DeepColorGreen);
-                hash.Add(this.DeepColorBlue);
-                hash.Add(this.DeepColorAlpha);
-                hash.Add(this.ReflectionColorRed);
-                hash.Add(this.ReflectionColorGreen);
-                hash.Add(this.ReflectionColorBlue);
-                hash.Add(this.ReflectionColorAlpha);
-                hash.Add(this.Unused3);
+                hash.Add(this.Unused5);
+                hash.Add(this.FogAboveWaterDistanceNearPlane);
+                hash.Add(this.FogAboveWaterDistanceFarPlane);
+                hash.Add(this.ShallowColor);
+                hash.Add(this.DeepColor);
+                hash.Add(this.ReflectionColor);
+                hash.Add(this.Unused6);
                 hash.Add(this.RainSimulatorForce);
                 hash.Add(this.RainSimulatorVelocity);
                 hash.Add(this.RainSimulatorFalloff);
                 hash.Add(this.RainSimulatorDampner);
-                hash.Add(this.DisplacementStartingSize);
-                hash.Add(this.DisplacementForce);
-                hash.Add(this.DisplacementVelocity);
-                hash.Add(this.DisplacementFalloff);
-                hash.Add(this.DisplacementDampner);
+                hash.Add(this.DisplacementSimulatorStartingSize);
+                hash.Add(this.DisplacementSimulatorForce);
+                hash.Add(this.DisplacementSimulatorVelocity);
+                hash.Add(this.DisplacementSimulatorFalloff);
+                hash.Add(this.DisplacementSimulatorDampner);
                 hash.Add(this.RainSimulatorStartingSize);
                 hash.Add(this.NormalsNoiseScale);
                 hash.Add(this.NoiseLayerOneWindDirection);
@@ -616,11 +590,11 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.NoiseLayerThreeWindSpeed);
                 hash.Add(this.NormalsDepthFalloffStart);
                 hash.Add(this.NormalsDepthFalloffEnd);
-                hash.Add(this.FogAboveAmount);
+                hash.Add(this.FogAboveWaterAmount);
                 hash.Add(this.NormalsUVScale);
-                hash.Add(this.FogUnderAmount);
-                hash.Add(this.FogUnderNearPlane);
-                hash.Add(this.FogUnderFarPlane);
+                hash.Add(this.FogUnderWaterAmount);
+                hash.Add(this.FogUnderWaterDistanceNearPlane);
+                hash.Add(this.FogUnderWaterDistanceFarPlane);
                 hash.Add(this.DistortionAmount);
                 hash.Add(this.Shininess);
                 hash.Add(this.ReflectionHDRMultiplier);
@@ -629,7 +603,10 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.NoiseLayerOneUVScale);
                 hash.Add(this.NoiseLayerTwoUVScale);
                 hash.Add(this.NoiseLayerThreeUVScale);
-                hash.Add(this.Remaining);
+                hash.Add(this.NoiseLayerOneAmplitudeScale);
+                hash.Add(this.NoiseLayerTwoAmplitudeScale);
+                hash.Add(this.NoiseLayerThreeAmplitudeScale);
+                hash.Add(this.Damage);
                 return hash.ToHashCode();
             }
 
@@ -638,35 +615,30 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Unused1)) return false;
+                if (!eval(this.Unused2)) return false;
+                if (!eval(this.Unused3)) return false;
+                if (!eval(this.Unused4)) return false;
                 if (!eval(this.SunPower)) return false;
                 if (!eval(this.ReflectivityAmount)) return false;
                 if (!eval(this.FresnelAmount)) return false;
-                if (!eval(this.Unused2)) return false;
-                if (!eval(this.FogAboveNearPlane)) return false;
-                if (!eval(this.FogAboveFarPlane)) return false;
-                if (!eval(this.ShallowColorRed)) return false;
-                if (!eval(this.ShallowColorGreen)) return false;
-                if (!eval(this.ShallowColorBlue)) return false;
-                if (!eval(this.ShallowColorAlpha)) return false;
-                if (!eval(this.DeepColorRed)) return false;
-                if (!eval(this.DeepColorGreen)) return false;
-                if (!eval(this.DeepColorBlue)) return false;
-                if (!eval(this.DeepColorAlpha)) return false;
-                if (!eval(this.ReflectionColorRed)) return false;
-                if (!eval(this.ReflectionColorGreen)) return false;
-                if (!eval(this.ReflectionColorBlue)) return false;
-                if (!eval(this.ReflectionColorAlpha)) return false;
-                if (!eval(this.Unused3)) return false;
+                if (!eval(this.Unused5)) return false;
+                if (!eval(this.FogAboveWaterDistanceNearPlane)) return false;
+                if (!eval(this.FogAboveWaterDistanceFarPlane)) return false;
+                if (!eval(this.ShallowColor)) return false;
+                if (!eval(this.DeepColor)) return false;
+                if (!eval(this.ReflectionColor)) return false;
+                if (!eval(this.Unused6)) return false;
                 if (!eval(this.RainSimulatorForce)) return false;
                 if (!eval(this.RainSimulatorVelocity)) return false;
                 if (!eval(this.RainSimulatorFalloff)) return false;
                 if (!eval(this.RainSimulatorDampner)) return false;
-                if (!eval(this.DisplacementStartingSize)) return false;
-                if (!eval(this.DisplacementForce)) return false;
-                if (!eval(this.DisplacementVelocity)) return false;
-                if (!eval(this.DisplacementFalloff)) return false;
-                if (!eval(this.DisplacementDampner)) return false;
+                if (!eval(this.DisplacementSimulatorStartingSize)) return false;
+                if (!eval(this.DisplacementSimulatorForce)) return false;
+                if (!eval(this.DisplacementSimulatorVelocity)) return false;
+                if (!eval(this.DisplacementSimulatorFalloff)) return false;
+                if (!eval(this.DisplacementSimulatorDampner)) return false;
                 if (!eval(this.RainSimulatorStartingSize)) return false;
                 if (!eval(this.NormalsNoiseScale)) return false;
                 if (!eval(this.NoiseLayerOneWindDirection)) return false;
@@ -677,11 +649,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.NoiseLayerThreeWindSpeed)) return false;
                 if (!eval(this.NormalsDepthFalloffStart)) return false;
                 if (!eval(this.NormalsDepthFalloffEnd)) return false;
-                if (!eval(this.FogAboveAmount)) return false;
+                if (!eval(this.FogAboveWaterAmount)) return false;
                 if (!eval(this.NormalsUVScale)) return false;
-                if (!eval(this.FogUnderAmount)) return false;
-                if (!eval(this.FogUnderNearPlane)) return false;
-                if (!eval(this.FogUnderFarPlane)) return false;
+                if (!eval(this.FogUnderWaterAmount)) return false;
+                if (!eval(this.FogUnderWaterDistanceNearPlane)) return false;
+                if (!eval(this.FogUnderWaterDistanceFarPlane)) return false;
                 if (!eval(this.DistortionAmount)) return false;
                 if (!eval(this.Shininess)) return false;
                 if (!eval(this.ReflectionHDRMultiplier)) return false;
@@ -690,7 +662,10 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.NoiseLayerOneUVScale)) return false;
                 if (!eval(this.NoiseLayerTwoUVScale)) return false;
                 if (!eval(this.NoiseLayerThreeUVScale)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.NoiseLayerOneAmplitudeScale)) return false;
+                if (!eval(this.NoiseLayerTwoAmplitudeScale)) return false;
+                if (!eval(this.NoiseLayerThreeAmplitudeScale)) return false;
+                if (!eval(this.Damage)) return false;
                 return true;
             }
             #endregion
@@ -698,35 +673,30 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Unused1)) return true;
+                if (eval(this.Unused2)) return true;
+                if (eval(this.Unused3)) return true;
+                if (eval(this.Unused4)) return true;
                 if (eval(this.SunPower)) return true;
                 if (eval(this.ReflectivityAmount)) return true;
                 if (eval(this.FresnelAmount)) return true;
-                if (eval(this.Unused2)) return true;
-                if (eval(this.FogAboveNearPlane)) return true;
-                if (eval(this.FogAboveFarPlane)) return true;
-                if (eval(this.ShallowColorRed)) return true;
-                if (eval(this.ShallowColorGreen)) return true;
-                if (eval(this.ShallowColorBlue)) return true;
-                if (eval(this.ShallowColorAlpha)) return true;
-                if (eval(this.DeepColorRed)) return true;
-                if (eval(this.DeepColorGreen)) return true;
-                if (eval(this.DeepColorBlue)) return true;
-                if (eval(this.DeepColorAlpha)) return true;
-                if (eval(this.ReflectionColorRed)) return true;
-                if (eval(this.ReflectionColorGreen)) return true;
-                if (eval(this.ReflectionColorBlue)) return true;
-                if (eval(this.ReflectionColorAlpha)) return true;
-                if (eval(this.Unused3)) return true;
+                if (eval(this.Unused5)) return true;
+                if (eval(this.FogAboveWaterDistanceNearPlane)) return true;
+                if (eval(this.FogAboveWaterDistanceFarPlane)) return true;
+                if (eval(this.ShallowColor)) return true;
+                if (eval(this.DeepColor)) return true;
+                if (eval(this.ReflectionColor)) return true;
+                if (eval(this.Unused6)) return true;
                 if (eval(this.RainSimulatorForce)) return true;
                 if (eval(this.RainSimulatorVelocity)) return true;
                 if (eval(this.RainSimulatorFalloff)) return true;
                 if (eval(this.RainSimulatorDampner)) return true;
-                if (eval(this.DisplacementStartingSize)) return true;
-                if (eval(this.DisplacementForce)) return true;
-                if (eval(this.DisplacementVelocity)) return true;
-                if (eval(this.DisplacementFalloff)) return true;
-                if (eval(this.DisplacementDampner)) return true;
+                if (eval(this.DisplacementSimulatorStartingSize)) return true;
+                if (eval(this.DisplacementSimulatorForce)) return true;
+                if (eval(this.DisplacementSimulatorVelocity)) return true;
+                if (eval(this.DisplacementSimulatorFalloff)) return true;
+                if (eval(this.DisplacementSimulatorDampner)) return true;
                 if (eval(this.RainSimulatorStartingSize)) return true;
                 if (eval(this.NormalsNoiseScale)) return true;
                 if (eval(this.NoiseLayerOneWindDirection)) return true;
@@ -737,11 +707,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.NoiseLayerThreeWindSpeed)) return true;
                 if (eval(this.NormalsDepthFalloffStart)) return true;
                 if (eval(this.NormalsDepthFalloffEnd)) return true;
-                if (eval(this.FogAboveAmount)) return true;
+                if (eval(this.FogAboveWaterAmount)) return true;
                 if (eval(this.NormalsUVScale)) return true;
-                if (eval(this.FogUnderAmount)) return true;
-                if (eval(this.FogUnderNearPlane)) return true;
-                if (eval(this.FogUnderFarPlane)) return true;
+                if (eval(this.FogUnderWaterAmount)) return true;
+                if (eval(this.FogUnderWaterDistanceNearPlane)) return true;
+                if (eval(this.FogUnderWaterDistanceFarPlane)) return true;
                 if (eval(this.DistortionAmount)) return true;
                 if (eval(this.Shininess)) return true;
                 if (eval(this.ReflectionHDRMultiplier)) return true;
@@ -750,7 +720,10 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.NoiseLayerOneUVScale)) return true;
                 if (eval(this.NoiseLayerTwoUVScale)) return true;
                 if (eval(this.NoiseLayerThreeUVScale)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.NoiseLayerOneAmplitudeScale)) return true;
+                if (eval(this.NoiseLayerTwoAmplitudeScale)) return true;
+                if (eval(this.NoiseLayerThreeAmplitudeScale)) return true;
+                if (eval(this.Damage)) return true;
                 return false;
             }
             #endregion
@@ -765,35 +738,30 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Unused1 = eval(this.Unused1);
+                obj.Unused2 = eval(this.Unused2);
+                obj.Unused3 = eval(this.Unused3);
+                obj.Unused4 = eval(this.Unused4);
                 obj.SunPower = eval(this.SunPower);
                 obj.ReflectivityAmount = eval(this.ReflectivityAmount);
                 obj.FresnelAmount = eval(this.FresnelAmount);
-                obj.Unused2 = eval(this.Unused2);
-                obj.FogAboveNearPlane = eval(this.FogAboveNearPlane);
-                obj.FogAboveFarPlane = eval(this.FogAboveFarPlane);
-                obj.ShallowColorRed = eval(this.ShallowColorRed);
-                obj.ShallowColorGreen = eval(this.ShallowColorGreen);
-                obj.ShallowColorBlue = eval(this.ShallowColorBlue);
-                obj.ShallowColorAlpha = eval(this.ShallowColorAlpha);
-                obj.DeepColorRed = eval(this.DeepColorRed);
-                obj.DeepColorGreen = eval(this.DeepColorGreen);
-                obj.DeepColorBlue = eval(this.DeepColorBlue);
-                obj.DeepColorAlpha = eval(this.DeepColorAlpha);
-                obj.ReflectionColorRed = eval(this.ReflectionColorRed);
-                obj.ReflectionColorGreen = eval(this.ReflectionColorGreen);
-                obj.ReflectionColorBlue = eval(this.ReflectionColorBlue);
-                obj.ReflectionColorAlpha = eval(this.ReflectionColorAlpha);
-                obj.Unused3 = eval(this.Unused3);
+                obj.Unused5 = eval(this.Unused5);
+                obj.FogAboveWaterDistanceNearPlane = eval(this.FogAboveWaterDistanceNearPlane);
+                obj.FogAboveWaterDistanceFarPlane = eval(this.FogAboveWaterDistanceFarPlane);
+                obj.ShallowColor = eval(this.ShallowColor);
+                obj.DeepColor = eval(this.DeepColor);
+                obj.ReflectionColor = eval(this.ReflectionColor);
+                obj.Unused6 = eval(this.Unused6);
                 obj.RainSimulatorForce = eval(this.RainSimulatorForce);
                 obj.RainSimulatorVelocity = eval(this.RainSimulatorVelocity);
                 obj.RainSimulatorFalloff = eval(this.RainSimulatorFalloff);
                 obj.RainSimulatorDampner = eval(this.RainSimulatorDampner);
-                obj.DisplacementStartingSize = eval(this.DisplacementStartingSize);
-                obj.DisplacementForce = eval(this.DisplacementForce);
-                obj.DisplacementVelocity = eval(this.DisplacementVelocity);
-                obj.DisplacementFalloff = eval(this.DisplacementFalloff);
-                obj.DisplacementDampner = eval(this.DisplacementDampner);
+                obj.DisplacementSimulatorStartingSize = eval(this.DisplacementSimulatorStartingSize);
+                obj.DisplacementSimulatorForce = eval(this.DisplacementSimulatorForce);
+                obj.DisplacementSimulatorVelocity = eval(this.DisplacementSimulatorVelocity);
+                obj.DisplacementSimulatorFalloff = eval(this.DisplacementSimulatorFalloff);
+                obj.DisplacementSimulatorDampner = eval(this.DisplacementSimulatorDampner);
                 obj.RainSimulatorStartingSize = eval(this.RainSimulatorStartingSize);
                 obj.NormalsNoiseScale = eval(this.NormalsNoiseScale);
                 obj.NoiseLayerOneWindDirection = eval(this.NoiseLayerOneWindDirection);
@@ -804,11 +772,11 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.NoiseLayerThreeWindSpeed = eval(this.NoiseLayerThreeWindSpeed);
                 obj.NormalsDepthFalloffStart = eval(this.NormalsDepthFalloffStart);
                 obj.NormalsDepthFalloffEnd = eval(this.NormalsDepthFalloffEnd);
-                obj.FogAboveAmount = eval(this.FogAboveAmount);
+                obj.FogAboveWaterAmount = eval(this.FogAboveWaterAmount);
                 obj.NormalsUVScale = eval(this.NormalsUVScale);
-                obj.FogUnderAmount = eval(this.FogUnderAmount);
-                obj.FogUnderNearPlane = eval(this.FogUnderNearPlane);
-                obj.FogUnderFarPlane = eval(this.FogUnderFarPlane);
+                obj.FogUnderWaterAmount = eval(this.FogUnderWaterAmount);
+                obj.FogUnderWaterDistanceNearPlane = eval(this.FogUnderWaterDistanceNearPlane);
+                obj.FogUnderWaterDistanceFarPlane = eval(this.FogUnderWaterDistanceFarPlane);
                 obj.DistortionAmount = eval(this.DistortionAmount);
                 obj.Shininess = eval(this.Shininess);
                 obj.ReflectionHDRMultiplier = eval(this.ReflectionHDRMultiplier);
@@ -817,7 +785,10 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.NoiseLayerOneUVScale = eval(this.NoiseLayerOneUVScale);
                 obj.NoiseLayerTwoUVScale = eval(this.NoiseLayerTwoUVScale);
                 obj.NoiseLayerThreeUVScale = eval(this.NoiseLayerThreeUVScale);
-                obj.Remaining = eval(this.Remaining);
+                obj.NoiseLayerOneAmplitudeScale = eval(this.NoiseLayerOneAmplitudeScale);
+                obj.NoiseLayerTwoAmplitudeScale = eval(this.NoiseLayerTwoAmplitudeScale);
+                obj.NoiseLayerThreeAmplitudeScale = eval(this.NoiseLayerThreeAmplitudeScale);
+                obj.Damage = eval(this.Damage);
             }
             #endregion
 
@@ -836,9 +807,25 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(WaterData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Unused1 ?? true)
                     {
                         sb.AppendItem(Unused1, "Unused1");
+                    }
+                    if (printMask?.Unused2 ?? true)
+                    {
+                        sb.AppendItem(Unused2, "Unused2");
+                    }
+                    if (printMask?.Unused3 ?? true)
+                    {
+                        sb.AppendItem(Unused3, "Unused3");
+                    }
+                    if (printMask?.Unused4 ?? true)
+                    {
+                        sb.AppendItem(Unused4, "Unused4");
                     }
                     if (printMask?.SunPower ?? true)
                     {
@@ -852,69 +839,33 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(FresnelAmount, "FresnelAmount");
                     }
-                    if (printMask?.Unused2 ?? true)
+                    if (printMask?.Unused5 ?? true)
                     {
-                        sb.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(Unused5, "Unused5");
                     }
-                    if (printMask?.FogAboveNearPlane ?? true)
+                    if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
                     {
-                        sb.AppendItem(FogAboveNearPlane, "FogAboveNearPlane");
+                        sb.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
                     }
-                    if (printMask?.FogAboveFarPlane ?? true)
+                    if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
                     {
-                        sb.AppendItem(FogAboveFarPlane, "FogAboveFarPlane");
+                        sb.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
                     }
-                    if (printMask?.ShallowColorRed ?? true)
+                    if (printMask?.ShallowColor ?? true)
                     {
-                        sb.AppendItem(ShallowColorRed, "ShallowColorRed");
+                        sb.AppendItem(ShallowColor, "ShallowColor");
                     }
-                    if (printMask?.ShallowColorGreen ?? true)
+                    if (printMask?.DeepColor ?? true)
                     {
-                        sb.AppendItem(ShallowColorGreen, "ShallowColorGreen");
+                        sb.AppendItem(DeepColor, "DeepColor");
                     }
-                    if (printMask?.ShallowColorBlue ?? true)
+                    if (printMask?.ReflectionColor ?? true)
                     {
-                        sb.AppendItem(ShallowColorBlue, "ShallowColorBlue");
+                        sb.AppendItem(ReflectionColor, "ReflectionColor");
                     }
-                    if (printMask?.ShallowColorAlpha ?? true)
+                    if (printMask?.Unused6 ?? true)
                     {
-                        sb.AppendItem(ShallowColorAlpha, "ShallowColorAlpha");
-                    }
-                    if (printMask?.DeepColorRed ?? true)
-                    {
-                        sb.AppendItem(DeepColorRed, "DeepColorRed");
-                    }
-                    if (printMask?.DeepColorGreen ?? true)
-                    {
-                        sb.AppendItem(DeepColorGreen, "DeepColorGreen");
-                    }
-                    if (printMask?.DeepColorBlue ?? true)
-                    {
-                        sb.AppendItem(DeepColorBlue, "DeepColorBlue");
-                    }
-                    if (printMask?.DeepColorAlpha ?? true)
-                    {
-                        sb.AppendItem(DeepColorAlpha, "DeepColorAlpha");
-                    }
-                    if (printMask?.ReflectionColorRed ?? true)
-                    {
-                        sb.AppendItem(ReflectionColorRed, "ReflectionColorRed");
-                    }
-                    if (printMask?.ReflectionColorGreen ?? true)
-                    {
-                        sb.AppendItem(ReflectionColorGreen, "ReflectionColorGreen");
-                    }
-                    if (printMask?.ReflectionColorBlue ?? true)
-                    {
-                        sb.AppendItem(ReflectionColorBlue, "ReflectionColorBlue");
-                    }
-                    if (printMask?.ReflectionColorAlpha ?? true)
-                    {
-                        sb.AppendItem(ReflectionColorAlpha, "ReflectionColorAlpha");
-                    }
-                    if (printMask?.Unused3 ?? true)
-                    {
-                        sb.AppendItem(Unused3, "Unused3");
+                        sb.AppendItem(Unused6, "Unused6");
                     }
                     if (printMask?.RainSimulatorForce ?? true)
                     {
@@ -932,25 +883,25 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
                     }
-                    if (printMask?.DisplacementStartingSize ?? true)
+                    if (printMask?.DisplacementSimulatorStartingSize ?? true)
                     {
-                        sb.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                        sb.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
                     }
-                    if (printMask?.DisplacementForce ?? true)
+                    if (printMask?.DisplacementSimulatorForce ?? true)
                     {
-                        sb.AppendItem(DisplacementForce, "DisplacementForce");
+                        sb.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
                     }
-                    if (printMask?.DisplacementVelocity ?? true)
+                    if (printMask?.DisplacementSimulatorVelocity ?? true)
                     {
-                        sb.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                        sb.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
                     }
-                    if (printMask?.DisplacementFalloff ?? true)
+                    if (printMask?.DisplacementSimulatorFalloff ?? true)
                     {
-                        sb.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                        sb.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
                     }
-                    if (printMask?.DisplacementDampner ?? true)
+                    if (printMask?.DisplacementSimulatorDampner ?? true)
                     {
-                        sb.AppendItem(DisplacementDampner, "DisplacementDampner");
+                        sb.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
                     }
                     if (printMask?.RainSimulatorStartingSize ?? true)
                     {
@@ -992,25 +943,25 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(NormalsDepthFalloffEnd, "NormalsDepthFalloffEnd");
                     }
-                    if (printMask?.FogAboveAmount ?? true)
+                    if (printMask?.FogAboveWaterAmount ?? true)
                     {
-                        sb.AppendItem(FogAboveAmount, "FogAboveAmount");
+                        sb.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
                     }
                     if (printMask?.NormalsUVScale ?? true)
                     {
                         sb.AppendItem(NormalsUVScale, "NormalsUVScale");
                     }
-                    if (printMask?.FogUnderAmount ?? true)
+                    if (printMask?.FogUnderWaterAmount ?? true)
                     {
-                        sb.AppendItem(FogUnderAmount, "FogUnderAmount");
+                        sb.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
                     }
-                    if (printMask?.FogUnderNearPlane ?? true)
+                    if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
                     {
-                        sb.AppendItem(FogUnderNearPlane, "FogUnderNearPlane");
+                        sb.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
                     }
-                    if (printMask?.FogUnderFarPlane ?? true)
+                    if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
                     {
-                        sb.AppendItem(FogUnderFarPlane, "FogUnderFarPlane");
+                        sb.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
                     }
                     if (printMask?.DistortionAmount ?? true)
                     {
@@ -1044,9 +995,21 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(NoiseLayerThreeUVScale, "NoiseLayerThreeUVScale");
                     }
-                    if (printMask?.Remaining ?? true)
+                    if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
                     {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                    }
+                    if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
+                    {
+                        sb.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                    }
+                    if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
+                    {
+                        sb.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                    }
+                    if (printMask?.Damage ?? true)
+                    {
+                        sb.AppendItem(Damage, "Damage");
                     }
                 }
             }
@@ -1072,35 +1035,30 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Unused1;
+            public Exception? Unused2;
+            public Exception? Unused3;
+            public Exception? Unused4;
             public Exception? SunPower;
             public Exception? ReflectivityAmount;
             public Exception? FresnelAmount;
-            public Exception? Unused2;
-            public Exception? FogAboveNearPlane;
-            public Exception? FogAboveFarPlane;
-            public Exception? ShallowColorRed;
-            public Exception? ShallowColorGreen;
-            public Exception? ShallowColorBlue;
-            public Exception? ShallowColorAlpha;
-            public Exception? DeepColorRed;
-            public Exception? DeepColorGreen;
-            public Exception? DeepColorBlue;
-            public Exception? DeepColorAlpha;
-            public Exception? ReflectionColorRed;
-            public Exception? ReflectionColorGreen;
-            public Exception? ReflectionColorBlue;
-            public Exception? ReflectionColorAlpha;
-            public Exception? Unused3;
+            public Exception? Unused5;
+            public Exception? FogAboveWaterDistanceNearPlane;
+            public Exception? FogAboveWaterDistanceFarPlane;
+            public Exception? ShallowColor;
+            public Exception? DeepColor;
+            public Exception? ReflectionColor;
+            public Exception? Unused6;
             public Exception? RainSimulatorForce;
             public Exception? RainSimulatorVelocity;
             public Exception? RainSimulatorFalloff;
             public Exception? RainSimulatorDampner;
-            public Exception? DisplacementStartingSize;
-            public Exception? DisplacementForce;
-            public Exception? DisplacementVelocity;
-            public Exception? DisplacementFalloff;
-            public Exception? DisplacementDampner;
+            public Exception? DisplacementSimulatorStartingSize;
+            public Exception? DisplacementSimulatorForce;
+            public Exception? DisplacementSimulatorVelocity;
+            public Exception? DisplacementSimulatorFalloff;
+            public Exception? DisplacementSimulatorDampner;
             public Exception? RainSimulatorStartingSize;
             public Exception? NormalsNoiseScale;
             public Exception? NoiseLayerOneWindDirection;
@@ -1111,11 +1069,11 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? NoiseLayerThreeWindSpeed;
             public Exception? NormalsDepthFalloffStart;
             public Exception? NormalsDepthFalloffEnd;
-            public Exception? FogAboveAmount;
+            public Exception? FogAboveWaterAmount;
             public Exception? NormalsUVScale;
-            public Exception? FogUnderAmount;
-            public Exception? FogUnderNearPlane;
-            public Exception? FogUnderFarPlane;
+            public Exception? FogUnderWaterAmount;
+            public Exception? FogUnderWaterDistanceNearPlane;
+            public Exception? FogUnderWaterDistanceFarPlane;
             public Exception? DistortionAmount;
             public Exception? Shininess;
             public Exception? ReflectionHDRMultiplier;
@@ -1124,7 +1082,10 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? NoiseLayerOneUVScale;
             public Exception? NoiseLayerTwoUVScale;
             public Exception? NoiseLayerThreeUVScale;
-            public Exception? Remaining;
+            public Exception? NoiseLayerOneAmplitudeScale;
+            public Exception? NoiseLayerTwoAmplitudeScale;
+            public Exception? NoiseLayerThreeAmplitudeScale;
+            public Exception? Damage;
             #endregion
 
             #region IErrorMask
@@ -1133,46 +1094,36 @@ namespace Mutagen.Bethesda.Fallout3
                 WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterData_FieldIndex.Versioning:
+                        return Versioning;
                     case WaterData_FieldIndex.Unused1:
                         return Unused1;
+                    case WaterData_FieldIndex.Unused2:
+                        return Unused2;
+                    case WaterData_FieldIndex.Unused3:
+                        return Unused3;
+                    case WaterData_FieldIndex.Unused4:
+                        return Unused4;
                     case WaterData_FieldIndex.SunPower:
                         return SunPower;
                     case WaterData_FieldIndex.ReflectivityAmount:
                         return ReflectivityAmount;
                     case WaterData_FieldIndex.FresnelAmount:
                         return FresnelAmount;
-                    case WaterData_FieldIndex.Unused2:
-                        return Unused2;
-                    case WaterData_FieldIndex.FogAboveNearPlane:
-                        return FogAboveNearPlane;
-                    case WaterData_FieldIndex.FogAboveFarPlane:
-                        return FogAboveFarPlane;
-                    case WaterData_FieldIndex.ShallowColorRed:
-                        return ShallowColorRed;
-                    case WaterData_FieldIndex.ShallowColorGreen:
-                        return ShallowColorGreen;
-                    case WaterData_FieldIndex.ShallowColorBlue:
-                        return ShallowColorBlue;
-                    case WaterData_FieldIndex.ShallowColorAlpha:
-                        return ShallowColorAlpha;
-                    case WaterData_FieldIndex.DeepColorRed:
-                        return DeepColorRed;
-                    case WaterData_FieldIndex.DeepColorGreen:
-                        return DeepColorGreen;
-                    case WaterData_FieldIndex.DeepColorBlue:
-                        return DeepColorBlue;
-                    case WaterData_FieldIndex.DeepColorAlpha:
-                        return DeepColorAlpha;
-                    case WaterData_FieldIndex.ReflectionColorRed:
-                        return ReflectionColorRed;
-                    case WaterData_FieldIndex.ReflectionColorGreen:
-                        return ReflectionColorGreen;
-                    case WaterData_FieldIndex.ReflectionColorBlue:
-                        return ReflectionColorBlue;
-                    case WaterData_FieldIndex.ReflectionColorAlpha:
-                        return ReflectionColorAlpha;
-                    case WaterData_FieldIndex.Unused3:
-                        return Unused3;
+                    case WaterData_FieldIndex.Unused5:
+                        return Unused5;
+                    case WaterData_FieldIndex.FogAboveWaterDistanceNearPlane:
+                        return FogAboveWaterDistanceNearPlane;
+                    case WaterData_FieldIndex.FogAboveWaterDistanceFarPlane:
+                        return FogAboveWaterDistanceFarPlane;
+                    case WaterData_FieldIndex.ShallowColor:
+                        return ShallowColor;
+                    case WaterData_FieldIndex.DeepColor:
+                        return DeepColor;
+                    case WaterData_FieldIndex.ReflectionColor:
+                        return ReflectionColor;
+                    case WaterData_FieldIndex.Unused6:
+                        return Unused6;
                     case WaterData_FieldIndex.RainSimulatorForce:
                         return RainSimulatorForce;
                     case WaterData_FieldIndex.RainSimulatorVelocity:
@@ -1181,16 +1132,16 @@ namespace Mutagen.Bethesda.Fallout3
                         return RainSimulatorFalloff;
                     case WaterData_FieldIndex.RainSimulatorDampner:
                         return RainSimulatorDampner;
-                    case WaterData_FieldIndex.DisplacementStartingSize:
-                        return DisplacementStartingSize;
-                    case WaterData_FieldIndex.DisplacementForce:
-                        return DisplacementForce;
-                    case WaterData_FieldIndex.DisplacementVelocity:
-                        return DisplacementVelocity;
-                    case WaterData_FieldIndex.DisplacementFalloff:
-                        return DisplacementFalloff;
-                    case WaterData_FieldIndex.DisplacementDampner:
-                        return DisplacementDampner;
+                    case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
+                        return DisplacementSimulatorStartingSize;
+                    case WaterData_FieldIndex.DisplacementSimulatorForce:
+                        return DisplacementSimulatorForce;
+                    case WaterData_FieldIndex.DisplacementSimulatorVelocity:
+                        return DisplacementSimulatorVelocity;
+                    case WaterData_FieldIndex.DisplacementSimulatorFalloff:
+                        return DisplacementSimulatorFalloff;
+                    case WaterData_FieldIndex.DisplacementSimulatorDampner:
+                        return DisplacementSimulatorDampner;
                     case WaterData_FieldIndex.RainSimulatorStartingSize:
                         return RainSimulatorStartingSize;
                     case WaterData_FieldIndex.NormalsNoiseScale:
@@ -1211,16 +1162,16 @@ namespace Mutagen.Bethesda.Fallout3
                         return NormalsDepthFalloffStart;
                     case WaterData_FieldIndex.NormalsDepthFalloffEnd:
                         return NormalsDepthFalloffEnd;
-                    case WaterData_FieldIndex.FogAboveAmount:
-                        return FogAboveAmount;
+                    case WaterData_FieldIndex.FogAboveWaterAmount:
+                        return FogAboveWaterAmount;
                     case WaterData_FieldIndex.NormalsUVScale:
                         return NormalsUVScale;
-                    case WaterData_FieldIndex.FogUnderAmount:
-                        return FogUnderAmount;
-                    case WaterData_FieldIndex.FogUnderNearPlane:
-                        return FogUnderNearPlane;
-                    case WaterData_FieldIndex.FogUnderFarPlane:
-                        return FogUnderFarPlane;
+                    case WaterData_FieldIndex.FogUnderWaterAmount:
+                        return FogUnderWaterAmount;
+                    case WaterData_FieldIndex.FogUnderWaterDistanceNearPlane:
+                        return FogUnderWaterDistanceNearPlane;
+                    case WaterData_FieldIndex.FogUnderWaterDistanceFarPlane:
+                        return FogUnderWaterDistanceFarPlane;
                     case WaterData_FieldIndex.DistortionAmount:
                         return DistortionAmount;
                     case WaterData_FieldIndex.Shininess:
@@ -1237,8 +1188,14 @@ namespace Mutagen.Bethesda.Fallout3
                         return NoiseLayerTwoUVScale;
                     case WaterData_FieldIndex.NoiseLayerThreeUVScale:
                         return NoiseLayerThreeUVScale;
-                    case WaterData_FieldIndex.Remaining:
-                        return Remaining;
+                    case WaterData_FieldIndex.NoiseLayerOneAmplitudeScale:
+                        return NoiseLayerOneAmplitudeScale;
+                    case WaterData_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                        return NoiseLayerTwoAmplitudeScale;
+                    case WaterData_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                        return NoiseLayerThreeAmplitudeScale;
+                    case WaterData_FieldIndex.Damage:
+                        return Damage;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1249,8 +1206,20 @@ namespace Mutagen.Bethesda.Fallout3
                 WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case WaterData_FieldIndex.Unused1:
                         this.Unused1 = ex;
+                        break;
+                    case WaterData_FieldIndex.Unused2:
+                        this.Unused2 = ex;
+                        break;
+                    case WaterData_FieldIndex.Unused3:
+                        this.Unused3 = ex;
+                        break;
+                    case WaterData_FieldIndex.Unused4:
+                        this.Unused4 = ex;
                         break;
                     case WaterData_FieldIndex.SunPower:
                         this.SunPower = ex;
@@ -1261,53 +1230,26 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.FresnelAmount:
                         this.FresnelAmount = ex;
                         break;
-                    case WaterData_FieldIndex.Unused2:
-                        this.Unused2 = ex;
+                    case WaterData_FieldIndex.Unused5:
+                        this.Unused5 = ex;
                         break;
-                    case WaterData_FieldIndex.FogAboveNearPlane:
-                        this.FogAboveNearPlane = ex;
+                    case WaterData_FieldIndex.FogAboveWaterDistanceNearPlane:
+                        this.FogAboveWaterDistanceNearPlane = ex;
                         break;
-                    case WaterData_FieldIndex.FogAboveFarPlane:
-                        this.FogAboveFarPlane = ex;
+                    case WaterData_FieldIndex.FogAboveWaterDistanceFarPlane:
+                        this.FogAboveWaterDistanceFarPlane = ex;
                         break;
-                    case WaterData_FieldIndex.ShallowColorRed:
-                        this.ShallowColorRed = ex;
+                    case WaterData_FieldIndex.ShallowColor:
+                        this.ShallowColor = ex;
                         break;
-                    case WaterData_FieldIndex.ShallowColorGreen:
-                        this.ShallowColorGreen = ex;
+                    case WaterData_FieldIndex.DeepColor:
+                        this.DeepColor = ex;
                         break;
-                    case WaterData_FieldIndex.ShallowColorBlue:
-                        this.ShallowColorBlue = ex;
+                    case WaterData_FieldIndex.ReflectionColor:
+                        this.ReflectionColor = ex;
                         break;
-                    case WaterData_FieldIndex.ShallowColorAlpha:
-                        this.ShallowColorAlpha = ex;
-                        break;
-                    case WaterData_FieldIndex.DeepColorRed:
-                        this.DeepColorRed = ex;
-                        break;
-                    case WaterData_FieldIndex.DeepColorGreen:
-                        this.DeepColorGreen = ex;
-                        break;
-                    case WaterData_FieldIndex.DeepColorBlue:
-                        this.DeepColorBlue = ex;
-                        break;
-                    case WaterData_FieldIndex.DeepColorAlpha:
-                        this.DeepColorAlpha = ex;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorRed:
-                        this.ReflectionColorRed = ex;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorGreen:
-                        this.ReflectionColorGreen = ex;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorBlue:
-                        this.ReflectionColorBlue = ex;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorAlpha:
-                        this.ReflectionColorAlpha = ex;
-                        break;
-                    case WaterData_FieldIndex.Unused3:
-                        this.Unused3 = ex;
+                    case WaterData_FieldIndex.Unused6:
+                        this.Unused6 = ex;
                         break;
                     case WaterData_FieldIndex.RainSimulatorForce:
                         this.RainSimulatorForce = ex;
@@ -1321,20 +1263,20 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.RainSimulatorDampner:
                         this.RainSimulatorDampner = ex;
                         break;
-                    case WaterData_FieldIndex.DisplacementStartingSize:
-                        this.DisplacementStartingSize = ex;
+                    case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
+                        this.DisplacementSimulatorStartingSize = ex;
                         break;
-                    case WaterData_FieldIndex.DisplacementForce:
-                        this.DisplacementForce = ex;
+                    case WaterData_FieldIndex.DisplacementSimulatorForce:
+                        this.DisplacementSimulatorForce = ex;
                         break;
-                    case WaterData_FieldIndex.DisplacementVelocity:
-                        this.DisplacementVelocity = ex;
+                    case WaterData_FieldIndex.DisplacementSimulatorVelocity:
+                        this.DisplacementSimulatorVelocity = ex;
                         break;
-                    case WaterData_FieldIndex.DisplacementFalloff:
-                        this.DisplacementFalloff = ex;
+                    case WaterData_FieldIndex.DisplacementSimulatorFalloff:
+                        this.DisplacementSimulatorFalloff = ex;
                         break;
-                    case WaterData_FieldIndex.DisplacementDampner:
-                        this.DisplacementDampner = ex;
+                    case WaterData_FieldIndex.DisplacementSimulatorDampner:
+                        this.DisplacementSimulatorDampner = ex;
                         break;
                     case WaterData_FieldIndex.RainSimulatorStartingSize:
                         this.RainSimulatorStartingSize = ex;
@@ -1366,20 +1308,20 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.NormalsDepthFalloffEnd:
                         this.NormalsDepthFalloffEnd = ex;
                         break;
-                    case WaterData_FieldIndex.FogAboveAmount:
-                        this.FogAboveAmount = ex;
+                    case WaterData_FieldIndex.FogAboveWaterAmount:
+                        this.FogAboveWaterAmount = ex;
                         break;
                     case WaterData_FieldIndex.NormalsUVScale:
                         this.NormalsUVScale = ex;
                         break;
-                    case WaterData_FieldIndex.FogUnderAmount:
-                        this.FogUnderAmount = ex;
+                    case WaterData_FieldIndex.FogUnderWaterAmount:
+                        this.FogUnderWaterAmount = ex;
                         break;
-                    case WaterData_FieldIndex.FogUnderNearPlane:
-                        this.FogUnderNearPlane = ex;
+                    case WaterData_FieldIndex.FogUnderWaterDistanceNearPlane:
+                        this.FogUnderWaterDistanceNearPlane = ex;
                         break;
-                    case WaterData_FieldIndex.FogUnderFarPlane:
-                        this.FogUnderFarPlane = ex;
+                    case WaterData_FieldIndex.FogUnderWaterDistanceFarPlane:
+                        this.FogUnderWaterDistanceFarPlane = ex;
                         break;
                     case WaterData_FieldIndex.DistortionAmount:
                         this.DistortionAmount = ex;
@@ -1405,8 +1347,17 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.NoiseLayerThreeUVScale:
                         this.NoiseLayerThreeUVScale = ex;
                         break;
-                    case WaterData_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case WaterData_FieldIndex.NoiseLayerOneAmplitudeScale:
+                        this.NoiseLayerOneAmplitudeScale = ex;
+                        break;
+                    case WaterData_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                        this.NoiseLayerTwoAmplitudeScale = ex;
+                        break;
+                    case WaterData_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                        this.NoiseLayerThreeAmplitudeScale = ex;
+                        break;
+                    case WaterData_FieldIndex.Damage:
+                        this.Damage = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1418,8 +1369,20 @@ namespace Mutagen.Bethesda.Fallout3
                 WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case WaterData_FieldIndex.Unused1:
                         this.Unused1 = (Exception?)obj;
+                        break;
+                    case WaterData_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
+                        break;
+                    case WaterData_FieldIndex.Unused3:
+                        this.Unused3 = (Exception?)obj;
+                        break;
+                    case WaterData_FieldIndex.Unused4:
+                        this.Unused4 = (Exception?)obj;
                         break;
                     case WaterData_FieldIndex.SunPower:
                         this.SunPower = (Exception?)obj;
@@ -1430,53 +1393,26 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.FresnelAmount:
                         this.FresnelAmount = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.Unused2:
-                        this.Unused2 = (Exception?)obj;
+                    case WaterData_FieldIndex.Unused5:
+                        this.Unused5 = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.FogAboveNearPlane:
-                        this.FogAboveNearPlane = (Exception?)obj;
+                    case WaterData_FieldIndex.FogAboveWaterDistanceNearPlane:
+                        this.FogAboveWaterDistanceNearPlane = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.FogAboveFarPlane:
-                        this.FogAboveFarPlane = (Exception?)obj;
+                    case WaterData_FieldIndex.FogAboveWaterDistanceFarPlane:
+                        this.FogAboveWaterDistanceFarPlane = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.ShallowColorRed:
-                        this.ShallowColorRed = (Exception?)obj;
+                    case WaterData_FieldIndex.ShallowColor:
+                        this.ShallowColor = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.ShallowColorGreen:
-                        this.ShallowColorGreen = (Exception?)obj;
+                    case WaterData_FieldIndex.DeepColor:
+                        this.DeepColor = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.ShallowColorBlue:
-                        this.ShallowColorBlue = (Exception?)obj;
+                    case WaterData_FieldIndex.ReflectionColor:
+                        this.ReflectionColor = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.ShallowColorAlpha:
-                        this.ShallowColorAlpha = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.DeepColorRed:
-                        this.DeepColorRed = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.DeepColorGreen:
-                        this.DeepColorGreen = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.DeepColorBlue:
-                        this.DeepColorBlue = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.DeepColorAlpha:
-                        this.DeepColorAlpha = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorRed:
-                        this.ReflectionColorRed = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorGreen:
-                        this.ReflectionColorGreen = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorBlue:
-                        this.ReflectionColorBlue = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.ReflectionColorAlpha:
-                        this.ReflectionColorAlpha = (Exception?)obj;
-                        break;
-                    case WaterData_FieldIndex.Unused3:
-                        this.Unused3 = (Exception?)obj;
+                    case WaterData_FieldIndex.Unused6:
+                        this.Unused6 = (Exception?)obj;
                         break;
                     case WaterData_FieldIndex.RainSimulatorForce:
                         this.RainSimulatorForce = (Exception?)obj;
@@ -1490,20 +1426,20 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.RainSimulatorDampner:
                         this.RainSimulatorDampner = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.DisplacementStartingSize:
-                        this.DisplacementStartingSize = (Exception?)obj;
+                    case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
+                        this.DisplacementSimulatorStartingSize = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.DisplacementForce:
-                        this.DisplacementForce = (Exception?)obj;
+                    case WaterData_FieldIndex.DisplacementSimulatorForce:
+                        this.DisplacementSimulatorForce = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.DisplacementVelocity:
-                        this.DisplacementVelocity = (Exception?)obj;
+                    case WaterData_FieldIndex.DisplacementSimulatorVelocity:
+                        this.DisplacementSimulatorVelocity = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.DisplacementFalloff:
-                        this.DisplacementFalloff = (Exception?)obj;
+                    case WaterData_FieldIndex.DisplacementSimulatorFalloff:
+                        this.DisplacementSimulatorFalloff = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.DisplacementDampner:
-                        this.DisplacementDampner = (Exception?)obj;
+                    case WaterData_FieldIndex.DisplacementSimulatorDampner:
+                        this.DisplacementSimulatorDampner = (Exception?)obj;
                         break;
                     case WaterData_FieldIndex.RainSimulatorStartingSize:
                         this.RainSimulatorStartingSize = (Exception?)obj;
@@ -1535,20 +1471,20 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.NormalsDepthFalloffEnd:
                         this.NormalsDepthFalloffEnd = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.FogAboveAmount:
-                        this.FogAboveAmount = (Exception?)obj;
+                    case WaterData_FieldIndex.FogAboveWaterAmount:
+                        this.FogAboveWaterAmount = (Exception?)obj;
                         break;
                     case WaterData_FieldIndex.NormalsUVScale:
                         this.NormalsUVScale = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.FogUnderAmount:
-                        this.FogUnderAmount = (Exception?)obj;
+                    case WaterData_FieldIndex.FogUnderWaterAmount:
+                        this.FogUnderWaterAmount = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.FogUnderNearPlane:
-                        this.FogUnderNearPlane = (Exception?)obj;
+                    case WaterData_FieldIndex.FogUnderWaterDistanceNearPlane:
+                        this.FogUnderWaterDistanceNearPlane = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.FogUnderFarPlane:
-                        this.FogUnderFarPlane = (Exception?)obj;
+                    case WaterData_FieldIndex.FogUnderWaterDistanceFarPlane:
+                        this.FogUnderWaterDistanceFarPlane = (Exception?)obj;
                         break;
                     case WaterData_FieldIndex.DistortionAmount:
                         this.DistortionAmount = (Exception?)obj;
@@ -1574,8 +1510,17 @@ namespace Mutagen.Bethesda.Fallout3
                     case WaterData_FieldIndex.NoiseLayerThreeUVScale:
                         this.NoiseLayerThreeUVScale = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case WaterData_FieldIndex.NoiseLayerOneAmplitudeScale:
+                        this.NoiseLayerOneAmplitudeScale = (Exception?)obj;
+                        break;
+                    case WaterData_FieldIndex.NoiseLayerTwoAmplitudeScale:
+                        this.NoiseLayerTwoAmplitudeScale = (Exception?)obj;
+                        break;
+                    case WaterData_FieldIndex.NoiseLayerThreeAmplitudeScale:
+                        this.NoiseLayerThreeAmplitudeScale = (Exception?)obj;
+                        break;
+                    case WaterData_FieldIndex.Damage:
+                        this.Damage = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1585,35 +1530,30 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Unused1 != null) return true;
+                if (Unused2 != null) return true;
+                if (Unused3 != null) return true;
+                if (Unused4 != null) return true;
                 if (SunPower != null) return true;
                 if (ReflectivityAmount != null) return true;
                 if (FresnelAmount != null) return true;
-                if (Unused2 != null) return true;
-                if (FogAboveNearPlane != null) return true;
-                if (FogAboveFarPlane != null) return true;
-                if (ShallowColorRed != null) return true;
-                if (ShallowColorGreen != null) return true;
-                if (ShallowColorBlue != null) return true;
-                if (ShallowColorAlpha != null) return true;
-                if (DeepColorRed != null) return true;
-                if (DeepColorGreen != null) return true;
-                if (DeepColorBlue != null) return true;
-                if (DeepColorAlpha != null) return true;
-                if (ReflectionColorRed != null) return true;
-                if (ReflectionColorGreen != null) return true;
-                if (ReflectionColorBlue != null) return true;
-                if (ReflectionColorAlpha != null) return true;
-                if (Unused3 != null) return true;
+                if (Unused5 != null) return true;
+                if (FogAboveWaterDistanceNearPlane != null) return true;
+                if (FogAboveWaterDistanceFarPlane != null) return true;
+                if (ShallowColor != null) return true;
+                if (DeepColor != null) return true;
+                if (ReflectionColor != null) return true;
+                if (Unused6 != null) return true;
                 if (RainSimulatorForce != null) return true;
                 if (RainSimulatorVelocity != null) return true;
                 if (RainSimulatorFalloff != null) return true;
                 if (RainSimulatorDampner != null) return true;
-                if (DisplacementStartingSize != null) return true;
-                if (DisplacementForce != null) return true;
-                if (DisplacementVelocity != null) return true;
-                if (DisplacementFalloff != null) return true;
-                if (DisplacementDampner != null) return true;
+                if (DisplacementSimulatorStartingSize != null) return true;
+                if (DisplacementSimulatorForce != null) return true;
+                if (DisplacementSimulatorVelocity != null) return true;
+                if (DisplacementSimulatorFalloff != null) return true;
+                if (DisplacementSimulatorDampner != null) return true;
                 if (RainSimulatorStartingSize != null) return true;
                 if (NormalsNoiseScale != null) return true;
                 if (NoiseLayerOneWindDirection != null) return true;
@@ -1624,11 +1564,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (NoiseLayerThreeWindSpeed != null) return true;
                 if (NormalsDepthFalloffStart != null) return true;
                 if (NormalsDepthFalloffEnd != null) return true;
-                if (FogAboveAmount != null) return true;
+                if (FogAboveWaterAmount != null) return true;
                 if (NormalsUVScale != null) return true;
-                if (FogUnderAmount != null) return true;
-                if (FogUnderNearPlane != null) return true;
-                if (FogUnderFarPlane != null) return true;
+                if (FogUnderWaterAmount != null) return true;
+                if (FogUnderWaterDistanceNearPlane != null) return true;
+                if (FogUnderWaterDistanceFarPlane != null) return true;
                 if (DistortionAmount != null) return true;
                 if (Shininess != null) return true;
                 if (ReflectionHDRMultiplier != null) return true;
@@ -1637,7 +1577,10 @@ namespace Mutagen.Bethesda.Fallout3
                 if (NoiseLayerOneUVScale != null) return true;
                 if (NoiseLayerTwoUVScale != null) return true;
                 if (NoiseLayerThreeUVScale != null) return true;
-                if (Remaining != null) return true;
+                if (NoiseLayerOneAmplitudeScale != null) return true;
+                if (NoiseLayerTwoAmplitudeScale != null) return true;
+                if (NoiseLayerThreeAmplitudeScale != null) return true;
+                if (Damage != null) return true;
                 return false;
             }
             #endregion
@@ -1664,7 +1607,19 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(Unused1, "Unused1");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                {
+                    sb.AppendItem(Unused3, "Unused3");
+                }
+                {
+                    sb.AppendItem(Unused4, "Unused4");
                 }
                 {
                     sb.AppendItem(SunPower, "SunPower");
@@ -1676,52 +1631,25 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(FresnelAmount, "FresnelAmount");
                 }
                 {
-                    sb.AppendItem(Unused2, "Unused2");
+                    sb.AppendItem(Unused5, "Unused5");
                 }
                 {
-                    sb.AppendItem(FogAboveNearPlane, "FogAboveNearPlane");
+                    sb.AppendItem(FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
                 }
                 {
-                    sb.AppendItem(FogAboveFarPlane, "FogAboveFarPlane");
+                    sb.AppendItem(FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
                 }
                 {
-                    sb.AppendItem(ShallowColorRed, "ShallowColorRed");
+                    sb.AppendItem(ShallowColor, "ShallowColor");
                 }
                 {
-                    sb.AppendItem(ShallowColorGreen, "ShallowColorGreen");
+                    sb.AppendItem(DeepColor, "DeepColor");
                 }
                 {
-                    sb.AppendItem(ShallowColorBlue, "ShallowColorBlue");
+                    sb.AppendItem(ReflectionColor, "ReflectionColor");
                 }
                 {
-                    sb.AppendItem(ShallowColorAlpha, "ShallowColorAlpha");
-                }
-                {
-                    sb.AppendItem(DeepColorRed, "DeepColorRed");
-                }
-                {
-                    sb.AppendItem(DeepColorGreen, "DeepColorGreen");
-                }
-                {
-                    sb.AppendItem(DeepColorBlue, "DeepColorBlue");
-                }
-                {
-                    sb.AppendItem(DeepColorAlpha, "DeepColorAlpha");
-                }
-                {
-                    sb.AppendItem(ReflectionColorRed, "ReflectionColorRed");
-                }
-                {
-                    sb.AppendItem(ReflectionColorGreen, "ReflectionColorGreen");
-                }
-                {
-                    sb.AppendItem(ReflectionColorBlue, "ReflectionColorBlue");
-                }
-                {
-                    sb.AppendItem(ReflectionColorAlpha, "ReflectionColorAlpha");
-                }
-                {
-                    sb.AppendItem(Unused3, "Unused3");
+                    sb.AppendItem(Unused6, "Unused6");
                 }
                 {
                     sb.AppendItem(RainSimulatorForce, "RainSimulatorForce");
@@ -1736,19 +1664,19 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
                 }
                 {
-                    sb.AppendItem(DisplacementStartingSize, "DisplacementStartingSize");
+                    sb.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
                 }
                 {
-                    sb.AppendItem(DisplacementForce, "DisplacementForce");
+                    sb.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
                 }
                 {
-                    sb.AppendItem(DisplacementVelocity, "DisplacementVelocity");
+                    sb.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
                 }
                 {
-                    sb.AppendItem(DisplacementFalloff, "DisplacementFalloff");
+                    sb.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
                 }
                 {
-                    sb.AppendItem(DisplacementDampner, "DisplacementDampner");
+                    sb.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
                 }
                 {
                     sb.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
@@ -1781,19 +1709,19 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(NormalsDepthFalloffEnd, "NormalsDepthFalloffEnd");
                 }
                 {
-                    sb.AppendItem(FogAboveAmount, "FogAboveAmount");
+                    sb.AppendItem(FogAboveWaterAmount, "FogAboveWaterAmount");
                 }
                 {
                     sb.AppendItem(NormalsUVScale, "NormalsUVScale");
                 }
                 {
-                    sb.AppendItem(FogUnderAmount, "FogUnderAmount");
+                    sb.AppendItem(FogUnderWaterAmount, "FogUnderWaterAmount");
                 }
                 {
-                    sb.AppendItem(FogUnderNearPlane, "FogUnderNearPlane");
+                    sb.AppendItem(FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
                 }
                 {
-                    sb.AppendItem(FogUnderFarPlane, "FogUnderFarPlane");
+                    sb.AppendItem(FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
                 }
                 {
                     sb.AppendItem(DistortionAmount, "DistortionAmount");
@@ -1820,7 +1748,16 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(NoiseLayerThreeUVScale, "NoiseLayerThreeUVScale");
                 }
                 {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+                }
+                {
+                    sb.AppendItem(Damage, "Damage");
                 }
             }
             #endregion
@@ -1830,35 +1767,30 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
+                ret.Unused4 = this.Unused4.Combine(rhs.Unused4);
                 ret.SunPower = this.SunPower.Combine(rhs.SunPower);
                 ret.ReflectivityAmount = this.ReflectivityAmount.Combine(rhs.ReflectivityAmount);
                 ret.FresnelAmount = this.FresnelAmount.Combine(rhs.FresnelAmount);
-                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
-                ret.FogAboveNearPlane = this.FogAboveNearPlane.Combine(rhs.FogAboveNearPlane);
-                ret.FogAboveFarPlane = this.FogAboveFarPlane.Combine(rhs.FogAboveFarPlane);
-                ret.ShallowColorRed = this.ShallowColorRed.Combine(rhs.ShallowColorRed);
-                ret.ShallowColorGreen = this.ShallowColorGreen.Combine(rhs.ShallowColorGreen);
-                ret.ShallowColorBlue = this.ShallowColorBlue.Combine(rhs.ShallowColorBlue);
-                ret.ShallowColorAlpha = this.ShallowColorAlpha.Combine(rhs.ShallowColorAlpha);
-                ret.DeepColorRed = this.DeepColorRed.Combine(rhs.DeepColorRed);
-                ret.DeepColorGreen = this.DeepColorGreen.Combine(rhs.DeepColorGreen);
-                ret.DeepColorBlue = this.DeepColorBlue.Combine(rhs.DeepColorBlue);
-                ret.DeepColorAlpha = this.DeepColorAlpha.Combine(rhs.DeepColorAlpha);
-                ret.ReflectionColorRed = this.ReflectionColorRed.Combine(rhs.ReflectionColorRed);
-                ret.ReflectionColorGreen = this.ReflectionColorGreen.Combine(rhs.ReflectionColorGreen);
-                ret.ReflectionColorBlue = this.ReflectionColorBlue.Combine(rhs.ReflectionColorBlue);
-                ret.ReflectionColorAlpha = this.ReflectionColorAlpha.Combine(rhs.ReflectionColorAlpha);
-                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
+                ret.Unused5 = this.Unused5.Combine(rhs.Unused5);
+                ret.FogAboveWaterDistanceNearPlane = this.FogAboveWaterDistanceNearPlane.Combine(rhs.FogAboveWaterDistanceNearPlane);
+                ret.FogAboveWaterDistanceFarPlane = this.FogAboveWaterDistanceFarPlane.Combine(rhs.FogAboveWaterDistanceFarPlane);
+                ret.ShallowColor = this.ShallowColor.Combine(rhs.ShallowColor);
+                ret.DeepColor = this.DeepColor.Combine(rhs.DeepColor);
+                ret.ReflectionColor = this.ReflectionColor.Combine(rhs.ReflectionColor);
+                ret.Unused6 = this.Unused6.Combine(rhs.Unused6);
                 ret.RainSimulatorForce = this.RainSimulatorForce.Combine(rhs.RainSimulatorForce);
                 ret.RainSimulatorVelocity = this.RainSimulatorVelocity.Combine(rhs.RainSimulatorVelocity);
                 ret.RainSimulatorFalloff = this.RainSimulatorFalloff.Combine(rhs.RainSimulatorFalloff);
                 ret.RainSimulatorDampner = this.RainSimulatorDampner.Combine(rhs.RainSimulatorDampner);
-                ret.DisplacementStartingSize = this.DisplacementStartingSize.Combine(rhs.DisplacementStartingSize);
-                ret.DisplacementForce = this.DisplacementForce.Combine(rhs.DisplacementForce);
-                ret.DisplacementVelocity = this.DisplacementVelocity.Combine(rhs.DisplacementVelocity);
-                ret.DisplacementFalloff = this.DisplacementFalloff.Combine(rhs.DisplacementFalloff);
-                ret.DisplacementDampner = this.DisplacementDampner.Combine(rhs.DisplacementDampner);
+                ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
+                ret.DisplacementSimulatorForce = this.DisplacementSimulatorForce.Combine(rhs.DisplacementSimulatorForce);
+                ret.DisplacementSimulatorVelocity = this.DisplacementSimulatorVelocity.Combine(rhs.DisplacementSimulatorVelocity);
+                ret.DisplacementSimulatorFalloff = this.DisplacementSimulatorFalloff.Combine(rhs.DisplacementSimulatorFalloff);
+                ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
                 ret.RainSimulatorStartingSize = this.RainSimulatorStartingSize.Combine(rhs.RainSimulatorStartingSize);
                 ret.NormalsNoiseScale = this.NormalsNoiseScale.Combine(rhs.NormalsNoiseScale);
                 ret.NoiseLayerOneWindDirection = this.NoiseLayerOneWindDirection.Combine(rhs.NoiseLayerOneWindDirection);
@@ -1869,11 +1801,11 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.NoiseLayerThreeWindSpeed = this.NoiseLayerThreeWindSpeed.Combine(rhs.NoiseLayerThreeWindSpeed);
                 ret.NormalsDepthFalloffStart = this.NormalsDepthFalloffStart.Combine(rhs.NormalsDepthFalloffStart);
                 ret.NormalsDepthFalloffEnd = this.NormalsDepthFalloffEnd.Combine(rhs.NormalsDepthFalloffEnd);
-                ret.FogAboveAmount = this.FogAboveAmount.Combine(rhs.FogAboveAmount);
+                ret.FogAboveWaterAmount = this.FogAboveWaterAmount.Combine(rhs.FogAboveWaterAmount);
                 ret.NormalsUVScale = this.NormalsUVScale.Combine(rhs.NormalsUVScale);
-                ret.FogUnderAmount = this.FogUnderAmount.Combine(rhs.FogUnderAmount);
-                ret.FogUnderNearPlane = this.FogUnderNearPlane.Combine(rhs.FogUnderNearPlane);
-                ret.FogUnderFarPlane = this.FogUnderFarPlane.Combine(rhs.FogUnderFarPlane);
+                ret.FogUnderWaterAmount = this.FogUnderWaterAmount.Combine(rhs.FogUnderWaterAmount);
+                ret.FogUnderWaterDistanceNearPlane = this.FogUnderWaterDistanceNearPlane.Combine(rhs.FogUnderWaterDistanceNearPlane);
+                ret.FogUnderWaterDistanceFarPlane = this.FogUnderWaterDistanceFarPlane.Combine(rhs.FogUnderWaterDistanceFarPlane);
                 ret.DistortionAmount = this.DistortionAmount.Combine(rhs.DistortionAmount);
                 ret.Shininess = this.Shininess.Combine(rhs.Shininess);
                 ret.ReflectionHDRMultiplier = this.ReflectionHDRMultiplier.Combine(rhs.ReflectionHDRMultiplier);
@@ -1882,7 +1814,10 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.NoiseLayerOneUVScale = this.NoiseLayerOneUVScale.Combine(rhs.NoiseLayerOneUVScale);
                 ret.NoiseLayerTwoUVScale = this.NoiseLayerTwoUVScale.Combine(rhs.NoiseLayerTwoUVScale);
                 ret.NoiseLayerThreeUVScale = this.NoiseLayerThreeUVScale.Combine(rhs.NoiseLayerThreeUVScale);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.NoiseLayerOneAmplitudeScale = this.NoiseLayerOneAmplitudeScale.Combine(rhs.NoiseLayerOneAmplitudeScale);
+                ret.NoiseLayerTwoAmplitudeScale = this.NoiseLayerTwoAmplitudeScale.Combine(rhs.NoiseLayerTwoAmplitudeScale);
+                ret.NoiseLayerThreeAmplitudeScale = this.NoiseLayerThreeAmplitudeScale.Combine(rhs.NoiseLayerThreeAmplitudeScale);
+                ret.Damage = this.Damage.Combine(rhs.Damage);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1906,35 +1841,30 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Unused1;
+            public bool Unused2;
+            public bool Unused3;
+            public bool Unused4;
             public bool SunPower;
             public bool ReflectivityAmount;
             public bool FresnelAmount;
-            public bool Unused2;
-            public bool FogAboveNearPlane;
-            public bool FogAboveFarPlane;
-            public bool ShallowColorRed;
-            public bool ShallowColorGreen;
-            public bool ShallowColorBlue;
-            public bool ShallowColorAlpha;
-            public bool DeepColorRed;
-            public bool DeepColorGreen;
-            public bool DeepColorBlue;
-            public bool DeepColorAlpha;
-            public bool ReflectionColorRed;
-            public bool ReflectionColorGreen;
-            public bool ReflectionColorBlue;
-            public bool ReflectionColorAlpha;
-            public bool Unused3;
+            public bool Unused5;
+            public bool FogAboveWaterDistanceNearPlane;
+            public bool FogAboveWaterDistanceFarPlane;
+            public bool ShallowColor;
+            public bool DeepColor;
+            public bool ReflectionColor;
+            public bool Unused6;
             public bool RainSimulatorForce;
             public bool RainSimulatorVelocity;
             public bool RainSimulatorFalloff;
             public bool RainSimulatorDampner;
-            public bool DisplacementStartingSize;
-            public bool DisplacementForce;
-            public bool DisplacementVelocity;
-            public bool DisplacementFalloff;
-            public bool DisplacementDampner;
+            public bool DisplacementSimulatorStartingSize;
+            public bool DisplacementSimulatorForce;
+            public bool DisplacementSimulatorVelocity;
+            public bool DisplacementSimulatorFalloff;
+            public bool DisplacementSimulatorDampner;
             public bool RainSimulatorStartingSize;
             public bool NormalsNoiseScale;
             public bool NoiseLayerOneWindDirection;
@@ -1945,11 +1875,11 @@ namespace Mutagen.Bethesda.Fallout3
             public bool NoiseLayerThreeWindSpeed;
             public bool NormalsDepthFalloffStart;
             public bool NormalsDepthFalloffEnd;
-            public bool FogAboveAmount;
+            public bool FogAboveWaterAmount;
             public bool NormalsUVScale;
-            public bool FogUnderAmount;
-            public bool FogUnderNearPlane;
-            public bool FogUnderFarPlane;
+            public bool FogUnderWaterAmount;
+            public bool FogUnderWaterDistanceNearPlane;
+            public bool FogUnderWaterDistanceFarPlane;
             public bool DistortionAmount;
             public bool Shininess;
             public bool ReflectionHDRMultiplier;
@@ -1958,7 +1888,10 @@ namespace Mutagen.Bethesda.Fallout3
             public bool NoiseLayerOneUVScale;
             public bool NoiseLayerTwoUVScale;
             public bool NoiseLayerThreeUVScale;
-            public bool Remaining;
+            public bool NoiseLayerOneAmplitudeScale;
+            public bool NoiseLayerTwoAmplitudeScale;
+            public bool NoiseLayerThreeAmplitudeScale;
+            public bool Damage;
             #endregion
 
             #region Ctors
@@ -1968,35 +1901,30 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Unused1 = defaultOn;
+                this.Unused2 = defaultOn;
+                this.Unused3 = defaultOn;
+                this.Unused4 = defaultOn;
                 this.SunPower = defaultOn;
                 this.ReflectivityAmount = defaultOn;
                 this.FresnelAmount = defaultOn;
-                this.Unused2 = defaultOn;
-                this.FogAboveNearPlane = defaultOn;
-                this.FogAboveFarPlane = defaultOn;
-                this.ShallowColorRed = defaultOn;
-                this.ShallowColorGreen = defaultOn;
-                this.ShallowColorBlue = defaultOn;
-                this.ShallowColorAlpha = defaultOn;
-                this.DeepColorRed = defaultOn;
-                this.DeepColorGreen = defaultOn;
-                this.DeepColorBlue = defaultOn;
-                this.DeepColorAlpha = defaultOn;
-                this.ReflectionColorRed = defaultOn;
-                this.ReflectionColorGreen = defaultOn;
-                this.ReflectionColorBlue = defaultOn;
-                this.ReflectionColorAlpha = defaultOn;
-                this.Unused3 = defaultOn;
+                this.Unused5 = defaultOn;
+                this.FogAboveWaterDistanceNearPlane = defaultOn;
+                this.FogAboveWaterDistanceFarPlane = defaultOn;
+                this.ShallowColor = defaultOn;
+                this.DeepColor = defaultOn;
+                this.ReflectionColor = defaultOn;
+                this.Unused6 = defaultOn;
                 this.RainSimulatorForce = defaultOn;
                 this.RainSimulatorVelocity = defaultOn;
                 this.RainSimulatorFalloff = defaultOn;
                 this.RainSimulatorDampner = defaultOn;
-                this.DisplacementStartingSize = defaultOn;
-                this.DisplacementForce = defaultOn;
-                this.DisplacementVelocity = defaultOn;
-                this.DisplacementFalloff = defaultOn;
-                this.DisplacementDampner = defaultOn;
+                this.DisplacementSimulatorStartingSize = defaultOn;
+                this.DisplacementSimulatorForce = defaultOn;
+                this.DisplacementSimulatorVelocity = defaultOn;
+                this.DisplacementSimulatorFalloff = defaultOn;
+                this.DisplacementSimulatorDampner = defaultOn;
                 this.RainSimulatorStartingSize = defaultOn;
                 this.NormalsNoiseScale = defaultOn;
                 this.NoiseLayerOneWindDirection = defaultOn;
@@ -2007,11 +1935,11 @@ namespace Mutagen.Bethesda.Fallout3
                 this.NoiseLayerThreeWindSpeed = defaultOn;
                 this.NormalsDepthFalloffStart = defaultOn;
                 this.NormalsDepthFalloffEnd = defaultOn;
-                this.FogAboveAmount = defaultOn;
+                this.FogAboveWaterAmount = defaultOn;
                 this.NormalsUVScale = defaultOn;
-                this.FogUnderAmount = defaultOn;
-                this.FogUnderNearPlane = defaultOn;
-                this.FogUnderFarPlane = defaultOn;
+                this.FogUnderWaterAmount = defaultOn;
+                this.FogUnderWaterDistanceNearPlane = defaultOn;
+                this.FogUnderWaterDistanceFarPlane = defaultOn;
                 this.DistortionAmount = defaultOn;
                 this.Shininess = defaultOn;
                 this.ReflectionHDRMultiplier = defaultOn;
@@ -2020,7 +1948,10 @@ namespace Mutagen.Bethesda.Fallout3
                 this.NoiseLayerOneUVScale = defaultOn;
                 this.NoiseLayerTwoUVScale = defaultOn;
                 this.NoiseLayerThreeUVScale = defaultOn;
-                this.Remaining = defaultOn;
+                this.NoiseLayerOneAmplitudeScale = defaultOn;
+                this.NoiseLayerTwoAmplitudeScale = defaultOn;
+                this.NoiseLayerThreeAmplitudeScale = defaultOn;
+                this.Damage = defaultOn;
             }
 
             #endregion
@@ -2036,35 +1967,30 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Unused1, null));
+                ret.Add((Unused2, null));
+                ret.Add((Unused3, null));
+                ret.Add((Unused4, null));
                 ret.Add((SunPower, null));
                 ret.Add((ReflectivityAmount, null));
                 ret.Add((FresnelAmount, null));
-                ret.Add((Unused2, null));
-                ret.Add((FogAboveNearPlane, null));
-                ret.Add((FogAboveFarPlane, null));
-                ret.Add((ShallowColorRed, null));
-                ret.Add((ShallowColorGreen, null));
-                ret.Add((ShallowColorBlue, null));
-                ret.Add((ShallowColorAlpha, null));
-                ret.Add((DeepColorRed, null));
-                ret.Add((DeepColorGreen, null));
-                ret.Add((DeepColorBlue, null));
-                ret.Add((DeepColorAlpha, null));
-                ret.Add((ReflectionColorRed, null));
-                ret.Add((ReflectionColorGreen, null));
-                ret.Add((ReflectionColorBlue, null));
-                ret.Add((ReflectionColorAlpha, null));
-                ret.Add((Unused3, null));
+                ret.Add((Unused5, null));
+                ret.Add((FogAboveWaterDistanceNearPlane, null));
+                ret.Add((FogAboveWaterDistanceFarPlane, null));
+                ret.Add((ShallowColor, null));
+                ret.Add((DeepColor, null));
+                ret.Add((ReflectionColor, null));
+                ret.Add((Unused6, null));
                 ret.Add((RainSimulatorForce, null));
                 ret.Add((RainSimulatorVelocity, null));
                 ret.Add((RainSimulatorFalloff, null));
                 ret.Add((RainSimulatorDampner, null));
-                ret.Add((DisplacementStartingSize, null));
-                ret.Add((DisplacementForce, null));
-                ret.Add((DisplacementVelocity, null));
-                ret.Add((DisplacementFalloff, null));
-                ret.Add((DisplacementDampner, null));
+                ret.Add((DisplacementSimulatorStartingSize, null));
+                ret.Add((DisplacementSimulatorForce, null));
+                ret.Add((DisplacementSimulatorVelocity, null));
+                ret.Add((DisplacementSimulatorFalloff, null));
+                ret.Add((DisplacementSimulatorDampner, null));
                 ret.Add((RainSimulatorStartingSize, null));
                 ret.Add((NormalsNoiseScale, null));
                 ret.Add((NoiseLayerOneWindDirection, null));
@@ -2075,11 +2001,11 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((NoiseLayerThreeWindSpeed, null));
                 ret.Add((NormalsDepthFalloffStart, null));
                 ret.Add((NormalsDepthFalloffEnd, null));
-                ret.Add((FogAboveAmount, null));
+                ret.Add((FogAboveWaterAmount, null));
                 ret.Add((NormalsUVScale, null));
-                ret.Add((FogUnderAmount, null));
-                ret.Add((FogUnderNearPlane, null));
-                ret.Add((FogUnderFarPlane, null));
+                ret.Add((FogUnderWaterAmount, null));
+                ret.Add((FogUnderWaterDistanceNearPlane, null));
+                ret.Add((FogUnderWaterDistanceFarPlane, null));
                 ret.Add((DistortionAmount, null));
                 ret.Add((Shininess, null));
                 ret.Add((ReflectionHDRMultiplier, null));
@@ -2088,7 +2014,10 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((NoiseLayerOneUVScale, null));
                 ret.Add((NoiseLayerTwoUVScale, null));
                 ret.Add((NoiseLayerThreeUVScale, null));
-                ret.Add((Remaining, null));
+                ret.Add((NoiseLayerOneAmplitudeScale, null));
+                ret.Add((NoiseLayerTwoAmplitudeScale, null));
+                ret.Add((NoiseLayerThreeAmplitudeScale, null));
+                ret.Add((Damage, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2096,6 +2025,14 @@ namespace Mutagen.Bethesda.Fallout3
                 return new TranslationMask(defaultOn: defaultOn, onOverall: defaultOn);
             }
 
+        }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -2161,35 +2098,30 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IWaterData>,
         IWaterDataGetter
     {
-        new MemorySlice<Byte> Unused1 { get; set; }
+        new WaterData.VersioningBreaks Versioning { get; set; }
+        new UInt32 Unused1 { get; set; }
+        new UInt32 Unused2 { get; set; }
+        new UInt32 Unused3 { get; set; }
+        new UInt32 Unused4 { get; set; }
         new Single SunPower { get; set; }
         new Single ReflectivityAmount { get; set; }
         new Single FresnelAmount { get; set; }
-        new MemorySlice<Byte> Unused2 { get; set; }
-        new Single FogAboveNearPlane { get; set; }
-        new Single FogAboveFarPlane { get; set; }
-        new Byte ShallowColorRed { get; set; }
-        new Byte ShallowColorGreen { get; set; }
-        new Byte ShallowColorBlue { get; set; }
-        new Byte ShallowColorAlpha { get; set; }
-        new Byte DeepColorRed { get; set; }
-        new Byte DeepColorGreen { get; set; }
-        new Byte DeepColorBlue { get; set; }
-        new Byte DeepColorAlpha { get; set; }
-        new Byte ReflectionColorRed { get; set; }
-        new Byte ReflectionColorGreen { get; set; }
-        new Byte ReflectionColorBlue { get; set; }
-        new Byte ReflectionColorAlpha { get; set; }
-        new MemorySlice<Byte> Unused3 { get; set; }
+        new UInt32 Unused5 { get; set; }
+        new Single FogAboveWaterDistanceNearPlane { get; set; }
+        new Single FogAboveWaterDistanceFarPlane { get; set; }
+        new Color ShallowColor { get; set; }
+        new Color DeepColor { get; set; }
+        new Color ReflectionColor { get; set; }
+        new UInt32 Unused6 { get; set; }
         new Single RainSimulatorForce { get; set; }
         new Single RainSimulatorVelocity { get; set; }
         new Single RainSimulatorFalloff { get; set; }
         new Single RainSimulatorDampner { get; set; }
-        new Single DisplacementStartingSize { get; set; }
-        new Single DisplacementForce { get; set; }
-        new Single DisplacementVelocity { get; set; }
-        new Single DisplacementFalloff { get; set; }
-        new Single DisplacementDampner { get; set; }
+        new Single DisplacementSimulatorStartingSize { get; set; }
+        new Single DisplacementSimulatorForce { get; set; }
+        new Single DisplacementSimulatorVelocity { get; set; }
+        new Single DisplacementSimulatorFalloff { get; set; }
+        new Single DisplacementSimulatorDampner { get; set; }
         new Single RainSimulatorStartingSize { get; set; }
         new Single NormalsNoiseScale { get; set; }
         new Single NoiseLayerOneWindDirection { get; set; }
@@ -2200,11 +2132,11 @@ namespace Mutagen.Bethesda.Fallout3
         new Single NoiseLayerThreeWindSpeed { get; set; }
         new Single NormalsDepthFalloffStart { get; set; }
         new Single NormalsDepthFalloffEnd { get; set; }
-        new Single FogAboveAmount { get; set; }
+        new Single FogAboveWaterAmount { get; set; }
         new Single NormalsUVScale { get; set; }
-        new Single FogUnderAmount { get; set; }
-        new Single FogUnderNearPlane { get; set; }
-        new Single FogUnderFarPlane { get; set; }
+        new Single FogUnderWaterAmount { get; set; }
+        new Single FogUnderWaterDistanceNearPlane { get; set; }
+        new Single FogUnderWaterDistanceFarPlane { get; set; }
         new Single DistortionAmount { get; set; }
         new Single Shininess { get; set; }
         new Single ReflectionHDRMultiplier { get; set; }
@@ -2213,7 +2145,10 @@ namespace Mutagen.Bethesda.Fallout3
         new Single NoiseLayerOneUVScale { get; set; }
         new Single NoiseLayerTwoUVScale { get; set; }
         new Single NoiseLayerThreeUVScale { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new Single NoiseLayerOneAmplitudeScale { get; set; }
+        new Single NoiseLayerTwoAmplitudeScale { get; set; }
+        new Single NoiseLayerThreeAmplitudeScale { get; set; }
+        new UInt16 Damage { get; set; }
     }
 
     public partial interface IWaterDataGetter :
@@ -2228,35 +2163,30 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WaterData_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> Unused1 { get; }
+        WaterData.VersioningBreaks Versioning { get; }
+        UInt32 Unused1 { get; }
+        UInt32 Unused2 { get; }
+        UInt32 Unused3 { get; }
+        UInt32 Unused4 { get; }
         Single SunPower { get; }
         Single ReflectivityAmount { get; }
         Single FresnelAmount { get; }
-        ReadOnlyMemorySlice<Byte> Unused2 { get; }
-        Single FogAboveNearPlane { get; }
-        Single FogAboveFarPlane { get; }
-        Byte ShallowColorRed { get; }
-        Byte ShallowColorGreen { get; }
-        Byte ShallowColorBlue { get; }
-        Byte ShallowColorAlpha { get; }
-        Byte DeepColorRed { get; }
-        Byte DeepColorGreen { get; }
-        Byte DeepColorBlue { get; }
-        Byte DeepColorAlpha { get; }
-        Byte ReflectionColorRed { get; }
-        Byte ReflectionColorGreen { get; }
-        Byte ReflectionColorBlue { get; }
-        Byte ReflectionColorAlpha { get; }
-        ReadOnlyMemorySlice<Byte> Unused3 { get; }
+        UInt32 Unused5 { get; }
+        Single FogAboveWaterDistanceNearPlane { get; }
+        Single FogAboveWaterDistanceFarPlane { get; }
+        Color ShallowColor { get; }
+        Color DeepColor { get; }
+        Color ReflectionColor { get; }
+        UInt32 Unused6 { get; }
         Single RainSimulatorForce { get; }
         Single RainSimulatorVelocity { get; }
         Single RainSimulatorFalloff { get; }
         Single RainSimulatorDampner { get; }
-        Single DisplacementStartingSize { get; }
-        Single DisplacementForce { get; }
-        Single DisplacementVelocity { get; }
-        Single DisplacementFalloff { get; }
-        Single DisplacementDampner { get; }
+        Single DisplacementSimulatorStartingSize { get; }
+        Single DisplacementSimulatorForce { get; }
+        Single DisplacementSimulatorVelocity { get; }
+        Single DisplacementSimulatorFalloff { get; }
+        Single DisplacementSimulatorDampner { get; }
         Single RainSimulatorStartingSize { get; }
         Single NormalsNoiseScale { get; }
         Single NoiseLayerOneWindDirection { get; }
@@ -2267,11 +2197,11 @@ namespace Mutagen.Bethesda.Fallout3
         Single NoiseLayerThreeWindSpeed { get; }
         Single NormalsDepthFalloffStart { get; }
         Single NormalsDepthFalloffEnd { get; }
-        Single FogAboveAmount { get; }
+        Single FogAboveWaterAmount { get; }
         Single NormalsUVScale { get; }
-        Single FogUnderAmount { get; }
-        Single FogUnderNearPlane { get; }
-        Single FogUnderFarPlane { get; }
+        Single FogUnderWaterAmount { get; }
+        Single FogUnderWaterDistanceNearPlane { get; }
+        Single FogUnderWaterDistanceFarPlane { get; }
         Single DistortionAmount { get; }
         Single Shininess { get; }
         Single ReflectionHDRMultiplier { get; }
@@ -2280,7 +2210,10 @@ namespace Mutagen.Bethesda.Fallout3
         Single NoiseLayerOneUVScale { get; }
         Single NoiseLayerTwoUVScale { get; }
         Single NoiseLayerThreeUVScale { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        Single NoiseLayerOneAmplitudeScale { get; }
+        Single NoiseLayerTwoAmplitudeScale { get; }
+        Single NoiseLayerThreeAmplitudeScale { get; }
+        UInt16 Damage { get; }
 
     }
 
@@ -2450,59 +2383,57 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum WaterData_FieldIndex
     {
-        Unused1 = 0,
-        SunPower = 1,
-        ReflectivityAmount = 2,
-        FresnelAmount = 3,
-        Unused2 = 4,
-        FogAboveNearPlane = 5,
-        FogAboveFarPlane = 6,
-        ShallowColorRed = 7,
-        ShallowColorGreen = 8,
-        ShallowColorBlue = 9,
-        ShallowColorAlpha = 10,
-        DeepColorRed = 11,
-        DeepColorGreen = 12,
-        DeepColorBlue = 13,
-        DeepColorAlpha = 14,
-        ReflectionColorRed = 15,
-        ReflectionColorGreen = 16,
-        ReflectionColorBlue = 17,
-        ReflectionColorAlpha = 18,
-        Unused3 = 19,
-        RainSimulatorForce = 20,
-        RainSimulatorVelocity = 21,
-        RainSimulatorFalloff = 22,
-        RainSimulatorDampner = 23,
-        DisplacementStartingSize = 24,
-        DisplacementForce = 25,
-        DisplacementVelocity = 26,
-        DisplacementFalloff = 27,
-        DisplacementDampner = 28,
-        RainSimulatorStartingSize = 29,
-        NormalsNoiseScale = 30,
-        NoiseLayerOneWindDirection = 31,
-        NoiseLayerTwoWindDirection = 32,
-        NoiseLayerThreeWindDirection = 33,
-        NoiseLayerOneWindSpeed = 34,
-        NoiseLayerTwoWindSpeed = 35,
-        NoiseLayerThreeWindSpeed = 36,
-        NormalsDepthFalloffStart = 37,
-        NormalsDepthFalloffEnd = 38,
-        FogAboveAmount = 39,
-        NormalsUVScale = 40,
-        FogUnderAmount = 41,
-        FogUnderNearPlane = 42,
-        FogUnderFarPlane = 43,
-        DistortionAmount = 44,
-        Shininess = 45,
-        ReflectionHDRMultiplier = 46,
-        LightRadius = 47,
-        LightBrightness = 48,
-        NoiseLayerOneUVScale = 49,
-        NoiseLayerTwoUVScale = 50,
-        NoiseLayerThreeUVScale = 51,
-        Remaining = 52,
+        Versioning = 0,
+        Unused1 = 1,
+        Unused2 = 2,
+        Unused3 = 3,
+        Unused4 = 4,
+        SunPower = 5,
+        ReflectivityAmount = 6,
+        FresnelAmount = 7,
+        Unused5 = 8,
+        FogAboveWaterDistanceNearPlane = 9,
+        FogAboveWaterDistanceFarPlane = 10,
+        ShallowColor = 11,
+        DeepColor = 12,
+        ReflectionColor = 13,
+        Unused6 = 14,
+        RainSimulatorForce = 15,
+        RainSimulatorVelocity = 16,
+        RainSimulatorFalloff = 17,
+        RainSimulatorDampner = 18,
+        DisplacementSimulatorStartingSize = 19,
+        DisplacementSimulatorForce = 20,
+        DisplacementSimulatorVelocity = 21,
+        DisplacementSimulatorFalloff = 22,
+        DisplacementSimulatorDampner = 23,
+        RainSimulatorStartingSize = 24,
+        NormalsNoiseScale = 25,
+        NoiseLayerOneWindDirection = 26,
+        NoiseLayerTwoWindDirection = 27,
+        NoiseLayerThreeWindDirection = 28,
+        NoiseLayerOneWindSpeed = 29,
+        NoiseLayerTwoWindSpeed = 30,
+        NoiseLayerThreeWindSpeed = 31,
+        NormalsDepthFalloffStart = 32,
+        NormalsDepthFalloffEnd = 33,
+        FogAboveWaterAmount = 34,
+        NormalsUVScale = 35,
+        FogUnderWaterAmount = 36,
+        FogUnderWaterDistanceNearPlane = 37,
+        FogUnderWaterDistanceFarPlane = 38,
+        DistortionAmount = 39,
+        Shininess = 40,
+        ReflectionHDRMultiplier = 41,
+        LightRadius = 42,
+        LightBrightness = 43,
+        NoiseLayerOneUVScale = 44,
+        NoiseLayerTwoUVScale = 45,
+        NoiseLayerThreeUVScale = 46,
+        NoiseLayerOneAmplitudeScale = 47,
+        NoiseLayerTwoAmplitudeScale = 48,
+        NoiseLayerThreeAmplitudeScale = 49,
+        Damage = 50,
     }
     #endregion
 
@@ -2513,9 +2444,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 53;
+        public const ushort AdditionalFieldCount = 51;
 
-        public const ushort FieldCount = 53;
+        public const ushort FieldCount = 51;
 
         public static readonly Type MaskType = typeof(WaterData.Mask<>);
 
@@ -2541,13 +2472,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.DNAM;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.DNAM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(WaterDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2588,37 +2512,32 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IWaterData item)
         {
             ClearPartial();
-            item.Unused1 = new byte[16];
-            item.SunPower = default(Single);
-            item.ReflectivityAmount = default(Single);
-            item.FresnelAmount = default(Single);
-            item.Unused2 = new byte[4];
-            item.FogAboveNearPlane = default(Single);
-            item.FogAboveFarPlane = default(Single);
-            item.ShallowColorRed = default(Byte);
-            item.ShallowColorGreen = default(Byte);
-            item.ShallowColorBlue = default(Byte);
-            item.ShallowColorAlpha = default(Byte);
-            item.DeepColorRed = default(Byte);
-            item.DeepColorGreen = default(Byte);
-            item.DeepColorBlue = default(Byte);
-            item.DeepColorAlpha = default(Byte);
-            item.ReflectionColorRed = default(Byte);
-            item.ReflectionColorGreen = default(Byte);
-            item.ReflectionColorBlue = default(Byte);
-            item.ReflectionColorAlpha = default(Byte);
-            item.Unused3 = new byte[4];
-            item.RainSimulatorForce = default(Single);
-            item.RainSimulatorVelocity = default(Single);
-            item.RainSimulatorFalloff = default(Single);
-            item.RainSimulatorDampner = default(Single);
-            item.DisplacementStartingSize = default(Single);
-            item.DisplacementForce = default(Single);
-            item.DisplacementVelocity = default(Single);
-            item.DisplacementFalloff = default(Single);
-            item.DisplacementDampner = default(Single);
-            item.RainSimulatorStartingSize = default(Single);
-            item.NormalsNoiseScale = default(Single);
+            item.Versioning = default(WaterData.VersioningBreaks);
+            item.Unused1 = default(UInt32);
+            item.Unused2 = default(UInt32);
+            item.Unused3 = default(UInt32);
+            item.Unused4 = default(UInt32);
+            item.SunPower = WaterData.SunPowerDefault;
+            item.ReflectivityAmount = WaterData.ReflectivityAmountDefault;
+            item.FresnelAmount = WaterData.FresnelAmountDefault;
+            item.Unused5 = default(UInt32);
+            item.FogAboveWaterDistanceNearPlane = default(Single);
+            item.FogAboveWaterDistanceFarPlane = default(Single);
+            item.ShallowColor = default(Color);
+            item.DeepColor = default(Color);
+            item.ReflectionColor = default(Color);
+            item.Unused6 = default(UInt32);
+            item.RainSimulatorForce = WaterData.RainSimulatorForceDefault;
+            item.RainSimulatorVelocity = WaterData.RainSimulatorVelocityDefault;
+            item.RainSimulatorFalloff = WaterData.RainSimulatorFalloffDefault;
+            item.RainSimulatorDampner = WaterData.RainSimulatorDampnerDefault;
+            item.DisplacementSimulatorStartingSize = WaterData.DisplacementSimulatorStartingSizeDefault;
+            item.DisplacementSimulatorForce = WaterData.DisplacementSimulatorForceDefault;
+            item.DisplacementSimulatorVelocity = WaterData.DisplacementSimulatorVelocityDefault;
+            item.DisplacementSimulatorFalloff = WaterData.DisplacementSimulatorFalloffDefault;
+            item.DisplacementSimulatorDampner = WaterData.DisplacementSimulatorDampnerDefault;
+            item.RainSimulatorStartingSize = WaterData.RainSimulatorStartingSizeDefault;
+            item.NormalsNoiseScale = WaterData.NormalsNoiseScaleDefault;
             item.NoiseLayerOneWindDirection = default(Single);
             item.NoiseLayerTwoWindDirection = default(Single);
             item.NoiseLayerThreeWindDirection = default(Single);
@@ -2627,20 +2546,23 @@ namespace Mutagen.Bethesda.Fallout3
             item.NoiseLayerThreeWindSpeed = default(Single);
             item.NormalsDepthFalloffStart = default(Single);
             item.NormalsDepthFalloffEnd = default(Single);
-            item.FogAboveAmount = default(Single);
-            item.NormalsUVScale = default(Single);
-            item.FogUnderAmount = default(Single);
-            item.FogUnderNearPlane = default(Single);
-            item.FogUnderFarPlane = default(Single);
-            item.DistortionAmount = default(Single);
-            item.Shininess = default(Single);
-            item.ReflectionHDRMultiplier = default(Single);
-            item.LightRadius = default(Single);
-            item.LightBrightness = default(Single);
-            item.NoiseLayerOneUVScale = default(Single);
-            item.NoiseLayerTwoUVScale = default(Single);
-            item.NoiseLayerThreeUVScale = default(Single);
-            item.Remaining = [];
+            item.FogAboveWaterAmount = WaterData.FogAboveWaterAmountDefault;
+            item.NormalsUVScale = WaterData.NormalsUVScaleDefault;
+            item.FogUnderWaterAmount = WaterData.FogUnderWaterAmountDefault;
+            item.FogUnderWaterDistanceNearPlane = default(Single);
+            item.FogUnderWaterDistanceFarPlane = WaterData.FogUnderWaterDistanceFarPlaneDefault;
+            item.DistortionAmount = WaterData.DistortionAmountDefault;
+            item.Shininess = WaterData.ShininessDefault;
+            item.ReflectionHDRMultiplier = WaterData.ReflectionHDRMultiplierDefault;
+            item.LightRadius = WaterData.LightRadiusDefault;
+            item.LightBrightness = WaterData.LightBrightnessDefault;
+            item.NoiseLayerOneUVScale = WaterData.NoiseLayerOneUVScaleDefault;
+            item.NoiseLayerTwoUVScale = WaterData.NoiseLayerTwoUVScaleDefault;
+            item.NoiseLayerThreeUVScale = WaterData.NoiseLayerThreeUVScaleDefault;
+            item.NoiseLayerOneAmplitudeScale = default(Single);
+            item.NoiseLayerTwoAmplitudeScale = default(Single);
+            item.NoiseLayerThreeAmplitudeScale = default(Single);
+            item.Damage = default(UInt16);
         }
         
         #region Mutagen
@@ -2656,10 +2578,6 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.DNAM),
-                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -2694,35 +2612,30 @@ namespace Mutagen.Bethesda.Fallout3
             WaterData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unused1 = MemoryExtensions.SequenceEqual(item.Unused1.Span, rhs.Unused1.Span);
+            ret.Versioning = item.Versioning == rhs.Versioning;
+            ret.Unused1 = item.Unused1 == rhs.Unused1;
+            ret.Unused2 = item.Unused2 == rhs.Unused2;
+            ret.Unused3 = item.Unused3 == rhs.Unused3;
+            ret.Unused4 = item.Unused4 == rhs.Unused4;
             ret.SunPower = item.SunPower.EqualsWithin(rhs.SunPower);
             ret.ReflectivityAmount = item.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount);
             ret.FresnelAmount = item.FresnelAmount.EqualsWithin(rhs.FresnelAmount);
-            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
-            ret.FogAboveNearPlane = item.FogAboveNearPlane.EqualsWithin(rhs.FogAboveNearPlane);
-            ret.FogAboveFarPlane = item.FogAboveFarPlane.EqualsWithin(rhs.FogAboveFarPlane);
-            ret.ShallowColorRed = item.ShallowColorRed == rhs.ShallowColorRed;
-            ret.ShallowColorGreen = item.ShallowColorGreen == rhs.ShallowColorGreen;
-            ret.ShallowColorBlue = item.ShallowColorBlue == rhs.ShallowColorBlue;
-            ret.ShallowColorAlpha = item.ShallowColorAlpha == rhs.ShallowColorAlpha;
-            ret.DeepColorRed = item.DeepColorRed == rhs.DeepColorRed;
-            ret.DeepColorGreen = item.DeepColorGreen == rhs.DeepColorGreen;
-            ret.DeepColorBlue = item.DeepColorBlue == rhs.DeepColorBlue;
-            ret.DeepColorAlpha = item.DeepColorAlpha == rhs.DeepColorAlpha;
-            ret.ReflectionColorRed = item.ReflectionColorRed == rhs.ReflectionColorRed;
-            ret.ReflectionColorGreen = item.ReflectionColorGreen == rhs.ReflectionColorGreen;
-            ret.ReflectionColorBlue = item.ReflectionColorBlue == rhs.ReflectionColorBlue;
-            ret.ReflectionColorAlpha = item.ReflectionColorAlpha == rhs.ReflectionColorAlpha;
-            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
+            ret.Unused5 = item.Unused5 == rhs.Unused5;
+            ret.FogAboveWaterDistanceNearPlane = item.FogAboveWaterDistanceNearPlane.EqualsWithin(rhs.FogAboveWaterDistanceNearPlane);
+            ret.FogAboveWaterDistanceFarPlane = item.FogAboveWaterDistanceFarPlane.EqualsWithin(rhs.FogAboveWaterDistanceFarPlane);
+            ret.ShallowColor = item.ShallowColor.ColorOnlyEquals(rhs.ShallowColor);
+            ret.DeepColor = item.DeepColor.ColorOnlyEquals(rhs.DeepColor);
+            ret.ReflectionColor = item.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor);
+            ret.Unused6 = item.Unused6 == rhs.Unused6;
             ret.RainSimulatorForce = item.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce);
             ret.RainSimulatorVelocity = item.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity);
             ret.RainSimulatorFalloff = item.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff);
             ret.RainSimulatorDampner = item.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner);
-            ret.DisplacementStartingSize = item.DisplacementStartingSize.EqualsWithin(rhs.DisplacementStartingSize);
-            ret.DisplacementForce = item.DisplacementForce.EqualsWithin(rhs.DisplacementForce);
-            ret.DisplacementVelocity = item.DisplacementVelocity.EqualsWithin(rhs.DisplacementVelocity);
-            ret.DisplacementFalloff = item.DisplacementFalloff.EqualsWithin(rhs.DisplacementFalloff);
-            ret.DisplacementDampner = item.DisplacementDampner.EqualsWithin(rhs.DisplacementDampner);
+            ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize);
+            ret.DisplacementSimulatorForce = item.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce);
+            ret.DisplacementSimulatorVelocity = item.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity);
+            ret.DisplacementSimulatorFalloff = item.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff);
+            ret.DisplacementSimulatorDampner = item.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner);
             ret.RainSimulatorStartingSize = item.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize);
             ret.NormalsNoiseScale = item.NormalsNoiseScale.EqualsWithin(rhs.NormalsNoiseScale);
             ret.NoiseLayerOneWindDirection = item.NoiseLayerOneWindDirection.EqualsWithin(rhs.NoiseLayerOneWindDirection);
@@ -2733,11 +2646,11 @@ namespace Mutagen.Bethesda.Fallout3
             ret.NoiseLayerThreeWindSpeed = item.NoiseLayerThreeWindSpeed.EqualsWithin(rhs.NoiseLayerThreeWindSpeed);
             ret.NormalsDepthFalloffStart = item.NormalsDepthFalloffStart.EqualsWithin(rhs.NormalsDepthFalloffStart);
             ret.NormalsDepthFalloffEnd = item.NormalsDepthFalloffEnd.EqualsWithin(rhs.NormalsDepthFalloffEnd);
-            ret.FogAboveAmount = item.FogAboveAmount.EqualsWithin(rhs.FogAboveAmount);
+            ret.FogAboveWaterAmount = item.FogAboveWaterAmount.EqualsWithin(rhs.FogAboveWaterAmount);
             ret.NormalsUVScale = item.NormalsUVScale.EqualsWithin(rhs.NormalsUVScale);
-            ret.FogUnderAmount = item.FogUnderAmount.EqualsWithin(rhs.FogUnderAmount);
-            ret.FogUnderNearPlane = item.FogUnderNearPlane.EqualsWithin(rhs.FogUnderNearPlane);
-            ret.FogUnderFarPlane = item.FogUnderFarPlane.EqualsWithin(rhs.FogUnderFarPlane);
+            ret.FogUnderWaterAmount = item.FogUnderWaterAmount.EqualsWithin(rhs.FogUnderWaterAmount);
+            ret.FogUnderWaterDistanceNearPlane = item.FogUnderWaterDistanceNearPlane.EqualsWithin(rhs.FogUnderWaterDistanceNearPlane);
+            ret.FogUnderWaterDistanceFarPlane = item.FogUnderWaterDistanceFarPlane.EqualsWithin(rhs.FogUnderWaterDistanceFarPlane);
             ret.DistortionAmount = item.DistortionAmount.EqualsWithin(rhs.DistortionAmount);
             ret.Shininess = item.Shininess.EqualsWithin(rhs.Shininess);
             ret.ReflectionHDRMultiplier = item.ReflectionHDRMultiplier.EqualsWithin(rhs.ReflectionHDRMultiplier);
@@ -2746,7 +2659,10 @@ namespace Mutagen.Bethesda.Fallout3
             ret.NoiseLayerOneUVScale = item.NoiseLayerOneUVScale.EqualsWithin(rhs.NoiseLayerOneUVScale);
             ret.NoiseLayerTwoUVScale = item.NoiseLayerTwoUVScale.EqualsWithin(rhs.NoiseLayerTwoUVScale);
             ret.NoiseLayerThreeUVScale = item.NoiseLayerThreeUVScale.EqualsWithin(rhs.NoiseLayerThreeUVScale);
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.NoiseLayerOneAmplitudeScale = item.NoiseLayerOneAmplitudeScale.EqualsWithin(rhs.NoiseLayerOneAmplitudeScale);
+            ret.NoiseLayerTwoAmplitudeScale = item.NoiseLayerTwoAmplitudeScale.EqualsWithin(rhs.NoiseLayerTwoAmplitudeScale);
+            ret.NoiseLayerThreeAmplitudeScale = item.NoiseLayerThreeAmplitudeScale.EqualsWithin(rhs.NoiseLayerThreeAmplitudeScale);
+            ret.Damage = item.Damage == rhs.Damage;
         }
         
         public string Print(
@@ -2791,9 +2707,25 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             WaterData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Unused1 ?? true)
             {
-                sb.AppendLine($"Unused1 => {SpanExt.ToHexString(item.Unused1)}");
+                sb.AppendItem(item.Unused1, "Unused1");
+            }
+            if (printMask?.Unused2 ?? true)
+            {
+                sb.AppendItem(item.Unused2, "Unused2");
+            }
+            if (printMask?.Unused3 ?? true)
+            {
+                sb.AppendItem(item.Unused3, "Unused3");
+            }
+            if (printMask?.Unused4 ?? true)
+            {
+                sb.AppendItem(item.Unused4, "Unused4");
             }
             if (printMask?.SunPower ?? true)
             {
@@ -2807,69 +2739,33 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.FresnelAmount, "FresnelAmount");
             }
-            if (printMask?.Unused2 ?? true)
+            if (printMask?.Unused5 ?? true)
             {
-                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+                sb.AppendItem(item.Unused5, "Unused5");
             }
-            if (printMask?.FogAboveNearPlane ?? true)
+            if (printMask?.FogAboveWaterDistanceNearPlane ?? true)
             {
-                sb.AppendItem(item.FogAboveNearPlane, "FogAboveNearPlane");
+                sb.AppendItem(item.FogAboveWaterDistanceNearPlane, "FogAboveWaterDistanceNearPlane");
             }
-            if (printMask?.FogAboveFarPlane ?? true)
+            if (printMask?.FogAboveWaterDistanceFarPlane ?? true)
             {
-                sb.AppendItem(item.FogAboveFarPlane, "FogAboveFarPlane");
+                sb.AppendItem(item.FogAboveWaterDistanceFarPlane, "FogAboveWaterDistanceFarPlane");
             }
-            if (printMask?.ShallowColorRed ?? true)
+            if (printMask?.ShallowColor ?? true)
             {
-                sb.AppendItem(item.ShallowColorRed, "ShallowColorRed");
+                sb.AppendItem(item.ShallowColor, "ShallowColor");
             }
-            if (printMask?.ShallowColorGreen ?? true)
+            if (printMask?.DeepColor ?? true)
             {
-                sb.AppendItem(item.ShallowColorGreen, "ShallowColorGreen");
+                sb.AppendItem(item.DeepColor, "DeepColor");
             }
-            if (printMask?.ShallowColorBlue ?? true)
+            if (printMask?.ReflectionColor ?? true)
             {
-                sb.AppendItem(item.ShallowColorBlue, "ShallowColorBlue");
+                sb.AppendItem(item.ReflectionColor, "ReflectionColor");
             }
-            if (printMask?.ShallowColorAlpha ?? true)
+            if (printMask?.Unused6 ?? true)
             {
-                sb.AppendItem(item.ShallowColorAlpha, "ShallowColorAlpha");
-            }
-            if (printMask?.DeepColorRed ?? true)
-            {
-                sb.AppendItem(item.DeepColorRed, "DeepColorRed");
-            }
-            if (printMask?.DeepColorGreen ?? true)
-            {
-                sb.AppendItem(item.DeepColorGreen, "DeepColorGreen");
-            }
-            if (printMask?.DeepColorBlue ?? true)
-            {
-                sb.AppendItem(item.DeepColorBlue, "DeepColorBlue");
-            }
-            if (printMask?.DeepColorAlpha ?? true)
-            {
-                sb.AppendItem(item.DeepColorAlpha, "DeepColorAlpha");
-            }
-            if (printMask?.ReflectionColorRed ?? true)
-            {
-                sb.AppendItem(item.ReflectionColorRed, "ReflectionColorRed");
-            }
-            if (printMask?.ReflectionColorGreen ?? true)
-            {
-                sb.AppendItem(item.ReflectionColorGreen, "ReflectionColorGreen");
-            }
-            if (printMask?.ReflectionColorBlue ?? true)
-            {
-                sb.AppendItem(item.ReflectionColorBlue, "ReflectionColorBlue");
-            }
-            if (printMask?.ReflectionColorAlpha ?? true)
-            {
-                sb.AppendItem(item.ReflectionColorAlpha, "ReflectionColorAlpha");
-            }
-            if (printMask?.Unused3 ?? true)
-            {
-                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
+                sb.AppendItem(item.Unused6, "Unused6");
             }
             if (printMask?.RainSimulatorForce ?? true)
             {
@@ -2887,25 +2783,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.RainSimulatorDampner, "RainSimulatorDampner");
             }
-            if (printMask?.DisplacementStartingSize ?? true)
+            if (printMask?.DisplacementSimulatorStartingSize ?? true)
             {
-                sb.AppendItem(item.DisplacementStartingSize, "DisplacementStartingSize");
+                sb.AppendItem(item.DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
             }
-            if (printMask?.DisplacementForce ?? true)
+            if (printMask?.DisplacementSimulatorForce ?? true)
             {
-                sb.AppendItem(item.DisplacementForce, "DisplacementForce");
+                sb.AppendItem(item.DisplacementSimulatorForce, "DisplacementSimulatorForce");
             }
-            if (printMask?.DisplacementVelocity ?? true)
+            if (printMask?.DisplacementSimulatorVelocity ?? true)
             {
-                sb.AppendItem(item.DisplacementVelocity, "DisplacementVelocity");
+                sb.AppendItem(item.DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
             }
-            if (printMask?.DisplacementFalloff ?? true)
+            if (printMask?.DisplacementSimulatorFalloff ?? true)
             {
-                sb.AppendItem(item.DisplacementFalloff, "DisplacementFalloff");
+                sb.AppendItem(item.DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
             }
-            if (printMask?.DisplacementDampner ?? true)
+            if (printMask?.DisplacementSimulatorDampner ?? true)
             {
-                sb.AppendItem(item.DisplacementDampner, "DisplacementDampner");
+                sb.AppendItem(item.DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
             }
             if (printMask?.RainSimulatorStartingSize ?? true)
             {
@@ -2947,25 +2843,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.NormalsDepthFalloffEnd, "NormalsDepthFalloffEnd");
             }
-            if (printMask?.FogAboveAmount ?? true)
+            if (printMask?.FogAboveWaterAmount ?? true)
             {
-                sb.AppendItem(item.FogAboveAmount, "FogAboveAmount");
+                sb.AppendItem(item.FogAboveWaterAmount, "FogAboveWaterAmount");
             }
             if (printMask?.NormalsUVScale ?? true)
             {
                 sb.AppendItem(item.NormalsUVScale, "NormalsUVScale");
             }
-            if (printMask?.FogUnderAmount ?? true)
+            if (printMask?.FogUnderWaterAmount ?? true)
             {
-                sb.AppendItem(item.FogUnderAmount, "FogUnderAmount");
+                sb.AppendItem(item.FogUnderWaterAmount, "FogUnderWaterAmount");
             }
-            if (printMask?.FogUnderNearPlane ?? true)
+            if (printMask?.FogUnderWaterDistanceNearPlane ?? true)
             {
-                sb.AppendItem(item.FogUnderNearPlane, "FogUnderNearPlane");
+                sb.AppendItem(item.FogUnderWaterDistanceNearPlane, "FogUnderWaterDistanceNearPlane");
             }
-            if (printMask?.FogUnderFarPlane ?? true)
+            if (printMask?.FogUnderWaterDistanceFarPlane ?? true)
             {
-                sb.AppendItem(item.FogUnderFarPlane, "FogUnderFarPlane");
+                sb.AppendItem(item.FogUnderWaterDistanceFarPlane, "FogUnderWaterDistanceFarPlane");
             }
             if (printMask?.DistortionAmount ?? true)
             {
@@ -2999,9 +2895,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.NoiseLayerThreeUVScale, "NoiseLayerThreeUVScale");
             }
-            if (printMask?.Remaining ?? true)
+            if (printMask?.NoiseLayerOneAmplitudeScale ?? true)
             {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendItem(item.NoiseLayerOneAmplitudeScale, "NoiseLayerOneAmplitudeScale");
+            }
+            if (printMask?.NoiseLayerTwoAmplitudeScale ?? true)
+            {
+                sb.AppendItem(item.NoiseLayerTwoAmplitudeScale, "NoiseLayerTwoAmplitudeScale");
+            }
+            if (printMask?.NoiseLayerThreeAmplitudeScale ?? true)
+            {
+                sb.AppendItem(item.NoiseLayerThreeAmplitudeScale, "NoiseLayerThreeAmplitudeScale");
+            }
+            if (printMask?.Damage ?? true)
+            {
+                sb.AppendItem(item.Damage, "Damage");
             }
         }
         
@@ -3012,9 +2920,25 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused1) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused1.Span, rhs.Unused1.Span)) return false;
+                if (lhs.Unused1 != rhs.Unused1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused2) ?? true))
+            {
+                if (lhs.Unused2 != rhs.Unused2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused3) ?? true))
+            {
+                if (lhs.Unused3 != rhs.Unused3) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused4) ?? true))
+            {
+                if (lhs.Unused4 != rhs.Unused4) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.SunPower) ?? true))
             {
@@ -3028,69 +2952,33 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.FresnelAmount.EqualsWithin(rhs.FresnelAmount)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused5) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+                if (lhs.Unused5 != rhs.Unused5) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveNearPlane) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveWaterDistanceNearPlane) ?? true))
             {
-                if (!lhs.FogAboveNearPlane.EqualsWithin(rhs.FogAboveNearPlane)) return false;
+                if (!lhs.FogAboveWaterDistanceNearPlane.EqualsWithin(rhs.FogAboveWaterDistanceNearPlane)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveFarPlane) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveWaterDistanceFarPlane) ?? true))
             {
-                if (!lhs.FogAboveFarPlane.EqualsWithin(rhs.FogAboveFarPlane)) return false;
+                if (!lhs.FogAboveWaterDistanceFarPlane.EqualsWithin(rhs.FogAboveWaterDistanceFarPlane)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorRed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColor) ?? true))
             {
-                if (lhs.ShallowColorRed != rhs.ShallowColorRed) return false;
+                if (!lhs.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorGreen) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColor) ?? true))
             {
-                if (lhs.ShallowColorGreen != rhs.ShallowColorGreen) return false;
+                if (!lhs.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorBlue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColor) ?? true))
             {
-                if (lhs.ShallowColorBlue != rhs.ShallowColorBlue) return false;
+                if (!lhs.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorAlpha) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused6) ?? true))
             {
-                if (lhs.ShallowColorAlpha != rhs.ShallowColorAlpha) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorRed) ?? true))
-            {
-                if (lhs.DeepColorRed != rhs.DeepColorRed) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorGreen) ?? true))
-            {
-                if (lhs.DeepColorGreen != rhs.DeepColorGreen) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorBlue) ?? true))
-            {
-                if (lhs.DeepColorBlue != rhs.DeepColorBlue) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorAlpha) ?? true))
-            {
-                if (lhs.DeepColorAlpha != rhs.DeepColorAlpha) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorRed) ?? true))
-            {
-                if (lhs.ReflectionColorRed != rhs.ReflectionColorRed) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorGreen) ?? true))
-            {
-                if (lhs.ReflectionColorGreen != rhs.ReflectionColorGreen) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorBlue) ?? true))
-            {
-                if (lhs.ReflectionColorBlue != rhs.ReflectionColorBlue) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorAlpha) ?? true))
-            {
-                if (lhs.ReflectionColorAlpha != rhs.ReflectionColorAlpha) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused3) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
+                if (lhs.Unused6 != rhs.Unused6) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorForce) ?? true))
             {
@@ -3108,25 +2996,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementStartingSize) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
             {
-                if (!lhs.DisplacementStartingSize.EqualsWithin(rhs.DisplacementStartingSize)) return false;
+                if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementForce) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorForce) ?? true))
             {
-                if (!lhs.DisplacementForce.EqualsWithin(rhs.DisplacementForce)) return false;
+                if (!lhs.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementVelocity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorVelocity) ?? true))
             {
-                if (!lhs.DisplacementVelocity.EqualsWithin(rhs.DisplacementVelocity)) return false;
+                if (!lhs.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementFalloff) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorFalloff) ?? true))
             {
-                if (!lhs.DisplacementFalloff.EqualsWithin(rhs.DisplacementFalloff)) return false;
+                if (!lhs.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementDampner) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorDampner) ?? true))
             {
-                if (!lhs.DisplacementDampner.EqualsWithin(rhs.DisplacementDampner)) return false;
+                if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorStartingSize) ?? true))
             {
@@ -3168,25 +3056,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.NormalsDepthFalloffEnd.EqualsWithin(rhs.NormalsDepthFalloffEnd)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveWaterAmount) ?? true))
             {
-                if (!lhs.FogAboveAmount.EqualsWithin(rhs.FogAboveAmount)) return false;
+                if (!lhs.FogAboveWaterAmount.EqualsWithin(rhs.FogAboveWaterAmount)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.NormalsUVScale) ?? true))
             {
                 if (!lhs.NormalsUVScale.EqualsWithin(rhs.NormalsUVScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderAmount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderWaterAmount) ?? true))
             {
-                if (!lhs.FogUnderAmount.EqualsWithin(rhs.FogUnderAmount)) return false;
+                if (!lhs.FogUnderWaterAmount.EqualsWithin(rhs.FogUnderWaterAmount)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderNearPlane) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderWaterDistanceNearPlane) ?? true))
             {
-                if (!lhs.FogUnderNearPlane.EqualsWithin(rhs.FogUnderNearPlane)) return false;
+                if (!lhs.FogUnderWaterDistanceNearPlane.EqualsWithin(rhs.FogUnderWaterDistanceNearPlane)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderFarPlane) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderWaterDistanceFarPlane) ?? true))
             {
-                if (!lhs.FogUnderFarPlane.EqualsWithin(rhs.FogUnderFarPlane)) return false;
+                if (!lhs.FogUnderWaterDistanceFarPlane.EqualsWithin(rhs.FogUnderWaterDistanceFarPlane)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.DistortionAmount) ?? true))
             {
@@ -3220,9 +3108,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.NoiseLayerThreeUVScale.EqualsWithin(rhs.NoiseLayerThreeUVScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Remaining) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.NoiseLayerOneAmplitudeScale) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (!lhs.NoiseLayerOneAmplitudeScale.EqualsWithin(rhs.NoiseLayerOneAmplitudeScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.NoiseLayerTwoAmplitudeScale) ?? true))
+            {
+                if (!lhs.NoiseLayerTwoAmplitudeScale.EqualsWithin(rhs.NoiseLayerTwoAmplitudeScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.NoiseLayerThreeAmplitudeScale) ?? true))
+            {
+                if (!lhs.NoiseLayerThreeAmplitudeScale.EqualsWithin(rhs.NoiseLayerThreeAmplitudeScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)WaterData_FieldIndex.Damage) ?? true))
+            {
+                if (lhs.Damage != rhs.Damage) return false;
             }
             return true;
         }
@@ -3230,35 +3130,30 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IWaterDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Unused1);
+            hash.Add(item.Unused2);
+            hash.Add(item.Unused3);
+            hash.Add(item.Unused4);
             hash.Add(item.SunPower);
             hash.Add(item.ReflectivityAmount);
             hash.Add(item.FresnelAmount);
-            hash.Add(item.Unused2);
-            hash.Add(item.FogAboveNearPlane);
-            hash.Add(item.FogAboveFarPlane);
-            hash.Add(item.ShallowColorRed);
-            hash.Add(item.ShallowColorGreen);
-            hash.Add(item.ShallowColorBlue);
-            hash.Add(item.ShallowColorAlpha);
-            hash.Add(item.DeepColorRed);
-            hash.Add(item.DeepColorGreen);
-            hash.Add(item.DeepColorBlue);
-            hash.Add(item.DeepColorAlpha);
-            hash.Add(item.ReflectionColorRed);
-            hash.Add(item.ReflectionColorGreen);
-            hash.Add(item.ReflectionColorBlue);
-            hash.Add(item.ReflectionColorAlpha);
-            hash.Add(item.Unused3);
+            hash.Add(item.Unused5);
+            hash.Add(item.FogAboveWaterDistanceNearPlane);
+            hash.Add(item.FogAboveWaterDistanceFarPlane);
+            hash.Add(item.ShallowColor);
+            hash.Add(item.DeepColor);
+            hash.Add(item.ReflectionColor);
+            hash.Add(item.Unused6);
             hash.Add(item.RainSimulatorForce);
             hash.Add(item.RainSimulatorVelocity);
             hash.Add(item.RainSimulatorFalloff);
             hash.Add(item.RainSimulatorDampner);
-            hash.Add(item.DisplacementStartingSize);
-            hash.Add(item.DisplacementForce);
-            hash.Add(item.DisplacementVelocity);
-            hash.Add(item.DisplacementFalloff);
-            hash.Add(item.DisplacementDampner);
+            hash.Add(item.DisplacementSimulatorStartingSize);
+            hash.Add(item.DisplacementSimulatorForce);
+            hash.Add(item.DisplacementSimulatorVelocity);
+            hash.Add(item.DisplacementSimulatorFalloff);
+            hash.Add(item.DisplacementSimulatorDampner);
             hash.Add(item.RainSimulatorStartingSize);
             hash.Add(item.NormalsNoiseScale);
             hash.Add(item.NoiseLayerOneWindDirection);
@@ -3269,11 +3164,11 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.NoiseLayerThreeWindSpeed);
             hash.Add(item.NormalsDepthFalloffStart);
             hash.Add(item.NormalsDepthFalloffEnd);
-            hash.Add(item.FogAboveAmount);
+            hash.Add(item.FogAboveWaterAmount);
             hash.Add(item.NormalsUVScale);
-            hash.Add(item.FogUnderAmount);
-            hash.Add(item.FogUnderNearPlane);
-            hash.Add(item.FogUnderFarPlane);
+            hash.Add(item.FogUnderWaterAmount);
+            hash.Add(item.FogUnderWaterDistanceNearPlane);
+            hash.Add(item.FogUnderWaterDistanceFarPlane);
             hash.Add(item.DistortionAmount);
             hash.Add(item.Shininess);
             hash.Add(item.ReflectionHDRMultiplier);
@@ -3282,7 +3177,10 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.NoiseLayerOneUVScale);
             hash.Add(item.NoiseLayerTwoUVScale);
             hash.Add(item.NoiseLayerThreeUVScale);
-            hash.Add(item.Remaining);
+            hash.Add(item.NoiseLayerOneAmplitudeScale);
+            hash.Add(item.NoiseLayerTwoAmplitudeScale);
+            hash.Add(item.NoiseLayerThreeAmplitudeScale);
+            hash.Add(item.Damage);
             return hash.ToHashCode();
         }
         
@@ -3315,9 +3213,25 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused1) ?? true))
             {
-                item.Unused1 = rhs.Unused1.ToArray();
+                item.Unused1 = rhs.Unused1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused2) ?? true))
+            {
+                item.Unused2 = rhs.Unused2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused3) ?? true))
+            {
+                item.Unused3 = rhs.Unused3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused4) ?? true))
+            {
+                item.Unused4 = rhs.Unused4;
             }
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.SunPower) ?? true))
             {
@@ -3331,69 +3245,33 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.FresnelAmount = rhs.FresnelAmount;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused5) ?? true))
             {
-                item.Unused2 = rhs.Unused2.ToArray();
+                item.Unused5 = rhs.Unused5;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveNearPlane) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveWaterDistanceNearPlane) ?? true))
             {
-                item.FogAboveNearPlane = rhs.FogAboveNearPlane;
+                item.FogAboveWaterDistanceNearPlane = rhs.FogAboveWaterDistanceNearPlane;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveFarPlane) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveWaterDistanceFarPlane) ?? true))
             {
-                item.FogAboveFarPlane = rhs.FogAboveFarPlane;
+                item.FogAboveWaterDistanceFarPlane = rhs.FogAboveWaterDistanceFarPlane;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorRed) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColor) ?? true))
             {
-                item.ShallowColorRed = rhs.ShallowColorRed;
+                item.ShallowColor = rhs.ShallowColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorGreen) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColor) ?? true))
             {
-                item.ShallowColorGreen = rhs.ShallowColorGreen;
+                item.DeepColor = rhs.DeepColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorBlue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColor) ?? true))
             {
-                item.ShallowColorBlue = rhs.ShallowColorBlue;
+                item.ReflectionColor = rhs.ReflectionColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColorAlpha) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused6) ?? true))
             {
-                item.ShallowColorAlpha = rhs.ShallowColorAlpha;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorRed) ?? true))
-            {
-                item.DeepColorRed = rhs.DeepColorRed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorGreen) ?? true))
-            {
-                item.DeepColorGreen = rhs.DeepColorGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorBlue) ?? true))
-            {
-                item.DeepColorBlue = rhs.DeepColorBlue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColorAlpha) ?? true))
-            {
-                item.DeepColorAlpha = rhs.DeepColorAlpha;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorRed) ?? true))
-            {
-                item.ReflectionColorRed = rhs.ReflectionColorRed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorGreen) ?? true))
-            {
-                item.ReflectionColorGreen = rhs.ReflectionColorGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorBlue) ?? true))
-            {
-                item.ReflectionColorBlue = rhs.ReflectionColorBlue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColorAlpha) ?? true))
-            {
-                item.ReflectionColorAlpha = rhs.ReflectionColorAlpha;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Unused3) ?? true))
-            {
-                item.Unused3 = rhs.Unused3.ToArray();
+                item.Unused6 = rhs.Unused6;
             }
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorForce) ?? true))
             {
@@ -3411,25 +3289,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.RainSimulatorDampner = rhs.RainSimulatorDampner;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementStartingSize) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
             {
-                item.DisplacementStartingSize = rhs.DisplacementStartingSize;
+                item.DisplacementSimulatorStartingSize = rhs.DisplacementSimulatorStartingSize;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementForce) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorForce) ?? true))
             {
-                item.DisplacementForce = rhs.DisplacementForce;
+                item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementVelocity) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorVelocity) ?? true))
             {
-                item.DisplacementVelocity = rhs.DisplacementVelocity;
+                item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementFalloff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorFalloff) ?? true))
             {
-                item.DisplacementFalloff = rhs.DisplacementFalloff;
+                item.DisplacementSimulatorFalloff = rhs.DisplacementSimulatorFalloff;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementDampner) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorDampner) ?? true))
             {
-                item.DisplacementDampner = rhs.DisplacementDampner;
+                item.DisplacementSimulatorDampner = rhs.DisplacementSimulatorDampner;
             }
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorStartingSize) ?? true))
             {
@@ -3471,25 +3349,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.NormalsDepthFalloffEnd = rhs.NormalsDepthFalloffEnd;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveAmount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogAboveWaterAmount) ?? true))
             {
-                item.FogAboveAmount = rhs.FogAboveAmount;
+                item.FogAboveWaterAmount = rhs.FogAboveWaterAmount;
             }
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.NormalsUVScale) ?? true))
             {
                 item.NormalsUVScale = rhs.NormalsUVScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderAmount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderWaterAmount) ?? true))
             {
-                item.FogUnderAmount = rhs.FogUnderAmount;
+                item.FogUnderWaterAmount = rhs.FogUnderWaterAmount;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderNearPlane) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderWaterDistanceNearPlane) ?? true))
             {
-                item.FogUnderNearPlane = rhs.FogUnderNearPlane;
+                item.FogUnderWaterDistanceNearPlane = rhs.FogUnderWaterDistanceNearPlane;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderFarPlane) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogUnderWaterDistanceFarPlane) ?? true))
             {
-                item.FogUnderFarPlane = rhs.FogUnderFarPlane;
+                item.FogUnderWaterDistanceFarPlane = rhs.FogUnderWaterDistanceFarPlane;
             }
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DistortionAmount) ?? true))
             {
@@ -3523,9 +3401,22 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.NoiseLayerThreeUVScale = rhs.NoiseLayerThreeUVScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Remaining) ?? true))
+            if (rhs.Versioning.HasFlag(WaterData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.NoiseLayerOneAmplitudeScale) ?? true))
             {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.NoiseLayerOneAmplitudeScale = rhs.NoiseLayerOneAmplitudeScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.NoiseLayerTwoAmplitudeScale) ?? true))
+            {
+                item.NoiseLayerTwoAmplitudeScale = rhs.NoiseLayerTwoAmplitudeScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.NoiseLayerThreeAmplitudeScale) ?? true))
+            {
+                item.NoiseLayerThreeAmplitudeScale = rhs.NoiseLayerThreeAmplitudeScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Damage) ?? true))
+            {
+                item.Damage = rhs.Damage;
             }
             DeepCopyInCustom(
                 item: item,
@@ -3635,9 +3526,10 @@ namespace Mutagen.Bethesda.Fallout3
             IWaterDataGetter item,
             MutagenWriter writer)
         {
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused1);
+            writer.Write(item.Unused1);
+            writer.Write(item.Unused2);
+            writer.Write(item.Unused3);
+            writer.Write(item.Unused4);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SunPower);
@@ -3647,30 +3539,23 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FresnelAmount);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused2);
+            writer.Write(item.Unused5);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogAboveNearPlane);
+                item: item.FogAboveWaterDistanceNearPlane);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogAboveFarPlane);
-            writer.Write(item.ShallowColorRed);
-            writer.Write(item.ShallowColorGreen);
-            writer.Write(item.ShallowColorBlue);
-            writer.Write(item.ShallowColorAlpha);
-            writer.Write(item.DeepColorRed);
-            writer.Write(item.DeepColorGreen);
-            writer.Write(item.DeepColorBlue);
-            writer.Write(item.DeepColorAlpha);
-            writer.Write(item.ReflectionColorRed);
-            writer.Write(item.ReflectionColorGreen);
-            writer.Write(item.ReflectionColorBlue);
-            writer.Write(item.ReflectionColorAlpha);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.FogAboveWaterDistanceFarPlane);
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unused3);
+                item: item.ShallowColor);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DeepColor);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ReflectionColor);
+            writer.Write(item.Unused6);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RainSimulatorForce);
@@ -3685,19 +3570,19 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.RainSimulatorDampner);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.DisplacementStartingSize);
+                item: item.DisplacementSimulatorStartingSize);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.DisplacementForce);
+                item: item.DisplacementSimulatorForce);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.DisplacementVelocity);
+                item: item.DisplacementSimulatorVelocity);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.DisplacementFalloff);
+                item: item.DisplacementSimulatorFalloff);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.DisplacementDampner);
+                item: item.DisplacementSimulatorDampner);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RainSimulatorStartingSize);
@@ -3730,19 +3615,19 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.NormalsDepthFalloffEnd);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogAboveAmount);
+                item: item.FogAboveWaterAmount);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NormalsUVScale);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogUnderAmount);
+                item: item.FogUnderWaterAmount);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogUnderNearPlane);
+                item: item.FogUnderWaterDistanceNearPlane);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FogUnderFarPlane);
+                item: item.FogUnderWaterDistanceFarPlane);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DistortionAmount);
@@ -3767,9 +3652,18 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NoiseLayerThreeUVScale);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Remaining);
+            if (!item.Versioning.HasFlag(WaterData.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerOneAmplitudeScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerTwoAmplitudeScale);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.NoiseLayerThreeAmplitudeScale);
+            }
         }
 
         public void Write(
@@ -3777,16 +3671,9 @@ namespace Mutagen.Bethesda.Fallout3
             IWaterDataGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.DNAM),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -3810,35 +3697,29 @@ namespace Mutagen.Bethesda.Fallout3
             IWaterData item,
             MutagenFrame frame)
         {
-            item.Unused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(16));
+            item.Unused1 = frame.ReadUInt32();
+            item.Unused2 = frame.ReadUInt32();
+            item.Unused3 = frame.ReadUInt32();
+            item.Unused4 = frame.ReadUInt32();
             item.SunPower = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ReflectivityAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FresnelAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.FogAboveNearPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogAboveFarPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.ShallowColorRed = frame.ReadUInt8();
-            item.ShallowColorGreen = frame.ReadUInt8();
-            item.ShallowColorBlue = frame.ReadUInt8();
-            item.ShallowColorAlpha = frame.ReadUInt8();
-            item.DeepColorRed = frame.ReadUInt8();
-            item.DeepColorGreen = frame.ReadUInt8();
-            item.DeepColorBlue = frame.ReadUInt8();
-            item.DeepColorAlpha = frame.ReadUInt8();
-            item.ReflectionColorRed = frame.ReadUInt8();
-            item.ReflectionColorGreen = frame.ReadUInt8();
-            item.ReflectionColorBlue = frame.ReadUInt8();
-            item.ReflectionColorAlpha = frame.ReadUInt8();
-            item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Unused5 = frame.ReadUInt32();
+            item.FogAboveWaterDistanceNearPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogAboveWaterDistanceFarPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ShallowColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DeepColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.ReflectionColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Unused6 = frame.ReadUInt32();
             item.RainSimulatorForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.RainSimulatorVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.RainSimulatorFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.RainSimulatorDampner = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.DisplacementStartingSize = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.DisplacementForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.DisplacementVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.DisplacementFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.DisplacementDampner = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorStartingSize = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorFalloff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorDampner = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.RainSimulatorStartingSize = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NormalsNoiseScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NoiseLayerOneWindDirection = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -3849,11 +3730,11 @@ namespace Mutagen.Bethesda.Fallout3
             item.NoiseLayerThreeWindSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NormalsDepthFalloffStart = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NormalsDepthFalloffEnd = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogAboveAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogAboveWaterAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NormalsUVScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogUnderAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogUnderNearPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.FogUnderFarPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogUnderWaterAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogUnderWaterDistanceNearPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogUnderWaterDistanceFarPlane = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.DistortionAmount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Shininess = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ReflectionHDRMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -3862,7 +3743,14 @@ namespace Mutagen.Bethesda.Fallout3
             item.NoiseLayerOneUVScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NoiseLayerTwoUVScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NoiseLayerThreeUVScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= WaterData.VersioningBreaks.Break0;
+                return;
+            }
+            item.NoiseLayerOneAmplitudeScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NoiseLayerTwoAmplitudeScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NoiseLayerThreeAmplitudeScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -3928,35 +3816,30 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public ReadOnlyMemorySlice<Byte> Unused1 => _structData.Span.Slice(0x0, 0x10).ToArray();
+        public WaterData.VersioningBreaks Versioning { get; private set; }
+        public UInt32 Unused1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public UInt32 Unused2 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public UInt32 Unused3 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt32 Unused4 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
         public Single SunPower => _structData.Slice(0x10, 0x4).Float();
         public Single ReflectivityAmount => _structData.Slice(0x14, 0x4).Float();
         public Single FresnelAmount => _structData.Slice(0x18, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0x1C, 0x4).ToArray();
-        public Single FogAboveNearPlane => _structData.Slice(0x20, 0x4).Float();
-        public Single FogAboveFarPlane => _structData.Slice(0x24, 0x4).Float();
-        public Byte ShallowColorRed => _structData.Span[0x28];
-        public Byte ShallowColorGreen => _structData.Span[0x29];
-        public Byte ShallowColorBlue => _structData.Span[0x2A];
-        public Byte ShallowColorAlpha => _structData.Span[0x2B];
-        public Byte DeepColorRed => _structData.Span[0x2C];
-        public Byte DeepColorGreen => _structData.Span[0x2D];
-        public Byte DeepColorBlue => _structData.Span[0x2E];
-        public Byte DeepColorAlpha => _structData.Span[0x2F];
-        public Byte ReflectionColorRed => _structData.Span[0x30];
-        public Byte ReflectionColorGreen => _structData.Span[0x31];
-        public Byte ReflectionColorBlue => _structData.Span[0x32];
-        public Byte ReflectionColorAlpha => _structData.Span[0x33];
-        public ReadOnlyMemorySlice<Byte> Unused3 => _structData.Span.Slice(0x34, 0x4).ToArray();
+        public UInt32 Unused5 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
+        public Single FogAboveWaterDistanceNearPlane => _structData.Slice(0x20, 0x4).Float();
+        public Single FogAboveWaterDistanceFarPlane => _structData.Slice(0x24, 0x4).Float();
+        public Color ShallowColor => _structData.Slice(0x28, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DeepColor => _structData.Slice(0x2C, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ReflectionColor => _structData.Slice(0x30, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public UInt32 Unused6 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x34, 0x4));
         public Single RainSimulatorForce => _structData.Slice(0x38, 0x4).Float();
         public Single RainSimulatorVelocity => _structData.Slice(0x3C, 0x4).Float();
         public Single RainSimulatorFalloff => _structData.Slice(0x40, 0x4).Float();
         public Single RainSimulatorDampner => _structData.Slice(0x44, 0x4).Float();
-        public Single DisplacementStartingSize => _structData.Slice(0x48, 0x4).Float();
-        public Single DisplacementForce => _structData.Slice(0x4C, 0x4).Float();
-        public Single DisplacementVelocity => _structData.Slice(0x50, 0x4).Float();
-        public Single DisplacementFalloff => _structData.Slice(0x54, 0x4).Float();
-        public Single DisplacementDampner => _structData.Slice(0x58, 0x4).Float();
+        public Single DisplacementSimulatorStartingSize => _structData.Slice(0x48, 0x4).Float();
+        public Single DisplacementSimulatorForce => _structData.Slice(0x4C, 0x4).Float();
+        public Single DisplacementSimulatorVelocity => _structData.Slice(0x50, 0x4).Float();
+        public Single DisplacementSimulatorFalloff => _structData.Slice(0x54, 0x4).Float();
+        public Single DisplacementSimulatorDampner => _structData.Slice(0x58, 0x4).Float();
         public Single RainSimulatorStartingSize => _structData.Slice(0x5C, 0x4).Float();
         public Single NormalsNoiseScale => _structData.Slice(0x60, 0x4).Float();
         public Single NoiseLayerOneWindDirection => _structData.Slice(0x64, 0x4).Float();
@@ -3967,11 +3850,11 @@ namespace Mutagen.Bethesda.Fallout3
         public Single NoiseLayerThreeWindSpeed => _structData.Slice(0x78, 0x4).Float();
         public Single NormalsDepthFalloffStart => _structData.Slice(0x7C, 0x4).Float();
         public Single NormalsDepthFalloffEnd => _structData.Slice(0x80, 0x4).Float();
-        public Single FogAboveAmount => _structData.Slice(0x84, 0x4).Float();
+        public Single FogAboveWaterAmount => _structData.Slice(0x84, 0x4).Float();
         public Single NormalsUVScale => _structData.Slice(0x88, 0x4).Float();
-        public Single FogUnderAmount => _structData.Slice(0x8C, 0x4).Float();
-        public Single FogUnderNearPlane => _structData.Slice(0x90, 0x4).Float();
-        public Single FogUnderFarPlane => _structData.Slice(0x94, 0x4).Float();
+        public Single FogUnderWaterAmount => _structData.Slice(0x8C, 0x4).Float();
+        public Single FogUnderWaterDistanceNearPlane => _structData.Slice(0x90, 0x4).Float();
+        public Single FogUnderWaterDistanceFarPlane => _structData.Slice(0x94, 0x4).Float();
         public Single DistortionAmount => _structData.Slice(0x98, 0x4).Float();
         public Single Shininess => _structData.Slice(0x9C, 0x4).Float();
         public Single ReflectionHDRMultiplier => _structData.Slice(0xA0, 0x4).Float();
@@ -3980,10 +3863,9 @@ namespace Mutagen.Bethesda.Fallout3
         public Single NoiseLayerOneUVScale => _structData.Slice(0xAC, 0x4).Float();
         public Single NoiseLayerTwoUVScale => _structData.Slice(0xB0, 0x4).Float();
         public Single NoiseLayerThreeUVScale => _structData.Slice(0xB4, 0x4).Float();
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Slice(0xB8).ToArray();
-        protected int RemainingEndingPos;
-        #endregion
+        public Single NoiseLayerOneAmplitudeScale => _structData.Length <= 0xB8 ? default : _structData.Slice(0xB8, 0x4).Float();
+        public Single NoiseLayerTwoAmplitudeScale => _structData.Length <= 0xBC ? default : _structData.Slice(0xBC, 0x4).Float();
+        public Single NoiseLayerThreeAmplitudeScale => _structData.Length <= 0xC0 ? default : _structData.Slice(0xC0, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -4003,18 +3885,23 @@ namespace Mutagen.Bethesda.Fallout3
         public static IWaterDataGetter WaterDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
+            int finalPos,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractSubrecordStructMemory(
+            stream = ExtractTypelessSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: finalPos - stream.Position,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new WaterDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0xB8)
+            {
+                ret.Versioning |= WaterData.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -4030,6 +3917,7 @@ namespace Mutagen.Bethesda.Fallout3
             return WaterDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
+                finalPos: slice.Length,
                 translationParams: translationParams);
         }
 
