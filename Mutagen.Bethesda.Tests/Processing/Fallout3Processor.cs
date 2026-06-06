@@ -57,6 +57,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.DIAL, ProcessDialogs);
         AddDynamicProcessing(RecordTypes.INFO, ProcessDialogResponses);
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
+        AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(
             ProcessPlaced,
             PlacedObject_Registration.TriggeringRecordType,
@@ -142,6 +143,23 @@ public class Fallout3Processor : Processor
         foreach (var qsta in majorFrame.FindEnumerateSubrecords(RecordTypes.QSTA))
         {
             ProcessBool(qsta, fileOffset, loc: 4, length: 1, importantBytes: 1);
+        }
+    }
+
+    private void ProcessPackages(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // PKPT (Patrol Flags) is a u8 bool + 1 unused byte, truncatable to just the bool byte.
+        // Mutagen always exports the full 2-byte form, so pad truncated 1-byte PKPTs in the
+        // reference to match. (Mutagen's reader still accepts the 1-byte form from real data.)
+        if (!majorFrame.IsDeleted
+            && majorFrame.TryFindSubrecord(RecordTypes.PKPT, out var pkptSub)
+            && pkptSub.ContentLength == 1)
+        {
+            var padded = new byte[2];
+            pkptSub.Content.Span.CopyTo(padded);
+            SwapSubrecordContent(fileOffset, majorFrame, pkptSub, padded);
         }
     }
 

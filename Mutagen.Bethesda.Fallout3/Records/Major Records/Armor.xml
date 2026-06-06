@@ -77,6 +77,8 @@
     </Fields>
     <LinkInterface>IBoundItem</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
   <Object name="ArmorAnimationSound" objType="Subrecord" recordType="SNAM">
     <Fields>

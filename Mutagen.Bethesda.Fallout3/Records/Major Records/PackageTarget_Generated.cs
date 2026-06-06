@@ -8,6 +8,7 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -51,32 +52,14 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region TargetType
-        public Int32 TargetType { get; set; } = default(Int32);
+        #region Versioning
+        public PackageTarget.VersioningBreaks Versioning { get; set; } = default(PackageTarget.VersioningBreaks);
         #endregion
-        #region TargetValue
-        private readonly IFormLink<IFallout3MajorRecordGetter> _TargetValue = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> TargetValue
-        {
-            get => _TargetValue;
-            set => _TargetValue.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IPackageTargetGetter.TargetValue => this.TargetValue;
+        #region CountOrDistance
+        public Int32 CountOrDistance { get; set; } = default(Int32);
         #endregion
-        #region TargetCountOrDistance
-        public Int32 TargetCountOrDistance { get; set; } = default(Int32);
-        #endregion
-        #region Remaining
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
-        {
-            get => _Remaining;
-            set => this._Remaining = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPackageTargetGetter.Remaining => this.Remaining;
+        #region Unknown
+        public Single Unknown { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -117,22 +100,22 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.TargetType = initialValue;
-                this.TargetValue = initialValue;
-                this.TargetCountOrDistance = initialValue;
-                this.Remaining = initialValue;
+                this.Versioning = initialValue;
+                this.Target = new MaskItem<TItem, APackageTarget.Mask<TItem>?>(initialValue, new APackageTarget.Mask<TItem>(initialValue));
+                this.CountOrDistance = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
-                TItem TargetType,
-                TItem TargetValue,
-                TItem TargetCountOrDistance,
-                TItem Remaining)
+                TItem Versioning,
+                TItem Target,
+                TItem CountOrDistance,
+                TItem Unknown)
             {
-                this.TargetType = TargetType;
-                this.TargetValue = TargetValue;
-                this.TargetCountOrDistance = TargetCountOrDistance;
-                this.Remaining = Remaining;
+                this.Versioning = Versioning;
+                this.Target = new MaskItem<TItem, APackageTarget.Mask<TItem>?>(Target, new APackageTarget.Mask<TItem>(Target));
+                this.CountOrDistance = CountOrDistance;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -144,10 +127,10 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem TargetType;
-            public TItem TargetValue;
-            public TItem TargetCountOrDistance;
-            public TItem Remaining;
+            public TItem Versioning;
+            public MaskItem<TItem, APackageTarget.Mask<TItem>?>? Target { get; set; }
+            public TItem CountOrDistance;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -160,19 +143,19 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
-                if (!object.Equals(this.TargetValue, rhs.TargetValue)) return false;
-                if (!object.Equals(this.TargetCountOrDistance, rhs.TargetCountOrDistance)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.CountOrDistance, rhs.CountOrDistance)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.TargetType);
-                hash.Add(this.TargetValue);
-                hash.Add(this.TargetCountOrDistance);
-                hash.Add(this.Remaining);
+                hash.Add(this.Versioning);
+                hash.Add(this.Target);
+                hash.Add(this.CountOrDistance);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -181,10 +164,14 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.TargetType)) return false;
-                if (!eval(this.TargetValue)) return false;
-                if (!eval(this.TargetCountOrDistance)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.Versioning)) return false;
+                if (Target != null)
+                {
+                    if (!eval(this.Target.Overall)) return false;
+                    if (this.Target.Specific != null && !this.Target.Specific.All(eval)) return false;
+                }
+                if (!eval(this.CountOrDistance)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -192,10 +179,14 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.TargetType)) return true;
-                if (eval(this.TargetValue)) return true;
-                if (eval(this.TargetCountOrDistance)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.Versioning)) return true;
+                if (Target != null)
+                {
+                    if (eval(this.Target.Overall)) return true;
+                    if (this.Target.Specific != null && this.Target.Specific.Any(eval)) return true;
+                }
+                if (eval(this.CountOrDistance)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -210,10 +201,10 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.TargetType = eval(this.TargetType);
-                obj.TargetValue = eval(this.TargetValue);
-                obj.TargetCountOrDistance = eval(this.TargetCountOrDistance);
-                obj.Remaining = eval(this.Remaining);
+                obj.Versioning = eval(this.Versioning);
+                obj.Target = this.Target == null ? null : new MaskItem<R, APackageTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
+                obj.CountOrDistance = eval(this.CountOrDistance);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -232,21 +223,21 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PackageTarget.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.TargetType ?? true)
+                    if (printMask?.Versioning ?? true)
                     {
-                        sb.AppendItem(TargetType, "TargetType");
+                        sb.AppendItem(Versioning, "Versioning");
                     }
-                    if (printMask?.TargetValue ?? true)
+                    if (printMask?.Target?.Overall ?? true)
                     {
-                        sb.AppendItem(TargetValue, "TargetValue");
+                        Target?.Print(sb);
                     }
-                    if (printMask?.TargetCountOrDistance ?? true)
+                    if (printMask?.CountOrDistance ?? true)
                     {
-                        sb.AppendItem(TargetCountOrDistance, "TargetCountOrDistance");
+                        sb.AppendItem(CountOrDistance, "CountOrDistance");
                     }
-                    if (printMask?.Remaining ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -272,10 +263,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? TargetType;
-            public Exception? TargetValue;
-            public Exception? TargetCountOrDistance;
-            public Exception? Remaining;
+            public Exception? Versioning;
+            public MaskItem<Exception?, APackageTarget.ErrorMask?>? Target;
+            public Exception? CountOrDistance;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -284,14 +275,14 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageTarget_FieldIndex enu = (PackageTarget_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageTarget_FieldIndex.TargetType:
-                        return TargetType;
-                    case PackageTarget_FieldIndex.TargetValue:
-                        return TargetValue;
-                    case PackageTarget_FieldIndex.TargetCountOrDistance:
-                        return TargetCountOrDistance;
-                    case PackageTarget_FieldIndex.Remaining:
-                        return Remaining;
+                    case PackageTarget_FieldIndex.Versioning:
+                        return Versioning;
+                    case PackageTarget_FieldIndex.Target:
+                        return Target;
+                    case PackageTarget_FieldIndex.CountOrDistance:
+                        return CountOrDistance;
+                    case PackageTarget_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -302,17 +293,17 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageTarget_FieldIndex enu = (PackageTarget_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageTarget_FieldIndex.TargetType:
-                        this.TargetType = ex;
+                    case PackageTarget_FieldIndex.Versioning:
+                        this.Versioning = ex;
                         break;
-                    case PackageTarget_FieldIndex.TargetValue:
-                        this.TargetValue = ex;
+                    case PackageTarget_FieldIndex.Target:
+                        this.Target = new MaskItem<Exception?, APackageTarget.ErrorMask?>(ex, null);
                         break;
-                    case PackageTarget_FieldIndex.TargetCountOrDistance:
-                        this.TargetCountOrDistance = ex;
+                    case PackageTarget_FieldIndex.CountOrDistance:
+                        this.CountOrDistance = ex;
                         break;
-                    case PackageTarget_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case PackageTarget_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -324,17 +315,17 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageTarget_FieldIndex enu = (PackageTarget_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageTarget_FieldIndex.TargetType:
-                        this.TargetType = (Exception?)obj;
+                    case PackageTarget_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
                         break;
-                    case PackageTarget_FieldIndex.TargetValue:
-                        this.TargetValue = (Exception?)obj;
+                    case PackageTarget_FieldIndex.Target:
+                        this.Target = (MaskItem<Exception?, APackageTarget.ErrorMask?>?)obj;
                         break;
-                    case PackageTarget_FieldIndex.TargetCountOrDistance:
-                        this.TargetCountOrDistance = (Exception?)obj;
+                    case PackageTarget_FieldIndex.CountOrDistance:
+                        this.CountOrDistance = (Exception?)obj;
                         break;
-                    case PackageTarget_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case PackageTarget_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -344,10 +335,10 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (TargetType != null) return true;
-                if (TargetValue != null) return true;
-                if (TargetCountOrDistance != null) return true;
-                if (Remaining != null) return true;
+                if (Versioning != null) return true;
+                if (Target != null) return true;
+                if (CountOrDistance != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -374,16 +365,14 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(TargetType, "TargetType");
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                Target?.Print(sb);
+                {
+                    sb.AppendItem(CountOrDistance, "CountOrDistance");
                 }
                 {
-                    sb.AppendItem(TargetValue, "TargetValue");
-                }
-                {
-                    sb.AppendItem(TargetCountOrDistance, "TargetCountOrDistance");
-                }
-                {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -393,10 +382,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.TargetType = this.TargetType.Combine(rhs.TargetType);
-                ret.TargetValue = this.TargetValue.Combine(rhs.TargetValue);
-                ret.TargetCountOrDistance = this.TargetCountOrDistance.Combine(rhs.TargetCountOrDistance);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
+                ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
+                ret.CountOrDistance = this.CountOrDistance.Combine(rhs.CountOrDistance);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -420,10 +409,10 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool TargetType;
-            public bool TargetValue;
-            public bool TargetCountOrDistance;
-            public bool Remaining;
+            public bool Versioning;
+            public APackageTarget.TranslationMask? Target;
+            public bool CountOrDistance;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -433,10 +422,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.TargetType = defaultOn;
-                this.TargetValue = defaultOn;
-                this.TargetCountOrDistance = defaultOn;
-                this.Remaining = defaultOn;
+                this.Versioning = defaultOn;
+                this.CountOrDistance = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -452,10 +440,10 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((TargetType, null));
-                ret.Add((TargetValue, null));
-                ret.Add((TargetCountOrDistance, null));
-                ret.Add((Remaining, null));
+                ret.Add((Versioning, null));
+                ret.Add((Target != null ? Target.OnOverall : DefaultOn, Target?.GetCrystal()));
+                ret.Add((CountOrDistance, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -467,6 +455,11 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PackageTargetCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageTargetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -534,10 +527,10 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPackageTarget>,
         IPackageTargetGetter
     {
-        new Int32 TargetType { get; set; }
-        new IFormLink<IFallout3MajorRecordGetter> TargetValue { get; set; }
-        new Int32 TargetCountOrDistance { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new PackageTarget.VersioningBreaks Versioning { get; set; }
+        new APackageTarget Target { get; set; }
+        new Int32 CountOrDistance { get; set; }
+        new Single Unknown { get; set; }
     }
 
     public partial interface IPackageTargetGetter :
@@ -553,10 +546,10 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageTarget_Registration.Instance;
-        Int32 TargetType { get; }
-        IFormLinkGetter<IFallout3MajorRecordGetter> TargetValue { get; }
-        Int32 TargetCountOrDistance { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        PackageTarget.VersioningBreaks Versioning { get; }
+        IAPackageTargetGetter Target { get; }
+        Int32 CountOrDistance { get; }
+        Single Unknown { get; }
 
     }
 
@@ -726,10 +719,10 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum PackageTarget_FieldIndex
     {
-        TargetType = 0,
-        TargetValue = 1,
-        TargetCountOrDistance = 2,
-        Remaining = 3,
+        Versioning = 0,
+        Target = 1,
+        CountOrDistance = 2,
+        Unknown = 3,
     }
     #endregion
 
@@ -768,13 +761,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.PTDT;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.PTDT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(PackageTargetBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -815,16 +801,16 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageTarget item)
         {
             ClearPartial();
-            item.TargetType = default(Int32);
-            item.TargetValue.Clear();
-            item.TargetCountOrDistance = default(Int32);
-            item.Remaining = [];
+            item.Versioning = default(PackageTarget.VersioningBreaks);
+            item.Target.Clear();
+            item.CountOrDistance = default(Int32);
+            item.Unknown = default(Single);
         }
         
         #region Mutagen
         public void RemapLinks(IPackageTarget obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.TargetValue.Relink(mapping);
+            obj.Target.RemapLinks(mapping);
         }
         
         #endregion
@@ -835,10 +821,6 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.PTDT),
-                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -873,10 +855,10 @@ namespace Mutagen.Bethesda.Fallout3
             PackageTarget.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.TargetType = item.TargetType == rhs.TargetType;
-            ret.TargetValue = item.TargetValue.Equals(rhs.TargetValue);
-            ret.TargetCountOrDistance = item.TargetCountOrDistance == rhs.TargetCountOrDistance;
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.Versioning = item.Versioning == rhs.Versioning;
+            ret.Target = MaskItemExt.Factory(item.Target.GetEqualsMask(rhs.Target, include), include);
+            ret.CountOrDistance = item.CountOrDistance == rhs.CountOrDistance;
+            ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
         }
         
         public string Print(
@@ -921,21 +903,21 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             PackageTarget.Mask<bool>? printMask = null)
         {
-            if (printMask?.TargetType ?? true)
+            if (printMask?.Versioning ?? true)
             {
-                sb.AppendItem(item.TargetType, "TargetType");
+                sb.AppendItem(item.Versioning, "Versioning");
             }
-            if (printMask?.TargetValue ?? true)
+            if (printMask?.Target?.Overall ?? true)
             {
-                sb.AppendItem(item.TargetValue.FormKey, "TargetValue");
+                item.Target?.Print(sb, "Target");
             }
-            if (printMask?.TargetCountOrDistance ?? true)
+            if (printMask?.CountOrDistance ?? true)
             {
-                sb.AppendItem(item.TargetCountOrDistance, "TargetCountOrDistance");
+                sb.AppendItem(item.CountOrDistance, "CountOrDistance");
             }
-            if (printMask?.Remaining ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -946,21 +928,25 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.TargetType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Versioning) ?? true))
             {
-                if (lhs.TargetType != rhs.TargetType) return false;
+                if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.TargetValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Target) ?? true))
             {
-                if (!lhs.TargetValue.Equals(rhs.TargetValue)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
+                {
+                    if (!((APackageTargetCommon)((IAPackageTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, equalsMask?.GetSubCrystal((int)PackageTarget_FieldIndex.Target))) return false;
+                }
+                else if (!isTargetEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.TargetCountOrDistance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.CountOrDistance) ?? true))
             {
-                if (lhs.TargetCountOrDistance != rhs.TargetCountOrDistance) return false;
+                if (lhs.CountOrDistance != rhs.CountOrDistance) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Remaining) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
             }
             return true;
         }
@@ -968,10 +954,10 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPackageTargetGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.TargetType);
-            hash.Add(item.TargetValue);
-            hash.Add(item.TargetCountOrDistance);
-            hash.Add(item.Remaining);
+            hash.Add(item.Versioning);
+            hash.Add(item.Target);
+            hash.Add(item.CountOrDistance);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -986,7 +972,13 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageTargetGetter obj, bool iterateNestedRecords = true)
         {
-            yield return FormLinkInformation.Factory(obj.TargetValue);
+            if (obj.Target is IFormLinkContainerGetter TargetlinkCont)
+            {
+                foreach (var item in TargetlinkCont.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1005,21 +997,40 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.TargetType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Versioning) ?? true))
             {
-                item.TargetType = rhs.TargetType;
+                item.Versioning = rhs.Versioning;
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.TargetValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Target) ?? true))
             {
-                item.TargetValue.SetTo(rhs.TargetValue.FormKey);
+                errorMask?.PushIndex((int)PackageTarget_FieldIndex.Target);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Target) ?? true))
+                    {
+                        item.Target = rhs.Target.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)PackageTarget_FieldIndex.Target),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.TargetCountOrDistance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.CountOrDistance) ?? true))
             {
-                item.TargetCountOrDistance = rhs.TargetCountOrDistance;
+                item.CountOrDistance = rhs.CountOrDistance;
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Remaining) ?? true))
+            if (rhs.Versioning.HasFlag(PackageTarget.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)PackageTarget_FieldIndex.Unknown) ?? true))
             {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1129,14 +1140,29 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageTargetGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.TargetType);
-            FormLinkBinaryTranslation.Instance.Write(
+            PackageTargetBinaryWriteTranslation.WriteBinaryTarget(
                 writer: writer,
-                item: item.TargetValue);
-            writer.Write(item.TargetCountOrDistance);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item);
+            writer.Write(item.CountOrDistance);
+            if (!item.Versioning.HasFlag(PackageTarget.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown);
+            }
+        }
+
+        public static partial void WriteBinaryTargetCustom(
+            MutagenWriter writer,
+            IPackageTargetGetter item);
+
+        public static void WriteBinaryTarget(
+            MutagenWriter writer,
+            IPackageTargetGetter item)
+        {
+            WriteBinaryTargetCustom(
                 writer: writer,
-                item: item.Remaining);
+                item: item);
         }
 
         public void Write(
@@ -1144,16 +1170,9 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageTargetGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PTDT),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -1177,11 +1196,21 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageTarget item,
             MutagenFrame frame)
         {
-            item.TargetType = frame.ReadInt32();
-            item.TargetValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.TargetCountOrDistance = frame.ReadInt32();
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            PackageTargetBinaryCreateTranslation.FillBinaryTargetCustom(
+                frame: frame,
+                item: item);
+            item.CountOrDistance = frame.ReadInt32();
+            if (frame.Complete)
+            {
+                item.Versioning |= PackageTarget.VersioningBreaks.Break0;
+                return;
+            }
+            item.Unknown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
+
+        public static partial void FillBinaryTargetCustom(
+            MutagenFrame frame,
+            IPackageTarget item);
 
     }
 
@@ -1247,13 +1276,9 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Int32 TargetType => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<IFallout3MajorRecordGetter> TargetValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
-        public Int32 TargetCountOrDistance => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Slice(0xC).ToArray();
-        protected int RemainingEndingPos;
-        #endregion
+        public PackageTarget.VersioningBreaks Versioning { get; private set; }
+        public Int32 CountOrDistance => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Single Unknown => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1273,18 +1298,23 @@ namespace Mutagen.Bethesda.Fallout3
         public static IPackageTargetGetter PackageTargetFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
+            int finalPos,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractSubrecordStructMemory(
+            stream = ExtractTypelessSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: finalPos - stream.Position,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new PackageTargetBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0xC)
+            {
+                ret.Versioning |= PackageTarget.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1300,6 +1330,7 @@ namespace Mutagen.Bethesda.Fallout3
             return PackageTargetFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
+                finalPos: slice.Length,
                 translationParams: translationParams);
         }
 

@@ -25,5 +25,7 @@
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

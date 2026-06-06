@@ -944,7 +944,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IKeyInternal>,
         IModeled,
         INamedRequired,
-        IObjectBounded
+        IObjectBounded,
+        IPackageLocationObject,
+        IPackageTargetObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -995,7 +997,9 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IKeyGetter>,
         IModeledGetter,
         INamedRequiredGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Key_Registration.Instance;
         #region ObjectBounds

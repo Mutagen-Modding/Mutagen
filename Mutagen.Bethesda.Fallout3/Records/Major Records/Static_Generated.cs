@@ -622,6 +622,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IStaticInternal>,
         IModeled,
         IObjectBoundedOptional,
+        IPackageLocationObject,
+        IPackageTargetObject,
         IRegionTarget,
         IStaticGetter
     {
@@ -658,6 +660,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IStaticGetter>,
         IModeledGetter,
         IObjectBoundedOptionalGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter,
         IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;

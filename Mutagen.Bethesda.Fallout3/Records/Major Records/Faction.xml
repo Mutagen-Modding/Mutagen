@@ -13,6 +13,7 @@
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
   <Object name="Rank" objType="Subrecord">
     <Fields>

@@ -719,7 +719,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ILeveledNpcInternal>,
         IModeled,
         INpcSpawn,
-        IObjectBounded
+        IObjectBounded,
+        IPackageTargetObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -750,7 +751,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<ILeveledNpcGetter>,
         IModeledGetter,
         INpcSpawnGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledNpc_Registration.Instance;
         #region ObjectBounds

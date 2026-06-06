@@ -843,7 +843,9 @@ namespace Mutagen.Bethesda.Fallout3
         IModeled,
         INamed,
         INamedRequired,
-        IObjectBoundedOptional
+        IObjectBoundedOptional,
+        IPackageLocationObject,
+        IPackageTargetObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -890,7 +892,9 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         #region ObjectBounds

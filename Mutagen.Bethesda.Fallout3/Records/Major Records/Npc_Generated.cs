@@ -2675,7 +2675,9 @@ namespace Mutagen.Bethesda.Fallout3
         INpcGetter,
         INpcSpawn,
         IObjectBounded,
-        IOwner
+        IOwner,
+        IPackageLocationObject,
+        IPackageTargetObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -2761,7 +2763,9 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         INpcSpawnGetter,
         IObjectBoundedGetter,
-        IOwnerGetter
+        IOwnerGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
         #region ObjectBounds

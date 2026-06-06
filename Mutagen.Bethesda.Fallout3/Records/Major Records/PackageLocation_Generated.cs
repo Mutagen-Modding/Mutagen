@@ -8,6 +8,7 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -51,21 +52,8 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region LocationType
-        public Int32 LocationType { get; set; } = default(Int32);
-        #endregion
-        #region LocationValue
-        private readonly IFormLink<IFallout3MajorRecordGetter> _LocationValue = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> LocationValue
-        {
-            get => _LocationValue;
-            set => _LocationValue.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IPackageLocationGetter.LocationValue => this.LocationValue;
-        #endregion
-        #region LocationRadius
-        public Int32 LocationRadius { get; set; } = default(Int32);
+        #region Radius
+        public Int32 Radius { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -106,19 +94,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.LocationType = initialValue;
-                this.LocationValue = initialValue;
-                this.LocationRadius = initialValue;
+                this.Location = new MaskItem<TItem, APackageLocation.Mask<TItem>?>(initialValue, new APackageLocation.Mask<TItem>(initialValue));
+                this.Radius = initialValue;
             }
 
             public Mask(
-                TItem LocationType,
-                TItem LocationValue,
-                TItem LocationRadius)
+                TItem Location,
+                TItem Radius)
             {
-                this.LocationType = LocationType;
-                this.LocationValue = LocationValue;
-                this.LocationRadius = LocationRadius;
+                this.Location = new MaskItem<TItem, APackageLocation.Mask<TItem>?>(Location, new APackageLocation.Mask<TItem>(Location));
+                this.Radius = Radius;
             }
 
             #pragma warning disable CS8618
@@ -130,9 +115,8 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem LocationType;
-            public TItem LocationValue;
-            public TItem LocationRadius;
+            public MaskItem<TItem, APackageLocation.Mask<TItem>?>? Location { get; set; }
+            public TItem Radius;
             #endregion
 
             #region Equals
@@ -145,17 +129,15 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.LocationType, rhs.LocationType)) return false;
-                if (!object.Equals(this.LocationValue, rhs.LocationValue)) return false;
-                if (!object.Equals(this.LocationRadius, rhs.LocationRadius)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.LocationType);
-                hash.Add(this.LocationValue);
-                hash.Add(this.LocationRadius);
+                hash.Add(this.Location);
+                hash.Add(this.Radius);
                 return hash.ToHashCode();
             }
 
@@ -164,9 +146,12 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.LocationType)) return false;
-                if (!eval(this.LocationValue)) return false;
-                if (!eval(this.LocationRadius)) return false;
+                if (Location != null)
+                {
+                    if (!eval(this.Location.Overall)) return false;
+                    if (this.Location.Specific != null && !this.Location.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Radius)) return false;
                 return true;
             }
             #endregion
@@ -174,9 +159,12 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.LocationType)) return true;
-                if (eval(this.LocationValue)) return true;
-                if (eval(this.LocationRadius)) return true;
+                if (Location != null)
+                {
+                    if (eval(this.Location.Overall)) return true;
+                    if (this.Location.Specific != null && this.Location.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Radius)) return true;
                 return false;
             }
             #endregion
@@ -191,9 +179,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.LocationType = eval(this.LocationType);
-                obj.LocationValue = eval(this.LocationValue);
-                obj.LocationRadius = eval(this.LocationRadius);
+                obj.Location = this.Location == null ? null : new MaskItem<R, APackageLocation.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
+                obj.Radius = eval(this.Radius);
             }
             #endregion
 
@@ -212,17 +199,13 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PackageLocation.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.LocationType ?? true)
+                    if (printMask?.Location?.Overall ?? true)
                     {
-                        sb.AppendItem(LocationType, "LocationType");
+                        Location?.Print(sb);
                     }
-                    if (printMask?.LocationValue ?? true)
+                    if (printMask?.Radius ?? true)
                     {
-                        sb.AppendItem(LocationValue, "LocationValue");
-                    }
-                    if (printMask?.LocationRadius ?? true)
-                    {
-                        sb.AppendItem(LocationRadius, "LocationRadius");
+                        sb.AppendItem(Radius, "Radius");
                     }
                 }
             }
@@ -248,9 +231,8 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? LocationType;
-            public Exception? LocationValue;
-            public Exception? LocationRadius;
+            public MaskItem<Exception?, APackageLocation.ErrorMask?>? Location;
+            public Exception? Radius;
             #endregion
 
             #region IErrorMask
@@ -259,12 +241,10 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageLocation_FieldIndex enu = (PackageLocation_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageLocation_FieldIndex.LocationType:
-                        return LocationType;
-                    case PackageLocation_FieldIndex.LocationValue:
-                        return LocationValue;
-                    case PackageLocation_FieldIndex.LocationRadius:
-                        return LocationRadius;
+                    case PackageLocation_FieldIndex.Location:
+                        return Location;
+                    case PackageLocation_FieldIndex.Radius:
+                        return Radius;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -275,14 +255,11 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageLocation_FieldIndex enu = (PackageLocation_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageLocation_FieldIndex.LocationType:
-                        this.LocationType = ex;
+                    case PackageLocation_FieldIndex.Location:
+                        this.Location = new MaskItem<Exception?, APackageLocation.ErrorMask?>(ex, null);
                         break;
-                    case PackageLocation_FieldIndex.LocationValue:
-                        this.LocationValue = ex;
-                        break;
-                    case PackageLocation_FieldIndex.LocationRadius:
-                        this.LocationRadius = ex;
+                    case PackageLocation_FieldIndex.Radius:
+                        this.Radius = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -294,14 +271,11 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageLocation_FieldIndex enu = (PackageLocation_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageLocation_FieldIndex.LocationType:
-                        this.LocationType = (Exception?)obj;
+                    case PackageLocation_FieldIndex.Location:
+                        this.Location = (MaskItem<Exception?, APackageLocation.ErrorMask?>?)obj;
                         break;
-                    case PackageLocation_FieldIndex.LocationValue:
-                        this.LocationValue = (Exception?)obj;
-                        break;
-                    case PackageLocation_FieldIndex.LocationRadius:
-                        this.LocationRadius = (Exception?)obj;
+                    case PackageLocation_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -311,9 +285,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (LocationType != null) return true;
-                if (LocationValue != null) return true;
-                if (LocationRadius != null) return true;
+                if (Location != null) return true;
+                if (Radius != null) return true;
                 return false;
             }
             #endregion
@@ -339,14 +312,9 @@ namespace Mutagen.Bethesda.Fallout3
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                Location?.Print(sb);
                 {
-                    sb.AppendItem(LocationType, "LocationType");
-                }
-                {
-                    sb.AppendItem(LocationValue, "LocationValue");
-                }
-                {
-                    sb.AppendItem(LocationRadius, "LocationRadius");
+                    sb.AppendItem(Radius, "Radius");
                 }
             }
             #endregion
@@ -356,9 +324,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LocationType = this.LocationType.Combine(rhs.LocationType);
-                ret.LocationValue = this.LocationValue.Combine(rhs.LocationValue);
-                ret.LocationRadius = this.LocationRadius.Combine(rhs.LocationRadius);
+                ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
+                ret.Radius = this.Radius.Combine(rhs.Radius);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -382,9 +349,8 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool LocationType;
-            public bool LocationValue;
-            public bool LocationRadius;
+            public APackageLocation.TranslationMask? Location;
+            public bool Radius;
             #endregion
 
             #region Ctors
@@ -394,9 +360,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.LocationType = defaultOn;
-                this.LocationValue = defaultOn;
-                this.LocationRadius = defaultOn;
+                this.Radius = defaultOn;
             }
 
             #endregion
@@ -412,9 +376,8 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((LocationType, null));
-                ret.Add((LocationValue, null));
-                ret.Add((LocationRadius, null));
+                ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
+                ret.Add((Radius, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -493,9 +456,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPackageLocation>,
         IPackageLocationGetter
     {
-        new Int32 LocationType { get; set; }
-        new IFormLink<IFallout3MajorRecordGetter> LocationValue { get; set; }
-        new Int32 LocationRadius { get; set; }
+        new APackageLocation Location { get; set; }
+        new Int32 Radius { get; set; }
     }
 
     public partial interface IPackageLocationGetter :
@@ -511,9 +473,8 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageLocation_Registration.Instance;
-        Int32 LocationType { get; }
-        IFormLinkGetter<IFallout3MajorRecordGetter> LocationValue { get; }
-        Int32 LocationRadius { get; }
+        IAPackageLocationGetter Location { get; }
+        Int32 Radius { get; }
 
     }
 
@@ -683,9 +644,8 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum PackageLocation_FieldIndex
     {
-        LocationType = 0,
-        LocationValue = 1,
-        LocationRadius = 2,
+        Location = 0,
+        Radius = 1,
     }
     #endregion
 
@@ -696,9 +656,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(PackageLocation.Mask<>);
 
@@ -724,13 +684,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.PLDT;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.PLDT);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(PackageLocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -771,15 +724,14 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageLocation item)
         {
             ClearPartial();
-            item.LocationType = default(Int32);
-            item.LocationValue.Clear();
-            item.LocationRadius = default(Int32);
+            item.Location.Clear();
+            item.Radius = default(Int32);
         }
         
         #region Mutagen
         public void RemapLinks(IPackageLocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.LocationValue.Relink(mapping);
+            obj.Location.RemapLinks(mapping);
         }
         
         #endregion
@@ -790,10 +742,6 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.PLDT),
-                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -828,9 +776,8 @@ namespace Mutagen.Bethesda.Fallout3
             PackageLocation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.LocationType = item.LocationType == rhs.LocationType;
-            ret.LocationValue = item.LocationValue.Equals(rhs.LocationValue);
-            ret.LocationRadius = item.LocationRadius == rhs.LocationRadius;
+            ret.Location = MaskItemExt.Factory(item.Location.GetEqualsMask(rhs.Location, include), include);
+            ret.Radius = item.Radius == rhs.Radius;
         }
         
         public string Print(
@@ -875,17 +822,13 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             PackageLocation.Mask<bool>? printMask = null)
         {
-            if (printMask?.LocationType ?? true)
+            if (printMask?.Location?.Overall ?? true)
             {
-                sb.AppendItem(item.LocationType, "LocationType");
+                item.Location?.Print(sb, "Location");
             }
-            if (printMask?.LocationValue ?? true)
+            if (printMask?.Radius ?? true)
             {
-                sb.AppendItem(item.LocationValue.FormKey, "LocationValue");
-            }
-            if (printMask?.LocationRadius ?? true)
-            {
-                sb.AppendItem(item.LocationRadius, "LocationRadius");
+                sb.AppendItem(item.Radius, "Radius");
             }
         }
         
@@ -896,17 +839,17 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.LocationType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.Location) ?? true))
             {
-                if (lhs.LocationType != rhs.LocationType) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
+                {
+                    if (!((APackageLocationCommon)((IAPackageLocationGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, equalsMask?.GetSubCrystal((int)PackageLocation_FieldIndex.Location))) return false;
+                }
+                else if (!isLocationEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.LocationValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.Radius) ?? true))
             {
-                if (!lhs.LocationValue.Equals(rhs.LocationValue)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.LocationRadius) ?? true))
-            {
-                if (lhs.LocationRadius != rhs.LocationRadius) return false;
+                if (lhs.Radius != rhs.Radius) return false;
             }
             return true;
         }
@@ -914,9 +857,8 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPackageLocationGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.LocationType);
-            hash.Add(item.LocationValue);
-            hash.Add(item.LocationRadius);
+            hash.Add(item.Location);
+            hash.Add(item.Radius);
             return hash.ToHashCode();
         }
         
@@ -931,7 +873,13 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPackageLocationGetter obj, bool iterateNestedRecords = true)
         {
-            yield return FormLinkInformation.Factory(obj.LocationValue);
+            if (obj.Location is IFormLinkContainerGetter LocationlinkCont)
+            {
+                foreach (var item in LocationlinkCont.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -950,17 +898,31 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.LocationType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.Location) ?? true))
             {
-                item.LocationType = rhs.LocationType;
+                errorMask?.PushIndex((int)PackageLocation_FieldIndex.Location);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.Location) ?? true))
+                    {
+                        item.Location = rhs.Location.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)PackageLocation_FieldIndex.Location),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.LocationValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.Radius) ?? true))
             {
-                item.LocationValue.SetTo(rhs.LocationValue.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)PackageLocation_FieldIndex.LocationRadius) ?? true))
-            {
-                item.LocationRadius = rhs.LocationRadius;
+                item.Radius = rhs.Radius;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1070,11 +1032,23 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageLocationGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.LocationType);
-            FormLinkBinaryTranslation.Instance.Write(
+            PackageLocationBinaryWriteTranslation.WriteBinaryLocation(
                 writer: writer,
-                item: item.LocationValue);
-            writer.Write(item.LocationRadius);
+                item: item);
+            writer.Write(item.Radius);
+        }
+
+        public static partial void WriteBinaryLocationCustom(
+            MutagenWriter writer,
+            IPackageLocationGetter item);
+
+        public static void WriteBinaryLocation(
+            MutagenWriter writer,
+            IPackageLocationGetter item)
+        {
+            WriteBinaryLocationCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1082,16 +1056,9 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageLocationGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PLDT),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -1115,10 +1082,15 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageLocation item,
             MutagenFrame frame)
         {
-            item.LocationType = frame.ReadInt32();
-            item.LocationValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.LocationRadius = frame.ReadInt32();
+            PackageLocationBinaryCreateTranslation.FillBinaryLocationCustom(
+                frame: frame,
+                item: item);
+            item.Radius = frame.ReadInt32();
         }
+
+        public static partial void FillBinaryLocationCustom(
+            MutagenFrame frame,
+            IPackageLocation item);
 
     }
 
@@ -1184,9 +1156,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Int32 LocationType => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<IFallout3MajorRecordGetter> LocationValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
-        public Int32 LocationRadius => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Int32 Radius => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1208,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout3
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractSubrecordStructMemory(
+            stream = ExtractTypelessSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
@@ -1218,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout3
             var ret = new PackageLocationBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
+            stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

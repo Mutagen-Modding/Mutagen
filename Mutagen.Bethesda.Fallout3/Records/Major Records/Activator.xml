@@ -19,5 +19,7 @@
         <ModHeaderVersioning version="1.32" />
       </String>
     </Fields>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

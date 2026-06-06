@@ -14,5 +14,7 @@
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

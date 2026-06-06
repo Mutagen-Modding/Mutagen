@@ -51,6 +51,8 @@
       <FormLink name="MeleeWeaponList" recordType="LNAM" refName="FormList" />
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
   <Object name="CreatureConfiguration" objType="Subrecord" recordType="ACBS">
     <Fields>

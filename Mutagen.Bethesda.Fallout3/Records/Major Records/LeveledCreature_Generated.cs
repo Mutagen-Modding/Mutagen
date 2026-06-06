@@ -719,7 +719,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ILeveledCreatureInternal>,
         IModeled,
         INpcSpawn,
-        IObjectBounded
+        IObjectBounded,
+        IPackageTargetObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -750,7 +751,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<ILeveledCreatureGetter>,
         IModeledGetter,
         INpcSpawnGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         #region ObjectBounds

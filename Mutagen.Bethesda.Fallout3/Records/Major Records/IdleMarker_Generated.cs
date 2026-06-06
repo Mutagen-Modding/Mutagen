@@ -673,7 +673,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         IIdleMarkerGetter,
         ILoquiObjectSetter<IIdleMarkerInternal>,
-        IObjectBoundedOptional
+        IObjectBoundedOptional,
+        IPackageTargetObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -702,7 +703,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainerGetter,
         ILoquiObject<IIdleMarkerGetter>,
         IMapsToGetter<IIdleMarkerGetter>,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         #region ObjectBounds

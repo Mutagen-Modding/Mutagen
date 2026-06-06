@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Type
-        public PackageIdles.Types Type { get; set; } = default(PackageIdles.Types);
+        #region Flags
+        public PackageIdles.Flag Flags { get; set; } = default(PackageIdles.Flag);
         #endregion
         #region AnimationCount
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,16 +82,16 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
-        #region IDLB
+        #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _IDLB;
-        public MemorySlice<Byte>? IDLB
+        protected MemorySlice<Byte>? _Unknown;
+        public MemorySlice<Byte>? Unknown
         {
-            get => this._IDLB;
-            set => this._IDLB = value;
+            get => this._Unknown;
+            set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPackageIdlesGetter.IDLB => this.IDLB;
+        ReadOnlyMemorySlice<Byte>? IPackageIdlesGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -132,25 +132,25 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Type = initialValue;
+                this.Flags = initialValue;
                 this.AnimationCount = initialValue;
                 this.TimerSetting = initialValue;
                 this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
-                this.IDLB = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
-                TItem Type,
+                TItem Flags,
                 TItem AnimationCount,
                 TItem TimerSetting,
                 TItem Animations,
-                TItem IDLB)
+                TItem Unknown)
             {
-                this.Type = Type;
+                this.Flags = Flags;
                 this.AnimationCount = AnimationCount;
                 this.TimerSetting = TimerSetting;
                 this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, []);
-                this.IDLB = IDLB;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -162,11 +162,11 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Type;
+            public TItem Flags;
             public TItem AnimationCount;
             public TItem TimerSetting;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Animations;
-            public TItem IDLB;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -179,21 +179,21 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.AnimationCount, rhs.AnimationCount)) return false;
                 if (!object.Equals(this.TimerSetting, rhs.TimerSetting)) return false;
                 if (!object.Equals(this.Animations, rhs.Animations)) return false;
-                if (!object.Equals(this.IDLB, rhs.IDLB)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Type);
+                hash.Add(this.Flags);
                 hash.Add(this.AnimationCount);
                 hash.Add(this.TimerSetting);
                 hash.Add(this.Animations);
-                hash.Add(this.IDLB);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Type)) return false;
+                if (!eval(this.Flags)) return false;
                 if (!eval(this.AnimationCount)) return false;
                 if (!eval(this.TimerSetting)) return false;
                 if (this.Animations != null)
@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                if (!eval(this.IDLB)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Type)) return true;
+                if (eval(this.Flags)) return true;
                 if (eval(this.AnimationCount)) return true;
                 if (eval(this.TimerSetting)) return true;
                 if (this.Animations != null)
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                if (eval(this.IDLB)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Type = eval(this.Type);
+                obj.Flags = eval(this.Flags);
                 obj.AnimationCount = eval(this.AnimationCount);
                 obj.TimerSetting = eval(this.TimerSetting);
                 if (Animations != null)
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                obj.IDLB = eval(this.IDLB);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -289,9 +289,9 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PackageIdles.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Type ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(Type, "Type");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AnimationCount ?? true)
                     {
@@ -322,9 +322,9 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
-                    if (printMask?.IDLB ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(IDLB, "IDLB");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -350,11 +350,11 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
-            public Exception? Type;
+            public Exception? Flags;
             public Exception? AnimationCount;
             public Exception? TimerSetting;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
-            public Exception? IDLB;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -363,16 +363,16 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageIdles_FieldIndex enu = (PackageIdles_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageIdles_FieldIndex.Type:
-                        return Type;
+                    case PackageIdles_FieldIndex.Flags:
+                        return Flags;
                     case PackageIdles_FieldIndex.AnimationCount:
                         return AnimationCount;
                     case PackageIdles_FieldIndex.TimerSetting:
                         return TimerSetting;
                     case PackageIdles_FieldIndex.Animations:
                         return Animations;
-                    case PackageIdles_FieldIndex.IDLB:
-                        return IDLB;
+                    case PackageIdles_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -383,8 +383,8 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageIdles_FieldIndex enu = (PackageIdles_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageIdles_FieldIndex.Type:
-                        this.Type = ex;
+                    case PackageIdles_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case PackageIdles_FieldIndex.AnimationCount:
                         this.AnimationCount = ex;
@@ -395,8 +395,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case PackageIdles_FieldIndex.Animations:
                         this.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case PackageIdles_FieldIndex.IDLB:
-                        this.IDLB = ex;
+                    case PackageIdles_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -408,8 +408,8 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageIdles_FieldIndex enu = (PackageIdles_FieldIndex)index;
                 switch (enu)
                 {
-                    case PackageIdles_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
+                    case PackageIdles_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     case PackageIdles_FieldIndex.AnimationCount:
                         this.AnimationCount = (Exception?)obj;
@@ -420,8 +420,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case PackageIdles_FieldIndex.Animations:
                         this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case PackageIdles_FieldIndex.IDLB:
-                        this.IDLB = (Exception?)obj;
+                    case PackageIdles_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -431,11 +431,11 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Type != null) return true;
+                if (Flags != null) return true;
                 if (AnimationCount != null) return true;
                 if (TimerSetting != null) return true;
                 if (Animations != null) return true;
-                if (IDLB != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Type, "Type");
+                    sb.AppendItem(Flags, "Flags");
                 }
                 {
                     sb.AppendItem(AnimationCount, "AnimationCount");
@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
                 {
-                    sb.AppendItem(IDLB, "IDLB");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -501,11 +501,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.AnimationCount = this.AnimationCount.Combine(rhs.AnimationCount);
                 ret.TimerSetting = this.TimerSetting.Combine(rhs.TimerSetting);
                 ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
-                ret.IDLB = this.IDLB.Combine(rhs.IDLB);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -529,11 +529,11 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Type;
+            public bool Flags;
             public bool AnimationCount;
             public bool TimerSetting;
             public bool Animations;
-            public bool IDLB;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -543,11 +543,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Type = defaultOn;
+                this.Flags = defaultOn;
                 this.AnimationCount = defaultOn;
                 this.TimerSetting = defaultOn;
                 this.Animations = defaultOn;
-                this.IDLB = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -563,11 +563,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Type, null));
+                ret.Add((Flags, null));
                 ret.Add((AnimationCount, null));
                 ret.Add((TimerSetting, null));
                 ret.Add((Animations, null));
-                ret.Add((IDLB, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -646,11 +646,11 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPackageIdles>,
         IPackageIdlesGetter
     {
-        new PackageIdles.Types Type { get; set; }
+        new PackageIdles.Flag Flags { get; set; }
         new MemorySlice<Byte>? AnimationCount { get; set; }
         new Single TimerSetting { get; set; }
         new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
-        new MemorySlice<Byte>? IDLB { get; set; }
+        new MemorySlice<Byte>? Unknown { get; set; }
     }
 
     public partial interface IPackageIdlesGetter :
@@ -666,11 +666,11 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageIdles_Registration.Instance;
-        PackageIdles.Types Type { get; }
+        PackageIdles.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte>? AnimationCount { get; }
         Single TimerSetting { get; }
         IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
-        ReadOnlyMemorySlice<Byte>? IDLB { get; }
+        ReadOnlyMemorySlice<Byte>? Unknown { get; }
 
     }
 
@@ -840,11 +840,11 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum PackageIdles_FieldIndex
     {
-        Type = 0,
+        Flags = 0,
         AnimationCount = 1,
         TimerSetting = 2,
         Animations = 3,
-        IDLB = 4,
+        Unknown = 4,
     }
     #endregion
 
@@ -938,11 +938,11 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageIdles item)
         {
             ClearPartial();
-            item.Type = default(PackageIdles.Types);
+            item.Flags = default(PackageIdles.Flag);
             item.AnimationCount = default;
             item.TimerSetting = default(Single);
             item.Animations.Clear();
-            item.IDLB = default;
+            item.Unknown = default;
         }
         
         #region Mutagen
@@ -993,14 +993,14 @@ namespace Mutagen.Bethesda.Fallout3
             PackageIdles.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Type = item.Type == rhs.Type;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.AnimationCount = MemorySliceExt.SequenceEqual(item.AnimationCount, rhs.AnimationCount);
             ret.TimerSetting = item.TimerSetting.EqualsWithin(rhs.TimerSetting);
             ret.Animations = item.Animations.CollectionEqualsHelper(
                 rhs.Animations,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.IDLB = MemorySliceExt.SequenceEqual(item.IDLB, rhs.IDLB);
+            ret.Unknown = MemorySliceExt.SequenceEqual(item.Unknown, rhs.Unknown);
         }
         
         public string Print(
@@ -1045,9 +1045,9 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             PackageIdles.Mask<bool>? printMask = null)
         {
-            if (printMask?.Type ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.AnimationCount ?? true)
                 && item.AnimationCount is {} AnimationCountItem)
@@ -1072,10 +1072,10 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
-            if ((printMask?.IDLB ?? true)
-                && item.IDLB is {} IDLBItem)
+            if ((printMask?.Unknown ?? true)
+                && item.Unknown is {} UnknownItem)
             {
-                sb.AppendLine($"IDLB => {SpanExt.ToHexString(IDLBItem)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }
         }
         
@@ -1086,9 +1086,9 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Type) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Flags) ?? true))
             {
-                if (lhs.Type != rhs.Type) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.AnimationCount) ?? true))
             {
@@ -1102,9 +1102,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.IDLB) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Unknown) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.IDLB, rhs.IDLB)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Unknown, rhs.Unknown)) return false;
             }
             return true;
         }
@@ -1112,16 +1112,16 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPackageIdlesGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Type);
+            hash.Add(item.Flags);
             if (item.AnimationCount is {} AnimationCountItem)
             {
                 hash.Add(AnimationCountItem);
             }
             hash.Add(item.TimerSetting);
             hash.Add(item.Animations);
-            if (item.IDLB is {} IDLBItem)
+            if (item.Unknown is {} UnknownItem)
             {
-                hash.Add(IDLBItem);
+                hash.Add(UnknownItem);
             }
             return hash.ToHashCode();
         }
@@ -1159,9 +1159,9 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Flags) ?? true))
             {
-                item.Type = rhs.Type;
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.AnimationCount) ?? true))
             {
@@ -1197,15 +1197,15 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.IDLB) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageIdles_FieldIndex.Unknown) ?? true))
             {
-                if(rhs.IDLB is {} IDLBrhs)
+                if(rhs.Unknown is {} Unknownrhs)
                 {
-                    item.IDLB = IDLBrhs.ToArray();
+                    item.Unknown = Unknownrhs.ToArray();
                 }
                 else
                 {
-                    item.IDLB = default;
+                    item.Unknown = default;
                 }
             }
             DeepCopyInCustom(
@@ -1317,9 +1317,9 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<PackageIdles.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.Type,
+                item.Flags,
                 length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.IDLF));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.IDLB,
+                item: item.Unknown,
                 header: translationParams.ConvertToCustom(RecordTypes.IDLB));
         }
 
@@ -1394,12 +1394,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Type, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<PackageIdles.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
-                    return (int)PackageIdles_FieldIndex.Type;
+                    return (int)PackageIdles_FieldIndex.Flags;
                 }
                 case RecordTypeInts.IDLC:
                 {
@@ -1424,8 +1424,8 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.IDLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IDLB = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)PackageIdles_FieldIndex.IDLB;
+                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PackageIdles_FieldIndex.Unknown;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1501,9 +1501,9 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        #region Type
-        private int? _TypeLocation;
-        public PackageIdles.Types Type => EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_TypeLocation, _recordData, _package, 1);
+        #region Flags
+        private int? _FlagsLocation;
+        public PackageIdles.Flag Flags => EnumBinaryTranslation<PackageIdles.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 1);
         #endregion
         #region AnimationCount
         private int? _AnimationCountLocation;
@@ -1521,9 +1521,9 @@ namespace Mutagen.Bethesda.Fallout3
             RecordType type,
             PreviousParse lastParsed);
         #endregion
-        #region IDLB
-        private int? _IDLBLocation;
-        public ReadOnlyMemorySlice<Byte>? IDLB => _IDLBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IDLBLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Unknown
+        private int? _UnknownLocation;
+        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnknownLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1590,9 +1590,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Type, translationParams)) return ParseResult.Stop;
-                    _TypeLocation = (stream.Position - offset);
-                    return (int)PackageIdles_FieldIndex.Type;
+                    if (lastParsed.ShortCircuit((int)PackageIdles_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)PackageIdles_FieldIndex.Flags;
                 }
                 case RecordTypeInts.IDLC:
                 {
@@ -1616,8 +1616,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.IDLB:
                 {
-                    _IDLBLocation = (stream.Position - offset);
-                    return (int)PackageIdles_FieldIndex.IDLB;
+                    _UnknownLocation = (stream.Position - offset);
+                    return (int)PackageIdles_FieldIndex.Unknown;
                 }
                 default:
                     return ParseResult.Stop;

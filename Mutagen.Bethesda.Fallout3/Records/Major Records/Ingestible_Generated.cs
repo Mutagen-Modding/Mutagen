@@ -1197,6 +1197,8 @@ namespace Mutagen.Bethesda.Fallout3
         IModeled,
         INamedRequired,
         IObjectBounded,
+        IPackageLocationObject,
+        IPackageTargetObject,
         ITranslatedNamedRequired
     {
         /// <summary>
@@ -1258,6 +1260,8 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;

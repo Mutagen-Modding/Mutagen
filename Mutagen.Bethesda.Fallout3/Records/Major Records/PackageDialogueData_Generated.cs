@@ -51,6 +51,9 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public PackageDialogueData.VersioningBreaks Versioning { get; set; } = default(PackageDialogueData.VersioningBreaks);
+        #endregion
         #region DialogueFOV
         public Single DialogueFOV { get; set; } = default(Single);
         #endregion
@@ -65,18 +68,16 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<IDialogTopicGetter> IPackageDialogueDataGetter.DialogueTopic => this.DialogueTopic;
         #endregion
         #region DialogueFlags
-        public UInt32 DialogueFlags { get; set; } = default(UInt32);
+        public Package.DialogueFlag DialogueFlags { get; set; } = default(Package.DialogueFlag);
         #endregion
-        #region Remaining
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
-        {
-            get => _Remaining;
-            set => this._Remaining = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPackageDialogueDataGetter.Remaining => this.Remaining;
+        #region Unused
+        public UInt32 Unused { get; set; } = default(UInt32);
+        #endregion
+        #region DialogueType
+        public Package.DialogueType DialogueType { get; set; } = default(Package.DialogueType);
+        #endregion
+        #region Unknown
+        public UInt32 Unknown { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -117,22 +118,31 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.DialogueFOV = initialValue;
                 this.DialogueTopic = initialValue;
                 this.DialogueFlags = initialValue;
-                this.Remaining = initialValue;
+                this.Unused = initialValue;
+                this.DialogueType = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem DialogueFOV,
                 TItem DialogueTopic,
                 TItem DialogueFlags,
-                TItem Remaining)
+                TItem Unused,
+                TItem DialogueType,
+                TItem Unknown)
             {
+                this.Versioning = Versioning;
                 this.DialogueFOV = DialogueFOV;
                 this.DialogueTopic = DialogueTopic;
                 this.DialogueFlags = DialogueFlags;
-                this.Remaining = Remaining;
+                this.Unused = Unused;
+                this.DialogueType = DialogueType;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -144,10 +154,13 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem DialogueFOV;
             public TItem DialogueTopic;
             public TItem DialogueFlags;
-            public TItem Remaining;
+            public TItem Unused;
+            public TItem DialogueType;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -160,19 +173,25 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.DialogueFOV, rhs.DialogueFOV)) return false;
                 if (!object.Equals(this.DialogueTopic, rhs.DialogueTopic)) return false;
                 if (!object.Equals(this.DialogueFlags, rhs.DialogueFlags)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.DialogueType, rhs.DialogueType)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.DialogueFOV);
                 hash.Add(this.DialogueTopic);
                 hash.Add(this.DialogueFlags);
-                hash.Add(this.Remaining);
+                hash.Add(this.Unused);
+                hash.Add(this.DialogueType);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -181,10 +200,13 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.DialogueFOV)) return false;
                 if (!eval(this.DialogueTopic)) return false;
                 if (!eval(this.DialogueFlags)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.Unused)) return false;
+                if (!eval(this.DialogueType)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -192,10 +214,13 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.DialogueFOV)) return true;
                 if (eval(this.DialogueTopic)) return true;
                 if (eval(this.DialogueFlags)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.Unused)) return true;
+                if (eval(this.DialogueType)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -210,10 +235,13 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.DialogueFOV = eval(this.DialogueFOV);
                 obj.DialogueTopic = eval(this.DialogueTopic);
                 obj.DialogueFlags = eval(this.DialogueFlags);
-                obj.Remaining = eval(this.Remaining);
+                obj.Unused = eval(this.Unused);
+                obj.DialogueType = eval(this.DialogueType);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -232,6 +260,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PackageDialogueData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.DialogueFOV ?? true)
                     {
                         sb.AppendItem(DialogueFOV, "DialogueFOV");
@@ -244,9 +276,17 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DialogueFlags, "DialogueFlags");
                     }
-                    if (printMask?.Remaining ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.DialogueType ?? true)
+                    {
+                        sb.AppendItem(DialogueType, "DialogueType");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -272,10 +312,13 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? DialogueFOV;
             public Exception? DialogueTopic;
             public Exception? DialogueFlags;
-            public Exception? Remaining;
+            public Exception? Unused;
+            public Exception? DialogueType;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -284,14 +327,20 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageDialogueData_FieldIndex enu = (PackageDialogueData_FieldIndex)index;
                 switch (enu)
                 {
+                    case PackageDialogueData_FieldIndex.Versioning:
+                        return Versioning;
                     case PackageDialogueData_FieldIndex.DialogueFOV:
                         return DialogueFOV;
                     case PackageDialogueData_FieldIndex.DialogueTopic:
                         return DialogueTopic;
                     case PackageDialogueData_FieldIndex.DialogueFlags:
                         return DialogueFlags;
-                    case PackageDialogueData_FieldIndex.Remaining:
-                        return Remaining;
+                    case PackageDialogueData_FieldIndex.Unused:
+                        return Unused;
+                    case PackageDialogueData_FieldIndex.DialogueType:
+                        return DialogueType;
+                    case PackageDialogueData_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -302,6 +351,9 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageDialogueData_FieldIndex enu = (PackageDialogueData_FieldIndex)index;
                 switch (enu)
                 {
+                    case PackageDialogueData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case PackageDialogueData_FieldIndex.DialogueFOV:
                         this.DialogueFOV = ex;
                         break;
@@ -311,8 +363,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case PackageDialogueData_FieldIndex.DialogueFlags:
                         this.DialogueFlags = ex;
                         break;
-                    case PackageDialogueData_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case PackageDialogueData_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case PackageDialogueData_FieldIndex.DialogueType:
+                        this.DialogueType = ex;
+                        break;
+                    case PackageDialogueData_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -324,6 +382,9 @@ namespace Mutagen.Bethesda.Fallout3
                 PackageDialogueData_FieldIndex enu = (PackageDialogueData_FieldIndex)index;
                 switch (enu)
                 {
+                    case PackageDialogueData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case PackageDialogueData_FieldIndex.DialogueFOV:
                         this.DialogueFOV = (Exception?)obj;
                         break;
@@ -333,8 +394,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case PackageDialogueData_FieldIndex.DialogueFlags:
                         this.DialogueFlags = (Exception?)obj;
                         break;
-                    case PackageDialogueData_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case PackageDialogueData_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case PackageDialogueData_FieldIndex.DialogueType:
+                        this.DialogueType = (Exception?)obj;
+                        break;
+                    case PackageDialogueData_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -344,10 +411,13 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (DialogueFOV != null) return true;
                 if (DialogueTopic != null) return true;
                 if (DialogueFlags != null) return true;
-                if (Remaining != null) return true;
+                if (Unused != null) return true;
+                if (DialogueType != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -374,6 +444,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
+                {
                     sb.AppendItem(DialogueFOV, "DialogueFOV");
                 }
                 {
@@ -383,7 +456,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(DialogueFlags, "DialogueFlags");
                 }
                 {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(Unused, "Unused");
+                }
+                {
+                    sb.AppendItem(DialogueType, "DialogueType");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -393,10 +472,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.DialogueFOV = this.DialogueFOV.Combine(rhs.DialogueFOV);
                 ret.DialogueTopic = this.DialogueTopic.Combine(rhs.DialogueTopic);
                 ret.DialogueFlags = this.DialogueFlags.Combine(rhs.DialogueFlags);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.DialogueType = this.DialogueType.Combine(rhs.DialogueType);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -420,10 +502,13 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool DialogueFOV;
             public bool DialogueTopic;
             public bool DialogueFlags;
-            public bool Remaining;
+            public bool Unused;
+            public bool DialogueType;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -433,10 +518,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.DialogueFOV = defaultOn;
                 this.DialogueTopic = defaultOn;
                 this.DialogueFlags = defaultOn;
-                this.Remaining = defaultOn;
+                this.Unused = defaultOn;
+                this.DialogueType = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -452,10 +540,13 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((DialogueFOV, null));
                 ret.Add((DialogueTopic, null));
                 ret.Add((DialogueFlags, null));
-                ret.Add((Remaining, null));
+                ret.Add((Unused, null));
+                ret.Add((DialogueType, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -467,6 +558,13 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1,
+            Break1 = 2,
+            Break2 = 4
+        }
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PackageDialogueDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageDialogueDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
@@ -534,10 +632,13 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPackageDialogueData>,
         IPackageDialogueDataGetter
     {
+        new PackageDialogueData.VersioningBreaks Versioning { get; set; }
         new Single DialogueFOV { get; set; }
         new IFormLink<IDialogTopicGetter> DialogueTopic { get; set; }
-        new UInt32 DialogueFlags { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new Package.DialogueFlag DialogueFlags { get; set; }
+        new UInt32 Unused { get; set; }
+        new Package.DialogueType DialogueType { get; set; }
+        new UInt32 Unknown { get; set; }
     }
 
     public partial interface IPackageDialogueDataGetter :
@@ -553,10 +654,13 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageDialogueData_Registration.Instance;
+        PackageDialogueData.VersioningBreaks Versioning { get; }
         Single DialogueFOV { get; }
         IFormLinkGetter<IDialogTopicGetter> DialogueTopic { get; }
-        UInt32 DialogueFlags { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        Package.DialogueFlag DialogueFlags { get; }
+        UInt32 Unused { get; }
+        Package.DialogueType DialogueType { get; }
+        UInt32 Unknown { get; }
 
     }
 
@@ -726,10 +830,13 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum PackageDialogueData_FieldIndex
     {
-        DialogueFOV = 0,
-        DialogueTopic = 1,
-        DialogueFlags = 2,
-        Remaining = 3,
+        Versioning = 0,
+        DialogueFOV = 1,
+        DialogueTopic = 2,
+        DialogueFlags = 3,
+        Unused = 4,
+        DialogueType = 5,
+        Unknown = 6,
     }
     #endregion
 
@@ -740,9 +847,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(PackageDialogueData.Mask<>);
 
@@ -815,10 +922,13 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageDialogueData item)
         {
             ClearPartial();
+            item.Versioning = default(PackageDialogueData.VersioningBreaks);
             item.DialogueFOV = default(Single);
             item.DialogueTopic.Clear();
-            item.DialogueFlags = default(UInt32);
-            item.Remaining = [];
+            item.DialogueFlags = default(Package.DialogueFlag);
+            item.Unused = default(UInt32);
+            item.DialogueType = default(Package.DialogueType);
+            item.Unknown = default(UInt32);
         }
         
         #region Mutagen
@@ -873,10 +983,13 @@ namespace Mutagen.Bethesda.Fallout3
             PackageDialogueData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DialogueFOV = item.DialogueFOV.EqualsWithin(rhs.DialogueFOV);
             ret.DialogueTopic = item.DialogueTopic.Equals(rhs.DialogueTopic);
             ret.DialogueFlags = item.DialogueFlags == rhs.DialogueFlags;
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.DialogueType = item.DialogueType == rhs.DialogueType;
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string Print(
@@ -921,6 +1034,10 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             PackageDialogueData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.DialogueFOV ?? true)
             {
                 sb.AppendItem(item.DialogueFOV, "DialogueFOV");
@@ -933,9 +1050,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DialogueFlags, "DialogueFlags");
             }
-            if (printMask?.Remaining ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendItem(item.Unused, "Unused");
+            }
+            if (printMask?.DialogueType ?? true)
+            {
+                sb.AppendItem(item.DialogueType, "DialogueType");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -946,6 +1071,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.DialogueFOV) ?? true))
             {
                 if (!lhs.DialogueFOV.EqualsWithin(rhs.DialogueFOV)) return false;
@@ -958,9 +1087,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.DialogueFlags != rhs.DialogueFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Remaining) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.DialogueType) ?? true))
+            {
+                if (lhs.DialogueType != rhs.DialogueType) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             return true;
         }
@@ -968,10 +1105,13 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPackageDialogueDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.DialogueFOV);
             hash.Add(item.DialogueTopic);
             hash.Add(item.DialogueFlags);
-            hash.Add(item.Remaining);
+            hash.Add(item.Unused);
+            hash.Add(item.DialogueType);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -1005,6 +1145,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.DialogueFOV) ?? true))
             {
                 item.DialogueFOV = rhs.DialogueFOV;
@@ -1017,9 +1161,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.DialogueFlags = rhs.DialogueFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Remaining) ?? true))
+            if (rhs.Versioning.HasFlag(PackageDialogueData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Unused) ?? true))
             {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.Unused = rhs.Unused;
+            }
+            if (rhs.Versioning.HasFlag(PackageDialogueData.VersioningBreaks.Break1)) return;
+            if ((copyMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.DialogueType) ?? true))
+            {
+                item.DialogueType = rhs.DialogueType;
+            }
+            if (rhs.Versioning.HasFlag(PackageDialogueData.VersioningBreaks.Break2)) return;
+            if ((copyMask?.GetShouldTranslate((int)PackageDialogueData_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1135,10 +1290,25 @@ namespace Mutagen.Bethesda.Fallout3
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DialogueTopic);
-            writer.Write(item.DialogueFlags);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Remaining);
+            EnumBinaryTranslation<Package.DialogueFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.DialogueFlags,
+                length: 4);
+            if (!item.Versioning.HasFlag(PackageDialogueData.VersioningBreaks.Break0))
+            {
+                writer.Write(item.Unused);
+                if (!item.Versioning.HasFlag(PackageDialogueData.VersioningBreaks.Break1))
+                {
+                    EnumBinaryTranslation<Package.DialogueType, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        item.DialogueType,
+                        length: 4);
+                    if (!item.Versioning.HasFlag(PackageDialogueData.VersioningBreaks.Break2))
+                    {
+                        writer.Write(item.Unknown);
+                    }
+                }
+            }
         }
 
         public void Write(
@@ -1181,8 +1351,29 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.DialogueFOV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.DialogueTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.DialogueFlags = frame.ReadUInt32();
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DialogueFlags = EnumBinaryTranslation<Package.DialogueFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            if (frame.Complete)
+            {
+                item.Versioning |= PackageDialogueData.VersioningBreaks.Break0;
+                return;
+            }
+            item.Unused = frame.ReadUInt32();
+            if (frame.Complete)
+            {
+                item.Versioning |= PackageDialogueData.VersioningBreaks.Break1;
+                return;
+            }
+            item.DialogueType = EnumBinaryTranslation<Package.DialogueType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            if (frame.Complete)
+            {
+                item.Versioning |= PackageDialogueData.VersioningBreaks.Break2;
+                return;
+            }
+            item.Unknown = frame.ReadUInt32();
         }
 
     }
@@ -1249,13 +1440,13 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public PackageDialogueData.VersioningBreaks Versioning { get; private set; }
         public Single DialogueFOV => _structData.Slice(0x0, 0x4).Float();
         public IFormLinkGetter<IDialogTopicGetter> DialogueTopic => FormLinkBinaryTranslation.Instance.OverlayFactory<IDialogTopicGetter>(_package, _structData.Span.Slice(0x4, 0x4));
-        public UInt32 DialogueFlags => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Slice(0xC).ToArray();
-        protected int RemainingEndingPos;
-        #endregion
+        public Package.DialogueFlag DialogueFlags => (Package.DialogueFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public UInt32 Unused => _structData.Length <= 0xC ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public Package.DialogueType DialogueType => _structData.Span.Length <= 0x10 ? default : (Package.DialogueType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
+        public UInt32 Unknown => _structData.Length <= 0x14 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1281,12 +1472,24 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x18,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new PackageDialogueDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0xC)
+            {
+                ret.Versioning |= PackageDialogueData.VersioningBreaks.Break0;
+            }
+            if (ret._structData.Length <= 0x10)
+            {
+                ret.Versioning |= PackageDialogueData.VersioningBreaks.Break1;
+            }
+            if (ret._structData.Length <= 0x14)
+            {
+                ret.Versioning |= PackageDialogueData.VersioningBreaks.Break2;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

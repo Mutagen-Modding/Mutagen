@@ -2939,6 +2939,54 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
+        /// Scope a load order query to IPackageLocationObject
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IPackageLocationObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageLocationObject, IPackageLocationObjectGetter> IPackageLocationObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageLocationObject, IPackageLocationObjectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPackageLocationObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPackageLocationObject, IPackageLocationObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPackageLocationObject
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IPackageLocationObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageLocationObject, IPackageLocationObjectGetter> IPackageLocationObject(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageLocationObject, IPackageLocationObjectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPackageLocationObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPackageLocationObject, IPackageLocationObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPackageTargetObject
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IPackageTargetObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageTargetObject, IPackageTargetObjectGetter> IPackageTargetObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageTargetObject, IPackageTargetObjectGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IPackageTargetObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPackageTargetObject, IPackageTargetObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IPackageTargetObject
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IPackageTargetObject</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageTargetObject, IPackageTargetObjectGetter> IPackageTargetObject(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPackageTargetObject, IPackageTargetObjectGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IPackageTargetObjectGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPackageTargetObject, IPackageTargetObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to IPlaceableObject
         /// </summary>
         /// <param name="listings">ModListings to query</param>

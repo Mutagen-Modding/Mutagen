@@ -811,6 +811,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamed,
         INamedRequired,
         IOwner,
+        IPackageTargetObject,
         IRelatable
     {
         /// <summary>
@@ -841,6 +842,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamedGetter,
         INamedRequiredGetter,
         IOwnerGetter,
+        IPackageTargetObjectGetter,
         IRelatableGetter
     {
         static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;

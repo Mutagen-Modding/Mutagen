@@ -8,5 +8,6 @@
       </List>
     </Fields>
     <LinkInterface>IAmmoOrList</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

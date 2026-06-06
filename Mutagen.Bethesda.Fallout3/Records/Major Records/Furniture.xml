@@ -10,5 +10,7 @@
       <RefDirect name="Destructible" refName="Destructible" />
       <ByteArray name="MarkerFlags" recordType="MNAM" nullable="False" />
     </Fields>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

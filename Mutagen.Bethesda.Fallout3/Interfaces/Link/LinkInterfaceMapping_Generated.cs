@@ -143,6 +143,69 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IOwner),
                 Getter: typeof(IOwnerGetter)));
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+        dict[typeof(IPackageLocationObject)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                CaravanCard_Registration.Instance,
+                CaravanMoney_Registration.Instance,
+                CasinoChip_Registration.Instance,
+                Container_Registration.Instance,
+                Creature_Registration.Instance,
+                Door_Registration.Instance,
+                Furniture_Registration.Instance,
+                Ingestible_Registration.Instance,
+                ItemMod_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Npc_Registration.Instance,
+                Spell_Registration.Instance,
+                Static_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPackageLocationObject),
+                Getter: typeof(IPackageLocationObjectGetter)));
+        dict[typeof(IPackageLocationObjectGetter)] = dict[typeof(IPackageLocationObject)] with { Setter = false };
+        dict[typeof(IPackageTargetObject)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                CaravanCard_Registration.Instance,
+                CaravanMoney_Registration.Instance,
+                CasinoChip_Registration.Instance,
+                Container_Registration.Instance,
+                Creature_Registration.Instance,
+                Door_Registration.Instance,
+                Faction_Registration.Instance,
+                FormList_Registration.Instance,
+                Furniture_Registration.Instance,
+                IdleMarker_Registration.Instance,
+                Ingestible_Registration.Instance,
+                ItemMod_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledCreature_Registration.Instance,
+                LeveledNpc_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Npc_Registration.Instance,
+                Spell_Registration.Instance,
+                Static_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPackageTargetObject),
+                Getter: typeof(IPackageTargetObjectGetter)));
+        dict[typeof(IPackageTargetObjectGetter)] = dict[typeof(IPackageTargetObject)] with { Setter = false };
         dict[typeof(IPlaceableObject)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

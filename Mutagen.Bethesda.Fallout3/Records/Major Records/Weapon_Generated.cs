@@ -5208,6 +5208,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamed,
         INamedRequired,
         IObjectBoundedOptional,
+        IPackageLocationObject,
+        IPackageTargetObject,
         IWeaponGetter
     {
         /// <summary>
@@ -5371,7 +5373,9 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region ObjectBounds

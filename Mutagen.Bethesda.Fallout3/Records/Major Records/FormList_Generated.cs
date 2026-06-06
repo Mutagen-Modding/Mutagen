@@ -544,7 +544,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IFormListGetter,
-        ILoquiObjectSetter<IFormListInternal>
+        ILoquiObjectSetter<IFormListInternal>,
+        IPackageTargetObject
     {
         new ExtendedList<IFormLinkGetter<IFallout3MajorRecordGetter>> Items { get; }
     }
@@ -563,7 +564,8 @@ namespace Mutagen.Bethesda.Fallout3
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IFormListGetter>,
-        IMapsToGetter<IFormListGetter>
+        IMapsToGetter<IFormListGetter>,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => FormList_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IFallout3MajorRecordGetter>> Items { get; }

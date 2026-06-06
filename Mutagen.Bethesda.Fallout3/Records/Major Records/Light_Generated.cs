@@ -1091,6 +1091,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamed,
         INamedRequired,
         IObjectBoundedOptional,
+        IPackageLocationObject,
+        IPackageTargetObject,
         IWeightValue
     {
         /// <summary>
@@ -1152,6 +1154,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter,
         IWeightValueGetter
     {
         static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;

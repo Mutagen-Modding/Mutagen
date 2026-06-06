@@ -51,13 +51,13 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region WeaponFlags
-        public UInt32 WeaponFlags { get; set; } = default(UInt32);
+        public Package.WeaponFlag WeaponFlags { get; set; } = default(Package.WeaponFlag);
         #endregion
         #region FireRate
-        public Byte FireRate { get; set; } = default(Byte);
+        public Package.FireRate FireRate { get; set; } = default(Package.FireRate);
         #endregion
         #region FireCount
-        public Byte FireCount { get; set; } = default(Byte);
+        public Package.FireCount FireCount { get; set; } = default(Package.FireCount);
         #endregion
         #region NumberOfBursts
         public UInt16 NumberOfBursts { get; set; } = default(UInt16);
@@ -75,15 +75,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Single PauseBetweenVolleysMax { get; set; } = default(Single);
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[4];
-        public MemorySlice<Byte> Unused
-        {
-            get => _Unused;
-            set => this._Unused = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPackageWeaponDataGetter.Unused => this.Unused;
+        public Int32 Unused { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -685,15 +677,15 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPackageWeaponData>,
         IPackageWeaponDataGetter
     {
-        new UInt32 WeaponFlags { get; set; }
-        new Byte FireRate { get; set; }
-        new Byte FireCount { get; set; }
+        new Package.WeaponFlag WeaponFlags { get; set; }
+        new Package.FireRate FireRate { get; set; }
+        new Package.FireCount FireCount { get; set; }
         new UInt16 NumberOfBursts { get; set; }
         new UInt16 ShootsPerVolleyMin { get; set; }
         new UInt16 ShootsPerVolleyMax { get; set; }
         new Single PauseBetweenVolleysMin { get; set; }
         new Single PauseBetweenVolleysMax { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
+        new Int32 Unused { get; set; }
     }
 
     public partial interface IPackageWeaponDataGetter :
@@ -708,15 +700,15 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PackageWeaponData_Registration.Instance;
-        UInt32 WeaponFlags { get; }
-        Byte FireRate { get; }
-        Byte FireCount { get; }
+        Package.WeaponFlag WeaponFlags { get; }
+        Package.FireRate FireRate { get; }
+        Package.FireCount FireCount { get; }
         UInt16 NumberOfBursts { get; }
         UInt16 ShootsPerVolleyMin { get; }
         UInt16 ShootsPerVolleyMax { get; }
         Single PauseBetweenVolleysMin { get; }
         Single PauseBetweenVolleysMax { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        Int32 Unused { get; }
 
     }
 
@@ -980,15 +972,15 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageWeaponData item)
         {
             ClearPartial();
-            item.WeaponFlags = default(UInt32);
-            item.FireRate = default(Byte);
-            item.FireCount = default(Byte);
+            item.WeaponFlags = default(Package.WeaponFlag);
+            item.FireRate = default(Package.FireRate);
+            item.FireCount = default(Package.FireCount);
             item.NumberOfBursts = default(UInt16);
             item.ShootsPerVolleyMin = default(UInt16);
             item.ShootsPerVolleyMax = default(UInt16);
             item.PauseBetweenVolleysMin = default(Single);
             item.PauseBetweenVolleysMax = default(Single);
-            item.Unused = new byte[4];
+            item.Unused = default(Int32);
         }
         
         #region Mutagen
@@ -1050,7 +1042,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ShootsPerVolleyMax = item.ShootsPerVolleyMax == rhs.ShootsPerVolleyMax;
             ret.PauseBetweenVolleysMin = item.PauseBetweenVolleysMin.EqualsWithin(rhs.PauseBetweenVolleysMin);
             ret.PauseBetweenVolleysMax = item.PauseBetweenVolleysMax.EqualsWithin(rhs.PauseBetweenVolleysMax);
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Unused = item.Unused == rhs.Unused;
         }
         
         public string Print(
@@ -1129,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendItem(item.Unused, "Unused");
             }
         }
         
@@ -1174,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)PackageWeaponData_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             return true;
         }
@@ -1257,7 +1249,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)PackageWeaponData_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.Unused = rhs.Unused;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1367,9 +1359,18 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageWeaponDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.WeaponFlags);
-            writer.Write(item.FireRate);
-            writer.Write(item.FireCount);
+            EnumBinaryTranslation<Package.WeaponFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.WeaponFlags,
+                length: 4);
+            EnumBinaryTranslation<Package.FireRate, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.FireRate,
+                length: 1);
+            EnumBinaryTranslation<Package.FireCount, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.FireCount,
+                length: 1);
             writer.Write(item.NumberOfBursts);
             writer.Write(item.ShootsPerVolleyMin);
             writer.Write(item.ShootsPerVolleyMax);
@@ -1379,9 +1380,7 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.PauseBetweenVolleysMax);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unused);
+            writer.Write(item.Unused);
         }
 
         public void Write(
@@ -1422,15 +1421,21 @@ namespace Mutagen.Bethesda.Fallout3
             IPackageWeaponData item,
             MutagenFrame frame)
         {
-            item.WeaponFlags = frame.ReadUInt32();
-            item.FireRate = frame.ReadUInt8();
-            item.FireCount = frame.ReadUInt8();
+            item.WeaponFlags = EnumBinaryTranslation<Package.WeaponFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.FireRate = EnumBinaryTranslation<Package.FireRate, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.FireCount = EnumBinaryTranslation<Package.FireCount, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.NumberOfBursts = frame.ReadUInt16();
             item.ShootsPerVolleyMin = frame.ReadUInt16();
             item.ShootsPerVolleyMax = frame.ReadUInt16();
             item.PauseBetweenVolleysMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.PauseBetweenVolleysMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Unused = frame.ReadInt32();
         }
 
     }
@@ -1496,15 +1501,15 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public UInt32 WeaponFlags => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public Byte FireRate => _structData.Span[0x4];
-        public Byte FireCount => _structData.Span[0x5];
+        public Package.WeaponFlag WeaponFlags => (Package.WeaponFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Package.FireRate FireRate => (Package.FireRate)_structData.Span.Slice(0x4, 0x1)[0];
+        public Package.FireCount FireCount => (Package.FireCount)_structData.Span.Slice(0x5, 0x1)[0];
         public UInt16 NumberOfBursts => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         public UInt16 ShootsPerVolleyMin => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x8, 0x2));
         public UInt16 ShootsPerVolleyMax => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xA, 0x2));
         public Single PauseBetweenVolleysMin => _structData.Slice(0xC, 0x4).Float();
         public Single PauseBetweenVolleysMax => _structData.Slice(0x10, 0x4).Float();
-        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x14, 0x4).ToArray();
+        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

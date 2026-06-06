@@ -6414,7 +6414,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XPTL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.PortalRoom = Mutagen.Bethesda.Fallout3.Bounding.CreateFromBinary(frame: frame);
+                    item.PortalRoom = Mutagen.Bethesda.Fallout3.Bounding.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.PortalRoom;
                 }
                 case RecordTypeInts.XSED:
@@ -6433,13 +6433,13 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XOCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.OcclusionPlane = Mutagen.Bethesda.Fallout3.Bounding.CreateFromBinary(frame: frame);
+                    item.OcclusionPlane = Mutagen.Bethesda.Fallout3.Bounding.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XORD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LinkedOcclusionPlanes = Mutagen.Bethesda.Fallout3.LinkedOcclusionPlanes.CreateFromBinary(frame: frame);
+                    item.LinkedOcclusionPlanes = Mutagen.Bethesda.Fallout3.LinkedOcclusionPlanes.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.LinkedOcclusionPlanes;
                 }
                 case RecordTypeInts.XLOD:

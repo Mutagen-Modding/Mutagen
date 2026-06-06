@@ -726,6 +726,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ISpellInternal>,
         INamed,
         INamedRequired,
+        IPackageLocationObject,
+        IPackageTargetObject,
         ISpellGetter
     {
         /// <summary>
@@ -756,7 +758,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<ISpellGetter>,
         IMapsToGetter<ISpellGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        IPackageLocationObjectGetter,
+        IPackageTargetObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Spell_Registration.Instance;
         #region Name

@@ -15,5 +15,7 @@
       <RefList name="Effects" refName="Effect" nullable="False" />
     </Fields>
     <LinkInterface>IEffectRecord</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

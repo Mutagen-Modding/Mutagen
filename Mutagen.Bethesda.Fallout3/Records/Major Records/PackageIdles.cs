@@ -10,12 +10,11 @@ namespace Mutagen.Bethesda.Fallout3;
 
 public partial class PackageIdles
 {
-    public enum Types
+    [Flags]
+    public enum Flag : byte
     {
-        None = 0,
-        Standard = 8,
-        Patrol = 9,
-        Guard = 12,
+        RunInSequence = 0x01,
+        DoOnce = 0x04,
     }
 }
 

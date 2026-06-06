@@ -10,6 +10,7 @@
       <RefDirect name="Model" refName="Model" />
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
   <Object name="LeveledNpcEntry" objType="Subrecord">
     <Fields>

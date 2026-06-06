@@ -54,31 +54,19 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public UInt32 Flags { get; set; } = default(UInt32);
-        #endregion
-        #region Type
-        public Byte Type { get; set; } = default(Byte);
+        #region GeneralFlags
+        public Package.Flag GeneralFlags { get; set; } = default(Package.Flag);
         #endregion
         #region Unused
         public Byte Unused { get; set; } = default(Byte);
         #endregion
-        #region FalloutBehaviorFlags
-        public UInt16 FalloutBehaviorFlags { get; set; } = default(UInt16);
-        #endregion
-        #region TypeSpecificFlags
-        public UInt16 TypeSpecificFlags { get; set; } = default(UInt16);
+        #region BehaviorFlags
+        public Package.BehaviorFlag BehaviorFlags { get; set; } = default(Package.BehaviorFlag);
         #endregion
         #region Unused2
+        public UInt16? Unused2 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused2 = new byte[2];
-        public MemorySlice<Byte> Unused2
-        {
-            get => _Unused2;
-            set => this._Unused2 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPackageGetter.Unused2 => this.Unused2;
+        UInt16? IPackageGetter.Unused2 => this.Unused2;
         #endregion
         #region Location
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -93,40 +81,29 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Location2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PackageLocation2? _Location2;
-        public PackageLocation2? Location2
+        private PackageLocation? _Location2;
+        public PackageLocation? Location2
         {
             get => _Location2;
             set => _Location2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPackageLocation2Getter? IPackageGetter.Location2 => this.Location2;
+        IPackageLocationGetter? IPackageGetter.Location2 => this.Location2;
         #endregion
         #region ScheduleMonth
         public SByte ScheduleMonth { get; set; } = default(SByte);
         #endregion
         #region ScheduleDayOfWeek
-        public Byte ScheduleDayOfWeek { get; set; } = default(Byte);
+        public Package.DayOfWeek ScheduleDayOfWeek { get; set; } = default(Package.DayOfWeek);
         #endregion
         #region ScheduleDate
         public Byte ScheduleDate { get; set; } = default(Byte);
         #endregion
-        #region ScheduleHour
-        public SByte ScheduleHour { get; set; } = default(SByte);
+        #region ScheduleTime
+        public SByte ScheduleTime { get; set; } = default(SByte);
         #endregion
-        #region ScheduleMinute
-        public SByte ScheduleMinute { get; set; } = default(SByte);
-        #endregion
-        #region Unused3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused3 = new byte[3];
-        public MemorySlice<Byte> Unused3
-        {
-            get => _Unused3;
-            set => this._Unused3 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPackageGetter.Unused3 => this.Unused3;
+        #region Duration
+        public Int32 Duration { get; set; } = default(Int32);
         #endregion
         #region Target
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -174,29 +151,23 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> IPackageGetter.CombatStyle => this.CombatStyle;
         #endregion
-        #region EatMarker
-        public Boolean EatMarker { get; set; } = default(Boolean);
+        #region IsEatMarker
+        public Boolean IsEatMarker { get; set; } = default(Boolean);
         #endregion
         #region EscortDistance
         public UInt32? EscortDistance { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt32? IPackageGetter.EscortDistance => this.EscortDistance;
         #endregion
-        #region FollowTriggerRadius
-        public Single? FollowTriggerRadius { get; set; }
+        #region FollowStartLocationTriggerRadius
+        public Single? FollowStartLocationTriggerRadius { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IPackageGetter.FollowTriggerRadius => this.FollowTriggerRadius;
+        Single? IPackageGetter.FollowStartLocationTriggerRadius => this.FollowStartLocationTriggerRadius;
         #endregion
-        #region PatrolFlags
+        #region IsRepeatable
+        public Boolean? IsRepeatable { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PatrolFlags;
-        public MemorySlice<Byte>? PatrolFlags
-        {
-            get => this._PatrolFlags;
-            set => this._PatrolFlags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPackageGetter.PatrolFlags => this.PatrolFlags;
+        Boolean? IPackageGetter.IsRepeatable => this.IsRepeatable;
         #endregion
         #region WeaponData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -211,20 +182,20 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Target2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PackageTarget2? _Target2;
-        public PackageTarget2? Target2
+        private PackageTarget? _Target2;
+        public PackageTarget? Target2
         {
             get => _Target2;
             set => _Target2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPackageTarget2Getter? IPackageGetter.Target2 => this.Target2;
+        IPackageTargetGetter? IPackageGetter.Target2 => this.Target2;
         #endregion
-        #region UseItemMarker
-        public Boolean UseItemMarker { get; set; } = default(Boolean);
+        #region IsUseItem
+        public Boolean IsUseItem { get; set; } = default(Boolean);
         #endregion
-        #region AmbushMarker
-        public Boolean AmbushMarker { get; set; } = default(Boolean);
+        #region IsAmbush
+        public Boolean IsAmbush { get; set; } = default(Boolean);
         #endregion
         #region DialogueData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -239,14 +210,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region DialogueLocation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PackageLocation2? _DialogueLocation;
-        public PackageLocation2? DialogueLocation
+        private PackageLocation? _DialogueLocation;
+        public PackageLocation? DialogueLocation
         {
             get => _DialogueLocation;
             set => _DialogueLocation = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPackageLocation2Getter? IPackageGetter.DialogueLocation => this.DialogueLocation;
+        IPackageLocationGetter? IPackageGetter.DialogueLocation => this.DialogueLocation;
         #endregion
         #region OnBegin
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -306,34 +277,32 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Flags = initialValue;
-                this.Type = initialValue;
+                this.GeneralFlags = initialValue;
                 this.Unused = initialValue;
-                this.FalloutBehaviorFlags = initialValue;
-                this.TypeSpecificFlags = initialValue;
+                this.BehaviorFlags = initialValue;
+                this.Flags = new MaskItem<TItem, APackageFlags.Mask<TItem>?>(initialValue, new APackageFlags.Mask<TItem>(initialValue));
                 this.Unused2 = initialValue;
                 this.Location = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(initialValue, new PackageLocation.Mask<TItem>(initialValue));
-                this.Location2 = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(initialValue, new PackageLocation2.Mask<TItem>(initialValue));
+                this.Location2 = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(initialValue, new PackageLocation.Mask<TItem>(initialValue));
                 this.ScheduleMonth = initialValue;
                 this.ScheduleDayOfWeek = initialValue;
                 this.ScheduleDate = initialValue;
-                this.ScheduleHour = initialValue;
-                this.ScheduleMinute = initialValue;
-                this.Unused3 = initialValue;
+                this.ScheduleTime = initialValue;
+                this.Duration = initialValue;
                 this.Target = new MaskItem<TItem, PackageTarget.Mask<TItem>?>(initialValue, new PackageTarget.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
                 this.IdleAnimations = new MaskItem<TItem, PackageIdles.Mask<TItem>?>(initialValue, new PackageIdles.Mask<TItem>(initialValue));
                 this.CombatStyle = initialValue;
-                this.EatMarker = initialValue;
+                this.IsEatMarker = initialValue;
                 this.EscortDistance = initialValue;
-                this.FollowTriggerRadius = initialValue;
-                this.PatrolFlags = initialValue;
+                this.FollowStartLocationTriggerRadius = initialValue;
+                this.IsRepeatable = initialValue;
                 this.WeaponData = new MaskItem<TItem, PackageWeaponData.Mask<TItem>?>(initialValue, new PackageWeaponData.Mask<TItem>(initialValue));
-                this.Target2 = new MaskItem<TItem, PackageTarget2.Mask<TItem>?>(initialValue, new PackageTarget2.Mask<TItem>(initialValue));
-                this.UseItemMarker = initialValue;
-                this.AmbushMarker = initialValue;
+                this.Target2 = new MaskItem<TItem, PackageTarget.Mask<TItem>?>(initialValue, new PackageTarget.Mask<TItem>(initialValue));
+                this.IsUseItem = initialValue;
+                this.IsAmbush = initialValue;
                 this.DialogueData = new MaskItem<TItem, PackageDialogueData.Mask<TItem>?>(initialValue, new PackageDialogueData.Mask<TItem>(initialValue));
-                this.DialogueLocation = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(initialValue, new PackageLocation2.Mask<TItem>(initialValue));
+                this.DialogueLocation = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(initialValue, new PackageLocation.Mask<TItem>(initialValue));
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(initialValue, new PackageEvent.Mask<TItem>(initialValue));
@@ -347,32 +316,30 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
-                TItem Flags,
-                TItem Type,
+                TItem GeneralFlags,
                 TItem Unused,
-                TItem FalloutBehaviorFlags,
-                TItem TypeSpecificFlags,
+                TItem BehaviorFlags,
+                TItem Flags,
                 TItem Unused2,
                 TItem Location,
                 TItem Location2,
                 TItem ScheduleMonth,
                 TItem ScheduleDayOfWeek,
                 TItem ScheduleDate,
-                TItem ScheduleHour,
-                TItem ScheduleMinute,
-                TItem Unused3,
+                TItem ScheduleTime,
+                TItem Duration,
                 TItem Target,
                 TItem Conditions,
                 TItem IdleAnimations,
                 TItem CombatStyle,
-                TItem EatMarker,
+                TItem IsEatMarker,
                 TItem EscortDistance,
-                TItem FollowTriggerRadius,
-                TItem PatrolFlags,
+                TItem FollowStartLocationTriggerRadius,
+                TItem IsRepeatable,
                 TItem WeaponData,
                 TItem Target2,
-                TItem UseItemMarker,
-                TItem AmbushMarker,
+                TItem IsUseItem,
+                TItem IsAmbush,
                 TItem DialogueData,
                 TItem DialogueLocation,
                 TItem OnBegin,
@@ -387,34 +354,32 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
-                this.Flags = Flags;
-                this.Type = Type;
+                this.GeneralFlags = GeneralFlags;
                 this.Unused = Unused;
-                this.FalloutBehaviorFlags = FalloutBehaviorFlags;
-                this.TypeSpecificFlags = TypeSpecificFlags;
+                this.BehaviorFlags = BehaviorFlags;
+                this.Flags = new MaskItem<TItem, APackageFlags.Mask<TItem>?>(Flags, new APackageFlags.Mask<TItem>(Flags));
                 this.Unused2 = Unused2;
                 this.Location = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(Location, new PackageLocation.Mask<TItem>(Location));
-                this.Location2 = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(Location2, new PackageLocation2.Mask<TItem>(Location2));
+                this.Location2 = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(Location2, new PackageLocation.Mask<TItem>(Location2));
                 this.ScheduleMonth = ScheduleMonth;
                 this.ScheduleDayOfWeek = ScheduleDayOfWeek;
                 this.ScheduleDate = ScheduleDate;
-                this.ScheduleHour = ScheduleHour;
-                this.ScheduleMinute = ScheduleMinute;
-                this.Unused3 = Unused3;
+                this.ScheduleTime = ScheduleTime;
+                this.Duration = Duration;
                 this.Target = new MaskItem<TItem, PackageTarget.Mask<TItem>?>(Target, new PackageTarget.Mask<TItem>(Target));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
                 this.IdleAnimations = new MaskItem<TItem, PackageIdles.Mask<TItem>?>(IdleAnimations, new PackageIdles.Mask<TItem>(IdleAnimations));
                 this.CombatStyle = CombatStyle;
-                this.EatMarker = EatMarker;
+                this.IsEatMarker = IsEatMarker;
                 this.EscortDistance = EscortDistance;
-                this.FollowTriggerRadius = FollowTriggerRadius;
-                this.PatrolFlags = PatrolFlags;
+                this.FollowStartLocationTriggerRadius = FollowStartLocationTriggerRadius;
+                this.IsRepeatable = IsRepeatable;
                 this.WeaponData = new MaskItem<TItem, PackageWeaponData.Mask<TItem>?>(WeaponData, new PackageWeaponData.Mask<TItem>(WeaponData));
-                this.Target2 = new MaskItem<TItem, PackageTarget2.Mask<TItem>?>(Target2, new PackageTarget2.Mask<TItem>(Target2));
-                this.UseItemMarker = UseItemMarker;
-                this.AmbushMarker = AmbushMarker;
+                this.Target2 = new MaskItem<TItem, PackageTarget.Mask<TItem>?>(Target2, new PackageTarget.Mask<TItem>(Target2));
+                this.IsUseItem = IsUseItem;
+                this.IsAmbush = IsAmbush;
                 this.DialogueData = new MaskItem<TItem, PackageDialogueData.Mask<TItem>?>(DialogueData, new PackageDialogueData.Mask<TItem>(DialogueData));
-                this.DialogueLocation = new MaskItem<TItem, PackageLocation2.Mask<TItem>?>(DialogueLocation, new PackageLocation2.Mask<TItem>(DialogueLocation));
+                this.DialogueLocation = new MaskItem<TItem, PackageLocation.Mask<TItem>?>(DialogueLocation, new PackageLocation.Mask<TItem>(DialogueLocation));
                 this.OnBegin = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnBegin, new PackageEvent.Mask<TItem>(OnBegin));
                 this.OnEnd = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnEnd, new PackageEvent.Mask<TItem>(OnEnd));
                 this.OnChange = new MaskItem<TItem, PackageEvent.Mask<TItem>?>(OnChange, new PackageEvent.Mask<TItem>(OnChange));
@@ -429,34 +394,32 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Flags;
-            public TItem Type;
+            public TItem GeneralFlags;
             public TItem Unused;
-            public TItem FalloutBehaviorFlags;
-            public TItem TypeSpecificFlags;
+            public TItem BehaviorFlags;
+            public MaskItem<TItem, APackageFlags.Mask<TItem>?>? Flags { get; set; }
             public TItem Unused2;
             public MaskItem<TItem, PackageLocation.Mask<TItem>?>? Location { get; set; }
-            public MaskItem<TItem, PackageLocation2.Mask<TItem>?>? Location2 { get; set; }
+            public MaskItem<TItem, PackageLocation.Mask<TItem>?>? Location2 { get; set; }
             public TItem ScheduleMonth;
             public TItem ScheduleDayOfWeek;
             public TItem ScheduleDate;
-            public TItem ScheduleHour;
-            public TItem ScheduleMinute;
-            public TItem Unused3;
+            public TItem ScheduleTime;
+            public TItem Duration;
             public MaskItem<TItem, PackageTarget.Mask<TItem>?>? Target { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, PackageIdles.Mask<TItem>?>? IdleAnimations { get; set; }
             public TItem CombatStyle;
-            public TItem EatMarker;
+            public TItem IsEatMarker;
             public TItem EscortDistance;
-            public TItem FollowTriggerRadius;
-            public TItem PatrolFlags;
+            public TItem FollowStartLocationTriggerRadius;
+            public TItem IsRepeatable;
             public MaskItem<TItem, PackageWeaponData.Mask<TItem>?>? WeaponData { get; set; }
-            public MaskItem<TItem, PackageTarget2.Mask<TItem>?>? Target2 { get; set; }
-            public TItem UseItemMarker;
-            public TItem AmbushMarker;
+            public MaskItem<TItem, PackageTarget.Mask<TItem>?>? Target2 { get; set; }
+            public TItem IsUseItem;
+            public TItem IsAmbush;
             public MaskItem<TItem, PackageDialogueData.Mask<TItem>?>? DialogueData { get; set; }
-            public MaskItem<TItem, PackageLocation2.Mask<TItem>?>? DialogueLocation { get; set; }
+            public MaskItem<TItem, PackageLocation.Mask<TItem>?>? DialogueLocation { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnBegin { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnEnd { get; set; }
             public MaskItem<TItem, PackageEvent.Mask<TItem>?>? OnChange { get; set; }
@@ -473,32 +436,30 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.GeneralFlags, rhs.GeneralFlags)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
-                if (!object.Equals(this.FalloutBehaviorFlags, rhs.FalloutBehaviorFlags)) return false;
-                if (!object.Equals(this.TypeSpecificFlags, rhs.TypeSpecificFlags)) return false;
+                if (!object.Equals(this.BehaviorFlags, rhs.BehaviorFlags)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.Location2, rhs.Location2)) return false;
                 if (!object.Equals(this.ScheduleMonth, rhs.ScheduleMonth)) return false;
                 if (!object.Equals(this.ScheduleDayOfWeek, rhs.ScheduleDayOfWeek)) return false;
                 if (!object.Equals(this.ScheduleDate, rhs.ScheduleDate)) return false;
-                if (!object.Equals(this.ScheduleHour, rhs.ScheduleHour)) return false;
-                if (!object.Equals(this.ScheduleMinute, rhs.ScheduleMinute)) return false;
-                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
+                if (!object.Equals(this.ScheduleTime, rhs.ScheduleTime)) return false;
+                if (!object.Equals(this.Duration, rhs.Duration)) return false;
                 if (!object.Equals(this.Target, rhs.Target)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.IdleAnimations, rhs.IdleAnimations)) return false;
                 if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
-                if (!object.Equals(this.EatMarker, rhs.EatMarker)) return false;
+                if (!object.Equals(this.IsEatMarker, rhs.IsEatMarker)) return false;
                 if (!object.Equals(this.EscortDistance, rhs.EscortDistance)) return false;
-                if (!object.Equals(this.FollowTriggerRadius, rhs.FollowTriggerRadius)) return false;
-                if (!object.Equals(this.PatrolFlags, rhs.PatrolFlags)) return false;
+                if (!object.Equals(this.FollowStartLocationTriggerRadius, rhs.FollowStartLocationTriggerRadius)) return false;
+                if (!object.Equals(this.IsRepeatable, rhs.IsRepeatable)) return false;
                 if (!object.Equals(this.WeaponData, rhs.WeaponData)) return false;
                 if (!object.Equals(this.Target2, rhs.Target2)) return false;
-                if (!object.Equals(this.UseItemMarker, rhs.UseItemMarker)) return false;
-                if (!object.Equals(this.AmbushMarker, rhs.AmbushMarker)) return false;
+                if (!object.Equals(this.IsUseItem, rhs.IsUseItem)) return false;
+                if (!object.Equals(this.IsAmbush, rhs.IsAmbush)) return false;
                 if (!object.Equals(this.DialogueData, rhs.DialogueData)) return false;
                 if (!object.Equals(this.DialogueLocation, rhs.DialogueLocation)) return false;
                 if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
@@ -509,32 +470,30 @@ namespace Mutagen.Bethesda.Fallout3
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
-                hash.Add(this.Type);
+                hash.Add(this.GeneralFlags);
                 hash.Add(this.Unused);
-                hash.Add(this.FalloutBehaviorFlags);
-                hash.Add(this.TypeSpecificFlags);
+                hash.Add(this.BehaviorFlags);
+                hash.Add(this.Flags);
                 hash.Add(this.Unused2);
                 hash.Add(this.Location);
                 hash.Add(this.Location2);
                 hash.Add(this.ScheduleMonth);
                 hash.Add(this.ScheduleDayOfWeek);
                 hash.Add(this.ScheduleDate);
-                hash.Add(this.ScheduleHour);
-                hash.Add(this.ScheduleMinute);
-                hash.Add(this.Unused3);
+                hash.Add(this.ScheduleTime);
+                hash.Add(this.Duration);
                 hash.Add(this.Target);
                 hash.Add(this.Conditions);
                 hash.Add(this.IdleAnimations);
                 hash.Add(this.CombatStyle);
-                hash.Add(this.EatMarker);
+                hash.Add(this.IsEatMarker);
                 hash.Add(this.EscortDistance);
-                hash.Add(this.FollowTriggerRadius);
-                hash.Add(this.PatrolFlags);
+                hash.Add(this.FollowStartLocationTriggerRadius);
+                hash.Add(this.IsRepeatable);
                 hash.Add(this.WeaponData);
                 hash.Add(this.Target2);
-                hash.Add(this.UseItemMarker);
-                hash.Add(this.AmbushMarker);
+                hash.Add(this.IsUseItem);
+                hash.Add(this.IsAmbush);
                 hash.Add(this.DialogueData);
                 hash.Add(this.DialogueLocation);
                 hash.Add(this.OnBegin);
@@ -550,11 +509,14 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.Type)) return false;
+                if (!eval(this.GeneralFlags)) return false;
                 if (!eval(this.Unused)) return false;
-                if (!eval(this.FalloutBehaviorFlags)) return false;
-                if (!eval(this.TypeSpecificFlags)) return false;
+                if (!eval(this.BehaviorFlags)) return false;
+                if (Flags != null)
+                {
+                    if (!eval(this.Flags.Overall)) return false;
+                    if (this.Flags.Specific != null && !this.Flags.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Unused2)) return false;
                 if (Location != null)
                 {
@@ -569,9 +531,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.ScheduleMonth)) return false;
                 if (!eval(this.ScheduleDayOfWeek)) return false;
                 if (!eval(this.ScheduleDate)) return false;
-                if (!eval(this.ScheduleHour)) return false;
-                if (!eval(this.ScheduleMinute)) return false;
-                if (!eval(this.Unused3)) return false;
+                if (!eval(this.ScheduleTime)) return false;
+                if (!eval(this.Duration)) return false;
                 if (Target != null)
                 {
                     if (!eval(this.Target.Overall)) return false;
@@ -595,10 +556,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (this.IdleAnimations.Specific != null && !this.IdleAnimations.Specific.All(eval)) return false;
                 }
                 if (!eval(this.CombatStyle)) return false;
-                if (!eval(this.EatMarker)) return false;
+                if (!eval(this.IsEatMarker)) return false;
                 if (!eval(this.EscortDistance)) return false;
-                if (!eval(this.FollowTriggerRadius)) return false;
-                if (!eval(this.PatrolFlags)) return false;
+                if (!eval(this.FollowStartLocationTriggerRadius)) return false;
+                if (!eval(this.IsRepeatable)) return false;
                 if (WeaponData != null)
                 {
                     if (!eval(this.WeaponData.Overall)) return false;
@@ -609,8 +570,8 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Target2.Overall)) return false;
                     if (this.Target2.Specific != null && !this.Target2.Specific.All(eval)) return false;
                 }
-                if (!eval(this.UseItemMarker)) return false;
-                if (!eval(this.AmbushMarker)) return false;
+                if (!eval(this.IsUseItem)) return false;
+                if (!eval(this.IsAmbush)) return false;
                 if (DialogueData != null)
                 {
                     if (!eval(this.DialogueData.Overall)) return false;
@@ -644,11 +605,14 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.Type)) return true;
+                if (eval(this.GeneralFlags)) return true;
                 if (eval(this.Unused)) return true;
-                if (eval(this.FalloutBehaviorFlags)) return true;
-                if (eval(this.TypeSpecificFlags)) return true;
+                if (eval(this.BehaviorFlags)) return true;
+                if (Flags != null)
+                {
+                    if (eval(this.Flags.Overall)) return true;
+                    if (this.Flags.Specific != null && this.Flags.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Unused2)) return true;
                 if (Location != null)
                 {
@@ -663,9 +627,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.ScheduleMonth)) return true;
                 if (eval(this.ScheduleDayOfWeek)) return true;
                 if (eval(this.ScheduleDate)) return true;
-                if (eval(this.ScheduleHour)) return true;
-                if (eval(this.ScheduleMinute)) return true;
-                if (eval(this.Unused3)) return true;
+                if (eval(this.ScheduleTime)) return true;
+                if (eval(this.Duration)) return true;
                 if (Target != null)
                 {
                     if (eval(this.Target.Overall)) return true;
@@ -689,10 +652,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (this.IdleAnimations.Specific != null && this.IdleAnimations.Specific.Any(eval)) return true;
                 }
                 if (eval(this.CombatStyle)) return true;
-                if (eval(this.EatMarker)) return true;
+                if (eval(this.IsEatMarker)) return true;
                 if (eval(this.EscortDistance)) return true;
-                if (eval(this.FollowTriggerRadius)) return true;
-                if (eval(this.PatrolFlags)) return true;
+                if (eval(this.FollowStartLocationTriggerRadius)) return true;
+                if (eval(this.IsRepeatable)) return true;
                 if (WeaponData != null)
                 {
                     if (eval(this.WeaponData.Overall)) return true;
@@ -703,8 +666,8 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Target2.Overall)) return true;
                     if (this.Target2.Specific != null && this.Target2.Specific.Any(eval)) return true;
                 }
-                if (eval(this.UseItemMarker)) return true;
-                if (eval(this.AmbushMarker)) return true;
+                if (eval(this.IsUseItem)) return true;
+                if (eval(this.IsAmbush)) return true;
                 if (DialogueData != null)
                 {
                     if (eval(this.DialogueData.Overall)) return true;
@@ -745,20 +708,18 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Flags = eval(this.Flags);
-                obj.Type = eval(this.Type);
+                obj.GeneralFlags = eval(this.GeneralFlags);
                 obj.Unused = eval(this.Unused);
-                obj.FalloutBehaviorFlags = eval(this.FalloutBehaviorFlags);
-                obj.TypeSpecificFlags = eval(this.TypeSpecificFlags);
+                obj.BehaviorFlags = eval(this.BehaviorFlags);
+                obj.Flags = this.Flags == null ? null : new MaskItem<R, APackageFlags.Mask<R>?>(eval(this.Flags.Overall), this.Flags.Specific?.Translate(eval));
                 obj.Unused2 = eval(this.Unused2);
                 obj.Location = this.Location == null ? null : new MaskItem<R, PackageLocation.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
-                obj.Location2 = this.Location2 == null ? null : new MaskItem<R, PackageLocation2.Mask<R>?>(eval(this.Location2.Overall), this.Location2.Specific?.Translate(eval));
+                obj.Location2 = this.Location2 == null ? null : new MaskItem<R, PackageLocation.Mask<R>?>(eval(this.Location2.Overall), this.Location2.Specific?.Translate(eval));
                 obj.ScheduleMonth = eval(this.ScheduleMonth);
                 obj.ScheduleDayOfWeek = eval(this.ScheduleDayOfWeek);
                 obj.ScheduleDate = eval(this.ScheduleDate);
-                obj.ScheduleHour = eval(this.ScheduleHour);
-                obj.ScheduleMinute = eval(this.ScheduleMinute);
-                obj.Unused3 = eval(this.Unused3);
+                obj.ScheduleTime = eval(this.ScheduleTime);
+                obj.Duration = eval(this.Duration);
                 obj.Target = this.Target == null ? null : new MaskItem<R, PackageTarget.Mask<R>?>(eval(this.Target.Overall), this.Target.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
@@ -777,16 +738,16 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 obj.IdleAnimations = this.IdleAnimations == null ? null : new MaskItem<R, PackageIdles.Mask<R>?>(eval(this.IdleAnimations.Overall), this.IdleAnimations.Specific?.Translate(eval));
                 obj.CombatStyle = eval(this.CombatStyle);
-                obj.EatMarker = eval(this.EatMarker);
+                obj.IsEatMarker = eval(this.IsEatMarker);
                 obj.EscortDistance = eval(this.EscortDistance);
-                obj.FollowTriggerRadius = eval(this.FollowTriggerRadius);
-                obj.PatrolFlags = eval(this.PatrolFlags);
+                obj.FollowStartLocationTriggerRadius = eval(this.FollowStartLocationTriggerRadius);
+                obj.IsRepeatable = eval(this.IsRepeatable);
                 obj.WeaponData = this.WeaponData == null ? null : new MaskItem<R, PackageWeaponData.Mask<R>?>(eval(this.WeaponData.Overall), this.WeaponData.Specific?.Translate(eval));
-                obj.Target2 = this.Target2 == null ? null : new MaskItem<R, PackageTarget2.Mask<R>?>(eval(this.Target2.Overall), this.Target2.Specific?.Translate(eval));
-                obj.UseItemMarker = eval(this.UseItemMarker);
-                obj.AmbushMarker = eval(this.AmbushMarker);
+                obj.Target2 = this.Target2 == null ? null : new MaskItem<R, PackageTarget.Mask<R>?>(eval(this.Target2.Overall), this.Target2.Specific?.Translate(eval));
+                obj.IsUseItem = eval(this.IsUseItem);
+                obj.IsAmbush = eval(this.IsAmbush);
                 obj.DialogueData = this.DialogueData == null ? null : new MaskItem<R, PackageDialogueData.Mask<R>?>(eval(this.DialogueData.Overall), this.DialogueData.Specific?.Translate(eval));
-                obj.DialogueLocation = this.DialogueLocation == null ? null : new MaskItem<R, PackageLocation2.Mask<R>?>(eval(this.DialogueLocation.Overall), this.DialogueLocation.Specific?.Translate(eval));
+                obj.DialogueLocation = this.DialogueLocation == null ? null : new MaskItem<R, PackageLocation.Mask<R>?>(eval(this.DialogueLocation.Overall), this.DialogueLocation.Specific?.Translate(eval));
                 obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
                 obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
                 obj.OnChange = this.OnChange == null ? null : new MaskItem<R, PackageEvent.Mask<R>?>(eval(this.OnChange.Overall), this.OnChange.Specific?.Translate(eval));
@@ -808,25 +769,21 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Package.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.GeneralFlags ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Type ?? true)
-                    {
-                        sb.AppendItem(Type, "Type");
+                        sb.AppendItem(GeneralFlags, "GeneralFlags");
                     }
                     if (printMask?.Unused ?? true)
                     {
                         sb.AppendItem(Unused, "Unused");
                     }
-                    if (printMask?.FalloutBehaviorFlags ?? true)
+                    if (printMask?.BehaviorFlags ?? true)
                     {
-                        sb.AppendItem(FalloutBehaviorFlags, "FalloutBehaviorFlags");
+                        sb.AppendItem(BehaviorFlags, "BehaviorFlags");
                     }
-                    if (printMask?.TypeSpecificFlags ?? true)
+                    if (printMask?.Flags?.Overall ?? true)
                     {
-                        sb.AppendItem(TypeSpecificFlags, "TypeSpecificFlags");
+                        Flags?.Print(sb);
                     }
                     if (printMask?.Unused2 ?? true)
                     {
@@ -852,17 +809,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ScheduleDate, "ScheduleDate");
                     }
-                    if (printMask?.ScheduleHour ?? true)
+                    if (printMask?.ScheduleTime ?? true)
                     {
-                        sb.AppendItem(ScheduleHour, "ScheduleHour");
+                        sb.AppendItem(ScheduleTime, "ScheduleTime");
                     }
-                    if (printMask?.ScheduleMinute ?? true)
+                    if (printMask?.Duration ?? true)
                     {
-                        sb.AppendItem(ScheduleMinute, "ScheduleMinute");
-                    }
-                    if (printMask?.Unused3 ?? true)
-                    {
-                        sb.AppendItem(Unused3, "Unused3");
+                        sb.AppendItem(Duration, "Duration");
                     }
                     if (printMask?.Target?.Overall ?? true)
                     {
@@ -895,21 +848,21 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(CombatStyle, "CombatStyle");
                     }
-                    if (printMask?.EatMarker ?? true)
+                    if (printMask?.IsEatMarker ?? true)
                     {
-                        sb.AppendItem(EatMarker, "EatMarker");
+                        sb.AppendItem(IsEatMarker, "IsEatMarker");
                     }
                     if (printMask?.EscortDistance ?? true)
                     {
                         sb.AppendItem(EscortDistance, "EscortDistance");
                     }
-                    if (printMask?.FollowTriggerRadius ?? true)
+                    if (printMask?.FollowStartLocationTriggerRadius ?? true)
                     {
-                        sb.AppendItem(FollowTriggerRadius, "FollowTriggerRadius");
+                        sb.AppendItem(FollowStartLocationTriggerRadius, "FollowStartLocationTriggerRadius");
                     }
-                    if (printMask?.PatrolFlags ?? true)
+                    if (printMask?.IsRepeatable ?? true)
                     {
-                        sb.AppendItem(PatrolFlags, "PatrolFlags");
+                        sb.AppendItem(IsRepeatable, "IsRepeatable");
                     }
                     if (printMask?.WeaponData?.Overall ?? true)
                     {
@@ -919,13 +872,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Target2?.Print(sb);
                     }
-                    if (printMask?.UseItemMarker ?? true)
+                    if (printMask?.IsUseItem ?? true)
                     {
-                        sb.AppendItem(UseItemMarker, "UseItemMarker");
+                        sb.AppendItem(IsUseItem, "IsUseItem");
                     }
-                    if (printMask?.AmbushMarker ?? true)
+                    if (printMask?.IsAmbush ?? true)
                     {
-                        sb.AppendItem(AmbushMarker, "AmbushMarker");
+                        sb.AppendItem(IsAmbush, "IsAmbush");
                     }
                     if (printMask?.DialogueData?.Overall ?? true)
                     {
@@ -958,34 +911,32 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Flags;
-            public Exception? Type;
+            public Exception? GeneralFlags;
             public Exception? Unused;
-            public Exception? FalloutBehaviorFlags;
-            public Exception? TypeSpecificFlags;
+            public Exception? BehaviorFlags;
+            public MaskItem<Exception?, APackageFlags.ErrorMask?>? Flags;
             public Exception? Unused2;
             public MaskItem<Exception?, PackageLocation.ErrorMask?>? Location;
-            public MaskItem<Exception?, PackageLocation2.ErrorMask?>? Location2;
+            public MaskItem<Exception?, PackageLocation.ErrorMask?>? Location2;
             public Exception? ScheduleMonth;
             public Exception? ScheduleDayOfWeek;
             public Exception? ScheduleDate;
-            public Exception? ScheduleHour;
-            public Exception? ScheduleMinute;
-            public Exception? Unused3;
+            public Exception? ScheduleTime;
+            public Exception? Duration;
             public MaskItem<Exception?, PackageTarget.ErrorMask?>? Target;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, PackageIdles.ErrorMask?>? IdleAnimations;
             public Exception? CombatStyle;
-            public Exception? EatMarker;
+            public Exception? IsEatMarker;
             public Exception? EscortDistance;
-            public Exception? FollowTriggerRadius;
-            public Exception? PatrolFlags;
+            public Exception? FollowStartLocationTriggerRadius;
+            public Exception? IsRepeatable;
             public MaskItem<Exception?, PackageWeaponData.ErrorMask?>? WeaponData;
-            public MaskItem<Exception?, PackageTarget2.ErrorMask?>? Target2;
-            public Exception? UseItemMarker;
-            public Exception? AmbushMarker;
+            public MaskItem<Exception?, PackageTarget.ErrorMask?>? Target2;
+            public Exception? IsUseItem;
+            public Exception? IsAmbush;
             public MaskItem<Exception?, PackageDialogueData.ErrorMask?>? DialogueData;
-            public MaskItem<Exception?, PackageLocation2.ErrorMask?>? DialogueLocation;
+            public MaskItem<Exception?, PackageLocation.ErrorMask?>? DialogueLocation;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnBegin;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnEnd;
             public MaskItem<Exception?, PackageEvent.ErrorMask?>? OnChange;
@@ -997,16 +948,14 @@ namespace Mutagen.Bethesda.Fallout3
                 Package_FieldIndex enu = (Package_FieldIndex)index;
                 switch (enu)
                 {
-                    case Package_FieldIndex.Flags:
-                        return Flags;
-                    case Package_FieldIndex.Type:
-                        return Type;
+                    case Package_FieldIndex.GeneralFlags:
+                        return GeneralFlags;
                     case Package_FieldIndex.Unused:
                         return Unused;
-                    case Package_FieldIndex.FalloutBehaviorFlags:
-                        return FalloutBehaviorFlags;
-                    case Package_FieldIndex.TypeSpecificFlags:
-                        return TypeSpecificFlags;
+                    case Package_FieldIndex.BehaviorFlags:
+                        return BehaviorFlags;
+                    case Package_FieldIndex.Flags:
+                        return Flags;
                     case Package_FieldIndex.Unused2:
                         return Unused2;
                     case Package_FieldIndex.Location:
@@ -1019,12 +968,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return ScheduleDayOfWeek;
                     case Package_FieldIndex.ScheduleDate:
                         return ScheduleDate;
-                    case Package_FieldIndex.ScheduleHour:
-                        return ScheduleHour;
-                    case Package_FieldIndex.ScheduleMinute:
-                        return ScheduleMinute;
-                    case Package_FieldIndex.Unused3:
-                        return Unused3;
+                    case Package_FieldIndex.ScheduleTime:
+                        return ScheduleTime;
+                    case Package_FieldIndex.Duration:
+                        return Duration;
                     case Package_FieldIndex.Target:
                         return Target;
                     case Package_FieldIndex.Conditions:
@@ -1033,22 +980,22 @@ namespace Mutagen.Bethesda.Fallout3
                         return IdleAnimations;
                     case Package_FieldIndex.CombatStyle:
                         return CombatStyle;
-                    case Package_FieldIndex.EatMarker:
-                        return EatMarker;
+                    case Package_FieldIndex.IsEatMarker:
+                        return IsEatMarker;
                     case Package_FieldIndex.EscortDistance:
                         return EscortDistance;
-                    case Package_FieldIndex.FollowTriggerRadius:
-                        return FollowTriggerRadius;
-                    case Package_FieldIndex.PatrolFlags:
-                        return PatrolFlags;
+                    case Package_FieldIndex.FollowStartLocationTriggerRadius:
+                        return FollowStartLocationTriggerRadius;
+                    case Package_FieldIndex.IsRepeatable:
+                        return IsRepeatable;
                     case Package_FieldIndex.WeaponData:
                         return WeaponData;
                     case Package_FieldIndex.Target2:
                         return Target2;
-                    case Package_FieldIndex.UseItemMarker:
-                        return UseItemMarker;
-                    case Package_FieldIndex.AmbushMarker:
-                        return AmbushMarker;
+                    case Package_FieldIndex.IsUseItem:
+                        return IsUseItem;
+                    case Package_FieldIndex.IsAmbush:
+                        return IsAmbush;
                     case Package_FieldIndex.DialogueData:
                         return DialogueData;
                     case Package_FieldIndex.DialogueLocation:
@@ -1069,20 +1016,17 @@ namespace Mutagen.Bethesda.Fallout3
                 Package_FieldIndex enu = (Package_FieldIndex)index;
                 switch (enu)
                 {
-                    case Package_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case Package_FieldIndex.Type:
-                        this.Type = ex;
+                    case Package_FieldIndex.GeneralFlags:
+                        this.GeneralFlags = ex;
                         break;
                     case Package_FieldIndex.Unused:
                         this.Unused = ex;
                         break;
-                    case Package_FieldIndex.FalloutBehaviorFlags:
-                        this.FalloutBehaviorFlags = ex;
+                    case Package_FieldIndex.BehaviorFlags:
+                        this.BehaviorFlags = ex;
                         break;
-                    case Package_FieldIndex.TypeSpecificFlags:
-                        this.TypeSpecificFlags = ex;
+                    case Package_FieldIndex.Flags:
+                        this.Flags = new MaskItem<Exception?, APackageFlags.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.Unused2:
                         this.Unused2 = ex;
@@ -1091,7 +1035,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Location = new MaskItem<Exception?, PackageLocation.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.Location2:
-                        this.Location2 = new MaskItem<Exception?, PackageLocation2.ErrorMask?>(ex, null);
+                        this.Location2 = new MaskItem<Exception?, PackageLocation.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.ScheduleMonth:
                         this.ScheduleMonth = ex;
@@ -1102,14 +1046,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case Package_FieldIndex.ScheduleDate:
                         this.ScheduleDate = ex;
                         break;
-                    case Package_FieldIndex.ScheduleHour:
-                        this.ScheduleHour = ex;
+                    case Package_FieldIndex.ScheduleTime:
+                        this.ScheduleTime = ex;
                         break;
-                    case Package_FieldIndex.ScheduleMinute:
-                        this.ScheduleMinute = ex;
-                        break;
-                    case Package_FieldIndex.Unused3:
-                        this.Unused3 = ex;
+                    case Package_FieldIndex.Duration:
+                        this.Duration = ex;
                         break;
                     case Package_FieldIndex.Target:
                         this.Target = new MaskItem<Exception?, PackageTarget.ErrorMask?>(ex, null);
@@ -1123,35 +1064,35 @@ namespace Mutagen.Bethesda.Fallout3
                     case Package_FieldIndex.CombatStyle:
                         this.CombatStyle = ex;
                         break;
-                    case Package_FieldIndex.EatMarker:
-                        this.EatMarker = ex;
+                    case Package_FieldIndex.IsEatMarker:
+                        this.IsEatMarker = ex;
                         break;
                     case Package_FieldIndex.EscortDistance:
                         this.EscortDistance = ex;
                         break;
-                    case Package_FieldIndex.FollowTriggerRadius:
-                        this.FollowTriggerRadius = ex;
+                    case Package_FieldIndex.FollowStartLocationTriggerRadius:
+                        this.FollowStartLocationTriggerRadius = ex;
                         break;
-                    case Package_FieldIndex.PatrolFlags:
-                        this.PatrolFlags = ex;
+                    case Package_FieldIndex.IsRepeatable:
+                        this.IsRepeatable = ex;
                         break;
                     case Package_FieldIndex.WeaponData:
                         this.WeaponData = new MaskItem<Exception?, PackageWeaponData.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.Target2:
-                        this.Target2 = new MaskItem<Exception?, PackageTarget2.ErrorMask?>(ex, null);
+                        this.Target2 = new MaskItem<Exception?, PackageTarget.ErrorMask?>(ex, null);
                         break;
-                    case Package_FieldIndex.UseItemMarker:
-                        this.UseItemMarker = ex;
+                    case Package_FieldIndex.IsUseItem:
+                        this.IsUseItem = ex;
                         break;
-                    case Package_FieldIndex.AmbushMarker:
-                        this.AmbushMarker = ex;
+                    case Package_FieldIndex.IsAmbush:
+                        this.IsAmbush = ex;
                         break;
                     case Package_FieldIndex.DialogueData:
                         this.DialogueData = new MaskItem<Exception?, PackageDialogueData.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.DialogueLocation:
-                        this.DialogueLocation = new MaskItem<Exception?, PackageLocation2.ErrorMask?>(ex, null);
+                        this.DialogueLocation = new MaskItem<Exception?, PackageLocation.ErrorMask?>(ex, null);
                         break;
                     case Package_FieldIndex.OnBegin:
                         this.OnBegin = new MaskItem<Exception?, PackageEvent.ErrorMask?>(ex, null);
@@ -1173,20 +1114,17 @@ namespace Mutagen.Bethesda.Fallout3
                 Package_FieldIndex enu = (Package_FieldIndex)index;
                 switch (enu)
                 {
-                    case Package_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case Package_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
+                    case Package_FieldIndex.GeneralFlags:
+                        this.GeneralFlags = (Exception?)obj;
                         break;
                     case Package_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.FalloutBehaviorFlags:
-                        this.FalloutBehaviorFlags = (Exception?)obj;
+                    case Package_FieldIndex.BehaviorFlags:
+                        this.BehaviorFlags = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.TypeSpecificFlags:
-                        this.TypeSpecificFlags = (Exception?)obj;
+                    case Package_FieldIndex.Flags:
+                        this.Flags = (MaskItem<Exception?, APackageFlags.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.Unused2:
                         this.Unused2 = (Exception?)obj;
@@ -1195,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Location = (MaskItem<Exception?, PackageLocation.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.Location2:
-                        this.Location2 = (MaskItem<Exception?, PackageLocation2.ErrorMask?>?)obj;
+                        this.Location2 = (MaskItem<Exception?, PackageLocation.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.ScheduleMonth:
                         this.ScheduleMonth = (Exception?)obj;
@@ -1206,14 +1144,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case Package_FieldIndex.ScheduleDate:
                         this.ScheduleDate = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.ScheduleHour:
-                        this.ScheduleHour = (Exception?)obj;
+                    case Package_FieldIndex.ScheduleTime:
+                        this.ScheduleTime = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.ScheduleMinute:
-                        this.ScheduleMinute = (Exception?)obj;
-                        break;
-                    case Package_FieldIndex.Unused3:
-                        this.Unused3 = (Exception?)obj;
+                    case Package_FieldIndex.Duration:
+                        this.Duration = (Exception?)obj;
                         break;
                     case Package_FieldIndex.Target:
                         this.Target = (MaskItem<Exception?, PackageTarget.ErrorMask?>?)obj;
@@ -1227,35 +1162,35 @@ namespace Mutagen.Bethesda.Fallout3
                     case Package_FieldIndex.CombatStyle:
                         this.CombatStyle = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.EatMarker:
-                        this.EatMarker = (Exception?)obj;
+                    case Package_FieldIndex.IsEatMarker:
+                        this.IsEatMarker = (Exception?)obj;
                         break;
                     case Package_FieldIndex.EscortDistance:
                         this.EscortDistance = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.FollowTriggerRadius:
-                        this.FollowTriggerRadius = (Exception?)obj;
+                    case Package_FieldIndex.FollowStartLocationTriggerRadius:
+                        this.FollowStartLocationTriggerRadius = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.PatrolFlags:
-                        this.PatrolFlags = (Exception?)obj;
+                    case Package_FieldIndex.IsRepeatable:
+                        this.IsRepeatable = (Exception?)obj;
                         break;
                     case Package_FieldIndex.WeaponData:
                         this.WeaponData = (MaskItem<Exception?, PackageWeaponData.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.Target2:
-                        this.Target2 = (MaskItem<Exception?, PackageTarget2.ErrorMask?>?)obj;
+                        this.Target2 = (MaskItem<Exception?, PackageTarget.ErrorMask?>?)obj;
                         break;
-                    case Package_FieldIndex.UseItemMarker:
-                        this.UseItemMarker = (Exception?)obj;
+                    case Package_FieldIndex.IsUseItem:
+                        this.IsUseItem = (Exception?)obj;
                         break;
-                    case Package_FieldIndex.AmbushMarker:
-                        this.AmbushMarker = (Exception?)obj;
+                    case Package_FieldIndex.IsAmbush:
+                        this.IsAmbush = (Exception?)obj;
                         break;
                     case Package_FieldIndex.DialogueData:
                         this.DialogueData = (MaskItem<Exception?, PackageDialogueData.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.DialogueLocation:
-                        this.DialogueLocation = (MaskItem<Exception?, PackageLocation2.ErrorMask?>?)obj;
+                        this.DialogueLocation = (MaskItem<Exception?, PackageLocation.ErrorMask?>?)obj;
                         break;
                     case Package_FieldIndex.OnBegin:
                         this.OnBegin = (MaskItem<Exception?, PackageEvent.ErrorMask?>?)obj;
@@ -1275,32 +1210,30 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
-                if (Type != null) return true;
+                if (GeneralFlags != null) return true;
                 if (Unused != null) return true;
-                if (FalloutBehaviorFlags != null) return true;
-                if (TypeSpecificFlags != null) return true;
+                if (BehaviorFlags != null) return true;
+                if (Flags != null) return true;
                 if (Unused2 != null) return true;
                 if (Location != null) return true;
                 if (Location2 != null) return true;
                 if (ScheduleMonth != null) return true;
                 if (ScheduleDayOfWeek != null) return true;
                 if (ScheduleDate != null) return true;
-                if (ScheduleHour != null) return true;
-                if (ScheduleMinute != null) return true;
-                if (Unused3 != null) return true;
+                if (ScheduleTime != null) return true;
+                if (Duration != null) return true;
                 if (Target != null) return true;
                 if (Conditions != null) return true;
                 if (IdleAnimations != null) return true;
                 if (CombatStyle != null) return true;
-                if (EatMarker != null) return true;
+                if (IsEatMarker != null) return true;
                 if (EscortDistance != null) return true;
-                if (FollowTriggerRadius != null) return true;
-                if (PatrolFlags != null) return true;
+                if (FollowStartLocationTriggerRadius != null) return true;
+                if (IsRepeatable != null) return true;
                 if (WeaponData != null) return true;
                 if (Target2 != null) return true;
-                if (UseItemMarker != null) return true;
-                if (AmbushMarker != null) return true;
+                if (IsUseItem != null) return true;
+                if (IsAmbush != null) return true;
                 if (DialogueData != null) return true;
                 if (DialogueLocation != null) return true;
                 if (OnBegin != null) return true;
@@ -1333,20 +1266,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Flags, "Flags");
-                }
-                {
-                    sb.AppendItem(Type, "Type");
+                    sb.AppendItem(GeneralFlags, "GeneralFlags");
                 }
                 {
                     sb.AppendItem(Unused, "Unused");
                 }
                 {
-                    sb.AppendItem(FalloutBehaviorFlags, "FalloutBehaviorFlags");
+                    sb.AppendItem(BehaviorFlags, "BehaviorFlags");
                 }
-                {
-                    sb.AppendItem(TypeSpecificFlags, "TypeSpecificFlags");
-                }
+                Flags?.Print(sb);
                 {
                     sb.AppendItem(Unused2, "Unused2");
                 }
@@ -1362,13 +1290,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ScheduleDate, "ScheduleDate");
                 }
                 {
-                    sb.AppendItem(ScheduleHour, "ScheduleHour");
+                    sb.AppendItem(ScheduleTime, "ScheduleTime");
                 }
                 {
-                    sb.AppendItem(ScheduleMinute, "ScheduleMinute");
-                }
-                {
-                    sb.AppendItem(Unused3, "Unused3");
+                    sb.AppendItem(Duration, "Duration");
                 }
                 Target?.Print(sb);
                 if (Conditions is {} ConditionsItem)
@@ -1394,24 +1319,24 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(CombatStyle, "CombatStyle");
                 }
                 {
-                    sb.AppendItem(EatMarker, "EatMarker");
+                    sb.AppendItem(IsEatMarker, "IsEatMarker");
                 }
                 {
                     sb.AppendItem(EscortDistance, "EscortDistance");
                 }
                 {
-                    sb.AppendItem(FollowTriggerRadius, "FollowTriggerRadius");
+                    sb.AppendItem(FollowStartLocationTriggerRadius, "FollowStartLocationTriggerRadius");
                 }
                 {
-                    sb.AppendItem(PatrolFlags, "PatrolFlags");
+                    sb.AppendItem(IsRepeatable, "IsRepeatable");
                 }
                 WeaponData?.Print(sb);
                 Target2?.Print(sb);
                 {
-                    sb.AppendItem(UseItemMarker, "UseItemMarker");
+                    sb.AppendItem(IsUseItem, "IsUseItem");
                 }
                 {
-                    sb.AppendItem(AmbushMarker, "AmbushMarker");
+                    sb.AppendItem(IsAmbush, "IsAmbush");
                 }
                 DialogueData?.Print(sb);
                 DialogueLocation?.Print(sb);
@@ -1426,32 +1351,30 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Type = this.Type.Combine(rhs.Type);
+                ret.GeneralFlags = this.GeneralFlags.Combine(rhs.GeneralFlags);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.FalloutBehaviorFlags = this.FalloutBehaviorFlags.Combine(rhs.FalloutBehaviorFlags);
-                ret.TypeSpecificFlags = this.TypeSpecificFlags.Combine(rhs.TypeSpecificFlags);
+                ret.BehaviorFlags = this.BehaviorFlags.Combine(rhs.BehaviorFlags);
+                ret.Flags = this.Flags.Combine(rhs.Flags, (l, r) => l.Combine(r));
                 ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
                 ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
                 ret.Location2 = this.Location2.Combine(rhs.Location2, (l, r) => l.Combine(r));
                 ret.ScheduleMonth = this.ScheduleMonth.Combine(rhs.ScheduleMonth);
                 ret.ScheduleDayOfWeek = this.ScheduleDayOfWeek.Combine(rhs.ScheduleDayOfWeek);
                 ret.ScheduleDate = this.ScheduleDate.Combine(rhs.ScheduleDate);
-                ret.ScheduleHour = this.ScheduleHour.Combine(rhs.ScheduleHour);
-                ret.ScheduleMinute = this.ScheduleMinute.Combine(rhs.ScheduleMinute);
-                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
+                ret.ScheduleTime = this.ScheduleTime.Combine(rhs.ScheduleTime);
+                ret.Duration = this.Duration.Combine(rhs.Duration);
                 ret.Target = this.Target.Combine(rhs.Target, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.IdleAnimations = this.IdleAnimations.Combine(rhs.IdleAnimations, (l, r) => l.Combine(r));
                 ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
-                ret.EatMarker = this.EatMarker.Combine(rhs.EatMarker);
+                ret.IsEatMarker = this.IsEatMarker.Combine(rhs.IsEatMarker);
                 ret.EscortDistance = this.EscortDistance.Combine(rhs.EscortDistance);
-                ret.FollowTriggerRadius = this.FollowTriggerRadius.Combine(rhs.FollowTriggerRadius);
-                ret.PatrolFlags = this.PatrolFlags.Combine(rhs.PatrolFlags);
+                ret.FollowStartLocationTriggerRadius = this.FollowStartLocationTriggerRadius.Combine(rhs.FollowStartLocationTriggerRadius);
+                ret.IsRepeatable = this.IsRepeatable.Combine(rhs.IsRepeatable);
                 ret.WeaponData = this.WeaponData.Combine(rhs.WeaponData, (l, r) => l.Combine(r));
                 ret.Target2 = this.Target2.Combine(rhs.Target2, (l, r) => l.Combine(r));
-                ret.UseItemMarker = this.UseItemMarker.Combine(rhs.UseItemMarker);
-                ret.AmbushMarker = this.AmbushMarker.Combine(rhs.AmbushMarker);
+                ret.IsUseItem = this.IsUseItem.Combine(rhs.IsUseItem);
+                ret.IsAmbush = this.IsAmbush.Combine(rhs.IsAmbush);
                 ret.DialogueData = this.DialogueData.Combine(rhs.DialogueData, (l, r) => l.Combine(r));
                 ret.DialogueLocation = this.DialogueLocation.Combine(rhs.DialogueLocation, (l, r) => l.Combine(r));
                 ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
@@ -1479,34 +1402,32 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public bool Flags;
-            public bool Type;
+            public bool GeneralFlags;
             public bool Unused;
-            public bool FalloutBehaviorFlags;
-            public bool TypeSpecificFlags;
+            public bool BehaviorFlags;
+            public APackageFlags.TranslationMask? Flags;
             public bool Unused2;
             public PackageLocation.TranslationMask? Location;
-            public PackageLocation2.TranslationMask? Location2;
+            public PackageLocation.TranslationMask? Location2;
             public bool ScheduleMonth;
             public bool ScheduleDayOfWeek;
             public bool ScheduleDate;
-            public bool ScheduleHour;
-            public bool ScheduleMinute;
-            public bool Unused3;
+            public bool ScheduleTime;
+            public bool Duration;
             public PackageTarget.TranslationMask? Target;
             public Condition.TranslationMask? Conditions;
             public PackageIdles.TranslationMask? IdleAnimations;
             public bool CombatStyle;
-            public bool EatMarker;
+            public bool IsEatMarker;
             public bool EscortDistance;
-            public bool FollowTriggerRadius;
-            public bool PatrolFlags;
+            public bool FollowStartLocationTriggerRadius;
+            public bool IsRepeatable;
             public PackageWeaponData.TranslationMask? WeaponData;
-            public PackageTarget2.TranslationMask? Target2;
-            public bool UseItemMarker;
-            public bool AmbushMarker;
+            public PackageTarget.TranslationMask? Target2;
+            public bool IsUseItem;
+            public bool IsAmbush;
             public PackageDialogueData.TranslationMask? DialogueData;
-            public PackageLocation2.TranslationMask? DialogueLocation;
+            public PackageLocation.TranslationMask? DialogueLocation;
             public PackageEvent.TranslationMask? OnBegin;
             public PackageEvent.TranslationMask? OnEnd;
             public PackageEvent.TranslationMask? OnChange;
@@ -1518,25 +1439,22 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
-                this.Type = defaultOn;
+                this.GeneralFlags = defaultOn;
                 this.Unused = defaultOn;
-                this.FalloutBehaviorFlags = defaultOn;
-                this.TypeSpecificFlags = defaultOn;
+                this.BehaviorFlags = defaultOn;
                 this.Unused2 = defaultOn;
                 this.ScheduleMonth = defaultOn;
                 this.ScheduleDayOfWeek = defaultOn;
                 this.ScheduleDate = defaultOn;
-                this.ScheduleHour = defaultOn;
-                this.ScheduleMinute = defaultOn;
-                this.Unused3 = defaultOn;
+                this.ScheduleTime = defaultOn;
+                this.Duration = defaultOn;
                 this.CombatStyle = defaultOn;
-                this.EatMarker = defaultOn;
+                this.IsEatMarker = defaultOn;
                 this.EscortDistance = defaultOn;
-                this.FollowTriggerRadius = defaultOn;
-                this.PatrolFlags = defaultOn;
-                this.UseItemMarker = defaultOn;
-                this.AmbushMarker = defaultOn;
+                this.FollowStartLocationTriggerRadius = defaultOn;
+                this.IsRepeatable = defaultOn;
+                this.IsUseItem = defaultOn;
+                this.IsAmbush = defaultOn;
             }
 
             #endregion
@@ -1544,32 +1462,30 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Flags, null));
-                ret.Add((Type, null));
+                ret.Add((GeneralFlags, null));
                 ret.Add((Unused, null));
-                ret.Add((FalloutBehaviorFlags, null));
-                ret.Add((TypeSpecificFlags, null));
+                ret.Add((BehaviorFlags, null));
+                ret.Add((Flags != null ? Flags.OnOverall : DefaultOn, Flags?.GetCrystal()));
                 ret.Add((Unused2, null));
                 ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
                 ret.Add((Location2 != null ? Location2.OnOverall : DefaultOn, Location2?.GetCrystal()));
                 ret.Add((ScheduleMonth, null));
                 ret.Add((ScheduleDayOfWeek, null));
                 ret.Add((ScheduleDate, null));
-                ret.Add((ScheduleHour, null));
-                ret.Add((ScheduleMinute, null));
-                ret.Add((Unused3, null));
+                ret.Add((ScheduleTime, null));
+                ret.Add((Duration, null));
                 ret.Add((Target != null ? Target.OnOverall : DefaultOn, Target?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((IdleAnimations != null ? IdleAnimations.OnOverall : DefaultOn, IdleAnimations?.GetCrystal()));
                 ret.Add((CombatStyle, null));
-                ret.Add((EatMarker, null));
+                ret.Add((IsEatMarker, null));
                 ret.Add((EscortDistance, null));
-                ret.Add((FollowTriggerRadius, null));
-                ret.Add((PatrolFlags, null));
+                ret.Add((FollowStartLocationTriggerRadius, null));
+                ret.Add((IsRepeatable, null));
                 ret.Add((WeaponData != null ? WeaponData.OnOverall : DefaultOn, WeaponData?.GetCrystal()));
                 ret.Add((Target2 != null ? Target2.OnOverall : DefaultOn, Target2?.GetCrystal()));
-                ret.Add((UseItemMarker, null));
-                ret.Add((AmbushMarker, null));
+                ret.Add((IsUseItem, null));
+                ret.Add((IsAmbush, null));
                 ret.Add((DialogueData != null ? DialogueData.OnOverall : DefaultOn, DialogueData?.GetCrystal()));
                 ret.Add((DialogueLocation != null ? DialogueLocation.OnOverall : DefaultOn, DialogueLocation?.GetCrystal()));
                 ret.Add((OnBegin != null ? OnBegin.OnOverall : DefaultOn, OnBegin?.GetCrystal()));
@@ -1711,34 +1627,32 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPackageInternal>,
         IPackageGetter
     {
-        new UInt32 Flags { get; set; }
-        new Byte Type { get; set; }
+        new Package.Flag GeneralFlags { get; set; }
         new Byte Unused { get; set; }
-        new UInt16 FalloutBehaviorFlags { get; set; }
-        new UInt16 TypeSpecificFlags { get; set; }
-        new MemorySlice<Byte> Unused2 { get; set; }
+        new Package.BehaviorFlag BehaviorFlags { get; set; }
+        new APackageFlags? Flags { get; set; }
+        new UInt16? Unused2 { get; set; }
         new PackageLocation? Location { get; set; }
-        new PackageLocation2? Location2 { get; set; }
+        new PackageLocation? Location2 { get; set; }
         new SByte ScheduleMonth { get; set; }
-        new Byte ScheduleDayOfWeek { get; set; }
+        new Package.DayOfWeek ScheduleDayOfWeek { get; set; }
         new Byte ScheduleDate { get; set; }
-        new SByte ScheduleHour { get; set; }
-        new SByte ScheduleMinute { get; set; }
-        new MemorySlice<Byte> Unused3 { get; set; }
+        new SByte ScheduleTime { get; set; }
+        new Int32 Duration { get; set; }
         new PackageTarget? Target { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new PackageIdles? IdleAnimations { get; set; }
         new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
-        new Boolean EatMarker { get; set; }
+        new Boolean IsEatMarker { get; set; }
         new UInt32? EscortDistance { get; set; }
-        new Single? FollowTriggerRadius { get; set; }
-        new MemorySlice<Byte>? PatrolFlags { get; set; }
+        new Single? FollowStartLocationTriggerRadius { get; set; }
+        new Boolean? IsRepeatable { get; set; }
         new PackageWeaponData? WeaponData { get; set; }
-        new PackageTarget2? Target2 { get; set; }
-        new Boolean UseItemMarker { get; set; }
-        new Boolean AmbushMarker { get; set; }
+        new PackageTarget? Target2 { get; set; }
+        new Boolean IsUseItem { get; set; }
+        new Boolean IsAmbush { get; set; }
         new PackageDialogueData? DialogueData { get; set; }
-        new PackageLocation2? DialogueLocation { get; set; }
+        new PackageLocation? DialogueLocation { get; set; }
         new PackageEvent? OnBegin { get; set; }
         new PackageEvent? OnEnd { get; set; }
         new PackageEvent? OnChange { get; set; }
@@ -1760,34 +1674,32 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IPackageGetter>
     {
         static new ILoquiRegistration StaticRegistration => Package_Registration.Instance;
-        UInt32 Flags { get; }
-        Byte Type { get; }
+        Package.Flag GeneralFlags { get; }
         Byte Unused { get; }
-        UInt16 FalloutBehaviorFlags { get; }
-        UInt16 TypeSpecificFlags { get; }
-        ReadOnlyMemorySlice<Byte> Unused2 { get; }
+        Package.BehaviorFlag BehaviorFlags { get; }
+        IAPackageFlagsGetter? Flags { get; }
+        UInt16? Unused2 { get; }
         IPackageLocationGetter? Location { get; }
-        IPackageLocation2Getter? Location2 { get; }
+        IPackageLocationGetter? Location2 { get; }
         SByte ScheduleMonth { get; }
-        Byte ScheduleDayOfWeek { get; }
+        Package.DayOfWeek ScheduleDayOfWeek { get; }
         Byte ScheduleDate { get; }
-        SByte ScheduleHour { get; }
-        SByte ScheduleMinute { get; }
-        ReadOnlyMemorySlice<Byte> Unused3 { get; }
+        SByte ScheduleTime { get; }
+        Int32 Duration { get; }
         IPackageTargetGetter? Target { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IPackageIdlesGetter? IdleAnimations { get; }
         IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle { get; }
-        Boolean EatMarker { get; }
+        Boolean IsEatMarker { get; }
         UInt32? EscortDistance { get; }
-        Single? FollowTriggerRadius { get; }
-        ReadOnlyMemorySlice<Byte>? PatrolFlags { get; }
+        Single? FollowStartLocationTriggerRadius { get; }
+        Boolean? IsRepeatable { get; }
         IPackageWeaponDataGetter? WeaponData { get; }
-        IPackageTarget2Getter? Target2 { get; }
-        Boolean UseItemMarker { get; }
-        Boolean AmbushMarker { get; }
+        IPackageTargetGetter? Target2 { get; }
+        Boolean IsUseItem { get; }
+        Boolean IsAmbush { get; }
         IPackageDialogueDataGetter? DialogueData { get; }
-        IPackageLocation2Getter? DialogueLocation { get; }
+        IPackageLocationGetter? DialogueLocation { get; }
         IPackageEventGetter? OnBegin { get; }
         IPackageEventGetter? OnEnd { get; }
         IPackageEventGetter? OnChange { get; }
@@ -1967,37 +1879,35 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        Flags = 7,
-        Type = 8,
-        Unused = 9,
-        FalloutBehaviorFlags = 10,
-        TypeSpecificFlags = 11,
-        Unused2 = 12,
-        Location = 13,
-        Location2 = 14,
-        ScheduleMonth = 15,
-        ScheduleDayOfWeek = 16,
-        ScheduleDate = 17,
-        ScheduleHour = 18,
-        ScheduleMinute = 19,
-        Unused3 = 20,
-        Target = 21,
-        Conditions = 22,
-        IdleAnimations = 23,
-        CombatStyle = 24,
-        EatMarker = 25,
-        EscortDistance = 26,
-        FollowTriggerRadius = 27,
-        PatrolFlags = 28,
-        WeaponData = 29,
-        Target2 = 30,
-        UseItemMarker = 31,
-        AmbushMarker = 32,
-        DialogueData = 33,
-        DialogueLocation = 34,
-        OnBegin = 35,
-        OnEnd = 36,
-        OnChange = 37,
+        GeneralFlags = 7,
+        Unused = 8,
+        BehaviorFlags = 9,
+        Flags = 10,
+        Unused2 = 11,
+        Location = 12,
+        Location2 = 13,
+        ScheduleMonth = 14,
+        ScheduleDayOfWeek = 15,
+        ScheduleDate = 16,
+        ScheduleTime = 17,
+        Duration = 18,
+        Target = 19,
+        Conditions = 20,
+        IdleAnimations = 21,
+        CombatStyle = 22,
+        IsEatMarker = 23,
+        EscortDistance = 24,
+        FollowStartLocationTriggerRadius = 25,
+        IsRepeatable = 26,
+        WeaponData = 27,
+        Target2 = 28,
+        IsUseItem = 29,
+        IsAmbush = 30,
+        DialogueData = 31,
+        DialogueLocation = 32,
+        OnBegin = 33,
+        OnEnd = 34,
+        OnChange = 35,
     }
     #endregion
 
@@ -2008,9 +1918,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(Package.Mask<>);
 
@@ -2107,32 +2017,30 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPackageInternal item)
         {
             ClearPartial();
-            item.Flags = default(UInt32);
-            item.Type = default(Byte);
+            item.GeneralFlags = default(Package.Flag);
             item.Unused = default(Byte);
-            item.FalloutBehaviorFlags = default(UInt16);
-            item.TypeSpecificFlags = default(UInt16);
-            item.Unused2 = new byte[2];
+            item.BehaviorFlags = default(Package.BehaviorFlag);
+            item.Flags = null;
+            item.Unused2 = default;
             item.Location = null;
             item.Location2 = null;
             item.ScheduleMonth = default(SByte);
-            item.ScheduleDayOfWeek = default(Byte);
+            item.ScheduleDayOfWeek = default(Package.DayOfWeek);
             item.ScheduleDate = default(Byte);
-            item.ScheduleHour = default(SByte);
-            item.ScheduleMinute = default(SByte);
-            item.Unused3 = new byte[3];
+            item.ScheduleTime = default(SByte);
+            item.Duration = default(Int32);
             item.Target = null;
             item.Conditions.Clear();
             item.IdleAnimations = null;
             item.CombatStyle.Clear();
-            item.EatMarker = default(Boolean);
+            item.IsEatMarker = default(Boolean);
             item.EscortDistance = default;
-            item.FollowTriggerRadius = default;
-            item.PatrolFlags = default;
+            item.FollowStartLocationTriggerRadius = default;
+            item.IsRepeatable = default;
             item.WeaponData = null;
             item.Target2 = null;
-            item.UseItemMarker = default(Boolean);
-            item.AmbushMarker = default(Boolean);
+            item.IsUseItem = default(Boolean);
+            item.IsAmbush = default(Boolean);
             item.DialogueData = null;
             item.DialogueLocation = null;
             item.OnBegin = null;
@@ -2234,12 +2142,15 @@ namespace Mutagen.Bethesda.Fallout3
             Package.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Type = item.Type == rhs.Type;
+            ret.GeneralFlags = item.GeneralFlags == rhs.GeneralFlags;
             ret.Unused = item.Unused == rhs.Unused;
-            ret.FalloutBehaviorFlags = item.FalloutBehaviorFlags == rhs.FalloutBehaviorFlags;
-            ret.TypeSpecificFlags = item.TypeSpecificFlags == rhs.TypeSpecificFlags;
-            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
+            ret.BehaviorFlags = item.BehaviorFlags == rhs.BehaviorFlags;
+            ret.Flags = EqualsMaskHelper.EqualsHelper(
+                item.Flags,
+                rhs.Flags,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Unused2 = item.Unused2 == rhs.Unused2;
             ret.Location = EqualsMaskHelper.EqualsHelper(
                 item.Location,
                 rhs.Location,
@@ -2253,9 +2164,8 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ScheduleMonth = item.ScheduleMonth == rhs.ScheduleMonth;
             ret.ScheduleDayOfWeek = item.ScheduleDayOfWeek == rhs.ScheduleDayOfWeek;
             ret.ScheduleDate = item.ScheduleDate == rhs.ScheduleDate;
-            ret.ScheduleHour = item.ScheduleHour == rhs.ScheduleHour;
-            ret.ScheduleMinute = item.ScheduleMinute == rhs.ScheduleMinute;
-            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
+            ret.ScheduleTime = item.ScheduleTime == rhs.ScheduleTime;
+            ret.Duration = item.Duration == rhs.Duration;
             ret.Target = EqualsMaskHelper.EqualsHelper(
                 item.Target,
                 rhs.Target,
@@ -2271,10 +2181,10 @@ namespace Mutagen.Bethesda.Fallout3
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.CombatStyle = item.CombatStyle.Equals(rhs.CombatStyle);
-            ret.EatMarker = item.EatMarker == rhs.EatMarker;
+            ret.IsEatMarker = item.IsEatMarker == rhs.IsEatMarker;
             ret.EscortDistance = item.EscortDistance == rhs.EscortDistance;
-            ret.FollowTriggerRadius = item.FollowTriggerRadius.EqualsWithin(rhs.FollowTriggerRadius);
-            ret.PatrolFlags = MemorySliceExt.SequenceEqual(item.PatrolFlags, rhs.PatrolFlags);
+            ret.FollowStartLocationTriggerRadius = item.FollowStartLocationTriggerRadius.EqualsWithin(rhs.FollowStartLocationTriggerRadius);
+            ret.IsRepeatable = item.IsRepeatable == rhs.IsRepeatable;
             ret.WeaponData = EqualsMaskHelper.EqualsHelper(
                 item.WeaponData,
                 rhs.WeaponData,
@@ -2285,8 +2195,8 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Target2,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.UseItemMarker = item.UseItemMarker == rhs.UseItemMarker;
-            ret.AmbushMarker = item.AmbushMarker == rhs.AmbushMarker;
+            ret.IsUseItem = item.IsUseItem == rhs.IsUseItem;
+            ret.IsAmbush = item.IsAmbush == rhs.IsAmbush;
             ret.DialogueData = EqualsMaskHelper.EqualsHelper(
                 item.DialogueData,
                 rhs.DialogueData,
@@ -2361,29 +2271,27 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Flags ?? true)
+            if (printMask?.GeneralFlags ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Type ?? true)
-            {
-                sb.AppendItem(item.Type, "Type");
+                sb.AppendItem(item.GeneralFlags, "GeneralFlags");
             }
             if (printMask?.Unused ?? true)
             {
                 sb.AppendItem(item.Unused, "Unused");
             }
-            if (printMask?.FalloutBehaviorFlags ?? true)
+            if (printMask?.BehaviorFlags ?? true)
             {
-                sb.AppendItem(item.FalloutBehaviorFlags, "FalloutBehaviorFlags");
+                sb.AppendItem(item.BehaviorFlags, "BehaviorFlags");
             }
-            if (printMask?.TypeSpecificFlags ?? true)
+            if ((printMask?.Flags?.Overall ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(item.TypeSpecificFlags, "TypeSpecificFlags");
+                FlagsItem?.Print(sb, "Flags");
             }
-            if (printMask?.Unused2 ?? true)
+            if ((printMask?.Unused2 ?? true)
+                && item.Unused2 is {} Unused2Item)
             {
-                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+                sb.AppendItem(Unused2Item, "Unused2");
             }
             if ((printMask?.Location?.Overall ?? true)
                 && item.Location is {} LocationItem)
@@ -2407,17 +2315,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.ScheduleDate, "ScheduleDate");
             }
-            if (printMask?.ScheduleHour ?? true)
+            if (printMask?.ScheduleTime ?? true)
             {
-                sb.AppendItem(item.ScheduleHour, "ScheduleHour");
+                sb.AppendItem(item.ScheduleTime, "ScheduleTime");
             }
-            if (printMask?.ScheduleMinute ?? true)
+            if (printMask?.Duration ?? true)
             {
-                sb.AppendItem(item.ScheduleMinute, "ScheduleMinute");
-            }
-            if (printMask?.Unused3 ?? true)
-            {
-                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
+                sb.AppendItem(item.Duration, "Duration");
             }
             if ((printMask?.Target?.Overall ?? true)
                 && item.Target is {} TargetItem)
@@ -2447,24 +2351,24 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.CombatStyle.FormKeyNullable, "CombatStyle");
             }
-            if (printMask?.EatMarker ?? true)
+            if (printMask?.IsEatMarker ?? true)
             {
-                sb.AppendItem(item.EatMarker, "EatMarker");
+                sb.AppendItem(item.IsEatMarker, "IsEatMarker");
             }
             if ((printMask?.EscortDistance ?? true)
                 && item.EscortDistance is {} EscortDistanceItem)
             {
                 sb.AppendItem(EscortDistanceItem, "EscortDistance");
             }
-            if ((printMask?.FollowTriggerRadius ?? true)
-                && item.FollowTriggerRadius is {} FollowTriggerRadiusItem)
+            if ((printMask?.FollowStartLocationTriggerRadius ?? true)
+                && item.FollowStartLocationTriggerRadius is {} FollowStartLocationTriggerRadiusItem)
             {
-                sb.AppendItem(FollowTriggerRadiusItem, "FollowTriggerRadius");
+                sb.AppendItem(FollowStartLocationTriggerRadiusItem, "FollowStartLocationTriggerRadius");
             }
-            if ((printMask?.PatrolFlags ?? true)
-                && item.PatrolFlags is {} PatrolFlagsItem)
+            if ((printMask?.IsRepeatable ?? true)
+                && item.IsRepeatable is {} IsRepeatableItem)
             {
-                sb.AppendLine($"PatrolFlags => {SpanExt.ToHexString(PatrolFlagsItem)}");
+                sb.AppendItem(IsRepeatableItem, "IsRepeatable");
             }
             if ((printMask?.WeaponData?.Overall ?? true)
                 && item.WeaponData is {} WeaponDataItem)
@@ -2476,13 +2380,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 Target2Item?.Print(sb, "Target2");
             }
-            if (printMask?.UseItemMarker ?? true)
+            if (printMask?.IsUseItem ?? true)
             {
-                sb.AppendItem(item.UseItemMarker, "UseItemMarker");
+                sb.AppendItem(item.IsUseItem, "IsUseItem");
             }
-            if (printMask?.AmbushMarker ?? true)
+            if (printMask?.IsAmbush ?? true)
             {
-                sb.AppendItem(item.AmbushMarker, "AmbushMarker");
+                sb.AppendItem(item.IsAmbush, "IsAmbush");
             }
             if ((printMask?.DialogueData?.Overall ?? true)
                 && item.DialogueData is {} DialogueDataItem)
@@ -2559,29 +2463,29 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.GeneralFlags) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
-            {
-                if (lhs.Type != rhs.Type) return false;
+                if (lhs.GeneralFlags != rhs.GeneralFlags) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unused) ?? true))
             {
                 if (lhs.Unused != rhs.Unused) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.FalloutBehaviorFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.BehaviorFlags) ?? true))
             {
-                if (lhs.FalloutBehaviorFlags != rhs.FalloutBehaviorFlags) return false;
+                if (lhs.BehaviorFlags != rhs.BehaviorFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.TypeSpecificFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
             {
-                if (lhs.TypeSpecificFlags != rhs.TypeSpecificFlags) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
+                {
+                    if (!((APackageFlagsCommon)((IAPackageFlagsGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Flags))) return false;
+                }
+                else if (!isFlagsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unused2) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+                if (lhs.Unused2 != rhs.Unused2) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Location) ?? true))
             {
@@ -2595,7 +2499,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Location2, rhs.Location2, out var lhsLocation2, out var rhsLocation2, out var isLocation2Equal))
                 {
-                    if (!((PackageLocation2Common)((IPackageLocation2Getter)lhsLocation2).CommonInstance()!).Equals(lhsLocation2, rhsLocation2, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Location2))) return false;
+                    if (!((PackageLocationCommon)((IPackageLocationGetter)lhsLocation2).CommonInstance()!).Equals(lhsLocation2, rhsLocation2, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Location2))) return false;
                 }
                 else if (!isLocation2Equal) return false;
             }
@@ -2611,17 +2515,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.ScheduleDate != rhs.ScheduleDate) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleTime) ?? true))
             {
-                if (lhs.ScheduleHour != rhs.ScheduleHour) return false;
+                if (lhs.ScheduleTime != rhs.ScheduleTime) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Duration) ?? true))
             {
-                if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Unused3) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
+                if (lhs.Duration != rhs.Duration) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Target) ?? true))
             {
@@ -2647,21 +2547,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.EatMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IsEatMarker) ?? true))
             {
-                if (lhs.EatMarker != rhs.EatMarker) return false;
+                if (lhs.IsEatMarker != rhs.IsEatMarker) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.EscortDistance) ?? true))
             {
                 if (lhs.EscortDistance != rhs.EscortDistance) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.FollowTriggerRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.FollowStartLocationTriggerRadius) ?? true))
             {
-                if (!lhs.FollowTriggerRadius.EqualsWithin(rhs.FollowTriggerRadius)) return false;
+                if (!lhs.FollowStartLocationTriggerRadius.EqualsWithin(rhs.FollowStartLocationTriggerRadius)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.PatrolFlags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IsRepeatable) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.PatrolFlags, rhs.PatrolFlags)) return false;
+                if (lhs.IsRepeatable != rhs.IsRepeatable) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.WeaponData) ?? true))
             {
@@ -2675,17 +2575,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Target2, rhs.Target2, out var lhsTarget2, out var rhsTarget2, out var isTarget2Equal))
                 {
-                    if (!((PackageTarget2Common)((IPackageTarget2Getter)lhsTarget2).CommonInstance()!).Equals(lhsTarget2, rhsTarget2, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Target2))) return false;
+                    if (!((PackageTargetCommon)((IPackageTargetGetter)lhsTarget2).CommonInstance()!).Equals(lhsTarget2, rhsTarget2, equalsMask?.GetSubCrystal((int)Package_FieldIndex.Target2))) return false;
                 }
                 else if (!isTarget2Equal) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.UseItemMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IsUseItem) ?? true))
             {
-                if (lhs.UseItemMarker != rhs.UseItemMarker) return false;
+                if (lhs.IsUseItem != rhs.IsUseItem) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.AmbushMarker) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.IsAmbush) ?? true))
             {
-                if (lhs.AmbushMarker != rhs.AmbushMarker) return false;
+                if (lhs.IsAmbush != rhs.IsAmbush) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.DialogueData) ?? true))
             {
@@ -2699,7 +2599,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (EqualsMaskHelper.RefEquality(lhs.DialogueLocation, rhs.DialogueLocation, out var lhsDialogueLocation, out var rhsDialogueLocation, out var isDialogueLocationEqual))
                 {
-                    if (!((PackageLocation2Common)((IPackageLocation2Getter)lhsDialogueLocation).CommonInstance()!).Equals(lhsDialogueLocation, rhsDialogueLocation, equalsMask?.GetSubCrystal((int)Package_FieldIndex.DialogueLocation))) return false;
+                    if (!((PackageLocationCommon)((IPackageLocationGetter)lhsDialogueLocation).CommonInstance()!).Equals(lhsDialogueLocation, rhsDialogueLocation, equalsMask?.GetSubCrystal((int)Package_FieldIndex.DialogueLocation))) return false;
                 }
                 else if (!isDialogueLocationEqual) return false;
             }
@@ -2755,12 +2655,17 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPackageGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Flags);
-            hash.Add(item.Type);
+            hash.Add(item.GeneralFlags);
             hash.Add(item.Unused);
-            hash.Add(item.FalloutBehaviorFlags);
-            hash.Add(item.TypeSpecificFlags);
-            hash.Add(item.Unused2);
+            hash.Add(item.BehaviorFlags);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.Unused2 is {} Unused2item)
+            {
+                hash.Add(Unused2item);
+            }
             if (item.Location is {} Locationitem)
             {
                 hash.Add(Locationitem);
@@ -2772,9 +2677,8 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.ScheduleMonth);
             hash.Add(item.ScheduleDayOfWeek);
             hash.Add(item.ScheduleDate);
-            hash.Add(item.ScheduleHour);
-            hash.Add(item.ScheduleMinute);
-            hash.Add(item.Unused3);
+            hash.Add(item.ScheduleTime);
+            hash.Add(item.Duration);
             if (item.Target is {} Targetitem)
             {
                 hash.Add(Targetitem);
@@ -2785,18 +2689,18 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(IdleAnimationsitem);
             }
             hash.Add(item.CombatStyle);
-            hash.Add(item.EatMarker);
+            hash.Add(item.IsEatMarker);
             if (item.EscortDistance is {} EscortDistanceitem)
             {
                 hash.Add(EscortDistanceitem);
             }
-            if (item.FollowTriggerRadius is {} FollowTriggerRadiusitem)
+            if (item.FollowStartLocationTriggerRadius is {} FollowStartLocationTriggerRadiusitem)
             {
-                hash.Add(FollowTriggerRadiusitem);
+                hash.Add(FollowStartLocationTriggerRadiusitem);
             }
-            if (item.PatrolFlags is {} PatrolFlagsItem)
+            if (item.IsRepeatable is {} IsRepeatableitem)
             {
-                hash.Add(PatrolFlagsItem);
+                hash.Add(IsRepeatableitem);
             }
             if (item.WeaponData is {} WeaponDataitem)
             {
@@ -2806,8 +2710,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Target2item);
             }
-            hash.Add(item.UseItemMarker);
-            hash.Add(item.AmbushMarker);
+            hash.Add(item.IsUseItem);
+            hash.Add(item.IsAmbush);
             if (item.DialogueData is {} DialogueDataitem)
             {
                 hash.Add(DialogueDataitem);
@@ -2857,23 +2761,23 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            if (obj.Location is {} LocationItems)
+            if (obj.Location is IFormLinkContainerGetter LocationlinkCont)
             {
-                foreach (var item in LocationItems.EnumerateFormLinks(iterateNestedRecords))
+                foreach (var item in LocationlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            if (obj.Location2 is {} Location2Items)
+            if (obj.Location2 is IFormLinkContainerGetter Location2linkCont)
             {
-                foreach (var item in Location2Items.EnumerateFormLinks(iterateNestedRecords))
+                foreach (var item in Location2linkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            if (obj.Target is {} TargetItems)
+            if (obj.Target is IFormLinkContainerGetter TargetlinkCont)
             {
-                foreach (var item in TargetItems.EnumerateFormLinks(iterateNestedRecords))
+                foreach (var item in TargetlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2893,9 +2797,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return CombatStyleInfo;
             }
-            if (obj.Target2 is {} Target2Items)
+            if (obj.Target2 is IFormLinkContainerGetter Target2linkCont)
             {
-                foreach (var item in Target2Items.EnumerateFormLinks(iterateNestedRecords))
+                foreach (var item in Target2linkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2907,9 +2811,9 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
-            if (obj.DialogueLocation is {} DialogueLocationItems)
+            if (obj.DialogueLocation is IFormLinkContainerGetter DialogueLocationlinkCont)
             {
-                foreach (var item in DialogueLocationItems.EnumerateFormLinks(iterateNestedRecords))
+                foreach (var item in DialogueLocationlinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -3009,29 +2913,47 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.GeneralFlags) ?? true))
             {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
-            {
-                item.Type = rhs.Type;
+                item.GeneralFlags = rhs.GeneralFlags;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unused) ?? true))
             {
                 item.Unused = rhs.Unused;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.FalloutBehaviorFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.BehaviorFlags) ?? true))
             {
-                item.FalloutBehaviorFlags = rhs.FalloutBehaviorFlags;
+                item.BehaviorFlags = rhs.BehaviorFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.TypeSpecificFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
             {
-                item.TypeSpecificFlags = rhs.TypeSpecificFlags;
+                errorMask?.PushIndex((int)Package_FieldIndex.Flags);
+                try
+                {
+                    if(rhs.Flags is {} rhsFlags)
+                    {
+                        item.Flags = rhsFlags.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Package_FieldIndex.Flags));
+                    }
+                    else
+                    {
+                        item.Flags = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unused2) ?? true))
             {
-                item.Unused2 = rhs.Unused2.ToArray();
+                item.Unused2 = rhs.Unused2;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Location) ?? true))
             {
@@ -3097,17 +3019,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ScheduleDate = rhs.ScheduleDate;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleTime) ?? true))
             {
-                item.ScheduleHour = rhs.ScheduleHour;
+                item.ScheduleTime = rhs.ScheduleTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Duration) ?? true))
             {
-                item.ScheduleMinute = rhs.ScheduleMinute;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Unused3) ?? true))
-            {
-                item.Unused3 = rhs.Unused3.ToArray();
+                item.Duration = rhs.Duration;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.Target) ?? true))
             {
@@ -3189,28 +3107,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.CombatStyle.SetTo(rhs.CombatStyle.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.EatMarker) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.IsEatMarker) ?? true))
             {
-                item.EatMarker = rhs.EatMarker;
+                item.IsEatMarker = rhs.IsEatMarker;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.EscortDistance) ?? true))
             {
                 item.EscortDistance = rhs.EscortDistance;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.FollowTriggerRadius) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.FollowStartLocationTriggerRadius) ?? true))
             {
-                item.FollowTriggerRadius = rhs.FollowTriggerRadius;
+                item.FollowStartLocationTriggerRadius = rhs.FollowStartLocationTriggerRadius;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.PatrolFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.IsRepeatable) ?? true))
             {
-                if(rhs.PatrolFlags is {} PatrolFlagsrhs)
-                {
-                    item.PatrolFlags = PatrolFlagsrhs.ToArray();
-                }
-                else
-                {
-                    item.PatrolFlags = default;
-                }
+                item.IsRepeatable = rhs.IsRepeatable;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.WeaponData) ?? true))
             {
@@ -3264,13 +3175,13 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.UseItemMarker) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.IsUseItem) ?? true))
             {
-                item.UseItemMarker = rhs.UseItemMarker;
+                item.IsUseItem = rhs.IsUseItem;
             }
-            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.AmbushMarker) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.IsAmbush) ?? true))
             {
-                item.AmbushMarker = rhs.AmbushMarker;
+                item.IsAmbush = rhs.IsAmbush;
             }
             if ((copyMask?.GetShouldTranslate((int)Package_FieldIndex.DialogueData) ?? true))
             {
@@ -3562,6 +3473,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly PackageBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IPackageGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IPackageGetter item,
             MutagenWriter writer,
@@ -3571,48 +3491,49 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PKDT)))
-            {
-                writer.Write(item.Flags);
-                writer.Write(item.Type);
-                writer.Write(item.Unused);
-                writer.Write(item.FalloutBehaviorFlags);
-                writer.Write(item.TypeSpecificFlags);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused2);
-            }
+            PackageBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
             if (item.Location is {} LocationItem)
             {
-                ((PackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
-                    item: LocationItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.PLDT))
+                {
+                    ((PackageLocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
+                        item: LocationItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             if (item.Location2 is {} Location2Item)
             {
-                ((PackageLocation2BinaryWriteTranslation)((IBinaryItem)Location2Item).BinaryWriteTranslator).Write(
-                    item: Location2Item,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.PLD2))
+                {
+                    ((PackageLocationBinaryWriteTranslation)((IBinaryItem)Location2Item).BinaryWriteTranslator).Write(
+                        item: Location2Item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PSDT)))
             {
                 writer.Write(item.ScheduleMonth);
-                writer.Write(item.ScheduleDayOfWeek);
+                EnumBinaryTranslation<Package.DayOfWeek, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.ScheduleDayOfWeek,
+                    length: 1);
                 writer.Write(item.ScheduleDate);
-                writer.Write(item.ScheduleHour);
-                writer.Write(item.ScheduleMinute);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unused3);
+                writer.Write(item.ScheduleTime);
+                writer.Write(item.Duration);
             }
             if (item.Target is {} TargetItem)
             {
-                ((PackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
-                    item: TargetItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.PTDT))
+                {
+                    ((PackageTargetBinaryWriteTranslation)((IBinaryItem)TargetItem).BinaryWriteTranslator).Write(
+                        item: TargetItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
@@ -3638,7 +3559,7 @@ namespace Mutagen.Bethesda.Fallout3
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.EatMarker,
+                item: item.IsEatMarker,
                 header: translationParams.ConvertToCustom(RecordTypes.PKED));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -3646,12 +3567,11 @@ namespace Mutagen.Bethesda.Fallout3
                 header: translationParams.ConvertToCustom(RecordTypes.PKE2));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.FollowTriggerRadius,
+                item: item.FollowStartLocationTriggerRadius,
                 header: translationParams.ConvertToCustom(RecordTypes.PKFD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            PackageBinaryWriteTranslation.WriteBinaryIsRepeatable(
                 writer: writer,
-                item: item.PatrolFlags,
-                header: translationParams.ConvertToCustom(RecordTypes.PKPT));
+                item: item);
             if (item.WeaponData is {} WeaponDataItem)
             {
                 ((PackageWeaponDataBinaryWriteTranslation)((IBinaryItem)WeaponDataItem).BinaryWriteTranslator).Write(
@@ -3661,18 +3581,21 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (item.Target2 is {} Target2Item)
             {
-                ((PackageTarget2BinaryWriteTranslation)((IBinaryItem)Target2Item).BinaryWriteTranslator).Write(
-                    item: Target2Item,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.PTD2))
+                {
+                    ((PackageTargetBinaryWriteTranslation)((IBinaryItem)Target2Item).BinaryWriteTranslator).Write(
+                        item: Target2Item,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.UseItemMarker,
+                item: item.IsUseItem,
                 header: translationParams.ConvertToCustom(RecordTypes.PUID));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.AmbushMarker,
+                item: item.IsAmbush,
                 header: translationParams.ConvertToCustom(RecordTypes.PKAM));
             if (item.DialogueData is {} DialogueDataItem)
             {
@@ -3683,10 +3606,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (item.DialogueLocation is {} DialogueLocationItem)
             {
-                ((PackageLocation2BinaryWriteTranslation)((IBinaryItem)DialogueLocationItem).BinaryWriteTranslator).Write(
-                    item: DialogueLocationItem,
-                    writer: writer,
-                    translationParams: translationParams);
+                using (HeaderExport.Subrecord(writer, RecordTypes.PLD2))
+                {
+                    ((PackageLocationBinaryWriteTranslation)((IBinaryItem)DialogueLocationItem).BinaryWriteTranslator).Write(
+                        item: DialogueLocationItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
             }
             if (item.OnBegin is {} OnBeginItem)
             {
@@ -3712,6 +3638,32 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IPackageGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IPackageGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryIsRepeatableCustom(
+            MutagenWriter writer,
+            IPackageGetter item);
+
+        public static void WriteBinaryIsRepeatable(
+            MutagenWriter writer,
+            IPackageGetter item)
+        {
+            WriteBinaryIsRepeatableCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -3768,6 +3720,15 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly PackageBinaryCreateTranslation Instance = new PackageBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.PACK;
+        public static void FillBinaryStructs(
+            IPackageInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IPackageInternal item,
             MutagenFrame frame,
@@ -3782,24 +3743,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.PKDT:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.Flags = dataFrame.ReadUInt32();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Type = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Unused = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 2) return null;
-                    item.FalloutBehaviorFlags = dataFrame.ReadUInt16();
-                    if (dataFrame.Remaining < 2) return null;
-                    item.TypeSpecificFlags = dataFrame.ReadUInt16();
-                    item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
-                    return (int)Package_FieldIndex.Unused2;
+                    PackageBinaryCreateTranslation.FillBinaryFlagsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                    return (int)Package_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PLDT:
                 {
-                    item.Location = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.Location = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Package_FieldIndex.Location;
                 }
                 case RecordTypeInts.PLD2:
@@ -3807,12 +3760,14 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.Location)
                     {
-                        item.Location2 = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                        item.Location2 = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                         return new ParseResult((int)Package_FieldIndex.Location2, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.DialogueData)
                     {
-                        item.DialogueLocation = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                        item.DialogueLocation = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                         return new ParseResult((int)Package_FieldIndex.DialogueLocation, nextRecordType);
                     }
                     else
@@ -3820,10 +3775,12 @@ namespace Mutagen.Bethesda.Fallout3
                         switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                         {
                             case 0:
-                                item.Location2 = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                                item.Location2 = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                                 return new ParseResult((int)Package_FieldIndex.Location2, nextRecordType);
                             case 1:
-                                item.DialogueLocation = Mutagen.Bethesda.Fallout3.PackageLocation2.CreateFromBinary(frame: frame);
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                                item.DialogueLocation = Mutagen.Bethesda.Fallout3.PackageLocation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                                 return new ParseResult((int)Package_FieldIndex.DialogueLocation, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -3837,19 +3794,21 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 1) return null;
                     item.ScheduleMonth = dataFrame.ReadInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.ScheduleDayOfWeek = dataFrame.ReadUInt8();
+                    item.ScheduleDayOfWeek = EnumBinaryTranslation<Package.DayOfWeek, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     if (dataFrame.Remaining < 1) return null;
                     item.ScheduleDate = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.ScheduleHour = dataFrame.ReadInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.ScheduleMinute = dataFrame.ReadInt8();
-                    item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
-                    return (int)Package_FieldIndex.Unused3;
+                    item.ScheduleTime = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Duration = dataFrame.ReadInt32();
+                    return (int)Package_FieldIndex.Duration;
                 }
                 case RecordTypeInts.PTDT:
                 {
-                    item.Target = Mutagen.Bethesda.Fallout3.PackageTarget.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.Target = Mutagen.Bethesda.Fallout3.PackageTarget.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Package_FieldIndex.Target;
                 }
                 case RecordTypeInts.CTDA:
@@ -3877,8 +3836,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PKED:
                 {
-                    item.EatMarker = true;
-                    return (int)Package_FieldIndex.EatMarker;
+                    item.IsEatMarker = true;
+                    return (int)Package_FieldIndex.IsEatMarker;
                 }
                 case RecordTypeInts.PKE2:
                 {
@@ -3889,14 +3848,16 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PKFD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FollowTriggerRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Package_FieldIndex.FollowTriggerRadius;
+                    item.FollowStartLocationTriggerRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Package_FieldIndex.FollowStartLocationTriggerRadius;
                 }
                 case RecordTypeInts.PKPT:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PatrolFlags = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Package_FieldIndex.PatrolFlags;
+                    PackageBinaryCreateTranslation.FillBinaryIsRepeatableCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
+                    return (int)Package_FieldIndex.IsRepeatable;
                 }
                 case RecordTypeInts.PKW3:
                 {
@@ -3905,18 +3866,19 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PTD2:
                 {
-                    item.Target2 = Mutagen.Bethesda.Fallout3.PackageTarget2.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.Target2 = Mutagen.Bethesda.Fallout3.PackageTarget.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Package_FieldIndex.Target2;
                 }
                 case RecordTypeInts.PUID:
                 {
-                    item.UseItemMarker = true;
-                    return (int)Package_FieldIndex.UseItemMarker;
+                    item.IsUseItem = true;
+                    return (int)Package_FieldIndex.IsUseItem;
                 }
                 case RecordTypeInts.PKAM:
                 {
-                    item.AmbushMarker = true;
-                    return (int)Package_FieldIndex.AmbushMarker;
+                    item.IsAmbush = true;
+                    return (int)Package_FieldIndex.IsAmbush;
                 }
                 case RecordTypeInts.PKDD:
                 {
@@ -3958,6 +3920,16 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IPackageInternal item,
+            PreviousParse lastParsed);
+
+        public static partial void FillBinaryIsRepeatableCustom(
+            MutagenFrame frame,
+            IPackageInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -4006,45 +3978,8 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IPackageGetter);
 
 
-        private RangeInt32? _PKDTLocation;
-        #region Flags
-        private int _FlagsLocation => _PKDTLocation!.Value.Min;
-        private bool _Flags_IsSet => _PKDTLocation.HasValue;
-        public UInt32 Flags => _Flags_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation, 4)) : default(UInt32);
-        #endregion
-        #region Type
-        private int _TypeLocation => _PKDTLocation!.Value.Min + 0x4;
-        private bool _Type_IsSet => _PKDTLocation.HasValue;
-        public Byte Type => _Type_IsSet ? _recordData.Span[_TypeLocation] : default;
-        #endregion
-        #region Unused
-        private int _UnusedLocation => _PKDTLocation!.Value.Min + 0x5;
-        private bool _Unused_IsSet => _PKDTLocation.HasValue;
-        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
-        #endregion
-        #region FalloutBehaviorFlags
-        private int _FalloutBehaviorFlagsLocation => _PKDTLocation!.Value.Min + 0x6;
-        private bool _FalloutBehaviorFlags_IsSet => _PKDTLocation.HasValue;
-        public UInt16 FalloutBehaviorFlags => _FalloutBehaviorFlags_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FalloutBehaviorFlagsLocation, 2)) : default(UInt16);
-        #endregion
-        #region TypeSpecificFlags
-        private int _TypeSpecificFlagsLocation => _PKDTLocation!.Value.Min + 0x8;
-        private bool _TypeSpecificFlags_IsSet => _PKDTLocation.HasValue;
-        public UInt16 TypeSpecificFlags => _TypeSpecificFlags_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_TypeSpecificFlagsLocation, 2)) : default(UInt16);
-        #endregion
-        #region Unused2
-        private int _Unused2Location => _PKDTLocation!.Value.Min + 0xA;
-        private bool _Unused2_IsSet => _PKDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused2 => _Unused2_IsSet ? _recordData.Span.Slice(_Unused2Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
-        #endregion
-        #region Location
-        private RangeInt32? _LocationLocation;
-        public IPackageLocationGetter? Location => _LocationLocation.HasValue ? PackageLocationBinaryOverlay.PackageLocationFactory(_recordData.Slice(_LocationLocation!.Value.Min), _package) : default;
-        #endregion
-        #region Location2
-        private RangeInt32? _Location2Location;
-        public IPackageLocation2Getter? Location2 => _Location2Location.HasValue ? PackageLocation2BinaryOverlay.PackageLocation2Factory(_recordData.Slice(_Location2Location!.Value.Min), _package) : default;
-        #endregion
+        public IPackageLocationGetter? Location { get; private set; }
+        public IPackageLocationGetter? Location2 { get; private set; }
         private RangeInt32? _PSDTLocation;
         #region ScheduleMonth
         private int _ScheduleMonthLocation => _PSDTLocation!.Value.Min;
@@ -4054,78 +3989,68 @@ namespace Mutagen.Bethesda.Fallout3
         #region ScheduleDayOfWeek
         private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
         private bool _ScheduleDayOfWeek_IsSet => _PSDTLocation.HasValue;
-        public Byte ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? _recordData.Span[_ScheduleDayOfWeekLocation] : default;
+        public Package.DayOfWeek ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? (Package.DayOfWeek)_recordData.Span.Slice(_ScheduleDayOfWeekLocation, 0x1)[0] : default;
         #endregion
         #region ScheduleDate
         private int _ScheduleDateLocation => _PSDTLocation!.Value.Min + 0x2;
         private bool _ScheduleDate_IsSet => _PSDTLocation.HasValue;
         public Byte ScheduleDate => _ScheduleDate_IsSet ? _recordData.Span[_ScheduleDateLocation] : default;
         #endregion
-        #region ScheduleHour
-        private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;
-        private bool _ScheduleHour_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleHour => _ScheduleHour_IsSet ? (sbyte)_recordData.Slice(_ScheduleHourLocation, 1)[0] : default(SByte);
+        #region ScheduleTime
+        private int _ScheduleTimeLocation => _PSDTLocation!.Value.Min + 0x3;
+        private bool _ScheduleTime_IsSet => _PSDTLocation.HasValue;
+        public SByte ScheduleTime => _ScheduleTime_IsSet ? (sbyte)_recordData.Slice(_ScheduleTimeLocation, 1)[0] : default(SByte);
         #endregion
-        #region ScheduleMinute
-        private int _ScheduleMinuteLocation => _PSDTLocation!.Value.Min + 0x4;
-        private bool _ScheduleMinute_IsSet => _PSDTLocation.HasValue;
-        public SByte ScheduleMinute => _ScheduleMinute_IsSet ? (sbyte)_recordData.Slice(_ScheduleMinuteLocation, 1)[0] : default(SByte);
+        #region Duration
+        private int _DurationLocation => _PSDTLocation!.Value.Min + 0x4;
+        private bool _Duration_IsSet => _PSDTLocation.HasValue;
+        public Int32 Duration => _Duration_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DurationLocation, 4)) : default(Int32);
         #endregion
-        #region Unused3
-        private int _Unused3Location => _PSDTLocation!.Value.Min + 0x5;
-        private bool _Unused3_IsSet => _PSDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused3 => _Unused3_IsSet ? _recordData.Span.Slice(_Unused3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
-        #endregion
-        #region Target
-        private RangeInt32? _TargetLocation;
-        public IPackageTargetGetter? Target => _TargetLocation.HasValue ? PackageTargetBinaryOverlay.PackageTargetFactory(_recordData.Slice(_TargetLocation!.Value.Min), _package) : default;
-        #endregion
+        public IPackageTargetGetter? Target { get; private set; }
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         public IPackageIdlesGetter? IdleAnimations { get; private set; }
         #region CombatStyle
         private int? _CombatStyleLocation;
         public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
-        #region EatMarker
-        private int? _EatMarkerLocation;
-        public Boolean EatMarker => _EatMarkerLocation.HasValue ? true : default(Boolean);
+        #region IsEatMarker
+        private int? _IsEatMarkerLocation;
+        public Boolean IsEatMarker => _IsEatMarkerLocation.HasValue ? true : default(Boolean);
         #endregion
         #region EscortDistance
         private int? _EscortDistanceLocation;
         public UInt32? EscortDistance => _EscortDistanceLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EscortDistanceLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region FollowTriggerRadius
-        private int? _FollowTriggerRadiusLocation;
-        public Single? FollowTriggerRadius => _FollowTriggerRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FollowTriggerRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region FollowStartLocationTriggerRadius
+        private int? _FollowStartLocationTriggerRadiusLocation;
+        public Single? FollowStartLocationTriggerRadius => _FollowStartLocationTriggerRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FollowStartLocationTriggerRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region PatrolFlags
-        private int? _PatrolFlagsLocation;
-        public ReadOnlyMemorySlice<Byte>? PatrolFlags => _PatrolFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PatrolFlagsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region IsRepeatable
+        partial void IsRepeatableCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        public partial Boolean? GetIsRepeatableCustom();
+        public Boolean? IsRepeatable => GetIsRepeatableCustom();
         #endregion
         #region WeaponData
         private RangeInt32? _WeaponDataLocation;
         public IPackageWeaponDataGetter? WeaponData => _WeaponDataLocation.HasValue ? PackageWeaponDataBinaryOverlay.PackageWeaponDataFactory(_recordData.Slice(_WeaponDataLocation!.Value.Min), _package) : default;
         #endregion
-        #region Target2
-        private RangeInt32? _Target2Location;
-        public IPackageTarget2Getter? Target2 => _Target2Location.HasValue ? PackageTarget2BinaryOverlay.PackageTarget2Factory(_recordData.Slice(_Target2Location!.Value.Min), _package) : default;
+        public IPackageTargetGetter? Target2 { get; private set; }
+        #region IsUseItem
+        private int? _IsUseItemLocation;
+        public Boolean IsUseItem => _IsUseItemLocation.HasValue ? true : default(Boolean);
         #endregion
-        #region UseItemMarker
-        private int? _UseItemMarkerLocation;
-        public Boolean UseItemMarker => _UseItemMarkerLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region AmbushMarker
-        private int? _AmbushMarkerLocation;
-        public Boolean AmbushMarker => _AmbushMarkerLocation.HasValue ? true : default(Boolean);
+        #region IsAmbush
+        private int? _IsAmbushLocation;
+        public Boolean IsAmbush => _IsAmbushLocation.HasValue ? true : default(Boolean);
         #endregion
         #region DialogueData
         private RangeInt32? _DialogueDataLocation;
         public IPackageDialogueDataGetter? DialogueData => _DialogueDataLocation.HasValue ? PackageDialogueDataBinaryOverlay.PackageDialogueDataFactory(_recordData.Slice(_DialogueDataLocation!.Value.Min), _package) : default;
         #endregion
-        #region DialogueLocation
-        private RangeInt32? _DialogueLocationLocation;
-        public IPackageLocation2Getter? DialogueLocation => _DialogueLocationLocation.HasValue ? PackageLocation2BinaryOverlay.PackageLocation2Factory(_recordData.Slice(_DialogueLocationLocation!.Value.Min), _package) : default;
-        #endregion
+        public IPackageLocationGetter? DialogueLocation { get; private set; }
         public IPackageEventGetter? OnBegin { get; private set; }
         public IPackageEventGetter? OnEnd { get; private set; }
         public IPackageEventGetter? OnChange { get; private set; }
@@ -4200,12 +4125,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.PKDT:
                 {
-                    _PKDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Package_FieldIndex.Unused2;
+                    FlagsCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
+                    return (int)Package_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PLDT:
                 {
-                    _LocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.Location = PackageLocationBinaryOverlay.PackageLocationFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.Location;
                 }
                 case RecordTypeInts.PLD2:
@@ -4213,12 +4145,20 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.Location)
                     {
-                        _Location2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                        this.Location2 = PackageLocationBinaryOverlay.PackageLocationFactory(
+                            stream: stream,
+                            package: _package,
+                            translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)Package_FieldIndex.Location2, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Package_FieldIndex.DialogueData)
                     {
-                        _DialogueLocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                        this.DialogueLocation = PackageLocationBinaryOverlay.PackageLocationFactory(
+                            stream: stream,
+                            package: _package,
+                            translationParams: translationParams.DoNotShortCircuit());
                         return new ParseResult((int)Package_FieldIndex.DialogueLocation, type);
                     }
                     else
@@ -4227,12 +4167,20 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             case 0:
                             {
-                                _Location2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                                this.Location2 = PackageLocationBinaryOverlay.PackageLocationFactory(
+                                    stream: stream,
+                                    package: _package,
+                                    translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)Package_FieldIndex.Location2, type);
                             }
                             case 1:
                             {
-                                _DialogueLocationLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                                this.DialogueLocation = PackageLocationBinaryOverlay.PackageLocationFactory(
+                                    stream: stream,
+                                    package: _package,
+                                    translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)Package_FieldIndex.DialogueLocation, type);
                             }
                             default:
@@ -4243,11 +4191,16 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PSDT:
                 {
                     _PSDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Package_FieldIndex.Unused3;
+                    return (int)Package_FieldIndex.Duration;
                 }
                 case RecordTypeInts.PTDT:
                 {
-                    _TargetLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.Target = PackageTargetBinaryOverlay.PackageTargetFactory(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.Target;
                 }
                 case RecordTypeInts.CTDA:
@@ -4280,8 +4233,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PKED:
                 {
-                    _EatMarkerLocation = (stream.Position - offset);
-                    return (int)Package_FieldIndex.EatMarker;
+                    _IsEatMarkerLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.IsEatMarker;
                 }
                 case RecordTypeInts.PKE2:
                 {
@@ -4290,13 +4243,16 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PKFD:
                 {
-                    _FollowTriggerRadiusLocation = (stream.Position - offset);
-                    return (int)Package_FieldIndex.FollowTriggerRadius;
+                    _FollowStartLocationTriggerRadiusLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.FollowStartLocationTriggerRadius;
                 }
                 case RecordTypeInts.PKPT:
                 {
-                    _PatrolFlagsLocation = (stream.Position - offset);
-                    return (int)Package_FieldIndex.PatrolFlags;
+                    IsRepeatableCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return (int)Package_FieldIndex.IsRepeatable;
                 }
                 case RecordTypeInts.PKW3:
                 {
@@ -4305,18 +4261,23 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PTD2:
                 {
-                    _Target2Location = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.Target2 = PackageTargetBinaryOverlay.PackageTargetFactory(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        translationParams: translationParams.DoNotShortCircuit());
                     return (int)Package_FieldIndex.Target2;
                 }
                 case RecordTypeInts.PUID:
                 {
-                    _UseItemMarkerLocation = (stream.Position - offset);
-                    return (int)Package_FieldIndex.UseItemMarker;
+                    _IsUseItemLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.IsUseItem;
                 }
                 case RecordTypeInts.PKAM:
                 {
-                    _AmbushMarkerLocation = (stream.Position - offset);
-                    return (int)Package_FieldIndex.AmbushMarker;
+                    _IsAmbushLocation = (stream.Position - offset);
+                    return (int)Package_FieldIndex.IsAmbush;
                 }
                 case RecordTypeInts.PKDD:
                 {

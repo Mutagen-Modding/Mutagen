@@ -805,6 +805,63 @@
     <Compile Include="Records\Major Records\Package_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PackageFlagsBinary.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageFlags.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageFlags_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageFind_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageFollow_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageEscort_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageEat_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageSleep_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageWander_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTravel_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageAccompany_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageUseItemAt_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageAmbush_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageFleeNotCombat_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageSandbox_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackagePatrol_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageGuard_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageDialogue_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageUseWeapon_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Perk.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
@@ -919,13 +976,67 @@
     <Compile Include="Records\Major Records\PackageLocation_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageLocation2_Generated.cs">
+    <Compile Include="Records\Major Records\PackageLocation.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageLocation.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageLocation_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationCell_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationObjectId_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationObjectType_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationNearCurrentLocation_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationNearEditorLocation_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationNearLinkedReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationAtPackageLocation_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageLocationFallback_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PackageTarget_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageTarget2_Generated.cs">
+    <Compile Include="Records\Major Records\PackageTarget.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageTarget.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\APackageTarget_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetObjectId_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetObjectType_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetLinkedReference_Generated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PackageTargetFallback_Generated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PackageWeaponData_Generated.cs">
@@ -1476,5 +1587,7 @@
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IActorValueOrPerk_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPackageLocationObject_Generated.cs" />
+    <Compile Include="Interfaces\Link\IPackageTargetObject_Generated.cs" />
   </ItemGroup>
 </Project>

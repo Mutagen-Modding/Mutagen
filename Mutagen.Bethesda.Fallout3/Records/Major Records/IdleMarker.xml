@@ -11,5 +11,6 @@
         <FormLink refName="IdleAnimation" />
       </List>
     </Fields>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>

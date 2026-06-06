@@ -14,5 +14,7 @@
       <UInt32 name="AbsoluteValue" recordType="DATA" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
   </Object>
 </Loqui>
