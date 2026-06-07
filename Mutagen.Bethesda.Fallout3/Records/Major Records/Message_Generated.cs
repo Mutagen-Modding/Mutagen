@@ -77,14 +77,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region Icon
-        private readonly IFormLinkNullable<IMenuIconGetter> _Icon = new FormLinkNullable<IMenuIconGetter>();
-        public IFormLinkNullable<IMenuIconGetter> Icon
+        private readonly IFormLink<IMenuIconGetter> _Icon = new FormLink<IMenuIconGetter>();
+        public IFormLink<IMenuIconGetter> Icon
         {
             get => _Icon;
             set => _Icon.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMenuIconGetter> IMessageGetter.Icon => this.Icon;
+        IFormLinkGetter<IMenuIconGetter> IMessageGetter.Icon => this.Icon;
         #endregion
         #region NAM0
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -197,7 +197,9 @@ namespace Mutagen.Bethesda.Fallout3
         ReadOnlyMemorySlice<Byte>? IMessageGetter.NAM9 => this.NAM9;
         #endregion
         #region Flags
-        public Message.Flag Flags { get; set; } = default(Message.Flag);
+        public Message.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Message.Flag? IMessageGetter.Flags => this.Flags;
         #endregion
         #region DisplayTime
         public UInt32? DisplayTime { get; set; }
@@ -1150,7 +1152,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new IFormLinkNullable<IMenuIconGetter> Icon { get; set; }
+        new IFormLink<IMenuIconGetter> Icon { get; set; }
         new MemorySlice<Byte>? NAM0 { get; set; }
         new MemorySlice<Byte>? NAM1 { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
@@ -1161,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout3
         new MemorySlice<Byte>? NAM7 { get; set; }
         new MemorySlice<Byte>? NAM8 { get; set; }
         new MemorySlice<Byte>? NAM9 { get; set; }
-        new Message.Flag Flags { get; set; }
+        new Message.Flag? Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }
     }
@@ -1191,7 +1193,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         String? Name { get; }
         #endregion
-        IFormLinkNullableGetter<IMenuIconGetter> Icon { get; }
+        IFormLinkGetter<IMenuIconGetter> Icon { get; }
         ReadOnlyMemorySlice<Byte>? NAM0 { get; }
         ReadOnlyMemorySlice<Byte>? NAM1 { get; }
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
@@ -1202,7 +1204,7 @@ namespace Mutagen.Bethesda.Fallout3
         ReadOnlyMemorySlice<Byte>? NAM7 { get; }
         ReadOnlyMemorySlice<Byte>? NAM8 { get; }
         ReadOnlyMemorySlice<Byte>? NAM9 { get; }
-        Message.Flag Flags { get; }
+        Message.Flag? Flags { get; }
         UInt32? DisplayTime { get; }
         IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
 
@@ -1516,7 +1518,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.NAM7 = default;
             item.NAM8 = default;
             item.NAM9 = default;
-            item.Flags = default(Message.Flag);
+            item.Flags = default;
             item.DisplayTime = default;
             item.MenuButtons.Clear();
             base.Clear(item);
@@ -1684,7 +1686,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Icon ?? true)
             {
-                sb.AppendItem(item.Icon.FormKeyNullable, "Icon");
+                sb.AppendItem(item.Icon.FormKey, "Icon");
             }
             if ((printMask?.NAM0 ?? true)
                 && item.NAM0 is {} NAM0Item)
@@ -1736,9 +1738,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendLine($"NAM9 => {SpanExt.ToHexString(NAM9Item)}");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.DisplayTime ?? true)
                 && item.DisplayTime is {} DisplayTimeItem)
@@ -1947,7 +1950,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(NAM9Item);
             }
-            hash.Add(item.Flags);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
             if (item.DisplayTime is {} DisplayTimeitem)
             {
                 hash.Add(DisplayTimeitem);
@@ -1982,10 +1988,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.Icon, out var IconInfo))
-            {
-                yield return IconInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.Icon);
             foreach (var item in obj.MenuButtons.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
@@ -2074,7 +2077,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Icon) ?? true))
             {
-                item.Icon.SetTo(rhs.Icon.FormKeyNullable);
+                item.Icon.SetTo(rhs.Icon.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.NAM0) ?? true))
             {
@@ -2397,7 +2400,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
@@ -2441,7 +2444,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.NAM9,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM9));
-            EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
@@ -2711,7 +2714,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Icon
         private int? _IconLocation;
-        public IFormLinkNullableGetter<IMenuIconGetter> Icon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMenuIconGetter>(_package, _recordData, _IconLocation);
+        public IFormLinkGetter<IMenuIconGetter> Icon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMenuIconGetter>(_package, _recordData, _IconLocation);
         #endregion
         #region NAM0
         private int? _NAM0Location;
@@ -2755,7 +2758,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Message.Flag Flags => EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_FlagsLocation, _recordData, _package, 4);
+        public Message.Flag? Flags => EnumBinaryTranslation<Message.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 4);
         #endregion
         #region DisplayTime
         private int? _DisplayTimeLocation;
