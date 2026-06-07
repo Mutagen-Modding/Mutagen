@@ -66,16 +66,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Stage
         public Byte Stage { get; set; } = default(Byte);
         #endregion
-        #region Unknown
+        #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[3];
-        public MemorySlice<Byte> Unknown
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
         {
-            get => _Unknown;
-            set => this._Unknown = value;
+            get => _Unused;
+            set => this._Unused = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPerkQuestEffectGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte> IPerkQuestEffectGetter.Unused => this.Unused;
         #endregion
 
         #region To String
@@ -120,28 +120,24 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Quest = initialValue;
                 this.Stage = initialValue;
-                this.Unknown = initialValue;
+                this.Unused = initialValue;
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags,
                 TItem Quest,
                 TItem Stage,
-                TItem Unknown)
+                TItem Unused)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                ButtonLabel: ButtonLabel,
-                Flags: Flags)
+                Conditions: Conditions)
             {
                 this.Quest = Quest;
                 this.Stage = Stage;
-                this.Unknown = Unknown;
+                this.Unused = Unused;
             }
 
             #pragma warning disable CS8618
@@ -155,7 +151,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Quest;
             public TItem Stage;
-            public TItem Unknown;
+            public TItem Unused;
             #endregion
 
             #region Equals
@@ -171,7 +167,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
                 if (!object.Equals(this.Stage, rhs.Stage)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -179,7 +175,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.Quest);
                 hash.Add(this.Stage);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unused);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -192,7 +188,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.All(eval)) return false;
                 if (!eval(this.Quest)) return false;
                 if (!eval(this.Stage)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unused)) return false;
                 return true;
             }
             #endregion
@@ -203,7 +199,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (base.Any(eval)) return true;
                 if (eval(this.Quest)) return true;
                 if (eval(this.Stage)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unused)) return true;
                 return false;
             }
             #endregion
@@ -221,7 +217,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.Quest = eval(this.Quest);
                 obj.Stage = eval(this.Stage);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unused = eval(this.Unused);
             }
             #endregion
 
@@ -248,9 +244,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Stage, "Stage");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unused, "Unused");
                     }
                 }
             }
@@ -265,7 +261,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public Exception? Quest;
             public Exception? Stage;
-            public Exception? Unknown;
+            public Exception? Unused;
             #endregion
 
             #region IErrorMask
@@ -278,8 +274,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Quest;
                     case PerkQuestEffect_FieldIndex.Stage:
                         return Stage;
-                    case PerkQuestEffect_FieldIndex.Unknown:
-                        return Unknown;
+                    case PerkQuestEffect_FieldIndex.Unused:
+                        return Unused;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -296,8 +292,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case PerkQuestEffect_FieldIndex.Stage:
                         this.Stage = ex;
                         break;
-                    case PerkQuestEffect_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case PerkQuestEffect_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -316,8 +312,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case PerkQuestEffect_FieldIndex.Stage:
                         this.Stage = (Exception?)obj;
                         break;
-                    case PerkQuestEffect_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case PerkQuestEffect_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -330,7 +326,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (Quest != null) return true;
                 if (Stage != null) return true;
-                if (Unknown != null) return true;
+                if (Unused != null) return true;
                 return false;
             }
             #endregion
@@ -364,7 +360,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Stage, "Stage");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unused, "Unused");
                 }
             }
             #endregion
@@ -376,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.Stage = this.Stage.Combine(rhs.Stage);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -401,7 +397,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public bool Quest;
             public bool Stage;
-            public bool Unknown;
+            public bool Unused;
             #endregion
 
             #region Ctors
@@ -412,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Quest = defaultOn;
                 this.Stage = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unused = defaultOn;
             }
 
             #endregion
@@ -422,7 +418,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.GetCrystal(ret);
                 ret.Add((Quest, null));
                 ret.Add((Stage, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unused, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -502,7 +498,7 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new IFormLink<IQuestGetter> Quest { get; set; }
         new Byte Stage { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
     }
 
     public partial interface IPerkQuestEffectGetter :
@@ -514,7 +510,7 @@ namespace Mutagen.Bethesda.Fallout3
         static new ILoquiRegistration StaticRegistration => PerkQuestEffect_Registration.Instance;
         IFormLinkGetter<IQuestGetter> Quest { get; }
         Byte Stage { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
 
     }
 
@@ -662,11 +658,9 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
-        Quest = 5,
-        Stage = 6,
-        Unknown = 7,
+        Quest = 3,
+        Stage = 4,
+        Unused = 5,
     }
     #endregion
 
@@ -679,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(PerkQuestEffect.Mask<>);
 
@@ -754,7 +748,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Quest.Clear();
             item.Stage = default(Byte);
-            item.Unknown = new byte[3];
+            item.Unused = new byte[3];
             base.Clear(item);
         }
         
@@ -826,7 +820,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.Stage = item.Stage == rhs.Stage;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -884,9 +878,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Stage, "Stage");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
         }
         
@@ -899,10 +893,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkQuestEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.ButtonLabel:
-                    return (PerkQuestEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.Flags:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -925,9 +915,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Stage != rhs.Stage) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             }
             return true;
         }
@@ -948,7 +938,7 @@ namespace Mutagen.Bethesda.Fallout3
             var hash = new HashCode();
             hash.Add(item.Quest);
             hash.Add(item.Stage);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unused);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1006,9 +996,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Stage = rhs.Stage;
             }
-            if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Unused) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unused = rhs.Unused.ToArray();
             }
             DeepCopyInCustom(
                 item: item,
@@ -1136,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout3
             writer.Write(item.Stage);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Unknown);
+                item: item.Unused);
         }
 
         public void Write(
@@ -1188,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Stage = frame.ReadUInt8();
-            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1238,7 +1228,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.OverlayFactory<IQuestGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Byte Stage => _structData.Span[0x4];
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x5, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

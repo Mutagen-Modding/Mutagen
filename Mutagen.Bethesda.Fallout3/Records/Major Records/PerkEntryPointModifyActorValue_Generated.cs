@@ -58,9 +58,6 @@ namespace Mutagen.Bethesda.Fallout3
         #region Value
         public Single Value { get; set; } = default(Single);
         #endregion
-        #region Modification
-        public PerkEntryPointModifyActorValue.ModificationType Modification { get; set; } = default(PerkEntryPointModifyActorValue.ModificationType);
-        #endregion
 
         #region To String
 
@@ -104,32 +101,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.ActorValue = initialValue;
                 this.Value = initialValue;
-                this.Modification = initialValue;
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem ActorValue,
-                TItem Value,
-                TItem Modification)
+                TItem Value)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                ButtonLabel: ButtonLabel,
-                Flags: Flags,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
                 this.ActorValue = ActorValue;
                 this.Value = Value;
-                this.Modification = Modification;
             }
 
             #pragma warning disable CS8618
@@ -143,7 +133,6 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem ActorValue;
             public TItem Value;
-            public TItem Modification;
             #endregion
 
             #region Equals
@@ -159,7 +148,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Modification, rhs.Modification)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -167,7 +155,6 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.ActorValue);
                 hash.Add(this.Value);
-                hash.Add(this.Modification);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -180,7 +167,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.All(eval)) return false;
                 if (!eval(this.ActorValue)) return false;
                 if (!eval(this.Value)) return false;
-                if (!eval(this.Modification)) return false;
                 return true;
             }
             #endregion
@@ -191,7 +177,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (base.Any(eval)) return true;
                 if (eval(this.ActorValue)) return true;
                 if (eval(this.Value)) return true;
-                if (eval(this.Modification)) return true;
                 return false;
             }
             #endregion
@@ -209,7 +194,6 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.ActorValue = eval(this.ActorValue);
                 obj.Value = eval(this.Value);
-                obj.Modification = eval(this.Modification);
             }
             #endregion
 
@@ -236,10 +220,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Value, "Value");
                     }
-                    if (printMask?.Modification ?? true)
-                    {
-                        sb.AppendItem(Modification, "Modification");
-                    }
                 }
             }
             #endregion
@@ -253,7 +233,6 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public Exception? ActorValue;
             public Exception? Value;
-            public Exception? Modification;
             #endregion
 
             #region IErrorMask
@@ -266,8 +245,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return ActorValue;
                     case PerkEntryPointModifyActorValue_FieldIndex.Value:
                         return Value;
-                    case PerkEntryPointModifyActorValue_FieldIndex.Modification:
-                        return Modification;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -283,9 +260,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case PerkEntryPointModifyActorValue_FieldIndex.Value:
                         this.Value = ex;
-                        break;
-                    case PerkEntryPointModifyActorValue_FieldIndex.Modification:
-                        this.Modification = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -304,9 +278,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case PerkEntryPointModifyActorValue_FieldIndex.Value:
                         this.Value = (Exception?)obj;
                         break;
-                    case PerkEntryPointModifyActorValue_FieldIndex.Modification:
-                        this.Modification = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -318,7 +289,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (ActorValue != null) return true;
                 if (Value != null) return true;
-                if (Modification != null) return true;
                 return false;
             }
             #endregion
@@ -351,9 +321,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Value, "Value");
                 }
-                {
-                    sb.AppendItem(Modification, "Modification");
-                }
             }
             #endregion
 
@@ -364,7 +331,6 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
                 ret.Value = this.Value.Combine(rhs.Value);
-                ret.Modification = this.Modification.Combine(rhs.Modification);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -389,7 +355,6 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public bool ActorValue;
             public bool Value;
-            public bool Modification;
             #endregion
 
             #region Ctors
@@ -400,7 +365,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.ActorValue = defaultOn;
                 this.Value = defaultOn;
-                this.Modification = defaultOn;
             }
 
             #endregion
@@ -410,7 +374,6 @@ namespace Mutagen.Bethesda.Fallout3
                 base.GetCrystal(ret);
                 ret.Add((ActorValue, null));
                 ret.Add((Value, null));
-                ret.Add((Modification, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -484,7 +447,6 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new ActorValue ActorValue { get; set; }
         new Single Value { get; set; }
-        new PerkEntryPointModifyActorValue.ModificationType Modification { get; set; }
     }
 
     public partial interface IPerkEntryPointModifyActorValueGetter :
@@ -495,7 +457,6 @@ namespace Mutagen.Bethesda.Fallout3
         static new ILoquiRegistration StaticRegistration => PerkEntryPointModifyActorValue_Registration.Instance;
         ActorValue ActorValue { get; }
         Single Value { get; }
-        PerkEntryPointModifyActorValue.ModificationType Modification { get; }
 
     }
 
@@ -643,13 +604,10 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
-        EntryPoint = 5,
-        PerkConditionTabCount = 6,
-        ActorValue = 7,
-        Value = 8,
-        Modification = 9,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        ActorValue = 5,
+        Value = 6,
     }
     #endregion
 
@@ -660,9 +618,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(PerkEntryPointModifyActorValue.Mask<>);
 
@@ -737,7 +695,6 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.ActorValue = default(ActorValue);
             item.Value = default(Single);
-            item.Modification = default(PerkEntryPointModifyActorValue.ModificationType);
             base.Clear(item);
         }
         
@@ -824,7 +781,6 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.ActorValue = item.ActorValue == rhs.ActorValue;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
-            ret.Modification = item.Modification == rhs.Modification;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -882,10 +838,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Value, "Value");
             }
-            if (printMask?.Modification ?? true)
-            {
-                sb.AppendItem(item.Modification, "Modification");
-            }
         }
         
         public static PerkEntryPointModifyActorValue_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -897,10 +849,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEntryPointEffect_FieldIndex.Priority:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
-                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
-                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.Flags:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
@@ -920,10 +868,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.ButtonLabel:
-                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -945,10 +889,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointModifyActorValue_FieldIndex.Value) ?? true))
             {
                 if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointModifyActorValue_FieldIndex.Modification) ?? true))
-            {
-                if (lhs.Modification != rhs.Modification) return false;
             }
             return true;
         }
@@ -980,7 +920,6 @@ namespace Mutagen.Bethesda.Fallout3
             var hash = new HashCode();
             hash.Add(item.ActorValue);
             hash.Add(item.Value);
-            hash.Add(item.Modification);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1041,10 +980,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointModifyActorValue_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointModifyActorValue_FieldIndex.Modification) ?? true))
-            {
-                item.Modification = rhs.Modification;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1192,10 +1127,6 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Value);
-            EnumBinaryTranslation<PerkEntryPointModifyActorValue.ModificationType, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Modification,
-                length: 4);
         }
 
         public void Write(
@@ -1263,9 +1194,6 @@ namespace Mutagen.Bethesda.Fallout3
                 reader: frame,
                 length: 4);
             item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyActorValue.ModificationType, MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                length: 4);
         }
 
     }
@@ -1314,7 +1242,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         public ActorValue ActorValue => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2, 0x4));
         public Single Value => _structData.Slice(0x6, 0x4).Float();
-        public PerkEntryPointModifyActorValue.ModificationType Modification => (PerkEntryPointModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

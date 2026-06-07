@@ -37,13 +37,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class PerkMainData :
-        IEquatable<IPerkMainDataGetter>,
-        ILoquiObjectSetter<PerkMainData>,
-        IPerkMainData
+    public partial class PerkData :
+        IEquatable<IPerkDataGetter>,
+        ILoquiObjectSetter<PerkData>,
+        IPerkData
     {
         #region Ctor
-        public PerkMainData()
+        public PerkData()
         {
             CustomCtor();
         }
@@ -51,10 +51,10 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Versioning
-        public PerkMainData.VersioningBreaks Versioning { get; set; } = default(PerkMainData.VersioningBreaks);
+        public PerkData.VersioningBreaks Versioning { get; set; } = default(PerkData.VersioningBreaks);
         #endregion
-        #region Trait
-        public Boolean Trait { get; set; } = default(Boolean);
+        #region IsTrait
+        public Boolean IsTrait { get; set; } = default(Boolean);
         #endregion
         #region MinLevel
         public Byte MinLevel { get; set; } = default(Byte);
@@ -62,22 +62,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region NumRanks
         public Byte NumRanks { get; set; } = default(Byte);
         #endregion
-        #region Playable
-        public Boolean Playable { get; set; } = default(Boolean);
+        #region IsPlayable
+        public Boolean IsPlayable { get; set; } = default(Boolean);
         #endregion
-        #region Hidden
-        public Boolean Hidden { get; set; } = default(Boolean);
-        #endregion
-        #region Remaining
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
-        {
-            get => _Remaining;
-            set => this._Remaining = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPerkMainDataGetter.Remaining => this.Remaining;
+        #region IsHidden
+        public Boolean IsHidden { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -86,7 +75,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkMainDataMixIn.Print(
+            PerkDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -97,16 +86,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPerkMainDataGetter rhs) return false;
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPerkDataGetter rhs) return false;
+            return ((PerkDataCommon)((IPerkDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPerkMainDataGetter? obj)
+        public bool Equals(IPerkDataGetter? obj)
         {
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PerkDataCommon)((IPerkDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PerkMainDataCommon)((IPerkMainDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkDataCommon)((IPerkDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -119,30 +108,27 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Versioning = initialValue;
-                this.Trait = initialValue;
+                this.IsTrait = initialValue;
                 this.MinLevel = initialValue;
                 this.NumRanks = initialValue;
-                this.Playable = initialValue;
-                this.Hidden = initialValue;
-                this.Remaining = initialValue;
+                this.IsPlayable = initialValue;
+                this.IsHidden = initialValue;
             }
 
             public Mask(
                 TItem Versioning,
-                TItem Trait,
+                TItem IsTrait,
                 TItem MinLevel,
                 TItem NumRanks,
-                TItem Playable,
-                TItem Hidden,
-                TItem Remaining)
+                TItem IsPlayable,
+                TItem IsHidden)
             {
                 this.Versioning = Versioning;
-                this.Trait = Trait;
+                this.IsTrait = IsTrait;
                 this.MinLevel = MinLevel;
                 this.NumRanks = NumRanks;
-                this.Playable = Playable;
-                this.Hidden = Hidden;
-                this.Remaining = Remaining;
+                this.IsPlayable = IsPlayable;
+                this.IsHidden = IsHidden;
             }
 
             #pragma warning disable CS8618
@@ -155,12 +141,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Versioning;
-            public TItem Trait;
+            public TItem IsTrait;
             public TItem MinLevel;
             public TItem NumRanks;
-            public TItem Playable;
-            public TItem Hidden;
-            public TItem Remaining;
+            public TItem IsPlayable;
+            public TItem IsHidden;
             #endregion
 
             #region Equals
@@ -174,24 +159,22 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
-                if (!object.Equals(this.Trait, rhs.Trait)) return false;
+                if (!object.Equals(this.IsTrait, rhs.IsTrait)) return false;
                 if (!object.Equals(this.MinLevel, rhs.MinLevel)) return false;
                 if (!object.Equals(this.NumRanks, rhs.NumRanks)) return false;
-                if (!object.Equals(this.Playable, rhs.Playable)) return false;
-                if (!object.Equals(this.Hidden, rhs.Hidden)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.IsPlayable, rhs.IsPlayable)) return false;
+                if (!object.Equals(this.IsHidden, rhs.IsHidden)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Versioning);
-                hash.Add(this.Trait);
+                hash.Add(this.IsTrait);
                 hash.Add(this.MinLevel);
                 hash.Add(this.NumRanks);
-                hash.Add(this.Playable);
-                hash.Add(this.Hidden);
-                hash.Add(this.Remaining);
+                hash.Add(this.IsPlayable);
+                hash.Add(this.IsHidden);
                 return hash.ToHashCode();
             }
 
@@ -201,12 +184,11 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Versioning)) return false;
-                if (!eval(this.Trait)) return false;
+                if (!eval(this.IsTrait)) return false;
                 if (!eval(this.MinLevel)) return false;
                 if (!eval(this.NumRanks)) return false;
-                if (!eval(this.Playable)) return false;
-                if (!eval(this.Hidden)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.IsPlayable)) return false;
+                if (!eval(this.IsHidden)) return false;
                 return true;
             }
             #endregion
@@ -215,12 +197,11 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Versioning)) return true;
-                if (eval(this.Trait)) return true;
+                if (eval(this.IsTrait)) return true;
                 if (eval(this.MinLevel)) return true;
                 if (eval(this.NumRanks)) return true;
-                if (eval(this.Playable)) return true;
-                if (eval(this.Hidden)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.IsPlayable)) return true;
+                if (eval(this.IsHidden)) return true;
                 return false;
             }
             #endregion
@@ -228,7 +209,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PerkMainData.Mask<R>();
+                var ret = new PerkData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -236,37 +217,36 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Versioning = eval(this.Versioning);
-                obj.Trait = eval(this.Trait);
+                obj.IsTrait = eval(this.IsTrait);
                 obj.MinLevel = eval(this.MinLevel);
                 obj.NumRanks = eval(this.NumRanks);
-                obj.Playable = eval(this.Playable);
-                obj.Hidden = eval(this.Hidden);
-                obj.Remaining = eval(this.Remaining);
+                obj.IsPlayable = eval(this.IsPlayable);
+                obj.IsHidden = eval(this.IsHidden);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(PerkMainData.Mask<bool>? printMask = null)
+            public string Print(PerkData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, PerkMainData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PerkData.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(PerkMainData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PerkData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Versioning ?? true)
                     {
                         sb.AppendItem(Versioning, "Versioning");
                     }
-                    if (printMask?.Trait ?? true)
+                    if (printMask?.IsTrait ?? true)
                     {
-                        sb.AppendItem(Trait, "Trait");
+                        sb.AppendItem(IsTrait, "IsTrait");
                     }
                     if (printMask?.MinLevel ?? true)
                     {
@@ -276,17 +256,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(NumRanks, "NumRanks");
                     }
-                    if (printMask?.Playable ?? true)
+                    if (printMask?.IsPlayable ?? true)
                     {
-                        sb.AppendItem(Playable, "Playable");
+                        sb.AppendItem(IsPlayable, "IsPlayable");
                     }
-                    if (printMask?.Hidden ?? true)
+                    if (printMask?.IsHidden ?? true)
                     {
-                        sb.AppendItem(Hidden, "Hidden");
-                    }
-                    if (printMask?.Remaining ?? true)
-                    {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(IsHidden, "IsHidden");
                     }
                 }
             }
@@ -313,34 +289,31 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Versioning;
-            public Exception? Trait;
+            public Exception? IsTrait;
             public Exception? MinLevel;
             public Exception? NumRanks;
-            public Exception? Playable;
-            public Exception? Hidden;
-            public Exception? Remaining;
+            public Exception? IsPlayable;
+            public Exception? IsHidden;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                PerkMainData_FieldIndex enu = (PerkMainData_FieldIndex)index;
+                PerkData_FieldIndex enu = (PerkData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkMainData_FieldIndex.Versioning:
+                    case PerkData_FieldIndex.Versioning:
                         return Versioning;
-                    case PerkMainData_FieldIndex.Trait:
-                        return Trait;
-                    case PerkMainData_FieldIndex.MinLevel:
+                    case PerkData_FieldIndex.IsTrait:
+                        return IsTrait;
+                    case PerkData_FieldIndex.MinLevel:
                         return MinLevel;
-                    case PerkMainData_FieldIndex.NumRanks:
+                    case PerkData_FieldIndex.NumRanks:
                         return NumRanks;
-                    case PerkMainData_FieldIndex.Playable:
-                        return Playable;
-                    case PerkMainData_FieldIndex.Hidden:
-                        return Hidden;
-                    case PerkMainData_FieldIndex.Remaining:
-                        return Remaining;
+                    case PerkData_FieldIndex.IsPlayable:
+                        return IsPlayable;
+                    case PerkData_FieldIndex.IsHidden:
+                        return IsHidden;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -348,29 +321,26 @@ namespace Mutagen.Bethesda.Fallout3
 
             public void SetNthException(int index, Exception ex)
             {
-                PerkMainData_FieldIndex enu = (PerkMainData_FieldIndex)index;
+                PerkData_FieldIndex enu = (PerkData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkMainData_FieldIndex.Versioning:
+                    case PerkData_FieldIndex.Versioning:
                         this.Versioning = ex;
                         break;
-                    case PerkMainData_FieldIndex.Trait:
-                        this.Trait = ex;
+                    case PerkData_FieldIndex.IsTrait:
+                        this.IsTrait = ex;
                         break;
-                    case PerkMainData_FieldIndex.MinLevel:
+                    case PerkData_FieldIndex.MinLevel:
                         this.MinLevel = ex;
                         break;
-                    case PerkMainData_FieldIndex.NumRanks:
+                    case PerkData_FieldIndex.NumRanks:
                         this.NumRanks = ex;
                         break;
-                    case PerkMainData_FieldIndex.Playable:
-                        this.Playable = ex;
+                    case PerkData_FieldIndex.IsPlayable:
+                        this.IsPlayable = ex;
                         break;
-                    case PerkMainData_FieldIndex.Hidden:
-                        this.Hidden = ex;
-                        break;
-                    case PerkMainData_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case PerkData_FieldIndex.IsHidden:
+                        this.IsHidden = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -379,29 +349,26 @@ namespace Mutagen.Bethesda.Fallout3
 
             public void SetNthMask(int index, object obj)
             {
-                PerkMainData_FieldIndex enu = (PerkMainData_FieldIndex)index;
+                PerkData_FieldIndex enu = (PerkData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkMainData_FieldIndex.Versioning:
+                    case PerkData_FieldIndex.Versioning:
                         this.Versioning = (Exception?)obj;
                         break;
-                    case PerkMainData_FieldIndex.Trait:
-                        this.Trait = (Exception?)obj;
+                    case PerkData_FieldIndex.IsTrait:
+                        this.IsTrait = (Exception?)obj;
                         break;
-                    case PerkMainData_FieldIndex.MinLevel:
+                    case PerkData_FieldIndex.MinLevel:
                         this.MinLevel = (Exception?)obj;
                         break;
-                    case PerkMainData_FieldIndex.NumRanks:
+                    case PerkData_FieldIndex.NumRanks:
                         this.NumRanks = (Exception?)obj;
                         break;
-                    case PerkMainData_FieldIndex.Playable:
-                        this.Playable = (Exception?)obj;
+                    case PerkData_FieldIndex.IsPlayable:
+                        this.IsPlayable = (Exception?)obj;
                         break;
-                    case PerkMainData_FieldIndex.Hidden:
-                        this.Hidden = (Exception?)obj;
-                        break;
-                    case PerkMainData_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case PerkData_FieldIndex.IsHidden:
+                        this.IsHidden = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -412,12 +379,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Versioning != null) return true;
-                if (Trait != null) return true;
+                if (IsTrait != null) return true;
                 if (MinLevel != null) return true;
                 if (NumRanks != null) return true;
-                if (Playable != null) return true;
-                if (Hidden != null) return true;
-                if (Remaining != null) return true;
+                if (IsPlayable != null) return true;
+                if (IsHidden != null) return true;
                 return false;
             }
             #endregion
@@ -447,7 +413,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Versioning, "Versioning");
                 }
                 {
-                    sb.AppendItem(Trait, "Trait");
+                    sb.AppendItem(IsTrait, "IsTrait");
                 }
                 {
                     sb.AppendItem(MinLevel, "MinLevel");
@@ -456,13 +422,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(NumRanks, "NumRanks");
                 }
                 {
-                    sb.AppendItem(Playable, "Playable");
+                    sb.AppendItem(IsPlayable, "IsPlayable");
                 }
                 {
-                    sb.AppendItem(Hidden, "Hidden");
-                }
-                {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(IsHidden, "IsHidden");
                 }
             }
             #endregion
@@ -473,12 +436,11 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Versioning = this.Versioning.Combine(rhs.Versioning);
-                ret.Trait = this.Trait.Combine(rhs.Trait);
+                ret.IsTrait = this.IsTrait.Combine(rhs.IsTrait);
                 ret.MinLevel = this.MinLevel.Combine(rhs.MinLevel);
                 ret.NumRanks = this.NumRanks.Combine(rhs.NumRanks);
-                ret.Playable = this.Playable.Combine(rhs.Playable);
-                ret.Hidden = this.Hidden.Combine(rhs.Hidden);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.IsPlayable = this.IsPlayable.Combine(rhs.IsPlayable);
+                ret.IsHidden = this.IsHidden.Combine(rhs.IsHidden);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -503,12 +465,11 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Versioning;
-            public bool Trait;
+            public bool IsTrait;
             public bool MinLevel;
             public bool NumRanks;
-            public bool Playable;
-            public bool Hidden;
-            public bool Remaining;
+            public bool IsPlayable;
+            public bool IsHidden;
             #endregion
 
             #region Ctors
@@ -519,12 +480,11 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Versioning = defaultOn;
-                this.Trait = defaultOn;
+                this.IsTrait = defaultOn;
                 this.MinLevel = defaultOn;
                 this.NumRanks = defaultOn;
-                this.Playable = defaultOn;
-                this.Hidden = defaultOn;
-                this.Remaining = defaultOn;
+                this.IsPlayable = defaultOn;
+                this.IsHidden = defaultOn;
             }
 
             #endregion
@@ -541,12 +501,11 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Versioning, null));
-                ret.Add((Trait, null));
+                ret.Add((IsTrait, null));
                 ret.Add((MinLevel, null));
                 ret.Add((NumRanks, null));
-                ret.Add((Playable, null));
-                ret.Add((Hidden, null));
-                ret.Add((Remaining, null));
+                ret.Add((IsPlayable, null));
+                ret.Add((IsHidden, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -567,25 +526,25 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PerkMainDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PerkDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PerkMainDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static PerkMainData CreateFromBinary(
+        public static PerkData CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new PerkMainData();
-            ((PerkMainDataSetterCommon)((IPerkMainDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PerkData();
+            ((PerkDataSetterCommon)((IPerkDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -596,7 +555,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PerkMainData item,
+            out PerkData item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -611,35 +570,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((PerkMainDataSetterCommon)((IPerkMainDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PerkDataSetterCommon)((IPerkDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static PerkMainData GetNew()
+        internal static PerkData GetNew()
         {
-            return new PerkMainData();
+            return new PerkData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPerkMainData :
-        ILoquiObjectSetter<IPerkMainData>,
-        IPerkMainDataGetter
+    public partial interface IPerkData :
+        ILoquiObjectSetter<IPerkData>,
+        IPerkDataGetter
     {
-        new PerkMainData.VersioningBreaks Versioning { get; set; }
-        new Boolean Trait { get; set; }
+        new PerkData.VersioningBreaks Versioning { get; set; }
+        new Boolean IsTrait { get; set; }
         new Byte MinLevel { get; set; }
         new Byte NumRanks { get; set; }
-        new Boolean Playable { get; set; }
-        new Boolean Hidden { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new Boolean IsPlayable { get; set; }
+        new Boolean IsHidden { get; set; }
     }
 
-    public partial interface IPerkMainDataGetter :
+    public partial interface IPerkDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPerkMainDataGetter>
+        ILoquiObject<IPerkDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -647,56 +605,55 @@ namespace Mutagen.Bethesda.Fallout3
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => PerkMainData_Registration.Instance;
-        PerkMainData.VersioningBreaks Versioning { get; }
-        Boolean Trait { get; }
+        static ILoquiRegistration StaticRegistration => PerkData_Registration.Instance;
+        PerkData.VersioningBreaks Versioning { get; }
+        Boolean IsTrait { get; }
         Byte MinLevel { get; }
         Byte NumRanks { get; }
-        Boolean Playable { get; }
-        Boolean Hidden { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        Boolean IsPlayable { get; }
+        Boolean IsHidden { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PerkMainDataMixIn
+    public static partial class PerkDataMixIn
     {
-        public static void Clear(this IPerkMainData item)
+        public static void Clear(this IPerkData item)
         {
-            ((PerkMainDataSetterCommon)((IPerkMainDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PerkDataSetterCommon)((IPerkDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PerkMainData.Mask<bool> GetEqualsMask(
-            this IPerkMainDataGetter item,
-            IPerkMainDataGetter rhs,
+        public static PerkData.Mask<bool> GetEqualsMask(
+            this IPerkDataGetter item,
+            IPerkDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPerkMainDataGetter item,
+            this IPerkDataGetter item,
             string? name = null,
-            PerkMainData.Mask<bool>? printMask = null)
+            PerkData.Mask<bool>? printMask = null)
         {
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).Print(
+            return ((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPerkMainDataGetter item,
+            this IPerkDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PerkMainData.Mask<bool>? printMask = null)
+            PerkData.Mask<bool>? printMask = null)
         {
-            ((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).Print(
+            ((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -704,21 +661,21 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IPerkMainDataGetter item,
-            IPerkMainDataGetter rhs,
-            PerkMainData.TranslationMask? equalsMask = null)
+            this IPerkDataGetter item,
+            IPerkDataGetter rhs,
+            PerkData.TranslationMask? equalsMask = null)
         {
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).Equals(
+            return ((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPerkMainData lhs,
-            IPerkMainDataGetter rhs)
+            this IPerkData lhs,
+            IPerkDataGetter rhs)
         {
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -727,11 +684,11 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this IPerkMainData lhs,
-            IPerkMainDataGetter rhs,
-            PerkMainData.TranslationMask? copyMask = null)
+            this IPerkData lhs,
+            IPerkDataGetter rhs,
+            PerkData.TranslationMask? copyMask = null)
         {
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -740,28 +697,28 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this IPerkMainData lhs,
-            IPerkMainDataGetter rhs,
-            out PerkMainData.ErrorMask errorMask,
-            PerkMainData.TranslationMask? copyMask = null)
+            this IPerkData lhs,
+            IPerkDataGetter rhs,
+            out PerkData.ErrorMask errorMask,
+            PerkData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PerkMainData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPerkMainData lhs,
-            IPerkMainDataGetter rhs,
+            this IPerkData lhs,
+            IPerkDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -769,32 +726,32 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static PerkMainData DeepCopy(
-            this IPerkMainDataGetter item,
-            PerkMainData.TranslationMask? copyMask = null)
+        public static PerkData DeepCopy(
+            this IPerkDataGetter item,
+            PerkData.TranslationMask? copyMask = null)
         {
-            return ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkDataSetterTranslationCommon)((IPerkDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PerkMainData DeepCopy(
-            this IPerkMainDataGetter item,
-            out PerkMainData.ErrorMask errorMask,
-            PerkMainData.TranslationMask? copyMask = null)
+        public static PerkData DeepCopy(
+            this IPerkDataGetter item,
+            out PerkData.ErrorMask errorMask,
+            PerkData.TranslationMask? copyMask = null)
         {
-            return ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkDataSetterTranslationCommon)((IPerkDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PerkMainData DeepCopy(
-            this IPerkMainDataGetter item,
+        public static PerkData DeepCopy(
+            this IPerkDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PerkDataSetterTranslationCommon)((IPerkDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -802,11 +759,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPerkMainData item,
+            this IPerkData item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((PerkMainDataSetterCommon)((IPerkMainDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PerkDataSetterCommon)((IPerkDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -822,46 +779,45 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum PerkMainData_FieldIndex
+    internal enum PerkData_FieldIndex
     {
         Versioning = 0,
-        Trait = 1,
+        IsTrait = 1,
         MinLevel = 2,
         NumRanks = 3,
-        Playable = 4,
-        Hidden = 5,
-        Remaining = 6,
+        IsPlayable = 4,
+        IsHidden = 5,
     }
     #endregion
 
     #region Registration
-    internal partial class PerkMainData_Registration : ILoquiRegistration
+    internal partial class PerkData_Registration : ILoquiRegistration
     {
-        public static readonly PerkMainData_Registration Instance = new PerkMainData_Registration();
+        public static readonly PerkData_Registration Instance = new PerkData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(PerkMainData.Mask<>);
+        public static readonly Type MaskType = typeof(PerkData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PerkMainData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PerkData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PerkMainData);
+        public static readonly Type ClassType = typeof(PerkData);
 
-        public static readonly Type GetterType = typeof(IPerkMainDataGetter);
+        public static readonly Type GetterType = typeof(IPerkDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPerkMainData);
+        public static readonly Type SetterType = typeof(IPerkData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.PerkMainData";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.PerkData";
 
-        public const string Name = "PerkMainData";
+        public const string Name = "PerkData";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -876,7 +832,7 @@ namespace Mutagen.Bethesda.Fallout3
             var all = RecordCollection.Factory(RecordTypes.DATA);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(PerkMainDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PerkDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -907,26 +863,25 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class PerkMainDataSetterCommon
+    internal partial class PerkDataSetterCommon
     {
-        public static readonly PerkMainDataSetterCommon Instance = new PerkMainDataSetterCommon();
+        public static readonly PerkDataSetterCommon Instance = new PerkDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPerkMainData item)
+        public void Clear(IPerkData item)
         {
             ClearPartial();
-            item.Versioning = default(PerkMainData.VersioningBreaks);
-            item.Trait = default(Boolean);
+            item.Versioning = default(PerkData.VersioningBreaks);
+            item.IsTrait = default(Boolean);
             item.MinLevel = default(Byte);
             item.NumRanks = default(Byte);
-            item.Playable = default(Boolean);
-            item.Hidden = default(Boolean);
-            item.Remaining = [];
+            item.IsPlayable = default(Boolean);
+            item.IsHidden = default(Boolean);
         }
         
         #region Mutagen
-        public void RemapLinks(IPerkMainData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPerkData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -934,7 +889,7 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPerkMainData item,
+            IPerkData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -946,23 +901,23 @@ namespace Mutagen.Bethesda.Fallout3
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PerkMainDataBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: PerkDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class PerkMainDataCommon
+    internal partial class PerkDataCommon
     {
-        public static readonly PerkMainDataCommon Instance = new PerkMainDataCommon();
+        public static readonly PerkDataCommon Instance = new PerkDataCommon();
 
-        public PerkMainData.Mask<bool> GetEqualsMask(
-            IPerkMainDataGetter item,
-            IPerkMainDataGetter rhs,
+        public PerkData.Mask<bool> GetEqualsMask(
+            IPerkDataGetter item,
+            IPerkDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PerkMainData.Mask<bool>(false);
-            ((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PerkData.Mask<bool>(false);
+            ((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -971,24 +926,23 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IPerkMainDataGetter item,
-            IPerkMainDataGetter rhs,
-            PerkMainData.Mask<bool> ret,
+            IPerkDataGetter item,
+            IPerkDataGetter rhs,
+            PerkData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Versioning = item.Versioning == rhs.Versioning;
-            ret.Trait = item.Trait == rhs.Trait;
+            ret.IsTrait = item.IsTrait == rhs.IsTrait;
             ret.MinLevel = item.MinLevel == rhs.MinLevel;
             ret.NumRanks = item.NumRanks == rhs.NumRanks;
-            ret.Playable = item.Playable == rhs.Playable;
-            ret.Hidden = item.Hidden == rhs.Hidden;
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.IsPlayable = item.IsPlayable == rhs.IsPlayable;
+            ret.IsHidden = item.IsHidden == rhs.IsHidden;
         }
         
         public string Print(
-            IPerkMainDataGetter item,
+            IPerkDataGetter item,
             string? name = null,
-            PerkMainData.Mask<bool>? printMask = null)
+            PerkData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -1000,18 +954,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IPerkMainDataGetter item,
+            IPerkDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PerkMainData.Mask<bool>? printMask = null)
+            PerkData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"PerkMainData =>");
+                sb.AppendLine($"PerkData =>");
             }
             else
             {
-                sb.AppendLine($"{name} (PerkMainData) =>");
+                sb.AppendLine($"{name} (PerkData) =>");
             }
             using (sb.Brace())
             {
@@ -1023,17 +977,17 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IPerkMainDataGetter item,
+            IPerkDataGetter item,
             StructuredStringBuilder sb,
-            PerkMainData.Mask<bool>? printMask = null)
+            PerkData.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
                 sb.AppendItem(item.Versioning, "Versioning");
             }
-            if (printMask?.Trait ?? true)
+            if (printMask?.IsTrait ?? true)
             {
-                sb.AppendItem(item.Trait, "Trait");
+                sb.AppendItem(item.IsTrait, "IsTrait");
             }
             if (printMask?.MinLevel ?? true)
             {
@@ -1043,68 +997,59 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.NumRanks, "NumRanks");
             }
-            if (printMask?.Playable ?? true)
+            if (printMask?.IsPlayable ?? true)
             {
-                sb.AppendItem(item.Playable, "Playable");
+                sb.AppendItem(item.IsPlayable, "IsPlayable");
             }
-            if (printMask?.Hidden ?? true)
+            if (printMask?.IsHidden ?? true)
             {
-                sb.AppendItem(item.Hidden, "Hidden");
-            }
-            if (printMask?.Remaining ?? true)
-            {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendItem(item.IsHidden, "IsHidden");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPerkMainDataGetter? lhs,
-            IPerkMainDataGetter? rhs,
+            IPerkDataGetter? lhs,
+            IPerkDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Versioning) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Trait) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkData_FieldIndex.IsTrait) ?? true))
             {
-                if (lhs.Trait != rhs.Trait) return false;
+                if (lhs.IsTrait != rhs.IsTrait) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.MinLevel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkData_FieldIndex.MinLevel) ?? true))
             {
                 if (lhs.MinLevel != rhs.MinLevel) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.NumRanks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkData_FieldIndex.NumRanks) ?? true))
             {
                 if (lhs.NumRanks != rhs.NumRanks) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Playable) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkData_FieldIndex.IsPlayable) ?? true))
             {
-                if (lhs.Playable != rhs.Playable) return false;
+                if (lhs.IsPlayable != rhs.IsPlayable) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Hidden) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkData_FieldIndex.IsHidden) ?? true))
             {
-                if (lhs.Hidden != rhs.Hidden) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Remaining) ?? true))
-            {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (lhs.IsHidden != rhs.IsHidden) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IPerkMainDataGetter item)
+        public virtual int GetHashCode(IPerkDataGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Versioning);
-            hash.Add(item.Trait);
+            hash.Add(item.IsTrait);
             hash.Add(item.MinLevel);
             hash.Add(item.NumRanks);
-            hash.Add(item.Playable);
-            hash.Add(item.Hidden);
-            hash.Add(item.Remaining);
+            hash.Add(item.IsPlayable);
+            hash.Add(item.IsHidden);
             return hash.ToHashCode();
         }
         
@@ -1113,11 +1058,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public object GetNew()
         {
-            return PerkMainData.GetNew();
+            return PerkData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkMainDataGetter obj, bool iterateNestedRecords = true)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPerkDataGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -1125,46 +1070,42 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class PerkMainDataSetterTranslationCommon
+    internal partial class PerkDataSetterTranslationCommon
     {
-        public static readonly PerkMainDataSetterTranslationCommon Instance = new PerkMainDataSetterTranslationCommon();
+        public static readonly PerkDataSetterTranslationCommon Instance = new PerkDataSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPerkMainData item,
-            IPerkMainDataGetter rhs,
+            IPerkData item,
+            IPerkDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Versioning) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkData_FieldIndex.Versioning) ?? true))
             {
                 item.Versioning = rhs.Versioning;
             }
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Trait) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkData_FieldIndex.IsTrait) ?? true))
             {
-                item.Trait = rhs.Trait;
+                item.IsTrait = rhs.IsTrait;
             }
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.MinLevel) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkData_FieldIndex.MinLevel) ?? true))
             {
                 item.MinLevel = rhs.MinLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.NumRanks) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkData_FieldIndex.NumRanks) ?? true))
             {
                 item.NumRanks = rhs.NumRanks;
             }
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Playable) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkData_FieldIndex.IsPlayable) ?? true))
             {
-                item.Playable = rhs.Playable;
+                item.IsPlayable = rhs.IsPlayable;
             }
-            if (rhs.Versioning.HasFlag(PerkMainData.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Hidden) ?? true))
+            if (rhs.Versioning.HasFlag(PerkData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)PerkData_FieldIndex.IsHidden) ?? true))
             {
-                item.Hidden = rhs.Hidden;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PerkMainData_FieldIndex.Remaining) ?? true))
-            {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.IsHidden = rhs.IsHidden;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1175,19 +1116,19 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IPerkMainData item,
-            IPerkMainDataGetter rhs,
+            IPerkData item,
+            IPerkDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public PerkMainData DeepCopy(
-            IPerkMainDataGetter item,
-            PerkMainData.TranslationMask? copyMask = null)
+        public PerkData DeepCopy(
+            IPerkDataGetter item,
+            PerkData.TranslationMask? copyMask = null)
         {
-            PerkMainData ret = (PerkMainData)((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).GetNew();
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkData ret = (PerkData)((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).GetNew();
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1196,30 +1137,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public PerkMainData DeepCopy(
-            IPerkMainDataGetter item,
-            out PerkMainData.ErrorMask errorMask,
-            PerkMainData.TranslationMask? copyMask = null)
+        public PerkData DeepCopy(
+            IPerkDataGetter item,
+            out PerkData.ErrorMask errorMask,
+            PerkData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PerkMainData ret = (PerkMainData)((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).GetNew();
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkData ret = (PerkData)((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).GetNew();
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PerkMainData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PerkData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PerkMainData DeepCopy(
-            IPerkMainDataGetter item,
+        public PerkData DeepCopy(
+            IPerkDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PerkMainData ret = (PerkMainData)((PerkMainDataCommon)((IPerkMainDataGetter)item).CommonInstance()!).GetNew();
-            ((PerkMainDataSetterTranslationCommon)((IPerkMainDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PerkData ret = (PerkData)((PerkDataCommon)((IPerkDataGetter)item).CommonInstance()!).GetNew();
+            ((PerkDataSetterTranslationCommon)((IPerkDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1235,27 +1176,27 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class PerkMainData
+    public partial class PerkData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PerkMainData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PerkMainData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PerkMainDataCommon.Instance;
+        protected object CommonInstance() => PerkDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return PerkMainDataSetterCommon.Instance;
+            return PerkDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PerkMainDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PerkDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPerkMainDataGetter.CommonInstance() => this.CommonInstance();
+        object IPerkDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IPerkMainDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPerkDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IPerkMainDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPerkDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1266,33 +1207,27 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class PerkMainDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class PerkDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PerkMainDataBinaryWriteTranslation Instance = new();
+        public static readonly PerkDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IPerkMainDataGetter item,
+            IPerkDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Trait);
+            writer.Write(item.IsTrait);
             writer.Write(item.MinLevel);
             writer.Write(item.NumRanks);
-            writer.Write(item.Playable);
-            if (!item.Versioning.HasFlag(PerkMainData.VersioningBreaks.Break0))
+            writer.Write(item.IsPlayable);
+            if (!item.Versioning.HasFlag(PerkData.VersioningBreaks.Break0))
             {
-                if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
-                {
-                    writer.Write(item.Hidden);
-                }
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Remaining);
+                writer.Write(item.IsHidden);
             }
         }
 
         public void Write(
             MutagenWriter writer,
-            IPerkMainDataGetter item,
+            IPerkDataGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
@@ -1313,35 +1248,31 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IPerkMainDataGetter)item,
+                item: (IPerkDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PerkMainDataBinaryCreateTranslation
+    internal partial class PerkDataBinaryCreateTranslation
     {
-        public static readonly PerkMainDataBinaryCreateTranslation Instance = new PerkMainDataBinaryCreateTranslation();
+        public static readonly PerkDataBinaryCreateTranslation Instance = new PerkDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPerkMainData item,
+            IPerkData item,
             MutagenFrame frame)
         {
-            item.Trait = frame.ReadBoolean();
+            item.IsTrait = frame.ReadBoolean();
             item.MinLevel = frame.ReadUInt8();
             item.NumRanks = frame.ReadUInt8();
-            item.Playable = frame.ReadBoolean();
+            item.IsPlayable = frame.ReadBoolean();
             if (frame.Complete)
             {
-                item.Versioning |= PerkMainData.VersioningBreaks.Break0;
+                item.Versioning |= PerkData.VersioningBreaks.Break0;
                 return;
             }
-            if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
-            {
-                item.Hidden = frame.ReadBoolean();
-            }
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.IsHidden = frame.ReadBoolean();
         }
 
     }
@@ -1350,14 +1281,14 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class PerkMainDataBinaryTranslationMixIn
+    public static class PerkDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPerkMainDataGetter item,
+            this IPerkDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PerkMainDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((PerkDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1370,63 +1301,56 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class PerkMainDataBinaryOverlay :
+    internal partial class PerkDataBinaryOverlay :
         PluginBinaryOverlay,
-        IPerkMainDataGetter
+        IPerkDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PerkMainData_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PerkMainData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PerkData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PerkData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PerkMainDataCommon.Instance;
+        protected object CommonInstance() => PerkDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PerkMainDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PerkDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPerkMainDataGetter.CommonInstance() => this.CommonInstance();
+        object IPerkDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IPerkMainDataGetter.CommonSetterInstance() => null;
+        object? IPerkDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IPerkMainDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPerkDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PerkMainDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PerkDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PerkMainDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PerkDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public PerkMainData.VersioningBreaks Versioning { get; private set; }
-        public Boolean Trait => _structData.Slice(0x0, 0x1)[0] >= 1;
+        public PerkData.VersioningBreaks Versioning { get; private set; }
+        public Boolean IsTrait => _structData.Slice(0x0, 0x1)[0] >= 1;
         public Byte MinLevel => _structData.Span[0x1];
         public Byte NumRanks => _structData.Span[0x2];
-        public Boolean Playable => _structData.Slice(0x3, 0x1)[0] >= 1;
-        #region Hidden
-        public Boolean Hidden => _structData.Length <= 0x4 ? default : _structData.Slice(0x4, 0x1)[0] >= 1;
-        int HiddenModHeaderVersioningOffset => _package.MetaData.ModHeaderVersion!.Value < 1.32f ? -1 : 0;
-        #endregion
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Length <= HiddenModHeaderVersioningOffset + 0x5 ? [] : _structData.Span.Slice(HiddenModHeaderVersioningOffset + 0x5).ToArray();
-        protected int RemainingEndingPos;
-        #endregion
+        public Boolean IsPlayable => _structData.Slice(0x3, 0x1)[0] >= 1;
+        public Boolean IsHidden => _structData.Length <= 0x4 ? default : _structData.Slice(0x4, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PerkMainDataBinaryOverlay(
+        protected PerkDataBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1436,7 +1360,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static IPerkMainDataGetter PerkMainDataFactory(
+        public static IPerkDataGetter PerkDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1445,15 +1369,15 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x5,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
-            var ret = new PerkMainDataBinaryOverlay(
+                offset: out var offset);
+            var ret = new PerkDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             if (ret._structData.Length <= 0x4)
             {
-                ret.Versioning |= PerkMainData.VersioningBreaks.Break0;
+                ret.Versioning |= PerkData.VersioningBreaks.Break0;
             }
             ret.CustomFactoryEnd(
                 stream: stream,
@@ -1462,12 +1386,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static IPerkMainDataGetter PerkMainDataFactory(
+        public static IPerkDataGetter PerkDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return PerkMainDataFactory(
+            return PerkDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1479,7 +1403,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PerkMainDataMixIn.Print(
+            PerkDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1490,16 +1414,16 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPerkMainDataGetter rhs) return false;
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPerkDataGetter rhs) return false;
+            return ((PerkDataCommon)((IPerkDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPerkMainDataGetter? obj)
+        public bool Equals(IPerkDataGetter? obj)
         {
-            return ((PerkMainDataCommon)((IPerkMainDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PerkDataCommon)((IPerkDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PerkMainDataCommon)((IPerkMainDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PerkDataCommon)((IPerkDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PerkEntryPointAbsoluteValue, PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// Implemented by: [PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue]
     /// </summary>
     public abstract partial class APerkEntryPointEffect :
         APerkEffect,
@@ -111,16 +111,12 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                ButtonLabel: ButtonLabel,
-                Flags: Flags)
+                Conditions: Conditions)
             {
                 this.EntryPoint = EntryPoint;
                 this.PerkConditionTabCount = PerkConditionTabCount;
@@ -424,7 +420,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PerkEntryPointAbsoluteValue, PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// Implemented by: [PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue]
     /// </summary>
     public partial interface IAPerkEntryPointEffect :
         IAPerkEffect,
@@ -437,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [PerkEntryPointAbsoluteValue, PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue, PerkEntryPointModifyValues, PerkEntryPointSelectSpell, PerkEntryPointSelectText, PerkEntryPointSetText]
+    /// Implemented by: [PerkEntryPointAddActivateChoice, PerkEntryPointAddLeveledItem, PerkEntryPointAddRangeToValue, PerkEntryPointModifyActorValue, PerkEntryPointModifyValue]
     /// </summary>
     public partial interface IAPerkEntryPointEffectGetter :
         IAPerkEffectGetter,
@@ -595,10 +591,8 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
-        EntryPoint = 5,
-        PerkConditionTabCount = 6,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
     }
     #endregion
 
@@ -611,7 +605,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(APerkEntryPointEffect.Mask<>);
 
@@ -824,10 +818,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEffect_FieldIndex.Priority:
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (APerkEntryPointEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.ButtonLabel:
-                    return (APerkEntryPointEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.Flags:
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

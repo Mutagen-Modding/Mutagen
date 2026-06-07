@@ -111,15 +111,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         #endregion
         #region PerkData
+        public PerkData PerkData { get; set; } = new PerkData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PerkMainData? _PerkData;
-        public PerkMainData? PerkData
-        {
-            get => _PerkData;
-            set => _PerkData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPerkMainDataGetter? IPerkGetter.PerkData => this.PerkData;
+        IPerkDataGetter IPerkGetter.PerkData => PerkData;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -164,7 +158,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Description = initialValue;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
-                this.PerkData = new MaskItem<TItem, PerkMainData.Mask<TItem>?>(initialValue, new PerkMainData.Mask<TItem>(initialValue));
+                this.PerkData = new MaskItem<TItem, PerkData.Mask<TItem>?>(initialValue, new PerkData.Mask<TItem>(initialValue));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(initialValue, []);
             }
 
@@ -195,7 +189,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Description = Description;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
-                this.PerkData = new MaskItem<TItem, PerkMainData.Mask<TItem>?>(PerkData, new PerkMainData.Mask<TItem>(PerkData));
+                this.PerkData = new MaskItem<TItem, PerkData.Mask<TItem>?>(PerkData, new PerkData.Mask<TItem>(PerkData));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>(Effects, []);
             }
 
@@ -212,7 +206,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Description;
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public MaskItem<TItem, PerkMainData.Mask<TItem>?>? PerkData { get; set; }
+            public MaskItem<TItem, PerkData.Mask<TItem>?>? PerkData { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, APerkEffect.Mask<TItem>?>>?>? Effects;
             #endregion
 
@@ -367,7 +361,7 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                obj.PerkData = this.PerkData == null ? null : new MaskItem<R, PerkMainData.Mask<R>?>(eval(this.PerkData.Overall), this.PerkData.Specific?.Translate(eval));
+                obj.PerkData = this.PerkData == null ? null : new MaskItem<R, PerkData.Mask<R>?>(eval(this.PerkData.Overall), this.PerkData.Specific?.Translate(eval));
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, APerkEffect.Mask<R>?>>?>(eval(this.Effects.Overall), []);
@@ -470,7 +464,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Description;
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public MaskItem<Exception?, PerkMainData.ErrorMask?>? PerkData;
+            public MaskItem<Exception?, PerkData.ErrorMask?>? PerkData;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>? Effects;
             #endregion
 
@@ -515,7 +509,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
                     case Perk_FieldIndex.PerkData:
-                        this.PerkData = new MaskItem<Exception?, PerkMainData.ErrorMask?>(ex, null);
+                        this.PerkData = new MaskItem<Exception?, PerkData.ErrorMask?>(ex, null);
                         break;
                     case Perk_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>(ex, null);
@@ -544,7 +538,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     case Perk_FieldIndex.PerkData:
-                        this.PerkData = (MaskItem<Exception?, PerkMainData.ErrorMask?>?)obj;
+                        this.PerkData = (MaskItem<Exception?, PerkData.ErrorMask?>?)obj;
                         break;
                     case Perk_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, APerkEffect.ErrorMask?>>?>)obj;
@@ -674,7 +668,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Description;
             public Icons.TranslationMask? Icons;
             public Condition.TranslationMask? Conditions;
-            public PerkMainData.TranslationMask? PerkData;
+            public PerkData.TranslationMask? PerkData;
             public APerkEffect.TranslationMask? Effects;
             #endregion
 
@@ -854,7 +848,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         new Icons? Icons { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new PerkMainData? PerkData { get; set; }
+        new PerkData PerkData { get; set; }
         new ExtendedList<APerkEffect> Effects { get; }
     }
 
@@ -893,7 +887,7 @@ namespace Mutagen.Bethesda.Fallout3
         IIconsGetter? Icons { get; }
         #endregion
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IPerkMainDataGetter? PerkData { get; }
+        IPerkDataGetter PerkData { get; }
         IReadOnlyList<IAPerkEffectGetter> Effects { get; }
 
     }
@@ -1130,9 +1124,7 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
                 RecordTypes.PRKC,
-                RecordTypes.EPFT,
-                RecordTypes.EPF2,
-                RecordTypes.EPF3);
+                RecordTypes.EPFT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1181,7 +1173,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Description = string.Empty;
             item.Icons = null;
             item.Conditions.Clear();
-            item.PerkData = null;
+            item.PerkData.Clear();
             item.Effects.Clear();
             base.Clear(item);
         }
@@ -1306,11 +1298,7 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PerkData = EqualsMaskHelper.EqualsHelper(
-                item.PerkData,
-                rhs.PerkData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.PerkData = MaskItemExt.Factory(item.PerkData.GetEqualsMask(rhs.PerkData, include), include);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1392,10 +1380,9 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
-            if ((printMask?.PerkData?.Overall ?? true)
-                && item.PerkData is {} PerkDataItem)
+            if (printMask?.PerkData?.Overall ?? true)
             {
-                PerkDataItem?.Print(sb, "PerkData");
+                item.PerkData?.Print(sb, "PerkData");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1485,7 +1472,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PerkData, rhs.PerkData, out var lhsPerkData, out var rhsPerkData, out var isPerkDataEqual))
                 {
-                    if (!((PerkMainDataCommon)((IPerkMainDataGetter)lhsPerkData).CommonInstance()!).Equals(lhsPerkData, rhsPerkData, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.PerkData))) return false;
+                    if (!((PerkDataCommon)((IPerkDataGetter)lhsPerkData).CommonInstance()!).Equals(lhsPerkData, rhsPerkData, equalsMask?.GetSubCrystal((int)Perk_FieldIndex.PerkData))) return false;
                 }
                 else if (!isPerkDataEqual) return false;
             }
@@ -1531,10 +1518,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(Iconsitem);
             }
             hash.Add(item.Conditions);
-            if (item.PerkData is {} PerkDataitem)
-            {
-                hash.Add(PerkDataitem);
-            }
+            hash.Add(item.PerkData);
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1726,15 +1710,11 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)Perk_FieldIndex.PerkData);
                 try
                 {
-                    if(rhs.PerkData is {} rhsPerkData)
+                    if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.PerkData) ?? true))
                     {
-                        item.PerkData = rhsPerkData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Perk_FieldIndex.PerkData));
-                    }
-                    else
-                    {
-                        item.PerkData = default;
+                        item.PerkData = rhs.PerkData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Perk_FieldIndex.PerkData),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1968,13 +1948,11 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
-            if (item.PerkData is {} PerkDataItem)
-            {
-                ((PerkMainDataBinaryWriteTranslation)((IBinaryItem)PerkDataItem).BinaryWriteTranslator).Write(
-                    item: PerkDataItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            var PerkDataItem = item.PerkData;
+            ((PerkDataBinaryWriteTranslation)((IBinaryItem)PerkDataItem).BinaryWriteTranslator).Write(
+                item: PerkDataItem,
+                writer: writer,
+                translationParams: translationParams);
             PerkBinaryWriteTranslation.WriteBinaryEffects(
                 writer: writer,
                 item: item);
@@ -2096,7 +2074,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    item.PerkData = Mutagen.Bethesda.Fallout3.PerkMainData.CreateFromBinary(frame: frame);
+                    item.PerkData = Mutagen.Bethesda.Fallout3.PerkData.CreateFromBinary(frame: frame);
                     return (int)Perk_FieldIndex.PerkData;
                 }
                 case RecordTypeInts.PRKE:
@@ -2188,7 +2166,8 @@ namespace Mutagen.Bethesda.Fallout3
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region PerkData
         private RangeInt32? _PerkDataLocation;
-        public IPerkMainDataGetter? PerkData => _PerkDataLocation.HasValue ? PerkMainDataBinaryOverlay.PerkMainDataFactory(_recordData.Slice(_PerkDataLocation!.Value.Min), _package) : default;
+        private IPerkDataGetter? _PerkData => _PerkDataLocation.HasValue ? PerkDataBinaryOverlay.PerkDataFactory(_recordData.Slice(_PerkDataLocation!.Value.Min), _package) : default;
+        public IPerkDataGetter PerkData => _PerkData ?? new PerkData();
         #endregion
         #region Effects
         partial void EffectsCustomParse(

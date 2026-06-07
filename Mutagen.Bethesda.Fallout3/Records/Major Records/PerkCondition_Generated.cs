@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region RunOnTabIndex
-        public Byte RunOnTabIndex { get; set; } = default(Byte);
+        public SByte RunOnTabIndex { get; set; } = default(SByte);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPerkCondition>,
         IPerkConditionGetter
     {
-        new Byte RunOnTabIndex { get; set; }
+        new SByte RunOnTabIndex { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
 
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PerkCondition_Registration.Instance;
-        Byte RunOnTabIndex { get; }
+        SByte RunOnTabIndex { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
@@ -810,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPerkCondition item)
         {
             ClearPartial();
-            item.RunOnTabIndex = default(Byte);
+            item.RunOnTabIndex = default(SByte);
             item.Conditions.Clear();
         }
         
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RunOnTabIndex,
                 header: translationParams.ConvertToCustom(RecordTypes.PRKC));
@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RunOnTabIndex = frame.ReadUInt8();
+                    item.RunOnTabIndex = frame.ReadInt8();
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region RunOnTabIndex
         private int? _RunOnTabIndexLocation;
-        public Byte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public SByte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? (sbyte)HeaderTranslation.ExtractSubrecordMemory(_recordData, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(SByte);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         partial void CustomFactoryEnd(

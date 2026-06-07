@@ -1069,43 +1069,22 @@
     <Compile Include="Records\Major Records\PerkEntryPointModifyValue_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointModifyValues_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointAddRangeToValue_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointAbsoluteValue_Generated.cs">
+    <Compile Include="Records\Major Records\PerkEntryPointAddLeveledItem_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointAddLeveledItem_Generated.cs">
+    <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointSelectSpell_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointSelectText_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointSetText_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PerkCondition_Generated.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkScriptFlag.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkScriptFlag_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\QuestStage_Generated.cs">
@@ -1345,7 +1324,7 @@
     <Compile Include="Records\Major Records\ImpactDataSetData_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkMainData_Generated.cs">
+    <Compile Include="Records\Major Records\PerkData_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <!-- FNV-only enums (version-gated to 1.32+) -->

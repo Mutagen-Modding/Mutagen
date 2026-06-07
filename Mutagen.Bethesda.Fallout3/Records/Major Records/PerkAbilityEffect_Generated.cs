@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Ability
-        private readonly IFormLink<ISpellGetter> _Ability = new FormLink<ISpellGetter>();
-        public IFormLink<ISpellGetter> Ability
+        private readonly IFormLinkNullable<ISpellGetter> _Ability = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> Ability
         {
             get => _Ability;
             set => _Ability.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability;
+        IFormLinkNullableGetter<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability;
         #endregion
 
         #region To String
@@ -111,15 +111,11 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags,
                 TItem Ability)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions,
-                ButtonLabel: ButtonLabel,
-                Flags: Flags)
+                Conditions: Conditions)
             {
                 this.Ability = Ability;
             }
@@ -426,7 +422,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPerkAbilityEffect>,
         IPerkAbilityEffectGetter
     {
-        new IFormLink<ISpellGetter> Ability { get; set; }
+        new IFormLinkNullable<ISpellGetter> Ability { get; set; }
     }
 
     public partial interface IPerkAbilityEffectGetter :
@@ -436,7 +432,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IPerkAbilityEffectGetter>
     {
         static new ILoquiRegistration StaticRegistration => PerkAbilityEffect_Registration.Instance;
-        IFormLinkGetter<ISpellGetter> Ability { get; }
+        IFormLinkNullableGetter<ISpellGetter> Ability { get; }
 
     }
 
@@ -584,9 +580,7 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
-        Ability = 5,
+        Ability = 3,
     }
     #endregion
 
@@ -599,7 +593,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(PerkAbilityEffect.Mask<>);
 
@@ -794,7 +788,7 @@ namespace Mutagen.Bethesda.Fallout3
                 printMask: printMask);
             if (printMask?.Ability ?? true)
             {
-                sb.AppendItem(item.Ability.FormKey, "Ability");
+                sb.AppendItem(item.Ability.FormKeyNullable, "Ability");
             }
         }
         
@@ -807,10 +801,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkAbilityEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkAbilityEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.ButtonLabel:
-                    return (PerkAbilityEffect_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.Flags:
                     return (PerkAbilityEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -871,7 +861,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Ability);
+            if (FormLinkInformation.TryFactory(obj.Ability, out var AbilityInfo))
+            {
+                yield return AbilityInfo;
+            }
             yield break;
         }
         
@@ -898,7 +891,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
-                item.Ability.SetTo(rhs.Ability.FormKey);
+                item.Ability.SetTo(rhs.Ability.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1020,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout3
             IPerkAbilityEffectGetter item,
             MutagenWriter writer)
         {
-            FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Ability);
         }
@@ -1072,6 +1065,7 @@ namespace Mutagen.Bethesda.Fallout3
             IPerkAbilityEffect item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.Ability.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1120,7 +1114,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISpellGetter> Ability => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkNullableGetter<ISpellGetter> Ability => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

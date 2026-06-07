@@ -53,15 +53,22 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Spell
-        private readonly IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
-        public IFormLinkNullable<ISpellGetter> Spell
-        {
-            get => _Spell;
-            set => _Spell.SetTo(value);
-        }
+        #region ButtonLabel
+        public String? ButtonLabel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;
+        String? IPerkEntryPointAddActivateChoiceGetter.ButtonLabel => this.ButtonLabel;
+        #endregion
+        #region RunImmediately
+        public Boolean? RunImmediately { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Boolean? IPerkEntryPointAddActivateChoiceGetter.RunImmediately => this.RunImmediately;
+        #endregion
+        #region Script
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly ScriptFields _Script_Object = new ScriptFields();
+        public ScriptFields Script => _Script_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScriptFieldsGetter IPerkEntryPointAddActivateChoiceGetter.Script => _Script_Object;
         #endregion
 
         #region To String
@@ -104,28 +111,30 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Spell = initialValue;
+                this.ButtonLabel = initialValue;
+                this.RunImmediately = initialValue;
+                this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(initialValue, new ScriptFields.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem Spell)
+                TItem ButtonLabel,
+                TItem RunImmediately,
+                TItem Script)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                ButtonLabel: ButtonLabel,
-                Flags: Flags,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
-                this.Spell = Spell;
+                this.ButtonLabel = ButtonLabel;
+                this.RunImmediately = RunImmediately;
+                this.Script = new MaskItem<TItem, ScriptFields.Mask<TItem>?>(Script, new ScriptFields.Mask<TItem>(Script));
             }
 
             #pragma warning disable CS8618
@@ -137,7 +146,9 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Spell;
+            public TItem ButtonLabel;
+            public TItem RunImmediately;
+            public MaskItem<TItem, ScriptFields.Mask<TItem>?>? Script { get; set; }
             #endregion
 
             #region Equals
@@ -151,13 +162,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Spell, rhs.Spell)) return false;
+                if (!object.Equals(this.ButtonLabel, rhs.ButtonLabel)) return false;
+                if (!object.Equals(this.RunImmediately, rhs.RunImmediately)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Spell);
+                hash.Add(this.ButtonLabel);
+                hash.Add(this.RunImmediately);
+                hash.Add(this.Script);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -168,7 +183,13 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Spell)) return false;
+                if (!eval(this.ButtonLabel)) return false;
+                if (!eval(this.RunImmediately)) return false;
+                if (Script != null)
+                {
+                    if (!eval(this.Script.Overall)) return false;
+                    if (this.Script.Specific != null && !this.Script.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -177,7 +198,13 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Spell)) return true;
+                if (eval(this.ButtonLabel)) return true;
+                if (eval(this.RunImmediately)) return true;
+                if (Script != null)
+                {
+                    if (eval(this.Script.Overall)) return true;
+                    if (this.Script.Specific != null && this.Script.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -193,7 +220,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Spell = eval(this.Spell);
+                obj.ButtonLabel = eval(this.ButtonLabel);
+                obj.RunImmediately = eval(this.RunImmediately);
+                obj.Script = this.Script == null ? null : new MaskItem<R, ScriptFields.Mask<R>?>(eval(this.Script.Overall), this.Script.Specific?.Translate(eval));
             }
             #endregion
 
@@ -212,9 +241,17 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(PerkEntryPointAddActivateChoice.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Spell ?? true)
+                    if (printMask?.ButtonLabel ?? true)
                     {
-                        sb.AppendItem(Spell, "Spell");
+                        sb.AppendItem(ButtonLabel, "ButtonLabel");
+                    }
+                    if (printMask?.RunImmediately ?? true)
+                    {
+                        sb.AppendItem(RunImmediately, "RunImmediately");
+                    }
+                    if (printMask?.Script?.Overall ?? true)
+                    {
+                        Script?.Print(sb);
                     }
                 }
             }
@@ -227,7 +264,9 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Spell;
+            public Exception? ButtonLabel;
+            public Exception? RunImmediately;
+            public MaskItem<Exception?, ScriptFields.ErrorMask?>? Script;
             #endregion
 
             #region IErrorMask
@@ -236,8 +275,12 @@ namespace Mutagen.Bethesda.Fallout3
                 PerkEntryPointAddActivateChoice_FieldIndex enu = (PerkEntryPointAddActivateChoice_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
-                        return Spell;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
+                        return ButtonLabel;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.RunImmediately:
+                        return RunImmediately;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.Script:
+                        return Script;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -248,8 +291,14 @@ namespace Mutagen.Bethesda.Fallout3
                 PerkEntryPointAddActivateChoice_FieldIndex enu = (PerkEntryPointAddActivateChoice_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
-                        this.Spell = ex;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
+                        this.ButtonLabel = ex;
+                        break;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.RunImmediately:
+                        this.RunImmediately = ex;
+                        break;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.Script:
+                        this.Script = new MaskItem<Exception?, ScriptFields.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -262,8 +311,14 @@ namespace Mutagen.Bethesda.Fallout3
                 PerkEntryPointAddActivateChoice_FieldIndex enu = (PerkEntryPointAddActivateChoice_FieldIndex)index;
                 switch (enu)
                 {
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
-                        this.Spell = (Exception?)obj;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
+                        this.ButtonLabel = (Exception?)obj;
+                        break;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.RunImmediately:
+                        this.RunImmediately = (Exception?)obj;
+                        break;
+                    case PerkEntryPointAddActivateChoice_FieldIndex.Script:
+                        this.Script = (MaskItem<Exception?, ScriptFields.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -274,7 +329,9 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Spell != null) return true;
+                if (ButtonLabel != null) return true;
+                if (RunImmediately != null) return true;
+                if (Script != null) return true;
                 return false;
             }
             #endregion
@@ -302,8 +359,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Spell, "Spell");
+                    sb.AppendItem(ButtonLabel, "ButtonLabel");
                 }
+                {
+                    sb.AppendItem(RunImmediately, "RunImmediately");
+                }
+                Script?.Print(sb);
             }
             #endregion
 
@@ -312,7 +373,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Spell = this.Spell.Combine(rhs.Spell);
+                ret.ButtonLabel = this.ButtonLabel.Combine(rhs.ButtonLabel);
+                ret.RunImmediately = this.RunImmediately.Combine(rhs.RunImmediately);
+                ret.Script = this.Script.Combine(rhs.Script, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -335,7 +398,9 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public bool Spell;
+            public bool ButtonLabel;
+            public bool RunImmediately;
+            public ScriptFields.TranslationMask? Script;
             #endregion
 
             #region Ctors
@@ -344,7 +409,8 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Spell = defaultOn;
+                this.ButtonLabel = defaultOn;
+                this.RunImmediately = defaultOn;
             }
 
             #endregion
@@ -352,7 +418,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Spell, null));
+                ret.Add((ButtonLabel, null));
+                ret.Add((RunImmediately, null));
+                ret.Add((Script != null ? Script.OnOverall : DefaultOn, Script?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -430,7 +498,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
         IPerkEntryPointAddActivateChoiceGetter
     {
-        new IFormLinkNullable<ISpellGetter> Spell { get; set; }
+        new String? ButtonLabel { get; set; }
+        new Boolean? RunImmediately { get; set; }
+        new ScriptFields Script { get; }
     }
 
     public partial interface IPerkEntryPointAddActivateChoiceGetter :
@@ -440,7 +510,9 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>
     {
         static new ILoquiRegistration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        IFormLinkNullableGetter<ISpellGetter> Spell { get; }
+        String? ButtonLabel { get; }
+        Boolean? RunImmediately { get; }
+        IScriptFieldsGetter Script { get; }
 
     }
 
@@ -588,11 +660,11 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
-        EntryPoint = 5,
-        PerkConditionTabCount = 6,
-        Spell = 7,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        ButtonLabel = 5,
+        RunImmediately = 6,
+        Script = 7,
     }
     #endregion
 
@@ -603,7 +675,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 8;
 
@@ -635,8 +707,15 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.PRKE);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.PRKE);
+            var all = RecordCollection.Factory(
+                RecordTypes.PRKE,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3,
+                RecordTypes.SCHR);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddActivateChoiceBinaryWriteTranslation);
         #region Interface
@@ -678,7 +757,8 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IPerkEntryPointAddActivateChoice item)
         {
             ClearPartial();
-            item.Spell.Clear();
+            item.ButtonLabel = default;
+            item.RunImmediately = default;
             base.Clear(item);
         }
         
@@ -696,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IPerkEntryPointAddActivateChoice obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Spell.Relink(mapping);
+            obj.Script.RemapLinks(mapping);
         }
         
         #endregion
@@ -764,7 +844,9 @@ namespace Mutagen.Bethesda.Fallout3
             PerkEntryPointAddActivateChoice.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Spell = item.Spell.Equals(rhs.Spell);
+            ret.ButtonLabel = string.Equals(item.ButtonLabel, rhs.ButtonLabel);
+            ret.RunImmediately = item.RunImmediately == rhs.RunImmediately;
+            ret.Script = MaskItemExt.Factory(item.Script.GetEqualsMask(rhs.Script, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -814,9 +896,19 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Spell ?? true)
+            if ((printMask?.ButtonLabel ?? true)
+                && item.ButtonLabel is {} ButtonLabelItem)
             {
-                sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
+                sb.AppendItem(ButtonLabelItem, "ButtonLabel");
+            }
+            if ((printMask?.RunImmediately ?? true)
+                && item.RunImmediately is {} RunImmediatelyItem)
+            {
+                sb.AppendItem(RunImmediatelyItem, "RunImmediately");
+            }
+            if (printMask?.Script?.Overall ?? true)
+            {
+                item.Script?.Print(sb, "Script");
             }
         }
         
@@ -829,10 +921,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEntryPointEffect_FieldIndex.Priority:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
-                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
-                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.Flags:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
@@ -853,10 +941,6 @@ namespace Mutagen.Bethesda.Fallout3
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.ButtonLabel:
-                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.Flags:
-                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -870,9 +954,21 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
-                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+                if (!string.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.RunImmediately) ?? true))
+            {
+                if (lhs.RunImmediately != rhs.RunImmediately) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Script) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Script, rhs.Script, out var lhsScript, out var rhsScript, out var isScriptEqual))
+                {
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, equalsMask?.GetSubCrystal((int)PerkEntryPointAddActivateChoice_FieldIndex.Script))) return false;
+                }
+                else if (!isScriptEqual) return false;
             }
             return true;
         }
@@ -902,7 +998,15 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IPerkEntryPointAddActivateChoiceGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Spell);
+            if (item.ButtonLabel is {} ButtonLabelitem)
+            {
+                hash.Add(ButtonLabelitem);
+            }
+            if (item.RunImmediately is {} RunImmediatelyitem)
+            {
+                hash.Add(RunImmediatelyitem);
+            }
+            hash.Add(item.Script);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -932,9 +1036,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.Spell, out var SpellInfo))
+            if (obj.Script is IFormLinkContainerGetter ScriptlinkCont)
             {
-                yield return SpellInfo;
+                foreach (var item in ScriptlinkCont.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -960,9 +1067,33 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
-                item.Spell.SetTo(rhs.Spell.FormKeyNullable);
+                item.ButtonLabel = rhs.ButtonLabel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.RunImmediately) ?? true))
+            {
+                item.RunImmediately = rhs.RunImmediately;
+            }
+            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Script) ?? true))
+            {
+                errorMask?.PushIndex((int)PerkEntryPointAddActivateChoice_FieldIndex.Script);
+                try
+                {
+                    item.Script.DeepCopyIn(
+                        rhs: rhs.Script,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)PerkEntryPointAddActivateChoice_FieldIndex.Script));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1096,16 +1227,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly PerkEntryPointAddActivateChoiceBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
+        public static void WriteRecordTypes(
             IPerkEntryPointAddActivateChoiceGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
         {
-            APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
-                writer: writer);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Spell);
+                translationParams: translationParams);
         }
 
         public void Write(
@@ -1113,10 +1243,10 @@ namespace Mutagen.Bethesda.Fallout3
             IPerkEntryPointAddActivateChoiceGetter item,
             TypedWriteParams translationParams)
         {
-            WriteEmbedded(
+            APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
+            WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1162,15 +1292,28 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly PerkEntryPointAddActivateChoiceBinaryCreateTranslation Instance = new PerkEntryPointAddActivateChoiceBinaryCreateTranslation();
 
-        public static void FillBinaryStructs(
+        public static ParseResult FillBinaryRecordTypes(
             IPerkEntryPointAddActivateChoice item,
-            MutagenFrame frame)
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
         {
-            APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-            if (frame.Complete) return;
-            item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                default:
+                    return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
         }
 
     }
@@ -1218,7 +1361,6 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkNullableGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x2, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1270,6 +1412,29 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

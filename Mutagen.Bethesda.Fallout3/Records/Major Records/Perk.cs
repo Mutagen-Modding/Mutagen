@@ -24,6 +24,17 @@ public partial class Perk
 
 partial class PerkBinaryCreateTranslation
 {
+    internal enum EntryPointFunction : byte
+    {
+        SetValue = 1,
+        AddValue = 2,
+        MultiplyValue = 3,
+        AddRangeToValue = 4,
+        AddActorValueMult = 5,
+        AddLeveledList = 8,
+        AddActivateChoice = 9,
+    }
+
     public record Payload
     {
         public SubrecordFrame? DATA { get; set; }
@@ -32,8 +43,7 @@ partial class PerkBinaryCreateTranslation
         public SubrecordFrame? EPFD { get; set; }
         public SubrecordFrame? EPFT { get; set; }
         public List<PerkCondition>? Conditions { get; set; }
-        // Embedded script subrecords (inside Entry Point Function Parameters per xEdit)
-        public List<(RecordType Type, ReadOnlyMemorySlice<byte> Data)>? EmbeddedScriptSubrecords { get; set; }
+        public ScriptFields? Script { get; set; }
     }
 
     private static Payload ReadPayload<TStream>(TStream stream)
@@ -71,16 +81,9 @@ partial class PerkBinaryCreateTranslation
                                 item: out listSubItem!);
                         });
                     break;
-                // Embedded script subrecords (part of Entry Point Function Parameters per xEdit)
                 case RecordTypeInts.SCHR:
-                case RecordTypeInts.SCDA:
-                case RecordTypeInts.SCTX:
-                case RecordTypeInts.SLSD:
-                case RecordTypeInts.SCVR:
-                case RecordTypeInts.SCRO:
-                case RecordTypeInts.SCRV:
-                    ret.EmbeddedScriptSubrecords ??= new();
-                    ret.EmbeddedScriptSubrecords.Add((subFrame.RecordType, subFrame.Content.ToArray()));
+                    stream.Position -= subFrame.TotalLength;
+                    ret.Script = ScriptFields.CreateFromBinary(new MutagenFrame(stream));
                     break;
                 default:
                     stream.Position -= subFrame.TotalLength;
@@ -101,157 +104,99 @@ partial class PerkBinaryCreateTranslation
         var payload = ReadPayload(stream);
 
         APerkEffect effect;
-        if (payload.DATA != null)
+        switch (type)
         {
-            switch (type)
-            {
-                case Perk.EffectType.Quest:
+            case Perk.EffectType.Quest:
+                if (payload.DATA is { } questData)
+                {
                     effect = new PerkQuestEffect()
                     {
-                        Quest = FormLinkBinaryTranslation.Instance.Factory<IQuestGetter>(stream.MetaData, payload.DATA.Value.Content),
-                        Stage = payload.DATA.Value.Content[4],
-                        Unknown = payload.DATA.Value.Content.Slice(5, 3).ToArray(),
+                        Quest = FormLinkBinaryTranslation.Instance.Factory<IQuestGetter>(stream.MetaData, questData.Content),
+                        Stage = questData.Content[4],
+                        Unused = questData.Content.Slice(5, 3).ToArray(),
                     };
-                    break;
-                case Perk.EffectType.Ability:
-                    effect = new PerkAbilityEffect()
-                    {
-                        Ability = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, payload.DATA.Value.Content),
-                    };
-                    break;
-                case Perk.EffectType.EntryPoint:
-                    var entryPt = (APerkEntryPointEffect.EntryType)payload.DATA.Value.Content[0];
-                    var func = payload.DATA.Value.Content[1];
-                    var tabCount = payload.DATA.Value.Content[2];
-                    APerkEntryPointEffect entryPointEffect;
-                    // FNV uses a simpler function type model
-                    // func values: 1=SetValue, 2=AddValue, 3=MultiplyValue
-                    switch (func)
-                    {
-                        case 1: // SetValue
-                        case 2: // AddValue
-                        case 3: // MultiplyValue
-                            if (payload.EPFT == null && payload.EPFD == null)
+                }
+                else
+                {
+                    effect = new PerkQuestEffect();
+                }
+                break;
+            case Perk.EffectType.Ability:
+                effect = new PerkAbilityEffect()
+                {
+                    Ability = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, payload.DATA?.Content),
+                };
+                break;
+            case Perk.EffectType.EntryPoint:
+                if (payload.DATA is not { } entryData)
+                {
+                    throw new MalformedDataException("Entry point perk effect lacked a DATA subrecord.");
+                }
+                var entryPt = (APerkEntryPointEffect.EntryType)entryData.Content[0];
+                var func = (EntryPointFunction)entryData.Content[1];
+                var tabCount = entryData.Content[2];
+                APerkEntryPointEffect entryPointEffect;
+                switch (func)
+                {
+                    case EntryPointFunction.SetValue:
+                    case EntryPointFunction.AddValue:
+                    case EntryPointFunction.MultiplyValue:
+                        entryPointEffect = new PerkEntryPointModifyValue()
+                        {
+                            Value = payload.EPFD?.Content.Float() ?? 0f,
+                            Modification = func switch
                             {
-                                entryPointEffect = new PerkEntryPointModifyValue()
-                                {
-                                    Value = null,
-                                    Modification = func switch
-                                    {
-                                        1 => PerkEntryPointModifyValue.ModificationType.Set,
-                                        3 => PerkEntryPointModifyValue.ModificationType.Multiply,
-                                        2 => PerkEntryPointModifyValue.ModificationType.Add,
-                                        _ => throw new MalformedDataException(),
-                                    }
-                                };
+                                EntryPointFunction.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
+                                EntryPointFunction.AddValue => PerkEntryPointModifyValue.ModificationType.Add,
+                                _ => PerkEntryPointModifyValue.ModificationType.Multiply,
                             }
-                            else if (payload.EPFT.HasValue && payload.EPFD.HasValue
-                                     && payload.EPFT.Value.Content[0] == 2 && payload.EPFD.Value.Content.Length >= 8)
-                            {
-                                entryPointEffect = new PerkEntryPointModifyValues()
-                                {
-                                    Value = payload.EPFD.Value.Content.Float(),
-                                    Value2 = payload.EPFD.Value.Content.Slice(4).Float(),
-                                    Modification = func switch
-                                    {
-                                        1 => PerkEntryPointModifyValue.ModificationType.Set,
-                                        3 => PerkEntryPointModifyValue.ModificationType.Multiply,
-                                        2 => PerkEntryPointModifyValue.ModificationType.Add,
-                                        _ => throw new MalformedDataException(),
-                                    }
-                                };
-                            }
-                            else
-                            {
-                                entryPointEffect = new PerkEntryPointModifyValue()
-                                {
-                                    Value = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Float() : null,
-                                    Modification = func switch
-                                    {
-                                        1 => PerkEntryPointModifyValue.ModificationType.Set,
-                                        3 => PerkEntryPointModifyValue.ModificationType.Multiply,
-                                        2 => PerkEntryPointModifyValue.ModificationType.Add,
-                                        _ => throw new MalformedDataException(),
-                                    }
-                                };
-                            }
-                            break;
-                        case 4: // AddRangeToValue
-                            entryPointEffect = new PerkEntryPointAddRangeToValue()
-                            {
-                                From = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Float() : 0f,
-                                To = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Slice(4).Float() : 0f,
-                            };
-                            break;
-                        case 5: // AddActorValueMult
-                            entryPointEffect = new PerkEntryPointModifyActorValue()
-                            {
-                                ActorValue = payload.EPFD.HasValue ? (ActorValue)BinaryPrimitives.ReadSingleLittleEndian(payload.EPFD.Value.Content) : default,
-                                Value = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Slice(4).Float() : 0f,
-                                Modification = PerkEntryPointModifyActorValue.ModificationType.AddAVMult,
-                            };
-                            break;
-                        case 6: // AbsoluteValue
-                            entryPointEffect = new PerkEntryPointAbsoluteValue()
-                            {
-                                Negative = false
-                            };
-                            break;
-                        case 7: // NegativeAbsoluteValue
-                            entryPointEffect = new PerkEntryPointAbsoluteValue()
-                            {
-                                Negative = true
-                            };
-                            break;
-                        case 8: // AddLeveledList
-                            entryPointEffect = new PerkEntryPointAddLeveledItem()
-                            {
-                                Item = FormLinkBinaryTranslation.Instance.Factory<ILeveledItemGetter>(stream.MetaData, payload.EPFD?.Content)
-                            };
-                            break;
-                        case 9: // AddActivateChoice
-                            entryPointEffect = new PerkEntryPointAddActivateChoice()
-                            {
-                                Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, payload.EPFD?.Content),
-                            };
-                            break;
-                        case 10: // SelectSpell
-                            entryPointEffect = new PerkEntryPointSelectSpell()
-                            {
-                                Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, payload.EPFD?.Content),
-                            };
-                            break;
-                        case 11: // SelectText
-                            entryPointEffect = new PerkEntryPointSelectText()
-                            {
-                                Text = payload.EPFD.HasValue ? BinaryStringUtility.ProcessWholeToZString(payload.EPFD.Value.Content, stream.MetaData.Encodings.NonTranslated) : string.Empty
-                            };
-                            break;
-                        case 12: // SetText
-                            entryPointEffect = new PerkEntryPointSetText()
-                            {
-                                Text = payload.EPFD.HasValue ? BinaryStringUtility.ProcessWholeToZString(payload.EPFD.Value.Content, stream.MetaData.Encodings.NonTranslated) : string.Empty
-                            };
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown perk entry point function type: {func}");
-                    }
-                    entryPointEffect.EntryPoint = entryPt;
-                    entryPointEffect.PerkConditionTabCount = tabCount;
-                    effect = entryPointEffect;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        else
-        {
-            effect = type switch
-            {
-                Perk.EffectType.Quest => new PerkQuestEffect(),
-                Perk.EffectType.Ability => new PerkAbilityEffect(),
-                _ => throw new MalformedDataException($"Expected DATA subrecord that did not exist."),
-            };
+                        };
+                        break;
+                    case EntryPointFunction.AddRangeToValue:
+                        entryPointEffect = new PerkEntryPointAddRangeToValue()
+                        {
+                            From = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Float() : 0f,
+                            To = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Slice(4).Float() : 0f,
+                        };
+                        break;
+                    case EntryPointFunction.AddActorValueMult:
+                        entryPointEffect = new PerkEntryPointModifyActorValue()
+                        {
+                            ActorValue = payload.EPFD.HasValue ? (ActorValue)BinaryPrimitives.ReadUInt32LittleEndian(payload.EPFD.Value.Content) : default,
+                            Value = payload.EPFD.HasValue ? payload.EPFD.Value.Content.Slice(4).Float() : 0f,
+                        };
+                        break;
+                    case EntryPointFunction.AddLeveledList:
+                        entryPointEffect = new PerkEntryPointAddLeveledItem()
+                        {
+                            Item = FormLinkBinaryTranslation.Instance.Factory<ILeveledItemGetter>(stream.MetaData, payload.EPFD?.Content)
+                        };
+                        break;
+                    case EntryPointFunction.AddActivateChoice:
+                        var choice = new PerkEntryPointAddActivateChoice();
+                        if (payload.EPF2 != null)
+                        {
+                            choice.ButtonLabel = BinaryStringUtility.ProcessWholeToZString(payload.EPF2.Value.Content, stream.MetaData.Encodings.NonTranslated);
+                        }
+                        if (payload.EPF3 != null)
+                        {
+                            choice.RunImmediately = BinaryPrimitives.ReadUInt16LittleEndian(payload.EPF3.Value.Content) != 0;
+                        }
+                        if (payload.Script != null)
+                        {
+                            choice.Script.DeepCopyIn(payload.Script);
+                        }
+                        entryPointEffect = choice;
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown perk entry point function type: {func}");
+                }
+                entryPointEffect.EntryPoint = entryPt;
+                entryPointEffect.PerkConditionTabCount = tabCount;
+                effect = entryPointEffect;
+                break;
+            default:
+                throw new NotImplementedException();
         }
 
         effect.Rank = rank;
@@ -260,32 +205,7 @@ partial class PerkBinaryCreateTranslation
         {
             effect.Conditions.SetTo(payload.Conditions);
         }
-        if (payload.EPF2 != null)
-        {
-            effect.ButtonLabel = BinaryStringUtility.ProcessWholeToZString(payload.EPF2.Value.Content, stream.MetaData.Encodings.NonTranslated);
-        }
-        if (payload.EPF3 != null && payload.EPF3.Value.Content.Length >= 4)
-        {
-            effect.Flags = new PerkScriptFlag()
-            {
-                Flags = (PerkScriptFlag.Flag)BinaryPrimitives.ReadInt16LittleEndian(payload.EPF3.Value.Content),
-                FragmentIndex = BinaryPrimitives.ReadUInt16LittleEndian(payload.EPF3.Value.Content.Slice(2))
-            };
-        }
 
-        if (payload.EmbeddedScriptSubrecords != null)
-        {
-            effect.EmbeddedScriptSubrecords = payload.EmbeddedScriptSubrecords
-                .Select(s => (s.Type, s.Data.ToArray()))
-                .ToList();
-        }
-
-        if (stream.TryReadSubrecord(RecordTypes.EPFT, out var epftFrame)
-            && epftFrame.ContentLength != 1
-            && epftFrame.Content[0] != 0)
-        {
-            throw new MalformedDataException($"Encountered an unexpected epft frame.");
-        }
         stream.TryReadSubrecord(RecordTypes.PRKF, out var _);
         return effect;
     }
@@ -297,9 +217,6 @@ partial class PerkBinaryCreateTranslation
         {
             effects.Add(ParseEffect(stream, prkeFrame));
         }
-        // Consume trailing record-level PRKF if present in source data
-        // (xEdit FO3 doesn't define one, but some ESMs have it)
-        stream.TryReadSubrecord(RecordTypes.PRKF, out var _);
         return effects;
     }
 
@@ -319,172 +236,120 @@ partial class PerkBinaryWriteTranslation
             {
                 writer.Write((byte)(effect switch
                 {
-                    PerkQuestEffect => Perk.EffectType.Quest,
-                    PerkAbilityEffect => Perk.EffectType.Ability,
-                    APerkEntryPointEffect => Perk.EffectType.EntryPoint,
+                    IPerkQuestEffectGetter => Perk.EffectType.Quest,
+                    IPerkAbilityEffectGetter => Perk.EffectType.Ability,
+                    IAPerkEntryPointEffectGetter => Perk.EffectType.EntryPoint,
                     _ => throw new NotImplementedException()
                 }));
                 writer.Write(effect.Rank);
                 writer.Write(effect.Priority);
             }
-            using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
+            switch (effect)
             {
-                switch (effect)
-                {
-                    case PerkQuestEffect quest:
+                case IPerkQuestEffectGetter quest:
+                    using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
+                    {
                         FormKeyBinaryTranslation.Instance.Write(writer, quest.Quest);
                         writer.Write(quest.Stage);
-                        writer.Write(quest.Unknown);
-                        break;
-                    case PerkAbilityEffect ability:
-                        FormKeyBinaryTranslation.Instance.Write(writer, ability.Ability);
-                        break;
-                    case APerkEntryPointEffect entryPt:
-                        writer.Write((byte)entryPt.EntryPoint);
-                        byte funcByte = entryPt switch
+                        writer.Write(quest.Unused);
+                    }
+                    break;
+                case IPerkAbilityEffectGetter ability:
+                    if (ability.Ability.FormKeyNullable.HasValue)
+                    {
+                        using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
                         {
-                            PerkEntryPointModifyValue modVal => modVal.Modification switch
+                            FormKeyBinaryTranslation.Instance.Write(writer, ability.Ability);
+                        }
+                    }
+                    break;
+                case IAPerkEntryPointEffectGetter entryPt:
+                    using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
+                    {
+                        writer.Write((byte)entryPt.EntryPoint);
+                        writer.Write((byte)(entryPt switch
+                        {
+                            IPerkEntryPointModifyValueGetter modVal => modVal.Modification switch
                             {
-                                PerkEntryPointModifyValue.ModificationType.Add => 2,
-                                PerkEntryPointModifyValue.ModificationType.Set => 1,
-                                PerkEntryPointModifyValue.ModificationType.Multiply => 3,
+                                PerkEntryPointModifyValue.ModificationType.Set => PerkBinaryCreateTranslation.EntryPointFunction.SetValue,
+                                PerkEntryPointModifyValue.ModificationType.Add => PerkBinaryCreateTranslation.EntryPointFunction.AddValue,
+                                PerkEntryPointModifyValue.ModificationType.Multiply => PerkBinaryCreateTranslation.EntryPointFunction.MultiplyValue,
                                 _ => throw new NotImplementedException()
                             },
-                            PerkEntryPointModifyValues modVals => modVals.Modification switch
-                            {
-                                PerkEntryPointModifyValue.ModificationType.Add => 2,
-                                PerkEntryPointModifyValue.ModificationType.Set => 1,
-                                PerkEntryPointModifyValue.ModificationType.Multiply => 3,
-                                _ => throw new NotImplementedException()
-                            },
-                            PerkEntryPointAddRangeToValue => 4,
-                            PerkEntryPointModifyActorValue => 5,
-                            PerkEntryPointAbsoluteValue absVal => (byte)(absVal.Negative ? 7 : 6),
-                            PerkEntryPointAddLeveledItem => 8,
-                            PerkEntryPointAddActivateChoice => 9,
-                            PerkEntryPointSelectSpell => 10,
-                            PerkEntryPointSelectText => 11,
-                            PerkEntryPointSetText => 12,
+                            IPerkEntryPointAddRangeToValueGetter => PerkBinaryCreateTranslation.EntryPointFunction.AddRangeToValue,
+                            IPerkEntryPointModifyActorValueGetter => PerkBinaryCreateTranslation.EntryPointFunction.AddActorValueMult,
+                            IPerkEntryPointAddLeveledItemGetter => PerkBinaryCreateTranslation.EntryPointFunction.AddLeveledList,
+                            IPerkEntryPointAddActivateChoiceGetter => PerkBinaryCreateTranslation.EntryPointFunction.AddActivateChoice,
                             _ => throw new NotImplementedException()
-                        };
-                        writer.Write(funcByte);
+                        }));
                         writer.Write(entryPt.PerkConditionTabCount);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
             ListBinaryTranslation<IPerkConditionGetter>.Instance.Write(
                 writer,
                 effect.Conditions,
                 (w, i) => i.WriteToBinary(w));
-            if (effect is APerkEntryPointEffect)
+            if (effect is IAPerkEntryPointEffectGetter entryPointEffect)
             {
-                byte paramType = effect switch
+                using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
                 {
-                    PerkEntryPointModifyValue => 1,
-                    PerkEntryPointModifyValues => 2,
-                    PerkEntryPointAddRangeToValue => 2,
-                    PerkEntryPointModifyActorValue => 2,
-                    PerkEntryPointAbsoluteValue => 0,
-                    PerkEntryPointAddLeveledItem => 3,
-                    PerkEntryPointAddActivateChoice => 4,
-                    PerkEntryPointSelectSpell => 5,
-                    PerkEntryPointSelectText => 6,
-                    PerkEntryPointSetText => 6,
-                    _ => throw new NotImplementedException()
-                };
-                if (effect is not PerkEntryPointModifyValue modValEpft
-                    || modValEpft.Value.HasValue)
-                {
-                    using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
+                    writer.Write((byte)(entryPointEffect switch
                     {
-                        writer.Write(paramType);
-                    }
+                        IPerkEntryPointModifyValueGetter => 1, // Float
+                        IPerkEntryPointAddRangeToValueGetter => 2, // Float, Float
+                        IPerkEntryPointModifyActorValueGetter => 2, // Actor Value, Float
+                        IPerkEntryPointAddLeveledItemGetter => 3, // Leveled Item
+                        IPerkEntryPointAddActivateChoiceGetter => 4, // None (Script)
+                        _ => throw new NotImplementedException()
+                    }));
                 }
-
-                if (effect is PerkEntryPointAddActivateChoice choice)
+                switch (entryPointEffect)
                 {
-                    if (choice.ButtonLabel != null)
-                    {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
+                    case IPerkEntryPointModifyValueGetter modVal:
+                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                         {
-                            writer.Write(choice.ButtonLabel, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
-                        }
-                    }
-                    choice.Flags.WriteToBinary(writer);
-                }
-                switch (effect)
-                {
-                    case PerkEntryPointModifyValue modVal:
-                        if (modVal.Value is {} f)
-                        {
-                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                            {
-                                writer.Write(f);
-                            }
+                            writer.Write(modVal.Value);
                         }
                         break;
-                    case PerkEntryPointModifyValues modVal:
-                        if (modVal.Value is not null || modVal.Value2 is not null)
-                        {
-                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
-                            {
-                                writer.Write(modVal.Value ?? 0f);
-                                writer.Write(modVal.Value2 ?? 0f);
-                            }
-                        }
-                        break;
-                    case PerkEntryPointAddRangeToValue range:
+                    case IPerkEntryPointAddRangeToValueGetter range:
                         using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                         {
                             writer.Write(range.From);
                             writer.Write(range.To);
                         }
                         break;
-                    case PerkEntryPointModifyActorValue actorVal:
+                    case IPerkEntryPointModifyActorValueGetter actorVal:
                         using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
                         {
-                            writer.Write((float)actorVal.ActorValue);
+                            writer.Write((uint)actorVal.ActorValue);
                             writer.Write(actorVal.Value);
                         }
                         break;
-                    case PerkEntryPointAddLeveledItem lev:
+                    case IPerkEntryPointAddLeveledItemGetter lev:
                         FormKeyBinaryTranslation.Instance.Write(writer, lev.Item, RecordTypes.EPFD);
                         break;
-                    case PerkEntryPointAddActivateChoice activateChoice:
-                        FormKeyBinaryTranslation.Instance.Write(writer, activateChoice.Spell, RecordTypes.EPFD);
-                        break;
-                    case PerkEntryPointSelectSpell spell:
-                        FormKeyBinaryTranslation.Instance.Write(writer, spell.Spell, RecordTypes.EPFD);
-                        break;
-                    case PerkEntryPointSelectText text:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                    case IPerkEntryPointAddActivateChoiceGetter choice:
+                        if (choice.ButtonLabel != null)
                         {
-                            writer.Write(text.Text, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                            using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
+                            {
+                                writer.Write(choice.ButtonLabel, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                            }
                         }
-                        break;
-                    case PerkEntryPointSetText ltext:
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                        if (choice.RunImmediately is { } runImmediately)
                         {
-                            writer.Write(ltext.Text, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                            using (HeaderExport.Subrecord(writer, RecordTypes.EPF3))
+                            {
+                                writer.Write((ushort)(runImmediately ? 1 : 0));
+                            }
                         }
-                        break;
-                    case PerkEntryPointAbsoluteValue:
+                        choice.Script.WriteToBinary(writer);
                         break;
                     default:
                         throw new NotImplementedException();
-                }
-            }
-            // Write embedded script subrecords inside the effect, before PRKF (per xEdit FO3 definition)
-            if (effect is APerkEffect concreteEffect && concreteEffect.EmbeddedScriptSubrecords != null)
-            {
-                foreach (var (recType, data) in concreteEffect.EmbeddedScriptSubrecords)
-                {
-                    using (HeaderExport.Subrecord(writer, recType))
-                    {
-                        writer.Write(data);
-                    }
                 }
             }
             using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { }

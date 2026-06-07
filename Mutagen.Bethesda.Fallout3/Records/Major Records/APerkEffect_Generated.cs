@@ -75,16 +75,6 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #endregion
-        #region ButtonLabel
-        public String? ButtonLabel { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAPerkEffectGetter.ButtonLabel => this.ButtonLabel;
-        #endregion
-        #region Flags
-        public PerkScriptFlag Flags { get; set; } = new PerkScriptFlag();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPerkScriptFlagGetter IAPerkEffectGetter.Flags => Flags;
-        #endregion
 
         #region To String
 
@@ -127,22 +117,16 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Rank = initialValue;
                 this.Priority = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(initialValue, []);
-                this.ButtonLabel = initialValue;
-                this.Flags = new MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>(initialValue, new PerkScriptFlag.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
-                TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags)
+                TItem Conditions)
             {
                 this.Rank = Rank;
                 this.Priority = Priority;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(Conditions, []);
-                this.ButtonLabel = ButtonLabel;
-                this.Flags = new MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>(Flags, new PerkScriptFlag.Mask<TItem>(Flags));
             }
 
             #pragma warning disable CS8618
@@ -157,8 +141,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Rank;
             public TItem Priority;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>? Conditions;
-            public TItem ButtonLabel;
-            public MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>? Flags { get; set; }
             #endregion
 
             #region Equals
@@ -174,8 +156,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Rank, rhs.Rank)) return false;
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.ButtonLabel, rhs.ButtonLabel)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -184,8 +164,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Rank);
                 hash.Add(this.Priority);
                 hash.Add(this.Conditions);
-                hash.Add(this.ButtonLabel);
-                hash.Add(this.Flags);
                 return hash.ToHashCode();
             }
 
@@ -208,12 +186,6 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                if (!eval(this.ButtonLabel)) return false;
-                if (Flags != null)
-                {
-                    if (!eval(this.Flags.Overall)) return false;
-                    if (this.Flags.Specific != null && !this.Flags.Specific.All(eval)) return false;
-                }
                 return true;
             }
             #endregion
@@ -234,12 +206,6 @@ namespace Mutagen.Bethesda.Fallout3
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
-                }
-                if (eval(this.ButtonLabel)) return true;
-                if (Flags != null)
-                {
-                    if (eval(this.Flags.Overall)) return true;
-                    if (this.Flags.Specific != null && this.Flags.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -272,8 +238,6 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                obj.ButtonLabel = eval(this.ButtonLabel);
-                obj.Flags = this.Flags == null ? null : new MaskItem<R, PerkScriptFlag.Mask<R>?>(eval(this.Flags.Overall), this.Flags.Specific?.Translate(eval));
             }
             #endregion
 
@@ -319,14 +283,6 @@ namespace Mutagen.Bethesda.Fallout3
                             }
                         }
                     }
-                    if (printMask?.ButtonLabel ?? true)
-                    {
-                        sb.AppendItem(ButtonLabel, "ButtonLabel");
-                    }
-                    if (printMask?.Flags?.Overall ?? true)
-                    {
-                        Flags?.Print(sb);
-                    }
                 }
             }
             #endregion
@@ -354,8 +310,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Rank;
             public Exception? Priority;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>? Conditions;
-            public Exception? ButtonLabel;
-            public MaskItem<Exception?, PerkScriptFlag.ErrorMask?>? Flags;
             #endregion
 
             #region IErrorMask
@@ -370,10 +324,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return Priority;
                     case APerkEffect_FieldIndex.Conditions:
                         return Conditions;
-                    case APerkEffect_FieldIndex.ButtonLabel:
-                        return ButtonLabel;
-                    case APerkEffect_FieldIndex.Flags:
-                        return Flags;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -392,12 +342,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case APerkEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case APerkEffect_FieldIndex.ButtonLabel:
-                        this.ButtonLabel = ex;
-                        break;
-                    case APerkEffect_FieldIndex.Flags:
-                        this.Flags = new MaskItem<Exception?, PerkScriptFlag.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -418,12 +362,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case APerkEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>)obj;
                         break;
-                    case APerkEffect_FieldIndex.ButtonLabel:
-                        this.ButtonLabel = (Exception?)obj;
-                        break;
-                    case APerkEffect_FieldIndex.Flags:
-                        this.Flags = (MaskItem<Exception?, PerkScriptFlag.ErrorMask?>?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -435,8 +373,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Rank != null) return true;
                 if (Priority != null) return true;
                 if (Conditions != null) return true;
-                if (ButtonLabel != null) return true;
-                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -486,10 +422,6 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                 }
-                {
-                    sb.AppendItem(ButtonLabel, "ButtonLabel");
-                }
-                Flags?.Print(sb);
             }
             #endregion
 
@@ -501,8 +433,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Rank = this.Rank.Combine(rhs.Rank);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.ButtonLabel = this.ButtonLabel.Combine(rhs.ButtonLabel);
-                ret.Flags = this.Flags.Combine(rhs.Flags, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -529,8 +459,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Rank;
             public bool Priority;
             public PerkCondition.TranslationMask? Conditions;
-            public bool ButtonLabel;
-            public PerkScriptFlag.TranslationMask? Flags;
             #endregion
 
             #region Ctors
@@ -542,7 +470,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.OnOverall = onOverall;
                 this.Rank = defaultOn;
                 this.Priority = defaultOn;
-                this.ButtonLabel = defaultOn;
             }
 
             #endregion
@@ -561,8 +488,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Rank, null));
                 ret.Add((Priority, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((ButtonLabel, null));
-                ret.Add((Flags != null ? Flags.OnOverall : DefaultOn, Flags?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -621,8 +546,6 @@ namespace Mutagen.Bethesda.Fallout3
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
         new ExtendedList<PerkCondition> Conditions { get; }
-        new String? ButtonLabel { get; set; }
-        new PerkScriptFlag Flags { get; set; }
     }
 
     /// <summary>
@@ -644,8 +567,6 @@ namespace Mutagen.Bethesda.Fallout3
         Byte Rank { get; }
         Byte Priority { get; }
         IReadOnlyList<IPerkConditionGetter> Conditions { get; }
-        String? ButtonLabel { get; }
-        IPerkScriptFlagGetter Flags { get; }
 
     }
 
@@ -818,8 +739,6 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
     }
     #endregion
 
@@ -830,9 +749,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(APerkEffect.Mask<>);
 
@@ -869,9 +788,7 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.PRKF,
                 RecordTypes.PRKC,
                 RecordTypes.CTDA,
-                RecordTypes.EPFT,
-                RecordTypes.EPF2,
-                RecordTypes.EPF3);
+                RecordTypes.EPFT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,
@@ -920,8 +837,6 @@ namespace Mutagen.Bethesda.Fallout3
             item.Rank = default(Byte);
             item.Priority = default(Byte);
             item.Conditions.Clear();
-            item.ButtonLabel = default;
-            item.Flags.Clear();
         }
         
         #region Mutagen
@@ -978,8 +893,6 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ButtonLabel = string.Equals(item.ButtonLabel, rhs.ButtonLabel);
-            ret.Flags = MaskItemExt.Factory(item.Flags.GetEqualsMask(rhs.Flags, include), include);
         }
         
         public string Print(
@@ -1046,15 +959,6 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                 }
             }
-            if ((printMask?.ButtonLabel ?? true)
-                && item.ButtonLabel is {} ButtonLabelItem)
-            {
-                sb.AppendItem(ButtonLabelItem, "ButtonLabel");
-            }
-            if (printMask?.Flags?.Overall ?? true)
-            {
-                item.Flags?.Print(sb, "Flags");
-            }
         }
         
         #region Equals and Hash
@@ -1076,18 +980,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((PerkConditionCommon)((IPerkConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.ButtonLabel) ?? true))
-            {
-                if (!string.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Flags) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
-                {
-                    if (!((PerkScriptFlagCommon)((IPerkScriptFlagGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, equalsMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Flags))) return false;
-                }
-                else if (!isFlagsEqual) return false;
-            }
             return true;
         }
         
@@ -1097,11 +989,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Rank);
             hash.Add(item.Priority);
             hash.Add(item.Conditions);
-            if (item.ButtonLabel is {} ButtonLabelitem)
-            {
-                hash.Add(ButtonLabelitem);
-            }
-            hash.Add(item.Flags);
             return hash.ToHashCode();
         }
         
@@ -1159,32 +1046,6 @@ namespace Mutagen.Bethesda.Fallout3
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.ButtonLabel) ?? true))
-            {
-                item.ButtonLabel = rhs.ButtonLabel;
-            }
-            if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Flags) ?? true))
-            {
-                errorMask?.PushIndex((int)APerkEffect_FieldIndex.Flags);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Flags) ?? true))
-                    {
-                        item.Flags = rhs.Flags.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Flags),
-                            errorMask: errorMask);
-                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)

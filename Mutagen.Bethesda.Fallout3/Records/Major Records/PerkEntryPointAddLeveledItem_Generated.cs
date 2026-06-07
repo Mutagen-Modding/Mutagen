@@ -111,8 +111,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
-                TItem ButtonLabel,
-                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem Item)
@@ -120,8 +118,6 @@ namespace Mutagen.Bethesda.Fallout3
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
-                ButtonLabel: ButtonLabel,
-                Flags: Flags,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
@@ -588,11 +584,9 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        ButtonLabel = 3,
-        Flags = 4,
-        EntryPoint = 5,
-        PerkConditionTabCount = 6,
-        Item = 7,
+        EntryPoint = 3,
+        PerkConditionTabCount = 4,
+        Item = 5,
     }
     #endregion
 
@@ -605,7 +599,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(PerkEntryPointAddLeveledItem.Mask<>);
 
@@ -830,10 +824,6 @@ namespace Mutagen.Bethesda.Fallout3
                     return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
-                    return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.Flags:
-                    return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
@@ -852,10 +842,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
-                    return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.ButtonLabel:
-                    return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
-                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointAddLeveledItem_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
