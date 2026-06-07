@@ -4,22 +4,22 @@
           recordType="CAMS">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <RefDirect name="Data" refName="CameraShotData" nullable="False" />
+      <Data nullable="False">
+        <Fields>
+          <Enum name="Action" enumName="CameraShot.ActionType" byteLength="4" />
+          <Enum name="Location" enumName="CameraShot.LocationType" byteLength="4" />
+          <Enum name="Target" enumName="CameraShot.LocationType" byteLength="4" />
+          <Enum name="Flags" enumName="CameraShot.Flag" byteLength="4" />
+          <Float name="TimeMultiplierPlayer" />
+          <Float name="TimeMultiplierTarget" />
+          <Float name="TimeMultiplierGlobal" />
+          <Float name="MaxTime" />
+          <Float name="MinTime" />
+          <Break />
+          <Float name="TargetPercentBetweenActors" />
+        </Fields>
+      </Data>
       <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
-    </Fields>
-  </Object>
-  <Object name="CameraShotData" objType="Subrecord" recordType="DATA">
-    <Fields>
-      <!-- Required fields (xEdit elements 0-6) -->
-      <Enum name="Action" enumName="CameraShotAction" byteLength="4" />
-      <Enum name="Location" enumName="CameraShotLocation" byteLength="4" />
-      <Enum name="Target" enumName="CameraShotLocation" byteLength="4" />
-      <Enum name="Flags" enumName="CameraShotFlag" byteLength="4" />
-      <Float name="TimeMultiplierPlayer" />
-      <Float name="TimeMultiplierTarget" />
-      <Float name="TimeMultiplierGlobal" />
-      <!-- Optional from xEdit element 7: MaxTime, MinTime, TargetPercentBetweenActors -->
-      <ByteArray name="Remaining" />
     </Fields>
   </Object>
 </Loqui>

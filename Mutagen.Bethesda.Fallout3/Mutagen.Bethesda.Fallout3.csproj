@@ -36,9 +36,6 @@
     <Compile Include="Enum\Assistance.cs" />
     <Compile Include="Enum\BlendMode.cs" />
     <Compile Include="Enum\BlendOp.cs" />
-    <Compile Include="Enum\CameraShotAction.cs" />
-    <Compile Include="Enum\CameraShotFlag.cs" />
-    <Compile Include="Enum\CameraShotLocation.cs" />
     <Compile Include="Enum\Confidence.cs" />
     <Compile Include="Enum\CreatureType.cs" />
     <Compile Include="Enum\ImpactMaterialType.cs" />
@@ -1309,9 +1306,6 @@
     </Compile>
     <Compile Include="Records\Major Records\EffectShaderData_Generated.cs">
       <DependentUpon>EffectShader.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CameraShotData_Generated.cs">
-      <DependentUpon>CameraShot.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogResponsesData_Generated.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>

@@ -73,10 +73,45 @@ namespace Mutagen.Bethesda.Fallout3
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region Data
-        public CameraShotData Data { get; set; } = new CameraShotData();
+        #region Action
+        public CameraShot.ActionType Action { get; set; } = default(CameraShot.ActionType);
+        #endregion
+        #region Location
+        public CameraShot.LocationType Location { get; set; } = default(CameraShot.LocationType);
+        #endregion
+        #region Target
+        public CameraShot.LocationType Target { get; set; } = default(CameraShot.LocationType);
+        #endregion
+        #region Flags
+        public CameraShot.Flag Flags { get; set; } = default(CameraShot.Flag);
+        #endregion
+        #region TimeMultiplierPlayer
+        public Single TimeMultiplierPlayer { get; set; } = default(Single);
+        #endregion
+        #region TimeMultiplierTarget
+        public Single TimeMultiplierTarget { get; set; } = default(Single);
+        #endregion
+        #region TimeMultiplierGlobal
+        public Single TimeMultiplierGlobal { get; set; } = default(Single);
+        #endregion
+        #region MaxTime
+        public Single MaxTime { get; set; } = default(Single);
+        #endregion
+        #region MinTime
+        public Single MinTime { get; set; } = default(Single);
+        #endregion
+        #region TargetPercentBetweenActors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ICameraShotDataGetter ICameraShotGetter.Data => Data;
+        private Single _TargetPercentBetweenActors;
+        public Single TargetPercentBetweenActors
+        {
+            get => this._TargetPercentBetweenActors;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._TargetPercentBetweenActors = value;
+            }
+        }
         #endregion
         #region ImageSpaceModifier
         private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
@@ -87,6 +122,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region DATADataTypeState
+        public CameraShot.DATADataType DATADataTypeState { get; set; } = default(CameraShot.DATADataType);
         #endregion
 
         #region To String
@@ -114,8 +152,18 @@ namespace Mutagen.Bethesda.Fallout3
             : base(initialValue)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Data = new MaskItem<TItem, CameraShotData.Mask<TItem>?>(initialValue, new CameraShotData.Mask<TItem>(initialValue));
+                this.Action = initialValue;
+                this.Location = initialValue;
+                this.Target = initialValue;
+                this.Flags = initialValue;
+                this.TimeMultiplierPlayer = initialValue;
+                this.TimeMultiplierTarget = initialValue;
+                this.TimeMultiplierGlobal = initialValue;
+                this.MaxTime = initialValue;
+                this.MinTime = initialValue;
+                this.TargetPercentBetweenActors = initialValue;
                 this.ImageSpaceModifier = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -127,8 +175,18 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
                 TItem Model,
-                TItem Data,
-                TItem ImageSpaceModifier)
+                TItem Action,
+                TItem Location,
+                TItem Target,
+                TItem Flags,
+                TItem TimeMultiplierPlayer,
+                TItem TimeMultiplierTarget,
+                TItem TimeMultiplierGlobal,
+                TItem MaxTime,
+                TItem MinTime,
+                TItem TargetPercentBetweenActors,
+                TItem ImageSpaceModifier,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -139,8 +197,18 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Data = new MaskItem<TItem, CameraShotData.Mask<TItem>?>(Data, new CameraShotData.Mask<TItem>(Data));
+                this.Action = Action;
+                this.Location = Location;
+                this.Target = Target;
+                this.Flags = Flags;
+                this.TimeMultiplierPlayer = TimeMultiplierPlayer;
+                this.TimeMultiplierTarget = TimeMultiplierTarget;
+                this.TimeMultiplierGlobal = TimeMultiplierGlobal;
+                this.MaxTime = MaxTime;
+                this.MinTime = MinTime;
+                this.TargetPercentBetweenActors = TargetPercentBetweenActors;
                 this.ImageSpaceModifier = ImageSpaceModifier;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -153,8 +221,18 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public MaskItem<TItem, CameraShotData.Mask<TItem>?>? Data { get; set; }
+            public TItem Action;
+            public TItem Location;
+            public TItem Target;
+            public TItem Flags;
+            public TItem TimeMultiplierPlayer;
+            public TItem TimeMultiplierTarget;
+            public TItem TimeMultiplierGlobal;
+            public TItem MaxTime;
+            public TItem MinTime;
+            public TItem TargetPercentBetweenActors;
             public TItem ImageSpaceModifier;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -169,16 +247,36 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Action, rhs.Action)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.TimeMultiplierPlayer, rhs.TimeMultiplierPlayer)) return false;
+                if (!object.Equals(this.TimeMultiplierTarget, rhs.TimeMultiplierTarget)) return false;
+                if (!object.Equals(this.TimeMultiplierGlobal, rhs.TimeMultiplierGlobal)) return false;
+                if (!object.Equals(this.MaxTime, rhs.MaxTime)) return false;
+                if (!object.Equals(this.MinTime, rhs.MinTime)) return false;
+                if (!object.Equals(this.TargetPercentBetweenActors, rhs.TargetPercentBetweenActors)) return false;
                 if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Model);
-                hash.Add(this.Data);
+                hash.Add(this.Action);
+                hash.Add(this.Location);
+                hash.Add(this.Target);
+                hash.Add(this.Flags);
+                hash.Add(this.TimeMultiplierPlayer);
+                hash.Add(this.TimeMultiplierTarget);
+                hash.Add(this.TimeMultiplierGlobal);
+                hash.Add(this.MaxTime);
+                hash.Add(this.MinTime);
+                hash.Add(this.TargetPercentBetweenActors);
                 hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -194,12 +292,18 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Action)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.Target)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.TimeMultiplierPlayer)) return false;
+                if (!eval(this.TimeMultiplierTarget)) return false;
+                if (!eval(this.TimeMultiplierGlobal)) return false;
+                if (!eval(this.MaxTime)) return false;
+                if (!eval(this.MinTime)) return false;
+                if (!eval(this.TargetPercentBetweenActors)) return false;
                 if (!eval(this.ImageSpaceModifier)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -213,12 +317,18 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Action)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.Target)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.TimeMultiplierPlayer)) return true;
+                if (eval(this.TimeMultiplierTarget)) return true;
+                if (eval(this.TimeMultiplierGlobal)) return true;
+                if (eval(this.MaxTime)) return true;
+                if (eval(this.MinTime)) return true;
+                if (eval(this.TargetPercentBetweenActors)) return true;
                 if (eval(this.ImageSpaceModifier)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -235,8 +345,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.Data = this.Data == null ? null : new MaskItem<R, CameraShotData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Action = eval(this.Action);
+                obj.Location = eval(this.Location);
+                obj.Target = eval(this.Target);
+                obj.Flags = eval(this.Flags);
+                obj.TimeMultiplierPlayer = eval(this.TimeMultiplierPlayer);
+                obj.TimeMultiplierTarget = eval(this.TimeMultiplierTarget);
+                obj.TimeMultiplierGlobal = eval(this.TimeMultiplierGlobal);
+                obj.MaxTime = eval(this.MaxTime);
+                obj.MinTime = eval(this.MinTime);
+                obj.TargetPercentBetweenActors = eval(this.TargetPercentBetweenActors);
                 obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -259,13 +379,53 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Action ?? true)
                     {
-                        Data?.Print(sb);
+                        sb.AppendItem(Action, "Action");
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.Target ?? true)
+                    {
+                        sb.AppendItem(Target, "Target");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.TimeMultiplierPlayer ?? true)
+                    {
+                        sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                    }
+                    if (printMask?.TimeMultiplierTarget ?? true)
+                    {
+                        sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                    }
+                    if (printMask?.TimeMultiplierGlobal ?? true)
+                    {
+                        sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                    }
+                    if (printMask?.MaxTime ?? true)
+                    {
+                        sb.AppendItem(MaxTime, "MaxTime");
+                    }
+                    if (printMask?.MinTime ?? true)
+                    {
+                        sb.AppendItem(MinTime, "MinTime");
+                    }
+                    if (printMask?.TargetPercentBetweenActors ?? true)
+                    {
+                        sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
                     }
                     if (printMask?.ImageSpaceModifier ?? true)
                     {
                         sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
             }
@@ -279,8 +439,18 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public MaskItem<Exception?, CameraShotData.ErrorMask?>? Data;
+            public Exception? Action;
+            public Exception? Location;
+            public Exception? Target;
+            public Exception? Flags;
+            public Exception? TimeMultiplierPlayer;
+            public Exception? TimeMultiplierTarget;
+            public Exception? TimeMultiplierGlobal;
+            public Exception? MaxTime;
+            public Exception? MinTime;
+            public Exception? TargetPercentBetweenActors;
             public Exception? ImageSpaceModifier;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -291,10 +461,30 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case CameraShot_FieldIndex.Model:
                         return Model;
-                    case CameraShot_FieldIndex.Data:
-                        return Data;
+                    case CameraShot_FieldIndex.Action:
+                        return Action;
+                    case CameraShot_FieldIndex.Location:
+                        return Location;
+                    case CameraShot_FieldIndex.Target:
+                        return Target;
+                    case CameraShot_FieldIndex.Flags:
+                        return Flags;
+                    case CameraShot_FieldIndex.TimeMultiplierPlayer:
+                        return TimeMultiplierPlayer;
+                    case CameraShot_FieldIndex.TimeMultiplierTarget:
+                        return TimeMultiplierTarget;
+                    case CameraShot_FieldIndex.TimeMultiplierGlobal:
+                        return TimeMultiplierGlobal;
+                    case CameraShot_FieldIndex.MaxTime:
+                        return MaxTime;
+                    case CameraShot_FieldIndex.MinTime:
+                        return MinTime;
+                    case CameraShot_FieldIndex.TargetPercentBetweenActors:
+                        return TargetPercentBetweenActors;
                     case CameraShot_FieldIndex.ImageSpaceModifier:
                         return ImageSpaceModifier;
+                    case CameraShot_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -308,11 +498,41 @@ namespace Mutagen.Bethesda.Fallout3
                     case CameraShot_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case CameraShot_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, CameraShotData.ErrorMask?>(ex, null);
+                    case CameraShot_FieldIndex.Action:
+                        this.Action = ex;
+                        break;
+                    case CameraShot_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case CameraShot_FieldIndex.Target:
+                        this.Target = ex;
+                        break;
+                    case CameraShot_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierPlayer:
+                        this.TimeMultiplierPlayer = ex;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierTarget:
+                        this.TimeMultiplierTarget = ex;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierGlobal:
+                        this.TimeMultiplierGlobal = ex;
+                        break;
+                    case CameraShot_FieldIndex.MaxTime:
+                        this.MaxTime = ex;
+                        break;
+                    case CameraShot_FieldIndex.MinTime:
+                        this.MinTime = ex;
+                        break;
+                    case CameraShot_FieldIndex.TargetPercentBetweenActors:
+                        this.TargetPercentBetweenActors = ex;
                         break;
                     case CameraShot_FieldIndex.ImageSpaceModifier:
                         this.ImageSpaceModifier = ex;
+                        break;
+                    case CameraShot_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -328,11 +548,41 @@ namespace Mutagen.Bethesda.Fallout3
                     case CameraShot_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case CameraShot_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, CameraShotData.ErrorMask?>?)obj;
+                    case CameraShot_FieldIndex.Action:
+                        this.Action = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierPlayer:
+                        this.TimeMultiplierPlayer = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierTarget:
+                        this.TimeMultiplierTarget = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TimeMultiplierGlobal:
+                        this.TimeMultiplierGlobal = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.MaxTime:
+                        this.MaxTime = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.MinTime:
+                        this.MinTime = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.TargetPercentBetweenActors:
+                        this.TargetPercentBetweenActors = (Exception?)obj;
                         break;
                     case CameraShot_FieldIndex.ImageSpaceModifier:
                         this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case CameraShot_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -344,8 +594,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Model != null) return true;
-                if (Data != null) return true;
+                if (Action != null) return true;
+                if (Location != null) return true;
+                if (Target != null) return true;
+                if (Flags != null) return true;
+                if (TimeMultiplierPlayer != null) return true;
+                if (TimeMultiplierTarget != null) return true;
+                if (TimeMultiplierGlobal != null) return true;
+                if (MaxTime != null) return true;
+                if (MinTime != null) return true;
+                if (TargetPercentBetweenActors != null) return true;
                 if (ImageSpaceModifier != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -373,9 +633,41 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 Model?.Print(sb);
-                Data?.Print(sb);
+                {
+                    sb.AppendItem(Action, "Action");
+                }
+                {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierPlayer, "TimeMultiplierPlayer");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierTarget, "TimeMultiplierTarget");
+                }
+                {
+                    sb.AppendItem(TimeMultiplierGlobal, "TimeMultiplierGlobal");
+                }
+                {
+                    sb.AppendItem(MaxTime, "MaxTime");
+                }
+                {
+                    sb.AppendItem(MinTime, "MinTime");
+                }
+                {
+                    sb.AppendItem(TargetPercentBetweenActors, "TargetPercentBetweenActors");
+                }
                 {
                     sb.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                 }
             }
             #endregion
@@ -386,8 +678,18 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Action = this.Action.Combine(rhs.Action);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.Target = this.Target.Combine(rhs.Target);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.TimeMultiplierPlayer = this.TimeMultiplierPlayer.Combine(rhs.TimeMultiplierPlayer);
+                ret.TimeMultiplierTarget = this.TimeMultiplierTarget.Combine(rhs.TimeMultiplierTarget);
+                ret.TimeMultiplierGlobal = this.TimeMultiplierGlobal.Combine(rhs.TimeMultiplierGlobal);
+                ret.MaxTime = this.MaxTime.Combine(rhs.MaxTime);
+                ret.MinTime = this.MinTime.Combine(rhs.MinTime);
+                ret.TargetPercentBetweenActors = this.TargetPercentBetweenActors.Combine(rhs.TargetPercentBetweenActors);
                 ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -411,8 +713,18 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public Model.TranslationMask? Model;
-            public CameraShotData.TranslationMask? Data;
+            public bool Action;
+            public bool Location;
+            public bool Target;
+            public bool Flags;
+            public bool TimeMultiplierPlayer;
+            public bool TimeMultiplierTarget;
+            public bool TimeMultiplierGlobal;
+            public bool MaxTime;
+            public bool MinTime;
+            public bool TargetPercentBetweenActors;
             public bool ImageSpaceModifier;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -421,7 +733,18 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Action = defaultOn;
+                this.Location = defaultOn;
+                this.Target = defaultOn;
+                this.Flags = defaultOn;
+                this.TimeMultiplierPlayer = defaultOn;
+                this.TimeMultiplierTarget = defaultOn;
+                this.TimeMultiplierGlobal = defaultOn;
+                this.MaxTime = defaultOn;
+                this.MinTime = defaultOn;
+                this.TargetPercentBetweenActors = defaultOn;
                 this.ImageSpaceModifier = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -430,8 +753,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.GetCrystal(ret);
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Action, null));
+                ret.Add((Location, null));
+                ret.Add((Target, null));
+                ret.Add((Flags, null));
+                ret.Add((TimeMultiplierPlayer, null));
+                ret.Add((TimeMultiplierTarget, null));
+                ret.Add((TimeMultiplierGlobal, null));
+                ret.Add((MaxTime, null));
+                ret.Add((MinTime, null));
+                ret.Add((TargetPercentBetweenActors, null));
                 ret.Add((ImageSpaceModifier, null));
+                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -484,6 +817,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(ICameraShot);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -573,8 +911,18 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new CameraShotData Data { get; set; }
+        new CameraShot.ActionType Action { get; set; }
+        new CameraShot.LocationType Location { get; set; }
+        new CameraShot.LocationType Target { get; set; }
+        new CameraShot.Flag Flags { get; set; }
+        new Single TimeMultiplierPlayer { get; set; }
+        new Single TimeMultiplierTarget { get; set; }
+        new Single TimeMultiplierGlobal { get; set; }
+        new Single MaxTime { get; set; }
+        new Single MinTime { get; set; }
+        new Single TargetPercentBetweenActors { get; set; }
         new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new CameraShot.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface ICameraShotInternal :
@@ -600,8 +948,18 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        ICameraShotDataGetter Data { get; }
+        CameraShot.ActionType Action { get; }
+        CameraShot.LocationType Location { get; }
+        CameraShot.LocationType Target { get; }
+        CameraShot.Flag Flags { get; }
+        Single TimeMultiplierPlayer { get; }
+        Single TimeMultiplierTarget { get; }
+        Single TimeMultiplierGlobal { get; }
+        Single MaxTime { get; }
+        Single MinTime { get; }
+        Single TargetPercentBetweenActors { get; }
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        CameraShot.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -779,8 +1137,18 @@ namespace Mutagen.Bethesda.Fallout3
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
         Model = 7,
-        Data = 8,
-        ImageSpaceModifier = 9,
+        Action = 8,
+        Location = 9,
+        Target = 10,
+        Flags = 11,
+        TimeMultiplierPlayer = 12,
+        TimeMultiplierTarget = 13,
+        TimeMultiplierGlobal = 14,
+        MaxTime = 15,
+        MinTime = 16,
+        TargetPercentBetweenActors = 17,
+        ImageSpaceModifier = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -791,9 +1159,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(CameraShot.Mask<>);
 
@@ -878,8 +1246,18 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Model = null;
-            item.Data.Clear();
+            item.Action = default(CameraShot.ActionType);
+            item.Location = default(CameraShot.LocationType);
+            item.Target = default(CameraShot.LocationType);
+            item.Flags = default(CameraShot.Flag);
+            item.TimeMultiplierPlayer = default(Single);
+            item.TimeMultiplierTarget = default(Single);
+            item.TimeMultiplierGlobal = default(Single);
+            item.MaxTime = default(Single);
+            item.MinTime = default(Single);
+            item.TargetPercentBetweenActors = default(Single);
             item.ImageSpaceModifier.Clear();
+            item.DATADataTypeState = default(CameraShot.DATADataType);
             base.Clear(item);
         }
         
@@ -971,8 +1349,18 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Action = item.Action == rhs.Action;
+            ret.Location = item.Location == rhs.Location;
+            ret.Target = item.Target == rhs.Target;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.TimeMultiplierPlayer = item.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer);
+            ret.TimeMultiplierTarget = item.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget);
+            ret.TimeMultiplierGlobal = item.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal);
+            ret.MaxTime = item.MaxTime.EqualsWithin(rhs.MaxTime);
+            ret.MinTime = item.MinTime.EqualsWithin(rhs.MinTime);
+            ret.TargetPercentBetweenActors = item.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors);
             ret.ImageSpaceModifier = item.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1027,13 +1415,53 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Action ?? true)
             {
-                item.Data?.Print(sb, "Data");
+                sb.AppendItem(item.Action, "Action");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location, "Location");
+            }
+            if (printMask?.Target ?? true)
+            {
+                sb.AppendItem(item.Target, "Target");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.TimeMultiplierPlayer ?? true)
+            {
+                sb.AppendItem(item.TimeMultiplierPlayer, "TimeMultiplierPlayer");
+            }
+            if (printMask?.TimeMultiplierTarget ?? true)
+            {
+                sb.AppendItem(item.TimeMultiplierTarget, "TimeMultiplierTarget");
+            }
+            if (printMask?.TimeMultiplierGlobal ?? true)
+            {
+                sb.AppendItem(item.TimeMultiplierGlobal, "TimeMultiplierGlobal");
+            }
+            if (printMask?.MaxTime ?? true)
+            {
+                sb.AppendItem(item.MaxTime, "MaxTime");
+            }
+            if (printMask?.MinTime ?? true)
+            {
+                sb.AppendItem(item.MinTime, "MinTime");
+            }
+            if (printMask?.TargetPercentBetweenActors ?? true)
+            {
+                sb.AppendItem(item.TargetPercentBetweenActors, "TargetPercentBetweenActors");
             }
             if (printMask?.ImageSpaceModifier ?? true)
             {
                 sb.AppendItem(item.ImageSpaceModifier.FormKeyNullable, "ImageSpaceModifier");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1093,17 +1521,53 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
-                {
-                    if (!((CameraShotDataCommon)((ICameraShotDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)CameraShot_FieldIndex.Data))) return false;
-                }
-                else if (!isDataEqual) return false;
+                if (lhs.Action != rhs.Action) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            {
+                if (lhs.Location != rhs.Location) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            {
+                if (lhs.Target != rhs.Target) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            {
+                if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            {
+                if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            {
+                if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            {
+                if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            {
+                if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            {
+                if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1137,8 +1601,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.Data);
+            hash.Add(item.Action);
+            hash.Add(item.Location);
+            hash.Add(item.Target);
+            hash.Add(item.Flags);
+            hash.Add(item.TimeMultiplierPlayer);
+            hash.Add(item.TimeMultiplierTarget);
+            hash.Add(item.TimeMultiplierGlobal);
+            hash.Add(item.MaxTime);
+            hash.Add(item.MinTime);
+            hash.Add(item.TargetPercentBetweenActors);
             hash.Add(item.ImageSpaceModifier);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1279,31 +1753,53 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
             {
-                errorMask?.PushIndex((int)CameraShot_FieldIndex.Data);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)CameraShot_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Action = rhs.Action;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            {
+                item.Location = rhs.Location;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            {
+                item.Target = rhs.Target;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            {
+                item.TimeMultiplierPlayer = rhs.TimeMultiplierPlayer;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            {
+                item.TimeMultiplierTarget = rhs.TimeMultiplierTarget;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            {
+                item.TimeMultiplierGlobal = rhs.TimeMultiplierGlobal;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            {
+                item.MaxTime = rhs.MaxTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            {
+                item.MinTime = rhs.MinTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            {
+                item.TargetPercentBetweenActors = rhs.TargetPercentBetweenActors;
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
                 item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1465,6 +1961,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly CameraShotBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            ICameraShotGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             ICameraShotGetter item,
             MutagenWriter writer,
@@ -1481,11 +1986,46 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            var DataItem = item.Data;
-            ((CameraShotDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                EnumBinaryTranslation<CameraShot.ActionType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Action,
+                    length: 4);
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Location,
+                    length: 4);
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Target,
+                    length: 4);
+                EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TimeMultiplierPlayer);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TimeMultiplierTarget);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TimeMultiplierGlobal);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MaxTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.MinTime);
+                if (!item.DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0))
+                {
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.TargetPercentBetweenActors);
+                }
+            }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ImageSpaceModifier,
@@ -1546,6 +2086,15 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly CameraShotBinaryCreateTranslation Instance = new CameraShotBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CAMS;
+        public static void FillBinaryStructs(
+            ICameraShotInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             ICameraShotInternal item,
             MutagenFrame frame,
@@ -1571,8 +2120,42 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    item.Data = Mutagen.Bethesda.Fallout3.CameraShotData.CreateFromBinary(frame: frame);
-                    return (int)CameraShot_FieldIndex.Data;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Action = EnumBinaryTranslation<CameraShot.ActionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Location = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Target = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TimeMultiplierPlayer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TimeMultiplierTarget = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TimeMultiplierGlobal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MaxTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MinTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= CameraShot.DATADataType.Break0;
+                        return (int)CameraShot_FieldIndex.MinTime;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TargetPercentBetweenActors = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CameraShot_FieldIndex.TargetPercentBetweenActors;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -1640,10 +2223,57 @@ namespace Mutagen.Bethesda.Fallout3
 
 
         public IModelGetter? Model { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        private ICameraShotDataGetter? _Data => _DataLocation.HasValue ? CameraShotDataBinaryOverlay.CameraShotDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
-        public ICameraShotDataGetter Data => _Data ?? new CameraShotData();
+        private RangeInt32? _DATALocation;
+        public CameraShot.DATADataType DATADataTypeState { get; private set; }
+        #region Action
+        private int _ActionLocation => _DATALocation!.Value.Min;
+        private bool _Action_IsSet => _DATALocation.HasValue;
+        public CameraShot.ActionType Action => _Action_IsSet ? (CameraShot.ActionType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ActionLocation, 0x4)) : default;
+        #endregion
+        #region Location
+        private int _LocationLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Location_IsSet => _DATALocation.HasValue;
+        public CameraShot.LocationType Location => _Location_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_LocationLocation, 0x4)) : default;
+        #endregion
+        #region Target
+        private int _TargetLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Target_IsSet => _DATALocation.HasValue;
+        public CameraShot.LocationType Target => _Target_IsSet ? (CameraShot.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetLocation, 0x4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public CameraShot.Flag Flags => _Flags_IsSet ? (CameraShot.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region TimeMultiplierPlayer
+        private int _TimeMultiplierPlayerLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
+        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _recordData.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default(Single);
+        #endregion
+        #region TimeMultiplierTarget
+        private int _TimeMultiplierTargetLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
+        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _recordData.Slice(_TimeMultiplierTargetLocation, 4).Float() : default(Single);
+        #endregion
+        #region TimeMultiplierGlobal
+        private int _TimeMultiplierGlobalLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
+        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _recordData.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default(Single);
+        #endregion
+        #region MaxTime
+        private int _MaxTimeLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _MaxTime_IsSet => _DATALocation.HasValue;
+        public Single MaxTime => _MaxTime_IsSet ? _recordData.Slice(_MaxTimeLocation, 4).Float() : default(Single);
+        #endregion
+        #region MinTime
+        private int _MinTimeLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _MinTime_IsSet => _DATALocation.HasValue;
+        public Single MinTime => _MinTime_IsSet ? _recordData.Slice(_MinTimeLocation, 4).Float() : default(Single);
+        #endregion
+        #region TargetPercentBetweenActors
+        private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0);
+        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _recordData.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default(Single);
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
@@ -1732,8 +2362,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)CameraShot_FieldIndex.Data;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x24)
+                    {
+                        this.DATADataTypeState |= CameraShot.DATADataType.Break0;
+                    }
+                    return (int)CameraShot_FieldIndex.TargetPercentBetweenActors;
                 }
                 case RecordTypeInts.MNAM:
                 {

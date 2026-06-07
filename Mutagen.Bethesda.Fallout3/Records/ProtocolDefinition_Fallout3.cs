@@ -45,7 +45,6 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Bounding_Registration.Instance,
             CameraPath_Registration.Instance,
             CameraShot_Registration.Instance,
-            CameraShotData_Registration.Instance,
             CaravanCard_Registration.Instance,
             CaravanDeck_Registration.Instance,
             CaravanDeckCard_Registration.Instance,
