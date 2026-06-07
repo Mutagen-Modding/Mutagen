@@ -85,49 +85,49 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         public BodyPart.Flag Flags { get; set; } = default(BodyPart.Flag);
         #endregion
-        #region PartType
-        public SByte PartType { get; set; } = default(SByte);
+        #region Type
+        public BodyPart.PartType Type { get; set; } = default(BodyPart.PartType);
         #endregion
         #region HealthPercent
-        public Byte HealthPercent { get; set; } = default(Byte);
+        public Percent HealthPercent { get; set; } = default(Percent);
         #endregion
         #region ActorValue
-        public SByte ActorValue { get; set; } = default(SByte);
+        public ActorValue ActorValue { get; set; } = default(ActorValue);
         #endregion
         #region ToHitChance
-        public Byte ToHitChance { get; set; } = default(Byte);
+        public Percent ToHitChance { get; set; } = default(Percent);
         #endregion
-        #region ExplodableExplosionChance
-        public Byte ExplodableExplosionChance { get; set; } = default(Byte);
+        #region ExplosionChance
+        public Percent ExplosionChance { get; set; } = default(Percent);
         #endregion
-        #region ExplodableDebrisCount
-        public UInt16 ExplodableDebrisCount { get; set; } = default(UInt16);
+        #region DebrisCount
+        public UInt16 DebrisCount { get; set; } = default(UInt16);
         #endregion
-        #region ExplodableDebris
-        private readonly IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
-        public IFormLink<IDebrisGetter> ExplodableDebris
+        #region Debris
+        private readonly IFormLink<IDebrisGetter> _Debris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> Debris
         {
-            get => _ExplodableDebris;
-            set => _ExplodableDebris.SetTo(value);
+            get => _Debris;
+            set => _Debris.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IDebrisGetter> IBodyPartGetter.ExplodableDebris => this.ExplodableDebris;
+        IFormLinkGetter<IDebrisGetter> IBodyPartGetter.Debris => this.Debris;
         #endregion
-        #region ExplodableExplosion
-        private readonly IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
-        public IFormLink<IExplosionGetter> ExplodableExplosion
+        #region Explosion
+        private readonly IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
         {
-            get => _ExplodableExplosion;
-            set => _ExplodableExplosion.SetTo(value);
+            get => _Explosion;
+            set => _Explosion.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IExplosionGetter> IBodyPartGetter.ExplodableExplosion => this.ExplodableExplosion;
+        IFormLinkGetter<IExplosionGetter> IBodyPartGetter.Explosion => this.Explosion;
         #endregion
         #region TrackingMaxAngle
         public Single TrackingMaxAngle { get; set; } = default(Single);
         #endregion
-        #region ExplodableDebrisScale
-        public Single ExplodableDebrisScale { get; set; } = default(Single);
+        #region DebrisScale
+        public Single DebrisScale { get; set; } = default(Single);
         #endregion
         #region SeverableDebrisCount
         public Int32 SeverableDebrisCount { get; set; } = default(Int32);
@@ -187,8 +187,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region ExplodableDecalCount
         public Byte ExplodableDecalCount { get; set; } = default(Byte);
         #endregion
-        #region Unknown
-        public UInt16 Unknown { get; set; } = default(UInt16);
+        #region Unused
+        public UInt16 Unused { get; set; } = default(UInt16);
         #endregion
         #region LimbReplacementScale
         public Single LimbReplacementScale { get; set; } = default(Single);
@@ -255,16 +255,16 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IkStartNode = initialValue;
                 this.DamageMult = initialValue;
                 this.Flags = initialValue;
-                this.PartType = initialValue;
+                this.Type = initialValue;
                 this.HealthPercent = initialValue;
                 this.ActorValue = initialValue;
                 this.ToHitChance = initialValue;
-                this.ExplodableExplosionChance = initialValue;
-                this.ExplodableDebrisCount = initialValue;
-                this.ExplodableDebris = initialValue;
-                this.ExplodableExplosion = initialValue;
+                this.ExplosionChance = initialValue;
+                this.DebrisCount = initialValue;
+                this.Debris = initialValue;
+                this.Explosion = initialValue;
                 this.TrackingMaxAngle = initialValue;
-                this.ExplodableDebrisScale = initialValue;
+                this.DebrisScale = initialValue;
                 this.SeverableDebrisCount = initialValue;
                 this.SeverableDebris = initialValue;
                 this.SeverableExplosion = initialValue;
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ExplodableImpactData = initialValue;
                 this.SeverableDecalCount = initialValue;
                 this.ExplodableDecalCount = initialValue;
-                this.Unknown = initialValue;
+                this.Unused = initialValue;
                 this.LimbReplacementScale = initialValue;
                 this.LimbReplacementModel = initialValue;
                 this.GoreTargetBone = initialValue;
@@ -289,16 +289,16 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem IkStartNode,
                 TItem DamageMult,
                 TItem Flags,
-                TItem PartType,
+                TItem Type,
                 TItem HealthPercent,
                 TItem ActorValue,
                 TItem ToHitChance,
-                TItem ExplodableExplosionChance,
-                TItem ExplodableDebrisCount,
-                TItem ExplodableDebris,
-                TItem ExplodableExplosion,
+                TItem ExplosionChance,
+                TItem DebrisCount,
+                TItem Debris,
+                TItem Explosion,
                 TItem TrackingMaxAngle,
-                TItem ExplodableDebrisScale,
+                TItem DebrisScale,
                 TItem SeverableDebrisCount,
                 TItem SeverableDebris,
                 TItem SeverableExplosion,
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ExplodableImpactData,
                 TItem SeverableDecalCount,
                 TItem ExplodableDecalCount,
-                TItem Unknown,
+                TItem Unused,
                 TItem LimbReplacementScale,
                 TItem LimbReplacementModel,
                 TItem GoreTargetBone,
@@ -321,16 +321,16 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IkStartNode = IkStartNode;
                 this.DamageMult = DamageMult;
                 this.Flags = Flags;
-                this.PartType = PartType;
+                this.Type = Type;
                 this.HealthPercent = HealthPercent;
                 this.ActorValue = ActorValue;
                 this.ToHitChance = ToHitChance;
-                this.ExplodableExplosionChance = ExplodableExplosionChance;
-                this.ExplodableDebrisCount = ExplodableDebrisCount;
-                this.ExplodableDebris = ExplodableDebris;
-                this.ExplodableExplosion = ExplodableExplosion;
+                this.ExplosionChance = ExplosionChance;
+                this.DebrisCount = DebrisCount;
+                this.Debris = Debris;
+                this.Explosion = Explosion;
                 this.TrackingMaxAngle = TrackingMaxAngle;
-                this.ExplodableDebrisScale = ExplodableDebrisScale;
+                this.DebrisScale = DebrisScale;
                 this.SeverableDebrisCount = SeverableDebrisCount;
                 this.SeverableDebris = SeverableDebris;
                 this.SeverableExplosion = SeverableExplosion;
@@ -341,7 +341,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ExplodableImpactData = ExplodableImpactData;
                 this.SeverableDecalCount = SeverableDecalCount;
                 this.ExplodableDecalCount = ExplodableDecalCount;
-                this.Unknown = Unknown;
+                this.Unused = Unused;
                 this.LimbReplacementScale = LimbReplacementScale;
                 this.LimbReplacementModel = LimbReplacementModel;
                 this.GoreTargetBone = GoreTargetBone;
@@ -363,16 +363,16 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem IkStartNode;
             public TItem DamageMult;
             public TItem Flags;
-            public TItem PartType;
+            public TItem Type;
             public TItem HealthPercent;
             public TItem ActorValue;
             public TItem ToHitChance;
-            public TItem ExplodableExplosionChance;
-            public TItem ExplodableDebrisCount;
-            public TItem ExplodableDebris;
-            public TItem ExplodableExplosion;
+            public TItem ExplosionChance;
+            public TItem DebrisCount;
+            public TItem Debris;
+            public TItem Explosion;
             public TItem TrackingMaxAngle;
-            public TItem ExplodableDebrisScale;
+            public TItem DebrisScale;
             public TItem SeverableDebrisCount;
             public TItem SeverableDebris;
             public TItem SeverableExplosion;
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem ExplodableImpactData;
             public TItem SeverableDecalCount;
             public TItem ExplodableDecalCount;
-            public TItem Unknown;
+            public TItem Unused;
             public TItem LimbReplacementScale;
             public TItem LimbReplacementModel;
             public TItem GoreTargetBone;
@@ -406,16 +406,16 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.IkStartNode, rhs.IkStartNode)) return false;
                 if (!object.Equals(this.DamageMult, rhs.DamageMult)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.PartType, rhs.PartType)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.HealthPercent, rhs.HealthPercent)) return false;
                 if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
                 if (!object.Equals(this.ToHitChance, rhs.ToHitChance)) return false;
-                if (!object.Equals(this.ExplodableExplosionChance, rhs.ExplodableExplosionChance)) return false;
-                if (!object.Equals(this.ExplodableDebrisCount, rhs.ExplodableDebrisCount)) return false;
-                if (!object.Equals(this.ExplodableDebris, rhs.ExplodableDebris)) return false;
-                if (!object.Equals(this.ExplodableExplosion, rhs.ExplodableExplosion)) return false;
+                if (!object.Equals(this.ExplosionChance, rhs.ExplosionChance)) return false;
+                if (!object.Equals(this.DebrisCount, rhs.DebrisCount)) return false;
+                if (!object.Equals(this.Debris, rhs.Debris)) return false;
+                if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
                 if (!object.Equals(this.TrackingMaxAngle, rhs.TrackingMaxAngle)) return false;
-                if (!object.Equals(this.ExplodableDebrisScale, rhs.ExplodableDebrisScale)) return false;
+                if (!object.Equals(this.DebrisScale, rhs.DebrisScale)) return false;
                 if (!object.Equals(this.SeverableDebrisCount, rhs.SeverableDebrisCount)) return false;
                 if (!object.Equals(this.SeverableDebris, rhs.SeverableDebris)) return false;
                 if (!object.Equals(this.SeverableExplosion, rhs.SeverableExplosion)) return false;
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ExplodableImpactData, rhs.ExplodableImpactData)) return false;
                 if (!object.Equals(this.SeverableDecalCount, rhs.SeverableDecalCount)) return false;
                 if (!object.Equals(this.ExplodableDecalCount, rhs.ExplodableDecalCount)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.LimbReplacementScale, rhs.LimbReplacementScale)) return false;
                 if (!object.Equals(this.LimbReplacementModel, rhs.LimbReplacementModel)) return false;
                 if (!object.Equals(this.GoreTargetBone, rhs.GoreTargetBone)) return false;
@@ -442,16 +442,16 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.IkStartNode);
                 hash.Add(this.DamageMult);
                 hash.Add(this.Flags);
-                hash.Add(this.PartType);
+                hash.Add(this.Type);
                 hash.Add(this.HealthPercent);
                 hash.Add(this.ActorValue);
                 hash.Add(this.ToHitChance);
-                hash.Add(this.ExplodableExplosionChance);
-                hash.Add(this.ExplodableDebrisCount);
-                hash.Add(this.ExplodableDebris);
-                hash.Add(this.ExplodableExplosion);
+                hash.Add(this.ExplosionChance);
+                hash.Add(this.DebrisCount);
+                hash.Add(this.Debris);
+                hash.Add(this.Explosion);
                 hash.Add(this.TrackingMaxAngle);
-                hash.Add(this.ExplodableDebrisScale);
+                hash.Add(this.DebrisScale);
                 hash.Add(this.SeverableDebrisCount);
                 hash.Add(this.SeverableDebris);
                 hash.Add(this.SeverableExplosion);
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ExplodableImpactData);
                 hash.Add(this.SeverableDecalCount);
                 hash.Add(this.ExplodableDecalCount);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unused);
                 hash.Add(this.LimbReplacementScale);
                 hash.Add(this.LimbReplacementModel);
                 hash.Add(this.GoreTargetBone);
@@ -481,16 +481,16 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.IkStartNode)) return false;
                 if (!eval(this.DamageMult)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.PartType)) return false;
+                if (!eval(this.Type)) return false;
                 if (!eval(this.HealthPercent)) return false;
                 if (!eval(this.ActorValue)) return false;
                 if (!eval(this.ToHitChance)) return false;
-                if (!eval(this.ExplodableExplosionChance)) return false;
-                if (!eval(this.ExplodableDebrisCount)) return false;
-                if (!eval(this.ExplodableDebris)) return false;
-                if (!eval(this.ExplodableExplosion)) return false;
+                if (!eval(this.ExplosionChance)) return false;
+                if (!eval(this.DebrisCount)) return false;
+                if (!eval(this.Debris)) return false;
+                if (!eval(this.Explosion)) return false;
                 if (!eval(this.TrackingMaxAngle)) return false;
-                if (!eval(this.ExplodableDebrisScale)) return false;
+                if (!eval(this.DebrisScale)) return false;
                 if (!eval(this.SeverableDebrisCount)) return false;
                 if (!eval(this.SeverableDebris)) return false;
                 if (!eval(this.SeverableExplosion)) return false;
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.ExplodableImpactData)) return false;
                 if (!eval(this.SeverableDecalCount)) return false;
                 if (!eval(this.ExplodableDecalCount)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unused)) return false;
                 if (!eval(this.LimbReplacementScale)) return false;
                 if (!eval(this.LimbReplacementModel)) return false;
                 if (!eval(this.GoreTargetBone)) return false;
@@ -519,16 +519,16 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.IkStartNode)) return true;
                 if (eval(this.DamageMult)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.PartType)) return true;
+                if (eval(this.Type)) return true;
                 if (eval(this.HealthPercent)) return true;
                 if (eval(this.ActorValue)) return true;
                 if (eval(this.ToHitChance)) return true;
-                if (eval(this.ExplodableExplosionChance)) return true;
-                if (eval(this.ExplodableDebrisCount)) return true;
-                if (eval(this.ExplodableDebris)) return true;
-                if (eval(this.ExplodableExplosion)) return true;
+                if (eval(this.ExplosionChance)) return true;
+                if (eval(this.DebrisCount)) return true;
+                if (eval(this.Debris)) return true;
+                if (eval(this.Explosion)) return true;
                 if (eval(this.TrackingMaxAngle)) return true;
-                if (eval(this.ExplodableDebrisScale)) return true;
+                if (eval(this.DebrisScale)) return true;
                 if (eval(this.SeverableDebrisCount)) return true;
                 if (eval(this.SeverableDebris)) return true;
                 if (eval(this.SeverableExplosion)) return true;
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.ExplodableImpactData)) return true;
                 if (eval(this.SeverableDecalCount)) return true;
                 if (eval(this.ExplodableDecalCount)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unused)) return true;
                 if (eval(this.LimbReplacementScale)) return true;
                 if (eval(this.LimbReplacementModel)) return true;
                 if (eval(this.GoreTargetBone)) return true;
@@ -564,16 +564,16 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.IkStartNode = eval(this.IkStartNode);
                 obj.DamageMult = eval(this.DamageMult);
                 obj.Flags = eval(this.Flags);
-                obj.PartType = eval(this.PartType);
+                obj.Type = eval(this.Type);
                 obj.HealthPercent = eval(this.HealthPercent);
                 obj.ActorValue = eval(this.ActorValue);
                 obj.ToHitChance = eval(this.ToHitChance);
-                obj.ExplodableExplosionChance = eval(this.ExplodableExplosionChance);
-                obj.ExplodableDebrisCount = eval(this.ExplodableDebrisCount);
-                obj.ExplodableDebris = eval(this.ExplodableDebris);
-                obj.ExplodableExplosion = eval(this.ExplodableExplosion);
+                obj.ExplosionChance = eval(this.ExplosionChance);
+                obj.DebrisCount = eval(this.DebrisCount);
+                obj.Debris = eval(this.Debris);
+                obj.Explosion = eval(this.Explosion);
                 obj.TrackingMaxAngle = eval(this.TrackingMaxAngle);
-                obj.ExplodableDebrisScale = eval(this.ExplodableDebrisScale);
+                obj.DebrisScale = eval(this.DebrisScale);
                 obj.SeverableDebrisCount = eval(this.SeverableDebrisCount);
                 obj.SeverableDebris = eval(this.SeverableDebris);
                 obj.SeverableExplosion = eval(this.SeverableExplosion);
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ExplodableImpactData = eval(this.ExplodableImpactData);
                 obj.SeverableDecalCount = eval(this.SeverableDecalCount);
                 obj.ExplodableDecalCount = eval(this.ExplodableDecalCount);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unused = eval(this.Unused);
                 obj.LimbReplacementScale = eval(this.LimbReplacementScale);
                 obj.LimbReplacementModel = eval(this.LimbReplacementModel);
                 obj.GoreTargetBone = eval(this.GoreTargetBone);
@@ -631,9 +631,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.PartType ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        sb.AppendItem(PartType, "PartType");
+                        sb.AppendItem(Type, "Type");
                     }
                     if (printMask?.HealthPercent ?? true)
                     {
@@ -647,29 +647,29 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ToHitChance, "ToHitChance");
                     }
-                    if (printMask?.ExplodableExplosionChance ?? true)
+                    if (printMask?.ExplosionChance ?? true)
                     {
-                        sb.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
+                        sb.AppendItem(ExplosionChance, "ExplosionChance");
                     }
-                    if (printMask?.ExplodableDebrisCount ?? true)
+                    if (printMask?.DebrisCount ?? true)
                     {
-                        sb.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
+                        sb.AppendItem(DebrisCount, "DebrisCount");
                     }
-                    if (printMask?.ExplodableDebris ?? true)
+                    if (printMask?.Debris ?? true)
                     {
-                        sb.AppendItem(ExplodableDebris, "ExplodableDebris");
+                        sb.AppendItem(Debris, "Debris");
                     }
-                    if (printMask?.ExplodableExplosion ?? true)
+                    if (printMask?.Explosion ?? true)
                     {
-                        sb.AppendItem(ExplodableExplosion, "ExplodableExplosion");
+                        sb.AppendItem(Explosion, "Explosion");
                     }
                     if (printMask?.TrackingMaxAngle ?? true)
                     {
                         sb.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
                     }
-                    if (printMask?.ExplodableDebrisScale ?? true)
+                    if (printMask?.DebrisScale ?? true)
                     {
-                        sb.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
+                        sb.AppendItem(DebrisScale, "DebrisScale");
                     }
                     if (printMask?.SeverableDebrisCount ?? true)
                     {
@@ -711,9 +711,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.LimbReplacementScale ?? true)
                     {
@@ -761,16 +761,16 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? IkStartNode;
             public Exception? DamageMult;
             public Exception? Flags;
-            public Exception? PartType;
+            public Exception? Type;
             public Exception? HealthPercent;
             public Exception? ActorValue;
             public Exception? ToHitChance;
-            public Exception? ExplodableExplosionChance;
-            public Exception? ExplodableDebrisCount;
-            public Exception? ExplodableDebris;
-            public Exception? ExplodableExplosion;
+            public Exception? ExplosionChance;
+            public Exception? DebrisCount;
+            public Exception? Debris;
+            public Exception? Explosion;
             public Exception? TrackingMaxAngle;
-            public Exception? ExplodableDebrisScale;
+            public Exception? DebrisScale;
             public Exception? SeverableDebrisCount;
             public Exception? SeverableDebris;
             public Exception? SeverableExplosion;
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? ExplodableImpactData;
             public Exception? SeverableDecalCount;
             public Exception? ExplodableDecalCount;
-            public Exception? Unknown;
+            public Exception? Unused;
             public Exception? LimbReplacementScale;
             public Exception? LimbReplacementModel;
             public Exception? GoreTargetBone;
@@ -806,26 +806,26 @@ namespace Mutagen.Bethesda.Fallout3
                         return DamageMult;
                     case BodyPart_FieldIndex.Flags:
                         return Flags;
-                    case BodyPart_FieldIndex.PartType:
-                        return PartType;
+                    case BodyPart_FieldIndex.Type:
+                        return Type;
                     case BodyPart_FieldIndex.HealthPercent:
                         return HealthPercent;
                     case BodyPart_FieldIndex.ActorValue:
                         return ActorValue;
                     case BodyPart_FieldIndex.ToHitChance:
                         return ToHitChance;
-                    case BodyPart_FieldIndex.ExplodableExplosionChance:
-                        return ExplodableExplosionChance;
-                    case BodyPart_FieldIndex.ExplodableDebrisCount:
-                        return ExplodableDebrisCount;
-                    case BodyPart_FieldIndex.ExplodableDebris:
-                        return ExplodableDebris;
-                    case BodyPart_FieldIndex.ExplodableExplosion:
-                        return ExplodableExplosion;
+                    case BodyPart_FieldIndex.ExplosionChance:
+                        return ExplosionChance;
+                    case BodyPart_FieldIndex.DebrisCount:
+                        return DebrisCount;
+                    case BodyPart_FieldIndex.Debris:
+                        return Debris;
+                    case BodyPart_FieldIndex.Explosion:
+                        return Explosion;
                     case BodyPart_FieldIndex.TrackingMaxAngle:
                         return TrackingMaxAngle;
-                    case BodyPart_FieldIndex.ExplodableDebrisScale:
-                        return ExplodableDebrisScale;
+                    case BodyPart_FieldIndex.DebrisScale:
+                        return DebrisScale;
                     case BodyPart_FieldIndex.SeverableDebrisCount:
                         return SeverableDebrisCount;
                     case BodyPart_FieldIndex.SeverableDebris:
@@ -846,8 +846,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return SeverableDecalCount;
                     case BodyPart_FieldIndex.ExplodableDecalCount:
                         return ExplodableDecalCount;
-                    case BodyPart_FieldIndex.Unknown:
-                        return Unknown;
+                    case BodyPart_FieldIndex.Unused:
+                        return Unused;
                     case BodyPart_FieldIndex.LimbReplacementScale:
                         return LimbReplacementScale;
                     case BodyPart_FieldIndex.LimbReplacementModel:
@@ -884,8 +884,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case BodyPart_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case BodyPart_FieldIndex.PartType:
-                        this.PartType = ex;
+                    case BodyPart_FieldIndex.Type:
+                        this.Type = ex;
                         break;
                     case BodyPart_FieldIndex.HealthPercent:
                         this.HealthPercent = ex;
@@ -896,23 +896,23 @@ namespace Mutagen.Bethesda.Fallout3
                     case BodyPart_FieldIndex.ToHitChance:
                         this.ToHitChance = ex;
                         break;
-                    case BodyPart_FieldIndex.ExplodableExplosionChance:
-                        this.ExplodableExplosionChance = ex;
+                    case BodyPart_FieldIndex.ExplosionChance:
+                        this.ExplosionChance = ex;
                         break;
-                    case BodyPart_FieldIndex.ExplodableDebrisCount:
-                        this.ExplodableDebrisCount = ex;
+                    case BodyPart_FieldIndex.DebrisCount:
+                        this.DebrisCount = ex;
                         break;
-                    case BodyPart_FieldIndex.ExplodableDebris:
-                        this.ExplodableDebris = ex;
+                    case BodyPart_FieldIndex.Debris:
+                        this.Debris = ex;
                         break;
-                    case BodyPart_FieldIndex.ExplodableExplosion:
-                        this.ExplodableExplosion = ex;
+                    case BodyPart_FieldIndex.Explosion:
+                        this.Explosion = ex;
                         break;
                     case BodyPart_FieldIndex.TrackingMaxAngle:
                         this.TrackingMaxAngle = ex;
                         break;
-                    case BodyPart_FieldIndex.ExplodableDebrisScale:
-                        this.ExplodableDebrisScale = ex;
+                    case BodyPart_FieldIndex.DebrisScale:
+                        this.DebrisScale = ex;
                         break;
                     case BodyPart_FieldIndex.SeverableDebrisCount:
                         this.SeverableDebrisCount = ex;
@@ -944,8 +944,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case BodyPart_FieldIndex.ExplodableDecalCount:
                         this.ExplodableDecalCount = ex;
                         break;
-                    case BodyPart_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case BodyPart_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case BodyPart_FieldIndex.LimbReplacementScale:
                         this.LimbReplacementScale = ex;
@@ -987,8 +987,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case BodyPart_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.PartType:
-                        this.PartType = (Exception?)obj;
+                    case BodyPart_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
                     case BodyPart_FieldIndex.HealthPercent:
                         this.HealthPercent = (Exception?)obj;
@@ -999,23 +999,23 @@ namespace Mutagen.Bethesda.Fallout3
                     case BodyPart_FieldIndex.ToHitChance:
                         this.ToHitChance = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.ExplodableExplosionChance:
-                        this.ExplodableExplosionChance = (Exception?)obj;
+                    case BodyPart_FieldIndex.ExplosionChance:
+                        this.ExplosionChance = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.ExplodableDebrisCount:
-                        this.ExplodableDebrisCount = (Exception?)obj;
+                    case BodyPart_FieldIndex.DebrisCount:
+                        this.DebrisCount = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.ExplodableDebris:
-                        this.ExplodableDebris = (Exception?)obj;
+                    case BodyPart_FieldIndex.Debris:
+                        this.Debris = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.ExplodableExplosion:
-                        this.ExplodableExplosion = (Exception?)obj;
+                    case BodyPart_FieldIndex.Explosion:
+                        this.Explosion = (Exception?)obj;
                         break;
                     case BodyPart_FieldIndex.TrackingMaxAngle:
                         this.TrackingMaxAngle = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.ExplodableDebrisScale:
-                        this.ExplodableDebrisScale = (Exception?)obj;
+                    case BodyPart_FieldIndex.DebrisScale:
+                        this.DebrisScale = (Exception?)obj;
                         break;
                     case BodyPart_FieldIndex.SeverableDebrisCount:
                         this.SeverableDebrisCount = (Exception?)obj;
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case BodyPart_FieldIndex.ExplodableDecalCount:
                         this.ExplodableDecalCount = (Exception?)obj;
                         break;
-                    case BodyPart_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case BodyPart_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case BodyPart_FieldIndex.LimbReplacementScale:
                         this.LimbReplacementScale = (Exception?)obj;
@@ -1076,16 +1076,16 @@ namespace Mutagen.Bethesda.Fallout3
                 if (IkStartNode != null) return true;
                 if (DamageMult != null) return true;
                 if (Flags != null) return true;
-                if (PartType != null) return true;
+                if (Type != null) return true;
                 if (HealthPercent != null) return true;
                 if (ActorValue != null) return true;
                 if (ToHitChance != null) return true;
-                if (ExplodableExplosionChance != null) return true;
-                if (ExplodableDebrisCount != null) return true;
-                if (ExplodableDebris != null) return true;
-                if (ExplodableExplosion != null) return true;
+                if (ExplosionChance != null) return true;
+                if (DebrisCount != null) return true;
+                if (Debris != null) return true;
+                if (Explosion != null) return true;
                 if (TrackingMaxAngle != null) return true;
-                if (ExplodableDebrisScale != null) return true;
+                if (DebrisScale != null) return true;
                 if (SeverableDebrisCount != null) return true;
                 if (SeverableDebris != null) return true;
                 if (SeverableExplosion != null) return true;
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ExplodableImpactData != null) return true;
                 if (SeverableDecalCount != null) return true;
                 if (ExplodableDecalCount != null) return true;
-                if (Unknown != null) return true;
+                if (Unused != null) return true;
                 if (LimbReplacementScale != null) return true;
                 if (LimbReplacementModel != null) return true;
                 if (GoreTargetBone != null) return true;
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(PartType, "PartType");
+                    sb.AppendItem(Type, "Type");
                 }
                 {
                     sb.AppendItem(HealthPercent, "HealthPercent");
@@ -1157,22 +1157,22 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ToHitChance, "ToHitChance");
                 }
                 {
-                    sb.AppendItem(ExplodableExplosionChance, "ExplodableExplosionChance");
+                    sb.AppendItem(ExplosionChance, "ExplosionChance");
                 }
                 {
-                    sb.AppendItem(ExplodableDebrisCount, "ExplodableDebrisCount");
+                    sb.AppendItem(DebrisCount, "DebrisCount");
                 }
                 {
-                    sb.AppendItem(ExplodableDebris, "ExplodableDebris");
+                    sb.AppendItem(Debris, "Debris");
                 }
                 {
-                    sb.AppendItem(ExplodableExplosion, "ExplodableExplosion");
+                    sb.AppendItem(Explosion, "Explosion");
                 }
                 {
                     sb.AppendItem(TrackingMaxAngle, "TrackingMaxAngle");
                 }
                 {
-                    sb.AppendItem(ExplodableDebrisScale, "ExplodableDebrisScale");
+                    sb.AppendItem(DebrisScale, "DebrisScale");
                 }
                 {
                     sb.AppendItem(SeverableDebrisCount, "SeverableDebrisCount");
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ExplodableDecalCount, "ExplodableDecalCount");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unused, "Unused");
                 }
                 {
                     sb.AppendItem(LimbReplacementScale, "LimbReplacementScale");
@@ -1233,16 +1233,16 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.IkStartNode = this.IkStartNode.Combine(rhs.IkStartNode);
                 ret.DamageMult = this.DamageMult.Combine(rhs.DamageMult);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.PartType = this.PartType.Combine(rhs.PartType);
+                ret.Type = this.Type.Combine(rhs.Type);
                 ret.HealthPercent = this.HealthPercent.Combine(rhs.HealthPercent);
                 ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
                 ret.ToHitChance = this.ToHitChance.Combine(rhs.ToHitChance);
-                ret.ExplodableExplosionChance = this.ExplodableExplosionChance.Combine(rhs.ExplodableExplosionChance);
-                ret.ExplodableDebrisCount = this.ExplodableDebrisCount.Combine(rhs.ExplodableDebrisCount);
-                ret.ExplodableDebris = this.ExplodableDebris.Combine(rhs.ExplodableDebris);
-                ret.ExplodableExplosion = this.ExplodableExplosion.Combine(rhs.ExplodableExplosion);
+                ret.ExplosionChance = this.ExplosionChance.Combine(rhs.ExplosionChance);
+                ret.DebrisCount = this.DebrisCount.Combine(rhs.DebrisCount);
+                ret.Debris = this.Debris.Combine(rhs.Debris);
+                ret.Explosion = this.Explosion.Combine(rhs.Explosion);
                 ret.TrackingMaxAngle = this.TrackingMaxAngle.Combine(rhs.TrackingMaxAngle);
-                ret.ExplodableDebrisScale = this.ExplodableDebrisScale.Combine(rhs.ExplodableDebrisScale);
+                ret.DebrisScale = this.DebrisScale.Combine(rhs.DebrisScale);
                 ret.SeverableDebrisCount = this.SeverableDebrisCount.Combine(rhs.SeverableDebrisCount);
                 ret.SeverableDebris = this.SeverableDebris.Combine(rhs.SeverableDebris);
                 ret.SeverableExplosion = this.SeverableExplosion.Combine(rhs.SeverableExplosion);
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ExplodableImpactData = this.ExplodableImpactData.Combine(rhs.ExplodableImpactData);
                 ret.SeverableDecalCount = this.SeverableDecalCount.Combine(rhs.SeverableDecalCount);
                 ret.ExplodableDecalCount = this.ExplodableDecalCount.Combine(rhs.ExplodableDecalCount);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.LimbReplacementScale = this.LimbReplacementScale.Combine(rhs.LimbReplacementScale);
                 ret.LimbReplacementModel = this.LimbReplacementModel.Combine(rhs.LimbReplacementModel);
                 ret.GoreTargetBone = this.GoreTargetBone.Combine(rhs.GoreTargetBone);
@@ -1287,16 +1287,16 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IkStartNode;
             public bool DamageMult;
             public bool Flags;
-            public bool PartType;
+            public bool Type;
             public bool HealthPercent;
             public bool ActorValue;
             public bool ToHitChance;
-            public bool ExplodableExplosionChance;
-            public bool ExplodableDebrisCount;
-            public bool ExplodableDebris;
-            public bool ExplodableExplosion;
+            public bool ExplosionChance;
+            public bool DebrisCount;
+            public bool Debris;
+            public bool Explosion;
             public bool TrackingMaxAngle;
-            public bool ExplodableDebrisScale;
+            public bool DebrisScale;
             public bool SeverableDebrisCount;
             public bool SeverableDebris;
             public bool SeverableExplosion;
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool ExplodableImpactData;
             public bool SeverableDecalCount;
             public bool ExplodableDecalCount;
-            public bool Unknown;
+            public bool Unused;
             public bool LimbReplacementScale;
             public bool LimbReplacementModel;
             public bool GoreTargetBone;
@@ -1327,16 +1327,16 @@ namespace Mutagen.Bethesda.Fallout3
                 this.IkStartNode = defaultOn;
                 this.DamageMult = defaultOn;
                 this.Flags = defaultOn;
-                this.PartType = defaultOn;
+                this.Type = defaultOn;
                 this.HealthPercent = defaultOn;
                 this.ActorValue = defaultOn;
                 this.ToHitChance = defaultOn;
-                this.ExplodableExplosionChance = defaultOn;
-                this.ExplodableDebrisCount = defaultOn;
-                this.ExplodableDebris = defaultOn;
-                this.ExplodableExplosion = defaultOn;
+                this.ExplosionChance = defaultOn;
+                this.DebrisCount = defaultOn;
+                this.Debris = defaultOn;
+                this.Explosion = defaultOn;
                 this.TrackingMaxAngle = defaultOn;
-                this.ExplodableDebrisScale = defaultOn;
+                this.DebrisScale = defaultOn;
                 this.SeverableDebrisCount = defaultOn;
                 this.SeverableDebris = defaultOn;
                 this.SeverableExplosion = defaultOn;
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ExplodableImpactData = defaultOn;
                 this.SeverableDecalCount = defaultOn;
                 this.ExplodableDecalCount = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unused = defaultOn;
                 this.LimbReplacementScale = defaultOn;
                 this.LimbReplacementModel = defaultOn;
                 this.GoreTargetBone = defaultOn;
@@ -1373,16 +1373,16 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((IkStartNode, null));
                 ret.Add((DamageMult, null));
                 ret.Add((Flags, null));
-                ret.Add((PartType, null));
+                ret.Add((Type, null));
                 ret.Add((HealthPercent, null));
                 ret.Add((ActorValue, null));
                 ret.Add((ToHitChance, null));
-                ret.Add((ExplodableExplosionChance, null));
-                ret.Add((ExplodableDebrisCount, null));
-                ret.Add((ExplodableDebris, null));
-                ret.Add((ExplodableExplosion, null));
+                ret.Add((ExplosionChance, null));
+                ret.Add((DebrisCount, null));
+                ret.Add((Debris, null));
+                ret.Add((Explosion, null));
                 ret.Add((TrackingMaxAngle, null));
-                ret.Add((ExplodableDebrisScale, null));
+                ret.Add((DebrisScale, null));
                 ret.Add((SeverableDebrisCount, null));
                 ret.Add((SeverableDebris, null));
                 ret.Add((SeverableExplosion, null));
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ExplodableImpactData, null));
                 ret.Add((SeverableDecalCount, null));
                 ret.Add((ExplodableDecalCount, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unused, null));
                 ret.Add((LimbReplacementScale, null));
                 ret.Add((LimbReplacementModel, null));
                 ret.Add((GoreTargetBone, null));
@@ -1487,16 +1487,16 @@ namespace Mutagen.Bethesda.Fallout3
         new String IkStartNode { get; set; }
         new Single DamageMult { get; set; }
         new BodyPart.Flag Flags { get; set; }
-        new SByte PartType { get; set; }
-        new Byte HealthPercent { get; set; }
-        new SByte ActorValue { get; set; }
-        new Byte ToHitChance { get; set; }
-        new Byte ExplodableExplosionChance { get; set; }
-        new UInt16 ExplodableDebrisCount { get; set; }
-        new IFormLink<IDebrisGetter> ExplodableDebris { get; set; }
-        new IFormLink<IExplosionGetter> ExplodableExplosion { get; set; }
+        new BodyPart.PartType Type { get; set; }
+        new Percent HealthPercent { get; set; }
+        new ActorValue ActorValue { get; set; }
+        new Percent ToHitChance { get; set; }
+        new Percent ExplosionChance { get; set; }
+        new UInt16 DebrisCount { get; set; }
+        new IFormLink<IDebrisGetter> Debris { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; set; }
         new Single TrackingMaxAngle { get; set; }
-        new Single ExplodableDebrisScale { get; set; }
+        new Single DebrisScale { get; set; }
         new Int32 SeverableDebrisCount { get; set; }
         new IFormLink<IDebrisGetter> SeverableDebris { get; set; }
         new IFormLink<IExplosionGetter> SeverableExplosion { get; set; }
@@ -1507,7 +1507,7 @@ namespace Mutagen.Bethesda.Fallout3
         new IFormLink<IImpactDataSetGetter> ExplodableImpactData { get; set; }
         new Byte SeverableDecalCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
-        new UInt16 Unknown { get; set; }
+        new UInt16 Unused { get; set; }
         new Single LimbReplacementScale { get; set; }
         new String LimbReplacementModel { get; set; }
         new String GoreTargetBone { get; set; }
@@ -1540,16 +1540,16 @@ namespace Mutagen.Bethesda.Fallout3
         String IkStartNode { get; }
         Single DamageMult { get; }
         BodyPart.Flag Flags { get; }
-        SByte PartType { get; }
-        Byte HealthPercent { get; }
-        SByte ActorValue { get; }
-        Byte ToHitChance { get; }
-        Byte ExplodableExplosionChance { get; }
-        UInt16 ExplodableDebrisCount { get; }
-        IFormLinkGetter<IDebrisGetter> ExplodableDebris { get; }
-        IFormLinkGetter<IExplosionGetter> ExplodableExplosion { get; }
+        BodyPart.PartType Type { get; }
+        Percent HealthPercent { get; }
+        ActorValue ActorValue { get; }
+        Percent ToHitChance { get; }
+        Percent ExplosionChance { get; }
+        UInt16 DebrisCount { get; }
+        IFormLinkGetter<IDebrisGetter> Debris { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
         Single TrackingMaxAngle { get; }
-        Single ExplodableDebrisScale { get; }
+        Single DebrisScale { get; }
         Int32 SeverableDebrisCount { get; }
         IFormLinkGetter<IDebrisGetter> SeverableDebris { get; }
         IFormLinkGetter<IExplosionGetter> SeverableExplosion { get; }
@@ -1560,7 +1560,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactData { get; }
         Byte SeverableDecalCount { get; }
         Byte ExplodableDecalCount { get; }
-        UInt16 Unknown { get; }
+        UInt16 Unused { get; }
         Single LimbReplacementScale { get; }
         String LimbReplacementModel { get; }
         String GoreTargetBone { get; }
@@ -1740,16 +1740,16 @@ namespace Mutagen.Bethesda.Fallout3
         IkStartNode = 3,
         DamageMult = 4,
         Flags = 5,
-        PartType = 6,
+        Type = 6,
         HealthPercent = 7,
         ActorValue = 8,
         ToHitChance = 9,
-        ExplodableExplosionChance = 10,
-        ExplodableDebrisCount = 11,
-        ExplodableDebris = 12,
-        ExplodableExplosion = 13,
+        ExplosionChance = 10,
+        DebrisCount = 11,
+        Debris = 12,
+        Explosion = 13,
         TrackingMaxAngle = 14,
-        ExplodableDebrisScale = 15,
+        DebrisScale = 15,
         SeverableDebrisCount = 16,
         SeverableDebris = 17,
         SeverableExplosion = 18,
@@ -1760,7 +1760,7 @@ namespace Mutagen.Bethesda.Fallout3
         ExplodableImpactData = 23,
         SeverableDecalCount = 24,
         ExplodableDecalCount = 25,
-        Unknown = 26,
+        Unused = 26,
         LimbReplacementScale = 27,
         LimbReplacementModel = 28,
         GoreTargetBone = 29,
@@ -1868,16 +1868,16 @@ namespace Mutagen.Bethesda.Fallout3
             item.IkStartNode = string.Empty;
             item.DamageMult = default(Single);
             item.Flags = default(BodyPart.Flag);
-            item.PartType = default(SByte);
-            item.HealthPercent = default(Byte);
-            item.ActorValue = default(SByte);
-            item.ToHitChance = default(Byte);
-            item.ExplodableExplosionChance = default(Byte);
-            item.ExplodableDebrisCount = default(UInt16);
-            item.ExplodableDebris.Clear();
-            item.ExplodableExplosion.Clear();
+            item.Type = default(BodyPart.PartType);
+            item.HealthPercent = default(Percent);
+            item.ActorValue = default(ActorValue);
+            item.ToHitChance = default(Percent);
+            item.ExplosionChance = default(Percent);
+            item.DebrisCount = default(UInt16);
+            item.Debris.Clear();
+            item.Explosion.Clear();
             item.TrackingMaxAngle = default(Single);
-            item.ExplodableDebrisScale = default(Single);
+            item.DebrisScale = default(Single);
             item.SeverableDebrisCount = default(Int32);
             item.SeverableDebris.Clear();
             item.SeverableExplosion.Clear();
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.ExplodableImpactData.Clear();
             item.SeverableDecalCount = default(Byte);
             item.ExplodableDecalCount = default(Byte);
-            item.Unknown = default(UInt16);
+            item.Unused = default(UInt16);
             item.LimbReplacementScale = default(Single);
             item.LimbReplacementModel = string.Empty;
             item.GoreTargetBone = string.Empty;
@@ -1898,8 +1898,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public void RemapLinks(IBodyPart obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.ExplodableDebris.Relink(mapping);
-            obj.ExplodableExplosion.Relink(mapping);
+            obj.Debris.Relink(mapping);
+            obj.Explosion.Relink(mapping);
             obj.SeverableDebris.Relink(mapping);
             obj.SeverableExplosion.Relink(mapping);
             obj.SeverableImpactData.Relink(mapping);
@@ -1954,16 +1954,16 @@ namespace Mutagen.Bethesda.Fallout3
             ret.IkStartNode = string.Equals(item.IkStartNode, rhs.IkStartNode);
             ret.DamageMult = item.DamageMult.EqualsWithin(rhs.DamageMult);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.PartType = item.PartType == rhs.PartType;
-            ret.HealthPercent = item.HealthPercent == rhs.HealthPercent;
+            ret.Type = item.Type == rhs.Type;
+            ret.HealthPercent = item.HealthPercent.Equals(rhs.HealthPercent);
             ret.ActorValue = item.ActorValue == rhs.ActorValue;
-            ret.ToHitChance = item.ToHitChance == rhs.ToHitChance;
-            ret.ExplodableExplosionChance = item.ExplodableExplosionChance == rhs.ExplodableExplosionChance;
-            ret.ExplodableDebrisCount = item.ExplodableDebrisCount == rhs.ExplodableDebrisCount;
-            ret.ExplodableDebris = item.ExplodableDebris.Equals(rhs.ExplodableDebris);
-            ret.ExplodableExplosion = item.ExplodableExplosion.Equals(rhs.ExplodableExplosion);
+            ret.ToHitChance = item.ToHitChance.Equals(rhs.ToHitChance);
+            ret.ExplosionChance = item.ExplosionChance.Equals(rhs.ExplosionChance);
+            ret.DebrisCount = item.DebrisCount == rhs.DebrisCount;
+            ret.Debris = item.Debris.Equals(rhs.Debris);
+            ret.Explosion = item.Explosion.Equals(rhs.Explosion);
             ret.TrackingMaxAngle = item.TrackingMaxAngle.EqualsWithin(rhs.TrackingMaxAngle);
-            ret.ExplodableDebrisScale = item.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale);
+            ret.DebrisScale = item.DebrisScale.EqualsWithin(rhs.DebrisScale);
             ret.SeverableDebrisCount = item.SeverableDebrisCount == rhs.SeverableDebrisCount;
             ret.SeverableDebris = item.SeverableDebris.Equals(rhs.SeverableDebris);
             ret.SeverableExplosion = item.SeverableExplosion.Equals(rhs.SeverableExplosion);
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ExplodableImpactData = item.ExplodableImpactData.Equals(rhs.ExplodableImpactData);
             ret.SeverableDecalCount = item.SeverableDecalCount == rhs.SeverableDecalCount;
             ret.ExplodableDecalCount = item.ExplodableDecalCount == rhs.ExplodableDecalCount;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unused = item.Unused == rhs.Unused;
             ret.LimbReplacementScale = item.LimbReplacementScale.EqualsWithin(rhs.LimbReplacementScale);
             ret.LimbReplacementModel = string.Equals(item.LimbReplacementModel, rhs.LimbReplacementModel);
             ret.GoreTargetBone = string.Equals(item.GoreTargetBone, rhs.GoreTargetBone);
@@ -2048,9 +2048,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.PartType ?? true)
+            if (printMask?.Type ?? true)
             {
-                sb.AppendItem(item.PartType, "PartType");
+                sb.AppendItem(item.Type, "Type");
             }
             if (printMask?.HealthPercent ?? true)
             {
@@ -2064,29 +2064,29 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.ToHitChance, "ToHitChance");
             }
-            if (printMask?.ExplodableExplosionChance ?? true)
+            if (printMask?.ExplosionChance ?? true)
             {
-                sb.AppendItem(item.ExplodableExplosionChance, "ExplodableExplosionChance");
+                sb.AppendItem(item.ExplosionChance, "ExplosionChance");
             }
-            if (printMask?.ExplodableDebrisCount ?? true)
+            if (printMask?.DebrisCount ?? true)
             {
-                sb.AppendItem(item.ExplodableDebrisCount, "ExplodableDebrisCount");
+                sb.AppendItem(item.DebrisCount, "DebrisCount");
             }
-            if (printMask?.ExplodableDebris ?? true)
+            if (printMask?.Debris ?? true)
             {
-                sb.AppendItem(item.ExplodableDebris.FormKey, "ExplodableDebris");
+                sb.AppendItem(item.Debris.FormKey, "Debris");
             }
-            if (printMask?.ExplodableExplosion ?? true)
+            if (printMask?.Explosion ?? true)
             {
-                sb.AppendItem(item.ExplodableExplosion.FormKey, "ExplodableExplosion");
+                sb.AppendItem(item.Explosion.FormKey, "Explosion");
             }
             if (printMask?.TrackingMaxAngle ?? true)
             {
                 sb.AppendItem(item.TrackingMaxAngle, "TrackingMaxAngle");
             }
-            if (printMask?.ExplodableDebrisScale ?? true)
+            if (printMask?.DebrisScale ?? true)
             {
-                sb.AppendItem(item.ExplodableDebrisScale, "ExplodableDebrisScale");
+                sb.AppendItem(item.DebrisScale, "DebrisScale");
             }
             if (printMask?.SeverableDebrisCount ?? true)
             {
@@ -2128,9 +2128,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.ExplodableDecalCount, "ExplodableDecalCount");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.LimbReplacementScale ?? true)
             {
@@ -2182,13 +2182,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PartType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Type) ?? true))
             {
-                if (lhs.PartType != rhs.PartType) return false;
+                if (lhs.Type != rhs.Type) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.HealthPercent) ?? true))
             {
-                if (lhs.HealthPercent != rhs.HealthPercent) return false;
+                if (!lhs.HealthPercent.Equals(rhs.HealthPercent)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ActorValue) ?? true))
             {
@@ -2196,31 +2196,31 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ToHitChance) ?? true))
             {
-                if (lhs.ToHitChance != rhs.ToHitChance) return false;
+                if (!lhs.ToHitChance.Equals(rhs.ToHitChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosionChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplosionChance) ?? true))
             {
-                if (lhs.ExplodableExplosionChance != rhs.ExplodableExplosionChance) return false;
+                if (!lhs.ExplosionChance.Equals(rhs.ExplosionChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.DebrisCount) ?? true))
             {
-                if (lhs.ExplodableDebrisCount != rhs.ExplodableDebrisCount) return false;
+                if (lhs.DebrisCount != rhs.DebrisCount) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Debris) ?? true))
             {
-                if (!lhs.ExplodableDebris.Equals(rhs.ExplodableDebris)) return false;
+                if (!lhs.Debris.Equals(rhs.Debris)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Explosion) ?? true))
             {
-                if (!lhs.ExplodableExplosion.Equals(rhs.ExplodableExplosion)) return false;
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
             {
                 if (!lhs.TrackingMaxAngle.EqualsWithin(rhs.TrackingMaxAngle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisScale) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.DebrisScale) ?? true))
             {
-                if (!lhs.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale)) return false;
+                if (!lhs.DebrisScale.EqualsWithin(rhs.DebrisScale)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisCount) ?? true))
             {
@@ -2262,9 +2262,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.ExplodableDecalCount != rhs.ExplodableDecalCount) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Unused) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementScale) ?? true))
             {
@@ -2297,16 +2297,16 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.IkStartNode);
             hash.Add(item.DamageMult);
             hash.Add(item.Flags);
-            hash.Add(item.PartType);
+            hash.Add(item.Type);
             hash.Add(item.HealthPercent);
             hash.Add(item.ActorValue);
             hash.Add(item.ToHitChance);
-            hash.Add(item.ExplodableExplosionChance);
-            hash.Add(item.ExplodableDebrisCount);
-            hash.Add(item.ExplodableDebris);
-            hash.Add(item.ExplodableExplosion);
+            hash.Add(item.ExplosionChance);
+            hash.Add(item.DebrisCount);
+            hash.Add(item.Debris);
+            hash.Add(item.Explosion);
             hash.Add(item.TrackingMaxAngle);
-            hash.Add(item.ExplodableDebrisScale);
+            hash.Add(item.DebrisScale);
             hash.Add(item.SeverableDebrisCount);
             hash.Add(item.SeverableDebris);
             hash.Add(item.SeverableExplosion);
@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.ExplodableImpactData);
             hash.Add(item.SeverableDecalCount);
             hash.Add(item.ExplodableDecalCount);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unused);
             hash.Add(item.LimbReplacementScale);
             hash.Add(item.LimbReplacementModel);
             hash.Add(item.GoreTargetBone);
@@ -2339,8 +2339,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBodyPartGetter obj, bool iterateNestedRecords = true)
         {
-            yield return FormLinkInformation.Factory(obj.ExplodableDebris);
-            yield return FormLinkInformation.Factory(obj.ExplodableExplosion);
+            yield return FormLinkInformation.Factory(obj.Debris);
+            yield return FormLinkInformation.Factory(obj.Explosion);
             yield return FormLinkInformation.Factory(obj.SeverableDebris);
             yield return FormLinkInformation.Factory(obj.SeverableExplosion);
             yield return FormLinkInformation.Factory(obj.SeverableImpactData);
@@ -2387,9 +2387,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.PartType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Type) ?? true))
             {
-                item.PartType = rhs.PartType;
+                item.Type = rhs.Type;
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.HealthPercent) ?? true))
             {
@@ -2403,29 +2403,29 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ToHitChance = rhs.ToHitChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosionChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplosionChance) ?? true))
             {
-                item.ExplodableExplosionChance = rhs.ExplodableExplosionChance;
+                item.ExplosionChance = rhs.ExplosionChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisCount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.DebrisCount) ?? true))
             {
-                item.ExplodableDebrisCount = rhs.ExplodableDebrisCount;
+                item.DebrisCount = rhs.DebrisCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebris) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Debris) ?? true))
             {
-                item.ExplodableDebris.SetTo(rhs.ExplodableDebris.FormKey);
+                item.Debris.SetTo(rhs.Debris.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableExplosion) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Explosion) ?? true))
             {
-                item.ExplodableExplosion.SetTo(rhs.ExplodableExplosion.FormKey);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.TrackingMaxAngle) ?? true))
             {
                 item.TrackingMaxAngle = rhs.TrackingMaxAngle;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.ExplodableDebrisScale) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.DebrisScale) ?? true))
             {
-                item.ExplodableDebrisScale = rhs.ExplodableDebrisScale;
+                item.DebrisScale = rhs.DebrisScale;
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.SeverableDebrisCount) ?? true))
             {
@@ -2467,9 +2467,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ExplodableDecalCount = rhs.ExplodableDecalCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.Unused) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementScale) ?? true))
             {
@@ -2632,24 +2632,39 @@ namespace Mutagen.Bethesda.Fallout3
                     writer,
                     item.Flags,
                     length: 1);
-                writer.Write(item.PartType);
-                writer.Write(item.HealthPercent);
-                writer.Write(item.ActorValue);
-                writer.Write(item.ToHitChance);
-                writer.Write(item.ExplodableExplosionChance);
-                writer.Write(item.ExplodableDebrisCount);
+                EnumBinaryTranslation<BodyPart.PartType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 1);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.HealthPercent,
+                    integerType: FloatIntegerType.Byte);
+                EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.ActorValue,
+                    length: 1);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.ToHitChance,
+                    integerType: FloatIntegerType.ByteHundred);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.ExplosionChance,
+                    integerType: FloatIntegerType.ByteHundred);
+                writer.Write(item.DebrisCount);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ExplodableDebris);
+                    item: item.Debris);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ExplodableExplosion);
+                    item: item.Explosion);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TrackingMaxAngle);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.ExplodableDebrisScale);
+                    item: item.DebrisScale);
                 writer.Write(item.SeverableDebrisCount);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2674,7 +2689,7 @@ namespace Mutagen.Bethesda.Fallout3
                     item: item.ExplodableImpactData);
                 writer.Write(item.SeverableDecalCount);
                 writer.Write(item.ExplodableDecalCount);
-                writer.Write(item.Unknown);
+                writer.Write(item.Unused);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.LimbReplacementScale);
@@ -2784,25 +2799,35 @@ namespace Mutagen.Bethesda.Fallout3
                         reader: dataFrame,
                         length: 1);
                     if (dataFrame.Remaining < 1) return null;
-                    item.PartType = dataFrame.ReadInt8();
+                    item.Type = EnumBinaryTranslation<BodyPart.PartType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     if (dataFrame.Remaining < 1) return null;
-                    item.HealthPercent = dataFrame.ReadUInt8();
+                    item.HealthPercent = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     if (dataFrame.Remaining < 1) return null;
-                    item.ActorValue = dataFrame.ReadInt8();
+                    item.ActorValue = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     if (dataFrame.Remaining < 1) return null;
-                    item.ToHitChance = dataFrame.ReadUInt8();
+                    item.ToHitChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.ByteHundred);
                     if (dataFrame.Remaining < 1) return null;
-                    item.ExplodableExplosionChance = dataFrame.ReadUInt8();
+                    item.ExplosionChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.ByteHundred);
                     if (dataFrame.Remaining < 2) return null;
-                    item.ExplodableDebrisCount = dataFrame.ReadUInt16();
+                    item.DebrisCount = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 4) return null;
-                    item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Debris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.TrackingMaxAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.ExplodableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.SeverableDebrisCount = dataFrame.ReadInt32();
                     if (dataFrame.Remaining < 4) return null;
@@ -2824,7 +2849,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 1) return null;
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 2) return null;
-                    item.Unknown = dataFrame.ReadUInt16();
+                    item.Unused = dataFrame.ReadUInt16();
                     if (dataFrame.Remaining < 4) return null;
                     item.LimbReplacementScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)BodyPart_FieldIndex.LimbReplacementScale;
@@ -2953,55 +2978,55 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _Flags_IsSet => _BPNDLocation.HasValue;
         public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
-        #region PartType
-        private int _PartTypeLocation => _BPNDLocation!.Value.Min + 0x5;
-        private bool _PartType_IsSet => _BPNDLocation.HasValue;
-        public SByte PartType => _PartType_IsSet ? (sbyte)_recordData.Slice(_PartTypeLocation, 1)[0] : default(SByte);
+        #region Type
+        private int _TypeLocation => _BPNDLocation!.Value.Min + 0x5;
+        private bool _Type_IsSet => _BPNDLocation.HasValue;
+        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
         #endregion
         #region HealthPercent
         private int _HealthPercentLocation => _BPNDLocation!.Value.Min + 0x6;
         private bool _HealthPercent_IsSet => _BPNDLocation.HasValue;
-        public Byte HealthPercent => _HealthPercent_IsSet ? _recordData.Span[_HealthPercentLocation] : default;
+        public Percent HealthPercent => _HealthPercent_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_HealthPercentLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         #region ActorValue
         private int _ActorValueLocation => _BPNDLocation!.Value.Min + 0x7;
         private bool _ActorValue_IsSet => _BPNDLocation.HasValue;
-        public SByte ActorValue => _ActorValue_IsSet ? (sbyte)_recordData.Slice(_ActorValueLocation, 1)[0] : default(SByte);
+        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_recordData.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
         #endregion
         #region ToHitChance
         private int _ToHitChanceLocation => _BPNDLocation!.Value.Min + 0x8;
         private bool _ToHitChance_IsSet => _BPNDLocation.HasValue;
-        public Byte ToHitChance => _ToHitChance_IsSet ? _recordData.Span[_ToHitChanceLocation] : default;
+        public Percent ToHitChance => _ToHitChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ToHitChanceLocation, 1), FloatIntegerType.ByteHundred) : default(Percent);
         #endregion
-        #region ExplodableExplosionChance
-        private int _ExplodableExplosionChanceLocation => _BPNDLocation!.Value.Min + 0x9;
-        private bool _ExplodableExplosionChance_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableExplosionChance => _ExplodableExplosionChance_IsSet ? _recordData.Span[_ExplodableExplosionChanceLocation] : default;
+        #region ExplosionChance
+        private int _ExplosionChanceLocation => _BPNDLocation!.Value.Min + 0x9;
+        private bool _ExplosionChance_IsSet => _BPNDLocation.HasValue;
+        public Percent ExplosionChance => _ExplosionChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ExplosionChanceLocation, 1), FloatIntegerType.ByteHundred) : default(Percent);
         #endregion
-        #region ExplodableDebrisCount
-        private int _ExplodableDebrisCountLocation => _BPNDLocation!.Value.Min + 0xA;
-        private bool _ExplodableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public UInt16 ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ExplodableDebrisCountLocation, 2)) : default(UInt16);
+        #region DebrisCount
+        private int _DebrisCountLocation => _BPNDLocation!.Value.Min + 0xA;
+        private bool _DebrisCount_IsSet => _BPNDLocation.HasValue;
+        public UInt16 DebrisCount => _DebrisCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DebrisCountLocation, 2)) : default(UInt16);
         #endregion
-        #region ExplodableDebris
-        private int _ExplodableDebrisLocation => _BPNDLocation!.Value.Min + 0xC;
-        private bool _ExplodableDebris_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_ExplodableDebrisLocation, 0x4), isSet: _ExplodableDebris_IsSet) : FormLink<IDebrisGetter>.Null;
+        #region Debris
+        private int _DebrisLocation => _BPNDLocation!.Value.Min + 0xC;
+        private bool _Debris_IsSet => _BPNDLocation.HasValue;
+        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_DebrisLocation, 0x4), isSet: _Debris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
-        #region ExplodableExplosion
-        private int _ExplodableExplosionLocation => _BPNDLocation!.Value.Min + 0x10;
-        private bool _ExplodableExplosion_IsSet => _BPNDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplodableExplosionLocation, 0x4), isSet: _ExplodableExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
+        #region Explosion
+        private int _ExplosionLocation => _BPNDLocation!.Value.Min + 0x10;
+        private bool _Explosion_IsSet => _BPNDLocation.HasValue;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region TrackingMaxAngle
         private int _TrackingMaxAngleLocation => _BPNDLocation!.Value.Min + 0x14;
         private bool _TrackingMaxAngle_IsSet => _BPNDLocation.HasValue;
         public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _recordData.Slice(_TrackingMaxAngleLocation, 4).Float() : default(Single);
         #endregion
-        #region ExplodableDebrisScale
-        private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value.Min + 0x18;
-        private bool _ExplodableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _recordData.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default(Single);
+        #region DebrisScale
+        private int _DebrisScaleLocation => _BPNDLocation!.Value.Min + 0x18;
+        private bool _DebrisScale_IsSet => _BPNDLocation.HasValue;
+        public Single DebrisScale => _DebrisScale_IsSet ? _recordData.Slice(_DebrisScaleLocation, 4).Float() : default(Single);
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x1C;
@@ -3053,10 +3078,10 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _ExplodableDecalCount_IsSet => _BPNDLocation.HasValue;
         public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
         #endregion
-        #region Unknown
-        private int _UnknownLocation => _BPNDLocation!.Value.Min + 0x4E;
-        private bool _Unknown_IsSet => _BPNDLocation.HasValue;
-        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(UInt16);
+        #region Unused
+        private int _UnusedLocation => _BPNDLocation!.Value.Min + 0x4E;
+        private bool _Unused_IsSet => _BPNDLocation.HasValue;
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default(UInt16);
         #endregion
         #region LimbReplacementScale
         private int _LimbReplacementScaleLocation => _BPNDLocation!.Value.Min + 0x50;

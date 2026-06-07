@@ -18,16 +18,16 @@
         <Fields>
           <Float name="DamageMult" />
           <Enum name="Flags" enumName="BodyPart.Flag" byteLength="1" />
-          <Int8 name="PartType" />
-          <UInt8 name="HealthPercent" />
-          <Int8 name="ActorValue" />
-          <UInt8 name="ToHitChance" />
-          <UInt8 name="ExplodableExplosionChance" />
-          <UInt16 name="ExplodableDebrisCount" />
-          <FormLink name="ExplodableDebris" refName="Debris" />
-          <FormLink name="ExplodableExplosion" refName="Explosion" />
+          <Enum name="Type" enumName="BodyPart.PartType" byteLength="1" />
+          <Percent name="HealthPercent" integerType="Byte" />
+          <Enum name="ActorValue" enumName="ActorValue" byteLength="1" />
+          <Percent name="ToHitChance" integerType="ByteHundred" />
+          <Percent name="ExplosionChance" integerType="ByteHundred" />
+          <UInt16 name="DebrisCount" />
+          <FormLink name="Debris" refName="Debris" />
+          <FormLink name="Explosion" refName="Explosion" />
           <Float name="TrackingMaxAngle" />
-          <Float name="ExplodableDebrisScale" />
+          <Float name="DebrisScale" />
           <Int32 name="SeverableDebrisCount" />
           <FormLink name="SeverableDebris" refName="Debris" />
           <FormLink name="SeverableExplosion" refName="Explosion" />
@@ -38,7 +38,7 @@
           <FormLink name="ExplodableImpactData" refName="ImpactDataSet" />
           <UInt8 name="SeverableDecalCount" />
           <UInt8 name="ExplodableDecalCount" />
-          <UInt16 name="Unknown" />
+          <UInt16 name="Unused" />
           <Float name="LimbReplacementScale" />
         </Fields>
       </Data>
