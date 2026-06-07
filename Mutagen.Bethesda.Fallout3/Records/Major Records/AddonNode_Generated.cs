@@ -106,29 +106,11 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IAddonNodeGetter.Sound => this.Sound;
         #endregion
-        #region AmbientSound
-        private readonly IFormLinkNullable<ISoundGetter> _AmbientSound = new FormLinkNullable<ISoundGetter>();
-        public IFormLinkNullable<ISoundGetter> AmbientSound
-        {
-            get => _AmbientSound;
-            set => _AmbientSound.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundGetter> IAddonNodeGetter.AmbientSound => this.AmbientSound;
-        #endregion
         #region MasterParticleSystemCap
         public UInt16 MasterParticleSystemCap { get; set; } = default(UInt16);
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[2];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAddonNodeGetter.Unknown => this.Unknown;
+        public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
 
         #region To String
@@ -159,7 +141,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.NodeIndex = initialValue;
                 this.Sound = initialValue;
-                this.AmbientSound = initialValue;
                 this.MasterParticleSystemCap = initialValue;
                 this.Unknown = initialValue;
             }
@@ -176,7 +157,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Model,
                 TItem NodeIndex,
                 TItem Sound,
-                TItem AmbientSound,
                 TItem MasterParticleSystemCap,
                 TItem Unknown)
             : base(
@@ -192,7 +172,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.NodeIndex = NodeIndex;
                 this.Sound = Sound;
-                this.AmbientSound = AmbientSound;
                 this.MasterParticleSystemCap = MasterParticleSystemCap;
                 this.Unknown = Unknown;
             }
@@ -210,7 +189,6 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem NodeIndex;
             public TItem Sound;
-            public TItem AmbientSound;
             public TItem MasterParticleSystemCap;
             public TItem Unknown;
             #endregion
@@ -230,7 +208,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.NodeIndex, rhs.NodeIndex)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
-                if (!object.Equals(this.AmbientSound, rhs.AmbientSound)) return false;
                 if (!object.Equals(this.MasterParticleSystemCap, rhs.MasterParticleSystemCap)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
@@ -242,7 +219,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Model);
                 hash.Add(this.NodeIndex);
                 hash.Add(this.Sound);
-                hash.Add(this.AmbientSound);
                 hash.Add(this.MasterParticleSystemCap);
                 hash.Add(this.Unknown);
                 hash.Add(base.GetHashCode());
@@ -267,7 +243,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (!eval(this.NodeIndex)) return false;
                 if (!eval(this.Sound)) return false;
-                if (!eval(this.AmbientSound)) return false;
                 if (!eval(this.MasterParticleSystemCap)) return false;
                 if (!eval(this.Unknown)) return false;
                 return true;
@@ -290,7 +265,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (eval(this.NodeIndex)) return true;
                 if (eval(this.Sound)) return true;
-                if (eval(this.AmbientSound)) return true;
                 if (eval(this.MasterParticleSystemCap)) return true;
                 if (eval(this.Unknown)) return true;
                 return false;
@@ -312,7 +286,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.NodeIndex = eval(this.NodeIndex);
                 obj.Sound = eval(this.Sound);
-                obj.AmbientSound = eval(this.AmbientSound);
                 obj.MasterParticleSystemCap = eval(this.MasterParticleSystemCap);
                 obj.Unknown = eval(this.Unknown);
             }
@@ -349,10 +322,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Sound, "Sound");
                     }
-                    if (printMask?.AmbientSound ?? true)
-                    {
-                        sb.AppendItem(AmbientSound, "AmbientSound");
-                    }
                     if (printMask?.MasterParticleSystemCap ?? true)
                     {
                         sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
@@ -376,7 +345,6 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? NodeIndex;
             public Exception? Sound;
-            public Exception? AmbientSound;
             public Exception? MasterParticleSystemCap;
             public Exception? Unknown;
             #endregion
@@ -395,8 +363,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return NodeIndex;
                     case AddonNode_FieldIndex.Sound:
                         return Sound;
-                    case AddonNode_FieldIndex.AmbientSound:
-                        return AmbientSound;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         return MasterParticleSystemCap;
                     case AddonNode_FieldIndex.Unknown:
@@ -422,9 +388,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case AddonNode_FieldIndex.Sound:
                         this.Sound = ex;
-                        break;
-                    case AddonNode_FieldIndex.AmbientSound:
-                        this.AmbientSound = ex;
                         break;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         this.MasterParticleSystemCap = ex;
@@ -455,9 +418,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case AddonNode_FieldIndex.Sound:
                         this.Sound = (Exception?)obj;
                         break;
-                    case AddonNode_FieldIndex.AmbientSound:
-                        this.AmbientSound = (Exception?)obj;
-                        break;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         this.MasterParticleSystemCap = (Exception?)obj;
                         break;
@@ -477,7 +437,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Model != null) return true;
                 if (NodeIndex != null) return true;
                 if (Sound != null) return true;
-                if (AmbientSound != null) return true;
                 if (MasterParticleSystemCap != null) return true;
                 if (Unknown != null) return true;
                 return false;
@@ -515,9 +474,6 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Sound, "Sound");
                 }
                 {
-                    sb.AppendItem(AmbientSound, "AmbientSound");
-                }
-                {
                     sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
                 }
                 {
@@ -535,7 +491,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.NodeIndex = this.NodeIndex.Combine(rhs.NodeIndex);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
-                ret.AmbientSound = this.AmbientSound.Combine(rhs.AmbientSound);
                 ret.MasterParticleSystemCap = this.MasterParticleSystemCap.Combine(rhs.MasterParticleSystemCap);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
@@ -564,7 +519,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Model.TranslationMask? Model;
             public bool NodeIndex;
             public bool Sound;
-            public bool AmbientSound;
             public bool MasterParticleSystemCap;
             public bool Unknown;
             #endregion
@@ -577,7 +531,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.NodeIndex = defaultOn;
                 this.Sound = defaultOn;
-                this.AmbientSound = defaultOn;
                 this.MasterParticleSystemCap = defaultOn;
                 this.Unknown = defaultOn;
             }
@@ -591,7 +544,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((NodeIndex, null));
                 ret.Add((Sound, null));
-                ret.Add((AmbientSound, null));
                 ret.Add((MasterParticleSystemCap, null));
                 ret.Add((Unknown, null));
             }
@@ -730,7 +682,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<IAddonNodeInternal>,
         IModeled,
-        IObjectBounded
+        IObjectBounded,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -742,9 +695,8 @@ namespace Mutagen.Bethesda.Fallout3
         new Model? Model { get; set; }
         new Int32 NodeIndex { get; set; }
         new IFormLinkNullable<ISoundGetter> Sound { get; set; }
-        new IFormLinkNullable<ISoundGetter> AmbientSound { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new UInt16 Unknown { get; set; }
     }
 
     public partial interface IAddonNodeInternal :
@@ -762,7 +714,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IAddonNodeGetter>,
         IMapsToGetter<IAddonNodeGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => AddonNode_Registration.Instance;
         #region ObjectBounds
@@ -779,9 +732,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         Int32 NodeIndex { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound { get; }
-        IFormLinkNullableGetter<ISoundGetter> AmbientSound { get; }
         UInt16 MasterParticleSystemCap { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        UInt16 Unknown { get; }
 
     }
 
@@ -962,9 +914,8 @@ namespace Mutagen.Bethesda.Fallout3
         Model = 8,
         NodeIndex = 9,
         Sound = 10,
-        AmbientSound = 11,
-        MasterParticleSystemCap = 12,
-        Unknown = 13,
+        MasterParticleSystemCap = 11,
+        Unknown = 12,
     }
     #endregion
 
@@ -975,9 +926,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(AddonNode.Mask<>);
 
@@ -1018,7 +969,6 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.MODD,
                 RecordTypes.DATA,
                 RecordTypes.SNAM,
-                RecordTypes.SOUN,
                 RecordTypes.DNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1068,9 +1018,8 @@ namespace Mutagen.Bethesda.Fallout3
             item.Model = null;
             item.NodeIndex = default(Int32);
             item.Sound.Clear();
-            item.AmbientSound.Clear();
             item.MasterParticleSystemCap = default(UInt16);
-            item.Unknown = new byte[2];
+            item.Unknown = default(UInt16);
             base.Clear(item);
         }
         
@@ -1090,7 +1039,6 @@ namespace Mutagen.Bethesda.Fallout3
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Sound.Relink(mapping);
-            obj.AmbientSound.Relink(mapping);
         }
         
         #endregion
@@ -1166,9 +1114,8 @@ namespace Mutagen.Bethesda.Fallout3
                 include);
             ret.NodeIndex = item.NodeIndex == rhs.NodeIndex;
             ret.Sound = item.Sound.Equals(rhs.Sound);
-            ret.AmbientSound = item.AmbientSound.Equals(rhs.AmbientSound);
             ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1235,17 +1182,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Sound.FormKeyNullable, "Sound");
             }
-            if (printMask?.AmbientSound ?? true)
-            {
-                sb.AppendItem(item.AmbientSound.FormKeyNullable, "AmbientSound");
-            }
             if (printMask?.MasterParticleSystemCap ?? true)
             {
                 sb.AppendItem(item.MasterParticleSystemCap, "MasterParticleSystemCap");
             }
             if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1321,17 +1264,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Sound.Equals(rhs.Sound)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.AmbientSound) ?? true))
-            {
-                if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {
                 if (lhs.MasterParticleSystemCap != rhs.MasterParticleSystemCap) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             return true;
         }
@@ -1368,7 +1307,6 @@ namespace Mutagen.Bethesda.Fallout3
             }
             hash.Add(item.NodeIndex);
             hash.Add(item.Sound);
-            hash.Add(item.AmbientSound);
             hash.Add(item.MasterParticleSystemCap);
             hash.Add(item.Unknown);
             hash.Add(base.GetHashCode());
@@ -1410,10 +1348,6 @@ namespace Mutagen.Bethesda.Fallout3
             if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
             {
                 yield return SoundInfo;
-            }
-            if (FormLinkInformation.TryFactory(obj.AmbientSound, out var AmbientSoundInfo))
-            {
-                yield return AmbientSoundInfo;
             }
             yield break;
         }
@@ -1545,17 +1479,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.AmbientSound) ?? true))
-            {
-                item.AmbientSound.SetTo(rhs.AmbientSound.FormKeyNullable);
-            }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {
                 item.MasterParticleSystemCap = rhs.MasterParticleSystemCap;
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1746,16 +1676,10 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Sound,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.AmbientSound,
-                header: translationParams.ConvertToCustom(RecordTypes.SOUN));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
                 writer.Write(item.MasterParticleSystemCap);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unknown);
+                writer.Write(item.Unknown);
             }
         }
 
@@ -1853,19 +1777,14 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AddonNode_FieldIndex.Sound;
                 }
-                case RecordTypeInts.SOUN:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbientSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AddonNode_FieldIndex.AmbientSound;
-                }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 2) return null;
                     item.MasterParticleSystemCap = dataFrame.ReadUInt16();
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Unknown = dataFrame.ReadUInt16();
                     return (int)AddonNode_FieldIndex.Unknown;
                 }
                 default:
@@ -1941,10 +1860,6 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _SoundLocation;
         public IFormLinkNullableGetter<ISoundGetter> Sound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _SoundLocation);
         #endregion
-        #region AmbientSound
-        private int? _AmbientSoundLocation;
-        public IFormLinkNullableGetter<ISoundGetter> AmbientSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _AmbientSoundLocation);
-        #endregion
         private RangeInt32? _DNAMLocation;
         #region MasterParticleSystemCap
         private int _MasterParticleSystemCapLocation => _DNAMLocation!.Value.Min;
@@ -1954,7 +1869,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(UInt16);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2051,11 +1966,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _SoundLocation = (stream.Position - offset);
                     return (int)AddonNode_FieldIndex.Sound;
-                }
-                case RecordTypeInts.SOUN:
-                {
-                    _AmbientSoundLocation = (stream.Position - offset);
-                    return (int)AddonNode_FieldIndex.AmbientSound;
                 }
                 case RecordTypeInts.DNAM:
                 {
