@@ -61,19 +61,69 @@ namespace Mutagen.Bethesda.Fallout3
         public Single Duration { get; set; } = default(Single);
         #endregion
         #region RadialBlurUseTarget
-        public Boolean RadialBlurUseTarget { get; set; } = default(Boolean);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _RadialBlurUseTarget;
+        public Boolean RadialBlurUseTarget
+        {
+            get => this._RadialBlurUseTarget;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._RadialBlurUseTarget = value;
+            }
+        }
         #endregion
         #region RadialBlurCenter
-        public P2Float RadialBlurCenter { get; set; } = default(P2Float);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private P2Float _RadialBlurCenter;
+        public P2Float RadialBlurCenter
+        {
+            get => this._RadialBlurCenter;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._RadialBlurCenter = value;
+            }
+        }
         #endregion
         #region DepthOfFieldUseTarget
-        public Boolean DepthOfFieldUseTarget { get; set; } = default(Boolean);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Boolean _DepthOfFieldUseTarget;
+        public Boolean DepthOfFieldUseTarget
+        {
+            get => this._DepthOfFieldUseTarget;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._DepthOfFieldUseTarget = value;
+            }
+        }
         #endregion
         #region DepthOfFieldFlags
-        public Byte DepthOfFieldFlags { get; set; } = default(Byte);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ImageSpaceAdapter.DepthOfFieldFlag _DepthOfFieldFlags;
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags
+        {
+            get => this._DepthOfFieldFlags;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._DepthOfFieldFlags = value;
+            }
+        }
         #endregion
-        #region DnamUnused
-        public UInt16 DnamUnused { get; set; } = default(UInt16);
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private UInt16 _Unused;
+        public UInt16 Unused
+        {
+            get => this._Unused;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._Unused = value;
+            }
+        }
         #endregion
         #region BlurRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -865,6 +915,9 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IImageSpaceAdapterGetter.SoundOutro => this.SoundOutro;
         #endregion
+        #region DNAMDataTypeState
+        public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; } = default(ImageSpaceAdapter.DNAMDataType);
+        #endregion
 
         #region To String
 
@@ -896,7 +949,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RadialBlurCenter = initialValue;
                 this.DepthOfFieldUseTarget = initialValue;
                 this.DepthOfFieldFlags = initialValue;
-                this.DnamUnused = initialValue;
+                this.Unused = initialValue;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
                 this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
                 this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(initialValue, []);
@@ -954,6 +1007,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(initialValue, []);
                 this.SoundIntro = initialValue;
                 this.SoundOutro = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -970,7 +1024,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem RadialBlurCenter,
                 TItem DepthOfFieldUseTarget,
                 TItem DepthOfFieldFlags,
-                TItem DnamUnused,
+                TItem Unused,
                 TItem BlurRadius,
                 TItem DoubleVisionStrength,
                 TItem TintColor,
@@ -1027,7 +1081,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CinematicBrightnessMult,
                 TItem CinematicBrightnessAdd,
                 TItem SoundIntro,
-                TItem SoundOutro)
+                TItem SoundOutro,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1043,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RadialBlurCenter = RadialBlurCenter;
                 this.DepthOfFieldUseTarget = DepthOfFieldUseTarget;
                 this.DepthOfFieldFlags = DepthOfFieldFlags;
-                this.DnamUnused = DnamUnused;
+                this.Unused = Unused;
                 this.BlurRadius = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(BlurRadius, []);
                 this.DoubleVisionStrength = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(DoubleVisionStrength, []);
                 this.TintColor = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>(TintColor, []);
@@ -1101,6 +1156,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CinematicBrightnessAdd = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>(CinematicBrightnessAdd, []);
                 this.SoundIntro = SoundIntro;
                 this.SoundOutro = SoundOutro;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1118,7 +1174,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem RadialBlurCenter;
             public TItem DepthOfFieldUseTarget;
             public TItem DepthOfFieldFlags;
-            public TItem DnamUnused;
+            public TItem Unused;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? BlurRadius;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? DoubleVisionStrength;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ColorFrame.Mask<TItem>?>>?>? TintColor;
@@ -1176,6 +1232,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, KeyFrame.Mask<TItem>?>>?>? CinematicBrightnessAdd;
             public TItem SoundIntro;
             public TItem SoundOutro;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -1195,7 +1252,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.RadialBlurCenter, rhs.RadialBlurCenter)) return false;
                 if (!object.Equals(this.DepthOfFieldUseTarget, rhs.DepthOfFieldUseTarget)) return false;
                 if (!object.Equals(this.DepthOfFieldFlags, rhs.DepthOfFieldFlags)) return false;
-                if (!object.Equals(this.DnamUnused, rhs.DnamUnused)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.BlurRadius, rhs.BlurRadius)) return false;
                 if (!object.Equals(this.DoubleVisionStrength, rhs.DoubleVisionStrength)) return false;
                 if (!object.Equals(this.TintColor, rhs.TintColor)) return false;
@@ -1253,6 +1310,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CinematicBrightnessAdd, rhs.CinematicBrightnessAdd)) return false;
                 if (!object.Equals(this.SoundIntro, rhs.SoundIntro)) return false;
                 if (!object.Equals(this.SoundOutro, rhs.SoundOutro)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1264,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.RadialBlurCenter);
                 hash.Add(this.DepthOfFieldUseTarget);
                 hash.Add(this.DepthOfFieldFlags);
-                hash.Add(this.DnamUnused);
+                hash.Add(this.Unused);
                 hash.Add(this.BlurRadius);
                 hash.Add(this.DoubleVisionStrength);
                 hash.Add(this.TintColor);
@@ -1322,6 +1380,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CinematicBrightnessAdd);
                 hash.Add(this.SoundIntro);
                 hash.Add(this.SoundOutro);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1338,7 +1397,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.RadialBlurCenter)) return false;
                 if (!eval(this.DepthOfFieldUseTarget)) return false;
                 if (!eval(this.DepthOfFieldFlags)) return false;
-                if (!eval(this.DnamUnused)) return false;
+                if (!eval(this.Unused)) return false;
                 if (this.BlurRadius != null)
                 {
                     if (!eval(this.BlurRadius.Overall)) return false;
@@ -2001,6 +2060,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (!eval(this.SoundIntro)) return false;
                 if (!eval(this.SoundOutro)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -2015,7 +2075,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.RadialBlurCenter)) return true;
                 if (eval(this.DepthOfFieldUseTarget)) return true;
                 if (eval(this.DepthOfFieldFlags)) return true;
-                if (eval(this.DnamUnused)) return true;
+                if (eval(this.Unused)) return true;
                 if (this.BlurRadius != null)
                 {
                     if (eval(this.BlurRadius.Overall)) return true;
@@ -2678,6 +2738,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (eval(this.SoundIntro)) return true;
                 if (eval(this.SoundOutro)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -2699,7 +2760,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.RadialBlurCenter = eval(this.RadialBlurCenter);
                 obj.DepthOfFieldUseTarget = eval(this.DepthOfFieldUseTarget);
                 obj.DepthOfFieldFlags = eval(this.DepthOfFieldFlags);
-                obj.DnamUnused = eval(this.DnamUnused);
+                obj.Unused = eval(this.Unused);
                 if (BlurRadius != null)
                 {
                     obj.BlurRadius = new MaskItem<R, IEnumerable<MaskItemIndexed<R, KeyFrame.Mask<R>?>>?>(eval(this.BlurRadius.Overall), []);
@@ -3527,6 +3588,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 obj.SoundIntro = eval(this.SoundIntro);
                 obj.SoundOutro = eval(this.SoundOutro);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -3569,9 +3631,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
                     }
-                    if (printMask?.DnamUnused ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(DnamUnused, "DnamUnused");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if ((printMask?.BlurRadius?.Overall ?? true)
                         && BlurRadius is {} BlurRadiusItem)
@@ -4626,6 +4688,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(SoundOutro, "SoundOutro");
                     }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
             }
             #endregion
@@ -4643,7 +4709,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? RadialBlurCenter;
             public Exception? DepthOfFieldUseTarget;
             public Exception? DepthOfFieldFlags;
-            public Exception? DnamUnused;
+            public Exception? Unused;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? BlurRadius;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? DoubleVisionStrength;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>? TintColor;
@@ -4701,6 +4767,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>? CinematicBrightnessAdd;
             public Exception? SoundIntro;
             public Exception? SoundOutro;
+            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -4721,8 +4788,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return DepthOfFieldUseTarget;
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                         return DepthOfFieldFlags;
-                    case ImageSpaceAdapter_FieldIndex.DnamUnused:
-                        return DnamUnused;
+                    case ImageSpaceAdapter_FieldIndex.Unused:
+                        return Unused;
                     case ImageSpaceAdapter_FieldIndex.BlurRadius:
                         return BlurRadius;
                     case ImageSpaceAdapter_FieldIndex.DoubleVisionStrength:
@@ -4837,6 +4904,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return SoundIntro;
                     case ImageSpaceAdapter_FieldIndex.SoundOutro:
                         return SoundOutro;
+                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -4865,8 +4934,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                         this.DepthOfFieldFlags = ex;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.DnamUnused:
-                        this.DnamUnused = ex;
+                    case ImageSpaceAdapter_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case ImageSpaceAdapter_FieldIndex.BlurRadius:
                         this.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(ex, null);
@@ -5039,6 +5108,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceAdapter_FieldIndex.SoundOutro:
                         this.SoundOutro = ex;
                         break;
+                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -5068,8 +5140,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceAdapter_FieldIndex.DepthOfFieldFlags:
                         this.DepthOfFieldFlags = (Exception?)obj;
                         break;
-                    case ImageSpaceAdapter_FieldIndex.DnamUnused:
-                        this.DnamUnused = (Exception?)obj;
+                    case ImageSpaceAdapter_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case ImageSpaceAdapter_FieldIndex.BlurRadius:
                         this.BlurRadius = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>)obj;
@@ -5242,6 +5314,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceAdapter_FieldIndex.SoundOutro:
                         this.SoundOutro = (Exception?)obj;
                         break;
+                    case ImageSpaceAdapter_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -5257,7 +5332,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (RadialBlurCenter != null) return true;
                 if (DepthOfFieldUseTarget != null) return true;
                 if (DepthOfFieldFlags != null) return true;
-                if (DnamUnused != null) return true;
+                if (Unused != null) return true;
                 if (BlurRadius != null) return true;
                 if (DoubleVisionStrength != null) return true;
                 if (TintColor != null) return true;
@@ -5315,6 +5390,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CinematicBrightnessAdd != null) return true;
                 if (SoundIntro != null) return true;
                 if (SoundOutro != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -5360,7 +5436,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(DepthOfFieldFlags, "DepthOfFieldFlags");
                 }
                 {
-                    sb.AppendItem(DnamUnused, "DnamUnused");
+                    sb.AppendItem(Unused, "Unused");
                 }
                 if (BlurRadius is {} BlurRadiusItem)
                 {
@@ -6358,6 +6434,9 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(SoundOutro, "SoundOutro");
                 }
+                {
+                    sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                }
             }
             #endregion
 
@@ -6372,7 +6451,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.RadialBlurCenter = this.RadialBlurCenter.Combine(rhs.RadialBlurCenter);
                 ret.DepthOfFieldUseTarget = this.DepthOfFieldUseTarget.Combine(rhs.DepthOfFieldUseTarget);
                 ret.DepthOfFieldFlags = this.DepthOfFieldFlags.Combine(rhs.DepthOfFieldFlags);
-                ret.DnamUnused = this.DnamUnused.Combine(rhs.DnamUnused);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.BlurRadius = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BlurRadius?.Overall, rhs.BlurRadius?.Overall), Noggog.ExceptionExt.Combine(this.BlurRadius?.Specific, rhs.BlurRadius?.Specific));
                 ret.DoubleVisionStrength = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoubleVisionStrength?.Overall, rhs.DoubleVisionStrength?.Overall), Noggog.ExceptionExt.Combine(this.DoubleVisionStrength?.Specific, rhs.DoubleVisionStrength?.Specific));
                 ret.TintColor = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ColorFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TintColor?.Overall, rhs.TintColor?.Overall), Noggog.ExceptionExt.Combine(this.TintColor?.Specific, rhs.TintColor?.Specific));
@@ -6430,6 +6509,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CinematicBrightnessAdd = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, KeyFrame.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.CinematicBrightnessAdd?.Overall, rhs.CinematicBrightnessAdd?.Overall), Noggog.ExceptionExt.Combine(this.CinematicBrightnessAdd?.Specific, rhs.CinematicBrightnessAdd?.Specific));
                 ret.SoundIntro = this.SoundIntro.Combine(rhs.SoundIntro);
                 ret.SoundOutro = this.SoundOutro.Combine(rhs.SoundOutro);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -6458,7 +6538,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool RadialBlurCenter;
             public bool DepthOfFieldUseTarget;
             public bool DepthOfFieldFlags;
-            public bool DnamUnused;
+            public bool Unused;
             public KeyFrame.TranslationMask? BlurRadius;
             public KeyFrame.TranslationMask? DoubleVisionStrength;
             public ColorFrame.TranslationMask? TintColor;
@@ -6516,6 +6596,7 @@ namespace Mutagen.Bethesda.Fallout3
             public KeyFrame.TranslationMask? CinematicBrightnessAdd;
             public bool SoundIntro;
             public bool SoundOutro;
+            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -6530,9 +6611,10 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RadialBlurCenter = defaultOn;
                 this.DepthOfFieldUseTarget = defaultOn;
                 this.DepthOfFieldFlags = defaultOn;
-                this.DnamUnused = defaultOn;
+                this.Unused = defaultOn;
                 this.SoundIntro = defaultOn;
                 this.SoundOutro = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -6546,7 +6628,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((RadialBlurCenter, null));
                 ret.Add((DepthOfFieldUseTarget, null));
                 ret.Add((DepthOfFieldFlags, null));
-                ret.Add((DnamUnused, null));
+                ret.Add((Unused, null));
                 ret.Add((BlurRadius == null ? DefaultOn : !BlurRadius.GetCrystal().CopyNothing, BlurRadius?.GetCrystal()));
                 ret.Add((DoubleVisionStrength == null ? DefaultOn : !DoubleVisionStrength.GetCrystal().CopyNothing, DoubleVisionStrength?.GetCrystal()));
                 ret.Add((TintColor == null ? DefaultOn : !TintColor.GetCrystal().CopyNothing, TintColor?.GetCrystal()));
@@ -6604,6 +6686,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CinematicBrightnessAdd == null ? DefaultOn : !CinematicBrightnessAdd.GetCrystal().CopyNothing, CinematicBrightnessAdd?.GetCrystal()));
                 ret.Add((SoundIntro, null));
                 ret.Add((SoundOutro, null));
+                ret.Add((DNAMDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -6656,6 +6739,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IImageSpaceAdapter);
 
+        [Flags]
+        public enum DNAMDataType
+        {
+            Break0 = 1,
+            Break1 = 2,
+            Break2 = 4
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -6745,8 +6835,8 @@ namespace Mutagen.Bethesda.Fallout3
         new Boolean RadialBlurUseTarget { get; set; }
         new P2Float RadialBlurCenter { get; set; }
         new Boolean DepthOfFieldUseTarget { get; set; }
-        new Byte DepthOfFieldFlags { get; set; }
-        new UInt16 DnamUnused { get; set; }
+        new ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; set; }
+        new UInt16 Unused { get; set; }
         new ExtendedList<KeyFrame>? BlurRadius { get; set; }
         new ExtendedList<KeyFrame>? DoubleVisionStrength { get; set; }
         new ExtendedList<ColorFrame>? TintColor { get; set; }
@@ -6804,6 +6894,7 @@ namespace Mutagen.Bethesda.Fallout3
         new ExtendedList<KeyFrame>? CinematicBrightnessAdd { get; set; }
         new IFormLinkNullable<ISoundGetter> SoundIntro { get; set; }
         new IFormLinkNullable<ISoundGetter> SoundOutro { get; set; }
+        new ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IImageSpaceAdapterInternal :
@@ -6827,8 +6918,8 @@ namespace Mutagen.Bethesda.Fallout3
         Boolean RadialBlurUseTarget { get; }
         P2Float RadialBlurCenter { get; }
         Boolean DepthOfFieldUseTarget { get; }
-        Byte DepthOfFieldFlags { get; }
-        UInt16 DnamUnused { get; }
+        ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags { get; }
+        UInt16 Unused { get; }
         IReadOnlyList<IKeyFrameGetter>? BlurRadius { get; }
         IReadOnlyList<IKeyFrameGetter>? DoubleVisionStrength { get; }
         IReadOnlyList<IColorFrameGetter>? TintColor { get; }
@@ -6886,6 +6977,7 @@ namespace Mutagen.Bethesda.Fallout3
         IReadOnlyList<IKeyFrameGetter>? CinematicBrightnessAdd { get; }
         IFormLinkNullableGetter<ISoundGetter> SoundIntro { get; }
         IFormLinkNullableGetter<ISoundGetter> SoundOutro { get; }
+        ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -7068,7 +7160,7 @@ namespace Mutagen.Bethesda.Fallout3
         RadialBlurCenter = 10,
         DepthOfFieldUseTarget = 11,
         DepthOfFieldFlags = 12,
-        DnamUnused = 13,
+        Unused = 13,
         BlurRadius = 14,
         DoubleVisionStrength = 15,
         TintColor = 16,
@@ -7126,6 +7218,7 @@ namespace Mutagen.Bethesda.Fallout3
         CinematicBrightnessAdd = 68,
         SoundIntro = 69,
         SoundOutro = 70,
+        DNAMDataTypeState = 71,
     }
     #endregion
 
@@ -7136,9 +7229,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 64;
+        public const ushort AdditionalFieldCount = 65;
 
-        public const ushort FieldCount = 71;
+        public const ushort FieldCount = 72;
 
         public static readonly Type MaskType = typeof(ImageSpaceAdapter.Mask<>);
 
@@ -7278,8 +7371,8 @@ namespace Mutagen.Bethesda.Fallout3
             item.RadialBlurUseTarget = default(Boolean);
             item.RadialBlurCenter = default(P2Float);
             item.DepthOfFieldUseTarget = default(Boolean);
-            item.DepthOfFieldFlags = default(Byte);
-            item.DnamUnused = default(UInt16);
+            item.DepthOfFieldFlags = default(ImageSpaceAdapter.DepthOfFieldFlag);
+            item.Unused = default(UInt16);
             item.BlurRadius = null;
             item.DoubleVisionStrength = null;
             item.TintColor = null;
@@ -7337,6 +7430,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CinematicBrightnessAdd = null;
             item.SoundIntro.Clear();
             item.SoundOutro.Clear();
+            item.DNAMDataTypeState = default(ImageSpaceAdapter.DNAMDataType);
             base.Clear(item);
         }
         
@@ -7429,7 +7523,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.RadialBlurCenter = item.RadialBlurCenter.Equals(rhs.RadialBlurCenter);
             ret.DepthOfFieldUseTarget = item.DepthOfFieldUseTarget == rhs.DepthOfFieldUseTarget;
             ret.DepthOfFieldFlags = item.DepthOfFieldFlags == rhs.DepthOfFieldFlags;
-            ret.DnamUnused = item.DnamUnused == rhs.DnamUnused;
+            ret.Unused = item.Unused == rhs.Unused;
             ret.BlurRadius = item.BlurRadius.CollectionEqualsHelper(
                 rhs.BlurRadius,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -7652,6 +7746,7 @@ namespace Mutagen.Bethesda.Fallout3
                 include);
             ret.SoundIntro = item.SoundIntro.Equals(rhs.SoundIntro);
             ret.SoundOutro = item.SoundOutro.Equals(rhs.SoundOutro);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -7725,9 +7820,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DepthOfFieldFlags, "DepthOfFieldFlags");
             }
-            if (printMask?.DnamUnused ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendItem(item.DnamUnused, "DnamUnused");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if ((printMask?.BlurRadius?.Overall ?? true)
                 && item.BlurRadius is {} BlurRadiusItem)
@@ -8562,6 +8657,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.SoundOutro.FormKeyNullable, "SoundOutro");
             }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                sb.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public static ImageSpaceAdapter_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -8636,9 +8735,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.DepthOfFieldFlags != rhs.DepthOfFieldFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DnamUnused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unused) ?? true))
             {
-                if (lhs.DnamUnused != rhs.DnamUnused) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
@@ -8868,6 +8967,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.SoundOutro.Equals(rhs.SoundOutro)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
@@ -8902,7 +9005,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.RadialBlurCenter);
             hash.Add(item.DepthOfFieldUseTarget);
             hash.Add(item.DepthOfFieldFlags);
-            hash.Add(item.DnamUnused);
+            hash.Add(item.Unused);
             hash.Add(item.BlurRadius);
             hash.Add(item.DoubleVisionStrength);
             hash.Add(item.TintColor);
@@ -8960,6 +9063,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.CinematicBrightnessAdd);
             hash.Add(item.SoundIntro);
             hash.Add(item.SoundOutro);
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -9095,9 +9199,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.DepthOfFieldFlags = rhs.DepthOfFieldFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DnamUnused) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.Unused) ?? true))
             {
-                item.DnamUnused = rhs.DnamUnused;
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.BlurRadius) ?? true))
             {
@@ -10867,6 +10971,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.SoundOutro.SetTo(rhs.SoundOutro.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceAdapter_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -11027,6 +11135,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly ImageSpaceAdapterBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IImageSpaceAdapterGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IImageSpaceAdapterGetter item,
             MutagenWriter writer,
@@ -11045,19 +11162,40 @@ namespace Mutagen.Bethesda.Fallout3
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
                     writer: writer,
                     item: item);
-                writer.Write(item.RadialBlurUseTarget, length: 4);
-                P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.RadialBlurCenter);
-                ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts2(
-                    writer: writer,
-                    item: item);
-                writer.Write(item.DepthOfFieldUseTarget);
-                writer.Write(item.DepthOfFieldFlags);
-                writer.Write(item.DnamUnused);
-                ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts3(
-                    writer: writer,
-                    item: item);
+                if (!item.DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0))
+                {
+                    ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts2(
+                        writer: writer,
+                        item: item);
+                    writer.Write(item.RadialBlurUseTarget, length: 4);
+                    P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer: writer,
+                        item: item.RadialBlurCenter);
+                    ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts3(
+                        writer: writer,
+                        item: item);
+                    writer.Write(item.DepthOfFieldUseTarget);
+                    EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        item.DepthOfFieldFlags,
+                        length: 1);
+                    writer.Write(item.Unused);
+                    ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts4(
+                        writer: writer,
+                        item: item);
+                    if (!item.DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break1))
+                    {
+                        ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts5(
+                            writer: writer,
+                            item: item);
+                        if (!item.DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break2))
+                        {
+                            ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts6(
+                                writer: writer,
+                                item: item);
+                        }
+                    }
+                }
             }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
@@ -11774,6 +11912,45 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item);
         }
 
+        public static partial void WriteBinaryCounts4Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts4(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts4Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounts5Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts5(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts5Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounts6Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts6(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts6Custom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item,
@@ -11828,6 +12005,15 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly ImageSpaceAdapterBinaryCreateTranslation Instance = new ImageSpaceAdapterBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IMAD;
+        public static void FillBinaryStructs(
+            IImageSpaceAdapterInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame,
@@ -11850,8 +12036,17 @@ namespace Mutagen.Bethesda.Fallout3
                         byteLength: 4);
                     if (dataFrame.Remaining < 4) return null;
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 192) return null;
+                    if (dataFrame.Remaining < 180) return null;
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break0;
+                        return (int)ImageSpaceAdapter_FieldIndex.Duration;
+                    }
+                    if (dataFrame.Remaining < 12) return null;
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
                         item: item);
                     if (dataFrame.Remaining < 4) return null;
@@ -11861,20 +12056,40 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 8) return null;
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 12) return null;
-                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
                         frame: dataFrame,
                         item: item);
                     if (dataFrame.Remaining < 1) return null;
                     item.DepthOfFieldUseTarget = dataFrame.ReadBoolean();
                     if (dataFrame.Remaining < 1) return null;
-                    item.DepthOfFieldFlags = dataFrame.ReadUInt8();
+                    item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     if (dataFrame.Remaining < 2) return null;
-                    item.DnamUnused = dataFrame.ReadUInt16();
-                    if (dataFrame.Remaining < 16) return null;
-                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
+                    item.Unused = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 8) return null;
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts4Custom(
                         frame: dataFrame,
                         item: item);
-                    return (int)ImageSpaceAdapter_FieldIndex.DnamUnused;
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break1;
+                        return (int)ImageSpaceAdapter_FieldIndex.Unused;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts5Custom(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Complete)
+                    {
+                        item.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break2;
+                        return (int)ImageSpaceAdapter_FieldIndex.Unused;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts6Custom(
+                        frame: dataFrame,
+                        item: item);
+                    return (int)ImageSpaceAdapter_FieldIndex.Unused;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -12468,6 +12683,18 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             IImageSpaceAdapterInternal item);
 
+        public static partial void FillBinaryCounts4Custom(
+            MutagenFrame frame,
+            IImageSpaceAdapterInternal item);
+
+        public static partial void FillBinaryCounts5Custom(
+            MutagenFrame frame,
+            IImageSpaceAdapterInternal item);
+
+        public static partial void FillBinaryCounts6Custom(
+            MutagenFrame frame,
+            IImageSpaceAdapterInternal item);
+
     }
 
 }
@@ -12516,6 +12743,7 @@ namespace Mutagen.Bethesda.Fallout3
 
 
         private RangeInt32? _DNAMLocation;
+        public ImageSpaceAdapter.DNAMDataType DNAMDataTypeState { get; private set; }
         #region Animatable
         private int _AnimatableLocation => _DNAMLocation!.Value.Min;
         private bool _Animatable_IsSet => _DNAMLocation.HasValue;
@@ -12533,42 +12761,63 @@ namespace Mutagen.Bethesda.Fallout3
             OverlayStream stream,
             int offset);
         #endregion
+        #region Counts2
+        private int _Counts2Location => _DNAMLocation!.Value.Min + 0xBC;
+        private bool _Counts2_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
+        partial void Counts2CustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         #region RadialBlurUseTarget
         private int _RadialBlurUseTargetLocation => _DNAMLocation!.Value.Min + 0xC8;
-        private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue;
+        private bool _RadialBlurUseTarget_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
         public Boolean RadialBlurUseTarget => _RadialBlurUseTarget_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RadialBlurUseTargetLocation, 4)) >= 1 : default(Boolean);
         #endregion
         #region RadialBlurCenter
         private int _RadialBlurCenterLocation => _DNAMLocation!.Value.Min + 0xCC;
-        private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
+        private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
         public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_recordData.Slice(_RadialBlurCenterLocation, 8)) : default(P2Float);
         #endregion
-        #region Counts2
-        private int _Counts2Location => _DNAMLocation!.Value.Min + 0xD4;
-        private bool _Counts2_IsSet => _DNAMLocation.HasValue;
-        partial void Counts2CustomParse(
+        #region Counts3
+        private int _Counts3Location => _DNAMLocation!.Value.Min + 0xD4;
+        private bool _Counts3_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
+        partial void Counts3CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
         #region DepthOfFieldUseTarget
         private int _DepthOfFieldUseTargetLocation => _DNAMLocation!.Value.Min + 0xE0;
-        private bool _DepthOfFieldUseTarget_IsSet => _DNAMLocation.HasValue;
+        private bool _DepthOfFieldUseTarget_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
         public Boolean DepthOfFieldUseTarget => _DepthOfFieldUseTarget_IsSet ? _recordData.Slice(_DepthOfFieldUseTargetLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region DepthOfFieldFlags
         private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value.Min + 0xE1;
-        private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue;
-        public Byte DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? _recordData.Span[_DepthOfFieldFlagsLocation] : default;
+        private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)_recordData.Span.Slice(_DepthOfFieldFlagsLocation, 0x1)[0] : default;
         #endregion
-        #region DnamUnused
-        private int _DnamUnusedLocation => _DNAMLocation!.Value.Min + 0xE2;
-        private bool _DnamUnused_IsSet => _DNAMLocation.HasValue;
-        public UInt16 DnamUnused => _DnamUnused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_DnamUnusedLocation, 2)) : default(UInt16);
+        #region Unused
+        private int _UnusedLocation => _DNAMLocation!.Value.Min + 0xE2;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnusedLocation, 2)) : default(UInt16);
         #endregion
-        #region Counts3
-        private int _Counts3Location => _DNAMLocation!.Value.Min + 0xE4;
-        private bool _Counts3_IsSet => _DNAMLocation.HasValue;
-        partial void Counts3CustomParse(
+        #region Counts4
+        private int _Counts4Location => _DNAMLocation!.Value.Min + 0xE4;
+        private bool _Counts4_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break0);
+        partial void Counts4CustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        #region Counts5
+        private int _Counts5Location => _DNAMLocation!.Value.Min + 0xEC;
+        private bool _Counts5_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break1);
+        partial void Counts5CustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
+        #region Counts6
+        private int _Counts6Location => _DNAMLocation!.Value.Min + 0xF0;
+        private bool _Counts6_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpaceAdapter.DNAMDataType.Break2);
+        partial void Counts6CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
@@ -12707,7 +12956,20 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)ImageSpaceAdapter_FieldIndex.DnamUnused;
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0xBC)
+                    {
+                        this.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break0;
+                    }
+                    if (subLen <= 0xEC)
+                    {
+                        this.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break1;
+                    }
+                    if (subLen <= 0xF0)
+                    {
+                        this.DNAMDataTypeState |= ImageSpaceAdapter.DNAMDataType.Break2;
+                    }
+                    return (int)ImageSpaceAdapter_FieldIndex.Unused;
                 }
                 case RecordTypeInts.BNAM:
                 {

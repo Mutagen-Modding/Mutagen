@@ -18,7 +18,7 @@ partial class ImageSpaceAdapterBinaryCreateTranslation
 {
     public static partial void FillBinaryCounts1Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
     {
-        frame.Position += 192;
+        frame.Position += 180;
     }
 
     public static partial void FillBinaryCounts2Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
@@ -28,7 +28,22 @@ partial class ImageSpaceAdapterBinaryCreateTranslation
 
     public static partial void FillBinaryCounts3Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
     {
-        frame.Position += 16;
+        frame.Position += 12;
+    }
+
+    public static partial void FillBinaryCounts4Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
+    {
+        frame.Position += 8;
+    }
+
+    public static partial void FillBinaryCounts5Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
+    {
+        frame.Position += 4;
+    }
+
+    public static partial void FillBinaryCounts6Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
+    {
+        frame.Position += 4;
     }
 }
 
@@ -81,23 +96,35 @@ partial class ImageSpaceAdapterBinaryWriteTranslation
         writer.Write(item.TintColor?.Count ?? 0);
         writer.Write(item.BlurRadius?.Count ?? 0);
         writer.Write(item.DoubleVisionStrength?.Count ?? 0);
+    }
+
+    public static partial void WriteBinaryCounts2Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+    {
         writer.Write(item.RadialBlurStrength?.Count ?? 0);
         writer.Write(item.RadialBlurRampUp?.Count ?? 0);
         writer.Write(item.RadialBlurStart?.Count ?? 0);
     }
 
-    public static partial void WriteBinaryCounts2Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+    public static partial void WriteBinaryCounts3Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
     {
         writer.Write(item.DepthOfFieldStrength?.Count ?? 0);
         writer.Write(item.DepthOfFieldDistance?.Count ?? 0);
         writer.Write(item.DepthOfFieldRange?.Count ?? 0);
     }
 
-    public static partial void WriteBinaryCounts3Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+    public static partial void WriteBinaryCounts4Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
     {
         writer.Write(item.RadialBlurRampDown?.Count ?? 0);
         writer.Write(item.RadialBlurDownStart?.Count ?? 0);
+    }
+
+    public static partial void WriteBinaryCounts5Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+    {
         writer.Write(item.FadeColor?.Count ?? 0);
+    }
+
+    public static partial void WriteBinaryCounts6Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+    {
         writer.Write(item.MotionBlurStrength?.Count ?? 0);
     }
 }
@@ -106,7 +133,7 @@ partial class ImageSpaceAdapterBinaryOverlay
 {
     partial void Counts1CustomParse(OverlayStream stream, int offset)
     {
-        stream.Position += 192;
+        stream.Position += 180;
     }
 
     partial void Counts2CustomParse(OverlayStream stream, int offset)
@@ -116,6 +143,21 @@ partial class ImageSpaceAdapterBinaryOverlay
 
     partial void Counts3CustomParse(OverlayStream stream, int offset)
     {
-        stream.Position += 16;
+        stream.Position += 12;
+    }
+
+    partial void Counts4CustomParse(OverlayStream stream, int offset)
+    {
+        stream.Position += 8;
+    }
+
+    partial void Counts5CustomParse(OverlayStream stream, int offset)
+    {
+        stream.Position += 4;
+    }
+
+    partial void Counts6CustomParse(OverlayStream stream, int offset)
+    {
+        stream.Position += 4;
     }
 }

@@ -59,6 +59,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.WATR, ProcessWaters);
+        AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
         AddDynamicProcessing(
             ProcessPlaced,
             PlacedObject_Registration.TriggeringRecordType,
@@ -191,6 +192,29 @@ public class Fallout3Processor : Processor
         Instructions.SetAddition(fileOffset + dataSub.EndLocation, dnam);
 
         ProcessLengths(majorFrame, 6, fileOffset);
+    }
+
+    private void ProcessImageSpaceAdapters(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        // Every IMAD subrecord except EDID, DNAM, and the FNV sound links is a pure
+        // float array (time interpolator / color interpolator keyframes). Normalize
+        // negative zero, which Mutagen always writes as positive zero.
+        foreach (var subrecord in majorFrame)
+        {
+            switch (subrecord.RecordTypeInt)
+            {
+                case RecordTypeInts.EDID:
+                case RecordTypeInts.DNAM:
+                case RecordTypeInts.RDSD:
+                case RecordTypeInts.RDSI:
+                    break;
+                default:
+                    ProcessZeroFloats(subrecord, fileOffset, subrecord.ContentLength / 4);
+                    break;
+            }
+        }
     }
 
     private void NormalizeFormIdOverflows(
