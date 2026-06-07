@@ -76,9 +76,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region Description
-        public String? Description { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActorValueInformationGetter.Description => this.Description;
+        public String Description { get; set; } = string.Empty;
         #endregion
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,10 +96,10 @@ namespace Mutagen.Bethesda.Fallout3
         IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
         #endregion
-        #region Abbreviation
-        public String? Abbreviation { get; set; }
+        #region ShortName
+        public String? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActorValueInformationGetter.Abbreviation => this.Abbreviation;
+        String? IActorValueInformationGetter.ShortName => this.ShortName;
         #endregion
 
         #region To String
@@ -131,7 +129,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
-                this.Abbreviation = initialValue;
+                this.ShortName = initialValue;
             }
 
             public Mask(
@@ -145,7 +143,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Name,
                 TItem Description,
                 TItem Icons,
-                TItem Abbreviation)
+                TItem ShortName)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -158,7 +156,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = Name;
                 this.Description = Description;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
-                this.Abbreviation = Abbreviation;
+                this.ShortName = ShortName;
             }
 
             #pragma warning disable CS8618
@@ -173,7 +171,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Name;
             public TItem Description;
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
-            public TItem Abbreviation;
+            public TItem ShortName;
             #endregion
 
             #region Equals
@@ -190,7 +188,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Icons, rhs.Icons)) return false;
-                if (!object.Equals(this.Abbreviation, rhs.Abbreviation)) return false;
+                if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -199,7 +197,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Name);
                 hash.Add(this.Description);
                 hash.Add(this.Icons);
-                hash.Add(this.Abbreviation);
+                hash.Add(this.ShortName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -217,7 +215,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Icons.Overall)) return false;
                     if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Abbreviation)) return false;
+                if (!eval(this.ShortName)) return false;
                 return true;
             }
             #endregion
@@ -233,7 +231,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Icons.Overall)) return true;
                     if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Abbreviation)) return true;
+                if (eval(this.ShortName)) return true;
                 return false;
             }
             #endregion
@@ -252,7 +250,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
                 obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
-                obj.Abbreviation = eval(this.Abbreviation);
+                obj.ShortName = eval(this.ShortName);
             }
             #endregion
 
@@ -283,9 +281,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Icons?.Print(sb);
                     }
-                    if (printMask?.Abbreviation ?? true)
+                    if (printMask?.ShortName ?? true)
                     {
-                        sb.AppendItem(Abbreviation, "Abbreviation");
+                        sb.AppendItem(ShortName, "ShortName");
                     }
                 }
             }
@@ -301,7 +299,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Name;
             public Exception? Description;
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
-            public Exception? Abbreviation;
+            public Exception? ShortName;
             #endregion
 
             #region IErrorMask
@@ -316,8 +314,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Description;
                     case ActorValueInformation_FieldIndex.Icons:
                         return Icons;
-                    case ActorValueInformation_FieldIndex.Abbreviation:
-                        return Abbreviation;
+                    case ActorValueInformation_FieldIndex.ShortName:
+                        return ShortName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -337,8 +335,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case ActorValueInformation_FieldIndex.Icons:
                         this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
-                    case ActorValueInformation_FieldIndex.Abbreviation:
-                        this.Abbreviation = ex;
+                    case ActorValueInformation_FieldIndex.ShortName:
+                        this.ShortName = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -360,8 +358,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case ActorValueInformation_FieldIndex.Icons:
                         this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
-                    case ActorValueInformation_FieldIndex.Abbreviation:
-                        this.Abbreviation = (Exception?)obj;
+                    case ActorValueInformation_FieldIndex.ShortName:
+                        this.ShortName = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -375,7 +373,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Name != null) return true;
                 if (Description != null) return true;
                 if (Icons != null) return true;
-                if (Abbreviation != null) return true;
+                if (ShortName != null) return true;
                 return false;
             }
             #endregion
@@ -410,7 +408,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 Icons?.Print(sb);
                 {
-                    sb.AppendItem(Abbreviation, "Abbreviation");
+                    sb.AppendItem(ShortName, "ShortName");
                 }
             }
             #endregion
@@ -423,7 +421,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
-                ret.Abbreviation = this.Abbreviation.Combine(rhs.Abbreviation);
+                ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -449,7 +447,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Name;
             public bool Description;
             public Icons.TranslationMask? Icons;
-            public bool Abbreviation;
+            public bool ShortName;
             #endregion
 
             #region Ctors
@@ -460,7 +458,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = defaultOn;
                 this.Description = defaultOn;
-                this.Abbreviation = defaultOn;
+                this.ShortName = defaultOn;
             }
 
             #endregion
@@ -471,7 +469,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
-                ret.Add((Abbreviation, null));
+                ret.Add((ShortName, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -618,12 +616,12 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
-        new String? Description { get; set; }
+        new String Description { get; set; }
         /// <summary>
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
-        new String? Abbreviation { get; set; }
+        new String? ShortName { get; set; }
     }
 
     public partial interface IActorValueInformationInternal :
@@ -652,14 +650,14 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         String? Name { get; }
         #endregion
-        String? Description { get; }
+        String Description { get; }
         #region Icons
         /// <summary>
         /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion
-        String? Abbreviation { get; }
+        String? ShortName { get; }
 
     }
 
@@ -839,7 +837,7 @@ namespace Mutagen.Bethesda.Fallout3
         Name = 7,
         Description = 8,
         Icons = 9,
-        Abbreviation = 10,
+        ShortName = 10,
     }
     #endregion
 
@@ -934,9 +932,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Name = default;
-            item.Description = default;
+            item.Description = string.Empty;
             item.Icons = null;
-            item.Abbreviation = default;
+            item.ShortName = default;
             base.Clear(item);
         }
         
@@ -1054,7 +1052,7 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Abbreviation = string.Equals(item.Abbreviation, rhs.Abbreviation);
+            ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1109,20 +1107,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.Description ?? true)
-                && item.Description is {} DescriptionItem)
+            if (printMask?.Description ?? true)
             {
-                sb.AppendItem(DescriptionItem, "Description");
+                sb.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icons?.Overall ?? true)
                 && item.Icons is {} IconsItem)
             {
                 IconsItem?.Print(sb, "Icons");
             }
-            if ((printMask?.Abbreviation ?? true)
-                && item.Abbreviation is {} AbbreviationItem)
+            if ((printMask?.ShortName ?? true)
+                && item.ShortName is {} ShortNameItem)
             {
-                sb.AppendItem(AbbreviationItem, "Abbreviation");
+                sb.AppendItem(ShortNameItem, "ShortName");
             }
         }
         
@@ -1190,9 +1187,9 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isIconsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.ShortName) ?? true))
             {
-                if (!string.Equals(lhs.Abbreviation, rhs.Abbreviation)) return false;
+                if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
             return true;
         }
@@ -1226,17 +1223,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Nameitem);
             }
-            if (item.Description is {} Descriptionitem)
-            {
-                hash.Add(Descriptionitem);
-            }
+            hash.Add(item.Description);
             if (item.Icons is {} Iconsitem)
             {
                 hash.Add(Iconsitem);
             }
-            if (item.Abbreviation is {} Abbreviationitem)
+            if (item.ShortName is {} ShortNameitem)
             {
-                hash.Add(Abbreviationitem);
+                hash.Add(ShortNameitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1391,9 +1385,9 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.ShortName) ?? true))
             {
-                item.Abbreviation = rhs.Abbreviation;
+                item.ShortName = rhs.ShortName;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1569,7 +1563,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
@@ -1583,7 +1577,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Abbreviation,
+                item: item.ShortName,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1682,11 +1676,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Abbreviation = StringBinaryTranslation.Instance.Parse(
+                    item.ShortName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
+                    return (int)ActorValueInformation_FieldIndex.ShortName;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1757,12 +1751,12 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        #region Abbreviation
-        private int? _AbbreviationLocation;
-        public String? Abbreviation => _AbbreviationLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AbbreviationLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ShortName
+        private int? _ShortNameLocation;
+        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1853,8 +1847,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _AbbreviationLocation = (stream.Position - offset);
-                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
+                    _ShortNameLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.ShortName;
                 }
                 default:
                     return base.FillRecordType(
