@@ -67,16 +67,6 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IRadiationStageGetter.ActorEffect => this.ActorEffect;
         #endregion
-        #region Spell
-        private readonly IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
-        public IFormLinkNullable<ISpellGetter> Spell
-        {
-            get => _Spell;
-            set => _Spell.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISpellGetter> IRadiationStageGetter.Spell => this.Spell;
-        #endregion
 
         #region To String
 
@@ -104,7 +94,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.TriggerThreshold = initialValue;
                 this.ActorEffect = initialValue;
-                this.Spell = initialValue;
             }
 
             public Mask(
@@ -116,8 +105,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
                 TItem TriggerThreshold,
-                TItem ActorEffect,
-                TItem Spell)
+                TItem ActorEffect)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -129,7 +117,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.TriggerThreshold = TriggerThreshold;
                 this.ActorEffect = ActorEffect;
-                this.Spell = Spell;
             }
 
             #pragma warning disable CS8618
@@ -143,7 +130,6 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem TriggerThreshold;
             public TItem ActorEffect;
-            public TItem Spell;
             #endregion
 
             #region Equals
@@ -159,7 +145,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.TriggerThreshold, rhs.TriggerThreshold)) return false;
                 if (!object.Equals(this.ActorEffect, rhs.ActorEffect)) return false;
-                if (!object.Equals(this.Spell, rhs.Spell)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -167,7 +152,6 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.TriggerThreshold);
                 hash.Add(this.ActorEffect);
-                hash.Add(this.Spell);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -180,7 +164,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.All(eval)) return false;
                 if (!eval(this.TriggerThreshold)) return false;
                 if (!eval(this.ActorEffect)) return false;
-                if (!eval(this.Spell)) return false;
                 return true;
             }
             #endregion
@@ -191,7 +174,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (base.Any(eval)) return true;
                 if (eval(this.TriggerThreshold)) return true;
                 if (eval(this.ActorEffect)) return true;
-                if (eval(this.Spell)) return true;
                 return false;
             }
             #endregion
@@ -209,7 +191,6 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.TriggerThreshold = eval(this.TriggerThreshold);
                 obj.ActorEffect = eval(this.ActorEffect);
-                obj.Spell = eval(this.Spell);
             }
             #endregion
 
@@ -236,10 +217,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ActorEffect, "ActorEffect");
                     }
-                    if (printMask?.Spell ?? true)
-                    {
-                        sb.AppendItem(Spell, "Spell");
-                    }
                 }
             }
             #endregion
@@ -253,7 +230,6 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public Exception? TriggerThreshold;
             public Exception? ActorEffect;
-            public Exception? Spell;
             #endregion
 
             #region IErrorMask
@@ -266,8 +242,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return TriggerThreshold;
                     case RadiationStage_FieldIndex.ActorEffect:
                         return ActorEffect;
-                    case RadiationStage_FieldIndex.Spell:
-                        return Spell;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -283,9 +257,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case RadiationStage_FieldIndex.ActorEffect:
                         this.ActorEffect = ex;
-                        break;
-                    case RadiationStage_FieldIndex.Spell:
-                        this.Spell = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -304,9 +275,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case RadiationStage_FieldIndex.ActorEffect:
                         this.ActorEffect = (Exception?)obj;
                         break;
-                    case RadiationStage_FieldIndex.Spell:
-                        this.Spell = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -318,7 +286,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (TriggerThreshold != null) return true;
                 if (ActorEffect != null) return true;
-                if (Spell != null) return true;
                 return false;
             }
             #endregion
@@ -351,9 +318,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(ActorEffect, "ActorEffect");
                 }
-                {
-                    sb.AppendItem(Spell, "Spell");
-                }
             }
             #endregion
 
@@ -364,7 +328,6 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.TriggerThreshold = this.TriggerThreshold.Combine(rhs.TriggerThreshold);
                 ret.ActorEffect = this.ActorEffect.Combine(rhs.ActorEffect);
-                ret.Spell = this.Spell.Combine(rhs.Spell);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -389,7 +352,6 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public bool TriggerThreshold;
             public bool ActorEffect;
-            public bool Spell;
             #endregion
 
             #region Ctors
@@ -400,7 +362,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.TriggerThreshold = defaultOn;
                 this.ActorEffect = defaultOn;
-                this.Spell = defaultOn;
             }
 
             #endregion
@@ -410,7 +371,6 @@ namespace Mutagen.Bethesda.Fallout3
                 base.GetCrystal(ret);
                 ret.Add((TriggerThreshold, null));
                 ret.Add((ActorEffect, null));
-                ret.Add((Spell, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -549,7 +509,6 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new UInt32 TriggerThreshold { get; set; }
         new IFormLink<ISpellGetter> ActorEffect { get; set; }
-        new IFormLinkNullable<ISpellGetter> Spell { get; set; }
     }
 
     public partial interface IRadiationStageInternal :
@@ -570,7 +529,6 @@ namespace Mutagen.Bethesda.Fallout3
         static new ILoquiRegistration StaticRegistration => RadiationStage_Registration.Instance;
         UInt32 TriggerThreshold { get; }
         IFormLinkGetter<ISpellGetter> ActorEffect { get; }
-        IFormLinkNullableGetter<ISpellGetter> Spell { get; }
 
     }
 
@@ -749,7 +707,6 @@ namespace Mutagen.Bethesda.Fallout3
         Fallout3MajorRecordFlags = 6,
         TriggerThreshold = 7,
         ActorEffect = 8,
-        Spell = 9,
     }
     #endregion
 
@@ -760,9 +717,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(RadiationStage.Mask<>);
 
@@ -795,8 +752,7 @@ namespace Mutagen.Bethesda.Fallout3
             var triggers = RecordCollection.Factory(RecordTypes.RADS);
             var all = RecordCollection.Factory(
                 RecordTypes.RADS,
-                RecordTypes.DATA,
-                RecordTypes.SPEL);
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -843,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.TriggerThreshold = default(UInt32);
             item.ActorEffect.Clear();
-            item.Spell.Clear();
             base.Clear(item);
         }
         
@@ -862,7 +817,6 @@ namespace Mutagen.Bethesda.Fallout3
         {
             base.RemapLinks(obj, mapping);
             obj.ActorEffect.Relink(mapping);
-            obj.Spell.Relink(mapping);
         }
         
         #endregion
@@ -932,7 +886,6 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.TriggerThreshold = item.TriggerThreshold == rhs.TriggerThreshold;
             ret.ActorEffect = item.ActorEffect.Equals(rhs.ActorEffect);
-            ret.Spell = item.Spell.Equals(rhs.Spell);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -989,10 +942,6 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.ActorEffect ?? true)
             {
                 sb.AppendItem(item.ActorEffect.FormKey, "ActorEffect");
-            }
-            if (printMask?.Spell ?? true)
-            {
-                sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
         }
         
@@ -1052,10 +1001,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.ActorEffect.Equals(rhs.ActorEffect)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)RadiationStage_FieldIndex.Spell) ?? true))
-            {
-                if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            }
             return true;
         }
         
@@ -1086,7 +1031,6 @@ namespace Mutagen.Bethesda.Fallout3
             var hash = new HashCode();
             hash.Add(item.TriggerThreshold);
             hash.Add(item.ActorEffect);
-            hash.Add(item.Spell);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1117,10 +1061,6 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.ActorEffect);
-            if (FormLinkInformation.TryFactory(obj.Spell, out var SpellInfo))
-            {
-                yield return SpellInfo;
-            }
             yield break;
         }
         
@@ -1202,10 +1142,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)RadiationStage_FieldIndex.ActorEffect) ?? true))
             {
                 item.ActorEffect.SetTo(rhs.ActorEffect.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)RadiationStage_FieldIndex.Spell) ?? true))
-            {
-                item.Spell.SetTo(rhs.Spell.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1383,10 +1319,6 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     item: item.ActorEffect);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Spell,
-                header: translationParams.ConvertToCustom(RecordTypes.SPEL));
         }
 
         public void Write(
@@ -1465,12 +1397,6 @@ namespace Mutagen.Bethesda.Fallout3
                     item.ActorEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)RadiationStage_FieldIndex.ActorEffect;
                 }
-                case RecordTypeInts.SPEL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)RadiationStage_FieldIndex.Spell;
-                }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1540,10 +1466,6 @@ namespace Mutagen.Bethesda.Fallout3
         private int _ActorEffectLocation => _DATALocation!.Value.Min + 0x4;
         private bool _ActorEffect_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<ISpellGetter> ActorEffect => _ActorEffect_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_ActorEffectLocation, 0x4), isSet: _ActorEffect_IsSet) : FormLink<ISpellGetter>.Null;
-        #endregion
-        #region Spell
-        private int? _SpellLocation;
-        public IFormLinkNullableGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpellGetter>(_package, _recordData, _SpellLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1618,11 +1540,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)RadiationStage_FieldIndex.ActorEffect;
-                }
-                case RecordTypeInts.SPEL:
-                {
-                    _SpellLocation = (stream.Position - offset);
-                    return (int)RadiationStage_FieldIndex.Spell;
                 }
                 default:
                     return base.FillRecordType(
