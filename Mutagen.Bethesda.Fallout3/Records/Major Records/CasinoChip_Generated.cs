@@ -818,6 +818,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ICasinoChip :
         IAssetLinkContainer,
         ICasinoChipGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -829,7 +830,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBoundedOptional,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -868,6 +870,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IHasIconsGetter,
@@ -879,7 +882,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => CasinoChip_Registration.Instance;
         #region ObjectBounds

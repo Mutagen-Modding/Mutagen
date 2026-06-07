@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout3
 {
     /// <summary>
-    /// Implemented by: [Region]
+    /// Implemented by: [Light, Region]
     /// </summary>
     public partial interface IEmittance :
         IEmittanceGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [Region]
+    /// Implemented by: [Light, Region]
     /// </summary>
     public partial interface IEmittanceGetter : IFallout3MajorRecordGetter
     {

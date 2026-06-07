@@ -987,6 +987,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IBook :
         IAssetLinkContainer,
         IBookGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -998,7 +999,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBounded,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -1042,6 +1044,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IHasIconsGetter,
@@ -1053,7 +1056,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Book_Registration.Instance;
         #region ObjectBounds

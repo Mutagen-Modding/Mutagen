@@ -1259,12 +1259,14 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IArmorAddon :
         IArmorAddonGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IArmorAddonInternal>,
         INamed,
         INamedRequired,
-        IObjectBounded
+        IObjectBounded,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -1306,12 +1308,14 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IArmorAddonGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IArmorAddonGetter>,
         IMapsToGetter<IArmorAddonGetter>,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => ArmorAddon_Registration.Instance;
         #region ObjectBounds

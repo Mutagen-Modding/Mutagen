@@ -11,5 +11,7 @@
       <FormLink name="Sound" recordType="SNAM" refName="Sound" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

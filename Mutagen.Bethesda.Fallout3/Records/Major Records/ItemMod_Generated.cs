@@ -918,6 +918,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IItemMod :
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -931,6 +932,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptional,
         IPackageLocationObject,
         IPackageTargetObject,
+        IPlaceableObject,
         IWeightValue
     {
         /// <summary>
@@ -973,6 +975,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IHasIconsGetter,
@@ -985,6 +988,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
+        IPlaceableObjectGetter,
         IWeightValueGetter
     {
         static new ILoquiRegistration StaticRegistration => ItemMod_Registration.Instance;

@@ -929,6 +929,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface INote :
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasIcons,
@@ -939,6 +940,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         INoteGetter,
         IObjectBoundedOptional,
+        IPlaceableObject,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -977,6 +979,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasIconsGetter,
         IItemGetter,
@@ -986,6 +989,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

@@ -12,5 +12,7 @@
       </List>
     </Fields>
     <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

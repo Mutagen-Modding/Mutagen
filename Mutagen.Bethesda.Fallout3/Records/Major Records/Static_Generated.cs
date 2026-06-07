@@ -616,6 +616,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IStatic :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IItem,
@@ -624,6 +625,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptional,
         IPackageLocationObject,
         IPackageTargetObject,
+        IPlaceableObject,
         IRegionTarget,
         IStaticGetter
     {
@@ -654,6 +656,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IStaticGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IItemGetter,
         ILoquiObject<IStaticGetter>,
@@ -662,6 +665,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
+        IPlaceableObjectGetter,
         IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Static_Registration.Instance;

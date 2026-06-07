@@ -59,5 +59,7 @@
       </Data>
           <ByteArray name="BMDT" recordType="BMDT" />
 </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

@@ -836,6 +836,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IDoor :
         IDoorGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -845,7 +846,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBoundedOptional,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -885,6 +887,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IDoorGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         ILoquiObject<IDoorGetter>,
@@ -894,7 +897,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Door_Registration.Instance;
         #region ObjectBounds

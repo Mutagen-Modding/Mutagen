@@ -611,11 +611,13 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IPlaceableWater :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlaceableWaterInternal>,
         IModeled,
         IObjectBounded,
+        IPlaceableObject,
         IPlaceableWaterGetter
     {
         /// <summary>
@@ -641,11 +643,13 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IPlaceableWaterGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IPlaceableWaterGetter>,
         IMapsToGetter<IPlaceableWaterGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => PlaceableWater_Registration.Instance;
         #region ObjectBounds

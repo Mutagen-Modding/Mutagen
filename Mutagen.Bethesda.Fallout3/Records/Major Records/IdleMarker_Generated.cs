@@ -669,12 +669,14 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IIdleMarker :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IIdleMarkerGetter,
         ILoquiObjectSetter<IIdleMarkerInternal>,
         IObjectBoundedOptional,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -700,11 +702,13 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IIdleMarkerGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IIdleMarkerGetter>,
         IMapsToGetter<IIdleMarkerGetter>,
         IObjectBoundedOptionalGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => IdleMarker_Registration.Instance;
         #region ObjectBounds

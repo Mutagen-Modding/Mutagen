@@ -780,9 +780,11 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface ITextureSet :
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<ITextureSetInternal>,
         IObjectBoundedOptional,
+        IPlaceableObject,
         ITextureSetGetter
     {
         /// <summary>
@@ -811,9 +813,11 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         ILoquiObject<ITextureSetGetter>,
         IMapsToGetter<ITextureSetGetter>,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => TextureSet_Registration.Instance;
         #region ObjectBounds

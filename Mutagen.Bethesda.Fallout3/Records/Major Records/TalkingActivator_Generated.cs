@@ -821,6 +821,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ITalkingActivator :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -829,6 +830,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamed,
         INamedRequired,
         IObjectBoundedOptional,
+        IPlaceableObject,
         ITalkingActivatorGetter,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -870,6 +872,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ITalkingActivatorGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         ILoquiObject<ITalkingActivatorGetter>,
@@ -878,6 +881,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

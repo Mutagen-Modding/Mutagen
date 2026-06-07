@@ -14,5 +14,7 @@
         <ModHeaderVersioning version="1.32" />
       </FormLink>
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

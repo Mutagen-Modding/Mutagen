@@ -833,6 +833,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ICaravanMoney :
         IAssetLinkContainer,
         ICaravanMoneyGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasIcons,
@@ -843,7 +844,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBoundedOptional,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -880,6 +882,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasIconsGetter,
         IItemGetter,
@@ -890,7 +893,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => CaravanMoney_Registration.Instance;
         #region ObjectBounds

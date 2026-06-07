@@ -936,6 +936,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IKey :
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -946,7 +947,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBounded,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -990,6 +992,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IItemGetter,
@@ -999,7 +1002,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Key_Registration.Instance;
         #region ObjectBounds

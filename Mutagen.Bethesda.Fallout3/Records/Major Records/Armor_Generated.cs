@@ -1781,6 +1781,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IArmor :
         IArmorGetter,
         IBoundItem,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -1790,7 +1791,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBounded,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -1851,6 +1853,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         IBoundItemGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IItemGetter,
@@ -1860,7 +1863,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Armor_Registration.Instance;
         #region ObjectBounds

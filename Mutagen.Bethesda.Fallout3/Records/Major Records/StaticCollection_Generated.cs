@@ -650,11 +650,13 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IStaticCollection :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IStaticCollectionInternal>,
         IModeled,
         IObjectBoundedOptional,
+        IPlaceableObject,
         IStaticCollectionGetter
     {
         /// <summary>
@@ -683,11 +685,13 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IStaticCollectionGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IStaticCollectionGetter>,
         IMapsToGetter<IStaticCollectionGetter>,
         IModeledGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => StaticCollection_Registration.Instance;
         #region ObjectBounds

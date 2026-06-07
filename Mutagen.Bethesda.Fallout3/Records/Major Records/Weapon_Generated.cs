@@ -5199,6 +5199,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IWeapon :
         IBoundItem,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -5210,6 +5211,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptional,
         IPackageLocationObject,
         IPackageTargetObject,
+        IPlaceableObject,
         IWeaponGetter
     {
         /// <summary>
@@ -5365,6 +5367,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         IBoundItemGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IItemGetter,
@@ -5375,7 +5378,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region ObjectBounds

@@ -1084,6 +1084,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ITerminal :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -1092,6 +1093,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamed,
         INamedRequired,
         IObjectBoundedOptional,
+        IPlaceableObject,
         ITerminalGetter
     {
         /// <summary>
@@ -1137,6 +1139,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ITerminalGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         ILoquiObject<ITerminalGetter>,
@@ -1144,7 +1147,8 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Terminal_Registration.Instance;
         #region ObjectBounds

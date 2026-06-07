@@ -836,8 +836,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<IAcousticSpaceInternal>,
         IObjectBounded,
-        IPlaceableObject,
-        IReferenceableObject
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -870,8 +869,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IAcousticSpaceGetter>,
         IMapsToGetter<IAcousticSpaceGetter>,
         IObjectBoundedGetter,
-        IPlaceableObjectGetter,
-        IReferenceableObjectGetter
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => AcousticSpace_Registration.Instance;
         #region ObjectBounds

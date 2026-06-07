@@ -421,7 +421,6 @@
       <DependentUpon>AcousticSpace.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IPlaceableObject_Generated.cs" />
-    <Compile Include="Interfaces\Link\IReferenceableObject_Generated.cs" />
     <Compile Include="Interfaces\Link\IExplodeSpawn_Generated.cs" />
     <Compile Include="Records\Major Records\EffectShader_Generated.cs">
       <DependentUpon>EffectShader.xml</DependentUpon>
@@ -1210,7 +1209,6 @@
     <Compile Include="Interfaces\Link\ICellOrWorldspace_Generated.cs" />
     <Compile Include="Interfaces\Link\IOwner_Generated.cs" />
     <Compile Include="Interfaces\Link\IEmittance_Generated.cs" />
-    <Compile Include="Interfaces\Link\ISoundOrNpcSpawn_Generated.cs" />
     <Compile Include="Records\Major Records\CellLighting_Generated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>

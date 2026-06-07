@@ -934,12 +934,14 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IGrass :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IGrassGetter,
         ILoquiObjectSetter<IGrassInternal>,
         IModeled,
-        IObjectBounded
+        IObjectBounded,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -974,11 +976,13 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IGrassGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IGrassGetter>,
         IMapsToGetter<IGrassGetter>,
         IModeledGetter,
-        IObjectBoundedGetter
+        IObjectBoundedGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Grass_Registration.Instance;
         #region ObjectBounds

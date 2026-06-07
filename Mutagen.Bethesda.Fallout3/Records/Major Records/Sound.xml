@@ -14,7 +14,8 @@
       <Int16 name="ReverbAttenuationControl" recordType="GNAM" />
       <Int32 name="Priority" recordType="HNAM" />
     </Fields>
-    <LinkInterface>ISoundOrNpcSpawn</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="SoundData" objType="Subrecord" recordType="SNDX" forceInternalInterface="true">
     <Fields>

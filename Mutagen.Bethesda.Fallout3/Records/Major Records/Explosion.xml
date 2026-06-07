@@ -26,7 +26,9 @@
         </Fields>
       </Data>
       <FormLink name="ImageSpaceAdapterRef" refName="ImageSpaceAdapter" recordType="IMAD" />
-      <FormLink name="PlacedImpactObject" recordType="INAM" refName="Fallout3MajorRecord" />
+      <FormLink name="PlacedImpactObject" recordType="INAM">
+        <Interface>IExplodeSpawn</Interface>
+      </FormLink>
     </Fields>
   </Object>
 </Loqui>

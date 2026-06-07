@@ -723,6 +723,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IFurniture :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureGetter,
@@ -733,7 +734,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBoundedOptional,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -770,6 +772,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IFurnitureGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         ILoquiObject<IFurnitureGetter>,
@@ -779,7 +782,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Furniture_Registration.Instance;
         #region ObjectBounds

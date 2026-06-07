@@ -11,6 +11,8 @@
     </Fields>
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="LeveledCreatureEntry" objType="Subrecord">
     <Fields>

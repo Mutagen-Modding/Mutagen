@@ -717,6 +717,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IMoveableStatic :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -726,7 +727,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMoveableStaticGetter,
         INamed,
         INamedRequired,
-        IObjectBoundedOptional
+        IObjectBoundedOptional,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -763,6 +765,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IMoveableStaticGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IItemGetter,
@@ -771,7 +774,8 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter
+        IObjectBoundedOptionalGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => MoveableStatic_Registration.Instance;
         #region ObjectBounds

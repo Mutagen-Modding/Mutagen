@@ -3035,30 +3035,6 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         /// <summary>
-        /// Scope a load order query to IReferenceableObject
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on IReferenceableObject</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter> IReferenceableObject(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IReferenceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to IReferenceableObject
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on IReferenceableObject</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter> IReferenceableObject(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IReferenceableObjectGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IReferenceableObject, IReferenceableObjectGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to IRegionTarget
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -3104,30 +3080,6 @@ namespace Mutagen.Bethesda.Fallout3
             return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRelatable, IRelatableGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ISoundOrNpcSpawn
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on ISoundOrNpcSpawn</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ISoundOrNpcSpawn, ISoundOrNpcSpawnGetter> ISoundOrNpcSpawn(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ISoundOrNpcSpawn, ISoundOrNpcSpawnGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<ISoundOrNpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ISoundOrNpcSpawn, ISoundOrNpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to ISoundOrNpcSpawn
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on ISoundOrNpcSpawn</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ISoundOrNpcSpawn, ISoundOrNpcSpawnGetter> ISoundOrNpcSpawn(this IEnumerable<IFallout3ModGetter> mods)
-        {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ISoundOrNpcSpawn, ISoundOrNpcSpawnGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<ISoundOrNpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ISoundOrNpcSpawn, ISoundOrNpcSpawnGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         #endregion

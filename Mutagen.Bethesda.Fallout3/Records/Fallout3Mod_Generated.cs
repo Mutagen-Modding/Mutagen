@@ -6316,11 +6316,39 @@ namespace Mutagen.Bethesda.Fallout3
                     break;
                 case "IEmittance":
                 case "IEmittanceGetter":
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IExplodeSpawn":
                 case "IExplodeSpawnGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorAddonGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IGrassGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IPlaceableWaterGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISoundGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticCollectionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITalkingActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IItem":
                 case "IItemGetter":
@@ -6443,6 +6471,34 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IPlaceableObject":
                 case "IPlaceableObjectGetter":
                     Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAddonNodeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorAddonGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IGrassGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IPlaceableWaterGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ISoundGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IStaticCollectionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITalkingActivatorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITextureSetGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ITreeGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IPlaced":
                 case "IPlacedGetter":
@@ -6452,10 +6508,6 @@ namespace Mutagen.Bethesda.Fallout3
                     obj.Worldspaces.Remove(
                         type: type,
                         keys: keys);
-                    break;
-                case "IReferenceableObject":
-                case "IReferenceableObjectGetter":
-                    Remove(obj, keys, typeof(IAcousticSpaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
@@ -6467,10 +6519,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IRelatableGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "ISoundOrNpcSpawn":
-                case "ISoundOrNpcSpawnGetter":
-                    Remove(obj, keys, typeof(ISoundGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "Key":
                 case "IKeyGetter":

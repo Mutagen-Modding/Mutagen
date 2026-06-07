@@ -1097,6 +1097,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface ITree :
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -1104,6 +1105,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ITreeInternal>,
         IModeled,
         IObjectBounded,
+        IPlaceableObject,
         IRegionTarget,
         ITreeGetter
     {
@@ -1152,6 +1154,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IHasIconsGetter,
@@ -1159,6 +1162,7 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<ITreeGetter>,
         IModeledGetter,
         IObjectBoundedGetter,
+        IPlaceableObjectGetter,
         IRegionTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => Tree_Registration.Instance;

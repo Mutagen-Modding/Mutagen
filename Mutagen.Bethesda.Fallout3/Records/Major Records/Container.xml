@@ -23,5 +23,7 @@
     </Fields>
     <LinkInterface>IPackageLocationObject</LinkInterface>
     <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

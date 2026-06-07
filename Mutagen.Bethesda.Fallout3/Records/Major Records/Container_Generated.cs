@@ -980,6 +980,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IContainer :
         IContainerGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -989,7 +990,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBounded,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -1031,6 +1033,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IContainerGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         ILoquiObject<IContainerGetter>,
@@ -1040,7 +1043,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Container_Registration.Instance;
         #region ObjectBounds

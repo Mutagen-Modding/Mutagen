@@ -12,5 +12,7 @@
       <RefDirect name="Decal" refName="Decal" />
       <Enum name="Flags" enumName="TextureSet.Flag" recordType="DNAM" byteLength="2" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
 </Loqui>

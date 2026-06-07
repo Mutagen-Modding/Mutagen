@@ -777,11 +777,12 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ISound :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<ISoundInternal>,
         IObjectBoundedOptional,
-        ISoundGetter,
-        ISoundOrNpcSpawn
+        IPlaceableObject,
+        ISoundGetter
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -806,10 +807,11 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ISoundGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         ILoquiObject<ISoundGetter>,
         IMapsToGetter<ISoundGetter>,
         IObjectBoundedOptionalGetter,
-        ISoundOrNpcSpawnGetter
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Sound_Registration.Instance;
         #region ObjectBounds

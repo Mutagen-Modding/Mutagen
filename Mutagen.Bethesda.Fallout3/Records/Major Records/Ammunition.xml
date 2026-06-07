@@ -36,6 +36,8 @@
     <LinkInterface>IAmmoOrList</LinkInterface>
     <LinkInterface>IPackageLocationObject</LinkInterface>
     <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="AmmunitionExtraData" objType="Subrecord" recordType="DAT2">
     <Fields>

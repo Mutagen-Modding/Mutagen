@@ -78,6 +78,7 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
             true,
             new ILoquiRegistration[]
             {
+                Light_Registration.Instance,
                 Region_Registration.Instance,
             },
             new InterfaceMappingTypes(
@@ -89,6 +90,37 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
             new ILoquiRegistration[]
             {
                 AcousticSpace_Registration.Instance,
+                Activator_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                ArmorAddon_Registration.Instance,
+                Book_Registration.Instance,
+                CaravanCard_Registration.Instance,
+                CaravanMoney_Registration.Instance,
+                CasinoChip_Registration.Instance,
+                Container_Registration.Instance,
+                Door_Registration.Instance,
+                Furniture_Registration.Instance,
+                Grass_Registration.Instance,
+                IdleMarker_Registration.Instance,
+                Ingestible_Registration.Instance,
+                ItemMod_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledCreature_Registration.Instance,
+                LeveledNpc_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Note_Registration.Instance,
+                PlaceableWater_Registration.Instance,
+                Sound_Registration.Instance,
+                Static_Registration.Instance,
+                StaticCollection_Registration.Instance,
+                TalkingActivator_Registration.Instance,
+                Terminal_Registration.Instance,
+                TextureSet_Registration.Instance,
+                Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             },
             new InterfaceMappingTypes(
                 Setter: typeof(IExplodeSpawn),
@@ -211,6 +243,38 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
             new ILoquiRegistration[]
             {
                 AcousticSpace_Registration.Instance,
+                Activator_Registration.Instance,
+                AddonNode_Registration.Instance,
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                ArmorAddon_Registration.Instance,
+                Book_Registration.Instance,
+                CaravanCard_Registration.Instance,
+                CaravanMoney_Registration.Instance,
+                CasinoChip_Registration.Instance,
+                Container_Registration.Instance,
+                Door_Registration.Instance,
+                Furniture_Registration.Instance,
+                Grass_Registration.Instance,
+                IdleMarker_Registration.Instance,
+                Ingestible_Registration.Instance,
+                ItemMod_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledCreature_Registration.Instance,
+                LeveledNpc_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                MoveableStatic_Registration.Instance,
+                Note_Registration.Instance,
+                PlaceableWater_Registration.Instance,
+                Sound_Registration.Instance,
+                Static_Registration.Instance,
+                StaticCollection_Registration.Instance,
+                TalkingActivator_Registration.Instance,
+                Terminal_Registration.Instance,
+                TextureSet_Registration.Instance,
+                Tree_Registration.Instance,
+                Weapon_Registration.Instance,
             },
             new InterfaceMappingTypes(
                 Setter: typeof(IPlaceableObject),
@@ -231,16 +295,6 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IPlaced),
                 Getter: typeof(IPlacedGetter)));
         dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
-        dict[typeof(IReferenceableObject)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                AcousticSpace_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IReferenceableObject),
-                Getter: typeof(IReferenceableObjectGetter)));
-        dict[typeof(IReferenceableObjectGetter)] = dict[typeof(IReferenceableObject)] with { Setter = false };
         dict[typeof(IRegionTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -264,16 +318,6 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IRelatable),
                 Getter: typeof(IRelatableGetter)));
         dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)] with { Setter = false };
-        dict[typeof(ISoundOrNpcSpawn)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                Sound_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(ISoundOrNpcSpawn),
-                Getter: typeof(ISoundOrNpcSpawnGetter)));
-        dict[typeof(ISoundOrNpcSpawnGetter)] = dict[typeof(ISoundOrNpcSpawn)] with { Setter = false };
         InterfaceToObjectTypes = dict;
     }
 }

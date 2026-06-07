@@ -209,14 +209,14 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceAdapterRef => this.ImageSpaceAdapterRef;
         #endregion
         #region PlacedImpactObject
-        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _PlacedImpactObject = new FormLinkNullable<IFallout3MajorRecordGetter>();
-        public IFormLinkNullable<IFallout3MajorRecordGetter> PlacedImpactObject
+        private readonly IFormLinkNullable<IExplodeSpawnGetter> _PlacedImpactObject = new FormLinkNullable<IExplodeSpawnGetter>();
+        public IFormLinkNullable<IExplodeSpawnGetter> PlacedImpactObject
         {
             get => _PlacedImpactObject;
             set => _PlacedImpactObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IExplosionGetter.PlacedImpactObject => this.PlacedImpactObject;
+        IFormLinkNullableGetter<IExplodeSpawnGetter> IExplosionGetter.PlacedImpactObject => this.PlacedImpactObject;
         #endregion
 
         #region To String
@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Single RadiationRadius { get; set; }
         new SoundLevel SoundLevel { get; set; }
         new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceAdapterRef { get; set; }
-        new IFormLinkNullable<IFallout3MajorRecordGetter> PlacedImpactObject { get; set; }
+        new IFormLinkNullable<IExplodeSpawnGetter> PlacedImpactObject { get; set; }
     }
 
     public partial interface IExplosionInternal :
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout3
         Single RadiationRadius { get; }
         SoundLevel SoundLevel { get; }
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapterRef { get; }
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> PlacedImpactObject { get; }
+        IFormLinkNullableGetter<IExplodeSpawnGetter> PlacedImpactObject { get; }
 
     }
 
@@ -2857,7 +2857,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region PlacedImpactObject
         private int? _PlacedImpactObjectLocation;
-        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> PlacedImpactObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _PlacedImpactObjectLocation);
+        public IFormLinkNullableGetter<IExplodeSpawnGetter> PlacedImpactObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExplodeSpawnGetter>(_package, _recordData, _PlacedImpactObjectLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout3
 {
     /// <summary>
-    /// Implemented by: [AcousticSpace]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArmorAddon, Book, CaravanCard, CaravanMoney, CasinoChip, Container, Door, Furniture, Grass, IdleMarker, Ingestible, ItemMod, Key, LeveledCreature, LeveledNpc, Light, MiscItem, MoveableStatic, Note, PlaceableWater, Sound, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, Weapon]
     /// </summary>
     public partial interface IPlaceableObject :
         IFallout3MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace]
+    /// Implemented by: [AcousticSpace, Activator, AddonNode, Ammunition, Armor, ArmorAddon, Book, CaravanCard, CaravanMoney, CasinoChip, Container, Door, Furniture, Grass, IdleMarker, Ingestible, ItemMod, Key, LeveledCreature, LeveledNpc, Light, MiscItem, MoveableStatic, Note, PlaceableWater, Sound, Static, StaticCollection, TalkingActivator, Terminal, TextureSet, Tree, Weapon]
     /// </summary>
     public partial interface IPlaceableObjectGetter : IFallout3MajorRecordGetter
     {

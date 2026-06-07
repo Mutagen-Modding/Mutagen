@@ -22,6 +22,8 @@
       </Data>
       <RefList name="MenuItems" refName="TerminalMenuItem" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="TerminalMenuItem" objType="Subrecord">
     <Fields>

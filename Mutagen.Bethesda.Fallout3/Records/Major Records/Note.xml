@@ -20,6 +20,8 @@
       <RefDirect name="Data" refName="ANoteData" binary="NoGeneration" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="ANoteData" objType="Subrecord" abstract="true" />
   <Object name="NoteStandard" objType="Subrecord" baseClass="ANoteData">

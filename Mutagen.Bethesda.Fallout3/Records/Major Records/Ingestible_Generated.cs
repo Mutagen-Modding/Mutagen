@@ -1186,6 +1186,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IIngestible :
         IAssetLinkContainer,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -1199,6 +1200,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBounded,
         IPackageLocationObject,
         IPackageTargetObject,
+        IPlaceableObject,
         ITranslatedNamedRequired
     {
         /// <summary>
@@ -1250,6 +1252,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IHasEffectsGetter,
@@ -1262,6 +1265,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
+        IPlaceableObjectGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;

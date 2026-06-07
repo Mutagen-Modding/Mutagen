@@ -918,6 +918,7 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IActivator :
         IActivatorGetter,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -927,7 +928,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequired,
         IObjectBoundedOptional,
         IPackageLocationObject,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -969,6 +971,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IActivatorGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         ILoquiObject<IActivatorGetter>,
@@ -978,7 +981,8 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => Activator_Registration.Instance;
         #region ObjectBounds

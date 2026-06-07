@@ -7,6 +7,8 @@
       <RefDirect name="Model" refName="Model" />
       <RefList name="Parts" refName="StaticPart" />
     </Fields>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
   <Object name="StaticPart" objType="Subrecord">
     <Fields>

@@ -713,6 +713,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ILeveledCreature :
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         ILeveledCreatureGetter,
@@ -720,7 +721,8 @@ namespace Mutagen.Bethesda.Fallout3
         IModeled,
         INpcSpawn,
         IObjectBounded,
-        IPackageTargetObject
+        IPackageTargetObject,
+        IPlaceableObject
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -746,13 +748,15 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ILeveledCreatureGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         ILoquiObject<ILeveledCreatureGetter>,
         IMapsToGetter<ILeveledCreatureGetter>,
         IModeledGetter,
         INpcSpawnGetter,
         IObjectBoundedGetter,
-        IPackageTargetObjectGetter
+        IPackageTargetObjectGetter,
+        IPlaceableObjectGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
         #region ObjectBounds

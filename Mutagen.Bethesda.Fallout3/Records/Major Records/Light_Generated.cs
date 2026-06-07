@@ -1080,6 +1080,8 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface ILight :
         IAssetLinkContainer,
+        IEmittance,
+        IExplodeSpawn,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -1093,6 +1095,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptional,
         IPackageLocationObject,
         IPackageTargetObject,
+        IPlaceableObject,
         IWeightValue
     {
         /// <summary>
@@ -1144,6 +1147,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IEmittanceGetter,
+        IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,
         IHasIconsGetter,
@@ -1156,6 +1161,7 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
+        IPlaceableObjectGetter,
         IWeightValueGetter
     {
         static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;
