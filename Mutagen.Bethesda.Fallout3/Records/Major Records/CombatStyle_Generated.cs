@@ -53,277 +53,277 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region DodgeChance
-        public Byte DodgeChance { get; set; } = default(Byte);
+        #region StandardManeuverDecisionDodgeChance
+        public Percent StandardManeuverDecisionDodgeChance { get; set; } = default(Percent);
         #endregion
-        #region LeftRightChance
-        public Byte LeftRightChance { get; set; } = default(Byte);
+        #region StandardManeuverDecisionLeftRightChance
+        public Percent StandardManeuverDecisionLeftRightChance { get; set; } = default(Percent);
         #endregion
-        #region Unused1
+        #region StandardUnused1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused1 = new byte[2];
-        public MemorySlice<Byte> Unused1
+        private MemorySlice<Byte> _StandardUnused1 = new byte[2];
+        public MemorySlice<Byte> StandardUnused1
         {
-            get => _Unused1;
-            set => this._Unused1 = value;
+            get => _StandardUnused1;
+            set => this._StandardUnused1 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused1 => this.Unused1;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.StandardUnused1 => this.StandardUnused1;
         #endregion
-        #region DodgeLRTimerMin
-        public Single DodgeLRTimerMin { get; set; } = default(Single);
+        #region StandardManeuverDecisionDodgeLRTimerMin
+        public Single StandardManeuverDecisionDodgeLRTimerMin { get; set; } = default(Single);
         #endregion
-        #region DodgeLRTimerMax
-        public Single DodgeLRTimerMax { get; set; } = default(Single);
+        #region StandardManeuverDecisionDodgeLRTimerMax
+        public Single StandardManeuverDecisionDodgeLRTimerMax { get; set; } = default(Single);
         #endregion
-        #region DodgeForwardTimerMin
-        public Single DodgeForwardTimerMin { get; set; } = default(Single);
+        #region StandardManeuverDecisionDodgeForwardTimerMin
+        public Single StandardManeuverDecisionDodgeForwardTimerMin { get; set; } = default(Single);
         #endregion
-        #region DodgeForwardTimerMax
-        public Single DodgeForwardTimerMax { get; set; } = default(Single);
+        #region StandardManeuverDecisionDodgeForwardTimerMax
+        public Single StandardManeuverDecisionDodgeForwardTimerMax { get; set; } = default(Single);
         #endregion
-        #region DodgeBackTimerMin
-        public Single DodgeBackTimerMin { get; set; } = default(Single);
+        #region StandardManeuverDecisionDodgeBackTimerMin
+        public Single StandardManeuverDecisionDodgeBackTimerMin { get; set; } = default(Single);
         #endregion
-        #region DodgeBackTimerMax
-        public Single DodgeBackTimerMax { get; set; } = default(Single);
+        #region StandardManeuverDecisionDodgeBackTimerMax
+        public Single StandardManeuverDecisionDodgeBackTimerMax { get; set; } = default(Single);
         #endregion
-        #region IdleTimerMin
-        public Single IdleTimerMin { get; set; } = default(Single);
+        #region StandardManeuverDecisionIdleTimerMin
+        public Single StandardManeuverDecisionIdleTimerMin { get; set; } = default(Single);
         #endregion
-        #region IdleTimerMax
-        public Single IdleTimerMax { get; set; } = default(Single);
+        #region StandardManeuverDecisionIdleTimerMax
+        public Single StandardManeuverDecisionIdleTimerMax { get; set; } = default(Single);
         #endregion
-        #region BlockChance
-        public Byte BlockChance { get; set; } = default(Byte);
+        #region StandardMeleeDecisionBlockChance
+        public Percent StandardMeleeDecisionBlockChance { get; set; } = default(Percent);
         #endregion
-        #region AttackChance
-        public Byte AttackChance { get; set; } = default(Byte);
+        #region StandardMeleeDecisionAttackChance
+        public Percent StandardMeleeDecisionAttackChance { get; set; } = default(Percent);
         #endregion
-        #region Unused2
+        #region StandardUnused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused2 = new byte[2];
-        public MemorySlice<Byte> Unused2
+        private MemorySlice<Byte> _StandardUnused2 = new byte[2];
+        public MemorySlice<Byte> StandardUnused2
         {
-            get => _Unused2;
-            set => this._Unused2 = value;
+            get => _StandardUnused2;
+            set => this._StandardUnused2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused2 => this.Unused2;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.StandardUnused2 => this.StandardUnused2;
         #endregion
-        #region RecoilStaggerBonusToAttack
-        public Single RecoilStaggerBonusToAttack { get; set; } = default(Single);
+        #region StandardMeleeDecisionRecoilStaggerBonusToAttack
+        public Single StandardMeleeDecisionRecoilStaggerBonusToAttack { get; set; } = default(Single);
         #endregion
-        #region UnconsciousBonusToAttack
-        public Single UnconsciousBonusToAttack { get; set; } = default(Single);
+        #region StandardMeleeDecisionUnconsciousBonusToAttack
+        public Single StandardMeleeDecisionUnconsciousBonusToAttack { get; set; } = default(Single);
         #endregion
-        #region HandToHandBonusToAttack
-        public Single HandToHandBonusToAttack { get; set; } = default(Single);
+        #region StandardMeleeDecisionHandToHandBonusToAttack
+        public Single StandardMeleeDecisionHandToHandBonusToAttack { get; set; } = default(Single);
         #endregion
-        #region PowerAttackChance
-        public Byte PowerAttackChance { get; set; } = default(Byte);
+        #region StandardMeleeDecisionPowerAttackChance
+        public Percent StandardMeleeDecisionPowerAttackChance { get; set; } = default(Percent);
         #endregion
-        #region Unused3
+        #region StandardUnused3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused3 = new byte[3];
-        public MemorySlice<Byte> Unused3
+        private MemorySlice<Byte> _StandardUnused3 = new byte[3];
+        public MemorySlice<Byte> StandardUnused3
         {
-            get => _Unused3;
-            set => this._Unused3 = value;
+            get => _StandardUnused3;
+            set => this._StandardUnused3 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused3 => this.Unused3;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.StandardUnused3 => this.StandardUnused3;
         #endregion
-        #region RecoilStaggerBonusToPowerAttack
-        public Single RecoilStaggerBonusToPowerAttack { get; set; } = default(Single);
+        #region StandardMeleeDecisionRecoilStaggerBonusToPowerAttack
+        public Single StandardMeleeDecisionRecoilStaggerBonusToPowerAttack { get; set; } = default(Single);
         #endregion
-        #region UnconsciousBonusToPowerAttack
-        public Single UnconsciousBonusToPowerAttack { get; set; } = default(Single);
+        #region StandardMeleeDecisionUnconsciousBonusToPowerAttack
+        public Single StandardMeleeDecisionUnconsciousBonusToPowerAttack { get; set; } = default(Single);
         #endregion
-        #region PowerAttackNormal
-        public Byte PowerAttackNormal { get; set; } = default(Byte);
+        #region StandardMeleeDecisionPowerAttackNormal
+        public Byte StandardMeleeDecisionPowerAttackNormal { get; set; } = default(Byte);
         #endregion
-        #region PowerAttackForward
-        public Byte PowerAttackForward { get; set; } = default(Byte);
+        #region StandardMeleeDecisionPowerAttackForward
+        public Byte StandardMeleeDecisionPowerAttackForward { get; set; } = default(Byte);
         #endregion
-        #region PowerAttackBack
-        public Byte PowerAttackBack { get; set; } = default(Byte);
+        #region StandardMeleeDecisionPowerAttackBack
+        public Byte StandardMeleeDecisionPowerAttackBack { get; set; } = default(Byte);
         #endregion
-        #region PowerAttackLeft
-        public Byte PowerAttackLeft { get; set; } = default(Byte);
+        #region StandardMeleeDecisionPowerAttackLeft
+        public Byte StandardMeleeDecisionPowerAttackLeft { get; set; } = default(Byte);
         #endregion
-        #region PowerAttackRight
-        public Byte PowerAttackRight { get; set; } = default(Byte);
+        #region StandardMeleeDecisionPowerAttackRight
+        public Byte StandardMeleeDecisionPowerAttackRight { get; set; } = default(Byte);
         #endregion
-        #region Unused4
+        #region StandardUnused4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused4 = new byte[3];
-        public MemorySlice<Byte> Unused4
+        private MemorySlice<Byte> _StandardUnused4 = new byte[3];
+        public MemorySlice<Byte> StandardUnused4
         {
-            get => _Unused4;
-            set => this._Unused4 = value;
+            get => _StandardUnused4;
+            set => this._StandardUnused4 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused4 => this.Unused4;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.StandardUnused4 => this.StandardUnused4;
         #endregion
-        #region HoldTimerMin
-        public Single HoldTimerMin { get; set; } = default(Single);
+        #region StandardMeleeDecisionHoldTimerMin
+        public Single StandardMeleeDecisionHoldTimerMin { get; set; } = default(Single);
         #endregion
-        #region HoldTimerMax
-        public Single HoldTimerMax { get; set; } = default(Single);
+        #region StandardMeleeDecisionHoldTimerMax
+        public Single StandardMeleeDecisionHoldTimerMax { get; set; } = default(Single);
         #endregion
-        #region Flags
-        public UInt16 Flags { get; set; } = default(UInt16);
+        #region StandardFlags
+        public CombatStyle.Flag StandardFlags { get; set; } = default(CombatStyle.Flag);
         #endregion
-        #region Unused5
+        #region StandardUnused5
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused5 = new byte[2];
-        public MemorySlice<Byte> Unused5
+        private MemorySlice<Byte> _StandardUnused5 = new byte[2];
+        public MemorySlice<Byte> StandardUnused5
         {
-            get => _Unused5;
-            set => this._Unused5 = value;
+            get => _StandardUnused5;
+            set => this._StandardUnused5 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused5 => this.Unused5;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.StandardUnused5 => this.StandardUnused5;
         #endregion
-        #region AcrobaticDodgeChance
-        public Byte AcrobaticDodgeChance { get; set; } = default(Byte);
+        #region StandardMeleeDecisionAcrobaticDodgeChance
+        public Percent StandardMeleeDecisionAcrobaticDodgeChance { get; set; } = default(Percent);
         #endregion
-        #region RushingAttackChance
-        public Byte RushingAttackChance { get; set; } = default(Byte);
+        #region StandardMeleeDecisionRushingAttackChance
+        public Percent StandardMeleeDecisionRushingAttackChance { get; set; } = default(Percent);
         #endregion
-        #region Unused6
+        #region StandardUnused6
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused6 = new byte[2];
-        public MemorySlice<Byte> Unused6
+        private MemorySlice<Byte> _StandardUnused6 = new byte[2];
+        public MemorySlice<Byte> StandardUnused6
         {
-            get => _Unused6;
-            set => this._Unused6 = value;
+            get => _StandardUnused6;
+            set => this._StandardUnused6 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused6 => this.Unused6;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.StandardUnused6 => this.StandardUnused6;
         #endregion
-        #region RushingAttackDistanceMult
-        public Single RushingAttackDistanceMult { get; set; } = default(Single);
+        #region StandardMeleeDecisionRushingAttackDistanceMult
+        public Single StandardMeleeDecisionRushingAttackDistanceMult { get; set; } = default(Single);
         #endregion
-        #region DodgeFatigueModMult
-        public Single DodgeFatigueModMult { get; set; } = default(Single);
+        #region AdvancedDodgeFatigueModMult
+        public Single AdvancedDodgeFatigueModMult { get; set; } = default(Single);
         #endregion
-        #region DodgeFatigueModBase
-        public Single DodgeFatigueModBase { get; set; } = default(Single);
+        #region AdvancedDodgeFatigueModBase
+        public Single AdvancedDodgeFatigueModBase { get; set; } = default(Single);
         #endregion
-        #region EncumbSpeedModBase
-        public Single EncumbSpeedModBase { get; set; } = default(Single);
+        #region AdvancedEncumbSpeedModBase
+        public Single AdvancedEncumbSpeedModBase { get; set; } = default(Single);
         #endregion
-        #region EncumbSpeedModMult
-        public Single EncumbSpeedModMult { get; set; } = default(Single);
+        #region AdvancedEncumbSpeedModMult
+        public Single AdvancedEncumbSpeedModMult { get; set; } = default(Single);
         #endregion
-        #region DodgeWhileUnderAttackMult
-        public Single DodgeWhileUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedDodgeWhileUnderAttackMult
+        public Single AdvancedDodgeWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region DodgeNotUnderAttackMult
-        public Single DodgeNotUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedDodgeNotUnderAttackMult
+        public Single AdvancedDodgeNotUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region DodgeBackWhileUnderAttackMult
-        public Single DodgeBackWhileUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedDodgeBackWhileUnderAttackMult
+        public Single AdvancedDodgeBackWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region DodgeBackNotUnderAttackMult
-        public Single DodgeBackNotUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedDodgeBackNotUnderAttackMult
+        public Single AdvancedDodgeBackNotUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region DodgeForwardWhileAttackingMult
-        public Single DodgeForwardWhileAttackingMult { get; set; } = default(Single);
+        #region AdvancedDodgeForwardWhileAttackingMult
+        public Single AdvancedDodgeForwardWhileAttackingMult { get; set; } = default(Single);
         #endregion
-        #region DodgeForwardNotAttackingMult
-        public Single DodgeForwardNotAttackingMult { get; set; } = default(Single);
+        #region AdvancedDodgeForwardNotAttackingMult
+        public Single AdvancedDodgeForwardNotAttackingMult { get; set; } = default(Single);
         #endregion
-        #region BlockSkillModifierMult
-        public Single BlockSkillModifierMult { get; set; } = default(Single);
+        #region AdvancedBlockSkillModifierMult
+        public Single AdvancedBlockSkillModifierMult { get; set; } = default(Single);
         #endregion
-        #region BlockSkillModifierBase
-        public Single BlockSkillModifierBase { get; set; } = default(Single);
+        #region AdvancedBlockSkillModifierBase
+        public Single AdvancedBlockSkillModifierBase { get; set; } = default(Single);
         #endregion
-        #region BlockWhileUnderAttackMult
-        public Single BlockWhileUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedBlockWhileUnderAttackMult
+        public Single AdvancedBlockWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region BlockNotUnderAttackMult
-        public Single BlockNotUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedBlockNotUnderAttackMult
+        public Single AdvancedBlockNotUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region AttackSkillModifierMult
-        public Single AttackSkillModifierMult { get; set; } = default(Single);
+        #region AdvancedAttackSkillModifierMult
+        public Single AdvancedAttackSkillModifierMult { get; set; } = default(Single);
         #endregion
-        #region AttackSkillModifierBase
-        public Single AttackSkillModifierBase { get; set; } = default(Single);
+        #region AdvancedAttackSkillModifierBase
+        public Single AdvancedAttackSkillModifierBase { get; set; } = default(Single);
         #endregion
-        #region AttackWhileUnderAttackMult
-        public Single AttackWhileUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedAttackWhileUnderAttackMult
+        public Single AdvancedAttackWhileUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region AttackNotUnderAttackMult
-        public Single AttackNotUnderAttackMult { get; set; } = default(Single);
+        #region AdvancedAttackNotUnderAttackMult
+        public Single AdvancedAttackNotUnderAttackMult { get; set; } = default(Single);
         #endregion
-        #region AttackDuringBlockMult
-        public Single AttackDuringBlockMult { get; set; } = default(Single);
+        #region AdvancedAttackDuringBlockMult
+        public Single AdvancedAttackDuringBlockMult { get; set; } = default(Single);
         #endregion
-        #region PowerAttackFatigueModBase
-        public Single PowerAttackFatigueModBase { get; set; } = default(Single);
+        #region AdvancedPowerAttackFatigueModBase
+        public Single AdvancedPowerAttackFatigueModBase { get; set; } = default(Single);
         #endregion
-        #region PowerAttackFatigueModMult
-        public Single PowerAttackFatigueModMult { get; set; } = default(Single);
+        #region AdvancedPowerAttackFatigueModMult
+        public Single AdvancedPowerAttackFatigueModMult { get; set; } = default(Single);
         #endregion
-        #region CoverSearchRadius
-        public Single CoverSearchRadius { get; set; } = default(Single);
+        #region SimpleCoverSearchRadius
+        public Single SimpleCoverSearchRadius { get; set; } = default(Single);
         #endregion
-        #region TakeCoverChance
-        public Single TakeCoverChance { get; set; } = default(Single);
+        #region SimpleTakeCoverChance
+        public Single SimpleTakeCoverChance { get; set; } = default(Single);
         #endregion
-        #region WaitTimerMin
-        public Single WaitTimerMin { get; set; } = default(Single);
+        #region SimpleWaitTimerMin
+        public Single SimpleWaitTimerMin { get; set; } = default(Single);
         #endregion
-        #region WaitTimerMax
-        public Single WaitTimerMax { get; set; } = default(Single);
+        #region SimpleWaitTimerMax
+        public Single SimpleWaitTimerMax { get; set; } = default(Single);
         #endregion
-        #region WaitToFireTimerMin
-        public Single WaitToFireTimerMin { get; set; } = default(Single);
+        #region SimpleWaitToFireTimerMin
+        public Single SimpleWaitToFireTimerMin { get; set; } = default(Single);
         #endregion
-        #region WaitToFireTimerMax
-        public Single WaitToFireTimerMax { get; set; } = default(Single);
+        #region SimpleWaitToFireTimerMax
+        public Single SimpleWaitToFireTimerMax { get; set; } = default(Single);
         #endregion
-        #region FireTimerMin
-        public Single FireTimerMin { get; set; } = default(Single);
+        #region SimpleFireTimerMin
+        public Single SimpleFireTimerMin { get; set; } = default(Single);
         #endregion
-        #region FireTimerMax
-        public Single FireTimerMax { get; set; } = default(Single);
+        #region SimpleFireTimerMax
+        public Single SimpleFireTimerMax { get; set; } = default(Single);
         #endregion
-        #region RangedWeaponRangeMultMin
-        public Single RangedWeaponRangeMultMin { get; set; } = default(Single);
+        #region SimpleRangedWeaponRangeMultMin
+        public Single SimpleRangedWeaponRangeMultMin { get; set; } = default(Single);
         #endregion
-        #region Unused
+        #region SimpleUnused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[4];
-        public MemorySlice<Byte> Unused
+        private MemorySlice<Byte> _SimpleUnused = new byte[4];
+        public MemorySlice<Byte> SimpleUnused
         {
-            get => _Unused;
-            set => this._Unused = value;
+            get => _SimpleUnused;
+            set => this._SimpleUnused = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.Unused => this.Unused;
+        ReadOnlyMemorySlice<Byte> ICombatStyleGetter.SimpleUnused => this.SimpleUnused;
         #endregion
-        #region WeaponRestrictions
-        public UInt32 WeaponRestrictions { get; set; } = default(UInt32);
+        #region SimpleWeaponRestrictions
+        public CombatStyle.WeaponRestriction SimpleWeaponRestrictions { get; set; } = default(CombatStyle.WeaponRestriction);
         #endregion
-        #region RangedWeaponRangeMultMax
-        public Single RangedWeaponRangeMultMax { get; set; } = default(Single);
+        #region SimpleRangedWeaponRangeMultMax
+        public Single SimpleRangedWeaponRangeMultMax { get; set; } = default(Single);
         #endregion
-        #region MaxTargetingFov
-        public Single MaxTargetingFov { get; set; } = default(Single);
+        #region SimpleMaxTargetingFov
+        public Single SimpleMaxTargetingFov { get; set; } = default(Single);
         #endregion
-        #region CombatRadius
-        public Single CombatRadius { get; set; } = default(Single);
+        #region SimpleCombatRadius
+        public Single SimpleCombatRadius { get; set; } = default(Single);
         #endregion
-        #region SemiAutoFiringDelayMultMin
-        public Single SemiAutoFiringDelayMultMin { get; set; } = default(Single);
+        #region SimpleSemiAutoFiringDelayMultMin
+        public Single SimpleSemiAutoFiringDelayMultMin { get; set; } = default(Single);
         #endregion
-        #region SemiAutoFiringDelayMultMax
-        public Single SemiAutoFiringDelayMultMax { get; set; } = default(Single);
+        #region SimpleSemiAutoFiringDelayMultMax
+        public Single SimpleSemiAutoFiringDelayMultMax { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -350,78 +350,78 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DodgeChance = initialValue;
-                this.LeftRightChance = initialValue;
-                this.Unused1 = initialValue;
-                this.DodgeLRTimerMin = initialValue;
-                this.DodgeLRTimerMax = initialValue;
-                this.DodgeForwardTimerMin = initialValue;
-                this.DodgeForwardTimerMax = initialValue;
-                this.DodgeBackTimerMin = initialValue;
-                this.DodgeBackTimerMax = initialValue;
-                this.IdleTimerMin = initialValue;
-                this.IdleTimerMax = initialValue;
-                this.BlockChance = initialValue;
-                this.AttackChance = initialValue;
-                this.Unused2 = initialValue;
-                this.RecoilStaggerBonusToAttack = initialValue;
-                this.UnconsciousBonusToAttack = initialValue;
-                this.HandToHandBonusToAttack = initialValue;
-                this.PowerAttackChance = initialValue;
-                this.Unused3 = initialValue;
-                this.RecoilStaggerBonusToPowerAttack = initialValue;
-                this.UnconsciousBonusToPowerAttack = initialValue;
-                this.PowerAttackNormal = initialValue;
-                this.PowerAttackForward = initialValue;
-                this.PowerAttackBack = initialValue;
-                this.PowerAttackLeft = initialValue;
-                this.PowerAttackRight = initialValue;
-                this.Unused4 = initialValue;
-                this.HoldTimerMin = initialValue;
-                this.HoldTimerMax = initialValue;
-                this.Flags = initialValue;
-                this.Unused5 = initialValue;
-                this.AcrobaticDodgeChance = initialValue;
-                this.RushingAttackChance = initialValue;
-                this.Unused6 = initialValue;
-                this.RushingAttackDistanceMult = initialValue;
-                this.DodgeFatigueModMult = initialValue;
-                this.DodgeFatigueModBase = initialValue;
-                this.EncumbSpeedModBase = initialValue;
-                this.EncumbSpeedModMult = initialValue;
-                this.DodgeWhileUnderAttackMult = initialValue;
-                this.DodgeNotUnderAttackMult = initialValue;
-                this.DodgeBackWhileUnderAttackMult = initialValue;
-                this.DodgeBackNotUnderAttackMult = initialValue;
-                this.DodgeForwardWhileAttackingMult = initialValue;
-                this.DodgeForwardNotAttackingMult = initialValue;
-                this.BlockSkillModifierMult = initialValue;
-                this.BlockSkillModifierBase = initialValue;
-                this.BlockWhileUnderAttackMult = initialValue;
-                this.BlockNotUnderAttackMult = initialValue;
-                this.AttackSkillModifierMult = initialValue;
-                this.AttackSkillModifierBase = initialValue;
-                this.AttackWhileUnderAttackMult = initialValue;
-                this.AttackNotUnderAttackMult = initialValue;
-                this.AttackDuringBlockMult = initialValue;
-                this.PowerAttackFatigueModBase = initialValue;
-                this.PowerAttackFatigueModMult = initialValue;
-                this.CoverSearchRadius = initialValue;
-                this.TakeCoverChance = initialValue;
-                this.WaitTimerMin = initialValue;
-                this.WaitTimerMax = initialValue;
-                this.WaitToFireTimerMin = initialValue;
-                this.WaitToFireTimerMax = initialValue;
-                this.FireTimerMin = initialValue;
-                this.FireTimerMax = initialValue;
-                this.RangedWeaponRangeMultMin = initialValue;
-                this.Unused = initialValue;
-                this.WeaponRestrictions = initialValue;
-                this.RangedWeaponRangeMultMax = initialValue;
-                this.MaxTargetingFov = initialValue;
-                this.CombatRadius = initialValue;
-                this.SemiAutoFiringDelayMultMin = initialValue;
-                this.SemiAutoFiringDelayMultMax = initialValue;
+                this.StandardManeuverDecisionDodgeChance = initialValue;
+                this.StandardManeuverDecisionLeftRightChance = initialValue;
+                this.StandardUnused1 = initialValue;
+                this.StandardManeuverDecisionDodgeLRTimerMin = initialValue;
+                this.StandardManeuverDecisionDodgeLRTimerMax = initialValue;
+                this.StandardManeuverDecisionDodgeForwardTimerMin = initialValue;
+                this.StandardManeuverDecisionDodgeForwardTimerMax = initialValue;
+                this.StandardManeuverDecisionDodgeBackTimerMin = initialValue;
+                this.StandardManeuverDecisionDodgeBackTimerMax = initialValue;
+                this.StandardManeuverDecisionIdleTimerMin = initialValue;
+                this.StandardManeuverDecisionIdleTimerMax = initialValue;
+                this.StandardMeleeDecisionBlockChance = initialValue;
+                this.StandardMeleeDecisionAttackChance = initialValue;
+                this.StandardUnused2 = initialValue;
+                this.StandardMeleeDecisionRecoilStaggerBonusToAttack = initialValue;
+                this.StandardMeleeDecisionUnconsciousBonusToAttack = initialValue;
+                this.StandardMeleeDecisionHandToHandBonusToAttack = initialValue;
+                this.StandardMeleeDecisionPowerAttackChance = initialValue;
+                this.StandardUnused3 = initialValue;
+                this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = initialValue;
+                this.StandardMeleeDecisionUnconsciousBonusToPowerAttack = initialValue;
+                this.StandardMeleeDecisionPowerAttackNormal = initialValue;
+                this.StandardMeleeDecisionPowerAttackForward = initialValue;
+                this.StandardMeleeDecisionPowerAttackBack = initialValue;
+                this.StandardMeleeDecisionPowerAttackLeft = initialValue;
+                this.StandardMeleeDecisionPowerAttackRight = initialValue;
+                this.StandardUnused4 = initialValue;
+                this.StandardMeleeDecisionHoldTimerMin = initialValue;
+                this.StandardMeleeDecisionHoldTimerMax = initialValue;
+                this.StandardFlags = initialValue;
+                this.StandardUnused5 = initialValue;
+                this.StandardMeleeDecisionAcrobaticDodgeChance = initialValue;
+                this.StandardMeleeDecisionRushingAttackChance = initialValue;
+                this.StandardUnused6 = initialValue;
+                this.StandardMeleeDecisionRushingAttackDistanceMult = initialValue;
+                this.AdvancedDodgeFatigueModMult = initialValue;
+                this.AdvancedDodgeFatigueModBase = initialValue;
+                this.AdvancedEncumbSpeedModBase = initialValue;
+                this.AdvancedEncumbSpeedModMult = initialValue;
+                this.AdvancedDodgeWhileUnderAttackMult = initialValue;
+                this.AdvancedDodgeNotUnderAttackMult = initialValue;
+                this.AdvancedDodgeBackWhileUnderAttackMult = initialValue;
+                this.AdvancedDodgeBackNotUnderAttackMult = initialValue;
+                this.AdvancedDodgeForwardWhileAttackingMult = initialValue;
+                this.AdvancedDodgeForwardNotAttackingMult = initialValue;
+                this.AdvancedBlockSkillModifierMult = initialValue;
+                this.AdvancedBlockSkillModifierBase = initialValue;
+                this.AdvancedBlockWhileUnderAttackMult = initialValue;
+                this.AdvancedBlockNotUnderAttackMult = initialValue;
+                this.AdvancedAttackSkillModifierMult = initialValue;
+                this.AdvancedAttackSkillModifierBase = initialValue;
+                this.AdvancedAttackWhileUnderAttackMult = initialValue;
+                this.AdvancedAttackNotUnderAttackMult = initialValue;
+                this.AdvancedAttackDuringBlockMult = initialValue;
+                this.AdvancedPowerAttackFatigueModBase = initialValue;
+                this.AdvancedPowerAttackFatigueModMult = initialValue;
+                this.SimpleCoverSearchRadius = initialValue;
+                this.SimpleTakeCoverChance = initialValue;
+                this.SimpleWaitTimerMin = initialValue;
+                this.SimpleWaitTimerMax = initialValue;
+                this.SimpleWaitToFireTimerMin = initialValue;
+                this.SimpleWaitToFireTimerMax = initialValue;
+                this.SimpleFireTimerMin = initialValue;
+                this.SimpleFireTimerMax = initialValue;
+                this.SimpleRangedWeaponRangeMultMin = initialValue;
+                this.SimpleUnused = initialValue;
+                this.SimpleWeaponRestrictions = initialValue;
+                this.SimpleRangedWeaponRangeMultMax = initialValue;
+                this.SimpleMaxTargetingFov = initialValue;
+                this.SimpleCombatRadius = initialValue;
+                this.SimpleSemiAutoFiringDelayMultMin = initialValue;
+                this.SimpleSemiAutoFiringDelayMultMax = initialValue;
             }
 
             public Mask(
@@ -432,78 +432,78 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
-                TItem DodgeChance,
-                TItem LeftRightChance,
-                TItem Unused1,
-                TItem DodgeLRTimerMin,
-                TItem DodgeLRTimerMax,
-                TItem DodgeForwardTimerMin,
-                TItem DodgeForwardTimerMax,
-                TItem DodgeBackTimerMin,
-                TItem DodgeBackTimerMax,
-                TItem IdleTimerMin,
-                TItem IdleTimerMax,
-                TItem BlockChance,
-                TItem AttackChance,
-                TItem Unused2,
-                TItem RecoilStaggerBonusToAttack,
-                TItem UnconsciousBonusToAttack,
-                TItem HandToHandBonusToAttack,
-                TItem PowerAttackChance,
-                TItem Unused3,
-                TItem RecoilStaggerBonusToPowerAttack,
-                TItem UnconsciousBonusToPowerAttack,
-                TItem PowerAttackNormal,
-                TItem PowerAttackForward,
-                TItem PowerAttackBack,
-                TItem PowerAttackLeft,
-                TItem PowerAttackRight,
-                TItem Unused4,
-                TItem HoldTimerMin,
-                TItem HoldTimerMax,
-                TItem Flags,
-                TItem Unused5,
-                TItem AcrobaticDodgeChance,
-                TItem RushingAttackChance,
-                TItem Unused6,
-                TItem RushingAttackDistanceMult,
-                TItem DodgeFatigueModMult,
-                TItem DodgeFatigueModBase,
-                TItem EncumbSpeedModBase,
-                TItem EncumbSpeedModMult,
-                TItem DodgeWhileUnderAttackMult,
-                TItem DodgeNotUnderAttackMult,
-                TItem DodgeBackWhileUnderAttackMult,
-                TItem DodgeBackNotUnderAttackMult,
-                TItem DodgeForwardWhileAttackingMult,
-                TItem DodgeForwardNotAttackingMult,
-                TItem BlockSkillModifierMult,
-                TItem BlockSkillModifierBase,
-                TItem BlockWhileUnderAttackMult,
-                TItem BlockNotUnderAttackMult,
-                TItem AttackSkillModifierMult,
-                TItem AttackSkillModifierBase,
-                TItem AttackWhileUnderAttackMult,
-                TItem AttackNotUnderAttackMult,
-                TItem AttackDuringBlockMult,
-                TItem PowerAttackFatigueModBase,
-                TItem PowerAttackFatigueModMult,
-                TItem CoverSearchRadius,
-                TItem TakeCoverChance,
-                TItem WaitTimerMin,
-                TItem WaitTimerMax,
-                TItem WaitToFireTimerMin,
-                TItem WaitToFireTimerMax,
-                TItem FireTimerMin,
-                TItem FireTimerMax,
-                TItem RangedWeaponRangeMultMin,
-                TItem Unused,
-                TItem WeaponRestrictions,
-                TItem RangedWeaponRangeMultMax,
-                TItem MaxTargetingFov,
-                TItem CombatRadius,
-                TItem SemiAutoFiringDelayMultMin,
-                TItem SemiAutoFiringDelayMultMax)
+                TItem StandardManeuverDecisionDodgeChance,
+                TItem StandardManeuverDecisionLeftRightChance,
+                TItem StandardUnused1,
+                TItem StandardManeuverDecisionDodgeLRTimerMin,
+                TItem StandardManeuverDecisionDodgeLRTimerMax,
+                TItem StandardManeuverDecisionDodgeForwardTimerMin,
+                TItem StandardManeuverDecisionDodgeForwardTimerMax,
+                TItem StandardManeuverDecisionDodgeBackTimerMin,
+                TItem StandardManeuverDecisionDodgeBackTimerMax,
+                TItem StandardManeuverDecisionIdleTimerMin,
+                TItem StandardManeuverDecisionIdleTimerMax,
+                TItem StandardMeleeDecisionBlockChance,
+                TItem StandardMeleeDecisionAttackChance,
+                TItem StandardUnused2,
+                TItem StandardMeleeDecisionRecoilStaggerBonusToAttack,
+                TItem StandardMeleeDecisionUnconsciousBonusToAttack,
+                TItem StandardMeleeDecisionHandToHandBonusToAttack,
+                TItem StandardMeleeDecisionPowerAttackChance,
+                TItem StandardUnused3,
+                TItem StandardMeleeDecisionRecoilStaggerBonusToPowerAttack,
+                TItem StandardMeleeDecisionUnconsciousBonusToPowerAttack,
+                TItem StandardMeleeDecisionPowerAttackNormal,
+                TItem StandardMeleeDecisionPowerAttackForward,
+                TItem StandardMeleeDecisionPowerAttackBack,
+                TItem StandardMeleeDecisionPowerAttackLeft,
+                TItem StandardMeleeDecisionPowerAttackRight,
+                TItem StandardUnused4,
+                TItem StandardMeleeDecisionHoldTimerMin,
+                TItem StandardMeleeDecisionHoldTimerMax,
+                TItem StandardFlags,
+                TItem StandardUnused5,
+                TItem StandardMeleeDecisionAcrobaticDodgeChance,
+                TItem StandardMeleeDecisionRushingAttackChance,
+                TItem StandardUnused6,
+                TItem StandardMeleeDecisionRushingAttackDistanceMult,
+                TItem AdvancedDodgeFatigueModMult,
+                TItem AdvancedDodgeFatigueModBase,
+                TItem AdvancedEncumbSpeedModBase,
+                TItem AdvancedEncumbSpeedModMult,
+                TItem AdvancedDodgeWhileUnderAttackMult,
+                TItem AdvancedDodgeNotUnderAttackMult,
+                TItem AdvancedDodgeBackWhileUnderAttackMult,
+                TItem AdvancedDodgeBackNotUnderAttackMult,
+                TItem AdvancedDodgeForwardWhileAttackingMult,
+                TItem AdvancedDodgeForwardNotAttackingMult,
+                TItem AdvancedBlockSkillModifierMult,
+                TItem AdvancedBlockSkillModifierBase,
+                TItem AdvancedBlockWhileUnderAttackMult,
+                TItem AdvancedBlockNotUnderAttackMult,
+                TItem AdvancedAttackSkillModifierMult,
+                TItem AdvancedAttackSkillModifierBase,
+                TItem AdvancedAttackWhileUnderAttackMult,
+                TItem AdvancedAttackNotUnderAttackMult,
+                TItem AdvancedAttackDuringBlockMult,
+                TItem AdvancedPowerAttackFatigueModBase,
+                TItem AdvancedPowerAttackFatigueModMult,
+                TItem SimpleCoverSearchRadius,
+                TItem SimpleTakeCoverChance,
+                TItem SimpleWaitTimerMin,
+                TItem SimpleWaitTimerMax,
+                TItem SimpleWaitToFireTimerMin,
+                TItem SimpleWaitToFireTimerMax,
+                TItem SimpleFireTimerMin,
+                TItem SimpleFireTimerMax,
+                TItem SimpleRangedWeaponRangeMultMin,
+                TItem SimpleUnused,
+                TItem SimpleWeaponRestrictions,
+                TItem SimpleRangedWeaponRangeMultMax,
+                TItem SimpleMaxTargetingFov,
+                TItem SimpleCombatRadius,
+                TItem SimpleSemiAutoFiringDelayMultMin,
+                TItem SimpleSemiAutoFiringDelayMultMax)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -513,78 +513,78 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
-                this.DodgeChance = DodgeChance;
-                this.LeftRightChance = LeftRightChance;
-                this.Unused1 = Unused1;
-                this.DodgeLRTimerMin = DodgeLRTimerMin;
-                this.DodgeLRTimerMax = DodgeLRTimerMax;
-                this.DodgeForwardTimerMin = DodgeForwardTimerMin;
-                this.DodgeForwardTimerMax = DodgeForwardTimerMax;
-                this.DodgeBackTimerMin = DodgeBackTimerMin;
-                this.DodgeBackTimerMax = DodgeBackTimerMax;
-                this.IdleTimerMin = IdleTimerMin;
-                this.IdleTimerMax = IdleTimerMax;
-                this.BlockChance = BlockChance;
-                this.AttackChance = AttackChance;
-                this.Unused2 = Unused2;
-                this.RecoilStaggerBonusToAttack = RecoilStaggerBonusToAttack;
-                this.UnconsciousBonusToAttack = UnconsciousBonusToAttack;
-                this.HandToHandBonusToAttack = HandToHandBonusToAttack;
-                this.PowerAttackChance = PowerAttackChance;
-                this.Unused3 = Unused3;
-                this.RecoilStaggerBonusToPowerAttack = RecoilStaggerBonusToPowerAttack;
-                this.UnconsciousBonusToPowerAttack = UnconsciousBonusToPowerAttack;
-                this.PowerAttackNormal = PowerAttackNormal;
-                this.PowerAttackForward = PowerAttackForward;
-                this.PowerAttackBack = PowerAttackBack;
-                this.PowerAttackLeft = PowerAttackLeft;
-                this.PowerAttackRight = PowerAttackRight;
-                this.Unused4 = Unused4;
-                this.HoldTimerMin = HoldTimerMin;
-                this.HoldTimerMax = HoldTimerMax;
-                this.Flags = Flags;
-                this.Unused5 = Unused5;
-                this.AcrobaticDodgeChance = AcrobaticDodgeChance;
-                this.RushingAttackChance = RushingAttackChance;
-                this.Unused6 = Unused6;
-                this.RushingAttackDistanceMult = RushingAttackDistanceMult;
-                this.DodgeFatigueModMult = DodgeFatigueModMult;
-                this.DodgeFatigueModBase = DodgeFatigueModBase;
-                this.EncumbSpeedModBase = EncumbSpeedModBase;
-                this.EncumbSpeedModMult = EncumbSpeedModMult;
-                this.DodgeWhileUnderAttackMult = DodgeWhileUnderAttackMult;
-                this.DodgeNotUnderAttackMult = DodgeNotUnderAttackMult;
-                this.DodgeBackWhileUnderAttackMult = DodgeBackWhileUnderAttackMult;
-                this.DodgeBackNotUnderAttackMult = DodgeBackNotUnderAttackMult;
-                this.DodgeForwardWhileAttackingMult = DodgeForwardWhileAttackingMult;
-                this.DodgeForwardNotAttackingMult = DodgeForwardNotAttackingMult;
-                this.BlockSkillModifierMult = BlockSkillModifierMult;
-                this.BlockSkillModifierBase = BlockSkillModifierBase;
-                this.BlockWhileUnderAttackMult = BlockWhileUnderAttackMult;
-                this.BlockNotUnderAttackMult = BlockNotUnderAttackMult;
-                this.AttackSkillModifierMult = AttackSkillModifierMult;
-                this.AttackSkillModifierBase = AttackSkillModifierBase;
-                this.AttackWhileUnderAttackMult = AttackWhileUnderAttackMult;
-                this.AttackNotUnderAttackMult = AttackNotUnderAttackMult;
-                this.AttackDuringBlockMult = AttackDuringBlockMult;
-                this.PowerAttackFatigueModBase = PowerAttackFatigueModBase;
-                this.PowerAttackFatigueModMult = PowerAttackFatigueModMult;
-                this.CoverSearchRadius = CoverSearchRadius;
-                this.TakeCoverChance = TakeCoverChance;
-                this.WaitTimerMin = WaitTimerMin;
-                this.WaitTimerMax = WaitTimerMax;
-                this.WaitToFireTimerMin = WaitToFireTimerMin;
-                this.WaitToFireTimerMax = WaitToFireTimerMax;
-                this.FireTimerMin = FireTimerMin;
-                this.FireTimerMax = FireTimerMax;
-                this.RangedWeaponRangeMultMin = RangedWeaponRangeMultMin;
-                this.Unused = Unused;
-                this.WeaponRestrictions = WeaponRestrictions;
-                this.RangedWeaponRangeMultMax = RangedWeaponRangeMultMax;
-                this.MaxTargetingFov = MaxTargetingFov;
-                this.CombatRadius = CombatRadius;
-                this.SemiAutoFiringDelayMultMin = SemiAutoFiringDelayMultMin;
-                this.SemiAutoFiringDelayMultMax = SemiAutoFiringDelayMultMax;
+                this.StandardManeuverDecisionDodgeChance = StandardManeuverDecisionDodgeChance;
+                this.StandardManeuverDecisionLeftRightChance = StandardManeuverDecisionLeftRightChance;
+                this.StandardUnused1 = StandardUnused1;
+                this.StandardManeuverDecisionDodgeLRTimerMin = StandardManeuverDecisionDodgeLRTimerMin;
+                this.StandardManeuverDecisionDodgeLRTimerMax = StandardManeuverDecisionDodgeLRTimerMax;
+                this.StandardManeuverDecisionDodgeForwardTimerMin = StandardManeuverDecisionDodgeForwardTimerMin;
+                this.StandardManeuverDecisionDodgeForwardTimerMax = StandardManeuverDecisionDodgeForwardTimerMax;
+                this.StandardManeuverDecisionDodgeBackTimerMin = StandardManeuverDecisionDodgeBackTimerMin;
+                this.StandardManeuverDecisionDodgeBackTimerMax = StandardManeuverDecisionDodgeBackTimerMax;
+                this.StandardManeuverDecisionIdleTimerMin = StandardManeuverDecisionIdleTimerMin;
+                this.StandardManeuverDecisionIdleTimerMax = StandardManeuverDecisionIdleTimerMax;
+                this.StandardMeleeDecisionBlockChance = StandardMeleeDecisionBlockChance;
+                this.StandardMeleeDecisionAttackChance = StandardMeleeDecisionAttackChance;
+                this.StandardUnused2 = StandardUnused2;
+                this.StandardMeleeDecisionRecoilStaggerBonusToAttack = StandardMeleeDecisionRecoilStaggerBonusToAttack;
+                this.StandardMeleeDecisionUnconsciousBonusToAttack = StandardMeleeDecisionUnconsciousBonusToAttack;
+                this.StandardMeleeDecisionHandToHandBonusToAttack = StandardMeleeDecisionHandToHandBonusToAttack;
+                this.StandardMeleeDecisionPowerAttackChance = StandardMeleeDecisionPowerAttackChance;
+                this.StandardUnused3 = StandardUnused3;
+                this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = StandardMeleeDecisionRecoilStaggerBonusToPowerAttack;
+                this.StandardMeleeDecisionUnconsciousBonusToPowerAttack = StandardMeleeDecisionUnconsciousBonusToPowerAttack;
+                this.StandardMeleeDecisionPowerAttackNormal = StandardMeleeDecisionPowerAttackNormal;
+                this.StandardMeleeDecisionPowerAttackForward = StandardMeleeDecisionPowerAttackForward;
+                this.StandardMeleeDecisionPowerAttackBack = StandardMeleeDecisionPowerAttackBack;
+                this.StandardMeleeDecisionPowerAttackLeft = StandardMeleeDecisionPowerAttackLeft;
+                this.StandardMeleeDecisionPowerAttackRight = StandardMeleeDecisionPowerAttackRight;
+                this.StandardUnused4 = StandardUnused4;
+                this.StandardMeleeDecisionHoldTimerMin = StandardMeleeDecisionHoldTimerMin;
+                this.StandardMeleeDecisionHoldTimerMax = StandardMeleeDecisionHoldTimerMax;
+                this.StandardFlags = StandardFlags;
+                this.StandardUnused5 = StandardUnused5;
+                this.StandardMeleeDecisionAcrobaticDodgeChance = StandardMeleeDecisionAcrobaticDodgeChance;
+                this.StandardMeleeDecisionRushingAttackChance = StandardMeleeDecisionRushingAttackChance;
+                this.StandardUnused6 = StandardUnused6;
+                this.StandardMeleeDecisionRushingAttackDistanceMult = StandardMeleeDecisionRushingAttackDistanceMult;
+                this.AdvancedDodgeFatigueModMult = AdvancedDodgeFatigueModMult;
+                this.AdvancedDodgeFatigueModBase = AdvancedDodgeFatigueModBase;
+                this.AdvancedEncumbSpeedModBase = AdvancedEncumbSpeedModBase;
+                this.AdvancedEncumbSpeedModMult = AdvancedEncumbSpeedModMult;
+                this.AdvancedDodgeWhileUnderAttackMult = AdvancedDodgeWhileUnderAttackMult;
+                this.AdvancedDodgeNotUnderAttackMult = AdvancedDodgeNotUnderAttackMult;
+                this.AdvancedDodgeBackWhileUnderAttackMult = AdvancedDodgeBackWhileUnderAttackMult;
+                this.AdvancedDodgeBackNotUnderAttackMult = AdvancedDodgeBackNotUnderAttackMult;
+                this.AdvancedDodgeForwardWhileAttackingMult = AdvancedDodgeForwardWhileAttackingMult;
+                this.AdvancedDodgeForwardNotAttackingMult = AdvancedDodgeForwardNotAttackingMult;
+                this.AdvancedBlockSkillModifierMult = AdvancedBlockSkillModifierMult;
+                this.AdvancedBlockSkillModifierBase = AdvancedBlockSkillModifierBase;
+                this.AdvancedBlockWhileUnderAttackMult = AdvancedBlockWhileUnderAttackMult;
+                this.AdvancedBlockNotUnderAttackMult = AdvancedBlockNotUnderAttackMult;
+                this.AdvancedAttackSkillModifierMult = AdvancedAttackSkillModifierMult;
+                this.AdvancedAttackSkillModifierBase = AdvancedAttackSkillModifierBase;
+                this.AdvancedAttackWhileUnderAttackMult = AdvancedAttackWhileUnderAttackMult;
+                this.AdvancedAttackNotUnderAttackMult = AdvancedAttackNotUnderAttackMult;
+                this.AdvancedAttackDuringBlockMult = AdvancedAttackDuringBlockMult;
+                this.AdvancedPowerAttackFatigueModBase = AdvancedPowerAttackFatigueModBase;
+                this.AdvancedPowerAttackFatigueModMult = AdvancedPowerAttackFatigueModMult;
+                this.SimpleCoverSearchRadius = SimpleCoverSearchRadius;
+                this.SimpleTakeCoverChance = SimpleTakeCoverChance;
+                this.SimpleWaitTimerMin = SimpleWaitTimerMin;
+                this.SimpleWaitTimerMax = SimpleWaitTimerMax;
+                this.SimpleWaitToFireTimerMin = SimpleWaitToFireTimerMin;
+                this.SimpleWaitToFireTimerMax = SimpleWaitToFireTimerMax;
+                this.SimpleFireTimerMin = SimpleFireTimerMin;
+                this.SimpleFireTimerMax = SimpleFireTimerMax;
+                this.SimpleRangedWeaponRangeMultMin = SimpleRangedWeaponRangeMultMin;
+                this.SimpleUnused = SimpleUnused;
+                this.SimpleWeaponRestrictions = SimpleWeaponRestrictions;
+                this.SimpleRangedWeaponRangeMultMax = SimpleRangedWeaponRangeMultMax;
+                this.SimpleMaxTargetingFov = SimpleMaxTargetingFov;
+                this.SimpleCombatRadius = SimpleCombatRadius;
+                this.SimpleSemiAutoFiringDelayMultMin = SimpleSemiAutoFiringDelayMultMin;
+                this.SimpleSemiAutoFiringDelayMultMax = SimpleSemiAutoFiringDelayMultMax;
             }
 
             #pragma warning disable CS8618
@@ -596,78 +596,78 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem DodgeChance;
-            public TItem LeftRightChance;
-            public TItem Unused1;
-            public TItem DodgeLRTimerMin;
-            public TItem DodgeLRTimerMax;
-            public TItem DodgeForwardTimerMin;
-            public TItem DodgeForwardTimerMax;
-            public TItem DodgeBackTimerMin;
-            public TItem DodgeBackTimerMax;
-            public TItem IdleTimerMin;
-            public TItem IdleTimerMax;
-            public TItem BlockChance;
-            public TItem AttackChance;
-            public TItem Unused2;
-            public TItem RecoilStaggerBonusToAttack;
-            public TItem UnconsciousBonusToAttack;
-            public TItem HandToHandBonusToAttack;
-            public TItem PowerAttackChance;
-            public TItem Unused3;
-            public TItem RecoilStaggerBonusToPowerAttack;
-            public TItem UnconsciousBonusToPowerAttack;
-            public TItem PowerAttackNormal;
-            public TItem PowerAttackForward;
-            public TItem PowerAttackBack;
-            public TItem PowerAttackLeft;
-            public TItem PowerAttackRight;
-            public TItem Unused4;
-            public TItem HoldTimerMin;
-            public TItem HoldTimerMax;
-            public TItem Flags;
-            public TItem Unused5;
-            public TItem AcrobaticDodgeChance;
-            public TItem RushingAttackChance;
-            public TItem Unused6;
-            public TItem RushingAttackDistanceMult;
-            public TItem DodgeFatigueModMult;
-            public TItem DodgeFatigueModBase;
-            public TItem EncumbSpeedModBase;
-            public TItem EncumbSpeedModMult;
-            public TItem DodgeWhileUnderAttackMult;
-            public TItem DodgeNotUnderAttackMult;
-            public TItem DodgeBackWhileUnderAttackMult;
-            public TItem DodgeBackNotUnderAttackMult;
-            public TItem DodgeForwardWhileAttackingMult;
-            public TItem DodgeForwardNotAttackingMult;
-            public TItem BlockSkillModifierMult;
-            public TItem BlockSkillModifierBase;
-            public TItem BlockWhileUnderAttackMult;
-            public TItem BlockNotUnderAttackMult;
-            public TItem AttackSkillModifierMult;
-            public TItem AttackSkillModifierBase;
-            public TItem AttackWhileUnderAttackMult;
-            public TItem AttackNotUnderAttackMult;
-            public TItem AttackDuringBlockMult;
-            public TItem PowerAttackFatigueModBase;
-            public TItem PowerAttackFatigueModMult;
-            public TItem CoverSearchRadius;
-            public TItem TakeCoverChance;
-            public TItem WaitTimerMin;
-            public TItem WaitTimerMax;
-            public TItem WaitToFireTimerMin;
-            public TItem WaitToFireTimerMax;
-            public TItem FireTimerMin;
-            public TItem FireTimerMax;
-            public TItem RangedWeaponRangeMultMin;
-            public TItem Unused;
-            public TItem WeaponRestrictions;
-            public TItem RangedWeaponRangeMultMax;
-            public TItem MaxTargetingFov;
-            public TItem CombatRadius;
-            public TItem SemiAutoFiringDelayMultMin;
-            public TItem SemiAutoFiringDelayMultMax;
+            public TItem StandardManeuverDecisionDodgeChance;
+            public TItem StandardManeuverDecisionLeftRightChance;
+            public TItem StandardUnused1;
+            public TItem StandardManeuverDecisionDodgeLRTimerMin;
+            public TItem StandardManeuverDecisionDodgeLRTimerMax;
+            public TItem StandardManeuverDecisionDodgeForwardTimerMin;
+            public TItem StandardManeuverDecisionDodgeForwardTimerMax;
+            public TItem StandardManeuverDecisionDodgeBackTimerMin;
+            public TItem StandardManeuverDecisionDodgeBackTimerMax;
+            public TItem StandardManeuverDecisionIdleTimerMin;
+            public TItem StandardManeuverDecisionIdleTimerMax;
+            public TItem StandardMeleeDecisionBlockChance;
+            public TItem StandardMeleeDecisionAttackChance;
+            public TItem StandardUnused2;
+            public TItem StandardMeleeDecisionRecoilStaggerBonusToAttack;
+            public TItem StandardMeleeDecisionUnconsciousBonusToAttack;
+            public TItem StandardMeleeDecisionHandToHandBonusToAttack;
+            public TItem StandardMeleeDecisionPowerAttackChance;
+            public TItem StandardUnused3;
+            public TItem StandardMeleeDecisionRecoilStaggerBonusToPowerAttack;
+            public TItem StandardMeleeDecisionUnconsciousBonusToPowerAttack;
+            public TItem StandardMeleeDecisionPowerAttackNormal;
+            public TItem StandardMeleeDecisionPowerAttackForward;
+            public TItem StandardMeleeDecisionPowerAttackBack;
+            public TItem StandardMeleeDecisionPowerAttackLeft;
+            public TItem StandardMeleeDecisionPowerAttackRight;
+            public TItem StandardUnused4;
+            public TItem StandardMeleeDecisionHoldTimerMin;
+            public TItem StandardMeleeDecisionHoldTimerMax;
+            public TItem StandardFlags;
+            public TItem StandardUnused5;
+            public TItem StandardMeleeDecisionAcrobaticDodgeChance;
+            public TItem StandardMeleeDecisionRushingAttackChance;
+            public TItem StandardUnused6;
+            public TItem StandardMeleeDecisionRushingAttackDistanceMult;
+            public TItem AdvancedDodgeFatigueModMult;
+            public TItem AdvancedDodgeFatigueModBase;
+            public TItem AdvancedEncumbSpeedModBase;
+            public TItem AdvancedEncumbSpeedModMult;
+            public TItem AdvancedDodgeWhileUnderAttackMult;
+            public TItem AdvancedDodgeNotUnderAttackMult;
+            public TItem AdvancedDodgeBackWhileUnderAttackMult;
+            public TItem AdvancedDodgeBackNotUnderAttackMult;
+            public TItem AdvancedDodgeForwardWhileAttackingMult;
+            public TItem AdvancedDodgeForwardNotAttackingMult;
+            public TItem AdvancedBlockSkillModifierMult;
+            public TItem AdvancedBlockSkillModifierBase;
+            public TItem AdvancedBlockWhileUnderAttackMult;
+            public TItem AdvancedBlockNotUnderAttackMult;
+            public TItem AdvancedAttackSkillModifierMult;
+            public TItem AdvancedAttackSkillModifierBase;
+            public TItem AdvancedAttackWhileUnderAttackMult;
+            public TItem AdvancedAttackNotUnderAttackMult;
+            public TItem AdvancedAttackDuringBlockMult;
+            public TItem AdvancedPowerAttackFatigueModBase;
+            public TItem AdvancedPowerAttackFatigueModMult;
+            public TItem SimpleCoverSearchRadius;
+            public TItem SimpleTakeCoverChance;
+            public TItem SimpleWaitTimerMin;
+            public TItem SimpleWaitTimerMax;
+            public TItem SimpleWaitToFireTimerMin;
+            public TItem SimpleWaitToFireTimerMax;
+            public TItem SimpleFireTimerMin;
+            public TItem SimpleFireTimerMax;
+            public TItem SimpleRangedWeaponRangeMultMin;
+            public TItem SimpleUnused;
+            public TItem SimpleWeaponRestrictions;
+            public TItem SimpleRangedWeaponRangeMultMax;
+            public TItem SimpleMaxTargetingFov;
+            public TItem SimpleCombatRadius;
+            public TItem SimpleSemiAutoFiringDelayMultMin;
+            public TItem SimpleSemiAutoFiringDelayMultMax;
             #endregion
 
             #region Equals
@@ -681,155 +681,155 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DodgeChance, rhs.DodgeChance)) return false;
-                if (!object.Equals(this.LeftRightChance, rhs.LeftRightChance)) return false;
-                if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
-                if (!object.Equals(this.DodgeLRTimerMin, rhs.DodgeLRTimerMin)) return false;
-                if (!object.Equals(this.DodgeLRTimerMax, rhs.DodgeLRTimerMax)) return false;
-                if (!object.Equals(this.DodgeForwardTimerMin, rhs.DodgeForwardTimerMin)) return false;
-                if (!object.Equals(this.DodgeForwardTimerMax, rhs.DodgeForwardTimerMax)) return false;
-                if (!object.Equals(this.DodgeBackTimerMin, rhs.DodgeBackTimerMin)) return false;
-                if (!object.Equals(this.DodgeBackTimerMax, rhs.DodgeBackTimerMax)) return false;
-                if (!object.Equals(this.IdleTimerMin, rhs.IdleTimerMin)) return false;
-                if (!object.Equals(this.IdleTimerMax, rhs.IdleTimerMax)) return false;
-                if (!object.Equals(this.BlockChance, rhs.BlockChance)) return false;
-                if (!object.Equals(this.AttackChance, rhs.AttackChance)) return false;
-                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
-                if (!object.Equals(this.RecoilStaggerBonusToAttack, rhs.RecoilStaggerBonusToAttack)) return false;
-                if (!object.Equals(this.UnconsciousBonusToAttack, rhs.UnconsciousBonusToAttack)) return false;
-                if (!object.Equals(this.HandToHandBonusToAttack, rhs.HandToHandBonusToAttack)) return false;
-                if (!object.Equals(this.PowerAttackChance, rhs.PowerAttackChance)) return false;
-                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
-                if (!object.Equals(this.RecoilStaggerBonusToPowerAttack, rhs.RecoilStaggerBonusToPowerAttack)) return false;
-                if (!object.Equals(this.UnconsciousBonusToPowerAttack, rhs.UnconsciousBonusToPowerAttack)) return false;
-                if (!object.Equals(this.PowerAttackNormal, rhs.PowerAttackNormal)) return false;
-                if (!object.Equals(this.PowerAttackForward, rhs.PowerAttackForward)) return false;
-                if (!object.Equals(this.PowerAttackBack, rhs.PowerAttackBack)) return false;
-                if (!object.Equals(this.PowerAttackLeft, rhs.PowerAttackLeft)) return false;
-                if (!object.Equals(this.PowerAttackRight, rhs.PowerAttackRight)) return false;
-                if (!object.Equals(this.Unused4, rhs.Unused4)) return false;
-                if (!object.Equals(this.HoldTimerMin, rhs.HoldTimerMin)) return false;
-                if (!object.Equals(this.HoldTimerMax, rhs.HoldTimerMax)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Unused5, rhs.Unused5)) return false;
-                if (!object.Equals(this.AcrobaticDodgeChance, rhs.AcrobaticDodgeChance)) return false;
-                if (!object.Equals(this.RushingAttackChance, rhs.RushingAttackChance)) return false;
-                if (!object.Equals(this.Unused6, rhs.Unused6)) return false;
-                if (!object.Equals(this.RushingAttackDistanceMult, rhs.RushingAttackDistanceMult)) return false;
-                if (!object.Equals(this.DodgeFatigueModMult, rhs.DodgeFatigueModMult)) return false;
-                if (!object.Equals(this.DodgeFatigueModBase, rhs.DodgeFatigueModBase)) return false;
-                if (!object.Equals(this.EncumbSpeedModBase, rhs.EncumbSpeedModBase)) return false;
-                if (!object.Equals(this.EncumbSpeedModMult, rhs.EncumbSpeedModMult)) return false;
-                if (!object.Equals(this.DodgeWhileUnderAttackMult, rhs.DodgeWhileUnderAttackMult)) return false;
-                if (!object.Equals(this.DodgeNotUnderAttackMult, rhs.DodgeNotUnderAttackMult)) return false;
-                if (!object.Equals(this.DodgeBackWhileUnderAttackMult, rhs.DodgeBackWhileUnderAttackMult)) return false;
-                if (!object.Equals(this.DodgeBackNotUnderAttackMult, rhs.DodgeBackNotUnderAttackMult)) return false;
-                if (!object.Equals(this.DodgeForwardWhileAttackingMult, rhs.DodgeForwardWhileAttackingMult)) return false;
-                if (!object.Equals(this.DodgeForwardNotAttackingMult, rhs.DodgeForwardNotAttackingMult)) return false;
-                if (!object.Equals(this.BlockSkillModifierMult, rhs.BlockSkillModifierMult)) return false;
-                if (!object.Equals(this.BlockSkillModifierBase, rhs.BlockSkillModifierBase)) return false;
-                if (!object.Equals(this.BlockWhileUnderAttackMult, rhs.BlockWhileUnderAttackMult)) return false;
-                if (!object.Equals(this.BlockNotUnderAttackMult, rhs.BlockNotUnderAttackMult)) return false;
-                if (!object.Equals(this.AttackSkillModifierMult, rhs.AttackSkillModifierMult)) return false;
-                if (!object.Equals(this.AttackSkillModifierBase, rhs.AttackSkillModifierBase)) return false;
-                if (!object.Equals(this.AttackWhileUnderAttackMult, rhs.AttackWhileUnderAttackMult)) return false;
-                if (!object.Equals(this.AttackNotUnderAttackMult, rhs.AttackNotUnderAttackMult)) return false;
-                if (!object.Equals(this.AttackDuringBlockMult, rhs.AttackDuringBlockMult)) return false;
-                if (!object.Equals(this.PowerAttackFatigueModBase, rhs.PowerAttackFatigueModBase)) return false;
-                if (!object.Equals(this.PowerAttackFatigueModMult, rhs.PowerAttackFatigueModMult)) return false;
-                if (!object.Equals(this.CoverSearchRadius, rhs.CoverSearchRadius)) return false;
-                if (!object.Equals(this.TakeCoverChance, rhs.TakeCoverChance)) return false;
-                if (!object.Equals(this.WaitTimerMin, rhs.WaitTimerMin)) return false;
-                if (!object.Equals(this.WaitTimerMax, rhs.WaitTimerMax)) return false;
-                if (!object.Equals(this.WaitToFireTimerMin, rhs.WaitToFireTimerMin)) return false;
-                if (!object.Equals(this.WaitToFireTimerMax, rhs.WaitToFireTimerMax)) return false;
-                if (!object.Equals(this.FireTimerMin, rhs.FireTimerMin)) return false;
-                if (!object.Equals(this.FireTimerMax, rhs.FireTimerMax)) return false;
-                if (!object.Equals(this.RangedWeaponRangeMultMin, rhs.RangedWeaponRangeMultMin)) return false;
-                if (!object.Equals(this.Unused, rhs.Unused)) return false;
-                if (!object.Equals(this.WeaponRestrictions, rhs.WeaponRestrictions)) return false;
-                if (!object.Equals(this.RangedWeaponRangeMultMax, rhs.RangedWeaponRangeMultMax)) return false;
-                if (!object.Equals(this.MaxTargetingFov, rhs.MaxTargetingFov)) return false;
-                if (!object.Equals(this.CombatRadius, rhs.CombatRadius)) return false;
-                if (!object.Equals(this.SemiAutoFiringDelayMultMin, rhs.SemiAutoFiringDelayMultMin)) return false;
-                if (!object.Equals(this.SemiAutoFiringDelayMultMax, rhs.SemiAutoFiringDelayMultMax)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeChance, rhs.StandardManeuverDecisionDodgeChance)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionLeftRightChance, rhs.StandardManeuverDecisionLeftRightChance)) return false;
+                if (!object.Equals(this.StandardUnused1, rhs.StandardUnused1)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeLRTimerMin, rhs.StandardManeuverDecisionDodgeLRTimerMin)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeLRTimerMax, rhs.StandardManeuverDecisionDodgeLRTimerMax)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeForwardTimerMin, rhs.StandardManeuverDecisionDodgeForwardTimerMin)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeForwardTimerMax, rhs.StandardManeuverDecisionDodgeForwardTimerMax)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeBackTimerMin, rhs.StandardManeuverDecisionDodgeBackTimerMin)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionDodgeBackTimerMax, rhs.StandardManeuverDecisionDodgeBackTimerMax)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionIdleTimerMin, rhs.StandardManeuverDecisionIdleTimerMin)) return false;
+                if (!object.Equals(this.StandardManeuverDecisionIdleTimerMax, rhs.StandardManeuverDecisionIdleTimerMax)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionBlockChance, rhs.StandardMeleeDecisionBlockChance)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionAttackChance, rhs.StandardMeleeDecisionAttackChance)) return false;
+                if (!object.Equals(this.StandardUnused2, rhs.StandardUnused2)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionRecoilStaggerBonusToAttack, rhs.StandardMeleeDecisionRecoilStaggerBonusToAttack)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionUnconsciousBonusToAttack, rhs.StandardMeleeDecisionUnconsciousBonusToAttack)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionHandToHandBonusToAttack, rhs.StandardMeleeDecisionHandToHandBonusToAttack)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionPowerAttackChance, rhs.StandardMeleeDecisionPowerAttackChance)) return false;
+                if (!object.Equals(this.StandardUnused3, rhs.StandardUnused3)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack, rhs.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionUnconsciousBonusToPowerAttack, rhs.StandardMeleeDecisionUnconsciousBonusToPowerAttack)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionPowerAttackNormal, rhs.StandardMeleeDecisionPowerAttackNormal)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionPowerAttackForward, rhs.StandardMeleeDecisionPowerAttackForward)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionPowerAttackBack, rhs.StandardMeleeDecisionPowerAttackBack)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionPowerAttackLeft, rhs.StandardMeleeDecisionPowerAttackLeft)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionPowerAttackRight, rhs.StandardMeleeDecisionPowerAttackRight)) return false;
+                if (!object.Equals(this.StandardUnused4, rhs.StandardUnused4)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionHoldTimerMin, rhs.StandardMeleeDecisionHoldTimerMin)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionHoldTimerMax, rhs.StandardMeleeDecisionHoldTimerMax)) return false;
+                if (!object.Equals(this.StandardFlags, rhs.StandardFlags)) return false;
+                if (!object.Equals(this.StandardUnused5, rhs.StandardUnused5)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionAcrobaticDodgeChance, rhs.StandardMeleeDecisionAcrobaticDodgeChance)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionRushingAttackChance, rhs.StandardMeleeDecisionRushingAttackChance)) return false;
+                if (!object.Equals(this.StandardUnused6, rhs.StandardUnused6)) return false;
+                if (!object.Equals(this.StandardMeleeDecisionRushingAttackDistanceMult, rhs.StandardMeleeDecisionRushingAttackDistanceMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeFatigueModMult, rhs.AdvancedDodgeFatigueModMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeFatigueModBase, rhs.AdvancedDodgeFatigueModBase)) return false;
+                if (!object.Equals(this.AdvancedEncumbSpeedModBase, rhs.AdvancedEncumbSpeedModBase)) return false;
+                if (!object.Equals(this.AdvancedEncumbSpeedModMult, rhs.AdvancedEncumbSpeedModMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeWhileUnderAttackMult, rhs.AdvancedDodgeWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeNotUnderAttackMult, rhs.AdvancedDodgeNotUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeBackWhileUnderAttackMult, rhs.AdvancedDodgeBackWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeBackNotUnderAttackMult, rhs.AdvancedDodgeBackNotUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeForwardWhileAttackingMult, rhs.AdvancedDodgeForwardWhileAttackingMult)) return false;
+                if (!object.Equals(this.AdvancedDodgeForwardNotAttackingMult, rhs.AdvancedDodgeForwardNotAttackingMult)) return false;
+                if (!object.Equals(this.AdvancedBlockSkillModifierMult, rhs.AdvancedBlockSkillModifierMult)) return false;
+                if (!object.Equals(this.AdvancedBlockSkillModifierBase, rhs.AdvancedBlockSkillModifierBase)) return false;
+                if (!object.Equals(this.AdvancedBlockWhileUnderAttackMult, rhs.AdvancedBlockWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedBlockNotUnderAttackMult, rhs.AdvancedBlockNotUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedAttackSkillModifierMult, rhs.AdvancedAttackSkillModifierMult)) return false;
+                if (!object.Equals(this.AdvancedAttackSkillModifierBase, rhs.AdvancedAttackSkillModifierBase)) return false;
+                if (!object.Equals(this.AdvancedAttackWhileUnderAttackMult, rhs.AdvancedAttackWhileUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedAttackNotUnderAttackMult, rhs.AdvancedAttackNotUnderAttackMult)) return false;
+                if (!object.Equals(this.AdvancedAttackDuringBlockMult, rhs.AdvancedAttackDuringBlockMult)) return false;
+                if (!object.Equals(this.AdvancedPowerAttackFatigueModBase, rhs.AdvancedPowerAttackFatigueModBase)) return false;
+                if (!object.Equals(this.AdvancedPowerAttackFatigueModMult, rhs.AdvancedPowerAttackFatigueModMult)) return false;
+                if (!object.Equals(this.SimpleCoverSearchRadius, rhs.SimpleCoverSearchRadius)) return false;
+                if (!object.Equals(this.SimpleTakeCoverChance, rhs.SimpleTakeCoverChance)) return false;
+                if (!object.Equals(this.SimpleWaitTimerMin, rhs.SimpleWaitTimerMin)) return false;
+                if (!object.Equals(this.SimpleWaitTimerMax, rhs.SimpleWaitTimerMax)) return false;
+                if (!object.Equals(this.SimpleWaitToFireTimerMin, rhs.SimpleWaitToFireTimerMin)) return false;
+                if (!object.Equals(this.SimpleWaitToFireTimerMax, rhs.SimpleWaitToFireTimerMax)) return false;
+                if (!object.Equals(this.SimpleFireTimerMin, rhs.SimpleFireTimerMin)) return false;
+                if (!object.Equals(this.SimpleFireTimerMax, rhs.SimpleFireTimerMax)) return false;
+                if (!object.Equals(this.SimpleRangedWeaponRangeMultMin, rhs.SimpleRangedWeaponRangeMultMin)) return false;
+                if (!object.Equals(this.SimpleUnused, rhs.SimpleUnused)) return false;
+                if (!object.Equals(this.SimpleWeaponRestrictions, rhs.SimpleWeaponRestrictions)) return false;
+                if (!object.Equals(this.SimpleRangedWeaponRangeMultMax, rhs.SimpleRangedWeaponRangeMultMax)) return false;
+                if (!object.Equals(this.SimpleMaxTargetingFov, rhs.SimpleMaxTargetingFov)) return false;
+                if (!object.Equals(this.SimpleCombatRadius, rhs.SimpleCombatRadius)) return false;
+                if (!object.Equals(this.SimpleSemiAutoFiringDelayMultMin, rhs.SimpleSemiAutoFiringDelayMultMin)) return false;
+                if (!object.Equals(this.SimpleSemiAutoFiringDelayMultMax, rhs.SimpleSemiAutoFiringDelayMultMax)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DodgeChance);
-                hash.Add(this.LeftRightChance);
-                hash.Add(this.Unused1);
-                hash.Add(this.DodgeLRTimerMin);
-                hash.Add(this.DodgeLRTimerMax);
-                hash.Add(this.DodgeForwardTimerMin);
-                hash.Add(this.DodgeForwardTimerMax);
-                hash.Add(this.DodgeBackTimerMin);
-                hash.Add(this.DodgeBackTimerMax);
-                hash.Add(this.IdleTimerMin);
-                hash.Add(this.IdleTimerMax);
-                hash.Add(this.BlockChance);
-                hash.Add(this.AttackChance);
-                hash.Add(this.Unused2);
-                hash.Add(this.RecoilStaggerBonusToAttack);
-                hash.Add(this.UnconsciousBonusToAttack);
-                hash.Add(this.HandToHandBonusToAttack);
-                hash.Add(this.PowerAttackChance);
-                hash.Add(this.Unused3);
-                hash.Add(this.RecoilStaggerBonusToPowerAttack);
-                hash.Add(this.UnconsciousBonusToPowerAttack);
-                hash.Add(this.PowerAttackNormal);
-                hash.Add(this.PowerAttackForward);
-                hash.Add(this.PowerAttackBack);
-                hash.Add(this.PowerAttackLeft);
-                hash.Add(this.PowerAttackRight);
-                hash.Add(this.Unused4);
-                hash.Add(this.HoldTimerMin);
-                hash.Add(this.HoldTimerMax);
-                hash.Add(this.Flags);
-                hash.Add(this.Unused5);
-                hash.Add(this.AcrobaticDodgeChance);
-                hash.Add(this.RushingAttackChance);
-                hash.Add(this.Unused6);
-                hash.Add(this.RushingAttackDistanceMult);
-                hash.Add(this.DodgeFatigueModMult);
-                hash.Add(this.DodgeFatigueModBase);
-                hash.Add(this.EncumbSpeedModBase);
-                hash.Add(this.EncumbSpeedModMult);
-                hash.Add(this.DodgeWhileUnderAttackMult);
-                hash.Add(this.DodgeNotUnderAttackMult);
-                hash.Add(this.DodgeBackWhileUnderAttackMult);
-                hash.Add(this.DodgeBackNotUnderAttackMult);
-                hash.Add(this.DodgeForwardWhileAttackingMult);
-                hash.Add(this.DodgeForwardNotAttackingMult);
-                hash.Add(this.BlockSkillModifierMult);
-                hash.Add(this.BlockSkillModifierBase);
-                hash.Add(this.BlockWhileUnderAttackMult);
-                hash.Add(this.BlockNotUnderAttackMult);
-                hash.Add(this.AttackSkillModifierMult);
-                hash.Add(this.AttackSkillModifierBase);
-                hash.Add(this.AttackWhileUnderAttackMult);
-                hash.Add(this.AttackNotUnderAttackMult);
-                hash.Add(this.AttackDuringBlockMult);
-                hash.Add(this.PowerAttackFatigueModBase);
-                hash.Add(this.PowerAttackFatigueModMult);
-                hash.Add(this.CoverSearchRadius);
-                hash.Add(this.TakeCoverChance);
-                hash.Add(this.WaitTimerMin);
-                hash.Add(this.WaitTimerMax);
-                hash.Add(this.WaitToFireTimerMin);
-                hash.Add(this.WaitToFireTimerMax);
-                hash.Add(this.FireTimerMin);
-                hash.Add(this.FireTimerMax);
-                hash.Add(this.RangedWeaponRangeMultMin);
-                hash.Add(this.Unused);
-                hash.Add(this.WeaponRestrictions);
-                hash.Add(this.RangedWeaponRangeMultMax);
-                hash.Add(this.MaxTargetingFov);
-                hash.Add(this.CombatRadius);
-                hash.Add(this.SemiAutoFiringDelayMultMin);
-                hash.Add(this.SemiAutoFiringDelayMultMax);
+                hash.Add(this.StandardManeuverDecisionDodgeChance);
+                hash.Add(this.StandardManeuverDecisionLeftRightChance);
+                hash.Add(this.StandardUnused1);
+                hash.Add(this.StandardManeuverDecisionDodgeLRTimerMin);
+                hash.Add(this.StandardManeuverDecisionDodgeLRTimerMax);
+                hash.Add(this.StandardManeuverDecisionDodgeForwardTimerMin);
+                hash.Add(this.StandardManeuverDecisionDodgeForwardTimerMax);
+                hash.Add(this.StandardManeuverDecisionDodgeBackTimerMin);
+                hash.Add(this.StandardManeuverDecisionDodgeBackTimerMax);
+                hash.Add(this.StandardManeuverDecisionIdleTimerMin);
+                hash.Add(this.StandardManeuverDecisionIdleTimerMax);
+                hash.Add(this.StandardMeleeDecisionBlockChance);
+                hash.Add(this.StandardMeleeDecisionAttackChance);
+                hash.Add(this.StandardUnused2);
+                hash.Add(this.StandardMeleeDecisionRecoilStaggerBonusToAttack);
+                hash.Add(this.StandardMeleeDecisionUnconsciousBonusToAttack);
+                hash.Add(this.StandardMeleeDecisionHandToHandBonusToAttack);
+                hash.Add(this.StandardMeleeDecisionPowerAttackChance);
+                hash.Add(this.StandardUnused3);
+                hash.Add(this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack);
+                hash.Add(this.StandardMeleeDecisionUnconsciousBonusToPowerAttack);
+                hash.Add(this.StandardMeleeDecisionPowerAttackNormal);
+                hash.Add(this.StandardMeleeDecisionPowerAttackForward);
+                hash.Add(this.StandardMeleeDecisionPowerAttackBack);
+                hash.Add(this.StandardMeleeDecisionPowerAttackLeft);
+                hash.Add(this.StandardMeleeDecisionPowerAttackRight);
+                hash.Add(this.StandardUnused4);
+                hash.Add(this.StandardMeleeDecisionHoldTimerMin);
+                hash.Add(this.StandardMeleeDecisionHoldTimerMax);
+                hash.Add(this.StandardFlags);
+                hash.Add(this.StandardUnused5);
+                hash.Add(this.StandardMeleeDecisionAcrobaticDodgeChance);
+                hash.Add(this.StandardMeleeDecisionRushingAttackChance);
+                hash.Add(this.StandardUnused6);
+                hash.Add(this.StandardMeleeDecisionRushingAttackDistanceMult);
+                hash.Add(this.AdvancedDodgeFatigueModMult);
+                hash.Add(this.AdvancedDodgeFatigueModBase);
+                hash.Add(this.AdvancedEncumbSpeedModBase);
+                hash.Add(this.AdvancedEncumbSpeedModMult);
+                hash.Add(this.AdvancedDodgeWhileUnderAttackMult);
+                hash.Add(this.AdvancedDodgeNotUnderAttackMult);
+                hash.Add(this.AdvancedDodgeBackWhileUnderAttackMult);
+                hash.Add(this.AdvancedDodgeBackNotUnderAttackMult);
+                hash.Add(this.AdvancedDodgeForwardWhileAttackingMult);
+                hash.Add(this.AdvancedDodgeForwardNotAttackingMult);
+                hash.Add(this.AdvancedBlockSkillModifierMult);
+                hash.Add(this.AdvancedBlockSkillModifierBase);
+                hash.Add(this.AdvancedBlockWhileUnderAttackMult);
+                hash.Add(this.AdvancedBlockNotUnderAttackMult);
+                hash.Add(this.AdvancedAttackSkillModifierMult);
+                hash.Add(this.AdvancedAttackSkillModifierBase);
+                hash.Add(this.AdvancedAttackWhileUnderAttackMult);
+                hash.Add(this.AdvancedAttackNotUnderAttackMult);
+                hash.Add(this.AdvancedAttackDuringBlockMult);
+                hash.Add(this.AdvancedPowerAttackFatigueModBase);
+                hash.Add(this.AdvancedPowerAttackFatigueModMult);
+                hash.Add(this.SimpleCoverSearchRadius);
+                hash.Add(this.SimpleTakeCoverChance);
+                hash.Add(this.SimpleWaitTimerMin);
+                hash.Add(this.SimpleWaitTimerMax);
+                hash.Add(this.SimpleWaitToFireTimerMin);
+                hash.Add(this.SimpleWaitToFireTimerMax);
+                hash.Add(this.SimpleFireTimerMin);
+                hash.Add(this.SimpleFireTimerMax);
+                hash.Add(this.SimpleRangedWeaponRangeMultMin);
+                hash.Add(this.SimpleUnused);
+                hash.Add(this.SimpleWeaponRestrictions);
+                hash.Add(this.SimpleRangedWeaponRangeMultMax);
+                hash.Add(this.SimpleMaxTargetingFov);
+                hash.Add(this.SimpleCombatRadius);
+                hash.Add(this.SimpleSemiAutoFiringDelayMultMin);
+                hash.Add(this.SimpleSemiAutoFiringDelayMultMax);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -840,78 +840,78 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DodgeChance)) return false;
-                if (!eval(this.LeftRightChance)) return false;
-                if (!eval(this.Unused1)) return false;
-                if (!eval(this.DodgeLRTimerMin)) return false;
-                if (!eval(this.DodgeLRTimerMax)) return false;
-                if (!eval(this.DodgeForwardTimerMin)) return false;
-                if (!eval(this.DodgeForwardTimerMax)) return false;
-                if (!eval(this.DodgeBackTimerMin)) return false;
-                if (!eval(this.DodgeBackTimerMax)) return false;
-                if (!eval(this.IdleTimerMin)) return false;
-                if (!eval(this.IdleTimerMax)) return false;
-                if (!eval(this.BlockChance)) return false;
-                if (!eval(this.AttackChance)) return false;
-                if (!eval(this.Unused2)) return false;
-                if (!eval(this.RecoilStaggerBonusToAttack)) return false;
-                if (!eval(this.UnconsciousBonusToAttack)) return false;
-                if (!eval(this.HandToHandBonusToAttack)) return false;
-                if (!eval(this.PowerAttackChance)) return false;
-                if (!eval(this.Unused3)) return false;
-                if (!eval(this.RecoilStaggerBonusToPowerAttack)) return false;
-                if (!eval(this.UnconsciousBonusToPowerAttack)) return false;
-                if (!eval(this.PowerAttackNormal)) return false;
-                if (!eval(this.PowerAttackForward)) return false;
-                if (!eval(this.PowerAttackBack)) return false;
-                if (!eval(this.PowerAttackLeft)) return false;
-                if (!eval(this.PowerAttackRight)) return false;
-                if (!eval(this.Unused4)) return false;
-                if (!eval(this.HoldTimerMin)) return false;
-                if (!eval(this.HoldTimerMax)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.Unused5)) return false;
-                if (!eval(this.AcrobaticDodgeChance)) return false;
-                if (!eval(this.RushingAttackChance)) return false;
-                if (!eval(this.Unused6)) return false;
-                if (!eval(this.RushingAttackDistanceMult)) return false;
-                if (!eval(this.DodgeFatigueModMult)) return false;
-                if (!eval(this.DodgeFatigueModBase)) return false;
-                if (!eval(this.EncumbSpeedModBase)) return false;
-                if (!eval(this.EncumbSpeedModMult)) return false;
-                if (!eval(this.DodgeWhileUnderAttackMult)) return false;
-                if (!eval(this.DodgeNotUnderAttackMult)) return false;
-                if (!eval(this.DodgeBackWhileUnderAttackMult)) return false;
-                if (!eval(this.DodgeBackNotUnderAttackMult)) return false;
-                if (!eval(this.DodgeForwardWhileAttackingMult)) return false;
-                if (!eval(this.DodgeForwardNotAttackingMult)) return false;
-                if (!eval(this.BlockSkillModifierMult)) return false;
-                if (!eval(this.BlockSkillModifierBase)) return false;
-                if (!eval(this.BlockWhileUnderAttackMult)) return false;
-                if (!eval(this.BlockNotUnderAttackMult)) return false;
-                if (!eval(this.AttackSkillModifierMult)) return false;
-                if (!eval(this.AttackSkillModifierBase)) return false;
-                if (!eval(this.AttackWhileUnderAttackMult)) return false;
-                if (!eval(this.AttackNotUnderAttackMult)) return false;
-                if (!eval(this.AttackDuringBlockMult)) return false;
-                if (!eval(this.PowerAttackFatigueModBase)) return false;
-                if (!eval(this.PowerAttackFatigueModMult)) return false;
-                if (!eval(this.CoverSearchRadius)) return false;
-                if (!eval(this.TakeCoverChance)) return false;
-                if (!eval(this.WaitTimerMin)) return false;
-                if (!eval(this.WaitTimerMax)) return false;
-                if (!eval(this.WaitToFireTimerMin)) return false;
-                if (!eval(this.WaitToFireTimerMax)) return false;
-                if (!eval(this.FireTimerMin)) return false;
-                if (!eval(this.FireTimerMax)) return false;
-                if (!eval(this.RangedWeaponRangeMultMin)) return false;
-                if (!eval(this.Unused)) return false;
-                if (!eval(this.WeaponRestrictions)) return false;
-                if (!eval(this.RangedWeaponRangeMultMax)) return false;
-                if (!eval(this.MaxTargetingFov)) return false;
-                if (!eval(this.CombatRadius)) return false;
-                if (!eval(this.SemiAutoFiringDelayMultMin)) return false;
-                if (!eval(this.SemiAutoFiringDelayMultMax)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeChance)) return false;
+                if (!eval(this.StandardManeuverDecisionLeftRightChance)) return false;
+                if (!eval(this.StandardUnused1)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeLRTimerMin)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeLRTimerMax)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeForwardTimerMin)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeForwardTimerMax)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeBackTimerMin)) return false;
+                if (!eval(this.StandardManeuverDecisionDodgeBackTimerMax)) return false;
+                if (!eval(this.StandardManeuverDecisionIdleTimerMin)) return false;
+                if (!eval(this.StandardManeuverDecisionIdleTimerMax)) return false;
+                if (!eval(this.StandardMeleeDecisionBlockChance)) return false;
+                if (!eval(this.StandardMeleeDecisionAttackChance)) return false;
+                if (!eval(this.StandardUnused2)) return false;
+                if (!eval(this.StandardMeleeDecisionRecoilStaggerBonusToAttack)) return false;
+                if (!eval(this.StandardMeleeDecisionUnconsciousBonusToAttack)) return false;
+                if (!eval(this.StandardMeleeDecisionHandToHandBonusToAttack)) return false;
+                if (!eval(this.StandardMeleeDecisionPowerAttackChance)) return false;
+                if (!eval(this.StandardUnused3)) return false;
+                if (!eval(this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack)) return false;
+                if (!eval(this.StandardMeleeDecisionUnconsciousBonusToPowerAttack)) return false;
+                if (!eval(this.StandardMeleeDecisionPowerAttackNormal)) return false;
+                if (!eval(this.StandardMeleeDecisionPowerAttackForward)) return false;
+                if (!eval(this.StandardMeleeDecisionPowerAttackBack)) return false;
+                if (!eval(this.StandardMeleeDecisionPowerAttackLeft)) return false;
+                if (!eval(this.StandardMeleeDecisionPowerAttackRight)) return false;
+                if (!eval(this.StandardUnused4)) return false;
+                if (!eval(this.StandardMeleeDecisionHoldTimerMin)) return false;
+                if (!eval(this.StandardMeleeDecisionHoldTimerMax)) return false;
+                if (!eval(this.StandardFlags)) return false;
+                if (!eval(this.StandardUnused5)) return false;
+                if (!eval(this.StandardMeleeDecisionAcrobaticDodgeChance)) return false;
+                if (!eval(this.StandardMeleeDecisionRushingAttackChance)) return false;
+                if (!eval(this.StandardUnused6)) return false;
+                if (!eval(this.StandardMeleeDecisionRushingAttackDistanceMult)) return false;
+                if (!eval(this.AdvancedDodgeFatigueModMult)) return false;
+                if (!eval(this.AdvancedDodgeFatigueModBase)) return false;
+                if (!eval(this.AdvancedEncumbSpeedModBase)) return false;
+                if (!eval(this.AdvancedEncumbSpeedModMult)) return false;
+                if (!eval(this.AdvancedDodgeWhileUnderAttackMult)) return false;
+                if (!eval(this.AdvancedDodgeNotUnderAttackMult)) return false;
+                if (!eval(this.AdvancedDodgeBackWhileUnderAttackMult)) return false;
+                if (!eval(this.AdvancedDodgeBackNotUnderAttackMult)) return false;
+                if (!eval(this.AdvancedDodgeForwardWhileAttackingMult)) return false;
+                if (!eval(this.AdvancedDodgeForwardNotAttackingMult)) return false;
+                if (!eval(this.AdvancedBlockSkillModifierMult)) return false;
+                if (!eval(this.AdvancedBlockSkillModifierBase)) return false;
+                if (!eval(this.AdvancedBlockWhileUnderAttackMult)) return false;
+                if (!eval(this.AdvancedBlockNotUnderAttackMult)) return false;
+                if (!eval(this.AdvancedAttackSkillModifierMult)) return false;
+                if (!eval(this.AdvancedAttackSkillModifierBase)) return false;
+                if (!eval(this.AdvancedAttackWhileUnderAttackMult)) return false;
+                if (!eval(this.AdvancedAttackNotUnderAttackMult)) return false;
+                if (!eval(this.AdvancedAttackDuringBlockMult)) return false;
+                if (!eval(this.AdvancedPowerAttackFatigueModBase)) return false;
+                if (!eval(this.AdvancedPowerAttackFatigueModMult)) return false;
+                if (!eval(this.SimpleCoverSearchRadius)) return false;
+                if (!eval(this.SimpleTakeCoverChance)) return false;
+                if (!eval(this.SimpleWaitTimerMin)) return false;
+                if (!eval(this.SimpleWaitTimerMax)) return false;
+                if (!eval(this.SimpleWaitToFireTimerMin)) return false;
+                if (!eval(this.SimpleWaitToFireTimerMax)) return false;
+                if (!eval(this.SimpleFireTimerMin)) return false;
+                if (!eval(this.SimpleFireTimerMax)) return false;
+                if (!eval(this.SimpleRangedWeaponRangeMultMin)) return false;
+                if (!eval(this.SimpleUnused)) return false;
+                if (!eval(this.SimpleWeaponRestrictions)) return false;
+                if (!eval(this.SimpleRangedWeaponRangeMultMax)) return false;
+                if (!eval(this.SimpleMaxTargetingFov)) return false;
+                if (!eval(this.SimpleCombatRadius)) return false;
+                if (!eval(this.SimpleSemiAutoFiringDelayMultMin)) return false;
+                if (!eval(this.SimpleSemiAutoFiringDelayMultMax)) return false;
                 return true;
             }
             #endregion
@@ -920,78 +920,78 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DodgeChance)) return true;
-                if (eval(this.LeftRightChance)) return true;
-                if (eval(this.Unused1)) return true;
-                if (eval(this.DodgeLRTimerMin)) return true;
-                if (eval(this.DodgeLRTimerMax)) return true;
-                if (eval(this.DodgeForwardTimerMin)) return true;
-                if (eval(this.DodgeForwardTimerMax)) return true;
-                if (eval(this.DodgeBackTimerMin)) return true;
-                if (eval(this.DodgeBackTimerMax)) return true;
-                if (eval(this.IdleTimerMin)) return true;
-                if (eval(this.IdleTimerMax)) return true;
-                if (eval(this.BlockChance)) return true;
-                if (eval(this.AttackChance)) return true;
-                if (eval(this.Unused2)) return true;
-                if (eval(this.RecoilStaggerBonusToAttack)) return true;
-                if (eval(this.UnconsciousBonusToAttack)) return true;
-                if (eval(this.HandToHandBonusToAttack)) return true;
-                if (eval(this.PowerAttackChance)) return true;
-                if (eval(this.Unused3)) return true;
-                if (eval(this.RecoilStaggerBonusToPowerAttack)) return true;
-                if (eval(this.UnconsciousBonusToPowerAttack)) return true;
-                if (eval(this.PowerAttackNormal)) return true;
-                if (eval(this.PowerAttackForward)) return true;
-                if (eval(this.PowerAttackBack)) return true;
-                if (eval(this.PowerAttackLeft)) return true;
-                if (eval(this.PowerAttackRight)) return true;
-                if (eval(this.Unused4)) return true;
-                if (eval(this.HoldTimerMin)) return true;
-                if (eval(this.HoldTimerMax)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.Unused5)) return true;
-                if (eval(this.AcrobaticDodgeChance)) return true;
-                if (eval(this.RushingAttackChance)) return true;
-                if (eval(this.Unused6)) return true;
-                if (eval(this.RushingAttackDistanceMult)) return true;
-                if (eval(this.DodgeFatigueModMult)) return true;
-                if (eval(this.DodgeFatigueModBase)) return true;
-                if (eval(this.EncumbSpeedModBase)) return true;
-                if (eval(this.EncumbSpeedModMult)) return true;
-                if (eval(this.DodgeWhileUnderAttackMult)) return true;
-                if (eval(this.DodgeNotUnderAttackMult)) return true;
-                if (eval(this.DodgeBackWhileUnderAttackMult)) return true;
-                if (eval(this.DodgeBackNotUnderAttackMult)) return true;
-                if (eval(this.DodgeForwardWhileAttackingMult)) return true;
-                if (eval(this.DodgeForwardNotAttackingMult)) return true;
-                if (eval(this.BlockSkillModifierMult)) return true;
-                if (eval(this.BlockSkillModifierBase)) return true;
-                if (eval(this.BlockWhileUnderAttackMult)) return true;
-                if (eval(this.BlockNotUnderAttackMult)) return true;
-                if (eval(this.AttackSkillModifierMult)) return true;
-                if (eval(this.AttackSkillModifierBase)) return true;
-                if (eval(this.AttackWhileUnderAttackMult)) return true;
-                if (eval(this.AttackNotUnderAttackMult)) return true;
-                if (eval(this.AttackDuringBlockMult)) return true;
-                if (eval(this.PowerAttackFatigueModBase)) return true;
-                if (eval(this.PowerAttackFatigueModMult)) return true;
-                if (eval(this.CoverSearchRadius)) return true;
-                if (eval(this.TakeCoverChance)) return true;
-                if (eval(this.WaitTimerMin)) return true;
-                if (eval(this.WaitTimerMax)) return true;
-                if (eval(this.WaitToFireTimerMin)) return true;
-                if (eval(this.WaitToFireTimerMax)) return true;
-                if (eval(this.FireTimerMin)) return true;
-                if (eval(this.FireTimerMax)) return true;
-                if (eval(this.RangedWeaponRangeMultMin)) return true;
-                if (eval(this.Unused)) return true;
-                if (eval(this.WeaponRestrictions)) return true;
-                if (eval(this.RangedWeaponRangeMultMax)) return true;
-                if (eval(this.MaxTargetingFov)) return true;
-                if (eval(this.CombatRadius)) return true;
-                if (eval(this.SemiAutoFiringDelayMultMin)) return true;
-                if (eval(this.SemiAutoFiringDelayMultMax)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeChance)) return true;
+                if (eval(this.StandardManeuverDecisionLeftRightChance)) return true;
+                if (eval(this.StandardUnused1)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeLRTimerMin)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeLRTimerMax)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeForwardTimerMin)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeForwardTimerMax)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeBackTimerMin)) return true;
+                if (eval(this.StandardManeuverDecisionDodgeBackTimerMax)) return true;
+                if (eval(this.StandardManeuverDecisionIdleTimerMin)) return true;
+                if (eval(this.StandardManeuverDecisionIdleTimerMax)) return true;
+                if (eval(this.StandardMeleeDecisionBlockChance)) return true;
+                if (eval(this.StandardMeleeDecisionAttackChance)) return true;
+                if (eval(this.StandardUnused2)) return true;
+                if (eval(this.StandardMeleeDecisionRecoilStaggerBonusToAttack)) return true;
+                if (eval(this.StandardMeleeDecisionUnconsciousBonusToAttack)) return true;
+                if (eval(this.StandardMeleeDecisionHandToHandBonusToAttack)) return true;
+                if (eval(this.StandardMeleeDecisionPowerAttackChance)) return true;
+                if (eval(this.StandardUnused3)) return true;
+                if (eval(this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack)) return true;
+                if (eval(this.StandardMeleeDecisionUnconsciousBonusToPowerAttack)) return true;
+                if (eval(this.StandardMeleeDecisionPowerAttackNormal)) return true;
+                if (eval(this.StandardMeleeDecisionPowerAttackForward)) return true;
+                if (eval(this.StandardMeleeDecisionPowerAttackBack)) return true;
+                if (eval(this.StandardMeleeDecisionPowerAttackLeft)) return true;
+                if (eval(this.StandardMeleeDecisionPowerAttackRight)) return true;
+                if (eval(this.StandardUnused4)) return true;
+                if (eval(this.StandardMeleeDecisionHoldTimerMin)) return true;
+                if (eval(this.StandardMeleeDecisionHoldTimerMax)) return true;
+                if (eval(this.StandardFlags)) return true;
+                if (eval(this.StandardUnused5)) return true;
+                if (eval(this.StandardMeleeDecisionAcrobaticDodgeChance)) return true;
+                if (eval(this.StandardMeleeDecisionRushingAttackChance)) return true;
+                if (eval(this.StandardUnused6)) return true;
+                if (eval(this.StandardMeleeDecisionRushingAttackDistanceMult)) return true;
+                if (eval(this.AdvancedDodgeFatigueModMult)) return true;
+                if (eval(this.AdvancedDodgeFatigueModBase)) return true;
+                if (eval(this.AdvancedEncumbSpeedModBase)) return true;
+                if (eval(this.AdvancedEncumbSpeedModMult)) return true;
+                if (eval(this.AdvancedDodgeWhileUnderAttackMult)) return true;
+                if (eval(this.AdvancedDodgeNotUnderAttackMult)) return true;
+                if (eval(this.AdvancedDodgeBackWhileUnderAttackMult)) return true;
+                if (eval(this.AdvancedDodgeBackNotUnderAttackMult)) return true;
+                if (eval(this.AdvancedDodgeForwardWhileAttackingMult)) return true;
+                if (eval(this.AdvancedDodgeForwardNotAttackingMult)) return true;
+                if (eval(this.AdvancedBlockSkillModifierMult)) return true;
+                if (eval(this.AdvancedBlockSkillModifierBase)) return true;
+                if (eval(this.AdvancedBlockWhileUnderAttackMult)) return true;
+                if (eval(this.AdvancedBlockNotUnderAttackMult)) return true;
+                if (eval(this.AdvancedAttackSkillModifierMult)) return true;
+                if (eval(this.AdvancedAttackSkillModifierBase)) return true;
+                if (eval(this.AdvancedAttackWhileUnderAttackMult)) return true;
+                if (eval(this.AdvancedAttackNotUnderAttackMult)) return true;
+                if (eval(this.AdvancedAttackDuringBlockMult)) return true;
+                if (eval(this.AdvancedPowerAttackFatigueModBase)) return true;
+                if (eval(this.AdvancedPowerAttackFatigueModMult)) return true;
+                if (eval(this.SimpleCoverSearchRadius)) return true;
+                if (eval(this.SimpleTakeCoverChance)) return true;
+                if (eval(this.SimpleWaitTimerMin)) return true;
+                if (eval(this.SimpleWaitTimerMax)) return true;
+                if (eval(this.SimpleWaitToFireTimerMin)) return true;
+                if (eval(this.SimpleWaitToFireTimerMax)) return true;
+                if (eval(this.SimpleFireTimerMin)) return true;
+                if (eval(this.SimpleFireTimerMax)) return true;
+                if (eval(this.SimpleRangedWeaponRangeMultMin)) return true;
+                if (eval(this.SimpleUnused)) return true;
+                if (eval(this.SimpleWeaponRestrictions)) return true;
+                if (eval(this.SimpleRangedWeaponRangeMultMax)) return true;
+                if (eval(this.SimpleMaxTargetingFov)) return true;
+                if (eval(this.SimpleCombatRadius)) return true;
+                if (eval(this.SimpleSemiAutoFiringDelayMultMin)) return true;
+                if (eval(this.SimpleSemiAutoFiringDelayMultMax)) return true;
                 return false;
             }
             #endregion
@@ -1007,78 +1007,78 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DodgeChance = eval(this.DodgeChance);
-                obj.LeftRightChance = eval(this.LeftRightChance);
-                obj.Unused1 = eval(this.Unused1);
-                obj.DodgeLRTimerMin = eval(this.DodgeLRTimerMin);
-                obj.DodgeLRTimerMax = eval(this.DodgeLRTimerMax);
-                obj.DodgeForwardTimerMin = eval(this.DodgeForwardTimerMin);
-                obj.DodgeForwardTimerMax = eval(this.DodgeForwardTimerMax);
-                obj.DodgeBackTimerMin = eval(this.DodgeBackTimerMin);
-                obj.DodgeBackTimerMax = eval(this.DodgeBackTimerMax);
-                obj.IdleTimerMin = eval(this.IdleTimerMin);
-                obj.IdleTimerMax = eval(this.IdleTimerMax);
-                obj.BlockChance = eval(this.BlockChance);
-                obj.AttackChance = eval(this.AttackChance);
-                obj.Unused2 = eval(this.Unused2);
-                obj.RecoilStaggerBonusToAttack = eval(this.RecoilStaggerBonusToAttack);
-                obj.UnconsciousBonusToAttack = eval(this.UnconsciousBonusToAttack);
-                obj.HandToHandBonusToAttack = eval(this.HandToHandBonusToAttack);
-                obj.PowerAttackChance = eval(this.PowerAttackChance);
-                obj.Unused3 = eval(this.Unused3);
-                obj.RecoilStaggerBonusToPowerAttack = eval(this.RecoilStaggerBonusToPowerAttack);
-                obj.UnconsciousBonusToPowerAttack = eval(this.UnconsciousBonusToPowerAttack);
-                obj.PowerAttackNormal = eval(this.PowerAttackNormal);
-                obj.PowerAttackForward = eval(this.PowerAttackForward);
-                obj.PowerAttackBack = eval(this.PowerAttackBack);
-                obj.PowerAttackLeft = eval(this.PowerAttackLeft);
-                obj.PowerAttackRight = eval(this.PowerAttackRight);
-                obj.Unused4 = eval(this.Unused4);
-                obj.HoldTimerMin = eval(this.HoldTimerMin);
-                obj.HoldTimerMax = eval(this.HoldTimerMax);
-                obj.Flags = eval(this.Flags);
-                obj.Unused5 = eval(this.Unused5);
-                obj.AcrobaticDodgeChance = eval(this.AcrobaticDodgeChance);
-                obj.RushingAttackChance = eval(this.RushingAttackChance);
-                obj.Unused6 = eval(this.Unused6);
-                obj.RushingAttackDistanceMult = eval(this.RushingAttackDistanceMult);
-                obj.DodgeFatigueModMult = eval(this.DodgeFatigueModMult);
-                obj.DodgeFatigueModBase = eval(this.DodgeFatigueModBase);
-                obj.EncumbSpeedModBase = eval(this.EncumbSpeedModBase);
-                obj.EncumbSpeedModMult = eval(this.EncumbSpeedModMult);
-                obj.DodgeWhileUnderAttackMult = eval(this.DodgeWhileUnderAttackMult);
-                obj.DodgeNotUnderAttackMult = eval(this.DodgeNotUnderAttackMult);
-                obj.DodgeBackWhileUnderAttackMult = eval(this.DodgeBackWhileUnderAttackMult);
-                obj.DodgeBackNotUnderAttackMult = eval(this.DodgeBackNotUnderAttackMult);
-                obj.DodgeForwardWhileAttackingMult = eval(this.DodgeForwardWhileAttackingMult);
-                obj.DodgeForwardNotAttackingMult = eval(this.DodgeForwardNotAttackingMult);
-                obj.BlockSkillModifierMult = eval(this.BlockSkillModifierMult);
-                obj.BlockSkillModifierBase = eval(this.BlockSkillModifierBase);
-                obj.BlockWhileUnderAttackMult = eval(this.BlockWhileUnderAttackMult);
-                obj.BlockNotUnderAttackMult = eval(this.BlockNotUnderAttackMult);
-                obj.AttackSkillModifierMult = eval(this.AttackSkillModifierMult);
-                obj.AttackSkillModifierBase = eval(this.AttackSkillModifierBase);
-                obj.AttackWhileUnderAttackMult = eval(this.AttackWhileUnderAttackMult);
-                obj.AttackNotUnderAttackMult = eval(this.AttackNotUnderAttackMult);
-                obj.AttackDuringBlockMult = eval(this.AttackDuringBlockMult);
-                obj.PowerAttackFatigueModBase = eval(this.PowerAttackFatigueModBase);
-                obj.PowerAttackFatigueModMult = eval(this.PowerAttackFatigueModMult);
-                obj.CoverSearchRadius = eval(this.CoverSearchRadius);
-                obj.TakeCoverChance = eval(this.TakeCoverChance);
-                obj.WaitTimerMin = eval(this.WaitTimerMin);
-                obj.WaitTimerMax = eval(this.WaitTimerMax);
-                obj.WaitToFireTimerMin = eval(this.WaitToFireTimerMin);
-                obj.WaitToFireTimerMax = eval(this.WaitToFireTimerMax);
-                obj.FireTimerMin = eval(this.FireTimerMin);
-                obj.FireTimerMax = eval(this.FireTimerMax);
-                obj.RangedWeaponRangeMultMin = eval(this.RangedWeaponRangeMultMin);
-                obj.Unused = eval(this.Unused);
-                obj.WeaponRestrictions = eval(this.WeaponRestrictions);
-                obj.RangedWeaponRangeMultMax = eval(this.RangedWeaponRangeMultMax);
-                obj.MaxTargetingFov = eval(this.MaxTargetingFov);
-                obj.CombatRadius = eval(this.CombatRadius);
-                obj.SemiAutoFiringDelayMultMin = eval(this.SemiAutoFiringDelayMultMin);
-                obj.SemiAutoFiringDelayMultMax = eval(this.SemiAutoFiringDelayMultMax);
+                obj.StandardManeuverDecisionDodgeChance = eval(this.StandardManeuverDecisionDodgeChance);
+                obj.StandardManeuverDecisionLeftRightChance = eval(this.StandardManeuverDecisionLeftRightChance);
+                obj.StandardUnused1 = eval(this.StandardUnused1);
+                obj.StandardManeuverDecisionDodgeLRTimerMin = eval(this.StandardManeuverDecisionDodgeLRTimerMin);
+                obj.StandardManeuverDecisionDodgeLRTimerMax = eval(this.StandardManeuverDecisionDodgeLRTimerMax);
+                obj.StandardManeuverDecisionDodgeForwardTimerMin = eval(this.StandardManeuverDecisionDodgeForwardTimerMin);
+                obj.StandardManeuverDecisionDodgeForwardTimerMax = eval(this.StandardManeuverDecisionDodgeForwardTimerMax);
+                obj.StandardManeuverDecisionDodgeBackTimerMin = eval(this.StandardManeuverDecisionDodgeBackTimerMin);
+                obj.StandardManeuverDecisionDodgeBackTimerMax = eval(this.StandardManeuverDecisionDodgeBackTimerMax);
+                obj.StandardManeuverDecisionIdleTimerMin = eval(this.StandardManeuverDecisionIdleTimerMin);
+                obj.StandardManeuverDecisionIdleTimerMax = eval(this.StandardManeuverDecisionIdleTimerMax);
+                obj.StandardMeleeDecisionBlockChance = eval(this.StandardMeleeDecisionBlockChance);
+                obj.StandardMeleeDecisionAttackChance = eval(this.StandardMeleeDecisionAttackChance);
+                obj.StandardUnused2 = eval(this.StandardUnused2);
+                obj.StandardMeleeDecisionRecoilStaggerBonusToAttack = eval(this.StandardMeleeDecisionRecoilStaggerBonusToAttack);
+                obj.StandardMeleeDecisionUnconsciousBonusToAttack = eval(this.StandardMeleeDecisionUnconsciousBonusToAttack);
+                obj.StandardMeleeDecisionHandToHandBonusToAttack = eval(this.StandardMeleeDecisionHandToHandBonusToAttack);
+                obj.StandardMeleeDecisionPowerAttackChance = eval(this.StandardMeleeDecisionPowerAttackChance);
+                obj.StandardUnused3 = eval(this.StandardUnused3);
+                obj.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = eval(this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack);
+                obj.StandardMeleeDecisionUnconsciousBonusToPowerAttack = eval(this.StandardMeleeDecisionUnconsciousBonusToPowerAttack);
+                obj.StandardMeleeDecisionPowerAttackNormal = eval(this.StandardMeleeDecisionPowerAttackNormal);
+                obj.StandardMeleeDecisionPowerAttackForward = eval(this.StandardMeleeDecisionPowerAttackForward);
+                obj.StandardMeleeDecisionPowerAttackBack = eval(this.StandardMeleeDecisionPowerAttackBack);
+                obj.StandardMeleeDecisionPowerAttackLeft = eval(this.StandardMeleeDecisionPowerAttackLeft);
+                obj.StandardMeleeDecisionPowerAttackRight = eval(this.StandardMeleeDecisionPowerAttackRight);
+                obj.StandardUnused4 = eval(this.StandardUnused4);
+                obj.StandardMeleeDecisionHoldTimerMin = eval(this.StandardMeleeDecisionHoldTimerMin);
+                obj.StandardMeleeDecisionHoldTimerMax = eval(this.StandardMeleeDecisionHoldTimerMax);
+                obj.StandardFlags = eval(this.StandardFlags);
+                obj.StandardUnused5 = eval(this.StandardUnused5);
+                obj.StandardMeleeDecisionAcrobaticDodgeChance = eval(this.StandardMeleeDecisionAcrobaticDodgeChance);
+                obj.StandardMeleeDecisionRushingAttackChance = eval(this.StandardMeleeDecisionRushingAttackChance);
+                obj.StandardUnused6 = eval(this.StandardUnused6);
+                obj.StandardMeleeDecisionRushingAttackDistanceMult = eval(this.StandardMeleeDecisionRushingAttackDistanceMult);
+                obj.AdvancedDodgeFatigueModMult = eval(this.AdvancedDodgeFatigueModMult);
+                obj.AdvancedDodgeFatigueModBase = eval(this.AdvancedDodgeFatigueModBase);
+                obj.AdvancedEncumbSpeedModBase = eval(this.AdvancedEncumbSpeedModBase);
+                obj.AdvancedEncumbSpeedModMult = eval(this.AdvancedEncumbSpeedModMult);
+                obj.AdvancedDodgeWhileUnderAttackMult = eval(this.AdvancedDodgeWhileUnderAttackMult);
+                obj.AdvancedDodgeNotUnderAttackMult = eval(this.AdvancedDodgeNotUnderAttackMult);
+                obj.AdvancedDodgeBackWhileUnderAttackMult = eval(this.AdvancedDodgeBackWhileUnderAttackMult);
+                obj.AdvancedDodgeBackNotUnderAttackMult = eval(this.AdvancedDodgeBackNotUnderAttackMult);
+                obj.AdvancedDodgeForwardWhileAttackingMult = eval(this.AdvancedDodgeForwardWhileAttackingMult);
+                obj.AdvancedDodgeForwardNotAttackingMult = eval(this.AdvancedDodgeForwardNotAttackingMult);
+                obj.AdvancedBlockSkillModifierMult = eval(this.AdvancedBlockSkillModifierMult);
+                obj.AdvancedBlockSkillModifierBase = eval(this.AdvancedBlockSkillModifierBase);
+                obj.AdvancedBlockWhileUnderAttackMult = eval(this.AdvancedBlockWhileUnderAttackMult);
+                obj.AdvancedBlockNotUnderAttackMult = eval(this.AdvancedBlockNotUnderAttackMult);
+                obj.AdvancedAttackSkillModifierMult = eval(this.AdvancedAttackSkillModifierMult);
+                obj.AdvancedAttackSkillModifierBase = eval(this.AdvancedAttackSkillModifierBase);
+                obj.AdvancedAttackWhileUnderAttackMult = eval(this.AdvancedAttackWhileUnderAttackMult);
+                obj.AdvancedAttackNotUnderAttackMult = eval(this.AdvancedAttackNotUnderAttackMult);
+                obj.AdvancedAttackDuringBlockMult = eval(this.AdvancedAttackDuringBlockMult);
+                obj.AdvancedPowerAttackFatigueModBase = eval(this.AdvancedPowerAttackFatigueModBase);
+                obj.AdvancedPowerAttackFatigueModMult = eval(this.AdvancedPowerAttackFatigueModMult);
+                obj.SimpleCoverSearchRadius = eval(this.SimpleCoverSearchRadius);
+                obj.SimpleTakeCoverChance = eval(this.SimpleTakeCoverChance);
+                obj.SimpleWaitTimerMin = eval(this.SimpleWaitTimerMin);
+                obj.SimpleWaitTimerMax = eval(this.SimpleWaitTimerMax);
+                obj.SimpleWaitToFireTimerMin = eval(this.SimpleWaitToFireTimerMin);
+                obj.SimpleWaitToFireTimerMax = eval(this.SimpleWaitToFireTimerMax);
+                obj.SimpleFireTimerMin = eval(this.SimpleFireTimerMin);
+                obj.SimpleFireTimerMax = eval(this.SimpleFireTimerMax);
+                obj.SimpleRangedWeaponRangeMultMin = eval(this.SimpleRangedWeaponRangeMultMin);
+                obj.SimpleUnused = eval(this.SimpleUnused);
+                obj.SimpleWeaponRestrictions = eval(this.SimpleWeaponRestrictions);
+                obj.SimpleRangedWeaponRangeMultMax = eval(this.SimpleRangedWeaponRangeMultMax);
+                obj.SimpleMaxTargetingFov = eval(this.SimpleMaxTargetingFov);
+                obj.SimpleCombatRadius = eval(this.SimpleCombatRadius);
+                obj.SimpleSemiAutoFiringDelayMultMin = eval(this.SimpleSemiAutoFiringDelayMultMin);
+                obj.SimpleSemiAutoFiringDelayMultMax = eval(this.SimpleSemiAutoFiringDelayMultMax);
             }
             #endregion
 
@@ -1097,293 +1097,293 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(CombatStyle.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.DodgeChance ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeChance ?? true)
                     {
-                        sb.AppendItem(DodgeChance, "DodgeChance");
+                        sb.AppendItem(StandardManeuverDecisionDodgeChance, "StandardManeuverDecisionDodgeChance");
                     }
-                    if (printMask?.LeftRightChance ?? true)
+                    if (printMask?.StandardManeuverDecisionLeftRightChance ?? true)
                     {
-                        sb.AppendItem(LeftRightChance, "LeftRightChance");
+                        sb.AppendItem(StandardManeuverDecisionLeftRightChance, "StandardManeuverDecisionLeftRightChance");
                     }
-                    if (printMask?.Unused1 ?? true)
+                    if (printMask?.StandardUnused1 ?? true)
                     {
-                        sb.AppendItem(Unused1, "Unused1");
+                        sb.AppendItem(StandardUnused1, "StandardUnused1");
                     }
-                    if (printMask?.DodgeLRTimerMin ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeLRTimerMin ?? true)
                     {
-                        sb.AppendItem(DodgeLRTimerMin, "DodgeLRTimerMin");
+                        sb.AppendItem(StandardManeuverDecisionDodgeLRTimerMin, "StandardManeuverDecisionDodgeLRTimerMin");
                     }
-                    if (printMask?.DodgeLRTimerMax ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeLRTimerMax ?? true)
                     {
-                        sb.AppendItem(DodgeLRTimerMax, "DodgeLRTimerMax");
+                        sb.AppendItem(StandardManeuverDecisionDodgeLRTimerMax, "StandardManeuverDecisionDodgeLRTimerMax");
                     }
-                    if (printMask?.DodgeForwardTimerMin ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeForwardTimerMin ?? true)
                     {
-                        sb.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
+                        sb.AppendItem(StandardManeuverDecisionDodgeForwardTimerMin, "StandardManeuverDecisionDodgeForwardTimerMin");
                     }
-                    if (printMask?.DodgeForwardTimerMax ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeForwardTimerMax ?? true)
                     {
-                        sb.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
+                        sb.AppendItem(StandardManeuverDecisionDodgeForwardTimerMax, "StandardManeuverDecisionDodgeForwardTimerMax");
                     }
-                    if (printMask?.DodgeBackTimerMin ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeBackTimerMin ?? true)
                     {
-                        sb.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
+                        sb.AppendItem(StandardManeuverDecisionDodgeBackTimerMin, "StandardManeuverDecisionDodgeBackTimerMin");
                     }
-                    if (printMask?.DodgeBackTimerMax ?? true)
+                    if (printMask?.StandardManeuverDecisionDodgeBackTimerMax ?? true)
                     {
-                        sb.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
+                        sb.AppendItem(StandardManeuverDecisionDodgeBackTimerMax, "StandardManeuverDecisionDodgeBackTimerMax");
                     }
-                    if (printMask?.IdleTimerMin ?? true)
+                    if (printMask?.StandardManeuverDecisionIdleTimerMin ?? true)
                     {
-                        sb.AppendItem(IdleTimerMin, "IdleTimerMin");
+                        sb.AppendItem(StandardManeuverDecisionIdleTimerMin, "StandardManeuverDecisionIdleTimerMin");
                     }
-                    if (printMask?.IdleTimerMax ?? true)
+                    if (printMask?.StandardManeuverDecisionIdleTimerMax ?? true)
                     {
-                        sb.AppendItem(IdleTimerMax, "IdleTimerMax");
+                        sb.AppendItem(StandardManeuverDecisionIdleTimerMax, "StandardManeuverDecisionIdleTimerMax");
                     }
-                    if (printMask?.BlockChance ?? true)
+                    if (printMask?.StandardMeleeDecisionBlockChance ?? true)
                     {
-                        sb.AppendItem(BlockChance, "BlockChance");
+                        sb.AppendItem(StandardMeleeDecisionBlockChance, "StandardMeleeDecisionBlockChance");
                     }
-                    if (printMask?.AttackChance ?? true)
+                    if (printMask?.StandardMeleeDecisionAttackChance ?? true)
                     {
-                        sb.AppendItem(AttackChance, "AttackChance");
+                        sb.AppendItem(StandardMeleeDecisionAttackChance, "StandardMeleeDecisionAttackChance");
                     }
-                    if (printMask?.Unused2 ?? true)
+                    if (printMask?.StandardUnused2 ?? true)
                     {
-                        sb.AppendItem(Unused2, "Unused2");
+                        sb.AppendItem(StandardUnused2, "StandardUnused2");
                     }
-                    if (printMask?.RecoilStaggerBonusToAttack ?? true)
+                    if (printMask?.StandardMeleeDecisionRecoilStaggerBonusToAttack ?? true)
                     {
-                        sb.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
+                        sb.AppendItem(StandardMeleeDecisionRecoilStaggerBonusToAttack, "StandardMeleeDecisionRecoilStaggerBonusToAttack");
                     }
-                    if (printMask?.UnconsciousBonusToAttack ?? true)
+                    if (printMask?.StandardMeleeDecisionUnconsciousBonusToAttack ?? true)
                     {
-                        sb.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
+                        sb.AppendItem(StandardMeleeDecisionUnconsciousBonusToAttack, "StandardMeleeDecisionUnconsciousBonusToAttack");
                     }
-                    if (printMask?.HandToHandBonusToAttack ?? true)
+                    if (printMask?.StandardMeleeDecisionHandToHandBonusToAttack ?? true)
                     {
-                        sb.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
+                        sb.AppendItem(StandardMeleeDecisionHandToHandBonusToAttack, "StandardMeleeDecisionHandToHandBonusToAttack");
                     }
-                    if (printMask?.PowerAttackChance ?? true)
+                    if (printMask?.StandardMeleeDecisionPowerAttackChance ?? true)
                     {
-                        sb.AppendItem(PowerAttackChance, "PowerAttackChance");
+                        sb.AppendItem(StandardMeleeDecisionPowerAttackChance, "StandardMeleeDecisionPowerAttackChance");
                     }
-                    if (printMask?.Unused3 ?? true)
+                    if (printMask?.StandardUnused3 ?? true)
                     {
-                        sb.AppendItem(Unused3, "Unused3");
+                        sb.AppendItem(StandardUnused3, "StandardUnused3");
                     }
-                    if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
+                    if (printMask?.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack ?? true)
                     {
-                        sb.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
+                        sb.AppendItem(StandardMeleeDecisionRecoilStaggerBonusToPowerAttack, "StandardMeleeDecisionRecoilStaggerBonusToPowerAttack");
                     }
-                    if (printMask?.UnconsciousBonusToPowerAttack ?? true)
+                    if (printMask?.StandardMeleeDecisionUnconsciousBonusToPowerAttack ?? true)
                     {
-                        sb.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
+                        sb.AppendItem(StandardMeleeDecisionUnconsciousBonusToPowerAttack, "StandardMeleeDecisionUnconsciousBonusToPowerAttack");
                     }
-                    if (printMask?.PowerAttackNormal ?? true)
+                    if (printMask?.StandardMeleeDecisionPowerAttackNormal ?? true)
                     {
-                        sb.AppendItem(PowerAttackNormal, "PowerAttackNormal");
+                        sb.AppendItem(StandardMeleeDecisionPowerAttackNormal, "StandardMeleeDecisionPowerAttackNormal");
                     }
-                    if (printMask?.PowerAttackForward ?? true)
+                    if (printMask?.StandardMeleeDecisionPowerAttackForward ?? true)
                     {
-                        sb.AppendItem(PowerAttackForward, "PowerAttackForward");
+                        sb.AppendItem(StandardMeleeDecisionPowerAttackForward, "StandardMeleeDecisionPowerAttackForward");
                     }
-                    if (printMask?.PowerAttackBack ?? true)
+                    if (printMask?.StandardMeleeDecisionPowerAttackBack ?? true)
                     {
-                        sb.AppendItem(PowerAttackBack, "PowerAttackBack");
+                        sb.AppendItem(StandardMeleeDecisionPowerAttackBack, "StandardMeleeDecisionPowerAttackBack");
                     }
-                    if (printMask?.PowerAttackLeft ?? true)
+                    if (printMask?.StandardMeleeDecisionPowerAttackLeft ?? true)
                     {
-                        sb.AppendItem(PowerAttackLeft, "PowerAttackLeft");
+                        sb.AppendItem(StandardMeleeDecisionPowerAttackLeft, "StandardMeleeDecisionPowerAttackLeft");
                     }
-                    if (printMask?.PowerAttackRight ?? true)
+                    if (printMask?.StandardMeleeDecisionPowerAttackRight ?? true)
                     {
-                        sb.AppendItem(PowerAttackRight, "PowerAttackRight");
+                        sb.AppendItem(StandardMeleeDecisionPowerAttackRight, "StandardMeleeDecisionPowerAttackRight");
                     }
-                    if (printMask?.Unused4 ?? true)
+                    if (printMask?.StandardUnused4 ?? true)
                     {
-                        sb.AppendItem(Unused4, "Unused4");
+                        sb.AppendItem(StandardUnused4, "StandardUnused4");
                     }
-                    if (printMask?.HoldTimerMin ?? true)
+                    if (printMask?.StandardMeleeDecisionHoldTimerMin ?? true)
                     {
-                        sb.AppendItem(HoldTimerMin, "HoldTimerMin");
+                        sb.AppendItem(StandardMeleeDecisionHoldTimerMin, "StandardMeleeDecisionHoldTimerMin");
                     }
-                    if (printMask?.HoldTimerMax ?? true)
+                    if (printMask?.StandardMeleeDecisionHoldTimerMax ?? true)
                     {
-                        sb.AppendItem(HoldTimerMax, "HoldTimerMax");
+                        sb.AppendItem(StandardMeleeDecisionHoldTimerMax, "StandardMeleeDecisionHoldTimerMax");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.StandardFlags ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(StandardFlags, "StandardFlags");
                     }
-                    if (printMask?.Unused5 ?? true)
+                    if (printMask?.StandardUnused5 ?? true)
                     {
-                        sb.AppendItem(Unused5, "Unused5");
+                        sb.AppendItem(StandardUnused5, "StandardUnused5");
                     }
-                    if (printMask?.AcrobaticDodgeChance ?? true)
+                    if (printMask?.StandardMeleeDecisionAcrobaticDodgeChance ?? true)
                     {
-                        sb.AppendItem(AcrobaticDodgeChance, "AcrobaticDodgeChance");
+                        sb.AppendItem(StandardMeleeDecisionAcrobaticDodgeChance, "StandardMeleeDecisionAcrobaticDodgeChance");
                     }
-                    if (printMask?.RushingAttackChance ?? true)
+                    if (printMask?.StandardMeleeDecisionRushingAttackChance ?? true)
                     {
-                        sb.AppendItem(RushingAttackChance, "RushingAttackChance");
+                        sb.AppendItem(StandardMeleeDecisionRushingAttackChance, "StandardMeleeDecisionRushingAttackChance");
                     }
-                    if (printMask?.Unused6 ?? true)
+                    if (printMask?.StandardUnused6 ?? true)
                     {
-                        sb.AppendItem(Unused6, "Unused6");
+                        sb.AppendItem(StandardUnused6, "StandardUnused6");
                     }
-                    if (printMask?.RushingAttackDistanceMult ?? true)
+                    if (printMask?.StandardMeleeDecisionRushingAttackDistanceMult ?? true)
                     {
-                        sb.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                        sb.AppendItem(StandardMeleeDecisionRushingAttackDistanceMult, "StandardMeleeDecisionRushingAttackDistanceMult");
                     }
-                    if (printMask?.DodgeFatigueModMult ?? true)
+                    if (printMask?.AdvancedDodgeFatigueModMult ?? true)
                     {
-                        sb.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
+                        sb.AppendItem(AdvancedDodgeFatigueModMult, "AdvancedDodgeFatigueModMult");
                     }
-                    if (printMask?.DodgeFatigueModBase ?? true)
+                    if (printMask?.AdvancedDodgeFatigueModBase ?? true)
                     {
-                        sb.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
+                        sb.AppendItem(AdvancedDodgeFatigueModBase, "AdvancedDodgeFatigueModBase");
                     }
-                    if (printMask?.EncumbSpeedModBase ?? true)
+                    if (printMask?.AdvancedEncumbSpeedModBase ?? true)
                     {
-                        sb.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
+                        sb.AppendItem(AdvancedEncumbSpeedModBase, "AdvancedEncumbSpeedModBase");
                     }
-                    if (printMask?.EncumbSpeedModMult ?? true)
+                    if (printMask?.AdvancedEncumbSpeedModMult ?? true)
                     {
-                        sb.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
+                        sb.AppendItem(AdvancedEncumbSpeedModMult, "AdvancedEncumbSpeedModMult");
                     }
-                    if (printMask?.DodgeWhileUnderAttackMult ?? true)
+                    if (printMask?.AdvancedDodgeWhileUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                        sb.AppendItem(AdvancedDodgeWhileUnderAttackMult, "AdvancedDodgeWhileUnderAttackMult");
                     }
-                    if (printMask?.DodgeNotUnderAttackMult ?? true)
+                    if (printMask?.AdvancedDodgeNotUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                        sb.AppendItem(AdvancedDodgeNotUnderAttackMult, "AdvancedDodgeNotUnderAttackMult");
                     }
-                    if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
+                    if (printMask?.AdvancedDodgeBackWhileUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                        sb.AppendItem(AdvancedDodgeBackWhileUnderAttackMult, "AdvancedDodgeBackWhileUnderAttackMult");
                     }
-                    if (printMask?.DodgeBackNotUnderAttackMult ?? true)
+                    if (printMask?.AdvancedDodgeBackNotUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                        sb.AppendItem(AdvancedDodgeBackNotUnderAttackMult, "AdvancedDodgeBackNotUnderAttackMult");
                     }
-                    if (printMask?.DodgeForwardWhileAttackingMult ?? true)
+                    if (printMask?.AdvancedDodgeForwardWhileAttackingMult ?? true)
                     {
-                        sb.AppendItem(DodgeForwardWhileAttackingMult, "DodgeForwardWhileAttackingMult");
+                        sb.AppendItem(AdvancedDodgeForwardWhileAttackingMult, "AdvancedDodgeForwardWhileAttackingMult");
                     }
-                    if (printMask?.DodgeForwardNotAttackingMult ?? true)
+                    if (printMask?.AdvancedDodgeForwardNotAttackingMult ?? true)
                     {
-                        sb.AppendItem(DodgeForwardNotAttackingMult, "DodgeForwardNotAttackingMult");
+                        sb.AppendItem(AdvancedDodgeForwardNotAttackingMult, "AdvancedDodgeForwardNotAttackingMult");
                     }
-                    if (printMask?.BlockSkillModifierMult ?? true)
+                    if (printMask?.AdvancedBlockSkillModifierMult ?? true)
                     {
-                        sb.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
+                        sb.AppendItem(AdvancedBlockSkillModifierMult, "AdvancedBlockSkillModifierMult");
                     }
-                    if (printMask?.BlockSkillModifierBase ?? true)
+                    if (printMask?.AdvancedBlockSkillModifierBase ?? true)
                     {
-                        sb.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
+                        sb.AppendItem(AdvancedBlockSkillModifierBase, "AdvancedBlockSkillModifierBase");
                     }
-                    if (printMask?.BlockWhileUnderAttackMult ?? true)
+                    if (printMask?.AdvancedBlockWhileUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                        sb.AppendItem(AdvancedBlockWhileUnderAttackMult, "AdvancedBlockWhileUnderAttackMult");
                     }
-                    if (printMask?.BlockNotUnderAttackMult ?? true)
+                    if (printMask?.AdvancedBlockNotUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                        sb.AppendItem(AdvancedBlockNotUnderAttackMult, "AdvancedBlockNotUnderAttackMult");
                     }
-                    if (printMask?.AttackSkillModifierMult ?? true)
+                    if (printMask?.AdvancedAttackSkillModifierMult ?? true)
                     {
-                        sb.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
+                        sb.AppendItem(AdvancedAttackSkillModifierMult, "AdvancedAttackSkillModifierMult");
                     }
-                    if (printMask?.AttackSkillModifierBase ?? true)
+                    if (printMask?.AdvancedAttackSkillModifierBase ?? true)
                     {
-                        sb.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
+                        sb.AppendItem(AdvancedAttackSkillModifierBase, "AdvancedAttackSkillModifierBase");
                     }
-                    if (printMask?.AttackWhileUnderAttackMult ?? true)
+                    if (printMask?.AdvancedAttackWhileUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                        sb.AppendItem(AdvancedAttackWhileUnderAttackMult, "AdvancedAttackWhileUnderAttackMult");
                     }
-                    if (printMask?.AttackNotUnderAttackMult ?? true)
+                    if (printMask?.AdvancedAttackNotUnderAttackMult ?? true)
                     {
-                        sb.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                        sb.AppendItem(AdvancedAttackNotUnderAttackMult, "AdvancedAttackNotUnderAttackMult");
                     }
-                    if (printMask?.AttackDuringBlockMult ?? true)
+                    if (printMask?.AdvancedAttackDuringBlockMult ?? true)
                     {
-                        sb.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
+                        sb.AppendItem(AdvancedAttackDuringBlockMult, "AdvancedAttackDuringBlockMult");
                     }
-                    if (printMask?.PowerAttackFatigueModBase ?? true)
+                    if (printMask?.AdvancedPowerAttackFatigueModBase ?? true)
                     {
-                        sb.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                        sb.AppendItem(AdvancedPowerAttackFatigueModBase, "AdvancedPowerAttackFatigueModBase");
                     }
-                    if (printMask?.PowerAttackFatigueModMult ?? true)
+                    if (printMask?.AdvancedPowerAttackFatigueModMult ?? true)
                     {
-                        sb.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                        sb.AppendItem(AdvancedPowerAttackFatigueModMult, "AdvancedPowerAttackFatigueModMult");
                     }
-                    if (printMask?.CoverSearchRadius ?? true)
+                    if (printMask?.SimpleCoverSearchRadius ?? true)
                     {
-                        sb.AppendItem(CoverSearchRadius, "CoverSearchRadius");
+                        sb.AppendItem(SimpleCoverSearchRadius, "SimpleCoverSearchRadius");
                     }
-                    if (printMask?.TakeCoverChance ?? true)
+                    if (printMask?.SimpleTakeCoverChance ?? true)
                     {
-                        sb.AppendItem(TakeCoverChance, "TakeCoverChance");
+                        sb.AppendItem(SimpleTakeCoverChance, "SimpleTakeCoverChance");
                     }
-                    if (printMask?.WaitTimerMin ?? true)
+                    if (printMask?.SimpleWaitTimerMin ?? true)
                     {
-                        sb.AppendItem(WaitTimerMin, "WaitTimerMin");
+                        sb.AppendItem(SimpleWaitTimerMin, "SimpleWaitTimerMin");
                     }
-                    if (printMask?.WaitTimerMax ?? true)
+                    if (printMask?.SimpleWaitTimerMax ?? true)
                     {
-                        sb.AppendItem(WaitTimerMax, "WaitTimerMax");
+                        sb.AppendItem(SimpleWaitTimerMax, "SimpleWaitTimerMax");
                     }
-                    if (printMask?.WaitToFireTimerMin ?? true)
+                    if (printMask?.SimpleWaitToFireTimerMin ?? true)
                     {
-                        sb.AppendItem(WaitToFireTimerMin, "WaitToFireTimerMin");
+                        sb.AppendItem(SimpleWaitToFireTimerMin, "SimpleWaitToFireTimerMin");
                     }
-                    if (printMask?.WaitToFireTimerMax ?? true)
+                    if (printMask?.SimpleWaitToFireTimerMax ?? true)
                     {
-                        sb.AppendItem(WaitToFireTimerMax, "WaitToFireTimerMax");
+                        sb.AppendItem(SimpleWaitToFireTimerMax, "SimpleWaitToFireTimerMax");
                     }
-                    if (printMask?.FireTimerMin ?? true)
+                    if (printMask?.SimpleFireTimerMin ?? true)
                     {
-                        sb.AppendItem(FireTimerMin, "FireTimerMin");
+                        sb.AppendItem(SimpleFireTimerMin, "SimpleFireTimerMin");
                     }
-                    if (printMask?.FireTimerMax ?? true)
+                    if (printMask?.SimpleFireTimerMax ?? true)
                     {
-                        sb.AppendItem(FireTimerMax, "FireTimerMax");
+                        sb.AppendItem(SimpleFireTimerMax, "SimpleFireTimerMax");
                     }
-                    if (printMask?.RangedWeaponRangeMultMin ?? true)
+                    if (printMask?.SimpleRangedWeaponRangeMultMin ?? true)
                     {
-                        sb.AppendItem(RangedWeaponRangeMultMin, "RangedWeaponRangeMultMin");
+                        sb.AppendItem(SimpleRangedWeaponRangeMultMin, "SimpleRangedWeaponRangeMultMin");
                     }
-                    if (printMask?.Unused ?? true)
+                    if (printMask?.SimpleUnused ?? true)
                     {
-                        sb.AppendItem(Unused, "Unused");
+                        sb.AppendItem(SimpleUnused, "SimpleUnused");
                     }
-                    if (printMask?.WeaponRestrictions ?? true)
+                    if (printMask?.SimpleWeaponRestrictions ?? true)
                     {
-                        sb.AppendItem(WeaponRestrictions, "WeaponRestrictions");
+                        sb.AppendItem(SimpleWeaponRestrictions, "SimpleWeaponRestrictions");
                     }
-                    if (printMask?.RangedWeaponRangeMultMax ?? true)
+                    if (printMask?.SimpleRangedWeaponRangeMultMax ?? true)
                     {
-                        sb.AppendItem(RangedWeaponRangeMultMax, "RangedWeaponRangeMultMax");
+                        sb.AppendItem(SimpleRangedWeaponRangeMultMax, "SimpleRangedWeaponRangeMultMax");
                     }
-                    if (printMask?.MaxTargetingFov ?? true)
+                    if (printMask?.SimpleMaxTargetingFov ?? true)
                     {
-                        sb.AppendItem(MaxTargetingFov, "MaxTargetingFov");
+                        sb.AppendItem(SimpleMaxTargetingFov, "SimpleMaxTargetingFov");
                     }
-                    if (printMask?.CombatRadius ?? true)
+                    if (printMask?.SimpleCombatRadius ?? true)
                     {
-                        sb.AppendItem(CombatRadius, "CombatRadius");
+                        sb.AppendItem(SimpleCombatRadius, "SimpleCombatRadius");
                     }
-                    if (printMask?.SemiAutoFiringDelayMultMin ?? true)
+                    if (printMask?.SimpleSemiAutoFiringDelayMultMin ?? true)
                     {
-                        sb.AppendItem(SemiAutoFiringDelayMultMin, "SemiAutoFiringDelayMultMin");
+                        sb.AppendItem(SimpleSemiAutoFiringDelayMultMin, "SimpleSemiAutoFiringDelayMultMin");
                     }
-                    if (printMask?.SemiAutoFiringDelayMultMax ?? true)
+                    if (printMask?.SimpleSemiAutoFiringDelayMultMax ?? true)
                     {
-                        sb.AppendItem(SemiAutoFiringDelayMultMax, "SemiAutoFiringDelayMultMax");
+                        sb.AppendItem(SimpleSemiAutoFiringDelayMultMax, "SimpleSemiAutoFiringDelayMultMax");
                     }
                 }
             }
@@ -1396,78 +1396,78 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DodgeChance;
-            public Exception? LeftRightChance;
-            public Exception? Unused1;
-            public Exception? DodgeLRTimerMin;
-            public Exception? DodgeLRTimerMax;
-            public Exception? DodgeForwardTimerMin;
-            public Exception? DodgeForwardTimerMax;
-            public Exception? DodgeBackTimerMin;
-            public Exception? DodgeBackTimerMax;
-            public Exception? IdleTimerMin;
-            public Exception? IdleTimerMax;
-            public Exception? BlockChance;
-            public Exception? AttackChance;
-            public Exception? Unused2;
-            public Exception? RecoilStaggerBonusToAttack;
-            public Exception? UnconsciousBonusToAttack;
-            public Exception? HandToHandBonusToAttack;
-            public Exception? PowerAttackChance;
-            public Exception? Unused3;
-            public Exception? RecoilStaggerBonusToPowerAttack;
-            public Exception? UnconsciousBonusToPowerAttack;
-            public Exception? PowerAttackNormal;
-            public Exception? PowerAttackForward;
-            public Exception? PowerAttackBack;
-            public Exception? PowerAttackLeft;
-            public Exception? PowerAttackRight;
-            public Exception? Unused4;
-            public Exception? HoldTimerMin;
-            public Exception? HoldTimerMax;
-            public Exception? Flags;
-            public Exception? Unused5;
-            public Exception? AcrobaticDodgeChance;
-            public Exception? RushingAttackChance;
-            public Exception? Unused6;
-            public Exception? RushingAttackDistanceMult;
-            public Exception? DodgeFatigueModMult;
-            public Exception? DodgeFatigueModBase;
-            public Exception? EncumbSpeedModBase;
-            public Exception? EncumbSpeedModMult;
-            public Exception? DodgeWhileUnderAttackMult;
-            public Exception? DodgeNotUnderAttackMult;
-            public Exception? DodgeBackWhileUnderAttackMult;
-            public Exception? DodgeBackNotUnderAttackMult;
-            public Exception? DodgeForwardWhileAttackingMult;
-            public Exception? DodgeForwardNotAttackingMult;
-            public Exception? BlockSkillModifierMult;
-            public Exception? BlockSkillModifierBase;
-            public Exception? BlockWhileUnderAttackMult;
-            public Exception? BlockNotUnderAttackMult;
-            public Exception? AttackSkillModifierMult;
-            public Exception? AttackSkillModifierBase;
-            public Exception? AttackWhileUnderAttackMult;
-            public Exception? AttackNotUnderAttackMult;
-            public Exception? AttackDuringBlockMult;
-            public Exception? PowerAttackFatigueModBase;
-            public Exception? PowerAttackFatigueModMult;
-            public Exception? CoverSearchRadius;
-            public Exception? TakeCoverChance;
-            public Exception? WaitTimerMin;
-            public Exception? WaitTimerMax;
-            public Exception? WaitToFireTimerMin;
-            public Exception? WaitToFireTimerMax;
-            public Exception? FireTimerMin;
-            public Exception? FireTimerMax;
-            public Exception? RangedWeaponRangeMultMin;
-            public Exception? Unused;
-            public Exception? WeaponRestrictions;
-            public Exception? RangedWeaponRangeMultMax;
-            public Exception? MaxTargetingFov;
-            public Exception? CombatRadius;
-            public Exception? SemiAutoFiringDelayMultMin;
-            public Exception? SemiAutoFiringDelayMultMax;
+            public Exception? StandardManeuverDecisionDodgeChance;
+            public Exception? StandardManeuverDecisionLeftRightChance;
+            public Exception? StandardUnused1;
+            public Exception? StandardManeuverDecisionDodgeLRTimerMin;
+            public Exception? StandardManeuverDecisionDodgeLRTimerMax;
+            public Exception? StandardManeuverDecisionDodgeForwardTimerMin;
+            public Exception? StandardManeuverDecisionDodgeForwardTimerMax;
+            public Exception? StandardManeuverDecisionDodgeBackTimerMin;
+            public Exception? StandardManeuverDecisionDodgeBackTimerMax;
+            public Exception? StandardManeuverDecisionIdleTimerMin;
+            public Exception? StandardManeuverDecisionIdleTimerMax;
+            public Exception? StandardMeleeDecisionBlockChance;
+            public Exception? StandardMeleeDecisionAttackChance;
+            public Exception? StandardUnused2;
+            public Exception? StandardMeleeDecisionRecoilStaggerBonusToAttack;
+            public Exception? StandardMeleeDecisionUnconsciousBonusToAttack;
+            public Exception? StandardMeleeDecisionHandToHandBonusToAttack;
+            public Exception? StandardMeleeDecisionPowerAttackChance;
+            public Exception? StandardUnused3;
+            public Exception? StandardMeleeDecisionRecoilStaggerBonusToPowerAttack;
+            public Exception? StandardMeleeDecisionUnconsciousBonusToPowerAttack;
+            public Exception? StandardMeleeDecisionPowerAttackNormal;
+            public Exception? StandardMeleeDecisionPowerAttackForward;
+            public Exception? StandardMeleeDecisionPowerAttackBack;
+            public Exception? StandardMeleeDecisionPowerAttackLeft;
+            public Exception? StandardMeleeDecisionPowerAttackRight;
+            public Exception? StandardUnused4;
+            public Exception? StandardMeleeDecisionHoldTimerMin;
+            public Exception? StandardMeleeDecisionHoldTimerMax;
+            public Exception? StandardFlags;
+            public Exception? StandardUnused5;
+            public Exception? StandardMeleeDecisionAcrobaticDodgeChance;
+            public Exception? StandardMeleeDecisionRushingAttackChance;
+            public Exception? StandardUnused6;
+            public Exception? StandardMeleeDecisionRushingAttackDistanceMult;
+            public Exception? AdvancedDodgeFatigueModMult;
+            public Exception? AdvancedDodgeFatigueModBase;
+            public Exception? AdvancedEncumbSpeedModBase;
+            public Exception? AdvancedEncumbSpeedModMult;
+            public Exception? AdvancedDodgeWhileUnderAttackMult;
+            public Exception? AdvancedDodgeNotUnderAttackMult;
+            public Exception? AdvancedDodgeBackWhileUnderAttackMult;
+            public Exception? AdvancedDodgeBackNotUnderAttackMult;
+            public Exception? AdvancedDodgeForwardWhileAttackingMult;
+            public Exception? AdvancedDodgeForwardNotAttackingMult;
+            public Exception? AdvancedBlockSkillModifierMult;
+            public Exception? AdvancedBlockSkillModifierBase;
+            public Exception? AdvancedBlockWhileUnderAttackMult;
+            public Exception? AdvancedBlockNotUnderAttackMult;
+            public Exception? AdvancedAttackSkillModifierMult;
+            public Exception? AdvancedAttackSkillModifierBase;
+            public Exception? AdvancedAttackWhileUnderAttackMult;
+            public Exception? AdvancedAttackNotUnderAttackMult;
+            public Exception? AdvancedAttackDuringBlockMult;
+            public Exception? AdvancedPowerAttackFatigueModBase;
+            public Exception? AdvancedPowerAttackFatigueModMult;
+            public Exception? SimpleCoverSearchRadius;
+            public Exception? SimpleTakeCoverChance;
+            public Exception? SimpleWaitTimerMin;
+            public Exception? SimpleWaitTimerMax;
+            public Exception? SimpleWaitToFireTimerMin;
+            public Exception? SimpleWaitToFireTimerMax;
+            public Exception? SimpleFireTimerMin;
+            public Exception? SimpleFireTimerMax;
+            public Exception? SimpleRangedWeaponRangeMultMin;
+            public Exception? SimpleUnused;
+            public Exception? SimpleWeaponRestrictions;
+            public Exception? SimpleRangedWeaponRangeMultMax;
+            public Exception? SimpleMaxTargetingFov;
+            public Exception? SimpleCombatRadius;
+            public Exception? SimpleSemiAutoFiringDelayMultMin;
+            public Exception? SimpleSemiAutoFiringDelayMultMax;
             #endregion
 
             #region IErrorMask
@@ -1476,150 +1476,150 @@ namespace Mutagen.Bethesda.Fallout3
                 CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
-                    case CombatStyle_FieldIndex.DodgeChance:
-                        return DodgeChance;
-                    case CombatStyle_FieldIndex.LeftRightChance:
-                        return LeftRightChance;
-                    case CombatStyle_FieldIndex.Unused1:
-                        return Unused1;
-                    case CombatStyle_FieldIndex.DodgeLRTimerMin:
-                        return DodgeLRTimerMin;
-                    case CombatStyle_FieldIndex.DodgeLRTimerMax:
-                        return DodgeLRTimerMax;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        return DodgeForwardTimerMin;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        return DodgeForwardTimerMax;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        return DodgeBackTimerMin;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        return DodgeBackTimerMax;
-                    case CombatStyle_FieldIndex.IdleTimerMin:
-                        return IdleTimerMin;
-                    case CombatStyle_FieldIndex.IdleTimerMax:
-                        return IdleTimerMax;
-                    case CombatStyle_FieldIndex.BlockChance:
-                        return BlockChance;
-                    case CombatStyle_FieldIndex.AttackChance:
-                        return AttackChance;
-                    case CombatStyle_FieldIndex.Unused2:
-                        return Unused2;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        return RecoilStaggerBonusToAttack;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        return UnconsciousBonusToAttack;
-                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        return HandToHandBonusToAttack;
-                    case CombatStyle_FieldIndex.PowerAttackChance:
-                        return PowerAttackChance;
-                    case CombatStyle_FieldIndex.Unused3:
-                        return Unused3;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        return RecoilStaggerBonusToPowerAttack;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        return UnconsciousBonusToPowerAttack;
-                    case CombatStyle_FieldIndex.PowerAttackNormal:
-                        return PowerAttackNormal;
-                    case CombatStyle_FieldIndex.PowerAttackForward:
-                        return PowerAttackForward;
-                    case CombatStyle_FieldIndex.PowerAttackBack:
-                        return PowerAttackBack;
-                    case CombatStyle_FieldIndex.PowerAttackLeft:
-                        return PowerAttackLeft;
-                    case CombatStyle_FieldIndex.PowerAttackRight:
-                        return PowerAttackRight;
-                    case CombatStyle_FieldIndex.Unused4:
-                        return Unused4;
-                    case CombatStyle_FieldIndex.HoldTimerMin:
-                        return HoldTimerMin;
-                    case CombatStyle_FieldIndex.HoldTimerMax:
-                        return HoldTimerMax;
-                    case CombatStyle_FieldIndex.Flags:
-                        return Flags;
-                    case CombatStyle_FieldIndex.Unused5:
-                        return Unused5;
-                    case CombatStyle_FieldIndex.AcrobaticDodgeChance:
-                        return AcrobaticDodgeChance;
-                    case CombatStyle_FieldIndex.RushingAttackChance:
-                        return RushingAttackChance;
-                    case CombatStyle_FieldIndex.Unused6:
-                        return Unused6;
-                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        return RushingAttackDistanceMult;
-                    case CombatStyle_FieldIndex.DodgeFatigueModMult:
-                        return DodgeFatigueModMult;
-                    case CombatStyle_FieldIndex.DodgeFatigueModBase:
-                        return DodgeFatigueModBase;
-                    case CombatStyle_FieldIndex.EncumbSpeedModBase:
-                        return EncumbSpeedModBase;
-                    case CombatStyle_FieldIndex.EncumbSpeedModMult:
-                        return EncumbSpeedModMult;
-                    case CombatStyle_FieldIndex.DodgeWhileUnderAttackMult:
-                        return DodgeWhileUnderAttackMult;
-                    case CombatStyle_FieldIndex.DodgeNotUnderAttackMult:
-                        return DodgeNotUnderAttackMult;
-                    case CombatStyle_FieldIndex.DodgeBackWhileUnderAttackMult:
-                        return DodgeBackWhileUnderAttackMult;
-                    case CombatStyle_FieldIndex.DodgeBackNotUnderAttackMult:
-                        return DodgeBackNotUnderAttackMult;
-                    case CombatStyle_FieldIndex.DodgeForwardWhileAttackingMult:
-                        return DodgeForwardWhileAttackingMult;
-                    case CombatStyle_FieldIndex.DodgeForwardNotAttackingMult:
-                        return DodgeForwardNotAttackingMult;
-                    case CombatStyle_FieldIndex.BlockSkillModifierMult:
-                        return BlockSkillModifierMult;
-                    case CombatStyle_FieldIndex.BlockSkillModifierBase:
-                        return BlockSkillModifierBase;
-                    case CombatStyle_FieldIndex.BlockWhileUnderAttackMult:
-                        return BlockWhileUnderAttackMult;
-                    case CombatStyle_FieldIndex.BlockNotUnderAttackMult:
-                        return BlockNotUnderAttackMult;
-                    case CombatStyle_FieldIndex.AttackSkillModifierMult:
-                        return AttackSkillModifierMult;
-                    case CombatStyle_FieldIndex.AttackSkillModifierBase:
-                        return AttackSkillModifierBase;
-                    case CombatStyle_FieldIndex.AttackWhileUnderAttackMult:
-                        return AttackWhileUnderAttackMult;
-                    case CombatStyle_FieldIndex.AttackNotUnderAttackMult:
-                        return AttackNotUnderAttackMult;
-                    case CombatStyle_FieldIndex.AttackDuringBlockMult:
-                        return AttackDuringBlockMult;
-                    case CombatStyle_FieldIndex.PowerAttackFatigueModBase:
-                        return PowerAttackFatigueModBase;
-                    case CombatStyle_FieldIndex.PowerAttackFatigueModMult:
-                        return PowerAttackFatigueModMult;
-                    case CombatStyle_FieldIndex.CoverSearchRadius:
-                        return CoverSearchRadius;
-                    case CombatStyle_FieldIndex.TakeCoverChance:
-                        return TakeCoverChance;
-                    case CombatStyle_FieldIndex.WaitTimerMin:
-                        return WaitTimerMin;
-                    case CombatStyle_FieldIndex.WaitTimerMax:
-                        return WaitTimerMax;
-                    case CombatStyle_FieldIndex.WaitToFireTimerMin:
-                        return WaitToFireTimerMin;
-                    case CombatStyle_FieldIndex.WaitToFireTimerMax:
-                        return WaitToFireTimerMax;
-                    case CombatStyle_FieldIndex.FireTimerMin:
-                        return FireTimerMin;
-                    case CombatStyle_FieldIndex.FireTimerMax:
-                        return FireTimerMax;
-                    case CombatStyle_FieldIndex.RangedWeaponRangeMultMin:
-                        return RangedWeaponRangeMultMin;
-                    case CombatStyle_FieldIndex.Unused:
-                        return Unused;
-                    case CombatStyle_FieldIndex.WeaponRestrictions:
-                        return WeaponRestrictions;
-                    case CombatStyle_FieldIndex.RangedWeaponRangeMultMax:
-                        return RangedWeaponRangeMultMax;
-                    case CombatStyle_FieldIndex.MaxTargetingFov:
-                        return MaxTargetingFov;
-                    case CombatStyle_FieldIndex.CombatRadius:
-                        return CombatRadius;
-                    case CombatStyle_FieldIndex.SemiAutoFiringDelayMultMin:
-                        return SemiAutoFiringDelayMultMin;
-                    case CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax:
-                        return SemiAutoFiringDelayMultMax;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeChance:
+                        return StandardManeuverDecisionDodgeChance;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionLeftRightChance:
+                        return StandardManeuverDecisionLeftRightChance;
+                    case CombatStyle_FieldIndex.StandardUnused1:
+                        return StandardUnused1;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMin:
+                        return StandardManeuverDecisionDodgeLRTimerMin;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMax:
+                        return StandardManeuverDecisionDodgeLRTimerMax;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMin:
+                        return StandardManeuverDecisionDodgeForwardTimerMin;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMax:
+                        return StandardManeuverDecisionDodgeForwardTimerMax;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMin:
+                        return StandardManeuverDecisionDodgeBackTimerMin;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMax:
+                        return StandardManeuverDecisionDodgeBackTimerMax;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMin:
+                        return StandardManeuverDecisionIdleTimerMin;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMax:
+                        return StandardManeuverDecisionIdleTimerMax;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionBlockChance:
+                        return StandardMeleeDecisionBlockChance;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionAttackChance:
+                        return StandardMeleeDecisionAttackChance;
+                    case CombatStyle_FieldIndex.StandardUnused2:
+                        return StandardUnused2;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToAttack:
+                        return StandardMeleeDecisionRecoilStaggerBonusToAttack;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToAttack:
+                        return StandardMeleeDecisionUnconsciousBonusToAttack;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHandToHandBonusToAttack:
+                        return StandardMeleeDecisionHandToHandBonusToAttack;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackChance:
+                        return StandardMeleeDecisionPowerAttackChance;
+                    case CombatStyle_FieldIndex.StandardUnused3:
+                        return StandardUnused3;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack:
+                        return StandardMeleeDecisionRecoilStaggerBonusToPowerAttack;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToPowerAttack:
+                        return StandardMeleeDecisionUnconsciousBonusToPowerAttack;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackNormal:
+                        return StandardMeleeDecisionPowerAttackNormal;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackForward:
+                        return StandardMeleeDecisionPowerAttackForward;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackBack:
+                        return StandardMeleeDecisionPowerAttackBack;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackLeft:
+                        return StandardMeleeDecisionPowerAttackLeft;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackRight:
+                        return StandardMeleeDecisionPowerAttackRight;
+                    case CombatStyle_FieldIndex.StandardUnused4:
+                        return StandardUnused4;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMin:
+                        return StandardMeleeDecisionHoldTimerMin;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMax:
+                        return StandardMeleeDecisionHoldTimerMax;
+                    case CombatStyle_FieldIndex.StandardFlags:
+                        return StandardFlags;
+                    case CombatStyle_FieldIndex.StandardUnused5:
+                        return StandardUnused5;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionAcrobaticDodgeChance:
+                        return StandardMeleeDecisionAcrobaticDodgeChance;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackChance:
+                        return StandardMeleeDecisionRushingAttackChance;
+                    case CombatStyle_FieldIndex.StandardUnused6:
+                        return StandardUnused6;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult:
+                        return StandardMeleeDecisionRushingAttackDistanceMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeFatigueModMult:
+                        return AdvancedDodgeFatigueModMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeFatigueModBase:
+                        return AdvancedDodgeFatigueModBase;
+                    case CombatStyle_FieldIndex.AdvancedEncumbSpeedModBase:
+                        return AdvancedEncumbSpeedModBase;
+                    case CombatStyle_FieldIndex.AdvancedEncumbSpeedModMult:
+                        return AdvancedEncumbSpeedModMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeWhileUnderAttackMult:
+                        return AdvancedDodgeWhileUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeNotUnderAttackMult:
+                        return AdvancedDodgeNotUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeBackWhileUnderAttackMult:
+                        return AdvancedDodgeBackWhileUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeBackNotUnderAttackMult:
+                        return AdvancedDodgeBackNotUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeForwardWhileAttackingMult:
+                        return AdvancedDodgeForwardWhileAttackingMult;
+                    case CombatStyle_FieldIndex.AdvancedDodgeForwardNotAttackingMult:
+                        return AdvancedDodgeForwardNotAttackingMult;
+                    case CombatStyle_FieldIndex.AdvancedBlockSkillModifierMult:
+                        return AdvancedBlockSkillModifierMult;
+                    case CombatStyle_FieldIndex.AdvancedBlockSkillModifierBase:
+                        return AdvancedBlockSkillModifierBase;
+                    case CombatStyle_FieldIndex.AdvancedBlockWhileUnderAttackMult:
+                        return AdvancedBlockWhileUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedBlockNotUnderAttackMult:
+                        return AdvancedBlockNotUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedAttackSkillModifierMult:
+                        return AdvancedAttackSkillModifierMult;
+                    case CombatStyle_FieldIndex.AdvancedAttackSkillModifierBase:
+                        return AdvancedAttackSkillModifierBase;
+                    case CombatStyle_FieldIndex.AdvancedAttackWhileUnderAttackMult:
+                        return AdvancedAttackWhileUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedAttackNotUnderAttackMult:
+                        return AdvancedAttackNotUnderAttackMult;
+                    case CombatStyle_FieldIndex.AdvancedAttackDuringBlockMult:
+                        return AdvancedAttackDuringBlockMult;
+                    case CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModBase:
+                        return AdvancedPowerAttackFatigueModBase;
+                    case CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult:
+                        return AdvancedPowerAttackFatigueModMult;
+                    case CombatStyle_FieldIndex.SimpleCoverSearchRadius:
+                        return SimpleCoverSearchRadius;
+                    case CombatStyle_FieldIndex.SimpleTakeCoverChance:
+                        return SimpleTakeCoverChance;
+                    case CombatStyle_FieldIndex.SimpleWaitTimerMin:
+                        return SimpleWaitTimerMin;
+                    case CombatStyle_FieldIndex.SimpleWaitTimerMax:
+                        return SimpleWaitTimerMax;
+                    case CombatStyle_FieldIndex.SimpleWaitToFireTimerMin:
+                        return SimpleWaitToFireTimerMin;
+                    case CombatStyle_FieldIndex.SimpleWaitToFireTimerMax:
+                        return SimpleWaitToFireTimerMax;
+                    case CombatStyle_FieldIndex.SimpleFireTimerMin:
+                        return SimpleFireTimerMin;
+                    case CombatStyle_FieldIndex.SimpleFireTimerMax:
+                        return SimpleFireTimerMax;
+                    case CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMin:
+                        return SimpleRangedWeaponRangeMultMin;
+                    case CombatStyle_FieldIndex.SimpleUnused:
+                        return SimpleUnused;
+                    case CombatStyle_FieldIndex.SimpleWeaponRestrictions:
+                        return SimpleWeaponRestrictions;
+                    case CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMax:
+                        return SimpleRangedWeaponRangeMultMax;
+                    case CombatStyle_FieldIndex.SimpleMaxTargetingFov:
+                        return SimpleMaxTargetingFov;
+                    case CombatStyle_FieldIndex.SimpleCombatRadius:
+                        return SimpleCombatRadius;
+                    case CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMin:
+                        return SimpleSemiAutoFiringDelayMultMin;
+                    case CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax:
+                        return SimpleSemiAutoFiringDelayMultMax;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1630,221 +1630,221 @@ namespace Mutagen.Bethesda.Fallout3
                 CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
-                    case CombatStyle_FieldIndex.DodgeChance:
-                        this.DodgeChance = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeChance:
+                        this.StandardManeuverDecisionDodgeChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.LeftRightChance:
-                        this.LeftRightChance = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionLeftRightChance:
+                        this.StandardManeuverDecisionLeftRightChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused1:
-                        this.Unused1 = ex;
+                    case CombatStyle_FieldIndex.StandardUnused1:
+                        this.StandardUnused1 = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeLRTimerMin:
-                        this.DodgeLRTimerMin = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMin:
+                        this.StandardManeuverDecisionDodgeLRTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeLRTimerMax:
-                        this.DodgeLRTimerMax = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMax:
+                        this.StandardManeuverDecisionDodgeLRTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        this.DodgeForwardTimerMin = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMin:
+                        this.StandardManeuverDecisionDodgeForwardTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        this.DodgeForwardTimerMax = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMax:
+                        this.StandardManeuverDecisionDodgeForwardTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        this.DodgeBackTimerMin = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMin:
+                        this.StandardManeuverDecisionDodgeBackTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        this.DodgeBackTimerMax = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMax:
+                        this.StandardManeuverDecisionDodgeBackTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.IdleTimerMin:
-                        this.IdleTimerMin = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMin:
+                        this.StandardManeuverDecisionIdleTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.IdleTimerMax:
-                        this.IdleTimerMax = ex;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMax:
+                        this.StandardManeuverDecisionIdleTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.BlockChance:
-                        this.BlockChance = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionBlockChance:
+                        this.StandardMeleeDecisionBlockChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.AttackChance:
-                        this.AttackChance = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionAttackChance:
+                        this.StandardMeleeDecisionAttackChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused2:
-                        this.Unused2 = ex;
+                    case CombatStyle_FieldIndex.StandardUnused2:
+                        this.StandardUnused2 = ex;
                         break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        this.RecoilStaggerBonusToAttack = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToAttack:
+                        this.StandardMeleeDecisionRecoilStaggerBonusToAttack = ex;
                         break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        this.UnconsciousBonusToAttack = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToAttack:
+                        this.StandardMeleeDecisionUnconsciousBonusToAttack = ex;
                         break;
-                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        this.HandToHandBonusToAttack = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHandToHandBonusToAttack:
+                        this.StandardMeleeDecisionHandToHandBonusToAttack = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackChance:
-                        this.PowerAttackChance = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackChance:
+                        this.StandardMeleeDecisionPowerAttackChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused3:
-                        this.Unused3 = ex;
+                    case CombatStyle_FieldIndex.StandardUnused3:
+                        this.StandardUnused3 = ex;
                         break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        this.RecoilStaggerBonusToPowerAttack = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack:
+                        this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = ex;
                         break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        this.UnconsciousBonusToPowerAttack = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToPowerAttack:
+                        this.StandardMeleeDecisionUnconsciousBonusToPowerAttack = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackNormal:
-                        this.PowerAttackNormal = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackNormal:
+                        this.StandardMeleeDecisionPowerAttackNormal = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackForward:
-                        this.PowerAttackForward = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackForward:
+                        this.StandardMeleeDecisionPowerAttackForward = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackBack:
-                        this.PowerAttackBack = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackBack:
+                        this.StandardMeleeDecisionPowerAttackBack = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackLeft:
-                        this.PowerAttackLeft = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackLeft:
+                        this.StandardMeleeDecisionPowerAttackLeft = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackRight:
-                        this.PowerAttackRight = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackRight:
+                        this.StandardMeleeDecisionPowerAttackRight = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused4:
-                        this.Unused4 = ex;
+                    case CombatStyle_FieldIndex.StandardUnused4:
+                        this.StandardUnused4 = ex;
                         break;
-                    case CombatStyle_FieldIndex.HoldTimerMin:
-                        this.HoldTimerMin = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMin:
+                        this.StandardMeleeDecisionHoldTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.HoldTimerMax:
-                        this.HoldTimerMax = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMax:
+                        this.StandardMeleeDecisionHoldTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case CombatStyle_FieldIndex.StandardFlags:
+                        this.StandardFlags = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused5:
-                        this.Unused5 = ex;
+                    case CombatStyle_FieldIndex.StandardUnused5:
+                        this.StandardUnused5 = ex;
                         break;
-                    case CombatStyle_FieldIndex.AcrobaticDodgeChance:
-                        this.AcrobaticDodgeChance = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionAcrobaticDodgeChance:
+                        this.StandardMeleeDecisionAcrobaticDodgeChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.RushingAttackChance:
-                        this.RushingAttackChance = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackChance:
+                        this.StandardMeleeDecisionRushingAttackChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused6:
-                        this.Unused6 = ex;
+                    case CombatStyle_FieldIndex.StandardUnused6:
+                        this.StandardUnused6 = ex;
                         break;
-                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        this.RushingAttackDistanceMult = ex;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult:
+                        this.StandardMeleeDecisionRushingAttackDistanceMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeFatigueModMult:
-                        this.DodgeFatigueModMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeFatigueModMult:
+                        this.AdvancedDodgeFatigueModMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeFatigueModBase:
-                        this.DodgeFatigueModBase = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeFatigueModBase:
+                        this.AdvancedDodgeFatigueModBase = ex;
                         break;
-                    case CombatStyle_FieldIndex.EncumbSpeedModBase:
-                        this.EncumbSpeedModBase = ex;
+                    case CombatStyle_FieldIndex.AdvancedEncumbSpeedModBase:
+                        this.AdvancedEncumbSpeedModBase = ex;
                         break;
-                    case CombatStyle_FieldIndex.EncumbSpeedModMult:
-                        this.EncumbSpeedModMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedEncumbSpeedModMult:
+                        this.AdvancedEncumbSpeedModMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeWhileUnderAttackMult:
-                        this.DodgeWhileUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeWhileUnderAttackMult:
+                        this.AdvancedDodgeWhileUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeNotUnderAttackMult:
-                        this.DodgeNotUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeNotUnderAttackMult:
+                        this.AdvancedDodgeNotUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackWhileUnderAttackMult:
-                        this.DodgeBackWhileUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeBackWhileUnderAttackMult:
+                        this.AdvancedDodgeBackWhileUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackNotUnderAttackMult:
-                        this.DodgeBackNotUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeBackNotUnderAttackMult:
+                        this.AdvancedDodgeBackNotUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardWhileAttackingMult:
-                        this.DodgeForwardWhileAttackingMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeForwardWhileAttackingMult:
+                        this.AdvancedDodgeForwardWhileAttackingMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardNotAttackingMult:
-                        this.DodgeForwardNotAttackingMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedDodgeForwardNotAttackingMult:
+                        this.AdvancedDodgeForwardNotAttackingMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.BlockSkillModifierMult:
-                        this.BlockSkillModifierMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedBlockSkillModifierMult:
+                        this.AdvancedBlockSkillModifierMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.BlockSkillModifierBase:
-                        this.BlockSkillModifierBase = ex;
+                    case CombatStyle_FieldIndex.AdvancedBlockSkillModifierBase:
+                        this.AdvancedBlockSkillModifierBase = ex;
                         break;
-                    case CombatStyle_FieldIndex.BlockWhileUnderAttackMult:
-                        this.BlockWhileUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedBlockWhileUnderAttackMult:
+                        this.AdvancedBlockWhileUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.BlockNotUnderAttackMult:
-                        this.BlockNotUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedBlockNotUnderAttackMult:
+                        this.AdvancedBlockNotUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.AttackSkillModifierMult:
-                        this.AttackSkillModifierMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedAttackSkillModifierMult:
+                        this.AdvancedAttackSkillModifierMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.AttackSkillModifierBase:
-                        this.AttackSkillModifierBase = ex;
+                    case CombatStyle_FieldIndex.AdvancedAttackSkillModifierBase:
+                        this.AdvancedAttackSkillModifierBase = ex;
                         break;
-                    case CombatStyle_FieldIndex.AttackWhileUnderAttackMult:
-                        this.AttackWhileUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedAttackWhileUnderAttackMult:
+                        this.AdvancedAttackWhileUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.AttackNotUnderAttackMult:
-                        this.AttackNotUnderAttackMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedAttackNotUnderAttackMult:
+                        this.AdvancedAttackNotUnderAttackMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.AttackDuringBlockMult:
-                        this.AttackDuringBlockMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedAttackDuringBlockMult:
+                        this.AdvancedAttackDuringBlockMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackFatigueModBase:
-                        this.PowerAttackFatigueModBase = ex;
+                    case CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModBase:
+                        this.AdvancedPowerAttackFatigueModBase = ex;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackFatigueModMult:
-                        this.PowerAttackFatigueModMult = ex;
+                    case CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult:
+                        this.AdvancedPowerAttackFatigueModMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CoverSearchRadius:
-                        this.CoverSearchRadius = ex;
+                    case CombatStyle_FieldIndex.SimpleCoverSearchRadius:
+                        this.SimpleCoverSearchRadius = ex;
                         break;
-                    case CombatStyle_FieldIndex.TakeCoverChance:
-                        this.TakeCoverChance = ex;
+                    case CombatStyle_FieldIndex.SimpleTakeCoverChance:
+                        this.SimpleTakeCoverChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.WaitTimerMin:
-                        this.WaitTimerMin = ex;
+                    case CombatStyle_FieldIndex.SimpleWaitTimerMin:
+                        this.SimpleWaitTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.WaitTimerMax:
-                        this.WaitTimerMax = ex;
+                    case CombatStyle_FieldIndex.SimpleWaitTimerMax:
+                        this.SimpleWaitTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.WaitToFireTimerMin:
-                        this.WaitToFireTimerMin = ex;
+                    case CombatStyle_FieldIndex.SimpleWaitToFireTimerMin:
+                        this.SimpleWaitToFireTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.WaitToFireTimerMax:
-                        this.WaitToFireTimerMax = ex;
+                    case CombatStyle_FieldIndex.SimpleWaitToFireTimerMax:
+                        this.SimpleWaitToFireTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.FireTimerMin:
-                        this.FireTimerMin = ex;
+                    case CombatStyle_FieldIndex.SimpleFireTimerMin:
+                        this.SimpleFireTimerMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.FireTimerMax:
-                        this.FireTimerMax = ex;
+                    case CombatStyle_FieldIndex.SimpleFireTimerMax:
+                        this.SimpleFireTimerMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.RangedWeaponRangeMultMin:
-                        this.RangedWeaponRangeMultMin = ex;
+                    case CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMin:
+                        this.SimpleRangedWeaponRangeMultMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.Unused:
-                        this.Unused = ex;
+                    case CombatStyle_FieldIndex.SimpleUnused:
+                        this.SimpleUnused = ex;
                         break;
-                    case CombatStyle_FieldIndex.WeaponRestrictions:
-                        this.WeaponRestrictions = ex;
+                    case CombatStyle_FieldIndex.SimpleWeaponRestrictions:
+                        this.SimpleWeaponRestrictions = ex;
                         break;
-                    case CombatStyle_FieldIndex.RangedWeaponRangeMultMax:
-                        this.RangedWeaponRangeMultMax = ex;
+                    case CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMax:
+                        this.SimpleRangedWeaponRangeMultMax = ex;
                         break;
-                    case CombatStyle_FieldIndex.MaxTargetingFov:
-                        this.MaxTargetingFov = ex;
+                    case CombatStyle_FieldIndex.SimpleMaxTargetingFov:
+                        this.SimpleMaxTargetingFov = ex;
                         break;
-                    case CombatStyle_FieldIndex.CombatRadius:
-                        this.CombatRadius = ex;
+                    case CombatStyle_FieldIndex.SimpleCombatRadius:
+                        this.SimpleCombatRadius = ex;
                         break;
-                    case CombatStyle_FieldIndex.SemiAutoFiringDelayMultMin:
-                        this.SemiAutoFiringDelayMultMin = ex;
+                    case CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMin:
+                        this.SimpleSemiAutoFiringDelayMultMin = ex;
                         break;
-                    case CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax:
-                        this.SemiAutoFiringDelayMultMax = ex;
+                    case CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax:
+                        this.SimpleSemiAutoFiringDelayMultMax = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1857,221 +1857,221 @@ namespace Mutagen.Bethesda.Fallout3
                 CombatStyle_FieldIndex enu = (CombatStyle_FieldIndex)index;
                 switch (enu)
                 {
-                    case CombatStyle_FieldIndex.DodgeChance:
-                        this.DodgeChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeChance:
+                        this.StandardManeuverDecisionDodgeChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.LeftRightChance:
-                        this.LeftRightChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionLeftRightChance:
+                        this.StandardManeuverDecisionLeftRightChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused1:
-                        this.Unused1 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardUnused1:
+                        this.StandardUnused1 = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeLRTimerMin:
-                        this.DodgeLRTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMin:
+                        this.StandardManeuverDecisionDodgeLRTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeLRTimerMax:
-                        this.DodgeLRTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMax:
+                        this.StandardManeuverDecisionDodgeLRTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMin:
-                        this.DodgeForwardTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMin:
+                        this.StandardManeuverDecisionDodgeForwardTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardTimerMax:
-                        this.DodgeForwardTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMax:
+                        this.StandardManeuverDecisionDodgeForwardTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMin:
-                        this.DodgeBackTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMin:
+                        this.StandardManeuverDecisionDodgeBackTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackTimerMax:
-                        this.DodgeBackTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMax:
+                        this.StandardManeuverDecisionDodgeBackTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.IdleTimerMin:
-                        this.IdleTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMin:
+                        this.StandardManeuverDecisionIdleTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.IdleTimerMax:
-                        this.IdleTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMax:
+                        this.StandardManeuverDecisionIdleTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.BlockChance:
-                        this.BlockChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionBlockChance:
+                        this.StandardMeleeDecisionBlockChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AttackChance:
-                        this.AttackChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionAttackChance:
+                        this.StandardMeleeDecisionAttackChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused2:
-                        this.Unused2 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardUnused2:
+                        this.StandardUnused2 = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToAttack:
-                        this.RecoilStaggerBonusToAttack = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToAttack:
+                        this.StandardMeleeDecisionRecoilStaggerBonusToAttack = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToAttack:
-                        this.UnconsciousBonusToAttack = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToAttack:
+                        this.StandardMeleeDecisionUnconsciousBonusToAttack = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.HandToHandBonusToAttack:
-                        this.HandToHandBonusToAttack = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHandToHandBonusToAttack:
+                        this.StandardMeleeDecisionHandToHandBonusToAttack = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackChance:
-                        this.PowerAttackChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackChance:
+                        this.StandardMeleeDecisionPowerAttackChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused3:
-                        this.Unused3 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardUnused3:
+                        this.StandardUnused3 = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack:
-                        this.RecoilStaggerBonusToPowerAttack = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack:
+                        this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack:
-                        this.UnconsciousBonusToPowerAttack = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToPowerAttack:
+                        this.StandardMeleeDecisionUnconsciousBonusToPowerAttack = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackNormal:
-                        this.PowerAttackNormal = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackNormal:
+                        this.StandardMeleeDecisionPowerAttackNormal = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackForward:
-                        this.PowerAttackForward = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackForward:
+                        this.StandardMeleeDecisionPowerAttackForward = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackBack:
-                        this.PowerAttackBack = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackBack:
+                        this.StandardMeleeDecisionPowerAttackBack = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackLeft:
-                        this.PowerAttackLeft = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackLeft:
+                        this.StandardMeleeDecisionPowerAttackLeft = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackRight:
-                        this.PowerAttackRight = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackRight:
+                        this.StandardMeleeDecisionPowerAttackRight = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused4:
-                        this.Unused4 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardUnused4:
+                        this.StandardUnused4 = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.HoldTimerMin:
-                        this.HoldTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMin:
+                        this.StandardMeleeDecisionHoldTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.HoldTimerMax:
-                        this.HoldTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMax:
+                        this.StandardMeleeDecisionHoldTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardFlags:
+                        this.StandardFlags = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused5:
-                        this.Unused5 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardUnused5:
+                        this.StandardUnused5 = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AcrobaticDodgeChance:
-                        this.AcrobaticDodgeChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionAcrobaticDodgeChance:
+                        this.StandardMeleeDecisionAcrobaticDodgeChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.RushingAttackChance:
-                        this.RushingAttackChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackChance:
+                        this.StandardMeleeDecisionRushingAttackChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused6:
-                        this.Unused6 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardUnused6:
+                        this.StandardUnused6 = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.RushingAttackDistanceMult:
-                        this.RushingAttackDistanceMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult:
+                        this.StandardMeleeDecisionRushingAttackDistanceMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeFatigueModMult:
-                        this.DodgeFatigueModMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeFatigueModMult:
+                        this.AdvancedDodgeFatigueModMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeFatigueModBase:
-                        this.DodgeFatigueModBase = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeFatigueModBase:
+                        this.AdvancedDodgeFatigueModBase = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.EncumbSpeedModBase:
-                        this.EncumbSpeedModBase = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedEncumbSpeedModBase:
+                        this.AdvancedEncumbSpeedModBase = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.EncumbSpeedModMult:
-                        this.EncumbSpeedModMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedEncumbSpeedModMult:
+                        this.AdvancedEncumbSpeedModMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeWhileUnderAttackMult:
-                        this.DodgeWhileUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeWhileUnderAttackMult:
+                        this.AdvancedDodgeWhileUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeNotUnderAttackMult:
-                        this.DodgeNotUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeNotUnderAttackMult:
+                        this.AdvancedDodgeNotUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackWhileUnderAttackMult:
-                        this.DodgeBackWhileUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeBackWhileUnderAttackMult:
+                        this.AdvancedDodgeBackWhileUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeBackNotUnderAttackMult:
-                        this.DodgeBackNotUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeBackNotUnderAttackMult:
+                        this.AdvancedDodgeBackNotUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardWhileAttackingMult:
-                        this.DodgeForwardWhileAttackingMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeForwardWhileAttackingMult:
+                        this.AdvancedDodgeForwardWhileAttackingMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DodgeForwardNotAttackingMult:
-                        this.DodgeForwardNotAttackingMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedDodgeForwardNotAttackingMult:
+                        this.AdvancedDodgeForwardNotAttackingMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.BlockSkillModifierMult:
-                        this.BlockSkillModifierMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedBlockSkillModifierMult:
+                        this.AdvancedBlockSkillModifierMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.BlockSkillModifierBase:
-                        this.BlockSkillModifierBase = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedBlockSkillModifierBase:
+                        this.AdvancedBlockSkillModifierBase = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.BlockWhileUnderAttackMult:
-                        this.BlockWhileUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedBlockWhileUnderAttackMult:
+                        this.AdvancedBlockWhileUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.BlockNotUnderAttackMult:
-                        this.BlockNotUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedBlockNotUnderAttackMult:
+                        this.AdvancedBlockNotUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AttackSkillModifierMult:
-                        this.AttackSkillModifierMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedAttackSkillModifierMult:
+                        this.AdvancedAttackSkillModifierMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AttackSkillModifierBase:
-                        this.AttackSkillModifierBase = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedAttackSkillModifierBase:
+                        this.AdvancedAttackSkillModifierBase = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AttackWhileUnderAttackMult:
-                        this.AttackWhileUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedAttackWhileUnderAttackMult:
+                        this.AdvancedAttackWhileUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AttackNotUnderAttackMult:
-                        this.AttackNotUnderAttackMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedAttackNotUnderAttackMult:
+                        this.AdvancedAttackNotUnderAttackMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.AttackDuringBlockMult:
-                        this.AttackDuringBlockMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedAttackDuringBlockMult:
+                        this.AdvancedAttackDuringBlockMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackFatigueModBase:
-                        this.PowerAttackFatigueModBase = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModBase:
+                        this.AdvancedPowerAttackFatigueModBase = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PowerAttackFatigueModMult:
-                        this.PowerAttackFatigueModMult = (Exception?)obj;
+                    case CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult:
+                        this.AdvancedPowerAttackFatigueModMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CoverSearchRadius:
-                        this.CoverSearchRadius = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleCoverSearchRadius:
+                        this.SimpleCoverSearchRadius = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.TakeCoverChance:
-                        this.TakeCoverChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleTakeCoverChance:
+                        this.SimpleTakeCoverChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.WaitTimerMin:
-                        this.WaitTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleWaitTimerMin:
+                        this.SimpleWaitTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.WaitTimerMax:
-                        this.WaitTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleWaitTimerMax:
+                        this.SimpleWaitTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.WaitToFireTimerMin:
-                        this.WaitToFireTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleWaitToFireTimerMin:
+                        this.SimpleWaitToFireTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.WaitToFireTimerMax:
-                        this.WaitToFireTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleWaitToFireTimerMax:
+                        this.SimpleWaitToFireTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.FireTimerMin:
-                        this.FireTimerMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleFireTimerMin:
+                        this.SimpleFireTimerMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.FireTimerMax:
-                        this.FireTimerMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleFireTimerMax:
+                        this.SimpleFireTimerMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.RangedWeaponRangeMultMin:
-                        this.RangedWeaponRangeMultMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMin:
+                        this.SimpleRangedWeaponRangeMultMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.Unused:
-                        this.Unused = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleUnused:
+                        this.SimpleUnused = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.WeaponRestrictions:
-                        this.WeaponRestrictions = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleWeaponRestrictions:
+                        this.SimpleWeaponRestrictions = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.RangedWeaponRangeMultMax:
-                        this.RangedWeaponRangeMultMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMax:
+                        this.SimpleRangedWeaponRangeMultMax = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.MaxTargetingFov:
-                        this.MaxTargetingFov = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleMaxTargetingFov:
+                        this.SimpleMaxTargetingFov = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CombatRadius:
-                        this.CombatRadius = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleCombatRadius:
+                        this.SimpleCombatRadius = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.SemiAutoFiringDelayMultMin:
-                        this.SemiAutoFiringDelayMultMin = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMin:
+                        this.SimpleSemiAutoFiringDelayMultMin = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax:
-                        this.SemiAutoFiringDelayMultMax = (Exception?)obj;
+                    case CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax:
+                        this.SimpleSemiAutoFiringDelayMultMax = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -2082,78 +2082,78 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DodgeChance != null) return true;
-                if (LeftRightChance != null) return true;
-                if (Unused1 != null) return true;
-                if (DodgeLRTimerMin != null) return true;
-                if (DodgeLRTimerMax != null) return true;
-                if (DodgeForwardTimerMin != null) return true;
-                if (DodgeForwardTimerMax != null) return true;
-                if (DodgeBackTimerMin != null) return true;
-                if (DodgeBackTimerMax != null) return true;
-                if (IdleTimerMin != null) return true;
-                if (IdleTimerMax != null) return true;
-                if (BlockChance != null) return true;
-                if (AttackChance != null) return true;
-                if (Unused2 != null) return true;
-                if (RecoilStaggerBonusToAttack != null) return true;
-                if (UnconsciousBonusToAttack != null) return true;
-                if (HandToHandBonusToAttack != null) return true;
-                if (PowerAttackChance != null) return true;
-                if (Unused3 != null) return true;
-                if (RecoilStaggerBonusToPowerAttack != null) return true;
-                if (UnconsciousBonusToPowerAttack != null) return true;
-                if (PowerAttackNormal != null) return true;
-                if (PowerAttackForward != null) return true;
-                if (PowerAttackBack != null) return true;
-                if (PowerAttackLeft != null) return true;
-                if (PowerAttackRight != null) return true;
-                if (Unused4 != null) return true;
-                if (HoldTimerMin != null) return true;
-                if (HoldTimerMax != null) return true;
-                if (Flags != null) return true;
-                if (Unused5 != null) return true;
-                if (AcrobaticDodgeChance != null) return true;
-                if (RushingAttackChance != null) return true;
-                if (Unused6 != null) return true;
-                if (RushingAttackDistanceMult != null) return true;
-                if (DodgeFatigueModMult != null) return true;
-                if (DodgeFatigueModBase != null) return true;
-                if (EncumbSpeedModBase != null) return true;
-                if (EncumbSpeedModMult != null) return true;
-                if (DodgeWhileUnderAttackMult != null) return true;
-                if (DodgeNotUnderAttackMult != null) return true;
-                if (DodgeBackWhileUnderAttackMult != null) return true;
-                if (DodgeBackNotUnderAttackMult != null) return true;
-                if (DodgeForwardWhileAttackingMult != null) return true;
-                if (DodgeForwardNotAttackingMult != null) return true;
-                if (BlockSkillModifierMult != null) return true;
-                if (BlockSkillModifierBase != null) return true;
-                if (BlockWhileUnderAttackMult != null) return true;
-                if (BlockNotUnderAttackMult != null) return true;
-                if (AttackSkillModifierMult != null) return true;
-                if (AttackSkillModifierBase != null) return true;
-                if (AttackWhileUnderAttackMult != null) return true;
-                if (AttackNotUnderAttackMult != null) return true;
-                if (AttackDuringBlockMult != null) return true;
-                if (PowerAttackFatigueModBase != null) return true;
-                if (PowerAttackFatigueModMult != null) return true;
-                if (CoverSearchRadius != null) return true;
-                if (TakeCoverChance != null) return true;
-                if (WaitTimerMin != null) return true;
-                if (WaitTimerMax != null) return true;
-                if (WaitToFireTimerMin != null) return true;
-                if (WaitToFireTimerMax != null) return true;
-                if (FireTimerMin != null) return true;
-                if (FireTimerMax != null) return true;
-                if (RangedWeaponRangeMultMin != null) return true;
-                if (Unused != null) return true;
-                if (WeaponRestrictions != null) return true;
-                if (RangedWeaponRangeMultMax != null) return true;
-                if (MaxTargetingFov != null) return true;
-                if (CombatRadius != null) return true;
-                if (SemiAutoFiringDelayMultMin != null) return true;
-                if (SemiAutoFiringDelayMultMax != null) return true;
+                if (StandardManeuverDecisionDodgeChance != null) return true;
+                if (StandardManeuverDecisionLeftRightChance != null) return true;
+                if (StandardUnused1 != null) return true;
+                if (StandardManeuverDecisionDodgeLRTimerMin != null) return true;
+                if (StandardManeuverDecisionDodgeLRTimerMax != null) return true;
+                if (StandardManeuverDecisionDodgeForwardTimerMin != null) return true;
+                if (StandardManeuverDecisionDodgeForwardTimerMax != null) return true;
+                if (StandardManeuverDecisionDodgeBackTimerMin != null) return true;
+                if (StandardManeuverDecisionDodgeBackTimerMax != null) return true;
+                if (StandardManeuverDecisionIdleTimerMin != null) return true;
+                if (StandardManeuverDecisionIdleTimerMax != null) return true;
+                if (StandardMeleeDecisionBlockChance != null) return true;
+                if (StandardMeleeDecisionAttackChance != null) return true;
+                if (StandardUnused2 != null) return true;
+                if (StandardMeleeDecisionRecoilStaggerBonusToAttack != null) return true;
+                if (StandardMeleeDecisionUnconsciousBonusToAttack != null) return true;
+                if (StandardMeleeDecisionHandToHandBonusToAttack != null) return true;
+                if (StandardMeleeDecisionPowerAttackChance != null) return true;
+                if (StandardUnused3 != null) return true;
+                if (StandardMeleeDecisionRecoilStaggerBonusToPowerAttack != null) return true;
+                if (StandardMeleeDecisionUnconsciousBonusToPowerAttack != null) return true;
+                if (StandardMeleeDecisionPowerAttackNormal != null) return true;
+                if (StandardMeleeDecisionPowerAttackForward != null) return true;
+                if (StandardMeleeDecisionPowerAttackBack != null) return true;
+                if (StandardMeleeDecisionPowerAttackLeft != null) return true;
+                if (StandardMeleeDecisionPowerAttackRight != null) return true;
+                if (StandardUnused4 != null) return true;
+                if (StandardMeleeDecisionHoldTimerMin != null) return true;
+                if (StandardMeleeDecisionHoldTimerMax != null) return true;
+                if (StandardFlags != null) return true;
+                if (StandardUnused5 != null) return true;
+                if (StandardMeleeDecisionAcrobaticDodgeChance != null) return true;
+                if (StandardMeleeDecisionRushingAttackChance != null) return true;
+                if (StandardUnused6 != null) return true;
+                if (StandardMeleeDecisionRushingAttackDistanceMult != null) return true;
+                if (AdvancedDodgeFatigueModMult != null) return true;
+                if (AdvancedDodgeFatigueModBase != null) return true;
+                if (AdvancedEncumbSpeedModBase != null) return true;
+                if (AdvancedEncumbSpeedModMult != null) return true;
+                if (AdvancedDodgeWhileUnderAttackMult != null) return true;
+                if (AdvancedDodgeNotUnderAttackMult != null) return true;
+                if (AdvancedDodgeBackWhileUnderAttackMult != null) return true;
+                if (AdvancedDodgeBackNotUnderAttackMult != null) return true;
+                if (AdvancedDodgeForwardWhileAttackingMult != null) return true;
+                if (AdvancedDodgeForwardNotAttackingMult != null) return true;
+                if (AdvancedBlockSkillModifierMult != null) return true;
+                if (AdvancedBlockSkillModifierBase != null) return true;
+                if (AdvancedBlockWhileUnderAttackMult != null) return true;
+                if (AdvancedBlockNotUnderAttackMult != null) return true;
+                if (AdvancedAttackSkillModifierMult != null) return true;
+                if (AdvancedAttackSkillModifierBase != null) return true;
+                if (AdvancedAttackWhileUnderAttackMult != null) return true;
+                if (AdvancedAttackNotUnderAttackMult != null) return true;
+                if (AdvancedAttackDuringBlockMult != null) return true;
+                if (AdvancedPowerAttackFatigueModBase != null) return true;
+                if (AdvancedPowerAttackFatigueModMult != null) return true;
+                if (SimpleCoverSearchRadius != null) return true;
+                if (SimpleTakeCoverChance != null) return true;
+                if (SimpleWaitTimerMin != null) return true;
+                if (SimpleWaitTimerMax != null) return true;
+                if (SimpleWaitToFireTimerMin != null) return true;
+                if (SimpleWaitToFireTimerMax != null) return true;
+                if (SimpleFireTimerMin != null) return true;
+                if (SimpleFireTimerMax != null) return true;
+                if (SimpleRangedWeaponRangeMultMin != null) return true;
+                if (SimpleUnused != null) return true;
+                if (SimpleWeaponRestrictions != null) return true;
+                if (SimpleRangedWeaponRangeMultMax != null) return true;
+                if (SimpleMaxTargetingFov != null) return true;
+                if (SimpleCombatRadius != null) return true;
+                if (SimpleSemiAutoFiringDelayMultMin != null) return true;
+                if (SimpleSemiAutoFiringDelayMultMax != null) return true;
                 return false;
             }
             #endregion
@@ -2181,220 +2181,220 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(DodgeChance, "DodgeChance");
+                    sb.AppendItem(StandardManeuverDecisionDodgeChance, "StandardManeuverDecisionDodgeChance");
                 }
                 {
-                    sb.AppendItem(LeftRightChance, "LeftRightChance");
+                    sb.AppendItem(StandardManeuverDecisionLeftRightChance, "StandardManeuverDecisionLeftRightChance");
                 }
                 {
-                    sb.AppendItem(Unused1, "Unused1");
+                    sb.AppendItem(StandardUnused1, "StandardUnused1");
                 }
                 {
-                    sb.AppendItem(DodgeLRTimerMin, "DodgeLRTimerMin");
+                    sb.AppendItem(StandardManeuverDecisionDodgeLRTimerMin, "StandardManeuverDecisionDodgeLRTimerMin");
                 }
                 {
-                    sb.AppendItem(DodgeLRTimerMax, "DodgeLRTimerMax");
+                    sb.AppendItem(StandardManeuverDecisionDodgeLRTimerMax, "StandardManeuverDecisionDodgeLRTimerMax");
                 }
                 {
-                    sb.AppendItem(DodgeForwardTimerMin, "DodgeForwardTimerMin");
+                    sb.AppendItem(StandardManeuverDecisionDodgeForwardTimerMin, "StandardManeuverDecisionDodgeForwardTimerMin");
                 }
                 {
-                    sb.AppendItem(DodgeForwardTimerMax, "DodgeForwardTimerMax");
+                    sb.AppendItem(StandardManeuverDecisionDodgeForwardTimerMax, "StandardManeuverDecisionDodgeForwardTimerMax");
                 }
                 {
-                    sb.AppendItem(DodgeBackTimerMin, "DodgeBackTimerMin");
+                    sb.AppendItem(StandardManeuverDecisionDodgeBackTimerMin, "StandardManeuverDecisionDodgeBackTimerMin");
                 }
                 {
-                    sb.AppendItem(DodgeBackTimerMax, "DodgeBackTimerMax");
+                    sb.AppendItem(StandardManeuverDecisionDodgeBackTimerMax, "StandardManeuverDecisionDodgeBackTimerMax");
                 }
                 {
-                    sb.AppendItem(IdleTimerMin, "IdleTimerMin");
+                    sb.AppendItem(StandardManeuverDecisionIdleTimerMin, "StandardManeuverDecisionIdleTimerMin");
                 }
                 {
-                    sb.AppendItem(IdleTimerMax, "IdleTimerMax");
+                    sb.AppendItem(StandardManeuverDecisionIdleTimerMax, "StandardManeuverDecisionIdleTimerMax");
                 }
                 {
-                    sb.AppendItem(BlockChance, "BlockChance");
+                    sb.AppendItem(StandardMeleeDecisionBlockChance, "StandardMeleeDecisionBlockChance");
                 }
                 {
-                    sb.AppendItem(AttackChance, "AttackChance");
+                    sb.AppendItem(StandardMeleeDecisionAttackChance, "StandardMeleeDecisionAttackChance");
                 }
                 {
-                    sb.AppendItem(Unused2, "Unused2");
+                    sb.AppendItem(StandardUnused2, "StandardUnused2");
                 }
                 {
-                    sb.AppendItem(RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
+                    sb.AppendItem(StandardMeleeDecisionRecoilStaggerBonusToAttack, "StandardMeleeDecisionRecoilStaggerBonusToAttack");
                 }
                 {
-                    sb.AppendItem(UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
+                    sb.AppendItem(StandardMeleeDecisionUnconsciousBonusToAttack, "StandardMeleeDecisionUnconsciousBonusToAttack");
                 }
                 {
-                    sb.AppendItem(HandToHandBonusToAttack, "HandToHandBonusToAttack");
+                    sb.AppendItem(StandardMeleeDecisionHandToHandBonusToAttack, "StandardMeleeDecisionHandToHandBonusToAttack");
                 }
                 {
-                    sb.AppendItem(PowerAttackChance, "PowerAttackChance");
+                    sb.AppendItem(StandardMeleeDecisionPowerAttackChance, "StandardMeleeDecisionPowerAttackChance");
                 }
                 {
-                    sb.AppendItem(Unused3, "Unused3");
+                    sb.AppendItem(StandardUnused3, "StandardUnused3");
                 }
                 {
-                    sb.AppendItem(RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
+                    sb.AppendItem(StandardMeleeDecisionRecoilStaggerBonusToPowerAttack, "StandardMeleeDecisionRecoilStaggerBonusToPowerAttack");
                 }
                 {
-                    sb.AppendItem(UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
+                    sb.AppendItem(StandardMeleeDecisionUnconsciousBonusToPowerAttack, "StandardMeleeDecisionUnconsciousBonusToPowerAttack");
                 }
                 {
-                    sb.AppendItem(PowerAttackNormal, "PowerAttackNormal");
+                    sb.AppendItem(StandardMeleeDecisionPowerAttackNormal, "StandardMeleeDecisionPowerAttackNormal");
                 }
                 {
-                    sb.AppendItem(PowerAttackForward, "PowerAttackForward");
+                    sb.AppendItem(StandardMeleeDecisionPowerAttackForward, "StandardMeleeDecisionPowerAttackForward");
                 }
                 {
-                    sb.AppendItem(PowerAttackBack, "PowerAttackBack");
+                    sb.AppendItem(StandardMeleeDecisionPowerAttackBack, "StandardMeleeDecisionPowerAttackBack");
                 }
                 {
-                    sb.AppendItem(PowerAttackLeft, "PowerAttackLeft");
+                    sb.AppendItem(StandardMeleeDecisionPowerAttackLeft, "StandardMeleeDecisionPowerAttackLeft");
                 }
                 {
-                    sb.AppendItem(PowerAttackRight, "PowerAttackRight");
+                    sb.AppendItem(StandardMeleeDecisionPowerAttackRight, "StandardMeleeDecisionPowerAttackRight");
                 }
                 {
-                    sb.AppendItem(Unused4, "Unused4");
+                    sb.AppendItem(StandardUnused4, "StandardUnused4");
                 }
                 {
-                    sb.AppendItem(HoldTimerMin, "HoldTimerMin");
+                    sb.AppendItem(StandardMeleeDecisionHoldTimerMin, "StandardMeleeDecisionHoldTimerMin");
                 }
                 {
-                    sb.AppendItem(HoldTimerMax, "HoldTimerMax");
+                    sb.AppendItem(StandardMeleeDecisionHoldTimerMax, "StandardMeleeDecisionHoldTimerMax");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(StandardFlags, "StandardFlags");
                 }
                 {
-                    sb.AppendItem(Unused5, "Unused5");
+                    sb.AppendItem(StandardUnused5, "StandardUnused5");
                 }
                 {
-                    sb.AppendItem(AcrobaticDodgeChance, "AcrobaticDodgeChance");
+                    sb.AppendItem(StandardMeleeDecisionAcrobaticDodgeChance, "StandardMeleeDecisionAcrobaticDodgeChance");
                 }
                 {
-                    sb.AppendItem(RushingAttackChance, "RushingAttackChance");
+                    sb.AppendItem(StandardMeleeDecisionRushingAttackChance, "StandardMeleeDecisionRushingAttackChance");
                 }
                 {
-                    sb.AppendItem(Unused6, "Unused6");
+                    sb.AppendItem(StandardUnused6, "StandardUnused6");
                 }
                 {
-                    sb.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                    sb.AppendItem(StandardMeleeDecisionRushingAttackDistanceMult, "StandardMeleeDecisionRushingAttackDistanceMult");
                 }
                 {
-                    sb.AppendItem(DodgeFatigueModMult, "DodgeFatigueModMult");
+                    sb.AppendItem(AdvancedDodgeFatigueModMult, "AdvancedDodgeFatigueModMult");
                 }
                 {
-                    sb.AppendItem(DodgeFatigueModBase, "DodgeFatigueModBase");
+                    sb.AppendItem(AdvancedDodgeFatigueModBase, "AdvancedDodgeFatigueModBase");
                 }
                 {
-                    sb.AppendItem(EncumbSpeedModBase, "EncumbSpeedModBase");
+                    sb.AppendItem(AdvancedEncumbSpeedModBase, "AdvancedEncumbSpeedModBase");
                 }
                 {
-                    sb.AppendItem(EncumbSpeedModMult, "EncumbSpeedModMult");
+                    sb.AppendItem(AdvancedEncumbSpeedModMult, "AdvancedEncumbSpeedModMult");
                 }
                 {
-                    sb.AppendItem(DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                    sb.AppendItem(AdvancedDodgeWhileUnderAttackMult, "AdvancedDodgeWhileUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                    sb.AppendItem(AdvancedDodgeNotUnderAttackMult, "AdvancedDodgeNotUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                    sb.AppendItem(AdvancedDodgeBackWhileUnderAttackMult, "AdvancedDodgeBackWhileUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                    sb.AppendItem(AdvancedDodgeBackNotUnderAttackMult, "AdvancedDodgeBackNotUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(DodgeForwardWhileAttackingMult, "DodgeForwardWhileAttackingMult");
+                    sb.AppendItem(AdvancedDodgeForwardWhileAttackingMult, "AdvancedDodgeForwardWhileAttackingMult");
                 }
                 {
-                    sb.AppendItem(DodgeForwardNotAttackingMult, "DodgeForwardNotAttackingMult");
+                    sb.AppendItem(AdvancedDodgeForwardNotAttackingMult, "AdvancedDodgeForwardNotAttackingMult");
                 }
                 {
-                    sb.AppendItem(BlockSkillModifierMult, "BlockSkillModifierMult");
+                    sb.AppendItem(AdvancedBlockSkillModifierMult, "AdvancedBlockSkillModifierMult");
                 }
                 {
-                    sb.AppendItem(BlockSkillModifierBase, "BlockSkillModifierBase");
+                    sb.AppendItem(AdvancedBlockSkillModifierBase, "AdvancedBlockSkillModifierBase");
                 }
                 {
-                    sb.AppendItem(BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                    sb.AppendItem(AdvancedBlockWhileUnderAttackMult, "AdvancedBlockWhileUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                    sb.AppendItem(AdvancedBlockNotUnderAttackMult, "AdvancedBlockNotUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(AttackSkillModifierMult, "AttackSkillModifierMult");
+                    sb.AppendItem(AdvancedAttackSkillModifierMult, "AdvancedAttackSkillModifierMult");
                 }
                 {
-                    sb.AppendItem(AttackSkillModifierBase, "AttackSkillModifierBase");
+                    sb.AppendItem(AdvancedAttackSkillModifierBase, "AdvancedAttackSkillModifierBase");
                 }
                 {
-                    sb.AppendItem(AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                    sb.AppendItem(AdvancedAttackWhileUnderAttackMult, "AdvancedAttackWhileUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                    sb.AppendItem(AdvancedAttackNotUnderAttackMult, "AdvancedAttackNotUnderAttackMult");
                 }
                 {
-                    sb.AppendItem(AttackDuringBlockMult, "AttackDuringBlockMult");
+                    sb.AppendItem(AdvancedAttackDuringBlockMult, "AdvancedAttackDuringBlockMult");
                 }
                 {
-                    sb.AppendItem(PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                    sb.AppendItem(AdvancedPowerAttackFatigueModBase, "AdvancedPowerAttackFatigueModBase");
                 }
                 {
-                    sb.AppendItem(PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                    sb.AppendItem(AdvancedPowerAttackFatigueModMult, "AdvancedPowerAttackFatigueModMult");
                 }
                 {
-                    sb.AppendItem(CoverSearchRadius, "CoverSearchRadius");
+                    sb.AppendItem(SimpleCoverSearchRadius, "SimpleCoverSearchRadius");
                 }
                 {
-                    sb.AppendItem(TakeCoverChance, "TakeCoverChance");
+                    sb.AppendItem(SimpleTakeCoverChance, "SimpleTakeCoverChance");
                 }
                 {
-                    sb.AppendItem(WaitTimerMin, "WaitTimerMin");
+                    sb.AppendItem(SimpleWaitTimerMin, "SimpleWaitTimerMin");
                 }
                 {
-                    sb.AppendItem(WaitTimerMax, "WaitTimerMax");
+                    sb.AppendItem(SimpleWaitTimerMax, "SimpleWaitTimerMax");
                 }
                 {
-                    sb.AppendItem(WaitToFireTimerMin, "WaitToFireTimerMin");
+                    sb.AppendItem(SimpleWaitToFireTimerMin, "SimpleWaitToFireTimerMin");
                 }
                 {
-                    sb.AppendItem(WaitToFireTimerMax, "WaitToFireTimerMax");
+                    sb.AppendItem(SimpleWaitToFireTimerMax, "SimpleWaitToFireTimerMax");
                 }
                 {
-                    sb.AppendItem(FireTimerMin, "FireTimerMin");
+                    sb.AppendItem(SimpleFireTimerMin, "SimpleFireTimerMin");
                 }
                 {
-                    sb.AppendItem(FireTimerMax, "FireTimerMax");
+                    sb.AppendItem(SimpleFireTimerMax, "SimpleFireTimerMax");
                 }
                 {
-                    sb.AppendItem(RangedWeaponRangeMultMin, "RangedWeaponRangeMultMin");
+                    sb.AppendItem(SimpleRangedWeaponRangeMultMin, "SimpleRangedWeaponRangeMultMin");
                 }
                 {
-                    sb.AppendItem(Unused, "Unused");
+                    sb.AppendItem(SimpleUnused, "SimpleUnused");
                 }
                 {
-                    sb.AppendItem(WeaponRestrictions, "WeaponRestrictions");
+                    sb.AppendItem(SimpleWeaponRestrictions, "SimpleWeaponRestrictions");
                 }
                 {
-                    sb.AppendItem(RangedWeaponRangeMultMax, "RangedWeaponRangeMultMax");
+                    sb.AppendItem(SimpleRangedWeaponRangeMultMax, "SimpleRangedWeaponRangeMultMax");
                 }
                 {
-                    sb.AppendItem(MaxTargetingFov, "MaxTargetingFov");
+                    sb.AppendItem(SimpleMaxTargetingFov, "SimpleMaxTargetingFov");
                 }
                 {
-                    sb.AppendItem(CombatRadius, "CombatRadius");
+                    sb.AppendItem(SimpleCombatRadius, "SimpleCombatRadius");
                 }
                 {
-                    sb.AppendItem(SemiAutoFiringDelayMultMin, "SemiAutoFiringDelayMultMin");
+                    sb.AppendItem(SimpleSemiAutoFiringDelayMultMin, "SimpleSemiAutoFiringDelayMultMin");
                 }
                 {
-                    sb.AppendItem(SemiAutoFiringDelayMultMax, "SemiAutoFiringDelayMultMax");
+                    sb.AppendItem(SimpleSemiAutoFiringDelayMultMax, "SimpleSemiAutoFiringDelayMultMax");
                 }
             }
             #endregion
@@ -2404,78 +2404,78 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DodgeChance = this.DodgeChance.Combine(rhs.DodgeChance);
-                ret.LeftRightChance = this.LeftRightChance.Combine(rhs.LeftRightChance);
-                ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
-                ret.DodgeLRTimerMin = this.DodgeLRTimerMin.Combine(rhs.DodgeLRTimerMin);
-                ret.DodgeLRTimerMax = this.DodgeLRTimerMax.Combine(rhs.DodgeLRTimerMax);
-                ret.DodgeForwardTimerMin = this.DodgeForwardTimerMin.Combine(rhs.DodgeForwardTimerMin);
-                ret.DodgeForwardTimerMax = this.DodgeForwardTimerMax.Combine(rhs.DodgeForwardTimerMax);
-                ret.DodgeBackTimerMin = this.DodgeBackTimerMin.Combine(rhs.DodgeBackTimerMin);
-                ret.DodgeBackTimerMax = this.DodgeBackTimerMax.Combine(rhs.DodgeBackTimerMax);
-                ret.IdleTimerMin = this.IdleTimerMin.Combine(rhs.IdleTimerMin);
-                ret.IdleTimerMax = this.IdleTimerMax.Combine(rhs.IdleTimerMax);
-                ret.BlockChance = this.BlockChance.Combine(rhs.BlockChance);
-                ret.AttackChance = this.AttackChance.Combine(rhs.AttackChance);
-                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
-                ret.RecoilStaggerBonusToAttack = this.RecoilStaggerBonusToAttack.Combine(rhs.RecoilStaggerBonusToAttack);
-                ret.UnconsciousBonusToAttack = this.UnconsciousBonusToAttack.Combine(rhs.UnconsciousBonusToAttack);
-                ret.HandToHandBonusToAttack = this.HandToHandBonusToAttack.Combine(rhs.HandToHandBonusToAttack);
-                ret.PowerAttackChance = this.PowerAttackChance.Combine(rhs.PowerAttackChance);
-                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
-                ret.RecoilStaggerBonusToPowerAttack = this.RecoilStaggerBonusToPowerAttack.Combine(rhs.RecoilStaggerBonusToPowerAttack);
-                ret.UnconsciousBonusToPowerAttack = this.UnconsciousBonusToPowerAttack.Combine(rhs.UnconsciousBonusToPowerAttack);
-                ret.PowerAttackNormal = this.PowerAttackNormal.Combine(rhs.PowerAttackNormal);
-                ret.PowerAttackForward = this.PowerAttackForward.Combine(rhs.PowerAttackForward);
-                ret.PowerAttackBack = this.PowerAttackBack.Combine(rhs.PowerAttackBack);
-                ret.PowerAttackLeft = this.PowerAttackLeft.Combine(rhs.PowerAttackLeft);
-                ret.PowerAttackRight = this.PowerAttackRight.Combine(rhs.PowerAttackRight);
-                ret.Unused4 = this.Unused4.Combine(rhs.Unused4);
-                ret.HoldTimerMin = this.HoldTimerMin.Combine(rhs.HoldTimerMin);
-                ret.HoldTimerMax = this.HoldTimerMax.Combine(rhs.HoldTimerMax);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Unused5 = this.Unused5.Combine(rhs.Unused5);
-                ret.AcrobaticDodgeChance = this.AcrobaticDodgeChance.Combine(rhs.AcrobaticDodgeChance);
-                ret.RushingAttackChance = this.RushingAttackChance.Combine(rhs.RushingAttackChance);
-                ret.Unused6 = this.Unused6.Combine(rhs.Unused6);
-                ret.RushingAttackDistanceMult = this.RushingAttackDistanceMult.Combine(rhs.RushingAttackDistanceMult);
-                ret.DodgeFatigueModMult = this.DodgeFatigueModMult.Combine(rhs.DodgeFatigueModMult);
-                ret.DodgeFatigueModBase = this.DodgeFatigueModBase.Combine(rhs.DodgeFatigueModBase);
-                ret.EncumbSpeedModBase = this.EncumbSpeedModBase.Combine(rhs.EncumbSpeedModBase);
-                ret.EncumbSpeedModMult = this.EncumbSpeedModMult.Combine(rhs.EncumbSpeedModMult);
-                ret.DodgeWhileUnderAttackMult = this.DodgeWhileUnderAttackMult.Combine(rhs.DodgeWhileUnderAttackMult);
-                ret.DodgeNotUnderAttackMult = this.DodgeNotUnderAttackMult.Combine(rhs.DodgeNotUnderAttackMult);
-                ret.DodgeBackWhileUnderAttackMult = this.DodgeBackWhileUnderAttackMult.Combine(rhs.DodgeBackWhileUnderAttackMult);
-                ret.DodgeBackNotUnderAttackMult = this.DodgeBackNotUnderAttackMult.Combine(rhs.DodgeBackNotUnderAttackMult);
-                ret.DodgeForwardWhileAttackingMult = this.DodgeForwardWhileAttackingMult.Combine(rhs.DodgeForwardWhileAttackingMult);
-                ret.DodgeForwardNotAttackingMult = this.DodgeForwardNotAttackingMult.Combine(rhs.DodgeForwardNotAttackingMult);
-                ret.BlockSkillModifierMult = this.BlockSkillModifierMult.Combine(rhs.BlockSkillModifierMult);
-                ret.BlockSkillModifierBase = this.BlockSkillModifierBase.Combine(rhs.BlockSkillModifierBase);
-                ret.BlockWhileUnderAttackMult = this.BlockWhileUnderAttackMult.Combine(rhs.BlockWhileUnderAttackMult);
-                ret.BlockNotUnderAttackMult = this.BlockNotUnderAttackMult.Combine(rhs.BlockNotUnderAttackMult);
-                ret.AttackSkillModifierMult = this.AttackSkillModifierMult.Combine(rhs.AttackSkillModifierMult);
-                ret.AttackSkillModifierBase = this.AttackSkillModifierBase.Combine(rhs.AttackSkillModifierBase);
-                ret.AttackWhileUnderAttackMult = this.AttackWhileUnderAttackMult.Combine(rhs.AttackWhileUnderAttackMult);
-                ret.AttackNotUnderAttackMult = this.AttackNotUnderAttackMult.Combine(rhs.AttackNotUnderAttackMult);
-                ret.AttackDuringBlockMult = this.AttackDuringBlockMult.Combine(rhs.AttackDuringBlockMult);
-                ret.PowerAttackFatigueModBase = this.PowerAttackFatigueModBase.Combine(rhs.PowerAttackFatigueModBase);
-                ret.PowerAttackFatigueModMult = this.PowerAttackFatigueModMult.Combine(rhs.PowerAttackFatigueModMult);
-                ret.CoverSearchRadius = this.CoverSearchRadius.Combine(rhs.CoverSearchRadius);
-                ret.TakeCoverChance = this.TakeCoverChance.Combine(rhs.TakeCoverChance);
-                ret.WaitTimerMin = this.WaitTimerMin.Combine(rhs.WaitTimerMin);
-                ret.WaitTimerMax = this.WaitTimerMax.Combine(rhs.WaitTimerMax);
-                ret.WaitToFireTimerMin = this.WaitToFireTimerMin.Combine(rhs.WaitToFireTimerMin);
-                ret.WaitToFireTimerMax = this.WaitToFireTimerMax.Combine(rhs.WaitToFireTimerMax);
-                ret.FireTimerMin = this.FireTimerMin.Combine(rhs.FireTimerMin);
-                ret.FireTimerMax = this.FireTimerMax.Combine(rhs.FireTimerMax);
-                ret.RangedWeaponRangeMultMin = this.RangedWeaponRangeMultMin.Combine(rhs.RangedWeaponRangeMultMin);
-                ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.WeaponRestrictions = this.WeaponRestrictions.Combine(rhs.WeaponRestrictions);
-                ret.RangedWeaponRangeMultMax = this.RangedWeaponRangeMultMax.Combine(rhs.RangedWeaponRangeMultMax);
-                ret.MaxTargetingFov = this.MaxTargetingFov.Combine(rhs.MaxTargetingFov);
-                ret.CombatRadius = this.CombatRadius.Combine(rhs.CombatRadius);
-                ret.SemiAutoFiringDelayMultMin = this.SemiAutoFiringDelayMultMin.Combine(rhs.SemiAutoFiringDelayMultMin);
-                ret.SemiAutoFiringDelayMultMax = this.SemiAutoFiringDelayMultMax.Combine(rhs.SemiAutoFiringDelayMultMax);
+                ret.StandardManeuverDecisionDodgeChance = this.StandardManeuverDecisionDodgeChance.Combine(rhs.StandardManeuverDecisionDodgeChance);
+                ret.StandardManeuverDecisionLeftRightChance = this.StandardManeuverDecisionLeftRightChance.Combine(rhs.StandardManeuverDecisionLeftRightChance);
+                ret.StandardUnused1 = this.StandardUnused1.Combine(rhs.StandardUnused1);
+                ret.StandardManeuverDecisionDodgeLRTimerMin = this.StandardManeuverDecisionDodgeLRTimerMin.Combine(rhs.StandardManeuverDecisionDodgeLRTimerMin);
+                ret.StandardManeuverDecisionDodgeLRTimerMax = this.StandardManeuverDecisionDodgeLRTimerMax.Combine(rhs.StandardManeuverDecisionDodgeLRTimerMax);
+                ret.StandardManeuverDecisionDodgeForwardTimerMin = this.StandardManeuverDecisionDodgeForwardTimerMin.Combine(rhs.StandardManeuverDecisionDodgeForwardTimerMin);
+                ret.StandardManeuverDecisionDodgeForwardTimerMax = this.StandardManeuverDecisionDodgeForwardTimerMax.Combine(rhs.StandardManeuverDecisionDodgeForwardTimerMax);
+                ret.StandardManeuverDecisionDodgeBackTimerMin = this.StandardManeuverDecisionDodgeBackTimerMin.Combine(rhs.StandardManeuverDecisionDodgeBackTimerMin);
+                ret.StandardManeuverDecisionDodgeBackTimerMax = this.StandardManeuverDecisionDodgeBackTimerMax.Combine(rhs.StandardManeuverDecisionDodgeBackTimerMax);
+                ret.StandardManeuverDecisionIdleTimerMin = this.StandardManeuverDecisionIdleTimerMin.Combine(rhs.StandardManeuverDecisionIdleTimerMin);
+                ret.StandardManeuverDecisionIdleTimerMax = this.StandardManeuverDecisionIdleTimerMax.Combine(rhs.StandardManeuverDecisionIdleTimerMax);
+                ret.StandardMeleeDecisionBlockChance = this.StandardMeleeDecisionBlockChance.Combine(rhs.StandardMeleeDecisionBlockChance);
+                ret.StandardMeleeDecisionAttackChance = this.StandardMeleeDecisionAttackChance.Combine(rhs.StandardMeleeDecisionAttackChance);
+                ret.StandardUnused2 = this.StandardUnused2.Combine(rhs.StandardUnused2);
+                ret.StandardMeleeDecisionRecoilStaggerBonusToAttack = this.StandardMeleeDecisionRecoilStaggerBonusToAttack.Combine(rhs.StandardMeleeDecisionRecoilStaggerBonusToAttack);
+                ret.StandardMeleeDecisionUnconsciousBonusToAttack = this.StandardMeleeDecisionUnconsciousBonusToAttack.Combine(rhs.StandardMeleeDecisionUnconsciousBonusToAttack);
+                ret.StandardMeleeDecisionHandToHandBonusToAttack = this.StandardMeleeDecisionHandToHandBonusToAttack.Combine(rhs.StandardMeleeDecisionHandToHandBonusToAttack);
+                ret.StandardMeleeDecisionPowerAttackChance = this.StandardMeleeDecisionPowerAttackChance.Combine(rhs.StandardMeleeDecisionPowerAttackChance);
+                ret.StandardUnused3 = this.StandardUnused3.Combine(rhs.StandardUnused3);
+                ret.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack.Combine(rhs.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack);
+                ret.StandardMeleeDecisionUnconsciousBonusToPowerAttack = this.StandardMeleeDecisionUnconsciousBonusToPowerAttack.Combine(rhs.StandardMeleeDecisionUnconsciousBonusToPowerAttack);
+                ret.StandardMeleeDecisionPowerAttackNormal = this.StandardMeleeDecisionPowerAttackNormal.Combine(rhs.StandardMeleeDecisionPowerAttackNormal);
+                ret.StandardMeleeDecisionPowerAttackForward = this.StandardMeleeDecisionPowerAttackForward.Combine(rhs.StandardMeleeDecisionPowerAttackForward);
+                ret.StandardMeleeDecisionPowerAttackBack = this.StandardMeleeDecisionPowerAttackBack.Combine(rhs.StandardMeleeDecisionPowerAttackBack);
+                ret.StandardMeleeDecisionPowerAttackLeft = this.StandardMeleeDecisionPowerAttackLeft.Combine(rhs.StandardMeleeDecisionPowerAttackLeft);
+                ret.StandardMeleeDecisionPowerAttackRight = this.StandardMeleeDecisionPowerAttackRight.Combine(rhs.StandardMeleeDecisionPowerAttackRight);
+                ret.StandardUnused4 = this.StandardUnused4.Combine(rhs.StandardUnused4);
+                ret.StandardMeleeDecisionHoldTimerMin = this.StandardMeleeDecisionHoldTimerMin.Combine(rhs.StandardMeleeDecisionHoldTimerMin);
+                ret.StandardMeleeDecisionHoldTimerMax = this.StandardMeleeDecisionHoldTimerMax.Combine(rhs.StandardMeleeDecisionHoldTimerMax);
+                ret.StandardFlags = this.StandardFlags.Combine(rhs.StandardFlags);
+                ret.StandardUnused5 = this.StandardUnused5.Combine(rhs.StandardUnused5);
+                ret.StandardMeleeDecisionAcrobaticDodgeChance = this.StandardMeleeDecisionAcrobaticDodgeChance.Combine(rhs.StandardMeleeDecisionAcrobaticDodgeChance);
+                ret.StandardMeleeDecisionRushingAttackChance = this.StandardMeleeDecisionRushingAttackChance.Combine(rhs.StandardMeleeDecisionRushingAttackChance);
+                ret.StandardUnused6 = this.StandardUnused6.Combine(rhs.StandardUnused6);
+                ret.StandardMeleeDecisionRushingAttackDistanceMult = this.StandardMeleeDecisionRushingAttackDistanceMult.Combine(rhs.StandardMeleeDecisionRushingAttackDistanceMult);
+                ret.AdvancedDodgeFatigueModMult = this.AdvancedDodgeFatigueModMult.Combine(rhs.AdvancedDodgeFatigueModMult);
+                ret.AdvancedDodgeFatigueModBase = this.AdvancedDodgeFatigueModBase.Combine(rhs.AdvancedDodgeFatigueModBase);
+                ret.AdvancedEncumbSpeedModBase = this.AdvancedEncumbSpeedModBase.Combine(rhs.AdvancedEncumbSpeedModBase);
+                ret.AdvancedEncumbSpeedModMult = this.AdvancedEncumbSpeedModMult.Combine(rhs.AdvancedEncumbSpeedModMult);
+                ret.AdvancedDodgeWhileUnderAttackMult = this.AdvancedDodgeWhileUnderAttackMult.Combine(rhs.AdvancedDodgeWhileUnderAttackMult);
+                ret.AdvancedDodgeNotUnderAttackMult = this.AdvancedDodgeNotUnderAttackMult.Combine(rhs.AdvancedDodgeNotUnderAttackMult);
+                ret.AdvancedDodgeBackWhileUnderAttackMult = this.AdvancedDodgeBackWhileUnderAttackMult.Combine(rhs.AdvancedDodgeBackWhileUnderAttackMult);
+                ret.AdvancedDodgeBackNotUnderAttackMult = this.AdvancedDodgeBackNotUnderAttackMult.Combine(rhs.AdvancedDodgeBackNotUnderAttackMult);
+                ret.AdvancedDodgeForwardWhileAttackingMult = this.AdvancedDodgeForwardWhileAttackingMult.Combine(rhs.AdvancedDodgeForwardWhileAttackingMult);
+                ret.AdvancedDodgeForwardNotAttackingMult = this.AdvancedDodgeForwardNotAttackingMult.Combine(rhs.AdvancedDodgeForwardNotAttackingMult);
+                ret.AdvancedBlockSkillModifierMult = this.AdvancedBlockSkillModifierMult.Combine(rhs.AdvancedBlockSkillModifierMult);
+                ret.AdvancedBlockSkillModifierBase = this.AdvancedBlockSkillModifierBase.Combine(rhs.AdvancedBlockSkillModifierBase);
+                ret.AdvancedBlockWhileUnderAttackMult = this.AdvancedBlockWhileUnderAttackMult.Combine(rhs.AdvancedBlockWhileUnderAttackMult);
+                ret.AdvancedBlockNotUnderAttackMult = this.AdvancedBlockNotUnderAttackMult.Combine(rhs.AdvancedBlockNotUnderAttackMult);
+                ret.AdvancedAttackSkillModifierMult = this.AdvancedAttackSkillModifierMult.Combine(rhs.AdvancedAttackSkillModifierMult);
+                ret.AdvancedAttackSkillModifierBase = this.AdvancedAttackSkillModifierBase.Combine(rhs.AdvancedAttackSkillModifierBase);
+                ret.AdvancedAttackWhileUnderAttackMult = this.AdvancedAttackWhileUnderAttackMult.Combine(rhs.AdvancedAttackWhileUnderAttackMult);
+                ret.AdvancedAttackNotUnderAttackMult = this.AdvancedAttackNotUnderAttackMult.Combine(rhs.AdvancedAttackNotUnderAttackMult);
+                ret.AdvancedAttackDuringBlockMult = this.AdvancedAttackDuringBlockMult.Combine(rhs.AdvancedAttackDuringBlockMult);
+                ret.AdvancedPowerAttackFatigueModBase = this.AdvancedPowerAttackFatigueModBase.Combine(rhs.AdvancedPowerAttackFatigueModBase);
+                ret.AdvancedPowerAttackFatigueModMult = this.AdvancedPowerAttackFatigueModMult.Combine(rhs.AdvancedPowerAttackFatigueModMult);
+                ret.SimpleCoverSearchRadius = this.SimpleCoverSearchRadius.Combine(rhs.SimpleCoverSearchRadius);
+                ret.SimpleTakeCoverChance = this.SimpleTakeCoverChance.Combine(rhs.SimpleTakeCoverChance);
+                ret.SimpleWaitTimerMin = this.SimpleWaitTimerMin.Combine(rhs.SimpleWaitTimerMin);
+                ret.SimpleWaitTimerMax = this.SimpleWaitTimerMax.Combine(rhs.SimpleWaitTimerMax);
+                ret.SimpleWaitToFireTimerMin = this.SimpleWaitToFireTimerMin.Combine(rhs.SimpleWaitToFireTimerMin);
+                ret.SimpleWaitToFireTimerMax = this.SimpleWaitToFireTimerMax.Combine(rhs.SimpleWaitToFireTimerMax);
+                ret.SimpleFireTimerMin = this.SimpleFireTimerMin.Combine(rhs.SimpleFireTimerMin);
+                ret.SimpleFireTimerMax = this.SimpleFireTimerMax.Combine(rhs.SimpleFireTimerMax);
+                ret.SimpleRangedWeaponRangeMultMin = this.SimpleRangedWeaponRangeMultMin.Combine(rhs.SimpleRangedWeaponRangeMultMin);
+                ret.SimpleUnused = this.SimpleUnused.Combine(rhs.SimpleUnused);
+                ret.SimpleWeaponRestrictions = this.SimpleWeaponRestrictions.Combine(rhs.SimpleWeaponRestrictions);
+                ret.SimpleRangedWeaponRangeMultMax = this.SimpleRangedWeaponRangeMultMax.Combine(rhs.SimpleRangedWeaponRangeMultMax);
+                ret.SimpleMaxTargetingFov = this.SimpleMaxTargetingFov.Combine(rhs.SimpleMaxTargetingFov);
+                ret.SimpleCombatRadius = this.SimpleCombatRadius.Combine(rhs.SimpleCombatRadius);
+                ret.SimpleSemiAutoFiringDelayMultMin = this.SimpleSemiAutoFiringDelayMultMin.Combine(rhs.SimpleSemiAutoFiringDelayMultMin);
+                ret.SimpleSemiAutoFiringDelayMultMax = this.SimpleSemiAutoFiringDelayMultMax.Combine(rhs.SimpleSemiAutoFiringDelayMultMax);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2498,78 +2498,78 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public bool DodgeChance;
-            public bool LeftRightChance;
-            public bool Unused1;
-            public bool DodgeLRTimerMin;
-            public bool DodgeLRTimerMax;
-            public bool DodgeForwardTimerMin;
-            public bool DodgeForwardTimerMax;
-            public bool DodgeBackTimerMin;
-            public bool DodgeBackTimerMax;
-            public bool IdleTimerMin;
-            public bool IdleTimerMax;
-            public bool BlockChance;
-            public bool AttackChance;
-            public bool Unused2;
-            public bool RecoilStaggerBonusToAttack;
-            public bool UnconsciousBonusToAttack;
-            public bool HandToHandBonusToAttack;
-            public bool PowerAttackChance;
-            public bool Unused3;
-            public bool RecoilStaggerBonusToPowerAttack;
-            public bool UnconsciousBonusToPowerAttack;
-            public bool PowerAttackNormal;
-            public bool PowerAttackForward;
-            public bool PowerAttackBack;
-            public bool PowerAttackLeft;
-            public bool PowerAttackRight;
-            public bool Unused4;
-            public bool HoldTimerMin;
-            public bool HoldTimerMax;
-            public bool Flags;
-            public bool Unused5;
-            public bool AcrobaticDodgeChance;
-            public bool RushingAttackChance;
-            public bool Unused6;
-            public bool RushingAttackDistanceMult;
-            public bool DodgeFatigueModMult;
-            public bool DodgeFatigueModBase;
-            public bool EncumbSpeedModBase;
-            public bool EncumbSpeedModMult;
-            public bool DodgeWhileUnderAttackMult;
-            public bool DodgeNotUnderAttackMult;
-            public bool DodgeBackWhileUnderAttackMult;
-            public bool DodgeBackNotUnderAttackMult;
-            public bool DodgeForwardWhileAttackingMult;
-            public bool DodgeForwardNotAttackingMult;
-            public bool BlockSkillModifierMult;
-            public bool BlockSkillModifierBase;
-            public bool BlockWhileUnderAttackMult;
-            public bool BlockNotUnderAttackMult;
-            public bool AttackSkillModifierMult;
-            public bool AttackSkillModifierBase;
-            public bool AttackWhileUnderAttackMult;
-            public bool AttackNotUnderAttackMult;
-            public bool AttackDuringBlockMult;
-            public bool PowerAttackFatigueModBase;
-            public bool PowerAttackFatigueModMult;
-            public bool CoverSearchRadius;
-            public bool TakeCoverChance;
-            public bool WaitTimerMin;
-            public bool WaitTimerMax;
-            public bool WaitToFireTimerMin;
-            public bool WaitToFireTimerMax;
-            public bool FireTimerMin;
-            public bool FireTimerMax;
-            public bool RangedWeaponRangeMultMin;
-            public bool Unused;
-            public bool WeaponRestrictions;
-            public bool RangedWeaponRangeMultMax;
-            public bool MaxTargetingFov;
-            public bool CombatRadius;
-            public bool SemiAutoFiringDelayMultMin;
-            public bool SemiAutoFiringDelayMultMax;
+            public bool StandardManeuverDecisionDodgeChance;
+            public bool StandardManeuverDecisionLeftRightChance;
+            public bool StandardUnused1;
+            public bool StandardManeuverDecisionDodgeLRTimerMin;
+            public bool StandardManeuverDecisionDodgeLRTimerMax;
+            public bool StandardManeuverDecisionDodgeForwardTimerMin;
+            public bool StandardManeuverDecisionDodgeForwardTimerMax;
+            public bool StandardManeuverDecisionDodgeBackTimerMin;
+            public bool StandardManeuverDecisionDodgeBackTimerMax;
+            public bool StandardManeuverDecisionIdleTimerMin;
+            public bool StandardManeuverDecisionIdleTimerMax;
+            public bool StandardMeleeDecisionBlockChance;
+            public bool StandardMeleeDecisionAttackChance;
+            public bool StandardUnused2;
+            public bool StandardMeleeDecisionRecoilStaggerBonusToAttack;
+            public bool StandardMeleeDecisionUnconsciousBonusToAttack;
+            public bool StandardMeleeDecisionHandToHandBonusToAttack;
+            public bool StandardMeleeDecisionPowerAttackChance;
+            public bool StandardUnused3;
+            public bool StandardMeleeDecisionRecoilStaggerBonusToPowerAttack;
+            public bool StandardMeleeDecisionUnconsciousBonusToPowerAttack;
+            public bool StandardMeleeDecisionPowerAttackNormal;
+            public bool StandardMeleeDecisionPowerAttackForward;
+            public bool StandardMeleeDecisionPowerAttackBack;
+            public bool StandardMeleeDecisionPowerAttackLeft;
+            public bool StandardMeleeDecisionPowerAttackRight;
+            public bool StandardUnused4;
+            public bool StandardMeleeDecisionHoldTimerMin;
+            public bool StandardMeleeDecisionHoldTimerMax;
+            public bool StandardFlags;
+            public bool StandardUnused5;
+            public bool StandardMeleeDecisionAcrobaticDodgeChance;
+            public bool StandardMeleeDecisionRushingAttackChance;
+            public bool StandardUnused6;
+            public bool StandardMeleeDecisionRushingAttackDistanceMult;
+            public bool AdvancedDodgeFatigueModMult;
+            public bool AdvancedDodgeFatigueModBase;
+            public bool AdvancedEncumbSpeedModBase;
+            public bool AdvancedEncumbSpeedModMult;
+            public bool AdvancedDodgeWhileUnderAttackMult;
+            public bool AdvancedDodgeNotUnderAttackMult;
+            public bool AdvancedDodgeBackWhileUnderAttackMult;
+            public bool AdvancedDodgeBackNotUnderAttackMult;
+            public bool AdvancedDodgeForwardWhileAttackingMult;
+            public bool AdvancedDodgeForwardNotAttackingMult;
+            public bool AdvancedBlockSkillModifierMult;
+            public bool AdvancedBlockSkillModifierBase;
+            public bool AdvancedBlockWhileUnderAttackMult;
+            public bool AdvancedBlockNotUnderAttackMult;
+            public bool AdvancedAttackSkillModifierMult;
+            public bool AdvancedAttackSkillModifierBase;
+            public bool AdvancedAttackWhileUnderAttackMult;
+            public bool AdvancedAttackNotUnderAttackMult;
+            public bool AdvancedAttackDuringBlockMult;
+            public bool AdvancedPowerAttackFatigueModBase;
+            public bool AdvancedPowerAttackFatigueModMult;
+            public bool SimpleCoverSearchRadius;
+            public bool SimpleTakeCoverChance;
+            public bool SimpleWaitTimerMin;
+            public bool SimpleWaitTimerMax;
+            public bool SimpleWaitToFireTimerMin;
+            public bool SimpleWaitToFireTimerMax;
+            public bool SimpleFireTimerMin;
+            public bool SimpleFireTimerMax;
+            public bool SimpleRangedWeaponRangeMultMin;
+            public bool SimpleUnused;
+            public bool SimpleWeaponRestrictions;
+            public bool SimpleRangedWeaponRangeMultMax;
+            public bool SimpleMaxTargetingFov;
+            public bool SimpleCombatRadius;
+            public bool SimpleSemiAutoFiringDelayMultMin;
+            public bool SimpleSemiAutoFiringDelayMultMax;
             #endregion
 
             #region Ctors
@@ -2578,78 +2578,78 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.DodgeChance = defaultOn;
-                this.LeftRightChance = defaultOn;
-                this.Unused1 = defaultOn;
-                this.DodgeLRTimerMin = defaultOn;
-                this.DodgeLRTimerMax = defaultOn;
-                this.DodgeForwardTimerMin = defaultOn;
-                this.DodgeForwardTimerMax = defaultOn;
-                this.DodgeBackTimerMin = defaultOn;
-                this.DodgeBackTimerMax = defaultOn;
-                this.IdleTimerMin = defaultOn;
-                this.IdleTimerMax = defaultOn;
-                this.BlockChance = defaultOn;
-                this.AttackChance = defaultOn;
-                this.Unused2 = defaultOn;
-                this.RecoilStaggerBonusToAttack = defaultOn;
-                this.UnconsciousBonusToAttack = defaultOn;
-                this.HandToHandBonusToAttack = defaultOn;
-                this.PowerAttackChance = defaultOn;
-                this.Unused3 = defaultOn;
-                this.RecoilStaggerBonusToPowerAttack = defaultOn;
-                this.UnconsciousBonusToPowerAttack = defaultOn;
-                this.PowerAttackNormal = defaultOn;
-                this.PowerAttackForward = defaultOn;
-                this.PowerAttackBack = defaultOn;
-                this.PowerAttackLeft = defaultOn;
-                this.PowerAttackRight = defaultOn;
-                this.Unused4 = defaultOn;
-                this.HoldTimerMin = defaultOn;
-                this.HoldTimerMax = defaultOn;
-                this.Flags = defaultOn;
-                this.Unused5 = defaultOn;
-                this.AcrobaticDodgeChance = defaultOn;
-                this.RushingAttackChance = defaultOn;
-                this.Unused6 = defaultOn;
-                this.RushingAttackDistanceMult = defaultOn;
-                this.DodgeFatigueModMult = defaultOn;
-                this.DodgeFatigueModBase = defaultOn;
-                this.EncumbSpeedModBase = defaultOn;
-                this.EncumbSpeedModMult = defaultOn;
-                this.DodgeWhileUnderAttackMult = defaultOn;
-                this.DodgeNotUnderAttackMult = defaultOn;
-                this.DodgeBackWhileUnderAttackMult = defaultOn;
-                this.DodgeBackNotUnderAttackMult = defaultOn;
-                this.DodgeForwardWhileAttackingMult = defaultOn;
-                this.DodgeForwardNotAttackingMult = defaultOn;
-                this.BlockSkillModifierMult = defaultOn;
-                this.BlockSkillModifierBase = defaultOn;
-                this.BlockWhileUnderAttackMult = defaultOn;
-                this.BlockNotUnderAttackMult = defaultOn;
-                this.AttackSkillModifierMult = defaultOn;
-                this.AttackSkillModifierBase = defaultOn;
-                this.AttackWhileUnderAttackMult = defaultOn;
-                this.AttackNotUnderAttackMult = defaultOn;
-                this.AttackDuringBlockMult = defaultOn;
-                this.PowerAttackFatigueModBase = defaultOn;
-                this.PowerAttackFatigueModMult = defaultOn;
-                this.CoverSearchRadius = defaultOn;
-                this.TakeCoverChance = defaultOn;
-                this.WaitTimerMin = defaultOn;
-                this.WaitTimerMax = defaultOn;
-                this.WaitToFireTimerMin = defaultOn;
-                this.WaitToFireTimerMax = defaultOn;
-                this.FireTimerMin = defaultOn;
-                this.FireTimerMax = defaultOn;
-                this.RangedWeaponRangeMultMin = defaultOn;
-                this.Unused = defaultOn;
-                this.WeaponRestrictions = defaultOn;
-                this.RangedWeaponRangeMultMax = defaultOn;
-                this.MaxTargetingFov = defaultOn;
-                this.CombatRadius = defaultOn;
-                this.SemiAutoFiringDelayMultMin = defaultOn;
-                this.SemiAutoFiringDelayMultMax = defaultOn;
+                this.StandardManeuverDecisionDodgeChance = defaultOn;
+                this.StandardManeuverDecisionLeftRightChance = defaultOn;
+                this.StandardUnused1 = defaultOn;
+                this.StandardManeuverDecisionDodgeLRTimerMin = defaultOn;
+                this.StandardManeuverDecisionDodgeLRTimerMax = defaultOn;
+                this.StandardManeuverDecisionDodgeForwardTimerMin = defaultOn;
+                this.StandardManeuverDecisionDodgeForwardTimerMax = defaultOn;
+                this.StandardManeuverDecisionDodgeBackTimerMin = defaultOn;
+                this.StandardManeuverDecisionDodgeBackTimerMax = defaultOn;
+                this.StandardManeuverDecisionIdleTimerMin = defaultOn;
+                this.StandardManeuverDecisionIdleTimerMax = defaultOn;
+                this.StandardMeleeDecisionBlockChance = defaultOn;
+                this.StandardMeleeDecisionAttackChance = defaultOn;
+                this.StandardUnused2 = defaultOn;
+                this.StandardMeleeDecisionRecoilStaggerBonusToAttack = defaultOn;
+                this.StandardMeleeDecisionUnconsciousBonusToAttack = defaultOn;
+                this.StandardMeleeDecisionHandToHandBonusToAttack = defaultOn;
+                this.StandardMeleeDecisionPowerAttackChance = defaultOn;
+                this.StandardUnused3 = defaultOn;
+                this.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = defaultOn;
+                this.StandardMeleeDecisionUnconsciousBonusToPowerAttack = defaultOn;
+                this.StandardMeleeDecisionPowerAttackNormal = defaultOn;
+                this.StandardMeleeDecisionPowerAttackForward = defaultOn;
+                this.StandardMeleeDecisionPowerAttackBack = defaultOn;
+                this.StandardMeleeDecisionPowerAttackLeft = defaultOn;
+                this.StandardMeleeDecisionPowerAttackRight = defaultOn;
+                this.StandardUnused4 = defaultOn;
+                this.StandardMeleeDecisionHoldTimerMin = defaultOn;
+                this.StandardMeleeDecisionHoldTimerMax = defaultOn;
+                this.StandardFlags = defaultOn;
+                this.StandardUnused5 = defaultOn;
+                this.StandardMeleeDecisionAcrobaticDodgeChance = defaultOn;
+                this.StandardMeleeDecisionRushingAttackChance = defaultOn;
+                this.StandardUnused6 = defaultOn;
+                this.StandardMeleeDecisionRushingAttackDistanceMult = defaultOn;
+                this.AdvancedDodgeFatigueModMult = defaultOn;
+                this.AdvancedDodgeFatigueModBase = defaultOn;
+                this.AdvancedEncumbSpeedModBase = defaultOn;
+                this.AdvancedEncumbSpeedModMult = defaultOn;
+                this.AdvancedDodgeWhileUnderAttackMult = defaultOn;
+                this.AdvancedDodgeNotUnderAttackMult = defaultOn;
+                this.AdvancedDodgeBackWhileUnderAttackMult = defaultOn;
+                this.AdvancedDodgeBackNotUnderAttackMult = defaultOn;
+                this.AdvancedDodgeForwardWhileAttackingMult = defaultOn;
+                this.AdvancedDodgeForwardNotAttackingMult = defaultOn;
+                this.AdvancedBlockSkillModifierMult = defaultOn;
+                this.AdvancedBlockSkillModifierBase = defaultOn;
+                this.AdvancedBlockWhileUnderAttackMult = defaultOn;
+                this.AdvancedBlockNotUnderAttackMult = defaultOn;
+                this.AdvancedAttackSkillModifierMult = defaultOn;
+                this.AdvancedAttackSkillModifierBase = defaultOn;
+                this.AdvancedAttackWhileUnderAttackMult = defaultOn;
+                this.AdvancedAttackNotUnderAttackMult = defaultOn;
+                this.AdvancedAttackDuringBlockMult = defaultOn;
+                this.AdvancedPowerAttackFatigueModBase = defaultOn;
+                this.AdvancedPowerAttackFatigueModMult = defaultOn;
+                this.SimpleCoverSearchRadius = defaultOn;
+                this.SimpleTakeCoverChance = defaultOn;
+                this.SimpleWaitTimerMin = defaultOn;
+                this.SimpleWaitTimerMax = defaultOn;
+                this.SimpleWaitToFireTimerMin = defaultOn;
+                this.SimpleWaitToFireTimerMax = defaultOn;
+                this.SimpleFireTimerMin = defaultOn;
+                this.SimpleFireTimerMax = defaultOn;
+                this.SimpleRangedWeaponRangeMultMin = defaultOn;
+                this.SimpleUnused = defaultOn;
+                this.SimpleWeaponRestrictions = defaultOn;
+                this.SimpleRangedWeaponRangeMultMax = defaultOn;
+                this.SimpleMaxTargetingFov = defaultOn;
+                this.SimpleCombatRadius = defaultOn;
+                this.SimpleSemiAutoFiringDelayMultMin = defaultOn;
+                this.SimpleSemiAutoFiringDelayMultMax = defaultOn;
             }
 
             #endregion
@@ -2657,78 +2657,78 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DodgeChance, null));
-                ret.Add((LeftRightChance, null));
-                ret.Add((Unused1, null));
-                ret.Add((DodgeLRTimerMin, null));
-                ret.Add((DodgeLRTimerMax, null));
-                ret.Add((DodgeForwardTimerMin, null));
-                ret.Add((DodgeForwardTimerMax, null));
-                ret.Add((DodgeBackTimerMin, null));
-                ret.Add((DodgeBackTimerMax, null));
-                ret.Add((IdleTimerMin, null));
-                ret.Add((IdleTimerMax, null));
-                ret.Add((BlockChance, null));
-                ret.Add((AttackChance, null));
-                ret.Add((Unused2, null));
-                ret.Add((RecoilStaggerBonusToAttack, null));
-                ret.Add((UnconsciousBonusToAttack, null));
-                ret.Add((HandToHandBonusToAttack, null));
-                ret.Add((PowerAttackChance, null));
-                ret.Add((Unused3, null));
-                ret.Add((RecoilStaggerBonusToPowerAttack, null));
-                ret.Add((UnconsciousBonusToPowerAttack, null));
-                ret.Add((PowerAttackNormal, null));
-                ret.Add((PowerAttackForward, null));
-                ret.Add((PowerAttackBack, null));
-                ret.Add((PowerAttackLeft, null));
-                ret.Add((PowerAttackRight, null));
-                ret.Add((Unused4, null));
-                ret.Add((HoldTimerMin, null));
-                ret.Add((HoldTimerMax, null));
-                ret.Add((Flags, null));
-                ret.Add((Unused5, null));
-                ret.Add((AcrobaticDodgeChance, null));
-                ret.Add((RushingAttackChance, null));
-                ret.Add((Unused6, null));
-                ret.Add((RushingAttackDistanceMult, null));
-                ret.Add((DodgeFatigueModMult, null));
-                ret.Add((DodgeFatigueModBase, null));
-                ret.Add((EncumbSpeedModBase, null));
-                ret.Add((EncumbSpeedModMult, null));
-                ret.Add((DodgeWhileUnderAttackMult, null));
-                ret.Add((DodgeNotUnderAttackMult, null));
-                ret.Add((DodgeBackWhileUnderAttackMult, null));
-                ret.Add((DodgeBackNotUnderAttackMult, null));
-                ret.Add((DodgeForwardWhileAttackingMult, null));
-                ret.Add((DodgeForwardNotAttackingMult, null));
-                ret.Add((BlockSkillModifierMult, null));
-                ret.Add((BlockSkillModifierBase, null));
-                ret.Add((BlockWhileUnderAttackMult, null));
-                ret.Add((BlockNotUnderAttackMult, null));
-                ret.Add((AttackSkillModifierMult, null));
-                ret.Add((AttackSkillModifierBase, null));
-                ret.Add((AttackWhileUnderAttackMult, null));
-                ret.Add((AttackNotUnderAttackMult, null));
-                ret.Add((AttackDuringBlockMult, null));
-                ret.Add((PowerAttackFatigueModBase, null));
-                ret.Add((PowerAttackFatigueModMult, null));
-                ret.Add((CoverSearchRadius, null));
-                ret.Add((TakeCoverChance, null));
-                ret.Add((WaitTimerMin, null));
-                ret.Add((WaitTimerMax, null));
-                ret.Add((WaitToFireTimerMin, null));
-                ret.Add((WaitToFireTimerMax, null));
-                ret.Add((FireTimerMin, null));
-                ret.Add((FireTimerMax, null));
-                ret.Add((RangedWeaponRangeMultMin, null));
-                ret.Add((Unused, null));
-                ret.Add((WeaponRestrictions, null));
-                ret.Add((RangedWeaponRangeMultMax, null));
-                ret.Add((MaxTargetingFov, null));
-                ret.Add((CombatRadius, null));
-                ret.Add((SemiAutoFiringDelayMultMin, null));
-                ret.Add((SemiAutoFiringDelayMultMax, null));
+                ret.Add((StandardManeuverDecisionDodgeChance, null));
+                ret.Add((StandardManeuverDecisionLeftRightChance, null));
+                ret.Add((StandardUnused1, null));
+                ret.Add((StandardManeuverDecisionDodgeLRTimerMin, null));
+                ret.Add((StandardManeuverDecisionDodgeLRTimerMax, null));
+                ret.Add((StandardManeuverDecisionDodgeForwardTimerMin, null));
+                ret.Add((StandardManeuverDecisionDodgeForwardTimerMax, null));
+                ret.Add((StandardManeuverDecisionDodgeBackTimerMin, null));
+                ret.Add((StandardManeuverDecisionDodgeBackTimerMax, null));
+                ret.Add((StandardManeuverDecisionIdleTimerMin, null));
+                ret.Add((StandardManeuverDecisionIdleTimerMax, null));
+                ret.Add((StandardMeleeDecisionBlockChance, null));
+                ret.Add((StandardMeleeDecisionAttackChance, null));
+                ret.Add((StandardUnused2, null));
+                ret.Add((StandardMeleeDecisionRecoilStaggerBonusToAttack, null));
+                ret.Add((StandardMeleeDecisionUnconsciousBonusToAttack, null));
+                ret.Add((StandardMeleeDecisionHandToHandBonusToAttack, null));
+                ret.Add((StandardMeleeDecisionPowerAttackChance, null));
+                ret.Add((StandardUnused3, null));
+                ret.Add((StandardMeleeDecisionRecoilStaggerBonusToPowerAttack, null));
+                ret.Add((StandardMeleeDecisionUnconsciousBonusToPowerAttack, null));
+                ret.Add((StandardMeleeDecisionPowerAttackNormal, null));
+                ret.Add((StandardMeleeDecisionPowerAttackForward, null));
+                ret.Add((StandardMeleeDecisionPowerAttackBack, null));
+                ret.Add((StandardMeleeDecisionPowerAttackLeft, null));
+                ret.Add((StandardMeleeDecisionPowerAttackRight, null));
+                ret.Add((StandardUnused4, null));
+                ret.Add((StandardMeleeDecisionHoldTimerMin, null));
+                ret.Add((StandardMeleeDecisionHoldTimerMax, null));
+                ret.Add((StandardFlags, null));
+                ret.Add((StandardUnused5, null));
+                ret.Add((StandardMeleeDecisionAcrobaticDodgeChance, null));
+                ret.Add((StandardMeleeDecisionRushingAttackChance, null));
+                ret.Add((StandardUnused6, null));
+                ret.Add((StandardMeleeDecisionRushingAttackDistanceMult, null));
+                ret.Add((AdvancedDodgeFatigueModMult, null));
+                ret.Add((AdvancedDodgeFatigueModBase, null));
+                ret.Add((AdvancedEncumbSpeedModBase, null));
+                ret.Add((AdvancedEncumbSpeedModMult, null));
+                ret.Add((AdvancedDodgeWhileUnderAttackMult, null));
+                ret.Add((AdvancedDodgeNotUnderAttackMult, null));
+                ret.Add((AdvancedDodgeBackWhileUnderAttackMult, null));
+                ret.Add((AdvancedDodgeBackNotUnderAttackMult, null));
+                ret.Add((AdvancedDodgeForwardWhileAttackingMult, null));
+                ret.Add((AdvancedDodgeForwardNotAttackingMult, null));
+                ret.Add((AdvancedBlockSkillModifierMult, null));
+                ret.Add((AdvancedBlockSkillModifierBase, null));
+                ret.Add((AdvancedBlockWhileUnderAttackMult, null));
+                ret.Add((AdvancedBlockNotUnderAttackMult, null));
+                ret.Add((AdvancedAttackSkillModifierMult, null));
+                ret.Add((AdvancedAttackSkillModifierBase, null));
+                ret.Add((AdvancedAttackWhileUnderAttackMult, null));
+                ret.Add((AdvancedAttackNotUnderAttackMult, null));
+                ret.Add((AdvancedAttackDuringBlockMult, null));
+                ret.Add((AdvancedPowerAttackFatigueModBase, null));
+                ret.Add((AdvancedPowerAttackFatigueModMult, null));
+                ret.Add((SimpleCoverSearchRadius, null));
+                ret.Add((SimpleTakeCoverChance, null));
+                ret.Add((SimpleWaitTimerMin, null));
+                ret.Add((SimpleWaitTimerMax, null));
+                ret.Add((SimpleWaitToFireTimerMin, null));
+                ret.Add((SimpleWaitToFireTimerMax, null));
+                ret.Add((SimpleFireTimerMin, null));
+                ret.Add((SimpleFireTimerMax, null));
+                ret.Add((SimpleRangedWeaponRangeMultMin, null));
+                ret.Add((SimpleUnused, null));
+                ret.Add((SimpleWeaponRestrictions, null));
+                ret.Add((SimpleRangedWeaponRangeMultMax, null));
+                ret.Add((SimpleMaxTargetingFov, null));
+                ret.Add((SimpleCombatRadius, null));
+                ret.Add((SimpleSemiAutoFiringDelayMultMin, null));
+                ret.Add((SimpleSemiAutoFiringDelayMultMax, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2862,78 +2862,78 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<ICombatStyleInternal>
     {
-        new Byte DodgeChance { get; set; }
-        new Byte LeftRightChance { get; set; }
-        new MemorySlice<Byte> Unused1 { get; set; }
-        new Single DodgeLRTimerMin { get; set; }
-        new Single DodgeLRTimerMax { get; set; }
-        new Single DodgeForwardTimerMin { get; set; }
-        new Single DodgeForwardTimerMax { get; set; }
-        new Single DodgeBackTimerMin { get; set; }
-        new Single DodgeBackTimerMax { get; set; }
-        new Single IdleTimerMin { get; set; }
-        new Single IdleTimerMax { get; set; }
-        new Byte BlockChance { get; set; }
-        new Byte AttackChance { get; set; }
-        new MemorySlice<Byte> Unused2 { get; set; }
-        new Single RecoilStaggerBonusToAttack { get; set; }
-        new Single UnconsciousBonusToAttack { get; set; }
-        new Single HandToHandBonusToAttack { get; set; }
-        new Byte PowerAttackChance { get; set; }
-        new MemorySlice<Byte> Unused3 { get; set; }
-        new Single RecoilStaggerBonusToPowerAttack { get; set; }
-        new Single UnconsciousBonusToPowerAttack { get; set; }
-        new Byte PowerAttackNormal { get; set; }
-        new Byte PowerAttackForward { get; set; }
-        new Byte PowerAttackBack { get; set; }
-        new Byte PowerAttackLeft { get; set; }
-        new Byte PowerAttackRight { get; set; }
-        new MemorySlice<Byte> Unused4 { get; set; }
-        new Single HoldTimerMin { get; set; }
-        new Single HoldTimerMax { get; set; }
-        new UInt16 Flags { get; set; }
-        new MemorySlice<Byte> Unused5 { get; set; }
-        new Byte AcrobaticDodgeChance { get; set; }
-        new Byte RushingAttackChance { get; set; }
-        new MemorySlice<Byte> Unused6 { get; set; }
-        new Single RushingAttackDistanceMult { get; set; }
-        new Single DodgeFatigueModMult { get; set; }
-        new Single DodgeFatigueModBase { get; set; }
-        new Single EncumbSpeedModBase { get; set; }
-        new Single EncumbSpeedModMult { get; set; }
-        new Single DodgeWhileUnderAttackMult { get; set; }
-        new Single DodgeNotUnderAttackMult { get; set; }
-        new Single DodgeBackWhileUnderAttackMult { get; set; }
-        new Single DodgeBackNotUnderAttackMult { get; set; }
-        new Single DodgeForwardWhileAttackingMult { get; set; }
-        new Single DodgeForwardNotAttackingMult { get; set; }
-        new Single BlockSkillModifierMult { get; set; }
-        new Single BlockSkillModifierBase { get; set; }
-        new Single BlockWhileUnderAttackMult { get; set; }
-        new Single BlockNotUnderAttackMult { get; set; }
-        new Single AttackSkillModifierMult { get; set; }
-        new Single AttackSkillModifierBase { get; set; }
-        new Single AttackWhileUnderAttackMult { get; set; }
-        new Single AttackNotUnderAttackMult { get; set; }
-        new Single AttackDuringBlockMult { get; set; }
-        new Single PowerAttackFatigueModBase { get; set; }
-        new Single PowerAttackFatigueModMult { get; set; }
-        new Single CoverSearchRadius { get; set; }
-        new Single TakeCoverChance { get; set; }
-        new Single WaitTimerMin { get; set; }
-        new Single WaitTimerMax { get; set; }
-        new Single WaitToFireTimerMin { get; set; }
-        new Single WaitToFireTimerMax { get; set; }
-        new Single FireTimerMin { get; set; }
-        new Single FireTimerMax { get; set; }
-        new Single RangedWeaponRangeMultMin { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
-        new UInt32 WeaponRestrictions { get; set; }
-        new Single RangedWeaponRangeMultMax { get; set; }
-        new Single MaxTargetingFov { get; set; }
-        new Single CombatRadius { get; set; }
-        new Single SemiAutoFiringDelayMultMin { get; set; }
-        new Single SemiAutoFiringDelayMultMax { get; set; }
+        new Percent StandardManeuverDecisionDodgeChance { get; set; }
+        new Percent StandardManeuverDecisionLeftRightChance { get; set; }
+        new MemorySlice<Byte> StandardUnused1 { get; set; }
+        new Single StandardManeuverDecisionDodgeLRTimerMin { get; set; }
+        new Single StandardManeuverDecisionDodgeLRTimerMax { get; set; }
+        new Single StandardManeuverDecisionDodgeForwardTimerMin { get; set; }
+        new Single StandardManeuverDecisionDodgeForwardTimerMax { get; set; }
+        new Single StandardManeuverDecisionDodgeBackTimerMin { get; set; }
+        new Single StandardManeuverDecisionDodgeBackTimerMax { get; set; }
+        new Single StandardManeuverDecisionIdleTimerMin { get; set; }
+        new Single StandardManeuverDecisionIdleTimerMax { get; set; }
+        new Percent StandardMeleeDecisionBlockChance { get; set; }
+        new Percent StandardMeleeDecisionAttackChance { get; set; }
+        new MemorySlice<Byte> StandardUnused2 { get; set; }
+        new Single StandardMeleeDecisionRecoilStaggerBonusToAttack { get; set; }
+        new Single StandardMeleeDecisionUnconsciousBonusToAttack { get; set; }
+        new Single StandardMeleeDecisionHandToHandBonusToAttack { get; set; }
+        new Percent StandardMeleeDecisionPowerAttackChance { get; set; }
+        new MemorySlice<Byte> StandardUnused3 { get; set; }
+        new Single StandardMeleeDecisionRecoilStaggerBonusToPowerAttack { get; set; }
+        new Single StandardMeleeDecisionUnconsciousBonusToPowerAttack { get; set; }
+        new Byte StandardMeleeDecisionPowerAttackNormal { get; set; }
+        new Byte StandardMeleeDecisionPowerAttackForward { get; set; }
+        new Byte StandardMeleeDecisionPowerAttackBack { get; set; }
+        new Byte StandardMeleeDecisionPowerAttackLeft { get; set; }
+        new Byte StandardMeleeDecisionPowerAttackRight { get; set; }
+        new MemorySlice<Byte> StandardUnused4 { get; set; }
+        new Single StandardMeleeDecisionHoldTimerMin { get; set; }
+        new Single StandardMeleeDecisionHoldTimerMax { get; set; }
+        new CombatStyle.Flag StandardFlags { get; set; }
+        new MemorySlice<Byte> StandardUnused5 { get; set; }
+        new Percent StandardMeleeDecisionAcrobaticDodgeChance { get; set; }
+        new Percent StandardMeleeDecisionRushingAttackChance { get; set; }
+        new MemorySlice<Byte> StandardUnused6 { get; set; }
+        new Single StandardMeleeDecisionRushingAttackDistanceMult { get; set; }
+        new Single AdvancedDodgeFatigueModMult { get; set; }
+        new Single AdvancedDodgeFatigueModBase { get; set; }
+        new Single AdvancedEncumbSpeedModBase { get; set; }
+        new Single AdvancedEncumbSpeedModMult { get; set; }
+        new Single AdvancedDodgeWhileUnderAttackMult { get; set; }
+        new Single AdvancedDodgeNotUnderAttackMult { get; set; }
+        new Single AdvancedDodgeBackWhileUnderAttackMult { get; set; }
+        new Single AdvancedDodgeBackNotUnderAttackMult { get; set; }
+        new Single AdvancedDodgeForwardWhileAttackingMult { get; set; }
+        new Single AdvancedDodgeForwardNotAttackingMult { get; set; }
+        new Single AdvancedBlockSkillModifierMult { get; set; }
+        new Single AdvancedBlockSkillModifierBase { get; set; }
+        new Single AdvancedBlockWhileUnderAttackMult { get; set; }
+        new Single AdvancedBlockNotUnderAttackMult { get; set; }
+        new Single AdvancedAttackSkillModifierMult { get; set; }
+        new Single AdvancedAttackSkillModifierBase { get; set; }
+        new Single AdvancedAttackWhileUnderAttackMult { get; set; }
+        new Single AdvancedAttackNotUnderAttackMult { get; set; }
+        new Single AdvancedAttackDuringBlockMult { get; set; }
+        new Single AdvancedPowerAttackFatigueModBase { get; set; }
+        new Single AdvancedPowerAttackFatigueModMult { get; set; }
+        new Single SimpleCoverSearchRadius { get; set; }
+        new Single SimpleTakeCoverChance { get; set; }
+        new Single SimpleWaitTimerMin { get; set; }
+        new Single SimpleWaitTimerMax { get; set; }
+        new Single SimpleWaitToFireTimerMin { get; set; }
+        new Single SimpleWaitToFireTimerMax { get; set; }
+        new Single SimpleFireTimerMin { get; set; }
+        new Single SimpleFireTimerMax { get; set; }
+        new Single SimpleRangedWeaponRangeMultMin { get; set; }
+        new MemorySlice<Byte> SimpleUnused { get; set; }
+        new CombatStyle.WeaponRestriction SimpleWeaponRestrictions { get; set; }
+        new Single SimpleRangedWeaponRangeMultMax { get; set; }
+        new Single SimpleMaxTargetingFov { get; set; }
+        new Single SimpleCombatRadius { get; set; }
+        new Single SimpleSemiAutoFiringDelayMultMin { get; set; }
+        new Single SimpleSemiAutoFiringDelayMultMax { get; set; }
     }
 
     public partial interface ICombatStyleInternal :
@@ -2951,78 +2951,78 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<ICombatStyleGetter>
     {
         static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
-        Byte DodgeChance { get; }
-        Byte LeftRightChance { get; }
-        ReadOnlyMemorySlice<Byte> Unused1 { get; }
-        Single DodgeLRTimerMin { get; }
-        Single DodgeLRTimerMax { get; }
-        Single DodgeForwardTimerMin { get; }
-        Single DodgeForwardTimerMax { get; }
-        Single DodgeBackTimerMin { get; }
-        Single DodgeBackTimerMax { get; }
-        Single IdleTimerMin { get; }
-        Single IdleTimerMax { get; }
-        Byte BlockChance { get; }
-        Byte AttackChance { get; }
-        ReadOnlyMemorySlice<Byte> Unused2 { get; }
-        Single RecoilStaggerBonusToAttack { get; }
-        Single UnconsciousBonusToAttack { get; }
-        Single HandToHandBonusToAttack { get; }
-        Byte PowerAttackChance { get; }
-        ReadOnlyMemorySlice<Byte> Unused3 { get; }
-        Single RecoilStaggerBonusToPowerAttack { get; }
-        Single UnconsciousBonusToPowerAttack { get; }
-        Byte PowerAttackNormal { get; }
-        Byte PowerAttackForward { get; }
-        Byte PowerAttackBack { get; }
-        Byte PowerAttackLeft { get; }
-        Byte PowerAttackRight { get; }
-        ReadOnlyMemorySlice<Byte> Unused4 { get; }
-        Single HoldTimerMin { get; }
-        Single HoldTimerMax { get; }
-        UInt16 Flags { get; }
-        ReadOnlyMemorySlice<Byte> Unused5 { get; }
-        Byte AcrobaticDodgeChance { get; }
-        Byte RushingAttackChance { get; }
-        ReadOnlyMemorySlice<Byte> Unused6 { get; }
-        Single RushingAttackDistanceMult { get; }
-        Single DodgeFatigueModMult { get; }
-        Single DodgeFatigueModBase { get; }
-        Single EncumbSpeedModBase { get; }
-        Single EncumbSpeedModMult { get; }
-        Single DodgeWhileUnderAttackMult { get; }
-        Single DodgeNotUnderAttackMult { get; }
-        Single DodgeBackWhileUnderAttackMult { get; }
-        Single DodgeBackNotUnderAttackMult { get; }
-        Single DodgeForwardWhileAttackingMult { get; }
-        Single DodgeForwardNotAttackingMult { get; }
-        Single BlockSkillModifierMult { get; }
-        Single BlockSkillModifierBase { get; }
-        Single BlockWhileUnderAttackMult { get; }
-        Single BlockNotUnderAttackMult { get; }
-        Single AttackSkillModifierMult { get; }
-        Single AttackSkillModifierBase { get; }
-        Single AttackWhileUnderAttackMult { get; }
-        Single AttackNotUnderAttackMult { get; }
-        Single AttackDuringBlockMult { get; }
-        Single PowerAttackFatigueModBase { get; }
-        Single PowerAttackFatigueModMult { get; }
-        Single CoverSearchRadius { get; }
-        Single TakeCoverChance { get; }
-        Single WaitTimerMin { get; }
-        Single WaitTimerMax { get; }
-        Single WaitToFireTimerMin { get; }
-        Single WaitToFireTimerMax { get; }
-        Single FireTimerMin { get; }
-        Single FireTimerMax { get; }
-        Single RangedWeaponRangeMultMin { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
-        UInt32 WeaponRestrictions { get; }
-        Single RangedWeaponRangeMultMax { get; }
-        Single MaxTargetingFov { get; }
-        Single CombatRadius { get; }
-        Single SemiAutoFiringDelayMultMin { get; }
-        Single SemiAutoFiringDelayMultMax { get; }
+        Percent StandardManeuverDecisionDodgeChance { get; }
+        Percent StandardManeuverDecisionLeftRightChance { get; }
+        ReadOnlyMemorySlice<Byte> StandardUnused1 { get; }
+        Single StandardManeuverDecisionDodgeLRTimerMin { get; }
+        Single StandardManeuverDecisionDodgeLRTimerMax { get; }
+        Single StandardManeuverDecisionDodgeForwardTimerMin { get; }
+        Single StandardManeuverDecisionDodgeForwardTimerMax { get; }
+        Single StandardManeuverDecisionDodgeBackTimerMin { get; }
+        Single StandardManeuverDecisionDodgeBackTimerMax { get; }
+        Single StandardManeuverDecisionIdleTimerMin { get; }
+        Single StandardManeuverDecisionIdleTimerMax { get; }
+        Percent StandardMeleeDecisionBlockChance { get; }
+        Percent StandardMeleeDecisionAttackChance { get; }
+        ReadOnlyMemorySlice<Byte> StandardUnused2 { get; }
+        Single StandardMeleeDecisionRecoilStaggerBonusToAttack { get; }
+        Single StandardMeleeDecisionUnconsciousBonusToAttack { get; }
+        Single StandardMeleeDecisionHandToHandBonusToAttack { get; }
+        Percent StandardMeleeDecisionPowerAttackChance { get; }
+        ReadOnlyMemorySlice<Byte> StandardUnused3 { get; }
+        Single StandardMeleeDecisionRecoilStaggerBonusToPowerAttack { get; }
+        Single StandardMeleeDecisionUnconsciousBonusToPowerAttack { get; }
+        Byte StandardMeleeDecisionPowerAttackNormal { get; }
+        Byte StandardMeleeDecisionPowerAttackForward { get; }
+        Byte StandardMeleeDecisionPowerAttackBack { get; }
+        Byte StandardMeleeDecisionPowerAttackLeft { get; }
+        Byte StandardMeleeDecisionPowerAttackRight { get; }
+        ReadOnlyMemorySlice<Byte> StandardUnused4 { get; }
+        Single StandardMeleeDecisionHoldTimerMin { get; }
+        Single StandardMeleeDecisionHoldTimerMax { get; }
+        CombatStyle.Flag StandardFlags { get; }
+        ReadOnlyMemorySlice<Byte> StandardUnused5 { get; }
+        Percent StandardMeleeDecisionAcrobaticDodgeChance { get; }
+        Percent StandardMeleeDecisionRushingAttackChance { get; }
+        ReadOnlyMemorySlice<Byte> StandardUnused6 { get; }
+        Single StandardMeleeDecisionRushingAttackDistanceMult { get; }
+        Single AdvancedDodgeFatigueModMult { get; }
+        Single AdvancedDodgeFatigueModBase { get; }
+        Single AdvancedEncumbSpeedModBase { get; }
+        Single AdvancedEncumbSpeedModMult { get; }
+        Single AdvancedDodgeWhileUnderAttackMult { get; }
+        Single AdvancedDodgeNotUnderAttackMult { get; }
+        Single AdvancedDodgeBackWhileUnderAttackMult { get; }
+        Single AdvancedDodgeBackNotUnderAttackMult { get; }
+        Single AdvancedDodgeForwardWhileAttackingMult { get; }
+        Single AdvancedDodgeForwardNotAttackingMult { get; }
+        Single AdvancedBlockSkillModifierMult { get; }
+        Single AdvancedBlockSkillModifierBase { get; }
+        Single AdvancedBlockWhileUnderAttackMult { get; }
+        Single AdvancedBlockNotUnderAttackMult { get; }
+        Single AdvancedAttackSkillModifierMult { get; }
+        Single AdvancedAttackSkillModifierBase { get; }
+        Single AdvancedAttackWhileUnderAttackMult { get; }
+        Single AdvancedAttackNotUnderAttackMult { get; }
+        Single AdvancedAttackDuringBlockMult { get; }
+        Single AdvancedPowerAttackFatigueModBase { get; }
+        Single AdvancedPowerAttackFatigueModMult { get; }
+        Single SimpleCoverSearchRadius { get; }
+        Single SimpleTakeCoverChance { get; }
+        Single SimpleWaitTimerMin { get; }
+        Single SimpleWaitTimerMax { get; }
+        Single SimpleWaitToFireTimerMin { get; }
+        Single SimpleWaitToFireTimerMax { get; }
+        Single SimpleFireTimerMin { get; }
+        Single SimpleFireTimerMax { get; }
+        Single SimpleRangedWeaponRangeMultMin { get; }
+        ReadOnlyMemorySlice<Byte> SimpleUnused { get; }
+        CombatStyle.WeaponRestriction SimpleWeaponRestrictions { get; }
+        Single SimpleRangedWeaponRangeMultMax { get; }
+        Single SimpleMaxTargetingFov { get; }
+        Single SimpleCombatRadius { get; }
+        Single SimpleSemiAutoFiringDelayMultMin { get; }
+        Single SimpleSemiAutoFiringDelayMultMax { get; }
 
     }
 
@@ -3199,78 +3199,78 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        DodgeChance = 7,
-        LeftRightChance = 8,
-        Unused1 = 9,
-        DodgeLRTimerMin = 10,
-        DodgeLRTimerMax = 11,
-        DodgeForwardTimerMin = 12,
-        DodgeForwardTimerMax = 13,
-        DodgeBackTimerMin = 14,
-        DodgeBackTimerMax = 15,
-        IdleTimerMin = 16,
-        IdleTimerMax = 17,
-        BlockChance = 18,
-        AttackChance = 19,
-        Unused2 = 20,
-        RecoilStaggerBonusToAttack = 21,
-        UnconsciousBonusToAttack = 22,
-        HandToHandBonusToAttack = 23,
-        PowerAttackChance = 24,
-        Unused3 = 25,
-        RecoilStaggerBonusToPowerAttack = 26,
-        UnconsciousBonusToPowerAttack = 27,
-        PowerAttackNormal = 28,
-        PowerAttackForward = 29,
-        PowerAttackBack = 30,
-        PowerAttackLeft = 31,
-        PowerAttackRight = 32,
-        Unused4 = 33,
-        HoldTimerMin = 34,
-        HoldTimerMax = 35,
-        Flags = 36,
-        Unused5 = 37,
-        AcrobaticDodgeChance = 38,
-        RushingAttackChance = 39,
-        Unused6 = 40,
-        RushingAttackDistanceMult = 41,
-        DodgeFatigueModMult = 42,
-        DodgeFatigueModBase = 43,
-        EncumbSpeedModBase = 44,
-        EncumbSpeedModMult = 45,
-        DodgeWhileUnderAttackMult = 46,
-        DodgeNotUnderAttackMult = 47,
-        DodgeBackWhileUnderAttackMult = 48,
-        DodgeBackNotUnderAttackMult = 49,
-        DodgeForwardWhileAttackingMult = 50,
-        DodgeForwardNotAttackingMult = 51,
-        BlockSkillModifierMult = 52,
-        BlockSkillModifierBase = 53,
-        BlockWhileUnderAttackMult = 54,
-        BlockNotUnderAttackMult = 55,
-        AttackSkillModifierMult = 56,
-        AttackSkillModifierBase = 57,
-        AttackWhileUnderAttackMult = 58,
-        AttackNotUnderAttackMult = 59,
-        AttackDuringBlockMult = 60,
-        PowerAttackFatigueModBase = 61,
-        PowerAttackFatigueModMult = 62,
-        CoverSearchRadius = 63,
-        TakeCoverChance = 64,
-        WaitTimerMin = 65,
-        WaitTimerMax = 66,
-        WaitToFireTimerMin = 67,
-        WaitToFireTimerMax = 68,
-        FireTimerMin = 69,
-        FireTimerMax = 70,
-        RangedWeaponRangeMultMin = 71,
-        Unused = 72,
-        WeaponRestrictions = 73,
-        RangedWeaponRangeMultMax = 74,
-        MaxTargetingFov = 75,
-        CombatRadius = 76,
-        SemiAutoFiringDelayMultMin = 77,
-        SemiAutoFiringDelayMultMax = 78,
+        StandardManeuverDecisionDodgeChance = 7,
+        StandardManeuverDecisionLeftRightChance = 8,
+        StandardUnused1 = 9,
+        StandardManeuverDecisionDodgeLRTimerMin = 10,
+        StandardManeuverDecisionDodgeLRTimerMax = 11,
+        StandardManeuverDecisionDodgeForwardTimerMin = 12,
+        StandardManeuverDecisionDodgeForwardTimerMax = 13,
+        StandardManeuverDecisionDodgeBackTimerMin = 14,
+        StandardManeuverDecisionDodgeBackTimerMax = 15,
+        StandardManeuverDecisionIdleTimerMin = 16,
+        StandardManeuverDecisionIdleTimerMax = 17,
+        StandardMeleeDecisionBlockChance = 18,
+        StandardMeleeDecisionAttackChance = 19,
+        StandardUnused2 = 20,
+        StandardMeleeDecisionRecoilStaggerBonusToAttack = 21,
+        StandardMeleeDecisionUnconsciousBonusToAttack = 22,
+        StandardMeleeDecisionHandToHandBonusToAttack = 23,
+        StandardMeleeDecisionPowerAttackChance = 24,
+        StandardUnused3 = 25,
+        StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = 26,
+        StandardMeleeDecisionUnconsciousBonusToPowerAttack = 27,
+        StandardMeleeDecisionPowerAttackNormal = 28,
+        StandardMeleeDecisionPowerAttackForward = 29,
+        StandardMeleeDecisionPowerAttackBack = 30,
+        StandardMeleeDecisionPowerAttackLeft = 31,
+        StandardMeleeDecisionPowerAttackRight = 32,
+        StandardUnused4 = 33,
+        StandardMeleeDecisionHoldTimerMin = 34,
+        StandardMeleeDecisionHoldTimerMax = 35,
+        StandardFlags = 36,
+        StandardUnused5 = 37,
+        StandardMeleeDecisionAcrobaticDodgeChance = 38,
+        StandardMeleeDecisionRushingAttackChance = 39,
+        StandardUnused6 = 40,
+        StandardMeleeDecisionRushingAttackDistanceMult = 41,
+        AdvancedDodgeFatigueModMult = 42,
+        AdvancedDodgeFatigueModBase = 43,
+        AdvancedEncumbSpeedModBase = 44,
+        AdvancedEncumbSpeedModMult = 45,
+        AdvancedDodgeWhileUnderAttackMult = 46,
+        AdvancedDodgeNotUnderAttackMult = 47,
+        AdvancedDodgeBackWhileUnderAttackMult = 48,
+        AdvancedDodgeBackNotUnderAttackMult = 49,
+        AdvancedDodgeForwardWhileAttackingMult = 50,
+        AdvancedDodgeForwardNotAttackingMult = 51,
+        AdvancedBlockSkillModifierMult = 52,
+        AdvancedBlockSkillModifierBase = 53,
+        AdvancedBlockWhileUnderAttackMult = 54,
+        AdvancedBlockNotUnderAttackMult = 55,
+        AdvancedAttackSkillModifierMult = 56,
+        AdvancedAttackSkillModifierBase = 57,
+        AdvancedAttackWhileUnderAttackMult = 58,
+        AdvancedAttackNotUnderAttackMult = 59,
+        AdvancedAttackDuringBlockMult = 60,
+        AdvancedPowerAttackFatigueModBase = 61,
+        AdvancedPowerAttackFatigueModMult = 62,
+        SimpleCoverSearchRadius = 63,
+        SimpleTakeCoverChance = 64,
+        SimpleWaitTimerMin = 65,
+        SimpleWaitTimerMax = 66,
+        SimpleWaitToFireTimerMin = 67,
+        SimpleWaitToFireTimerMax = 68,
+        SimpleFireTimerMin = 69,
+        SimpleFireTimerMax = 70,
+        SimpleRangedWeaponRangeMultMin = 71,
+        SimpleUnused = 72,
+        SimpleWeaponRestrictions = 73,
+        SimpleRangedWeaponRangeMultMax = 74,
+        SimpleMaxTargetingFov = 75,
+        SimpleCombatRadius = 76,
+        SimpleSemiAutoFiringDelayMultMin = 77,
+        SimpleSemiAutoFiringDelayMultMax = 78,
     }
     #endregion
 
@@ -3363,78 +3363,78 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICombatStyleInternal item)
         {
             ClearPartial();
-            item.DodgeChance = default(Byte);
-            item.LeftRightChance = default(Byte);
-            item.Unused1 = new byte[2];
-            item.DodgeLRTimerMin = default(Single);
-            item.DodgeLRTimerMax = default(Single);
-            item.DodgeForwardTimerMin = default(Single);
-            item.DodgeForwardTimerMax = default(Single);
-            item.DodgeBackTimerMin = default(Single);
-            item.DodgeBackTimerMax = default(Single);
-            item.IdleTimerMin = default(Single);
-            item.IdleTimerMax = default(Single);
-            item.BlockChance = default(Byte);
-            item.AttackChance = default(Byte);
-            item.Unused2 = new byte[2];
-            item.RecoilStaggerBonusToAttack = default(Single);
-            item.UnconsciousBonusToAttack = default(Single);
-            item.HandToHandBonusToAttack = default(Single);
-            item.PowerAttackChance = default(Byte);
-            item.Unused3 = new byte[3];
-            item.RecoilStaggerBonusToPowerAttack = default(Single);
-            item.UnconsciousBonusToPowerAttack = default(Single);
-            item.PowerAttackNormal = default(Byte);
-            item.PowerAttackForward = default(Byte);
-            item.PowerAttackBack = default(Byte);
-            item.PowerAttackLeft = default(Byte);
-            item.PowerAttackRight = default(Byte);
-            item.Unused4 = new byte[3];
-            item.HoldTimerMin = default(Single);
-            item.HoldTimerMax = default(Single);
-            item.Flags = default(UInt16);
-            item.Unused5 = new byte[2];
-            item.AcrobaticDodgeChance = default(Byte);
-            item.RushingAttackChance = default(Byte);
-            item.Unused6 = new byte[2];
-            item.RushingAttackDistanceMult = default(Single);
-            item.DodgeFatigueModMult = default(Single);
-            item.DodgeFatigueModBase = default(Single);
-            item.EncumbSpeedModBase = default(Single);
-            item.EncumbSpeedModMult = default(Single);
-            item.DodgeWhileUnderAttackMult = default(Single);
-            item.DodgeNotUnderAttackMult = default(Single);
-            item.DodgeBackWhileUnderAttackMult = default(Single);
-            item.DodgeBackNotUnderAttackMult = default(Single);
-            item.DodgeForwardWhileAttackingMult = default(Single);
-            item.DodgeForwardNotAttackingMult = default(Single);
-            item.BlockSkillModifierMult = default(Single);
-            item.BlockSkillModifierBase = default(Single);
-            item.BlockWhileUnderAttackMult = default(Single);
-            item.BlockNotUnderAttackMult = default(Single);
-            item.AttackSkillModifierMult = default(Single);
-            item.AttackSkillModifierBase = default(Single);
-            item.AttackWhileUnderAttackMult = default(Single);
-            item.AttackNotUnderAttackMult = default(Single);
-            item.AttackDuringBlockMult = default(Single);
-            item.PowerAttackFatigueModBase = default(Single);
-            item.PowerAttackFatigueModMult = default(Single);
-            item.CoverSearchRadius = default(Single);
-            item.TakeCoverChance = default(Single);
-            item.WaitTimerMin = default(Single);
-            item.WaitTimerMax = default(Single);
-            item.WaitToFireTimerMin = default(Single);
-            item.WaitToFireTimerMax = default(Single);
-            item.FireTimerMin = default(Single);
-            item.FireTimerMax = default(Single);
-            item.RangedWeaponRangeMultMin = default(Single);
-            item.Unused = new byte[4];
-            item.WeaponRestrictions = default(UInt32);
-            item.RangedWeaponRangeMultMax = default(Single);
-            item.MaxTargetingFov = default(Single);
-            item.CombatRadius = default(Single);
-            item.SemiAutoFiringDelayMultMin = default(Single);
-            item.SemiAutoFiringDelayMultMax = default(Single);
+            item.StandardManeuverDecisionDodgeChance = default(Percent);
+            item.StandardManeuverDecisionLeftRightChance = default(Percent);
+            item.StandardUnused1 = new byte[2];
+            item.StandardManeuverDecisionDodgeLRTimerMin = default(Single);
+            item.StandardManeuverDecisionDodgeLRTimerMax = default(Single);
+            item.StandardManeuverDecisionDodgeForwardTimerMin = default(Single);
+            item.StandardManeuverDecisionDodgeForwardTimerMax = default(Single);
+            item.StandardManeuverDecisionDodgeBackTimerMin = default(Single);
+            item.StandardManeuverDecisionDodgeBackTimerMax = default(Single);
+            item.StandardManeuverDecisionIdleTimerMin = default(Single);
+            item.StandardManeuverDecisionIdleTimerMax = default(Single);
+            item.StandardMeleeDecisionBlockChance = default(Percent);
+            item.StandardMeleeDecisionAttackChance = default(Percent);
+            item.StandardUnused2 = new byte[2];
+            item.StandardMeleeDecisionRecoilStaggerBonusToAttack = default(Single);
+            item.StandardMeleeDecisionUnconsciousBonusToAttack = default(Single);
+            item.StandardMeleeDecisionHandToHandBonusToAttack = default(Single);
+            item.StandardMeleeDecisionPowerAttackChance = default(Percent);
+            item.StandardUnused3 = new byte[3];
+            item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = default(Single);
+            item.StandardMeleeDecisionUnconsciousBonusToPowerAttack = default(Single);
+            item.StandardMeleeDecisionPowerAttackNormal = default(Byte);
+            item.StandardMeleeDecisionPowerAttackForward = default(Byte);
+            item.StandardMeleeDecisionPowerAttackBack = default(Byte);
+            item.StandardMeleeDecisionPowerAttackLeft = default(Byte);
+            item.StandardMeleeDecisionPowerAttackRight = default(Byte);
+            item.StandardUnused4 = new byte[3];
+            item.StandardMeleeDecisionHoldTimerMin = default(Single);
+            item.StandardMeleeDecisionHoldTimerMax = default(Single);
+            item.StandardFlags = default(CombatStyle.Flag);
+            item.StandardUnused5 = new byte[2];
+            item.StandardMeleeDecisionAcrobaticDodgeChance = default(Percent);
+            item.StandardMeleeDecisionRushingAttackChance = default(Percent);
+            item.StandardUnused6 = new byte[2];
+            item.StandardMeleeDecisionRushingAttackDistanceMult = default(Single);
+            item.AdvancedDodgeFatigueModMult = default(Single);
+            item.AdvancedDodgeFatigueModBase = default(Single);
+            item.AdvancedEncumbSpeedModBase = default(Single);
+            item.AdvancedEncumbSpeedModMult = default(Single);
+            item.AdvancedDodgeWhileUnderAttackMult = default(Single);
+            item.AdvancedDodgeNotUnderAttackMult = default(Single);
+            item.AdvancedDodgeBackWhileUnderAttackMult = default(Single);
+            item.AdvancedDodgeBackNotUnderAttackMult = default(Single);
+            item.AdvancedDodgeForwardWhileAttackingMult = default(Single);
+            item.AdvancedDodgeForwardNotAttackingMult = default(Single);
+            item.AdvancedBlockSkillModifierMult = default(Single);
+            item.AdvancedBlockSkillModifierBase = default(Single);
+            item.AdvancedBlockWhileUnderAttackMult = default(Single);
+            item.AdvancedBlockNotUnderAttackMult = default(Single);
+            item.AdvancedAttackSkillModifierMult = default(Single);
+            item.AdvancedAttackSkillModifierBase = default(Single);
+            item.AdvancedAttackWhileUnderAttackMult = default(Single);
+            item.AdvancedAttackNotUnderAttackMult = default(Single);
+            item.AdvancedAttackDuringBlockMult = default(Single);
+            item.AdvancedPowerAttackFatigueModBase = default(Single);
+            item.AdvancedPowerAttackFatigueModMult = default(Single);
+            item.SimpleCoverSearchRadius = default(Single);
+            item.SimpleTakeCoverChance = default(Single);
+            item.SimpleWaitTimerMin = default(Single);
+            item.SimpleWaitTimerMax = default(Single);
+            item.SimpleWaitToFireTimerMin = default(Single);
+            item.SimpleWaitToFireTimerMax = default(Single);
+            item.SimpleFireTimerMin = default(Single);
+            item.SimpleFireTimerMax = default(Single);
+            item.SimpleRangedWeaponRangeMultMin = default(Single);
+            item.SimpleUnused = new byte[4];
+            item.SimpleWeaponRestrictions = default(CombatStyle.WeaponRestriction);
+            item.SimpleRangedWeaponRangeMultMax = default(Single);
+            item.SimpleMaxTargetingFov = default(Single);
+            item.SimpleCombatRadius = default(Single);
+            item.SimpleSemiAutoFiringDelayMultMin = default(Single);
+            item.SimpleSemiAutoFiringDelayMultMax = default(Single);
             base.Clear(item);
         }
         
@@ -3519,78 +3519,78 @@ namespace Mutagen.Bethesda.Fallout3
             CombatStyle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DodgeChance = item.DodgeChance == rhs.DodgeChance;
-            ret.LeftRightChance = item.LeftRightChance == rhs.LeftRightChance;
-            ret.Unused1 = MemoryExtensions.SequenceEqual(item.Unused1.Span, rhs.Unused1.Span);
-            ret.DodgeLRTimerMin = item.DodgeLRTimerMin.EqualsWithin(rhs.DodgeLRTimerMin);
-            ret.DodgeLRTimerMax = item.DodgeLRTimerMax.EqualsWithin(rhs.DodgeLRTimerMax);
-            ret.DodgeForwardTimerMin = item.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin);
-            ret.DodgeForwardTimerMax = item.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax);
-            ret.DodgeBackTimerMin = item.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin);
-            ret.DodgeBackTimerMax = item.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax);
-            ret.IdleTimerMin = item.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin);
-            ret.IdleTimerMax = item.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax);
-            ret.BlockChance = item.BlockChance == rhs.BlockChance;
-            ret.AttackChance = item.AttackChance == rhs.AttackChance;
-            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
-            ret.RecoilStaggerBonusToAttack = item.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack);
-            ret.UnconsciousBonusToAttack = item.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack);
-            ret.HandToHandBonusToAttack = item.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack);
-            ret.PowerAttackChance = item.PowerAttackChance == rhs.PowerAttackChance;
-            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
-            ret.RecoilStaggerBonusToPowerAttack = item.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack);
-            ret.UnconsciousBonusToPowerAttack = item.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack);
-            ret.PowerAttackNormal = item.PowerAttackNormal == rhs.PowerAttackNormal;
-            ret.PowerAttackForward = item.PowerAttackForward == rhs.PowerAttackForward;
-            ret.PowerAttackBack = item.PowerAttackBack == rhs.PowerAttackBack;
-            ret.PowerAttackLeft = item.PowerAttackLeft == rhs.PowerAttackLeft;
-            ret.PowerAttackRight = item.PowerAttackRight == rhs.PowerAttackRight;
-            ret.Unused4 = MemoryExtensions.SequenceEqual(item.Unused4.Span, rhs.Unused4.Span);
-            ret.HoldTimerMin = item.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin);
-            ret.HoldTimerMax = item.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Unused5 = MemoryExtensions.SequenceEqual(item.Unused5.Span, rhs.Unused5.Span);
-            ret.AcrobaticDodgeChance = item.AcrobaticDodgeChance == rhs.AcrobaticDodgeChance;
-            ret.RushingAttackChance = item.RushingAttackChance == rhs.RushingAttackChance;
-            ret.Unused6 = MemoryExtensions.SequenceEqual(item.Unused6.Span, rhs.Unused6.Span);
-            ret.RushingAttackDistanceMult = item.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult);
-            ret.DodgeFatigueModMult = item.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult);
-            ret.DodgeFatigueModBase = item.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase);
-            ret.EncumbSpeedModBase = item.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase);
-            ret.EncumbSpeedModMult = item.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult);
-            ret.DodgeWhileUnderAttackMult = item.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult);
-            ret.DodgeNotUnderAttackMult = item.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult);
-            ret.DodgeBackWhileUnderAttackMult = item.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult);
-            ret.DodgeBackNotUnderAttackMult = item.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult);
-            ret.DodgeForwardWhileAttackingMult = item.DodgeForwardWhileAttackingMult.EqualsWithin(rhs.DodgeForwardWhileAttackingMult);
-            ret.DodgeForwardNotAttackingMult = item.DodgeForwardNotAttackingMult.EqualsWithin(rhs.DodgeForwardNotAttackingMult);
-            ret.BlockSkillModifierMult = item.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult);
-            ret.BlockSkillModifierBase = item.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase);
-            ret.BlockWhileUnderAttackMult = item.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult);
-            ret.BlockNotUnderAttackMult = item.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult);
-            ret.AttackSkillModifierMult = item.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult);
-            ret.AttackSkillModifierBase = item.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase);
-            ret.AttackWhileUnderAttackMult = item.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult);
-            ret.AttackNotUnderAttackMult = item.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult);
-            ret.AttackDuringBlockMult = item.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult);
-            ret.PowerAttackFatigueModBase = item.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase);
-            ret.PowerAttackFatigueModMult = item.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult);
-            ret.CoverSearchRadius = item.CoverSearchRadius.EqualsWithin(rhs.CoverSearchRadius);
-            ret.TakeCoverChance = item.TakeCoverChance.EqualsWithin(rhs.TakeCoverChance);
-            ret.WaitTimerMin = item.WaitTimerMin.EqualsWithin(rhs.WaitTimerMin);
-            ret.WaitTimerMax = item.WaitTimerMax.EqualsWithin(rhs.WaitTimerMax);
-            ret.WaitToFireTimerMin = item.WaitToFireTimerMin.EqualsWithin(rhs.WaitToFireTimerMin);
-            ret.WaitToFireTimerMax = item.WaitToFireTimerMax.EqualsWithin(rhs.WaitToFireTimerMax);
-            ret.FireTimerMin = item.FireTimerMin.EqualsWithin(rhs.FireTimerMin);
-            ret.FireTimerMax = item.FireTimerMax.EqualsWithin(rhs.FireTimerMax);
-            ret.RangedWeaponRangeMultMin = item.RangedWeaponRangeMultMin.EqualsWithin(rhs.RangedWeaponRangeMultMin);
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
-            ret.WeaponRestrictions = item.WeaponRestrictions == rhs.WeaponRestrictions;
-            ret.RangedWeaponRangeMultMax = item.RangedWeaponRangeMultMax.EqualsWithin(rhs.RangedWeaponRangeMultMax);
-            ret.MaxTargetingFov = item.MaxTargetingFov.EqualsWithin(rhs.MaxTargetingFov);
-            ret.CombatRadius = item.CombatRadius.EqualsWithin(rhs.CombatRadius);
-            ret.SemiAutoFiringDelayMultMin = item.SemiAutoFiringDelayMultMin.EqualsWithin(rhs.SemiAutoFiringDelayMultMin);
-            ret.SemiAutoFiringDelayMultMax = item.SemiAutoFiringDelayMultMax.EqualsWithin(rhs.SemiAutoFiringDelayMultMax);
+            ret.StandardManeuverDecisionDodgeChance = item.StandardManeuverDecisionDodgeChance.Equals(rhs.StandardManeuverDecisionDodgeChance);
+            ret.StandardManeuverDecisionLeftRightChance = item.StandardManeuverDecisionLeftRightChance.Equals(rhs.StandardManeuverDecisionLeftRightChance);
+            ret.StandardUnused1 = MemoryExtensions.SequenceEqual(item.StandardUnused1.Span, rhs.StandardUnused1.Span);
+            ret.StandardManeuverDecisionDodgeLRTimerMin = item.StandardManeuverDecisionDodgeLRTimerMin.EqualsWithin(rhs.StandardManeuverDecisionDodgeLRTimerMin);
+            ret.StandardManeuverDecisionDodgeLRTimerMax = item.StandardManeuverDecisionDodgeLRTimerMax.EqualsWithin(rhs.StandardManeuverDecisionDodgeLRTimerMax);
+            ret.StandardManeuverDecisionDodgeForwardTimerMin = item.StandardManeuverDecisionDodgeForwardTimerMin.EqualsWithin(rhs.StandardManeuverDecisionDodgeForwardTimerMin);
+            ret.StandardManeuverDecisionDodgeForwardTimerMax = item.StandardManeuverDecisionDodgeForwardTimerMax.EqualsWithin(rhs.StandardManeuverDecisionDodgeForwardTimerMax);
+            ret.StandardManeuverDecisionDodgeBackTimerMin = item.StandardManeuverDecisionDodgeBackTimerMin.EqualsWithin(rhs.StandardManeuverDecisionDodgeBackTimerMin);
+            ret.StandardManeuverDecisionDodgeBackTimerMax = item.StandardManeuverDecisionDodgeBackTimerMax.EqualsWithin(rhs.StandardManeuverDecisionDodgeBackTimerMax);
+            ret.StandardManeuverDecisionIdleTimerMin = item.StandardManeuverDecisionIdleTimerMin.EqualsWithin(rhs.StandardManeuverDecisionIdleTimerMin);
+            ret.StandardManeuverDecisionIdleTimerMax = item.StandardManeuverDecisionIdleTimerMax.EqualsWithin(rhs.StandardManeuverDecisionIdleTimerMax);
+            ret.StandardMeleeDecisionBlockChance = item.StandardMeleeDecisionBlockChance.Equals(rhs.StandardMeleeDecisionBlockChance);
+            ret.StandardMeleeDecisionAttackChance = item.StandardMeleeDecisionAttackChance.Equals(rhs.StandardMeleeDecisionAttackChance);
+            ret.StandardUnused2 = MemoryExtensions.SequenceEqual(item.StandardUnused2.Span, rhs.StandardUnused2.Span);
+            ret.StandardMeleeDecisionRecoilStaggerBonusToAttack = item.StandardMeleeDecisionRecoilStaggerBonusToAttack.EqualsWithin(rhs.StandardMeleeDecisionRecoilStaggerBonusToAttack);
+            ret.StandardMeleeDecisionUnconsciousBonusToAttack = item.StandardMeleeDecisionUnconsciousBonusToAttack.EqualsWithin(rhs.StandardMeleeDecisionUnconsciousBonusToAttack);
+            ret.StandardMeleeDecisionHandToHandBonusToAttack = item.StandardMeleeDecisionHandToHandBonusToAttack.EqualsWithin(rhs.StandardMeleeDecisionHandToHandBonusToAttack);
+            ret.StandardMeleeDecisionPowerAttackChance = item.StandardMeleeDecisionPowerAttackChance.Equals(rhs.StandardMeleeDecisionPowerAttackChance);
+            ret.StandardUnused3 = MemoryExtensions.SequenceEqual(item.StandardUnused3.Span, rhs.StandardUnused3.Span);
+            ret.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack);
+            ret.StandardMeleeDecisionUnconsciousBonusToPowerAttack = item.StandardMeleeDecisionUnconsciousBonusToPowerAttack.EqualsWithin(rhs.StandardMeleeDecisionUnconsciousBonusToPowerAttack);
+            ret.StandardMeleeDecisionPowerAttackNormal = item.StandardMeleeDecisionPowerAttackNormal == rhs.StandardMeleeDecisionPowerAttackNormal;
+            ret.StandardMeleeDecisionPowerAttackForward = item.StandardMeleeDecisionPowerAttackForward == rhs.StandardMeleeDecisionPowerAttackForward;
+            ret.StandardMeleeDecisionPowerAttackBack = item.StandardMeleeDecisionPowerAttackBack == rhs.StandardMeleeDecisionPowerAttackBack;
+            ret.StandardMeleeDecisionPowerAttackLeft = item.StandardMeleeDecisionPowerAttackLeft == rhs.StandardMeleeDecisionPowerAttackLeft;
+            ret.StandardMeleeDecisionPowerAttackRight = item.StandardMeleeDecisionPowerAttackRight == rhs.StandardMeleeDecisionPowerAttackRight;
+            ret.StandardUnused4 = MemoryExtensions.SequenceEqual(item.StandardUnused4.Span, rhs.StandardUnused4.Span);
+            ret.StandardMeleeDecisionHoldTimerMin = item.StandardMeleeDecisionHoldTimerMin.EqualsWithin(rhs.StandardMeleeDecisionHoldTimerMin);
+            ret.StandardMeleeDecisionHoldTimerMax = item.StandardMeleeDecisionHoldTimerMax.EqualsWithin(rhs.StandardMeleeDecisionHoldTimerMax);
+            ret.StandardFlags = item.StandardFlags == rhs.StandardFlags;
+            ret.StandardUnused5 = MemoryExtensions.SequenceEqual(item.StandardUnused5.Span, rhs.StandardUnused5.Span);
+            ret.StandardMeleeDecisionAcrobaticDodgeChance = item.StandardMeleeDecisionAcrobaticDodgeChance.Equals(rhs.StandardMeleeDecisionAcrobaticDodgeChance);
+            ret.StandardMeleeDecisionRushingAttackChance = item.StandardMeleeDecisionRushingAttackChance.Equals(rhs.StandardMeleeDecisionRushingAttackChance);
+            ret.StandardUnused6 = MemoryExtensions.SequenceEqual(item.StandardUnused6.Span, rhs.StandardUnused6.Span);
+            ret.StandardMeleeDecisionRushingAttackDistanceMult = item.StandardMeleeDecisionRushingAttackDistanceMult.EqualsWithin(rhs.StandardMeleeDecisionRushingAttackDistanceMult);
+            ret.AdvancedDodgeFatigueModMult = item.AdvancedDodgeFatigueModMult.EqualsWithin(rhs.AdvancedDodgeFatigueModMult);
+            ret.AdvancedDodgeFatigueModBase = item.AdvancedDodgeFatigueModBase.EqualsWithin(rhs.AdvancedDodgeFatigueModBase);
+            ret.AdvancedEncumbSpeedModBase = item.AdvancedEncumbSpeedModBase.EqualsWithin(rhs.AdvancedEncumbSpeedModBase);
+            ret.AdvancedEncumbSpeedModMult = item.AdvancedEncumbSpeedModMult.EqualsWithin(rhs.AdvancedEncumbSpeedModMult);
+            ret.AdvancedDodgeWhileUnderAttackMult = item.AdvancedDodgeWhileUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeWhileUnderAttackMult);
+            ret.AdvancedDodgeNotUnderAttackMult = item.AdvancedDodgeNotUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeNotUnderAttackMult);
+            ret.AdvancedDodgeBackWhileUnderAttackMult = item.AdvancedDodgeBackWhileUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeBackWhileUnderAttackMult);
+            ret.AdvancedDodgeBackNotUnderAttackMult = item.AdvancedDodgeBackNotUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeBackNotUnderAttackMult);
+            ret.AdvancedDodgeForwardWhileAttackingMult = item.AdvancedDodgeForwardWhileAttackingMult.EqualsWithin(rhs.AdvancedDodgeForwardWhileAttackingMult);
+            ret.AdvancedDodgeForwardNotAttackingMult = item.AdvancedDodgeForwardNotAttackingMult.EqualsWithin(rhs.AdvancedDodgeForwardNotAttackingMult);
+            ret.AdvancedBlockSkillModifierMult = item.AdvancedBlockSkillModifierMult.EqualsWithin(rhs.AdvancedBlockSkillModifierMult);
+            ret.AdvancedBlockSkillModifierBase = item.AdvancedBlockSkillModifierBase.EqualsWithin(rhs.AdvancedBlockSkillModifierBase);
+            ret.AdvancedBlockWhileUnderAttackMult = item.AdvancedBlockWhileUnderAttackMult.EqualsWithin(rhs.AdvancedBlockWhileUnderAttackMult);
+            ret.AdvancedBlockNotUnderAttackMult = item.AdvancedBlockNotUnderAttackMult.EqualsWithin(rhs.AdvancedBlockNotUnderAttackMult);
+            ret.AdvancedAttackSkillModifierMult = item.AdvancedAttackSkillModifierMult.EqualsWithin(rhs.AdvancedAttackSkillModifierMult);
+            ret.AdvancedAttackSkillModifierBase = item.AdvancedAttackSkillModifierBase.EqualsWithin(rhs.AdvancedAttackSkillModifierBase);
+            ret.AdvancedAttackWhileUnderAttackMult = item.AdvancedAttackWhileUnderAttackMult.EqualsWithin(rhs.AdvancedAttackWhileUnderAttackMult);
+            ret.AdvancedAttackNotUnderAttackMult = item.AdvancedAttackNotUnderAttackMult.EqualsWithin(rhs.AdvancedAttackNotUnderAttackMult);
+            ret.AdvancedAttackDuringBlockMult = item.AdvancedAttackDuringBlockMult.EqualsWithin(rhs.AdvancedAttackDuringBlockMult);
+            ret.AdvancedPowerAttackFatigueModBase = item.AdvancedPowerAttackFatigueModBase.EqualsWithin(rhs.AdvancedPowerAttackFatigueModBase);
+            ret.AdvancedPowerAttackFatigueModMult = item.AdvancedPowerAttackFatigueModMult.EqualsWithin(rhs.AdvancedPowerAttackFatigueModMult);
+            ret.SimpleCoverSearchRadius = item.SimpleCoverSearchRadius.EqualsWithin(rhs.SimpleCoverSearchRadius);
+            ret.SimpleTakeCoverChance = item.SimpleTakeCoverChance.EqualsWithin(rhs.SimpleTakeCoverChance);
+            ret.SimpleWaitTimerMin = item.SimpleWaitTimerMin.EqualsWithin(rhs.SimpleWaitTimerMin);
+            ret.SimpleWaitTimerMax = item.SimpleWaitTimerMax.EqualsWithin(rhs.SimpleWaitTimerMax);
+            ret.SimpleWaitToFireTimerMin = item.SimpleWaitToFireTimerMin.EqualsWithin(rhs.SimpleWaitToFireTimerMin);
+            ret.SimpleWaitToFireTimerMax = item.SimpleWaitToFireTimerMax.EqualsWithin(rhs.SimpleWaitToFireTimerMax);
+            ret.SimpleFireTimerMin = item.SimpleFireTimerMin.EqualsWithin(rhs.SimpleFireTimerMin);
+            ret.SimpleFireTimerMax = item.SimpleFireTimerMax.EqualsWithin(rhs.SimpleFireTimerMax);
+            ret.SimpleRangedWeaponRangeMultMin = item.SimpleRangedWeaponRangeMultMin.EqualsWithin(rhs.SimpleRangedWeaponRangeMultMin);
+            ret.SimpleUnused = MemoryExtensions.SequenceEqual(item.SimpleUnused.Span, rhs.SimpleUnused.Span);
+            ret.SimpleWeaponRestrictions = item.SimpleWeaponRestrictions == rhs.SimpleWeaponRestrictions;
+            ret.SimpleRangedWeaponRangeMultMax = item.SimpleRangedWeaponRangeMultMax.EqualsWithin(rhs.SimpleRangedWeaponRangeMultMax);
+            ret.SimpleMaxTargetingFov = item.SimpleMaxTargetingFov.EqualsWithin(rhs.SimpleMaxTargetingFov);
+            ret.SimpleCombatRadius = item.SimpleCombatRadius.EqualsWithin(rhs.SimpleCombatRadius);
+            ret.SimpleSemiAutoFiringDelayMultMin = item.SimpleSemiAutoFiringDelayMultMin.EqualsWithin(rhs.SimpleSemiAutoFiringDelayMultMin);
+            ret.SimpleSemiAutoFiringDelayMultMax = item.SimpleSemiAutoFiringDelayMultMax.EqualsWithin(rhs.SimpleSemiAutoFiringDelayMultMax);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3640,293 +3640,293 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.DodgeChance ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeChance ?? true)
             {
-                sb.AppendItem(item.DodgeChance, "DodgeChance");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeChance, "StandardManeuverDecisionDodgeChance");
             }
-            if (printMask?.LeftRightChance ?? true)
+            if (printMask?.StandardManeuverDecisionLeftRightChance ?? true)
             {
-                sb.AppendItem(item.LeftRightChance, "LeftRightChance");
+                sb.AppendItem(item.StandardManeuverDecisionLeftRightChance, "StandardManeuverDecisionLeftRightChance");
             }
-            if (printMask?.Unused1 ?? true)
+            if (printMask?.StandardUnused1 ?? true)
             {
-                sb.AppendLine($"Unused1 => {SpanExt.ToHexString(item.Unused1)}");
+                sb.AppendLine($"StandardUnused1 => {SpanExt.ToHexString(item.StandardUnused1)}");
             }
-            if (printMask?.DodgeLRTimerMin ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeLRTimerMin ?? true)
             {
-                sb.AppendItem(item.DodgeLRTimerMin, "DodgeLRTimerMin");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeLRTimerMin, "StandardManeuverDecisionDodgeLRTimerMin");
             }
-            if (printMask?.DodgeLRTimerMax ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeLRTimerMax ?? true)
             {
-                sb.AppendItem(item.DodgeLRTimerMax, "DodgeLRTimerMax");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeLRTimerMax, "StandardManeuverDecisionDodgeLRTimerMax");
             }
-            if (printMask?.DodgeForwardTimerMin ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeForwardTimerMin ?? true)
             {
-                sb.AppendItem(item.DodgeForwardTimerMin, "DodgeForwardTimerMin");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeForwardTimerMin, "StandardManeuverDecisionDodgeForwardTimerMin");
             }
-            if (printMask?.DodgeForwardTimerMax ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeForwardTimerMax ?? true)
             {
-                sb.AppendItem(item.DodgeForwardTimerMax, "DodgeForwardTimerMax");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeForwardTimerMax, "StandardManeuverDecisionDodgeForwardTimerMax");
             }
-            if (printMask?.DodgeBackTimerMin ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeBackTimerMin ?? true)
             {
-                sb.AppendItem(item.DodgeBackTimerMin, "DodgeBackTimerMin");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeBackTimerMin, "StandardManeuverDecisionDodgeBackTimerMin");
             }
-            if (printMask?.DodgeBackTimerMax ?? true)
+            if (printMask?.StandardManeuverDecisionDodgeBackTimerMax ?? true)
             {
-                sb.AppendItem(item.DodgeBackTimerMax, "DodgeBackTimerMax");
+                sb.AppendItem(item.StandardManeuverDecisionDodgeBackTimerMax, "StandardManeuverDecisionDodgeBackTimerMax");
             }
-            if (printMask?.IdleTimerMin ?? true)
+            if (printMask?.StandardManeuverDecisionIdleTimerMin ?? true)
             {
-                sb.AppendItem(item.IdleTimerMin, "IdleTimerMin");
+                sb.AppendItem(item.StandardManeuverDecisionIdleTimerMin, "StandardManeuverDecisionIdleTimerMin");
             }
-            if (printMask?.IdleTimerMax ?? true)
+            if (printMask?.StandardManeuverDecisionIdleTimerMax ?? true)
             {
-                sb.AppendItem(item.IdleTimerMax, "IdleTimerMax");
+                sb.AppendItem(item.StandardManeuverDecisionIdleTimerMax, "StandardManeuverDecisionIdleTimerMax");
             }
-            if (printMask?.BlockChance ?? true)
+            if (printMask?.StandardMeleeDecisionBlockChance ?? true)
             {
-                sb.AppendItem(item.BlockChance, "BlockChance");
+                sb.AppendItem(item.StandardMeleeDecisionBlockChance, "StandardMeleeDecisionBlockChance");
             }
-            if (printMask?.AttackChance ?? true)
+            if (printMask?.StandardMeleeDecisionAttackChance ?? true)
             {
-                sb.AppendItem(item.AttackChance, "AttackChance");
+                sb.AppendItem(item.StandardMeleeDecisionAttackChance, "StandardMeleeDecisionAttackChance");
             }
-            if (printMask?.Unused2 ?? true)
+            if (printMask?.StandardUnused2 ?? true)
             {
-                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+                sb.AppendLine($"StandardUnused2 => {SpanExt.ToHexString(item.StandardUnused2)}");
             }
-            if (printMask?.RecoilStaggerBonusToAttack ?? true)
+            if (printMask?.StandardMeleeDecisionRecoilStaggerBonusToAttack ?? true)
             {
-                sb.AppendItem(item.RecoilStaggerBonusToAttack, "RecoilStaggerBonusToAttack");
+                sb.AppendItem(item.StandardMeleeDecisionRecoilStaggerBonusToAttack, "StandardMeleeDecisionRecoilStaggerBonusToAttack");
             }
-            if (printMask?.UnconsciousBonusToAttack ?? true)
+            if (printMask?.StandardMeleeDecisionUnconsciousBonusToAttack ?? true)
             {
-                sb.AppendItem(item.UnconsciousBonusToAttack, "UnconsciousBonusToAttack");
+                sb.AppendItem(item.StandardMeleeDecisionUnconsciousBonusToAttack, "StandardMeleeDecisionUnconsciousBonusToAttack");
             }
-            if (printMask?.HandToHandBonusToAttack ?? true)
+            if (printMask?.StandardMeleeDecisionHandToHandBonusToAttack ?? true)
             {
-                sb.AppendItem(item.HandToHandBonusToAttack, "HandToHandBonusToAttack");
+                sb.AppendItem(item.StandardMeleeDecisionHandToHandBonusToAttack, "StandardMeleeDecisionHandToHandBonusToAttack");
             }
-            if (printMask?.PowerAttackChance ?? true)
+            if (printMask?.StandardMeleeDecisionPowerAttackChance ?? true)
             {
-                sb.AppendItem(item.PowerAttackChance, "PowerAttackChance");
+                sb.AppendItem(item.StandardMeleeDecisionPowerAttackChance, "StandardMeleeDecisionPowerAttackChance");
             }
-            if (printMask?.Unused3 ?? true)
+            if (printMask?.StandardUnused3 ?? true)
             {
-                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
+                sb.AppendLine($"StandardUnused3 => {SpanExt.ToHexString(item.StandardUnused3)}");
             }
-            if (printMask?.RecoilStaggerBonusToPowerAttack ?? true)
+            if (printMask?.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack ?? true)
             {
-                sb.AppendItem(item.RecoilStaggerBonusToPowerAttack, "RecoilStaggerBonusToPowerAttack");
+                sb.AppendItem(item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack, "StandardMeleeDecisionRecoilStaggerBonusToPowerAttack");
             }
-            if (printMask?.UnconsciousBonusToPowerAttack ?? true)
+            if (printMask?.StandardMeleeDecisionUnconsciousBonusToPowerAttack ?? true)
             {
-                sb.AppendItem(item.UnconsciousBonusToPowerAttack, "UnconsciousBonusToPowerAttack");
+                sb.AppendItem(item.StandardMeleeDecisionUnconsciousBonusToPowerAttack, "StandardMeleeDecisionUnconsciousBonusToPowerAttack");
             }
-            if (printMask?.PowerAttackNormal ?? true)
+            if (printMask?.StandardMeleeDecisionPowerAttackNormal ?? true)
             {
-                sb.AppendItem(item.PowerAttackNormal, "PowerAttackNormal");
+                sb.AppendItem(item.StandardMeleeDecisionPowerAttackNormal, "StandardMeleeDecisionPowerAttackNormal");
             }
-            if (printMask?.PowerAttackForward ?? true)
+            if (printMask?.StandardMeleeDecisionPowerAttackForward ?? true)
             {
-                sb.AppendItem(item.PowerAttackForward, "PowerAttackForward");
+                sb.AppendItem(item.StandardMeleeDecisionPowerAttackForward, "StandardMeleeDecisionPowerAttackForward");
             }
-            if (printMask?.PowerAttackBack ?? true)
+            if (printMask?.StandardMeleeDecisionPowerAttackBack ?? true)
             {
-                sb.AppendItem(item.PowerAttackBack, "PowerAttackBack");
+                sb.AppendItem(item.StandardMeleeDecisionPowerAttackBack, "StandardMeleeDecisionPowerAttackBack");
             }
-            if (printMask?.PowerAttackLeft ?? true)
+            if (printMask?.StandardMeleeDecisionPowerAttackLeft ?? true)
             {
-                sb.AppendItem(item.PowerAttackLeft, "PowerAttackLeft");
+                sb.AppendItem(item.StandardMeleeDecisionPowerAttackLeft, "StandardMeleeDecisionPowerAttackLeft");
             }
-            if (printMask?.PowerAttackRight ?? true)
+            if (printMask?.StandardMeleeDecisionPowerAttackRight ?? true)
             {
-                sb.AppendItem(item.PowerAttackRight, "PowerAttackRight");
+                sb.AppendItem(item.StandardMeleeDecisionPowerAttackRight, "StandardMeleeDecisionPowerAttackRight");
             }
-            if (printMask?.Unused4 ?? true)
+            if (printMask?.StandardUnused4 ?? true)
             {
-                sb.AppendLine($"Unused4 => {SpanExt.ToHexString(item.Unused4)}");
+                sb.AppendLine($"StandardUnused4 => {SpanExt.ToHexString(item.StandardUnused4)}");
             }
-            if (printMask?.HoldTimerMin ?? true)
+            if (printMask?.StandardMeleeDecisionHoldTimerMin ?? true)
             {
-                sb.AppendItem(item.HoldTimerMin, "HoldTimerMin");
+                sb.AppendItem(item.StandardMeleeDecisionHoldTimerMin, "StandardMeleeDecisionHoldTimerMin");
             }
-            if (printMask?.HoldTimerMax ?? true)
+            if (printMask?.StandardMeleeDecisionHoldTimerMax ?? true)
             {
-                sb.AppendItem(item.HoldTimerMax, "HoldTimerMax");
+                sb.AppendItem(item.StandardMeleeDecisionHoldTimerMax, "StandardMeleeDecisionHoldTimerMax");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.StandardFlags ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.StandardFlags, "StandardFlags");
             }
-            if (printMask?.Unused5 ?? true)
+            if (printMask?.StandardUnused5 ?? true)
             {
-                sb.AppendLine($"Unused5 => {SpanExt.ToHexString(item.Unused5)}");
+                sb.AppendLine($"StandardUnused5 => {SpanExt.ToHexString(item.StandardUnused5)}");
             }
-            if (printMask?.AcrobaticDodgeChance ?? true)
+            if (printMask?.StandardMeleeDecisionAcrobaticDodgeChance ?? true)
             {
-                sb.AppendItem(item.AcrobaticDodgeChance, "AcrobaticDodgeChance");
+                sb.AppendItem(item.StandardMeleeDecisionAcrobaticDodgeChance, "StandardMeleeDecisionAcrobaticDodgeChance");
             }
-            if (printMask?.RushingAttackChance ?? true)
+            if (printMask?.StandardMeleeDecisionRushingAttackChance ?? true)
             {
-                sb.AppendItem(item.RushingAttackChance, "RushingAttackChance");
+                sb.AppendItem(item.StandardMeleeDecisionRushingAttackChance, "StandardMeleeDecisionRushingAttackChance");
             }
-            if (printMask?.Unused6 ?? true)
+            if (printMask?.StandardUnused6 ?? true)
             {
-                sb.AppendLine($"Unused6 => {SpanExt.ToHexString(item.Unused6)}");
+                sb.AppendLine($"StandardUnused6 => {SpanExt.ToHexString(item.StandardUnused6)}");
             }
-            if (printMask?.RushingAttackDistanceMult ?? true)
+            if (printMask?.StandardMeleeDecisionRushingAttackDistanceMult ?? true)
             {
-                sb.AppendItem(item.RushingAttackDistanceMult, "RushingAttackDistanceMult");
+                sb.AppendItem(item.StandardMeleeDecisionRushingAttackDistanceMult, "StandardMeleeDecisionRushingAttackDistanceMult");
             }
-            if (printMask?.DodgeFatigueModMult ?? true)
+            if (printMask?.AdvancedDodgeFatigueModMult ?? true)
             {
-                sb.AppendItem(item.DodgeFatigueModMult, "DodgeFatigueModMult");
+                sb.AppendItem(item.AdvancedDodgeFatigueModMult, "AdvancedDodgeFatigueModMult");
             }
-            if (printMask?.DodgeFatigueModBase ?? true)
+            if (printMask?.AdvancedDodgeFatigueModBase ?? true)
             {
-                sb.AppendItem(item.DodgeFatigueModBase, "DodgeFatigueModBase");
+                sb.AppendItem(item.AdvancedDodgeFatigueModBase, "AdvancedDodgeFatigueModBase");
             }
-            if (printMask?.EncumbSpeedModBase ?? true)
+            if (printMask?.AdvancedEncumbSpeedModBase ?? true)
             {
-                sb.AppendItem(item.EncumbSpeedModBase, "EncumbSpeedModBase");
+                sb.AppendItem(item.AdvancedEncumbSpeedModBase, "AdvancedEncumbSpeedModBase");
             }
-            if (printMask?.EncumbSpeedModMult ?? true)
+            if (printMask?.AdvancedEncumbSpeedModMult ?? true)
             {
-                sb.AppendItem(item.EncumbSpeedModMult, "EncumbSpeedModMult");
+                sb.AppendItem(item.AdvancedEncumbSpeedModMult, "AdvancedEncumbSpeedModMult");
             }
-            if (printMask?.DodgeWhileUnderAttackMult ?? true)
+            if (printMask?.AdvancedDodgeWhileUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.DodgeWhileUnderAttackMult, "DodgeWhileUnderAttackMult");
+                sb.AppendItem(item.AdvancedDodgeWhileUnderAttackMult, "AdvancedDodgeWhileUnderAttackMult");
             }
-            if (printMask?.DodgeNotUnderAttackMult ?? true)
+            if (printMask?.AdvancedDodgeNotUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.DodgeNotUnderAttackMult, "DodgeNotUnderAttackMult");
+                sb.AppendItem(item.AdvancedDodgeNotUnderAttackMult, "AdvancedDodgeNotUnderAttackMult");
             }
-            if (printMask?.DodgeBackWhileUnderAttackMult ?? true)
+            if (printMask?.AdvancedDodgeBackWhileUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.DodgeBackWhileUnderAttackMult, "DodgeBackWhileUnderAttackMult");
+                sb.AppendItem(item.AdvancedDodgeBackWhileUnderAttackMult, "AdvancedDodgeBackWhileUnderAttackMult");
             }
-            if (printMask?.DodgeBackNotUnderAttackMult ?? true)
+            if (printMask?.AdvancedDodgeBackNotUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.DodgeBackNotUnderAttackMult, "DodgeBackNotUnderAttackMult");
+                sb.AppendItem(item.AdvancedDodgeBackNotUnderAttackMult, "AdvancedDodgeBackNotUnderAttackMult");
             }
-            if (printMask?.DodgeForwardWhileAttackingMult ?? true)
+            if (printMask?.AdvancedDodgeForwardWhileAttackingMult ?? true)
             {
-                sb.AppendItem(item.DodgeForwardWhileAttackingMult, "DodgeForwardWhileAttackingMult");
+                sb.AppendItem(item.AdvancedDodgeForwardWhileAttackingMult, "AdvancedDodgeForwardWhileAttackingMult");
             }
-            if (printMask?.DodgeForwardNotAttackingMult ?? true)
+            if (printMask?.AdvancedDodgeForwardNotAttackingMult ?? true)
             {
-                sb.AppendItem(item.DodgeForwardNotAttackingMult, "DodgeForwardNotAttackingMult");
+                sb.AppendItem(item.AdvancedDodgeForwardNotAttackingMult, "AdvancedDodgeForwardNotAttackingMult");
             }
-            if (printMask?.BlockSkillModifierMult ?? true)
+            if (printMask?.AdvancedBlockSkillModifierMult ?? true)
             {
-                sb.AppendItem(item.BlockSkillModifierMult, "BlockSkillModifierMult");
+                sb.AppendItem(item.AdvancedBlockSkillModifierMult, "AdvancedBlockSkillModifierMult");
             }
-            if (printMask?.BlockSkillModifierBase ?? true)
+            if (printMask?.AdvancedBlockSkillModifierBase ?? true)
             {
-                sb.AppendItem(item.BlockSkillModifierBase, "BlockSkillModifierBase");
+                sb.AppendItem(item.AdvancedBlockSkillModifierBase, "AdvancedBlockSkillModifierBase");
             }
-            if (printMask?.BlockWhileUnderAttackMult ?? true)
+            if (printMask?.AdvancedBlockWhileUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.BlockWhileUnderAttackMult, "BlockWhileUnderAttackMult");
+                sb.AppendItem(item.AdvancedBlockWhileUnderAttackMult, "AdvancedBlockWhileUnderAttackMult");
             }
-            if (printMask?.BlockNotUnderAttackMult ?? true)
+            if (printMask?.AdvancedBlockNotUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.BlockNotUnderAttackMult, "BlockNotUnderAttackMult");
+                sb.AppendItem(item.AdvancedBlockNotUnderAttackMult, "AdvancedBlockNotUnderAttackMult");
             }
-            if (printMask?.AttackSkillModifierMult ?? true)
+            if (printMask?.AdvancedAttackSkillModifierMult ?? true)
             {
-                sb.AppendItem(item.AttackSkillModifierMult, "AttackSkillModifierMult");
+                sb.AppendItem(item.AdvancedAttackSkillModifierMult, "AdvancedAttackSkillModifierMult");
             }
-            if (printMask?.AttackSkillModifierBase ?? true)
+            if (printMask?.AdvancedAttackSkillModifierBase ?? true)
             {
-                sb.AppendItem(item.AttackSkillModifierBase, "AttackSkillModifierBase");
+                sb.AppendItem(item.AdvancedAttackSkillModifierBase, "AdvancedAttackSkillModifierBase");
             }
-            if (printMask?.AttackWhileUnderAttackMult ?? true)
+            if (printMask?.AdvancedAttackWhileUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.AttackWhileUnderAttackMult, "AttackWhileUnderAttackMult");
+                sb.AppendItem(item.AdvancedAttackWhileUnderAttackMult, "AdvancedAttackWhileUnderAttackMult");
             }
-            if (printMask?.AttackNotUnderAttackMult ?? true)
+            if (printMask?.AdvancedAttackNotUnderAttackMult ?? true)
             {
-                sb.AppendItem(item.AttackNotUnderAttackMult, "AttackNotUnderAttackMult");
+                sb.AppendItem(item.AdvancedAttackNotUnderAttackMult, "AdvancedAttackNotUnderAttackMult");
             }
-            if (printMask?.AttackDuringBlockMult ?? true)
+            if (printMask?.AdvancedAttackDuringBlockMult ?? true)
             {
-                sb.AppendItem(item.AttackDuringBlockMult, "AttackDuringBlockMult");
+                sb.AppendItem(item.AdvancedAttackDuringBlockMult, "AdvancedAttackDuringBlockMult");
             }
-            if (printMask?.PowerAttackFatigueModBase ?? true)
+            if (printMask?.AdvancedPowerAttackFatigueModBase ?? true)
             {
-                sb.AppendItem(item.PowerAttackFatigueModBase, "PowerAttackFatigueModBase");
+                sb.AppendItem(item.AdvancedPowerAttackFatigueModBase, "AdvancedPowerAttackFatigueModBase");
             }
-            if (printMask?.PowerAttackFatigueModMult ?? true)
+            if (printMask?.AdvancedPowerAttackFatigueModMult ?? true)
             {
-                sb.AppendItem(item.PowerAttackFatigueModMult, "PowerAttackFatigueModMult");
+                sb.AppendItem(item.AdvancedPowerAttackFatigueModMult, "AdvancedPowerAttackFatigueModMult");
             }
-            if (printMask?.CoverSearchRadius ?? true)
+            if (printMask?.SimpleCoverSearchRadius ?? true)
             {
-                sb.AppendItem(item.CoverSearchRadius, "CoverSearchRadius");
+                sb.AppendItem(item.SimpleCoverSearchRadius, "SimpleCoverSearchRadius");
             }
-            if (printMask?.TakeCoverChance ?? true)
+            if (printMask?.SimpleTakeCoverChance ?? true)
             {
-                sb.AppendItem(item.TakeCoverChance, "TakeCoverChance");
+                sb.AppendItem(item.SimpleTakeCoverChance, "SimpleTakeCoverChance");
             }
-            if (printMask?.WaitTimerMin ?? true)
+            if (printMask?.SimpleWaitTimerMin ?? true)
             {
-                sb.AppendItem(item.WaitTimerMin, "WaitTimerMin");
+                sb.AppendItem(item.SimpleWaitTimerMin, "SimpleWaitTimerMin");
             }
-            if (printMask?.WaitTimerMax ?? true)
+            if (printMask?.SimpleWaitTimerMax ?? true)
             {
-                sb.AppendItem(item.WaitTimerMax, "WaitTimerMax");
+                sb.AppendItem(item.SimpleWaitTimerMax, "SimpleWaitTimerMax");
             }
-            if (printMask?.WaitToFireTimerMin ?? true)
+            if (printMask?.SimpleWaitToFireTimerMin ?? true)
             {
-                sb.AppendItem(item.WaitToFireTimerMin, "WaitToFireTimerMin");
+                sb.AppendItem(item.SimpleWaitToFireTimerMin, "SimpleWaitToFireTimerMin");
             }
-            if (printMask?.WaitToFireTimerMax ?? true)
+            if (printMask?.SimpleWaitToFireTimerMax ?? true)
             {
-                sb.AppendItem(item.WaitToFireTimerMax, "WaitToFireTimerMax");
+                sb.AppendItem(item.SimpleWaitToFireTimerMax, "SimpleWaitToFireTimerMax");
             }
-            if (printMask?.FireTimerMin ?? true)
+            if (printMask?.SimpleFireTimerMin ?? true)
             {
-                sb.AppendItem(item.FireTimerMin, "FireTimerMin");
+                sb.AppendItem(item.SimpleFireTimerMin, "SimpleFireTimerMin");
             }
-            if (printMask?.FireTimerMax ?? true)
+            if (printMask?.SimpleFireTimerMax ?? true)
             {
-                sb.AppendItem(item.FireTimerMax, "FireTimerMax");
+                sb.AppendItem(item.SimpleFireTimerMax, "SimpleFireTimerMax");
             }
-            if (printMask?.RangedWeaponRangeMultMin ?? true)
+            if (printMask?.SimpleRangedWeaponRangeMultMin ?? true)
             {
-                sb.AppendItem(item.RangedWeaponRangeMultMin, "RangedWeaponRangeMultMin");
+                sb.AppendItem(item.SimpleRangedWeaponRangeMultMin, "SimpleRangedWeaponRangeMultMin");
             }
-            if (printMask?.Unused ?? true)
+            if (printMask?.SimpleUnused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                sb.AppendLine($"SimpleUnused => {SpanExt.ToHexString(item.SimpleUnused)}");
             }
-            if (printMask?.WeaponRestrictions ?? true)
+            if (printMask?.SimpleWeaponRestrictions ?? true)
             {
-                sb.AppendItem(item.WeaponRestrictions, "WeaponRestrictions");
+                sb.AppendItem(item.SimpleWeaponRestrictions, "SimpleWeaponRestrictions");
             }
-            if (printMask?.RangedWeaponRangeMultMax ?? true)
+            if (printMask?.SimpleRangedWeaponRangeMultMax ?? true)
             {
-                sb.AppendItem(item.RangedWeaponRangeMultMax, "RangedWeaponRangeMultMax");
+                sb.AppendItem(item.SimpleRangedWeaponRangeMultMax, "SimpleRangedWeaponRangeMultMax");
             }
-            if (printMask?.MaxTargetingFov ?? true)
+            if (printMask?.SimpleMaxTargetingFov ?? true)
             {
-                sb.AppendItem(item.MaxTargetingFov, "MaxTargetingFov");
+                sb.AppendItem(item.SimpleMaxTargetingFov, "SimpleMaxTargetingFov");
             }
-            if (printMask?.CombatRadius ?? true)
+            if (printMask?.SimpleCombatRadius ?? true)
             {
-                sb.AppendItem(item.CombatRadius, "CombatRadius");
+                sb.AppendItem(item.SimpleCombatRadius, "SimpleCombatRadius");
             }
-            if (printMask?.SemiAutoFiringDelayMultMin ?? true)
+            if (printMask?.SimpleSemiAutoFiringDelayMultMin ?? true)
             {
-                sb.AppendItem(item.SemiAutoFiringDelayMultMin, "SemiAutoFiringDelayMultMin");
+                sb.AppendItem(item.SimpleSemiAutoFiringDelayMultMin, "SimpleSemiAutoFiringDelayMultMin");
             }
-            if (printMask?.SemiAutoFiringDelayMultMax ?? true)
+            if (printMask?.SimpleSemiAutoFiringDelayMultMax ?? true)
             {
-                sb.AppendItem(item.SemiAutoFiringDelayMultMax, "SemiAutoFiringDelayMultMax");
+                sb.AppendItem(item.SimpleSemiAutoFiringDelayMultMax, "SimpleSemiAutoFiringDelayMultMax");
             }
         }
         
@@ -3978,293 +3978,293 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeChance) ?? true))
             {
-                if (lhs.DodgeChance != rhs.DodgeChance) return false;
+                if (!lhs.StandardManeuverDecisionDodgeChance.Equals(rhs.StandardManeuverDecisionDodgeChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionLeftRightChance) ?? true))
             {
-                if (lhs.LeftRightChance != rhs.LeftRightChance) return false;
+                if (!lhs.StandardManeuverDecisionLeftRightChance.Equals(rhs.StandardManeuverDecisionLeftRightChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused1) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused1.Span, rhs.Unused1.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.StandardUnused1.Span, rhs.StandardUnused1.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLRTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMin) ?? true))
             {
-                if (!lhs.DodgeLRTimerMin.EqualsWithin(rhs.DodgeLRTimerMin)) return false;
+                if (!lhs.StandardManeuverDecisionDodgeLRTimerMin.EqualsWithin(rhs.StandardManeuverDecisionDodgeLRTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLRTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMax) ?? true))
             {
-                if (!lhs.DodgeLRTimerMax.EqualsWithin(rhs.DodgeLRTimerMax)) return false;
+                if (!lhs.StandardManeuverDecisionDodgeLRTimerMax.EqualsWithin(rhs.StandardManeuverDecisionDodgeLRTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMin) ?? true))
             {
-                if (!lhs.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin)) return false;
+                if (!lhs.StandardManeuverDecisionDodgeForwardTimerMin.EqualsWithin(rhs.StandardManeuverDecisionDodgeForwardTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMax) ?? true))
             {
-                if (!lhs.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax)) return false;
+                if (!lhs.StandardManeuverDecisionDodgeForwardTimerMax.EqualsWithin(rhs.StandardManeuverDecisionDodgeForwardTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMin) ?? true))
             {
-                if (!lhs.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin)) return false;
+                if (!lhs.StandardManeuverDecisionDodgeBackTimerMin.EqualsWithin(rhs.StandardManeuverDecisionDodgeBackTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMax) ?? true))
             {
-                if (!lhs.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax)) return false;
+                if (!lhs.StandardManeuverDecisionDodgeBackTimerMax.EqualsWithin(rhs.StandardManeuverDecisionDodgeBackTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMin) ?? true))
             {
-                if (!lhs.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin)) return false;
+                if (!lhs.StandardManeuverDecisionIdleTimerMin.EqualsWithin(rhs.StandardManeuverDecisionIdleTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMax) ?? true))
             {
-                if (!lhs.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax)) return false;
+                if (!lhs.StandardManeuverDecisionIdleTimerMax.EqualsWithin(rhs.StandardManeuverDecisionIdleTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionBlockChance) ?? true))
             {
-                if (lhs.BlockChance != rhs.BlockChance) return false;
+                if (!lhs.StandardMeleeDecisionBlockChance.Equals(rhs.StandardMeleeDecisionBlockChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionAttackChance) ?? true))
             {
-                if (lhs.AttackChance != rhs.AttackChance) return false;
+                if (!lhs.StandardMeleeDecisionAttackChance.Equals(rhs.StandardMeleeDecisionAttackChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused2) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.StandardUnused2.Span, rhs.StandardUnused2.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToAttack) ?? true))
             {
-                if (!lhs.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack)) return false;
+                if (!lhs.StandardMeleeDecisionRecoilStaggerBonusToAttack.EqualsWithin(rhs.StandardMeleeDecisionRecoilStaggerBonusToAttack)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToAttack) ?? true))
             {
-                if (!lhs.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack)) return false;
+                if (!lhs.StandardMeleeDecisionUnconsciousBonusToAttack.EqualsWithin(rhs.StandardMeleeDecisionUnconsciousBonusToAttack)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionHandToHandBonusToAttack) ?? true))
             {
-                if (!lhs.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack)) return false;
+                if (!lhs.StandardMeleeDecisionHandToHandBonusToAttack.EqualsWithin(rhs.StandardMeleeDecisionHandToHandBonusToAttack)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackChance) ?? true))
             {
-                if (lhs.PowerAttackChance != rhs.PowerAttackChance) return false;
+                if (!lhs.StandardMeleeDecisionPowerAttackChance.Equals(rhs.StandardMeleeDecisionPowerAttackChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused3) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.StandardUnused3.Span, rhs.StandardUnused3.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack) ?? true))
             {
-                if (!lhs.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack)) return false;
+                if (!lhs.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToPowerAttack) ?? true))
             {
-                if (!lhs.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack)) return false;
+                if (!lhs.StandardMeleeDecisionUnconsciousBonusToPowerAttack.EqualsWithin(rhs.StandardMeleeDecisionUnconsciousBonusToPowerAttack)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackNormal) ?? true))
             {
-                if (lhs.PowerAttackNormal != rhs.PowerAttackNormal) return false;
+                if (lhs.StandardMeleeDecisionPowerAttackNormal != rhs.StandardMeleeDecisionPowerAttackNormal) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackForward) ?? true))
             {
-                if (lhs.PowerAttackForward != rhs.PowerAttackForward) return false;
+                if (lhs.StandardMeleeDecisionPowerAttackForward != rhs.StandardMeleeDecisionPowerAttackForward) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackBack) ?? true))
             {
-                if (lhs.PowerAttackBack != rhs.PowerAttackBack) return false;
+                if (lhs.StandardMeleeDecisionPowerAttackBack != rhs.StandardMeleeDecisionPowerAttackBack) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackLeft) ?? true))
             {
-                if (lhs.PowerAttackLeft != rhs.PowerAttackLeft) return false;
+                if (lhs.StandardMeleeDecisionPowerAttackLeft != rhs.StandardMeleeDecisionPowerAttackLeft) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackRight) ?? true))
             {
-                if (lhs.PowerAttackRight != rhs.PowerAttackRight) return false;
+                if (lhs.StandardMeleeDecisionPowerAttackRight != rhs.StandardMeleeDecisionPowerAttackRight) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused4) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused4.Span, rhs.Unused4.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.StandardUnused4.Span, rhs.StandardUnused4.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMin) ?? true))
             {
-                if (!lhs.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin)) return false;
+                if (!lhs.StandardMeleeDecisionHoldTimerMin.EqualsWithin(rhs.StandardMeleeDecisionHoldTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMax) ?? true))
             {
-                if (!lhs.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax)) return false;
+                if (!lhs.StandardMeleeDecisionHoldTimerMax.EqualsWithin(rhs.StandardMeleeDecisionHoldTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardFlags) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.StandardFlags != rhs.StandardFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused5) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused5.Span, rhs.Unused5.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.StandardUnused5.Span, rhs.StandardUnused5.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgeChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionAcrobaticDodgeChance) ?? true))
             {
-                if (lhs.AcrobaticDodgeChance != rhs.AcrobaticDodgeChance) return false;
+                if (!lhs.StandardMeleeDecisionAcrobaticDodgeChance.Equals(rhs.StandardMeleeDecisionAcrobaticDodgeChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackChance) ?? true))
             {
-                if (lhs.RushingAttackChance != rhs.RushingAttackChance) return false;
+                if (!lhs.StandardMeleeDecisionRushingAttackChance.Equals(rhs.StandardMeleeDecisionRushingAttackChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused6) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused6.Span, rhs.Unused6.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.StandardUnused6.Span, rhs.StandardUnused6.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult) ?? true))
             {
-                if (!lhs.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
+                if (!lhs.StandardMeleeDecisionRushingAttackDistanceMult.EqualsWithin(rhs.StandardMeleeDecisionRushingAttackDistanceMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeFatigueModMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeFatigueModMult) ?? true))
             {
-                if (!lhs.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult)) return false;
+                if (!lhs.AdvancedDodgeFatigueModMult.EqualsWithin(rhs.AdvancedDodgeFatigueModMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeFatigueModBase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeFatigueModBase) ?? true))
             {
-                if (!lhs.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase)) return false;
+                if (!lhs.AdvancedDodgeFatigueModBase.EqualsWithin(rhs.AdvancedDodgeFatigueModBase)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EncumbSpeedModBase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedEncumbSpeedModBase) ?? true))
             {
-                if (!lhs.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase)) return false;
+                if (!lhs.AdvancedEncumbSpeedModBase.EqualsWithin(rhs.AdvancedEncumbSpeedModBase)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EncumbSpeedModMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedEncumbSpeedModMult) ?? true))
             {
-                if (!lhs.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult)) return false;
+                if (!lhs.AdvancedEncumbSpeedModMult.EqualsWithin(rhs.AdvancedEncumbSpeedModMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeWhileUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeWhileUnderAttackMult) ?? true))
             {
-                if (!lhs.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult)) return false;
+                if (!lhs.AdvancedDodgeWhileUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeWhileUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeNotUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeNotUnderAttackMult) ?? true))
             {
-                if (!lhs.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult)) return false;
+                if (!lhs.AdvancedDodgeNotUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeNotUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackWhileUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeBackWhileUnderAttackMult) ?? true))
             {
-                if (!lhs.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult)) return false;
+                if (!lhs.AdvancedDodgeBackWhileUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeBackWhileUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackNotUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeBackNotUnderAttackMult) ?? true))
             {
-                if (!lhs.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult)) return false;
+                if (!lhs.AdvancedDodgeBackNotUnderAttackMult.EqualsWithin(rhs.AdvancedDodgeBackNotUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardWhileAttackingMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeForwardWhileAttackingMult) ?? true))
             {
-                if (!lhs.DodgeForwardWhileAttackingMult.EqualsWithin(rhs.DodgeForwardWhileAttackingMult)) return false;
+                if (!lhs.AdvancedDodgeForwardWhileAttackingMult.EqualsWithin(rhs.AdvancedDodgeForwardWhileAttackingMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardNotAttackingMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeForwardNotAttackingMult) ?? true))
             {
-                if (!lhs.DodgeForwardNotAttackingMult.EqualsWithin(rhs.DodgeForwardNotAttackingMult)) return false;
+                if (!lhs.AdvancedDodgeForwardNotAttackingMult.EqualsWithin(rhs.AdvancedDodgeForwardNotAttackingMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockSkillModifierMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockSkillModifierMult) ?? true))
             {
-                if (!lhs.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult)) return false;
+                if (!lhs.AdvancedBlockSkillModifierMult.EqualsWithin(rhs.AdvancedBlockSkillModifierMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockSkillModifierBase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockSkillModifierBase) ?? true))
             {
-                if (!lhs.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase)) return false;
+                if (!lhs.AdvancedBlockSkillModifierBase.EqualsWithin(rhs.AdvancedBlockSkillModifierBase)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockWhileUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockWhileUnderAttackMult) ?? true))
             {
-                if (!lhs.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult)) return false;
+                if (!lhs.AdvancedBlockWhileUnderAttackMult.EqualsWithin(rhs.AdvancedBlockWhileUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockNotUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockNotUnderAttackMult) ?? true))
             {
-                if (!lhs.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult)) return false;
+                if (!lhs.AdvancedBlockNotUnderAttackMult.EqualsWithin(rhs.AdvancedBlockNotUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackSkillModifierMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackSkillModifierMult) ?? true))
             {
-                if (!lhs.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult)) return false;
+                if (!lhs.AdvancedAttackSkillModifierMult.EqualsWithin(rhs.AdvancedAttackSkillModifierMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackSkillModifierBase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackSkillModifierBase) ?? true))
             {
-                if (!lhs.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase)) return false;
+                if (!lhs.AdvancedAttackSkillModifierBase.EqualsWithin(rhs.AdvancedAttackSkillModifierBase)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackWhileUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackWhileUnderAttackMult) ?? true))
             {
-                if (!lhs.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult)) return false;
+                if (!lhs.AdvancedAttackWhileUnderAttackMult.EqualsWithin(rhs.AdvancedAttackWhileUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackNotUnderAttackMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackNotUnderAttackMult) ?? true))
             {
-                if (!lhs.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult)) return false;
+                if (!lhs.AdvancedAttackNotUnderAttackMult.EqualsWithin(rhs.AdvancedAttackNotUnderAttackMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackDuringBlockMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackDuringBlockMult) ?? true))
             {
-                if (!lhs.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult)) return false;
+                if (!lhs.AdvancedAttackDuringBlockMult.EqualsWithin(rhs.AdvancedAttackDuringBlockMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackFatigueModBase) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModBase) ?? true))
             {
-                if (!lhs.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase)) return false;
+                if (!lhs.AdvancedPowerAttackFatigueModBase.EqualsWithin(rhs.AdvancedPowerAttackFatigueModBase)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackFatigueModMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult) ?? true))
             {
-                if (!lhs.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult)) return false;
+                if (!lhs.AdvancedPowerAttackFatigueModMult.EqualsWithin(rhs.AdvancedPowerAttackFatigueModMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleCoverSearchRadius) ?? true))
             {
-                if (!lhs.CoverSearchRadius.EqualsWithin(rhs.CoverSearchRadius)) return false;
+                if (!lhs.SimpleCoverSearchRadius.EqualsWithin(rhs.SimpleCoverSearchRadius)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TakeCoverChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleTakeCoverChance) ?? true))
             {
-                if (!lhs.TakeCoverChance.EqualsWithin(rhs.TakeCoverChance)) return false;
+                if (!lhs.SimpleTakeCoverChance.EqualsWithin(rhs.SimpleTakeCoverChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitTimerMin) ?? true))
             {
-                if (!lhs.WaitTimerMin.EqualsWithin(rhs.WaitTimerMin)) return false;
+                if (!lhs.SimpleWaitTimerMin.EqualsWithin(rhs.SimpleWaitTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitTimerMax) ?? true))
             {
-                if (!lhs.WaitTimerMax.EqualsWithin(rhs.WaitTimerMax)) return false;
+                if (!lhs.SimpleWaitTimerMax.EqualsWithin(rhs.SimpleWaitTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitToFireTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitToFireTimerMin) ?? true))
             {
-                if (!lhs.WaitToFireTimerMin.EqualsWithin(rhs.WaitToFireTimerMin)) return false;
+                if (!lhs.SimpleWaitToFireTimerMin.EqualsWithin(rhs.SimpleWaitToFireTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitToFireTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitToFireTimerMax) ?? true))
             {
-                if (!lhs.WaitToFireTimerMax.EqualsWithin(rhs.WaitToFireTimerMax)) return false;
+                if (!lhs.SimpleWaitToFireTimerMax.EqualsWithin(rhs.SimpleWaitToFireTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FireTimerMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleFireTimerMin) ?? true))
             {
-                if (!lhs.FireTimerMin.EqualsWithin(rhs.FireTimerMin)) return false;
+                if (!lhs.SimpleFireTimerMin.EqualsWithin(rhs.SimpleFireTimerMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FireTimerMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleFireTimerMax) ?? true))
             {
-                if (!lhs.FireTimerMax.EqualsWithin(rhs.FireTimerMax)) return false;
+                if (!lhs.SimpleFireTimerMax.EqualsWithin(rhs.SimpleFireTimerMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedWeaponRangeMultMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMin) ?? true))
             {
-                if (!lhs.RangedWeaponRangeMultMin.EqualsWithin(rhs.RangedWeaponRangeMultMin)) return false;
+                if (!lhs.SimpleRangedWeaponRangeMultMin.EqualsWithin(rhs.SimpleRangedWeaponRangeMultMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleUnused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.SimpleUnused.Span, rhs.SimpleUnused.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WeaponRestrictions) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWeaponRestrictions) ?? true))
             {
-                if (lhs.WeaponRestrictions != rhs.WeaponRestrictions) return false;
+                if (lhs.SimpleWeaponRestrictions != rhs.SimpleWeaponRestrictions) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedWeaponRangeMultMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMax) ?? true))
             {
-                if (!lhs.RangedWeaponRangeMultMax.EqualsWithin(rhs.RangedWeaponRangeMultMax)) return false;
+                if (!lhs.SimpleRangedWeaponRangeMultMax.EqualsWithin(rhs.SimpleRangedWeaponRangeMultMax)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MaxTargetingFov) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleMaxTargetingFov) ?? true))
             {
-                if (!lhs.MaxTargetingFov.EqualsWithin(rhs.MaxTargetingFov)) return false;
+                if (!lhs.SimpleMaxTargetingFov.EqualsWithin(rhs.SimpleMaxTargetingFov)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CombatRadius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleCombatRadius) ?? true))
             {
-                if (!lhs.CombatRadius.EqualsWithin(rhs.CombatRadius)) return false;
+                if (!lhs.SimpleCombatRadius.EqualsWithin(rhs.SimpleCombatRadius)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SemiAutoFiringDelayMultMin) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMin) ?? true))
             {
-                if (!lhs.SemiAutoFiringDelayMultMin.EqualsWithin(rhs.SemiAutoFiringDelayMultMin)) return false;
+                if (!lhs.SimpleSemiAutoFiringDelayMultMin.EqualsWithin(rhs.SimpleSemiAutoFiringDelayMultMin)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax) ?? true))
             {
-                if (!lhs.SemiAutoFiringDelayMultMax.EqualsWithin(rhs.SemiAutoFiringDelayMultMax)) return false;
+                if (!lhs.SimpleSemiAutoFiringDelayMultMax.EqualsWithin(rhs.SimpleSemiAutoFiringDelayMultMax)) return false;
             }
             return true;
         }
@@ -4294,78 +4294,78 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ICombatStyleGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.DodgeChance);
-            hash.Add(item.LeftRightChance);
-            hash.Add(item.Unused1);
-            hash.Add(item.DodgeLRTimerMin);
-            hash.Add(item.DodgeLRTimerMax);
-            hash.Add(item.DodgeForwardTimerMin);
-            hash.Add(item.DodgeForwardTimerMax);
-            hash.Add(item.DodgeBackTimerMin);
-            hash.Add(item.DodgeBackTimerMax);
-            hash.Add(item.IdleTimerMin);
-            hash.Add(item.IdleTimerMax);
-            hash.Add(item.BlockChance);
-            hash.Add(item.AttackChance);
-            hash.Add(item.Unused2);
-            hash.Add(item.RecoilStaggerBonusToAttack);
-            hash.Add(item.UnconsciousBonusToAttack);
-            hash.Add(item.HandToHandBonusToAttack);
-            hash.Add(item.PowerAttackChance);
-            hash.Add(item.Unused3);
-            hash.Add(item.RecoilStaggerBonusToPowerAttack);
-            hash.Add(item.UnconsciousBonusToPowerAttack);
-            hash.Add(item.PowerAttackNormal);
-            hash.Add(item.PowerAttackForward);
-            hash.Add(item.PowerAttackBack);
-            hash.Add(item.PowerAttackLeft);
-            hash.Add(item.PowerAttackRight);
-            hash.Add(item.Unused4);
-            hash.Add(item.HoldTimerMin);
-            hash.Add(item.HoldTimerMax);
-            hash.Add(item.Flags);
-            hash.Add(item.Unused5);
-            hash.Add(item.AcrobaticDodgeChance);
-            hash.Add(item.RushingAttackChance);
-            hash.Add(item.Unused6);
-            hash.Add(item.RushingAttackDistanceMult);
-            hash.Add(item.DodgeFatigueModMult);
-            hash.Add(item.DodgeFatigueModBase);
-            hash.Add(item.EncumbSpeedModBase);
-            hash.Add(item.EncumbSpeedModMult);
-            hash.Add(item.DodgeWhileUnderAttackMult);
-            hash.Add(item.DodgeNotUnderAttackMult);
-            hash.Add(item.DodgeBackWhileUnderAttackMult);
-            hash.Add(item.DodgeBackNotUnderAttackMult);
-            hash.Add(item.DodgeForwardWhileAttackingMult);
-            hash.Add(item.DodgeForwardNotAttackingMult);
-            hash.Add(item.BlockSkillModifierMult);
-            hash.Add(item.BlockSkillModifierBase);
-            hash.Add(item.BlockWhileUnderAttackMult);
-            hash.Add(item.BlockNotUnderAttackMult);
-            hash.Add(item.AttackSkillModifierMult);
-            hash.Add(item.AttackSkillModifierBase);
-            hash.Add(item.AttackWhileUnderAttackMult);
-            hash.Add(item.AttackNotUnderAttackMult);
-            hash.Add(item.AttackDuringBlockMult);
-            hash.Add(item.PowerAttackFatigueModBase);
-            hash.Add(item.PowerAttackFatigueModMult);
-            hash.Add(item.CoverSearchRadius);
-            hash.Add(item.TakeCoverChance);
-            hash.Add(item.WaitTimerMin);
-            hash.Add(item.WaitTimerMax);
-            hash.Add(item.WaitToFireTimerMin);
-            hash.Add(item.WaitToFireTimerMax);
-            hash.Add(item.FireTimerMin);
-            hash.Add(item.FireTimerMax);
-            hash.Add(item.RangedWeaponRangeMultMin);
-            hash.Add(item.Unused);
-            hash.Add(item.WeaponRestrictions);
-            hash.Add(item.RangedWeaponRangeMultMax);
-            hash.Add(item.MaxTargetingFov);
-            hash.Add(item.CombatRadius);
-            hash.Add(item.SemiAutoFiringDelayMultMin);
-            hash.Add(item.SemiAutoFiringDelayMultMax);
+            hash.Add(item.StandardManeuverDecisionDodgeChance);
+            hash.Add(item.StandardManeuverDecisionLeftRightChance);
+            hash.Add(item.StandardUnused1);
+            hash.Add(item.StandardManeuverDecisionDodgeLRTimerMin);
+            hash.Add(item.StandardManeuverDecisionDodgeLRTimerMax);
+            hash.Add(item.StandardManeuverDecisionDodgeForwardTimerMin);
+            hash.Add(item.StandardManeuverDecisionDodgeForwardTimerMax);
+            hash.Add(item.StandardManeuverDecisionDodgeBackTimerMin);
+            hash.Add(item.StandardManeuverDecisionDodgeBackTimerMax);
+            hash.Add(item.StandardManeuverDecisionIdleTimerMin);
+            hash.Add(item.StandardManeuverDecisionIdleTimerMax);
+            hash.Add(item.StandardMeleeDecisionBlockChance);
+            hash.Add(item.StandardMeleeDecisionAttackChance);
+            hash.Add(item.StandardUnused2);
+            hash.Add(item.StandardMeleeDecisionRecoilStaggerBonusToAttack);
+            hash.Add(item.StandardMeleeDecisionUnconsciousBonusToAttack);
+            hash.Add(item.StandardMeleeDecisionHandToHandBonusToAttack);
+            hash.Add(item.StandardMeleeDecisionPowerAttackChance);
+            hash.Add(item.StandardUnused3);
+            hash.Add(item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack);
+            hash.Add(item.StandardMeleeDecisionUnconsciousBonusToPowerAttack);
+            hash.Add(item.StandardMeleeDecisionPowerAttackNormal);
+            hash.Add(item.StandardMeleeDecisionPowerAttackForward);
+            hash.Add(item.StandardMeleeDecisionPowerAttackBack);
+            hash.Add(item.StandardMeleeDecisionPowerAttackLeft);
+            hash.Add(item.StandardMeleeDecisionPowerAttackRight);
+            hash.Add(item.StandardUnused4);
+            hash.Add(item.StandardMeleeDecisionHoldTimerMin);
+            hash.Add(item.StandardMeleeDecisionHoldTimerMax);
+            hash.Add(item.StandardFlags);
+            hash.Add(item.StandardUnused5);
+            hash.Add(item.StandardMeleeDecisionAcrobaticDodgeChance);
+            hash.Add(item.StandardMeleeDecisionRushingAttackChance);
+            hash.Add(item.StandardUnused6);
+            hash.Add(item.StandardMeleeDecisionRushingAttackDistanceMult);
+            hash.Add(item.AdvancedDodgeFatigueModMult);
+            hash.Add(item.AdvancedDodgeFatigueModBase);
+            hash.Add(item.AdvancedEncumbSpeedModBase);
+            hash.Add(item.AdvancedEncumbSpeedModMult);
+            hash.Add(item.AdvancedDodgeWhileUnderAttackMult);
+            hash.Add(item.AdvancedDodgeNotUnderAttackMult);
+            hash.Add(item.AdvancedDodgeBackWhileUnderAttackMult);
+            hash.Add(item.AdvancedDodgeBackNotUnderAttackMult);
+            hash.Add(item.AdvancedDodgeForwardWhileAttackingMult);
+            hash.Add(item.AdvancedDodgeForwardNotAttackingMult);
+            hash.Add(item.AdvancedBlockSkillModifierMult);
+            hash.Add(item.AdvancedBlockSkillModifierBase);
+            hash.Add(item.AdvancedBlockWhileUnderAttackMult);
+            hash.Add(item.AdvancedBlockNotUnderAttackMult);
+            hash.Add(item.AdvancedAttackSkillModifierMult);
+            hash.Add(item.AdvancedAttackSkillModifierBase);
+            hash.Add(item.AdvancedAttackWhileUnderAttackMult);
+            hash.Add(item.AdvancedAttackNotUnderAttackMult);
+            hash.Add(item.AdvancedAttackDuringBlockMult);
+            hash.Add(item.AdvancedPowerAttackFatigueModBase);
+            hash.Add(item.AdvancedPowerAttackFatigueModMult);
+            hash.Add(item.SimpleCoverSearchRadius);
+            hash.Add(item.SimpleTakeCoverChance);
+            hash.Add(item.SimpleWaitTimerMin);
+            hash.Add(item.SimpleWaitTimerMax);
+            hash.Add(item.SimpleWaitToFireTimerMin);
+            hash.Add(item.SimpleWaitToFireTimerMax);
+            hash.Add(item.SimpleFireTimerMin);
+            hash.Add(item.SimpleFireTimerMax);
+            hash.Add(item.SimpleRangedWeaponRangeMultMin);
+            hash.Add(item.SimpleUnused);
+            hash.Add(item.SimpleWeaponRestrictions);
+            hash.Add(item.SimpleRangedWeaponRangeMultMax);
+            hash.Add(item.SimpleMaxTargetingFov);
+            hash.Add(item.SimpleCombatRadius);
+            hash.Add(item.SimpleSemiAutoFiringDelayMultMin);
+            hash.Add(item.SimpleSemiAutoFiringDelayMultMax);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4469,293 +4469,293 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeChance) ?? true))
             {
-                item.DodgeChance = rhs.DodgeChance;
+                item.StandardManeuverDecisionDodgeChance = rhs.StandardManeuverDecisionDodgeChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LeftRightChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionLeftRightChance) ?? true))
             {
-                item.LeftRightChance = rhs.LeftRightChance;
+                item.StandardManeuverDecisionLeftRightChance = rhs.StandardManeuverDecisionLeftRightChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused1) ?? true))
             {
-                item.Unused1 = rhs.Unused1.ToArray();
+                item.StandardUnused1 = rhs.StandardUnused1.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLRTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMin) ?? true))
             {
-                item.DodgeLRTimerMin = rhs.DodgeLRTimerMin;
+                item.StandardManeuverDecisionDodgeLRTimerMin = rhs.StandardManeuverDecisionDodgeLRTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeLRTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeLRTimerMax) ?? true))
             {
-                item.DodgeLRTimerMax = rhs.DodgeLRTimerMax;
+                item.StandardManeuverDecisionDodgeLRTimerMax = rhs.StandardManeuverDecisionDodgeLRTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMin) ?? true))
             {
-                item.DodgeForwardTimerMin = rhs.DodgeForwardTimerMin;
+                item.StandardManeuverDecisionDodgeForwardTimerMin = rhs.StandardManeuverDecisionDodgeForwardTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeForwardTimerMax) ?? true))
             {
-                item.DodgeForwardTimerMax = rhs.DodgeForwardTimerMax;
+                item.StandardManeuverDecisionDodgeForwardTimerMax = rhs.StandardManeuverDecisionDodgeForwardTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMin) ?? true))
             {
-                item.DodgeBackTimerMin = rhs.DodgeBackTimerMin;
+                item.StandardManeuverDecisionDodgeBackTimerMin = rhs.StandardManeuverDecisionDodgeBackTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionDodgeBackTimerMax) ?? true))
             {
-                item.DodgeBackTimerMax = rhs.DodgeBackTimerMax;
+                item.StandardManeuverDecisionDodgeBackTimerMax = rhs.StandardManeuverDecisionDodgeBackTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMin) ?? true))
             {
-                item.IdleTimerMin = rhs.IdleTimerMin;
+                item.StandardManeuverDecisionIdleTimerMin = rhs.StandardManeuverDecisionIdleTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.IdleTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardManeuverDecisionIdleTimerMax) ?? true))
             {
-                item.IdleTimerMax = rhs.IdleTimerMax;
+                item.StandardManeuverDecisionIdleTimerMax = rhs.StandardManeuverDecisionIdleTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionBlockChance) ?? true))
             {
-                item.BlockChance = rhs.BlockChance;
+                item.StandardMeleeDecisionBlockChance = rhs.StandardMeleeDecisionBlockChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionAttackChance) ?? true))
             {
-                item.AttackChance = rhs.AttackChance;
+                item.StandardMeleeDecisionAttackChance = rhs.StandardMeleeDecisionAttackChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused2) ?? true))
             {
-                item.Unused2 = rhs.Unused2.ToArray();
+                item.StandardUnused2 = rhs.StandardUnused2.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToAttack) ?? true))
             {
-                item.RecoilStaggerBonusToAttack = rhs.RecoilStaggerBonusToAttack;
+                item.StandardMeleeDecisionRecoilStaggerBonusToAttack = rhs.StandardMeleeDecisionRecoilStaggerBonusToAttack;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToAttack) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToAttack) ?? true))
             {
-                item.UnconsciousBonusToAttack = rhs.UnconsciousBonusToAttack;
+                item.StandardMeleeDecisionUnconsciousBonusToAttack = rhs.StandardMeleeDecisionUnconsciousBonusToAttack;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HandToHandBonusToAttack) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionHandToHandBonusToAttack) ?? true))
             {
-                item.HandToHandBonusToAttack = rhs.HandToHandBonusToAttack;
+                item.StandardMeleeDecisionHandToHandBonusToAttack = rhs.StandardMeleeDecisionHandToHandBonusToAttack;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackChance) ?? true))
             {
-                item.PowerAttackChance = rhs.PowerAttackChance;
+                item.StandardMeleeDecisionPowerAttackChance = rhs.StandardMeleeDecisionPowerAttackChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused3) ?? true))
             {
-                item.Unused3 = rhs.Unused3.ToArray();
+                item.StandardUnused3 = rhs.StandardUnused3.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack) ?? true))
             {
-                item.RecoilStaggerBonusToPowerAttack = rhs.RecoilStaggerBonusToPowerAttack;
+                item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = rhs.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionUnconsciousBonusToPowerAttack) ?? true))
             {
-                item.UnconsciousBonusToPowerAttack = rhs.UnconsciousBonusToPowerAttack;
+                item.StandardMeleeDecisionUnconsciousBonusToPowerAttack = rhs.StandardMeleeDecisionUnconsciousBonusToPowerAttack;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackNormal) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackNormal) ?? true))
             {
-                item.PowerAttackNormal = rhs.PowerAttackNormal;
+                item.StandardMeleeDecisionPowerAttackNormal = rhs.StandardMeleeDecisionPowerAttackNormal;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackForward) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackForward) ?? true))
             {
-                item.PowerAttackForward = rhs.PowerAttackForward;
+                item.StandardMeleeDecisionPowerAttackForward = rhs.StandardMeleeDecisionPowerAttackForward;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackBack) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackBack) ?? true))
             {
-                item.PowerAttackBack = rhs.PowerAttackBack;
+                item.StandardMeleeDecisionPowerAttackBack = rhs.StandardMeleeDecisionPowerAttackBack;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackLeft) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackLeft) ?? true))
             {
-                item.PowerAttackLeft = rhs.PowerAttackLeft;
+                item.StandardMeleeDecisionPowerAttackLeft = rhs.StandardMeleeDecisionPowerAttackLeft;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackRight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionPowerAttackRight) ?? true))
             {
-                item.PowerAttackRight = rhs.PowerAttackRight;
+                item.StandardMeleeDecisionPowerAttackRight = rhs.StandardMeleeDecisionPowerAttackRight;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused4) ?? true))
             {
-                item.Unused4 = rhs.Unused4.ToArray();
+                item.StandardUnused4 = rhs.StandardUnused4.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMin) ?? true))
             {
-                item.HoldTimerMin = rhs.HoldTimerMin;
+                item.StandardMeleeDecisionHoldTimerMin = rhs.StandardMeleeDecisionHoldTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoldTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionHoldTimerMax) ?? true))
             {
-                item.HoldTimerMax = rhs.HoldTimerMax;
+                item.StandardMeleeDecisionHoldTimerMax = rhs.StandardMeleeDecisionHoldTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardFlags) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.StandardFlags = rhs.StandardFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused5) ?? true))
             {
-                item.Unused5 = rhs.Unused5.ToArray();
+                item.StandardUnused5 = rhs.StandardUnused5.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AcrobaticDodgeChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionAcrobaticDodgeChance) ?? true))
             {
-                item.AcrobaticDodgeChance = rhs.AcrobaticDodgeChance;
+                item.StandardMeleeDecisionAcrobaticDodgeChance = rhs.StandardMeleeDecisionAcrobaticDodgeChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackChance) ?? true))
             {
-                item.RushingAttackChance = rhs.RushingAttackChance;
+                item.StandardMeleeDecisionRushingAttackChance = rhs.StandardMeleeDecisionRushingAttackChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused6) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardUnused6) ?? true))
             {
-                item.Unused6 = rhs.Unused6.ToArray();
+                item.StandardUnused6 = rhs.StandardUnused6.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RushingAttackDistanceMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult) ?? true))
             {
-                item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
+                item.StandardMeleeDecisionRushingAttackDistanceMult = rhs.StandardMeleeDecisionRushingAttackDistanceMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeFatigueModMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeFatigueModMult) ?? true))
             {
-                item.DodgeFatigueModMult = rhs.DodgeFatigueModMult;
+                item.AdvancedDodgeFatigueModMult = rhs.AdvancedDodgeFatigueModMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeFatigueModBase) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeFatigueModBase) ?? true))
             {
-                item.DodgeFatigueModBase = rhs.DodgeFatigueModBase;
+                item.AdvancedDodgeFatigueModBase = rhs.AdvancedDodgeFatigueModBase;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EncumbSpeedModBase) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedEncumbSpeedModBase) ?? true))
             {
-                item.EncumbSpeedModBase = rhs.EncumbSpeedModBase;
+                item.AdvancedEncumbSpeedModBase = rhs.AdvancedEncumbSpeedModBase;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EncumbSpeedModMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedEncumbSpeedModMult) ?? true))
             {
-                item.EncumbSpeedModMult = rhs.EncumbSpeedModMult;
+                item.AdvancedEncumbSpeedModMult = rhs.AdvancedEncumbSpeedModMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeWhileUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeWhileUnderAttackMult) ?? true))
             {
-                item.DodgeWhileUnderAttackMult = rhs.DodgeWhileUnderAttackMult;
+                item.AdvancedDodgeWhileUnderAttackMult = rhs.AdvancedDodgeWhileUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeNotUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeNotUnderAttackMult) ?? true))
             {
-                item.DodgeNotUnderAttackMult = rhs.DodgeNotUnderAttackMult;
+                item.AdvancedDodgeNotUnderAttackMult = rhs.AdvancedDodgeNotUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackWhileUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeBackWhileUnderAttackMult) ?? true))
             {
-                item.DodgeBackWhileUnderAttackMult = rhs.DodgeBackWhileUnderAttackMult;
+                item.AdvancedDodgeBackWhileUnderAttackMult = rhs.AdvancedDodgeBackWhileUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeBackNotUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeBackNotUnderAttackMult) ?? true))
             {
-                item.DodgeBackNotUnderAttackMult = rhs.DodgeBackNotUnderAttackMult;
+                item.AdvancedDodgeBackNotUnderAttackMult = rhs.AdvancedDodgeBackNotUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardWhileAttackingMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeForwardWhileAttackingMult) ?? true))
             {
-                item.DodgeForwardWhileAttackingMult = rhs.DodgeForwardWhileAttackingMult;
+                item.AdvancedDodgeForwardWhileAttackingMult = rhs.AdvancedDodgeForwardWhileAttackingMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeForwardNotAttackingMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedDodgeForwardNotAttackingMult) ?? true))
             {
-                item.DodgeForwardNotAttackingMult = rhs.DodgeForwardNotAttackingMult;
+                item.AdvancedDodgeForwardNotAttackingMult = rhs.AdvancedDodgeForwardNotAttackingMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockSkillModifierMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockSkillModifierMult) ?? true))
             {
-                item.BlockSkillModifierMult = rhs.BlockSkillModifierMult;
+                item.AdvancedBlockSkillModifierMult = rhs.AdvancedBlockSkillModifierMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockSkillModifierBase) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockSkillModifierBase) ?? true))
             {
-                item.BlockSkillModifierBase = rhs.BlockSkillModifierBase;
+                item.AdvancedBlockSkillModifierBase = rhs.AdvancedBlockSkillModifierBase;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockWhileUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockWhileUnderAttackMult) ?? true))
             {
-                item.BlockWhileUnderAttackMult = rhs.BlockWhileUnderAttackMult;
+                item.AdvancedBlockWhileUnderAttackMult = rhs.AdvancedBlockWhileUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.BlockNotUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedBlockNotUnderAttackMult) ?? true))
             {
-                item.BlockNotUnderAttackMult = rhs.BlockNotUnderAttackMult;
+                item.AdvancedBlockNotUnderAttackMult = rhs.AdvancedBlockNotUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackSkillModifierMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackSkillModifierMult) ?? true))
             {
-                item.AttackSkillModifierMult = rhs.AttackSkillModifierMult;
+                item.AdvancedAttackSkillModifierMult = rhs.AdvancedAttackSkillModifierMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackSkillModifierBase) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackSkillModifierBase) ?? true))
             {
-                item.AttackSkillModifierBase = rhs.AttackSkillModifierBase;
+                item.AdvancedAttackSkillModifierBase = rhs.AdvancedAttackSkillModifierBase;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackWhileUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackWhileUnderAttackMult) ?? true))
             {
-                item.AttackWhileUnderAttackMult = rhs.AttackWhileUnderAttackMult;
+                item.AdvancedAttackWhileUnderAttackMult = rhs.AdvancedAttackWhileUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackNotUnderAttackMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackNotUnderAttackMult) ?? true))
             {
-                item.AttackNotUnderAttackMult = rhs.AttackNotUnderAttackMult;
+                item.AdvancedAttackNotUnderAttackMult = rhs.AdvancedAttackNotUnderAttackMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AttackDuringBlockMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedAttackDuringBlockMult) ?? true))
             {
-                item.AttackDuringBlockMult = rhs.AttackDuringBlockMult;
+                item.AdvancedAttackDuringBlockMult = rhs.AdvancedAttackDuringBlockMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackFatigueModBase) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModBase) ?? true))
             {
-                item.PowerAttackFatigueModBase = rhs.PowerAttackFatigueModBase;
+                item.AdvancedPowerAttackFatigueModBase = rhs.AdvancedPowerAttackFatigueModBase;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PowerAttackFatigueModMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult) ?? true))
             {
-                item.PowerAttackFatigueModMult = rhs.PowerAttackFatigueModMult;
+                item.AdvancedPowerAttackFatigueModMult = rhs.AdvancedPowerAttackFatigueModMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchRadius) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleCoverSearchRadius) ?? true))
             {
-                item.CoverSearchRadius = rhs.CoverSearchRadius;
+                item.SimpleCoverSearchRadius = rhs.SimpleCoverSearchRadius;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TakeCoverChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleTakeCoverChance) ?? true))
             {
-                item.TakeCoverChance = rhs.TakeCoverChance;
+                item.SimpleTakeCoverChance = rhs.SimpleTakeCoverChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitTimerMin) ?? true))
             {
-                item.WaitTimerMin = rhs.WaitTimerMin;
+                item.SimpleWaitTimerMin = rhs.SimpleWaitTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitTimerMax) ?? true))
             {
-                item.WaitTimerMax = rhs.WaitTimerMax;
+                item.SimpleWaitTimerMax = rhs.SimpleWaitTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitToFireTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitToFireTimerMin) ?? true))
             {
-                item.WaitToFireTimerMin = rhs.WaitToFireTimerMin;
+                item.SimpleWaitToFireTimerMin = rhs.SimpleWaitToFireTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WaitToFireTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWaitToFireTimerMax) ?? true))
             {
-                item.WaitToFireTimerMax = rhs.WaitToFireTimerMax;
+                item.SimpleWaitToFireTimerMax = rhs.SimpleWaitToFireTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FireTimerMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleFireTimerMin) ?? true))
             {
-                item.FireTimerMin = rhs.FireTimerMin;
+                item.SimpleFireTimerMin = rhs.SimpleFireTimerMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FireTimerMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleFireTimerMax) ?? true))
             {
-                item.FireTimerMax = rhs.FireTimerMax;
+                item.SimpleFireTimerMax = rhs.SimpleFireTimerMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedWeaponRangeMultMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMin) ?? true))
             {
-                item.RangedWeaponRangeMultMin = rhs.RangedWeaponRangeMultMin;
+                item.SimpleRangedWeaponRangeMultMin = rhs.SimpleRangedWeaponRangeMultMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Unused) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleUnused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.SimpleUnused = rhs.SimpleUnused.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.WeaponRestrictions) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleWeaponRestrictions) ?? true))
             {
-                item.WeaponRestrictions = rhs.WeaponRestrictions;
+                item.SimpleWeaponRestrictions = rhs.SimpleWeaponRestrictions;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedWeaponRangeMultMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleRangedWeaponRangeMultMax) ?? true))
             {
-                item.RangedWeaponRangeMultMax = rhs.RangedWeaponRangeMultMax;
+                item.SimpleRangedWeaponRangeMultMax = rhs.SimpleRangedWeaponRangeMultMax;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MaxTargetingFov) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleMaxTargetingFov) ?? true))
             {
-                item.MaxTargetingFov = rhs.MaxTargetingFov;
+                item.SimpleMaxTargetingFov = rhs.SimpleMaxTargetingFov;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CombatRadius) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleCombatRadius) ?? true))
             {
-                item.CombatRadius = rhs.CombatRadius;
+                item.SimpleCombatRadius = rhs.SimpleCombatRadius;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SemiAutoFiringDelayMultMin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMin) ?? true))
             {
-                item.SemiAutoFiringDelayMultMin = rhs.SemiAutoFiringDelayMultMin;
+                item.SimpleSemiAutoFiringDelayMultMin = rhs.SimpleSemiAutoFiringDelayMultMin;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax) ?? true))
             {
-                item.SemiAutoFiringDelayMultMax = rhs.SemiAutoFiringDelayMultMax;
+                item.SimpleSemiAutoFiringDelayMultMax = rhs.SimpleSemiAutoFiringDelayMultMax;
             }
             DeepCopyInCustom(
                 item: item,
@@ -4928,200 +4928,227 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSTD)))
             {
-                writer.Write(item.DodgeChance);
-                writer.Write(item.LeftRightChance);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardManeuverDecisionDodgeChance,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardManeuverDecisionLeftRightChance,
+                    integerType: FloatIntegerType.Byte);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused1);
+                    item: item.StandardUnused1);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeLRTimerMin);
+                    item: item.StandardManeuverDecisionDodgeLRTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeLRTimerMax);
+                    item: item.StandardManeuverDecisionDodgeLRTimerMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeForwardTimerMin);
+                    item: item.StandardManeuverDecisionDodgeForwardTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeForwardTimerMax);
+                    item: item.StandardManeuverDecisionDodgeForwardTimerMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeBackTimerMin);
+                    item: item.StandardManeuverDecisionDodgeBackTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeBackTimerMax);
+                    item: item.StandardManeuverDecisionDodgeBackTimerMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.IdleTimerMin);
+                    item: item.StandardManeuverDecisionIdleTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.IdleTimerMax);
-                writer.Write(item.BlockChance);
-                writer.Write(item.AttackChance);
+                    item: item.StandardManeuverDecisionIdleTimerMax);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardMeleeDecisionBlockChance,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardMeleeDecisionAttackChance,
+                    integerType: FloatIntegerType.Byte);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused2);
+                    item: item.StandardUnused2);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RecoilStaggerBonusToAttack);
+                    item: item.StandardMeleeDecisionRecoilStaggerBonusToAttack);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnconsciousBonusToAttack);
+                    item: item.StandardMeleeDecisionUnconsciousBonusToAttack);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.HandToHandBonusToAttack);
-                writer.Write(item.PowerAttackChance);
+                    item: item.StandardMeleeDecisionHandToHandBonusToAttack);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardMeleeDecisionPowerAttackChance,
+                    integerType: FloatIntegerType.Byte);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused3);
+                    item: item.StandardUnused3);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RecoilStaggerBonusToPowerAttack);
+                    item: item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnconsciousBonusToPowerAttack);
-                writer.Write(item.PowerAttackNormal);
-                writer.Write(item.PowerAttackForward);
-                writer.Write(item.PowerAttackBack);
-                writer.Write(item.PowerAttackLeft);
-                writer.Write(item.PowerAttackRight);
+                    item: item.StandardMeleeDecisionUnconsciousBonusToPowerAttack);
+                writer.Write(item.StandardMeleeDecisionPowerAttackNormal);
+                writer.Write(item.StandardMeleeDecisionPowerAttackForward);
+                writer.Write(item.StandardMeleeDecisionPowerAttackBack);
+                writer.Write(item.StandardMeleeDecisionPowerAttackLeft);
+                writer.Write(item.StandardMeleeDecisionPowerAttackRight);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused4);
+                    item: item.StandardUnused4);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.HoldTimerMin);
+                    item: item.StandardMeleeDecisionHoldTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.HoldTimerMax);
-                writer.Write(item.Flags);
+                    item: item.StandardMeleeDecisionHoldTimerMax);
+                EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.StandardFlags,
+                    length: 2);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused5);
-                writer.Write(item.AcrobaticDodgeChance);
-                writer.Write(item.RushingAttackChance);
+                    item: item.StandardUnused5);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardMeleeDecisionAcrobaticDodgeChance,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.StandardMeleeDecisionRushingAttackChance,
+                    integerType: FloatIntegerType.Byte);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused6);
+                    item: item.StandardUnused6);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RushingAttackDistanceMult);
+                    item: item.StandardMeleeDecisionRushingAttackDistanceMult);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSAD)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeFatigueModMult);
+                    item: item.AdvancedDodgeFatigueModMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeFatigueModBase);
+                    item: item.AdvancedDodgeFatigueModBase);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.EncumbSpeedModBase);
+                    item: item.AdvancedEncumbSpeedModBase);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.EncumbSpeedModMult);
+                    item: item.AdvancedEncumbSpeedModMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeWhileUnderAttackMult);
+                    item: item.AdvancedDodgeWhileUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeNotUnderAttackMult);
+                    item: item.AdvancedDodgeNotUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeBackWhileUnderAttackMult);
+                    item: item.AdvancedDodgeBackWhileUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeBackNotUnderAttackMult);
+                    item: item.AdvancedDodgeBackNotUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeForwardWhileAttackingMult);
+                    item: item.AdvancedDodgeForwardWhileAttackingMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeForwardNotAttackingMult);
+                    item: item.AdvancedDodgeForwardNotAttackingMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BlockSkillModifierMult);
+                    item: item.AdvancedBlockSkillModifierMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BlockSkillModifierBase);
+                    item: item.AdvancedBlockSkillModifierBase);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BlockWhileUnderAttackMult);
+                    item: item.AdvancedBlockWhileUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BlockNotUnderAttackMult);
+                    item: item.AdvancedBlockNotUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.AttackSkillModifierMult);
+                    item: item.AdvancedAttackSkillModifierMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.AttackSkillModifierBase);
+                    item: item.AdvancedAttackSkillModifierBase);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.AttackWhileUnderAttackMult);
+                    item: item.AdvancedAttackWhileUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.AttackNotUnderAttackMult);
+                    item: item.AdvancedAttackNotUnderAttackMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.AttackDuringBlockMult);
+                    item: item.AdvancedAttackDuringBlockMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.PowerAttackFatigueModBase);
+                    item: item.AdvancedPowerAttackFatigueModBase);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.PowerAttackFatigueModMult);
+                    item: item.AdvancedPowerAttackFatigueModMult);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSSD)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.CoverSearchRadius);
+                    item: item.SimpleCoverSearchRadius);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.TakeCoverChance);
+                    item: item.SimpleTakeCoverChance);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.WaitTimerMin);
+                    item: item.SimpleWaitTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.WaitTimerMax);
+                    item: item.SimpleWaitTimerMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.WaitToFireTimerMin);
+                    item: item.SimpleWaitToFireTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.WaitToFireTimerMax);
+                    item: item.SimpleWaitToFireTimerMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.FireTimerMin);
+                    item: item.SimpleFireTimerMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.FireTimerMax);
+                    item: item.SimpleFireTimerMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RangedWeaponRangeMultMin);
+                    item: item.SimpleRangedWeaponRangeMultMin);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unused);
-                writer.Write(item.WeaponRestrictions);
+                    item: item.SimpleUnused);
+                EnumBinaryTranslation<CombatStyle.WeaponRestriction, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.SimpleWeaponRestrictions,
+                    length: 4);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RangedWeaponRangeMultMax);
+                    item: item.SimpleRangedWeaponRangeMultMax);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.MaxTargetingFov);
+                    item: item.SimpleMaxTargetingFov);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.CombatRadius);
+                    item: item.SimpleCombatRadius);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.SemiAutoFiringDelayMultMin);
+                    item: item.SimpleSemiAutoFiringDelayMultMin);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.SemiAutoFiringDelayMultMax);
+                    item: item.SimpleSemiAutoFiringDelayMultMax);
             }
         }
 
@@ -5196,155 +5223,173 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
-                    item.DodgeChance = dataFrame.ReadUInt8();
+                    item.StandardManeuverDecisionDodgeChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     if (dataFrame.Remaining < 1) return null;
-                    item.LeftRightChance = dataFrame.ReadUInt8();
-                    item.Unused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.StandardManeuverDecisionLeftRightChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.StandardUnused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeLRTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionDodgeLRTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeLRTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionDodgeLRTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeForwardTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionDodgeForwardTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeForwardTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionDodgeForwardTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeBackTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionDodgeBackTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeBackTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionDodgeBackTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.IdleTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionIdleTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.IdleTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardManeuverDecisionIdleTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 1) return null;
-                    item.BlockChance = dataFrame.ReadUInt8();
+                    item.StandardMeleeDecisionBlockChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     if (dataFrame.Remaining < 1) return null;
-                    item.AttackChance = dataFrame.ReadUInt8();
-                    item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.StandardMeleeDecisionAttackChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.StandardUnused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     if (dataFrame.Remaining < 4) return null;
-                    item.RecoilStaggerBonusToAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionRecoilStaggerBonusToAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnconsciousBonusToAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionUnconsciousBonusToAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.HandToHandBonusToAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionHandToHandBonusToAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 1) return null;
-                    item.PowerAttackChance = dataFrame.ReadUInt8();
-                    item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    item.StandardMeleeDecisionPowerAttackChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.StandardUnused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     if (dataFrame.Remaining < 4) return null;
-                    item.RecoilStaggerBonusToPowerAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionRecoilStaggerBonusToPowerAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnconsciousBonusToPowerAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionUnconsciousBonusToPowerAttack = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 1) return null;
-                    item.PowerAttackNormal = dataFrame.ReadUInt8();
+                    item.StandardMeleeDecisionPowerAttackNormal = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.PowerAttackForward = dataFrame.ReadUInt8();
+                    item.StandardMeleeDecisionPowerAttackForward = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.PowerAttackBack = dataFrame.ReadUInt8();
+                    item.StandardMeleeDecisionPowerAttackBack = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.PowerAttackLeft = dataFrame.ReadUInt8();
+                    item.StandardMeleeDecisionPowerAttackLeft = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.PowerAttackRight = dataFrame.ReadUInt8();
-                    item.Unused4 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    item.StandardMeleeDecisionPowerAttackRight = dataFrame.ReadUInt8();
+                    item.StandardUnused4 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     if (dataFrame.Remaining < 4) return null;
-                    item.HoldTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionHoldTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.HoldTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.StandardMeleeDecisionHoldTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 2) return null;
-                    item.Flags = dataFrame.ReadUInt16();
-                    item.Unused5 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.StandardFlags = EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    item.StandardUnused5 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     if (dataFrame.Remaining < 1) return null;
-                    item.AcrobaticDodgeChance = dataFrame.ReadUInt8();
+                    item.StandardMeleeDecisionAcrobaticDodgeChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
                     if (dataFrame.Remaining < 1) return null;
-                    item.RushingAttackChance = dataFrame.ReadUInt8();
-                    item.Unused6 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.StandardMeleeDecisionRushingAttackChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    item.StandardUnused6 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     if (dataFrame.Remaining < 4) return null;
-                    item.RushingAttackDistanceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.RushingAttackDistanceMult;
+                    item.StandardMeleeDecisionRushingAttackDistanceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult;
                 }
                 case RecordTypeInts.CSAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeFatigueModMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeFatigueModMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeFatigueModBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeFatigueModBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.EncumbSpeedModBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedEncumbSpeedModBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.EncumbSpeedModMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedEncumbSpeedModMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeBackWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeBackWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeBackNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeBackNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeForwardWhileAttackingMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeForwardWhileAttackingMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeForwardNotAttackingMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedDodgeForwardNotAttackingMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BlockSkillModifierMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedBlockSkillModifierMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BlockSkillModifierBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedBlockSkillModifierBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BlockWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedBlockWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BlockNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedBlockNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.AttackSkillModifierMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedAttackSkillModifierMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.AttackSkillModifierBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedAttackSkillModifierBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.AttackWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedAttackWhileUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.AttackNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedAttackNotUnderAttackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.AttackDuringBlockMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedAttackDuringBlockMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.PowerAttackFatigueModBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AdvancedPowerAttackFatigueModBase = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.PowerAttackFatigueModMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.PowerAttackFatigueModMult;
+                    item.AdvancedPowerAttackFatigueModMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult;
                 }
                 case RecordTypeInts.CSSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CoverSearchRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleCoverSearchRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.TakeCoverChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleTakeCoverChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.WaitTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleWaitTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.WaitTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleWaitTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.WaitToFireTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleWaitToFireTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.WaitToFireTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleWaitToFireTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.FireTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleFireTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.FireTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleFireTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.RangedWeaponRangeMultMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.SimpleRangedWeaponRangeMultMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleUnused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     if (dataFrame.Remaining < 4) return null;
-                    item.WeaponRestrictions = dataFrame.ReadUInt32();
+                    item.SimpleWeaponRestrictions = EnumBinaryTranslation<CombatStyle.WeaponRestriction, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     if (dataFrame.Remaining < 4) return null;
-                    item.RangedWeaponRangeMultMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleRangedWeaponRangeMultMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.MaxTargetingFov = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleMaxTargetingFov = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CombatRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleCombatRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.SemiAutoFiringDelayMultMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SimpleSemiAutoFiringDelayMultMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.SemiAutoFiringDelayMultMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax;
+                    item.SimpleSemiAutoFiringDelayMultMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5405,367 +5450,367 @@ namespace Mutagen.Bethesda.Fallout3
 
 
         private RangeInt32? _CSTDLocation;
-        #region DodgeChance
-        private int _DodgeChanceLocation => _CSTDLocation!.Value.Min;
-        private bool _DodgeChance_IsSet => _CSTDLocation.HasValue;
-        public Byte DodgeChance => _DodgeChance_IsSet ? _recordData.Span[_DodgeChanceLocation] : default;
+        #region StandardManeuverDecisionDodgeChance
+        private int _StandardManeuverDecisionDodgeChanceLocation => _CSTDLocation!.Value.Min;
+        private bool _StandardManeuverDecisionDodgeChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardManeuverDecisionDodgeChance => _StandardManeuverDecisionDodgeChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardManeuverDecisionDodgeChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region LeftRightChance
-        private int _LeftRightChanceLocation => _CSTDLocation!.Value.Min + 0x1;
-        private bool _LeftRightChance_IsSet => _CSTDLocation.HasValue;
-        public Byte LeftRightChance => _LeftRightChance_IsSet ? _recordData.Span[_LeftRightChanceLocation] : default;
+        #region StandardManeuverDecisionLeftRightChance
+        private int _StandardManeuverDecisionLeftRightChanceLocation => _CSTDLocation!.Value.Min + 0x1;
+        private bool _StandardManeuverDecisionLeftRightChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardManeuverDecisionLeftRightChance => _StandardManeuverDecisionLeftRightChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardManeuverDecisionLeftRightChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region Unused1
-        private int _Unused1Location => _CSTDLocation!.Value.Min + 0x2;
-        private bool _Unused1_IsSet => _CSTDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused1 => _Unused1_IsSet ? _recordData.Span.Slice(_Unused1Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region StandardUnused1
+        private int _StandardUnused1Location => _CSTDLocation!.Value.Min + 0x2;
+        private bool _StandardUnused1_IsSet => _CSTDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> StandardUnused1 => _StandardUnused1_IsSet ? _recordData.Span.Slice(_StandardUnused1Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region DodgeLRTimerMin
-        private int _DodgeLRTimerMinLocation => _CSTDLocation!.Value.Min + 0x4;
-        private bool _DodgeLRTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeLRTimerMin => _DodgeLRTimerMin_IsSet ? _recordData.Slice(_DodgeLRTimerMinLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionDodgeLRTimerMin
+        private int _StandardManeuverDecisionDodgeLRTimerMinLocation => _CSTDLocation!.Value.Min + 0x4;
+        private bool _StandardManeuverDecisionDodgeLRTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionDodgeLRTimerMin => _StandardManeuverDecisionDodgeLRTimerMin_IsSet ? _recordData.Slice(_StandardManeuverDecisionDodgeLRTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeLRTimerMax
-        private int _DodgeLRTimerMaxLocation => _CSTDLocation!.Value.Min + 0x8;
-        private bool _DodgeLRTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeLRTimerMax => _DodgeLRTimerMax_IsSet ? _recordData.Slice(_DodgeLRTimerMaxLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionDodgeLRTimerMax
+        private int _StandardManeuverDecisionDodgeLRTimerMaxLocation => _CSTDLocation!.Value.Min + 0x8;
+        private bool _StandardManeuverDecisionDodgeLRTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionDodgeLRTimerMax => _StandardManeuverDecisionDodgeLRTimerMax_IsSet ? _recordData.Slice(_StandardManeuverDecisionDodgeLRTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeForwardTimerMin
-        private int _DodgeForwardTimerMinLocation => _CSTDLocation!.Value.Min + 0xC;
-        private bool _DodgeForwardTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeForwardTimerMin => _DodgeForwardTimerMin_IsSet ? _recordData.Slice(_DodgeForwardTimerMinLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionDodgeForwardTimerMin
+        private int _StandardManeuverDecisionDodgeForwardTimerMinLocation => _CSTDLocation!.Value.Min + 0xC;
+        private bool _StandardManeuverDecisionDodgeForwardTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionDodgeForwardTimerMin => _StandardManeuverDecisionDodgeForwardTimerMin_IsSet ? _recordData.Slice(_StandardManeuverDecisionDodgeForwardTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeForwardTimerMax
-        private int _DodgeForwardTimerMaxLocation => _CSTDLocation!.Value.Min + 0x10;
-        private bool _DodgeForwardTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeForwardTimerMax => _DodgeForwardTimerMax_IsSet ? _recordData.Slice(_DodgeForwardTimerMaxLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionDodgeForwardTimerMax
+        private int _StandardManeuverDecisionDodgeForwardTimerMaxLocation => _CSTDLocation!.Value.Min + 0x10;
+        private bool _StandardManeuverDecisionDodgeForwardTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionDodgeForwardTimerMax => _StandardManeuverDecisionDodgeForwardTimerMax_IsSet ? _recordData.Slice(_StandardManeuverDecisionDodgeForwardTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeBackTimerMin
-        private int _DodgeBackTimerMinLocation => _CSTDLocation!.Value.Min + 0x14;
-        private bool _DodgeBackTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeBackTimerMin => _DodgeBackTimerMin_IsSet ? _recordData.Slice(_DodgeBackTimerMinLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionDodgeBackTimerMin
+        private int _StandardManeuverDecisionDodgeBackTimerMinLocation => _CSTDLocation!.Value.Min + 0x14;
+        private bool _StandardManeuverDecisionDodgeBackTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionDodgeBackTimerMin => _StandardManeuverDecisionDodgeBackTimerMin_IsSet ? _recordData.Slice(_StandardManeuverDecisionDodgeBackTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeBackTimerMax
-        private int _DodgeBackTimerMaxLocation => _CSTDLocation!.Value.Min + 0x18;
-        private bool _DodgeBackTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single DodgeBackTimerMax => _DodgeBackTimerMax_IsSet ? _recordData.Slice(_DodgeBackTimerMaxLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionDodgeBackTimerMax
+        private int _StandardManeuverDecisionDodgeBackTimerMaxLocation => _CSTDLocation!.Value.Min + 0x18;
+        private bool _StandardManeuverDecisionDodgeBackTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionDodgeBackTimerMax => _StandardManeuverDecisionDodgeBackTimerMax_IsSet ? _recordData.Slice(_StandardManeuverDecisionDodgeBackTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region IdleTimerMin
-        private int _IdleTimerMinLocation => _CSTDLocation!.Value.Min + 0x1C;
-        private bool _IdleTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single IdleTimerMin => _IdleTimerMin_IsSet ? _recordData.Slice(_IdleTimerMinLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionIdleTimerMin
+        private int _StandardManeuverDecisionIdleTimerMinLocation => _CSTDLocation!.Value.Min + 0x1C;
+        private bool _StandardManeuverDecisionIdleTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionIdleTimerMin => _StandardManeuverDecisionIdleTimerMin_IsSet ? _recordData.Slice(_StandardManeuverDecisionIdleTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region IdleTimerMax
-        private int _IdleTimerMaxLocation => _CSTDLocation!.Value.Min + 0x20;
-        private bool _IdleTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single IdleTimerMax => _IdleTimerMax_IsSet ? _recordData.Slice(_IdleTimerMaxLocation, 4).Float() : default(Single);
+        #region StandardManeuverDecisionIdleTimerMax
+        private int _StandardManeuverDecisionIdleTimerMaxLocation => _CSTDLocation!.Value.Min + 0x20;
+        private bool _StandardManeuverDecisionIdleTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single StandardManeuverDecisionIdleTimerMax => _StandardManeuverDecisionIdleTimerMax_IsSet ? _recordData.Slice(_StandardManeuverDecisionIdleTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region BlockChance
-        private int _BlockChanceLocation => _CSTDLocation!.Value.Min + 0x24;
-        private bool _BlockChance_IsSet => _CSTDLocation.HasValue;
-        public Byte BlockChance => _BlockChance_IsSet ? _recordData.Span[_BlockChanceLocation] : default;
+        #region StandardMeleeDecisionBlockChance
+        private int _StandardMeleeDecisionBlockChanceLocation => _CSTDLocation!.Value.Min + 0x24;
+        private bool _StandardMeleeDecisionBlockChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardMeleeDecisionBlockChance => _StandardMeleeDecisionBlockChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardMeleeDecisionBlockChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region AttackChance
-        private int _AttackChanceLocation => _CSTDLocation!.Value.Min + 0x25;
-        private bool _AttackChance_IsSet => _CSTDLocation.HasValue;
-        public Byte AttackChance => _AttackChance_IsSet ? _recordData.Span[_AttackChanceLocation] : default;
+        #region StandardMeleeDecisionAttackChance
+        private int _StandardMeleeDecisionAttackChanceLocation => _CSTDLocation!.Value.Min + 0x25;
+        private bool _StandardMeleeDecisionAttackChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardMeleeDecisionAttackChance => _StandardMeleeDecisionAttackChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardMeleeDecisionAttackChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region Unused2
-        private int _Unused2Location => _CSTDLocation!.Value.Min + 0x26;
-        private bool _Unused2_IsSet => _CSTDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused2 => _Unused2_IsSet ? _recordData.Span.Slice(_Unused2Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region StandardUnused2
+        private int _StandardUnused2Location => _CSTDLocation!.Value.Min + 0x26;
+        private bool _StandardUnused2_IsSet => _CSTDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> StandardUnused2 => _StandardUnused2_IsSet ? _recordData.Span.Slice(_StandardUnused2Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region RecoilStaggerBonusToAttack
-        private int _RecoilStaggerBonusToAttackLocation => _CSTDLocation!.Value.Min + 0x28;
-        private bool _RecoilStaggerBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single RecoilStaggerBonusToAttack => _RecoilStaggerBonusToAttack_IsSet ? _recordData.Slice(_RecoilStaggerBonusToAttackLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionRecoilStaggerBonusToAttack
+        private int _StandardMeleeDecisionRecoilStaggerBonusToAttackLocation => _CSTDLocation!.Value.Min + 0x28;
+        private bool _StandardMeleeDecisionRecoilStaggerBonusToAttack_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionRecoilStaggerBonusToAttack => _StandardMeleeDecisionRecoilStaggerBonusToAttack_IsSet ? _recordData.Slice(_StandardMeleeDecisionRecoilStaggerBonusToAttackLocation, 4).Float() : default(Single);
         #endregion
-        #region UnconsciousBonusToAttack
-        private int _UnconsciousBonusToAttackLocation => _CSTDLocation!.Value.Min + 0x2C;
-        private bool _UnconsciousBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single UnconsciousBonusToAttack => _UnconsciousBonusToAttack_IsSet ? _recordData.Slice(_UnconsciousBonusToAttackLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionUnconsciousBonusToAttack
+        private int _StandardMeleeDecisionUnconsciousBonusToAttackLocation => _CSTDLocation!.Value.Min + 0x2C;
+        private bool _StandardMeleeDecisionUnconsciousBonusToAttack_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionUnconsciousBonusToAttack => _StandardMeleeDecisionUnconsciousBonusToAttack_IsSet ? _recordData.Slice(_StandardMeleeDecisionUnconsciousBonusToAttackLocation, 4).Float() : default(Single);
         #endregion
-        #region HandToHandBonusToAttack
-        private int _HandToHandBonusToAttackLocation => _CSTDLocation!.Value.Min + 0x30;
-        private bool _HandToHandBonusToAttack_IsSet => _CSTDLocation.HasValue;
-        public Single HandToHandBonusToAttack => _HandToHandBonusToAttack_IsSet ? _recordData.Slice(_HandToHandBonusToAttackLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionHandToHandBonusToAttack
+        private int _StandardMeleeDecisionHandToHandBonusToAttackLocation => _CSTDLocation!.Value.Min + 0x30;
+        private bool _StandardMeleeDecisionHandToHandBonusToAttack_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionHandToHandBonusToAttack => _StandardMeleeDecisionHandToHandBonusToAttack_IsSet ? _recordData.Slice(_StandardMeleeDecisionHandToHandBonusToAttackLocation, 4).Float() : default(Single);
         #endregion
-        #region PowerAttackChance
-        private int _PowerAttackChanceLocation => _CSTDLocation!.Value.Min + 0x34;
-        private bool _PowerAttackChance_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackChance => _PowerAttackChance_IsSet ? _recordData.Span[_PowerAttackChanceLocation] : default;
+        #region StandardMeleeDecisionPowerAttackChance
+        private int _StandardMeleeDecisionPowerAttackChanceLocation => _CSTDLocation!.Value.Min + 0x34;
+        private bool _StandardMeleeDecisionPowerAttackChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardMeleeDecisionPowerAttackChance => _StandardMeleeDecisionPowerAttackChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardMeleeDecisionPowerAttackChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region Unused3
-        private int _Unused3Location => _CSTDLocation!.Value.Min + 0x35;
-        private bool _Unused3_IsSet => _CSTDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused3 => _Unused3_IsSet ? _recordData.Span.Slice(_Unused3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region StandardUnused3
+        private int _StandardUnused3Location => _CSTDLocation!.Value.Min + 0x35;
+        private bool _StandardUnused3_IsSet => _CSTDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> StandardUnused3 => _StandardUnused3_IsSet ? _recordData.Span.Slice(_StandardUnused3Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region RecoilStaggerBonusToPowerAttack
-        private int _RecoilStaggerBonusToPowerAttackLocation => _CSTDLocation!.Value.Min + 0x38;
-        private bool _RecoilStaggerBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
-        public Single RecoilStaggerBonusToPowerAttack => _RecoilStaggerBonusToPowerAttack_IsSet ? _recordData.Slice(_RecoilStaggerBonusToPowerAttackLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionRecoilStaggerBonusToPowerAttack
+        private int _StandardMeleeDecisionRecoilStaggerBonusToPowerAttackLocation => _CSTDLocation!.Value.Min + 0x38;
+        private bool _StandardMeleeDecisionRecoilStaggerBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionRecoilStaggerBonusToPowerAttack => _StandardMeleeDecisionRecoilStaggerBonusToPowerAttack_IsSet ? _recordData.Slice(_StandardMeleeDecisionRecoilStaggerBonusToPowerAttackLocation, 4).Float() : default(Single);
         #endregion
-        #region UnconsciousBonusToPowerAttack
-        private int _UnconsciousBonusToPowerAttackLocation => _CSTDLocation!.Value.Min + 0x3C;
-        private bool _UnconsciousBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
-        public Single UnconsciousBonusToPowerAttack => _UnconsciousBonusToPowerAttack_IsSet ? _recordData.Slice(_UnconsciousBonusToPowerAttackLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionUnconsciousBonusToPowerAttack
+        private int _StandardMeleeDecisionUnconsciousBonusToPowerAttackLocation => _CSTDLocation!.Value.Min + 0x3C;
+        private bool _StandardMeleeDecisionUnconsciousBonusToPowerAttack_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionUnconsciousBonusToPowerAttack => _StandardMeleeDecisionUnconsciousBonusToPowerAttack_IsSet ? _recordData.Slice(_StandardMeleeDecisionUnconsciousBonusToPowerAttackLocation, 4).Float() : default(Single);
         #endregion
-        #region PowerAttackNormal
-        private int _PowerAttackNormalLocation => _CSTDLocation!.Value.Min + 0x40;
-        private bool _PowerAttackNormal_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackNormal => _PowerAttackNormal_IsSet ? _recordData.Span[_PowerAttackNormalLocation] : default;
+        #region StandardMeleeDecisionPowerAttackNormal
+        private int _StandardMeleeDecisionPowerAttackNormalLocation => _CSTDLocation!.Value.Min + 0x40;
+        private bool _StandardMeleeDecisionPowerAttackNormal_IsSet => _CSTDLocation.HasValue;
+        public Byte StandardMeleeDecisionPowerAttackNormal => _StandardMeleeDecisionPowerAttackNormal_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackNormalLocation] : default;
         #endregion
-        #region PowerAttackForward
-        private int _PowerAttackForwardLocation => _CSTDLocation!.Value.Min + 0x41;
-        private bool _PowerAttackForward_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackForward => _PowerAttackForward_IsSet ? _recordData.Span[_PowerAttackForwardLocation] : default;
+        #region StandardMeleeDecisionPowerAttackForward
+        private int _StandardMeleeDecisionPowerAttackForwardLocation => _CSTDLocation!.Value.Min + 0x41;
+        private bool _StandardMeleeDecisionPowerAttackForward_IsSet => _CSTDLocation.HasValue;
+        public Byte StandardMeleeDecisionPowerAttackForward => _StandardMeleeDecisionPowerAttackForward_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackForwardLocation] : default;
         #endregion
-        #region PowerAttackBack
-        private int _PowerAttackBackLocation => _CSTDLocation!.Value.Min + 0x42;
-        private bool _PowerAttackBack_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackBack => _PowerAttackBack_IsSet ? _recordData.Span[_PowerAttackBackLocation] : default;
+        #region StandardMeleeDecisionPowerAttackBack
+        private int _StandardMeleeDecisionPowerAttackBackLocation => _CSTDLocation!.Value.Min + 0x42;
+        private bool _StandardMeleeDecisionPowerAttackBack_IsSet => _CSTDLocation.HasValue;
+        public Byte StandardMeleeDecisionPowerAttackBack => _StandardMeleeDecisionPowerAttackBack_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackBackLocation] : default;
         #endregion
-        #region PowerAttackLeft
-        private int _PowerAttackLeftLocation => _CSTDLocation!.Value.Min + 0x43;
-        private bool _PowerAttackLeft_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackLeft => _PowerAttackLeft_IsSet ? _recordData.Span[_PowerAttackLeftLocation] : default;
+        #region StandardMeleeDecisionPowerAttackLeft
+        private int _StandardMeleeDecisionPowerAttackLeftLocation => _CSTDLocation!.Value.Min + 0x43;
+        private bool _StandardMeleeDecisionPowerAttackLeft_IsSet => _CSTDLocation.HasValue;
+        public Byte StandardMeleeDecisionPowerAttackLeft => _StandardMeleeDecisionPowerAttackLeft_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackLeftLocation] : default;
         #endregion
-        #region PowerAttackRight
-        private int _PowerAttackRightLocation => _CSTDLocation!.Value.Min + 0x44;
-        private bool _PowerAttackRight_IsSet => _CSTDLocation.HasValue;
-        public Byte PowerAttackRight => _PowerAttackRight_IsSet ? _recordData.Span[_PowerAttackRightLocation] : default;
+        #region StandardMeleeDecisionPowerAttackRight
+        private int _StandardMeleeDecisionPowerAttackRightLocation => _CSTDLocation!.Value.Min + 0x44;
+        private bool _StandardMeleeDecisionPowerAttackRight_IsSet => _CSTDLocation.HasValue;
+        public Byte StandardMeleeDecisionPowerAttackRight => _StandardMeleeDecisionPowerAttackRight_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackRightLocation] : default;
         #endregion
-        #region Unused4
-        private int _Unused4Location => _CSTDLocation!.Value.Min + 0x45;
-        private bool _Unused4_IsSet => _CSTDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused4 => _Unused4_IsSet ? _recordData.Span.Slice(_Unused4Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region StandardUnused4
+        private int _StandardUnused4Location => _CSTDLocation!.Value.Min + 0x45;
+        private bool _StandardUnused4_IsSet => _CSTDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> StandardUnused4 => _StandardUnused4_IsSet ? _recordData.Span.Slice(_StandardUnused4Location, 3).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region HoldTimerMin
-        private int _HoldTimerMinLocation => _CSTDLocation!.Value.Min + 0x48;
-        private bool _HoldTimerMin_IsSet => _CSTDLocation.HasValue;
-        public Single HoldTimerMin => _HoldTimerMin_IsSet ? _recordData.Slice(_HoldTimerMinLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionHoldTimerMin
+        private int _StandardMeleeDecisionHoldTimerMinLocation => _CSTDLocation!.Value.Min + 0x48;
+        private bool _StandardMeleeDecisionHoldTimerMin_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionHoldTimerMin => _StandardMeleeDecisionHoldTimerMin_IsSet ? _recordData.Slice(_StandardMeleeDecisionHoldTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region HoldTimerMax
-        private int _HoldTimerMaxLocation => _CSTDLocation!.Value.Min + 0x4C;
-        private bool _HoldTimerMax_IsSet => _CSTDLocation.HasValue;
-        public Single HoldTimerMax => _HoldTimerMax_IsSet ? _recordData.Slice(_HoldTimerMaxLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionHoldTimerMax
+        private int _StandardMeleeDecisionHoldTimerMaxLocation => _CSTDLocation!.Value.Min + 0x4C;
+        private bool _StandardMeleeDecisionHoldTimerMax_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionHoldTimerMax => _StandardMeleeDecisionHoldTimerMax_IsSet ? _recordData.Slice(_StandardMeleeDecisionHoldTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region Flags
-        private int _FlagsLocation => _CSTDLocation!.Value.Min + 0x50;
-        private bool _Flags_IsSet => _CSTDLocation.HasValue;
-        public UInt16 Flags => _Flags_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FlagsLocation, 2)) : default(UInt16);
+        #region StandardFlags
+        private int _StandardFlagsLocation => _CSTDLocation!.Value.Min + 0x50;
+        private bool _StandardFlags_IsSet => _CSTDLocation.HasValue;
+        public CombatStyle.Flag StandardFlags => _StandardFlags_IsSet ? (CombatStyle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_StandardFlagsLocation, 0x2)) : default;
         #endregion
-        #region Unused5
-        private int _Unused5Location => _CSTDLocation!.Value.Min + 0x52;
-        private bool _Unused5_IsSet => _CSTDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused5 => _Unused5_IsSet ? _recordData.Span.Slice(_Unused5Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region StandardUnused5
+        private int _StandardUnused5Location => _CSTDLocation!.Value.Min + 0x52;
+        private bool _StandardUnused5_IsSet => _CSTDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> StandardUnused5 => _StandardUnused5_IsSet ? _recordData.Span.Slice(_StandardUnused5Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region AcrobaticDodgeChance
-        private int _AcrobaticDodgeChanceLocation => _CSTDLocation!.Value.Min + 0x54;
-        private bool _AcrobaticDodgeChance_IsSet => _CSTDLocation.HasValue;
-        public Byte AcrobaticDodgeChance => _AcrobaticDodgeChance_IsSet ? _recordData.Span[_AcrobaticDodgeChanceLocation] : default;
+        #region StandardMeleeDecisionAcrobaticDodgeChance
+        private int _StandardMeleeDecisionAcrobaticDodgeChanceLocation => _CSTDLocation!.Value.Min + 0x54;
+        private bool _StandardMeleeDecisionAcrobaticDodgeChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardMeleeDecisionAcrobaticDodgeChance => _StandardMeleeDecisionAcrobaticDodgeChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardMeleeDecisionAcrobaticDodgeChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region RushingAttackChance
-        private int _RushingAttackChanceLocation => _CSTDLocation!.Value.Min + 0x55;
-        private bool _RushingAttackChance_IsSet => _CSTDLocation.HasValue;
-        public Byte RushingAttackChance => _RushingAttackChance_IsSet ? _recordData.Span[_RushingAttackChanceLocation] : default;
+        #region StandardMeleeDecisionRushingAttackChance
+        private int _StandardMeleeDecisionRushingAttackChanceLocation => _CSTDLocation!.Value.Min + 0x55;
+        private bool _StandardMeleeDecisionRushingAttackChance_IsSet => _CSTDLocation.HasValue;
+        public Percent StandardMeleeDecisionRushingAttackChance => _StandardMeleeDecisionRushingAttackChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_StandardMeleeDecisionRushingAttackChanceLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
-        #region Unused6
-        private int _Unused6Location => _CSTDLocation!.Value.Min + 0x56;
-        private bool _Unused6_IsSet => _CSTDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused6 => _Unused6_IsSet ? _recordData.Span.Slice(_Unused6Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region StandardUnused6
+        private int _StandardUnused6Location => _CSTDLocation!.Value.Min + 0x56;
+        private bool _StandardUnused6_IsSet => _CSTDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> StandardUnused6 => _StandardUnused6_IsSet ? _recordData.Span.Slice(_StandardUnused6Location, 2).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region RushingAttackDistanceMult
-        private int _RushingAttackDistanceMultLocation => _CSTDLocation!.Value.Min + 0x58;
-        private bool _RushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue;
-        public Single RushingAttackDistanceMult => _RushingAttackDistanceMult_IsSet ? _recordData.Slice(_RushingAttackDistanceMultLocation, 4).Float() : default(Single);
+        #region StandardMeleeDecisionRushingAttackDistanceMult
+        private int _StandardMeleeDecisionRushingAttackDistanceMultLocation => _CSTDLocation!.Value.Min + 0x58;
+        private bool _StandardMeleeDecisionRushingAttackDistanceMult_IsSet => _CSTDLocation.HasValue;
+        public Single StandardMeleeDecisionRushingAttackDistanceMult => _StandardMeleeDecisionRushingAttackDistanceMult_IsSet ? _recordData.Slice(_StandardMeleeDecisionRushingAttackDistanceMultLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _CSADLocation;
-        #region DodgeFatigueModMult
-        private int _DodgeFatigueModMultLocation => _CSADLocation!.Value.Min;
-        private bool _DodgeFatigueModMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeFatigueModMult => _DodgeFatigueModMult_IsSet ? _recordData.Slice(_DodgeFatigueModMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeFatigueModMult
+        private int _AdvancedDodgeFatigueModMultLocation => _CSADLocation!.Value.Min;
+        private bool _AdvancedDodgeFatigueModMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeFatigueModMult => _AdvancedDodgeFatigueModMult_IsSet ? _recordData.Slice(_AdvancedDodgeFatigueModMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeFatigueModBase
-        private int _DodgeFatigueModBaseLocation => _CSADLocation!.Value.Min + 0x4;
-        private bool _DodgeFatigueModBase_IsSet => _CSADLocation.HasValue;
-        public Single DodgeFatigueModBase => _DodgeFatigueModBase_IsSet ? _recordData.Slice(_DodgeFatigueModBaseLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeFatigueModBase
+        private int _AdvancedDodgeFatigueModBaseLocation => _CSADLocation!.Value.Min + 0x4;
+        private bool _AdvancedDodgeFatigueModBase_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeFatigueModBase => _AdvancedDodgeFatigueModBase_IsSet ? _recordData.Slice(_AdvancedDodgeFatigueModBaseLocation, 4).Float() : default(Single);
         #endregion
-        #region EncumbSpeedModBase
-        private int _EncumbSpeedModBaseLocation => _CSADLocation!.Value.Min + 0x8;
-        private bool _EncumbSpeedModBase_IsSet => _CSADLocation.HasValue;
-        public Single EncumbSpeedModBase => _EncumbSpeedModBase_IsSet ? _recordData.Slice(_EncumbSpeedModBaseLocation, 4).Float() : default(Single);
+        #region AdvancedEncumbSpeedModBase
+        private int _AdvancedEncumbSpeedModBaseLocation => _CSADLocation!.Value.Min + 0x8;
+        private bool _AdvancedEncumbSpeedModBase_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedEncumbSpeedModBase => _AdvancedEncumbSpeedModBase_IsSet ? _recordData.Slice(_AdvancedEncumbSpeedModBaseLocation, 4).Float() : default(Single);
         #endregion
-        #region EncumbSpeedModMult
-        private int _EncumbSpeedModMultLocation => _CSADLocation!.Value.Min + 0xC;
-        private bool _EncumbSpeedModMult_IsSet => _CSADLocation.HasValue;
-        public Single EncumbSpeedModMult => _EncumbSpeedModMult_IsSet ? _recordData.Slice(_EncumbSpeedModMultLocation, 4).Float() : default(Single);
+        #region AdvancedEncumbSpeedModMult
+        private int _AdvancedEncumbSpeedModMultLocation => _CSADLocation!.Value.Min + 0xC;
+        private bool _AdvancedEncumbSpeedModMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedEncumbSpeedModMult => _AdvancedEncumbSpeedModMult_IsSet ? _recordData.Slice(_AdvancedEncumbSpeedModMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeWhileUnderAttackMult
-        private int _DodgeWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x10;
-        private bool _DodgeWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeWhileUnderAttackMult => _DodgeWhileUnderAttackMult_IsSet ? _recordData.Slice(_DodgeWhileUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeWhileUnderAttackMult
+        private int _AdvancedDodgeWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x10;
+        private bool _AdvancedDodgeWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeWhileUnderAttackMult => _AdvancedDodgeWhileUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedDodgeWhileUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeNotUnderAttackMult
-        private int _DodgeNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x14;
-        private bool _DodgeNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeNotUnderAttackMult => _DodgeNotUnderAttackMult_IsSet ? _recordData.Slice(_DodgeNotUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeNotUnderAttackMult
+        private int _AdvancedDodgeNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x14;
+        private bool _AdvancedDodgeNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeNotUnderAttackMult => _AdvancedDodgeNotUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedDodgeNotUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeBackWhileUnderAttackMult
-        private int _DodgeBackWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x18;
-        private bool _DodgeBackWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeBackWhileUnderAttackMult => _DodgeBackWhileUnderAttackMult_IsSet ? _recordData.Slice(_DodgeBackWhileUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeBackWhileUnderAttackMult
+        private int _AdvancedDodgeBackWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x18;
+        private bool _AdvancedDodgeBackWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeBackWhileUnderAttackMult => _AdvancedDodgeBackWhileUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedDodgeBackWhileUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeBackNotUnderAttackMult
-        private int _DodgeBackNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x1C;
-        private bool _DodgeBackNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeBackNotUnderAttackMult => _DodgeBackNotUnderAttackMult_IsSet ? _recordData.Slice(_DodgeBackNotUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeBackNotUnderAttackMult
+        private int _AdvancedDodgeBackNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x1C;
+        private bool _AdvancedDodgeBackNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeBackNotUnderAttackMult => _AdvancedDodgeBackNotUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedDodgeBackNotUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeForwardWhileAttackingMult
-        private int _DodgeForwardWhileAttackingMultLocation => _CSADLocation!.Value.Min + 0x20;
-        private bool _DodgeForwardWhileAttackingMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeForwardWhileAttackingMult => _DodgeForwardWhileAttackingMult_IsSet ? _recordData.Slice(_DodgeForwardWhileAttackingMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeForwardWhileAttackingMult
+        private int _AdvancedDodgeForwardWhileAttackingMultLocation => _CSADLocation!.Value.Min + 0x20;
+        private bool _AdvancedDodgeForwardWhileAttackingMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeForwardWhileAttackingMult => _AdvancedDodgeForwardWhileAttackingMult_IsSet ? _recordData.Slice(_AdvancedDodgeForwardWhileAttackingMultLocation, 4).Float() : default(Single);
         #endregion
-        #region DodgeForwardNotAttackingMult
-        private int _DodgeForwardNotAttackingMultLocation => _CSADLocation!.Value.Min + 0x24;
-        private bool _DodgeForwardNotAttackingMult_IsSet => _CSADLocation.HasValue;
-        public Single DodgeForwardNotAttackingMult => _DodgeForwardNotAttackingMult_IsSet ? _recordData.Slice(_DodgeForwardNotAttackingMultLocation, 4).Float() : default(Single);
+        #region AdvancedDodgeForwardNotAttackingMult
+        private int _AdvancedDodgeForwardNotAttackingMultLocation => _CSADLocation!.Value.Min + 0x24;
+        private bool _AdvancedDodgeForwardNotAttackingMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedDodgeForwardNotAttackingMult => _AdvancedDodgeForwardNotAttackingMult_IsSet ? _recordData.Slice(_AdvancedDodgeForwardNotAttackingMultLocation, 4).Float() : default(Single);
         #endregion
-        #region BlockSkillModifierMult
-        private int _BlockSkillModifierMultLocation => _CSADLocation!.Value.Min + 0x28;
-        private bool _BlockSkillModifierMult_IsSet => _CSADLocation.HasValue;
-        public Single BlockSkillModifierMult => _BlockSkillModifierMult_IsSet ? _recordData.Slice(_BlockSkillModifierMultLocation, 4).Float() : default(Single);
+        #region AdvancedBlockSkillModifierMult
+        private int _AdvancedBlockSkillModifierMultLocation => _CSADLocation!.Value.Min + 0x28;
+        private bool _AdvancedBlockSkillModifierMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedBlockSkillModifierMult => _AdvancedBlockSkillModifierMult_IsSet ? _recordData.Slice(_AdvancedBlockSkillModifierMultLocation, 4).Float() : default(Single);
         #endregion
-        #region BlockSkillModifierBase
-        private int _BlockSkillModifierBaseLocation => _CSADLocation!.Value.Min + 0x2C;
-        private bool _BlockSkillModifierBase_IsSet => _CSADLocation.HasValue;
-        public Single BlockSkillModifierBase => _BlockSkillModifierBase_IsSet ? _recordData.Slice(_BlockSkillModifierBaseLocation, 4).Float() : default(Single);
+        #region AdvancedBlockSkillModifierBase
+        private int _AdvancedBlockSkillModifierBaseLocation => _CSADLocation!.Value.Min + 0x2C;
+        private bool _AdvancedBlockSkillModifierBase_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedBlockSkillModifierBase => _AdvancedBlockSkillModifierBase_IsSet ? _recordData.Slice(_AdvancedBlockSkillModifierBaseLocation, 4).Float() : default(Single);
         #endregion
-        #region BlockWhileUnderAttackMult
-        private int _BlockWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x30;
-        private bool _BlockWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single BlockWhileUnderAttackMult => _BlockWhileUnderAttackMult_IsSet ? _recordData.Slice(_BlockWhileUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedBlockWhileUnderAttackMult
+        private int _AdvancedBlockWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x30;
+        private bool _AdvancedBlockWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedBlockWhileUnderAttackMult => _AdvancedBlockWhileUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedBlockWhileUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region BlockNotUnderAttackMult
-        private int _BlockNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x34;
-        private bool _BlockNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single BlockNotUnderAttackMult => _BlockNotUnderAttackMult_IsSet ? _recordData.Slice(_BlockNotUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedBlockNotUnderAttackMult
+        private int _AdvancedBlockNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x34;
+        private bool _AdvancedBlockNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedBlockNotUnderAttackMult => _AdvancedBlockNotUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedBlockNotUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region AttackSkillModifierMult
-        private int _AttackSkillModifierMultLocation => _CSADLocation!.Value.Min + 0x38;
-        private bool _AttackSkillModifierMult_IsSet => _CSADLocation.HasValue;
-        public Single AttackSkillModifierMult => _AttackSkillModifierMult_IsSet ? _recordData.Slice(_AttackSkillModifierMultLocation, 4).Float() : default(Single);
+        #region AdvancedAttackSkillModifierMult
+        private int _AdvancedAttackSkillModifierMultLocation => _CSADLocation!.Value.Min + 0x38;
+        private bool _AdvancedAttackSkillModifierMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedAttackSkillModifierMult => _AdvancedAttackSkillModifierMult_IsSet ? _recordData.Slice(_AdvancedAttackSkillModifierMultLocation, 4).Float() : default(Single);
         #endregion
-        #region AttackSkillModifierBase
-        private int _AttackSkillModifierBaseLocation => _CSADLocation!.Value.Min + 0x3C;
-        private bool _AttackSkillModifierBase_IsSet => _CSADLocation.HasValue;
-        public Single AttackSkillModifierBase => _AttackSkillModifierBase_IsSet ? _recordData.Slice(_AttackSkillModifierBaseLocation, 4).Float() : default(Single);
+        #region AdvancedAttackSkillModifierBase
+        private int _AdvancedAttackSkillModifierBaseLocation => _CSADLocation!.Value.Min + 0x3C;
+        private bool _AdvancedAttackSkillModifierBase_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedAttackSkillModifierBase => _AdvancedAttackSkillModifierBase_IsSet ? _recordData.Slice(_AdvancedAttackSkillModifierBaseLocation, 4).Float() : default(Single);
         #endregion
-        #region AttackWhileUnderAttackMult
-        private int _AttackWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x40;
-        private bool _AttackWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single AttackWhileUnderAttackMult => _AttackWhileUnderAttackMult_IsSet ? _recordData.Slice(_AttackWhileUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedAttackWhileUnderAttackMult
+        private int _AdvancedAttackWhileUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x40;
+        private bool _AdvancedAttackWhileUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedAttackWhileUnderAttackMult => _AdvancedAttackWhileUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedAttackWhileUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region AttackNotUnderAttackMult
-        private int _AttackNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x44;
-        private bool _AttackNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
-        public Single AttackNotUnderAttackMult => _AttackNotUnderAttackMult_IsSet ? _recordData.Slice(_AttackNotUnderAttackMultLocation, 4).Float() : default(Single);
+        #region AdvancedAttackNotUnderAttackMult
+        private int _AdvancedAttackNotUnderAttackMultLocation => _CSADLocation!.Value.Min + 0x44;
+        private bool _AdvancedAttackNotUnderAttackMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedAttackNotUnderAttackMult => _AdvancedAttackNotUnderAttackMult_IsSet ? _recordData.Slice(_AdvancedAttackNotUnderAttackMultLocation, 4).Float() : default(Single);
         #endregion
-        #region AttackDuringBlockMult
-        private int _AttackDuringBlockMultLocation => _CSADLocation!.Value.Min + 0x48;
-        private bool _AttackDuringBlockMult_IsSet => _CSADLocation.HasValue;
-        public Single AttackDuringBlockMult => _AttackDuringBlockMult_IsSet ? _recordData.Slice(_AttackDuringBlockMultLocation, 4).Float() : default(Single);
+        #region AdvancedAttackDuringBlockMult
+        private int _AdvancedAttackDuringBlockMultLocation => _CSADLocation!.Value.Min + 0x48;
+        private bool _AdvancedAttackDuringBlockMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedAttackDuringBlockMult => _AdvancedAttackDuringBlockMult_IsSet ? _recordData.Slice(_AdvancedAttackDuringBlockMultLocation, 4).Float() : default(Single);
         #endregion
-        #region PowerAttackFatigueModBase
-        private int _PowerAttackFatigueModBaseLocation => _CSADLocation!.Value.Min + 0x4C;
-        private bool _PowerAttackFatigueModBase_IsSet => _CSADLocation.HasValue;
-        public Single PowerAttackFatigueModBase => _PowerAttackFatigueModBase_IsSet ? _recordData.Slice(_PowerAttackFatigueModBaseLocation, 4).Float() : default(Single);
+        #region AdvancedPowerAttackFatigueModBase
+        private int _AdvancedPowerAttackFatigueModBaseLocation => _CSADLocation!.Value.Min + 0x4C;
+        private bool _AdvancedPowerAttackFatigueModBase_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedPowerAttackFatigueModBase => _AdvancedPowerAttackFatigueModBase_IsSet ? _recordData.Slice(_AdvancedPowerAttackFatigueModBaseLocation, 4).Float() : default(Single);
         #endregion
-        #region PowerAttackFatigueModMult
-        private int _PowerAttackFatigueModMultLocation => _CSADLocation!.Value.Min + 0x50;
-        private bool _PowerAttackFatigueModMult_IsSet => _CSADLocation.HasValue;
-        public Single PowerAttackFatigueModMult => _PowerAttackFatigueModMult_IsSet ? _recordData.Slice(_PowerAttackFatigueModMultLocation, 4).Float() : default(Single);
+        #region AdvancedPowerAttackFatigueModMult
+        private int _AdvancedPowerAttackFatigueModMultLocation => _CSADLocation!.Value.Min + 0x50;
+        private bool _AdvancedPowerAttackFatigueModMult_IsSet => _CSADLocation.HasValue;
+        public Single AdvancedPowerAttackFatigueModMult => _AdvancedPowerAttackFatigueModMult_IsSet ? _recordData.Slice(_AdvancedPowerAttackFatigueModMultLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _CSSDLocation;
-        #region CoverSearchRadius
-        private int _CoverSearchRadiusLocation => _CSSDLocation!.Value.Min;
-        private bool _CoverSearchRadius_IsSet => _CSSDLocation.HasValue;
-        public Single CoverSearchRadius => _CoverSearchRadius_IsSet ? _recordData.Slice(_CoverSearchRadiusLocation, 4).Float() : default(Single);
+        #region SimpleCoverSearchRadius
+        private int _SimpleCoverSearchRadiusLocation => _CSSDLocation!.Value.Min;
+        private bool _SimpleCoverSearchRadius_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleCoverSearchRadius => _SimpleCoverSearchRadius_IsSet ? _recordData.Slice(_SimpleCoverSearchRadiusLocation, 4).Float() : default(Single);
         #endregion
-        #region TakeCoverChance
-        private int _TakeCoverChanceLocation => _CSSDLocation!.Value.Min + 0x4;
-        private bool _TakeCoverChance_IsSet => _CSSDLocation.HasValue;
-        public Single TakeCoverChance => _TakeCoverChance_IsSet ? _recordData.Slice(_TakeCoverChanceLocation, 4).Float() : default(Single);
+        #region SimpleTakeCoverChance
+        private int _SimpleTakeCoverChanceLocation => _CSSDLocation!.Value.Min + 0x4;
+        private bool _SimpleTakeCoverChance_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleTakeCoverChance => _SimpleTakeCoverChance_IsSet ? _recordData.Slice(_SimpleTakeCoverChanceLocation, 4).Float() : default(Single);
         #endregion
-        #region WaitTimerMin
-        private int _WaitTimerMinLocation => _CSSDLocation!.Value.Min + 0x8;
-        private bool _WaitTimerMin_IsSet => _CSSDLocation.HasValue;
-        public Single WaitTimerMin => _WaitTimerMin_IsSet ? _recordData.Slice(_WaitTimerMinLocation, 4).Float() : default(Single);
+        #region SimpleWaitTimerMin
+        private int _SimpleWaitTimerMinLocation => _CSSDLocation!.Value.Min + 0x8;
+        private bool _SimpleWaitTimerMin_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleWaitTimerMin => _SimpleWaitTimerMin_IsSet ? _recordData.Slice(_SimpleWaitTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region WaitTimerMax
-        private int _WaitTimerMaxLocation => _CSSDLocation!.Value.Min + 0xC;
-        private bool _WaitTimerMax_IsSet => _CSSDLocation.HasValue;
-        public Single WaitTimerMax => _WaitTimerMax_IsSet ? _recordData.Slice(_WaitTimerMaxLocation, 4).Float() : default(Single);
+        #region SimpleWaitTimerMax
+        private int _SimpleWaitTimerMaxLocation => _CSSDLocation!.Value.Min + 0xC;
+        private bool _SimpleWaitTimerMax_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleWaitTimerMax => _SimpleWaitTimerMax_IsSet ? _recordData.Slice(_SimpleWaitTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region WaitToFireTimerMin
-        private int _WaitToFireTimerMinLocation => _CSSDLocation!.Value.Min + 0x10;
-        private bool _WaitToFireTimerMin_IsSet => _CSSDLocation.HasValue;
-        public Single WaitToFireTimerMin => _WaitToFireTimerMin_IsSet ? _recordData.Slice(_WaitToFireTimerMinLocation, 4).Float() : default(Single);
+        #region SimpleWaitToFireTimerMin
+        private int _SimpleWaitToFireTimerMinLocation => _CSSDLocation!.Value.Min + 0x10;
+        private bool _SimpleWaitToFireTimerMin_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleWaitToFireTimerMin => _SimpleWaitToFireTimerMin_IsSet ? _recordData.Slice(_SimpleWaitToFireTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region WaitToFireTimerMax
-        private int _WaitToFireTimerMaxLocation => _CSSDLocation!.Value.Min + 0x14;
-        private bool _WaitToFireTimerMax_IsSet => _CSSDLocation.HasValue;
-        public Single WaitToFireTimerMax => _WaitToFireTimerMax_IsSet ? _recordData.Slice(_WaitToFireTimerMaxLocation, 4).Float() : default(Single);
+        #region SimpleWaitToFireTimerMax
+        private int _SimpleWaitToFireTimerMaxLocation => _CSSDLocation!.Value.Min + 0x14;
+        private bool _SimpleWaitToFireTimerMax_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleWaitToFireTimerMax => _SimpleWaitToFireTimerMax_IsSet ? _recordData.Slice(_SimpleWaitToFireTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region FireTimerMin
-        private int _FireTimerMinLocation => _CSSDLocation!.Value.Min + 0x18;
-        private bool _FireTimerMin_IsSet => _CSSDLocation.HasValue;
-        public Single FireTimerMin => _FireTimerMin_IsSet ? _recordData.Slice(_FireTimerMinLocation, 4).Float() : default(Single);
+        #region SimpleFireTimerMin
+        private int _SimpleFireTimerMinLocation => _CSSDLocation!.Value.Min + 0x18;
+        private bool _SimpleFireTimerMin_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleFireTimerMin => _SimpleFireTimerMin_IsSet ? _recordData.Slice(_SimpleFireTimerMinLocation, 4).Float() : default(Single);
         #endregion
-        #region FireTimerMax
-        private int _FireTimerMaxLocation => _CSSDLocation!.Value.Min + 0x1C;
-        private bool _FireTimerMax_IsSet => _CSSDLocation.HasValue;
-        public Single FireTimerMax => _FireTimerMax_IsSet ? _recordData.Slice(_FireTimerMaxLocation, 4).Float() : default(Single);
+        #region SimpleFireTimerMax
+        private int _SimpleFireTimerMaxLocation => _CSSDLocation!.Value.Min + 0x1C;
+        private bool _SimpleFireTimerMax_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleFireTimerMax => _SimpleFireTimerMax_IsSet ? _recordData.Slice(_SimpleFireTimerMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region RangedWeaponRangeMultMin
-        private int _RangedWeaponRangeMultMinLocation => _CSSDLocation!.Value.Min + 0x20;
-        private bool _RangedWeaponRangeMultMin_IsSet => _CSSDLocation.HasValue;
-        public Single RangedWeaponRangeMultMin => _RangedWeaponRangeMultMin_IsSet ? _recordData.Slice(_RangedWeaponRangeMultMinLocation, 4).Float() : default(Single);
+        #region SimpleRangedWeaponRangeMultMin
+        private int _SimpleRangedWeaponRangeMultMinLocation => _CSSDLocation!.Value.Min + 0x20;
+        private bool _SimpleRangedWeaponRangeMultMin_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleRangedWeaponRangeMultMin => _SimpleRangedWeaponRangeMultMin_IsSet ? _recordData.Slice(_SimpleRangedWeaponRangeMultMinLocation, 4).Float() : default(Single);
         #endregion
-        #region Unused
-        private int _UnusedLocation => _CSSDLocation!.Value.Min + 0x24;
-        private bool _Unused_IsSet => _CSSDLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 4).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region SimpleUnused
+        private int _SimpleUnusedLocation => _CSSDLocation!.Value.Min + 0x24;
+        private bool _SimpleUnused_IsSet => _CSSDLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> SimpleUnused => _SimpleUnused_IsSet ? _recordData.Span.Slice(_SimpleUnusedLocation, 4).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region WeaponRestrictions
-        private int _WeaponRestrictionsLocation => _CSSDLocation!.Value.Min + 0x28;
-        private bool _WeaponRestrictions_IsSet => _CSSDLocation.HasValue;
-        public UInt32 WeaponRestrictions => _WeaponRestrictions_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_WeaponRestrictionsLocation, 4)) : default(UInt32);
+        #region SimpleWeaponRestrictions
+        private int _SimpleWeaponRestrictionsLocation => _CSSDLocation!.Value.Min + 0x28;
+        private bool _SimpleWeaponRestrictions_IsSet => _CSSDLocation.HasValue;
+        public CombatStyle.WeaponRestriction SimpleWeaponRestrictions => _SimpleWeaponRestrictions_IsSet ? (CombatStyle.WeaponRestriction)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SimpleWeaponRestrictionsLocation, 0x4)) : default;
         #endregion
-        #region RangedWeaponRangeMultMax
-        private int _RangedWeaponRangeMultMaxLocation => _CSSDLocation!.Value.Min + 0x2C;
-        private bool _RangedWeaponRangeMultMax_IsSet => _CSSDLocation.HasValue;
-        public Single RangedWeaponRangeMultMax => _RangedWeaponRangeMultMax_IsSet ? _recordData.Slice(_RangedWeaponRangeMultMaxLocation, 4).Float() : default(Single);
+        #region SimpleRangedWeaponRangeMultMax
+        private int _SimpleRangedWeaponRangeMultMaxLocation => _CSSDLocation!.Value.Min + 0x2C;
+        private bool _SimpleRangedWeaponRangeMultMax_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleRangedWeaponRangeMultMax => _SimpleRangedWeaponRangeMultMax_IsSet ? _recordData.Slice(_SimpleRangedWeaponRangeMultMaxLocation, 4).Float() : default(Single);
         #endregion
-        #region MaxTargetingFov
-        private int _MaxTargetingFovLocation => _CSSDLocation!.Value.Min + 0x30;
-        private bool _MaxTargetingFov_IsSet => _CSSDLocation.HasValue;
-        public Single MaxTargetingFov => _MaxTargetingFov_IsSet ? _recordData.Slice(_MaxTargetingFovLocation, 4).Float() : default(Single);
+        #region SimpleMaxTargetingFov
+        private int _SimpleMaxTargetingFovLocation => _CSSDLocation!.Value.Min + 0x30;
+        private bool _SimpleMaxTargetingFov_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleMaxTargetingFov => _SimpleMaxTargetingFov_IsSet ? _recordData.Slice(_SimpleMaxTargetingFovLocation, 4).Float() : default(Single);
         #endregion
-        #region CombatRadius
-        private int _CombatRadiusLocation => _CSSDLocation!.Value.Min + 0x34;
-        private bool _CombatRadius_IsSet => _CSSDLocation.HasValue;
-        public Single CombatRadius => _CombatRadius_IsSet ? _recordData.Slice(_CombatRadiusLocation, 4).Float() : default(Single);
+        #region SimpleCombatRadius
+        private int _SimpleCombatRadiusLocation => _CSSDLocation!.Value.Min + 0x34;
+        private bool _SimpleCombatRadius_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleCombatRadius => _SimpleCombatRadius_IsSet ? _recordData.Slice(_SimpleCombatRadiusLocation, 4).Float() : default(Single);
         #endregion
-        #region SemiAutoFiringDelayMultMin
-        private int _SemiAutoFiringDelayMultMinLocation => _CSSDLocation!.Value.Min + 0x38;
-        private bool _SemiAutoFiringDelayMultMin_IsSet => _CSSDLocation.HasValue;
-        public Single SemiAutoFiringDelayMultMin => _SemiAutoFiringDelayMultMin_IsSet ? _recordData.Slice(_SemiAutoFiringDelayMultMinLocation, 4).Float() : default(Single);
+        #region SimpleSemiAutoFiringDelayMultMin
+        private int _SimpleSemiAutoFiringDelayMultMinLocation => _CSSDLocation!.Value.Min + 0x38;
+        private bool _SimpleSemiAutoFiringDelayMultMin_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleSemiAutoFiringDelayMultMin => _SimpleSemiAutoFiringDelayMultMin_IsSet ? _recordData.Slice(_SimpleSemiAutoFiringDelayMultMinLocation, 4).Float() : default(Single);
         #endregion
-        #region SemiAutoFiringDelayMultMax
-        private int _SemiAutoFiringDelayMultMaxLocation => _CSSDLocation!.Value.Min + 0x3C;
-        private bool _SemiAutoFiringDelayMultMax_IsSet => _CSSDLocation.HasValue;
-        public Single SemiAutoFiringDelayMultMax => _SemiAutoFiringDelayMultMax_IsSet ? _recordData.Slice(_SemiAutoFiringDelayMultMaxLocation, 4).Float() : default(Single);
+        #region SimpleSemiAutoFiringDelayMultMax
+        private int _SimpleSemiAutoFiringDelayMultMaxLocation => _CSSDLocation!.Value.Min + 0x3C;
+        private bool _SimpleSemiAutoFiringDelayMultMax_IsSet => _CSSDLocation.HasValue;
+        public Single SimpleSemiAutoFiringDelayMultMax => _SimpleSemiAutoFiringDelayMultMax_IsSet ? _recordData.Slice(_SimpleSemiAutoFiringDelayMultMaxLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -5839,17 +5884,17 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.CSTD:
                 {
                     _CSTDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.RushingAttackDistanceMult;
+                    return (int)CombatStyle_FieldIndex.StandardMeleeDecisionRushingAttackDistanceMult;
                 }
                 case RecordTypeInts.CSAD:
                 {
                     _CSADLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.PowerAttackFatigueModMult;
+                    return (int)CombatStyle_FieldIndex.AdvancedPowerAttackFatigueModMult;
                 }
                 case RecordTypeInts.CSSD:
                 {
                     _CSSDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.SemiAutoFiringDelayMultMax;
+                    return (int)CombatStyle_FieldIndex.SimpleSemiAutoFiringDelayMultMax;
                 }
                 default:
                     return base.FillRecordType(

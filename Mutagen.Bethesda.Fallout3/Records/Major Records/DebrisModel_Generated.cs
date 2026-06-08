@@ -53,13 +53,13 @@ namespace Mutagen.Bethesda.Fallout3
         #region Percentage
         public Byte Percentage { get; set; } = default(Byte);
         #endregion
-        #region ModelFilename
-        public String ModelFilename { get; set; } = string.Empty;
+        #region ModelFileName
+        public String ModelFileName { get; set; } = string.Empty;
         #endregion
         #region HasCollision
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _HasCollision;
-        public Byte HasCollision
+        private Boolean _HasCollision;
+        public Boolean HasCollision
         {
             get => this._HasCollision;
             set
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.Percentage = initialValue;
-                this.ModelFilename = initialValue;
+                this.ModelFileName = initialValue;
                 this.HasCollision = initialValue;
                 this.TextureFileHashes = initialValue;
                 this.DATADataTypeState = initialValue;
@@ -131,13 +131,13 @@ namespace Mutagen.Bethesda.Fallout3
 
             public Mask(
                 TItem Percentage,
-                TItem ModelFilename,
+                TItem ModelFileName,
                 TItem HasCollision,
                 TItem TextureFileHashes,
                 TItem DATADataTypeState)
             {
                 this.Percentage = Percentage;
-                this.ModelFilename = ModelFilename;
+                this.ModelFileName = ModelFileName;
                 this.HasCollision = HasCollision;
                 this.TextureFileHashes = TextureFileHashes;
                 this.DATADataTypeState = DATADataTypeState;
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Percentage;
-            public TItem ModelFilename;
+            public TItem ModelFileName;
             public TItem HasCollision;
             public TItem TextureFileHashes;
             public TItem DATADataTypeState;
@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Percentage, rhs.Percentage)) return false;
-                if (!object.Equals(this.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(this.ModelFileName, rhs.ModelFileName)) return false;
                 if (!object.Equals(this.HasCollision, rhs.HasCollision)) return false;
                 if (!object.Equals(this.TextureFileHashes, rhs.TextureFileHashes)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.Percentage);
-                hash.Add(this.ModelFilename);
+                hash.Add(this.ModelFileName);
                 hash.Add(this.HasCollision);
                 hash.Add(this.TextureFileHashes);
                 hash.Add(this.DATADataTypeState);
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Percentage)) return false;
-                if (!eval(this.ModelFilename)) return false;
+                if (!eval(this.ModelFileName)) return false;
                 if (!eval(this.HasCollision)) return false;
                 if (!eval(this.TextureFileHashes)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Percentage)) return true;
-                if (eval(this.ModelFilename)) return true;
+                if (eval(this.ModelFileName)) return true;
                 if (eval(this.HasCollision)) return true;
                 if (eval(this.TextureFileHashes)) return true;
                 if (eval(this.DATADataTypeState)) return true;
@@ -224,7 +224,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Percentage = eval(this.Percentage);
-                obj.ModelFilename = eval(this.ModelFilename);
+                obj.ModelFileName = eval(this.ModelFileName);
                 obj.HasCollision = eval(this.HasCollision);
                 obj.TextureFileHashes = eval(this.TextureFileHashes);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
@@ -250,9 +250,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Percentage, "Percentage");
                     }
-                    if (printMask?.ModelFilename ?? true)
+                    if (printMask?.ModelFileName ?? true)
                     {
-                        sb.AppendItem(ModelFilename, "ModelFilename");
+                        sb.AppendItem(ModelFileName, "ModelFileName");
                     }
                     if (printMask?.HasCollision ?? true)
                     {
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public Exception? Percentage;
-            public Exception? ModelFilename;
+            public Exception? ModelFileName;
             public Exception? HasCollision;
             public Exception? TextureFileHashes;
             public Exception? DATADataTypeState;
@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case DebrisModel_FieldIndex.Percentage:
                         return Percentage;
-                    case DebrisModel_FieldIndex.ModelFilename:
-                        return ModelFilename;
+                    case DebrisModel_FieldIndex.ModelFileName:
+                        return ModelFileName;
                     case DebrisModel_FieldIndex.HasCollision:
                         return HasCollision;
                     case DebrisModel_FieldIndex.TextureFileHashes:
@@ -326,8 +326,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case DebrisModel_FieldIndex.Percentage:
                         this.Percentage = ex;
                         break;
-                    case DebrisModel_FieldIndex.ModelFilename:
-                        this.ModelFilename = ex;
+                    case DebrisModel_FieldIndex.ModelFileName:
+                        this.ModelFileName = ex;
                         break;
                     case DebrisModel_FieldIndex.HasCollision:
                         this.HasCollision = ex;
@@ -351,8 +351,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case DebrisModel_FieldIndex.Percentage:
                         this.Percentage = (Exception?)obj;
                         break;
-                    case DebrisModel_FieldIndex.ModelFilename:
-                        this.ModelFilename = (Exception?)obj;
+                    case DebrisModel_FieldIndex.ModelFileName:
+                        this.ModelFileName = (Exception?)obj;
                         break;
                     case DebrisModel_FieldIndex.HasCollision:
                         this.HasCollision = (Exception?)obj;
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Percentage != null) return true;
-                if (ModelFilename != null) return true;
+                if (ModelFileName != null) return true;
                 if (HasCollision != null) return true;
                 if (TextureFileHashes != null) return true;
                 if (DATADataTypeState != null) return true;
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Percentage, "Percentage");
                 }
                 {
-                    sb.AppendItem(ModelFilename, "ModelFilename");
+                    sb.AppendItem(ModelFileName, "ModelFileName");
                 }
                 {
                     sb.AppendItem(HasCollision, "HasCollision");
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Percentage = this.Percentage.Combine(rhs.Percentage);
-                ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
+                ret.ModelFileName = this.ModelFileName.Combine(rhs.ModelFileName);
                 ret.HasCollision = this.HasCollision.Combine(rhs.HasCollision);
                 ret.TextureFileHashes = this.TextureFileHashes.Combine(rhs.TextureFileHashes);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Percentage;
-            public bool ModelFilename;
+            public bool ModelFileName;
             public bool HasCollision;
             public bool TextureFileHashes;
             public bool DATADataTypeState;
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Percentage = defaultOn;
-                this.ModelFilename = defaultOn;
+                this.ModelFileName = defaultOn;
                 this.HasCollision = defaultOn;
                 this.TextureFileHashes = defaultOn;
                 this.DATADataTypeState = defaultOn;
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Percentage, null));
-                ret.Add((ModelFilename, null));
+                ret.Add((ModelFileName, null));
                 ret.Add((HasCollision, null));
                 ret.Add((TextureFileHashes, null));
                 ret.Add((DATADataTypeState, null));
@@ -572,8 +572,8 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IDebrisModel>
     {
         new Byte Percentage { get; set; }
-        new String ModelFilename { get; set; }
-        new Byte HasCollision { get; set; }
+        new String ModelFileName { get; set; }
+        new Boolean HasCollision { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
         new DebrisModel.DATADataType DATADataTypeState { get; set; }
     }
@@ -591,8 +591,8 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         Byte Percentage { get; }
-        String ModelFilename { get; }
-        Byte HasCollision { get; }
+        String ModelFileName { get; }
+        Boolean HasCollision { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
         DebrisModel.DATADataType DATADataTypeState { get; }
 
@@ -765,7 +765,7 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum DebrisModel_FieldIndex
     {
         Percentage = 0,
-        ModelFilename = 1,
+        ModelFileName = 1,
         HasCollision = 2,
         TextureFileHashes = 3,
         DATADataTypeState = 4,
@@ -860,8 +860,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Percentage = default(Byte);
-            item.ModelFilename = string.Empty;
-            item.HasCollision = default(Byte);
+            item.ModelFileName = string.Empty;
+            item.HasCollision = default(Boolean);
             item.TextureFileHashes = default;
             item.DATADataTypeState = default(DebrisModel.DATADataType);
         }
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Percentage = item.Percentage == rhs.Percentage;
-            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.ModelFileName = string.Equals(item.ModelFileName, rhs.ModelFileName);
             ret.HasCollision = item.HasCollision == rhs.HasCollision;
             ret.TextureFileHashes = MemorySliceExt.SequenceEqual(item.TextureFileHashes, rhs.TextureFileHashes);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -967,9 +967,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Percentage, "Percentage");
             }
-            if (printMask?.ModelFilename ?? true)
+            if (printMask?.ModelFileName ?? true)
             {
-                sb.AppendItem(item.ModelFilename, "ModelFilename");
+                sb.AppendItem(item.ModelFileName, "ModelFileName");
             }
             if (printMask?.HasCollision ?? true)
             {
@@ -997,9 +997,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Percentage != rhs.Percentage) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFileName) ?? true))
             {
-                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+                if (!string.Equals(lhs.ModelFileName, rhs.ModelFileName)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.HasCollision) ?? true))
             {
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.Percentage);
-            hash.Add(item.ModelFilename);
+            hash.Add(item.ModelFileName);
             hash.Add(item.HasCollision);
             if (item.TextureFileHashes is {} TextureFileHashesItem)
             {
@@ -1063,9 +1063,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Percentage = rhs.Percentage;
             }
-            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFileName) ?? true))
             {
-                item.ModelFilename = rhs.ModelFilename;
+                item.ModelFileName = rhs.ModelFileName;
             }
             if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.HasCollision) ?? true))
             {
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer.Write(item.Percentage);
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ModelFilename,
+                    item: item.ModelFileName,
                     binaryType: StringBinaryType.NullTerminate);
                 if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
                 {
@@ -1275,17 +1275,17 @@ namespace Mutagen.Bethesda.Fallout3
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
                     item.Percentage = dataFrame.ReadUInt8();
-                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                    item.ModelFileName = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
-                        return (int)DebrisModel_FieldIndex.ModelFilename;
+                        return (int)DebrisModel_FieldIndex.ModelFileName;
                     }
                     if (dataFrame.Remaining < 1) return null;
-                    item.HasCollision = dataFrame.ReadUInt8();
+                    item.HasCollision = dataFrame.ReadBoolean();
                     return (int)DebrisModel_FieldIndex.HasCollision;
                 }
                 case RecordTypeInts.MODT:
@@ -1369,14 +1369,14 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _Percentage_IsSet => _DATALocation.HasValue;
         public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default;
         #endregion
-        #region ModelFilename
-        public String ModelFilename { get; private set; } = string.Empty;
-        protected int ModelFilenameEndingPos;
+        #region ModelFileName
+        public String ModelFileName { get; private set; } = string.Empty;
+        protected int ModelFileNameEndingPos;
         #endregion
         #region HasCollision
-        private int _HasCollisionLocation => ModelFilenameEndingPos;
+        private int _HasCollisionLocation => ModelFileNameEndingPos;
         private bool _HasCollision_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0);
-        public Byte HasCollision => _HasCollision_IsSet ? _recordData.Span[_HasCollisionLocation] : default;
+        public Boolean HasCollision => _HasCollision_IsSet ? _recordData.Slice(_HasCollisionLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region TextureFileHashes
         private int? _TextureFileHashesLocation;
@@ -1419,8 +1419,8 @@ namespace Mutagen.Bethesda.Fallout3
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
+            ret.ModelFileName = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
+            ret.ModelFileNameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFileName.Length + 1;
             return ret;
         }
 
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.HasCollision, translationParams)) return ParseResult.Stop;
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= ModelFilenameEndingPos)
+                    if (subLen <= ModelFileNameEndingPos)
                     {
                         this.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                     }

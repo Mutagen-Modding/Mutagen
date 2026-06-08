@@ -198,16 +198,6 @@ namespace Mutagen.Bethesda.Fallout3
         #region SoundLevel
         public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
-        #region ImageSpaceAdapterRef
-        private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceAdapterRef = new FormLinkNullable<IImageSpaceAdapterGetter>();
-        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceAdapterRef
-        {
-            get => _ImageSpaceAdapterRef;
-            set => _ImageSpaceAdapterRef.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IExplosionGetter.ImageSpaceAdapterRef => this.ImageSpaceAdapterRef;
-        #endregion
         #region PlacedImpactObject
         private readonly IFormLinkNullable<IExplodeSpawnGetter> _PlacedImpactObject = new FormLinkNullable<IExplodeSpawnGetter>();
         public IFormLinkNullable<IExplodeSpawnGetter> PlacedImpactObject
@@ -261,7 +251,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RadiationDissipationTime = initialValue;
                 this.RadiationRadius = initialValue;
                 this.SoundLevel = initialValue;
-                this.ImageSpaceAdapterRef = initialValue;
                 this.PlacedImpactObject = initialValue;
             }
 
@@ -291,7 +280,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem RadiationDissipationTime,
                 TItem RadiationRadius,
                 TItem SoundLevel,
-                TItem ImageSpaceAdapterRef,
                 TItem PlacedImpactObject)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -320,7 +308,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RadiationDissipationTime = RadiationDissipationTime;
                 this.RadiationRadius = RadiationRadius;
                 this.SoundLevel = SoundLevel;
-                this.ImageSpaceAdapterRef = ImageSpaceAdapterRef;
                 this.PlacedImpactObject = PlacedImpactObject;
             }
 
@@ -351,7 +338,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem RadiationDissipationTime;
             public TItem RadiationRadius;
             public TItem SoundLevel;
-            public TItem ImageSpaceAdapterRef;
             public TItem PlacedImpactObject;
             #endregion
 
@@ -384,7 +370,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.RadiationDissipationTime, rhs.RadiationDissipationTime)) return false;
                 if (!object.Equals(this.RadiationRadius, rhs.RadiationRadius)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
-                if (!object.Equals(this.ImageSpaceAdapterRef, rhs.ImageSpaceAdapterRef)) return false;
                 if (!object.Equals(this.PlacedImpactObject, rhs.PlacedImpactObject)) return false;
                 return true;
             }
@@ -409,7 +394,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.RadiationDissipationTime);
                 hash.Add(this.RadiationRadius);
                 hash.Add(this.SoundLevel);
-                hash.Add(this.ImageSpaceAdapterRef);
                 hash.Add(this.PlacedImpactObject);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -447,7 +431,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.RadiationDissipationTime)) return false;
                 if (!eval(this.RadiationRadius)) return false;
                 if (!eval(this.SoundLevel)) return false;
-                if (!eval(this.ImageSpaceAdapterRef)) return false;
                 if (!eval(this.PlacedImpactObject)) return false;
                 return true;
             }
@@ -483,7 +466,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.RadiationDissipationTime)) return true;
                 if (eval(this.RadiationRadius)) return true;
                 if (eval(this.SoundLevel)) return true;
-                if (eval(this.ImageSpaceAdapterRef)) return true;
                 if (eval(this.PlacedImpactObject)) return true;
                 return false;
             }
@@ -518,7 +500,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.RadiationDissipationTime = eval(this.RadiationDissipationTime);
                 obj.RadiationRadius = eval(this.RadiationRadius);
                 obj.SoundLevel = eval(this.SoundLevel);
-                obj.ImageSpaceAdapterRef = eval(this.ImageSpaceAdapterRef);
                 obj.PlacedImpactObject = eval(this.PlacedImpactObject);
             }
             #endregion
@@ -610,10 +591,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.ImageSpaceAdapterRef ?? true)
-                    {
-                        sb.AppendItem(ImageSpaceAdapterRef, "ImageSpaceAdapterRef");
-                    }
                     if (printMask?.PlacedImpactObject ?? true)
                     {
                         sb.AppendItem(PlacedImpactObject, "PlacedImpactObject");
@@ -647,7 +624,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? RadiationDissipationTime;
             public Exception? RadiationRadius;
             public Exception? SoundLevel;
-            public Exception? ImageSpaceAdapterRef;
             public Exception? PlacedImpactObject;
             #endregion
 
@@ -693,8 +669,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return RadiationRadius;
                     case Explosion_FieldIndex.SoundLevel:
                         return SoundLevel;
-                    case Explosion_FieldIndex.ImageSpaceAdapterRef:
-                        return ImageSpaceAdapterRef;
                     case Explosion_FieldIndex.PlacedImpactObject:
                         return PlacedImpactObject;
                     default:
@@ -760,9 +734,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Explosion_FieldIndex.SoundLevel:
                         this.SoundLevel = ex;
-                        break;
-                    case Explosion_FieldIndex.ImageSpaceAdapterRef:
-                        this.ImageSpaceAdapterRef = ex;
                         break;
                     case Explosion_FieldIndex.PlacedImpactObject:
                         this.PlacedImpactObject = ex;
@@ -832,9 +803,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case Explosion_FieldIndex.SoundLevel:
                         this.SoundLevel = (Exception?)obj;
                         break;
-                    case Explosion_FieldIndex.ImageSpaceAdapterRef:
-                        this.ImageSpaceAdapterRef = (Exception?)obj;
-                        break;
                     case Explosion_FieldIndex.PlacedImpactObject:
                         this.PlacedImpactObject = (Exception?)obj;
                         break;
@@ -865,7 +833,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (RadiationDissipationTime != null) return true;
                 if (RadiationRadius != null) return true;
                 if (SoundLevel != null) return true;
-                if (ImageSpaceAdapterRef != null) return true;
                 if (PlacedImpactObject != null) return true;
                 return false;
             }
@@ -944,9 +911,6 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(SoundLevel, "SoundLevel");
                 }
                 {
-                    sb.AppendItem(ImageSpaceAdapterRef, "ImageSpaceAdapterRef");
-                }
-                {
                     sb.AppendItem(PlacedImpactObject, "PlacedImpactObject");
                 }
             }
@@ -975,7 +939,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.RadiationDissipationTime = this.RadiationDissipationTime.Combine(rhs.RadiationDissipationTime);
                 ret.RadiationRadius = this.RadiationRadius.Combine(rhs.RadiationRadius);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.ImageSpaceAdapterRef = this.ImageSpaceAdapterRef.Combine(rhs.ImageSpaceAdapterRef);
                 ret.PlacedImpactObject = this.PlacedImpactObject.Combine(rhs.PlacedImpactObject);
                 return ret;
             }
@@ -1017,7 +980,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool RadiationDissipationTime;
             public bool RadiationRadius;
             public bool SoundLevel;
-            public bool ImageSpaceAdapterRef;
             public bool PlacedImpactObject;
             #endregion
 
@@ -1043,7 +1005,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.RadiationDissipationTime = defaultOn;
                 this.RadiationRadius = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.ImageSpaceAdapterRef = defaultOn;
                 this.PlacedImpactObject = defaultOn;
             }
 
@@ -1070,7 +1031,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((RadiationDissipationTime, null));
                 ret.Add((RadiationRadius, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((ImageSpaceAdapterRef, null));
                 ret.Add((PlacedImpactObject, null));
             }
 
@@ -1239,7 +1199,6 @@ namespace Mutagen.Bethesda.Fallout3
         new Single RadiationDissipationTime { get; set; }
         new Single RadiationRadius { get; set; }
         new SoundLevel SoundLevel { get; set; }
-        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceAdapterRef { get; set; }
         new IFormLinkNullable<IExplodeSpawnGetter> PlacedImpactObject { get; set; }
     }
 
@@ -1296,7 +1255,6 @@ namespace Mutagen.Bethesda.Fallout3
         Single RadiationDissipationTime { get; }
         Single RadiationRadius { get; }
         SoundLevel SoundLevel { get; }
-        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapterRef { get; }
         IFormLinkNullableGetter<IExplodeSpawnGetter> PlacedImpactObject { get; }
 
     }
@@ -1492,8 +1450,7 @@ namespace Mutagen.Bethesda.Fallout3
         RadiationDissipationTime = 22,
         RadiationRadius = 23,
         SoundLevel = 24,
-        ImageSpaceAdapterRef = 25,
-        PlacedImpactObject = 26,
+        PlacedImpactObject = 25,
     }
     #endregion
 
@@ -1504,9 +1461,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 26;
 
         public static readonly Type MaskType = typeof(Explosion.Mask<>);
 
@@ -1549,7 +1506,6 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.EITM,
                 RecordTypes.MNAM,
                 RecordTypes.DATA,
-                RecordTypes.IMAD,
                 RecordTypes.INAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1613,7 +1569,6 @@ namespace Mutagen.Bethesda.Fallout3
             item.RadiationDissipationTime = default(Single);
             item.RadiationRadius = default(Single);
             item.SoundLevel = default(SoundLevel);
-            item.ImageSpaceAdapterRef.Clear();
             item.PlacedImpactObject.Clear();
             base.Clear(item);
         }
@@ -1639,7 +1594,6 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Sound1.Relink(mapping);
             obj.ImpactDataSet.Relink(mapping);
             obj.Sound2.Relink(mapping);
-            obj.ImageSpaceAdapterRef.Relink(mapping);
             obj.PlacedImpactObject.Relink(mapping);
         }
         
@@ -1730,7 +1684,6 @@ namespace Mutagen.Bethesda.Fallout3
             ret.RadiationDissipationTime = item.RadiationDissipationTime.EqualsWithin(rhs.RadiationDissipationTime);
             ret.RadiationRadius = item.RadiationRadius.EqualsWithin(rhs.RadiationRadius);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
-            ret.ImageSpaceAdapterRef = item.ImageSpaceAdapterRef.Equals(rhs.ImageSpaceAdapterRef);
             ret.PlacedImpactObject = item.PlacedImpactObject.Equals(rhs.PlacedImpactObject);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1854,10 +1807,6 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.SoundLevel ?? true)
             {
                 sb.AppendItem(item.SoundLevel, "SoundLevel");
-            }
-            if (printMask?.ImageSpaceAdapterRef ?? true)
-            {
-                sb.AppendItem(item.ImageSpaceAdapterRef.FormKeyNullable, "ImageSpaceAdapterRef");
             }
             if (printMask?.PlacedImpactObject ?? true)
             {
@@ -1993,10 +1942,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceAdapterRef) ?? true))
-            {
-                if (!lhs.ImageSpaceAdapterRef.Equals(rhs.ImageSpaceAdapterRef)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedImpactObject) ?? true))
             {
                 if (!lhs.PlacedImpactObject.Equals(rhs.PlacedImpactObject)) return false;
@@ -2053,7 +1998,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.RadiationDissipationTime);
             hash.Add(item.RadiationRadius);
             hash.Add(item.SoundLevel);
-            hash.Add(item.ImageSpaceAdapterRef);
             hash.Add(item.PlacedImpactObject);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2103,10 +2047,6 @@ namespace Mutagen.Bethesda.Fallout3
             yield return FormLinkInformation.Factory(obj.Sound1);
             yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             yield return FormLinkInformation.Factory(obj.Sound2);
-            if (FormLinkInformation.TryFactory(obj.ImageSpaceAdapterRef, out var ImageSpaceAdapterRefInfo))
-            {
-                yield return ImageSpaceAdapterRefInfo;
-            }
             if (FormLinkInformation.TryFactory(obj.PlacedImpactObject, out var PlacedImpactObjectInfo))
             {
                 yield return PlacedImpactObjectInfo;
@@ -2296,10 +2236,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.SoundLevel) ?? true))
             {
                 item.SoundLevel = rhs.SoundLevel;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.ImageSpaceAdapterRef) ?? true))
-            {
-                item.ImageSpaceAdapterRef.SetTo(rhs.ImageSpaceAdapterRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Explosion_FieldIndex.PlacedImpactObject) ?? true))
             {
@@ -2545,10 +2481,6 @@ namespace Mutagen.Bethesda.Fallout3
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ImageSpaceAdapterRef,
-                header: translationParams.ConvertToCustom(RecordTypes.IMAD));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
                 item: item.PlacedImpactObject,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
         }
@@ -2691,12 +2623,6 @@ namespace Mutagen.Bethesda.Fallout3
                         reader: dataFrame,
                         length: 4);
                     return (int)Explosion_FieldIndex.SoundLevel;
-                }
-                case RecordTypeInts.IMAD:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceAdapterRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Explosion_FieldIndex.ImageSpaceAdapterRef;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -2851,10 +2777,6 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
         public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
-        #region ImageSpaceAdapterRef
-        private int? _ImageSpaceAdapterRefLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapterRef => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceAdapterRefLocation);
-        #endregion
         #region PlacedImpactObject
         private int? _PlacedImpactObjectLocation;
         public IFormLinkNullableGetter<IExplodeSpawnGetter> PlacedImpactObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExplodeSpawnGetter>(_package, _recordData, _PlacedImpactObjectLocation);
@@ -2964,11 +2886,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)Explosion_FieldIndex.SoundLevel;
-                }
-                case RecordTypeInts.IMAD:
-                {
-                    _ImageSpaceAdapterRefLocation = (stream.Position - offset);
-                    return (int)Explosion_FieldIndex.ImageSpaceAdapterRef;
                 }
                 case RecordTypeInts.INAM:
                 {

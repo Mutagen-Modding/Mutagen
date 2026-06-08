@@ -80,14 +80,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         #endregion
         #region LoadScreenType
-        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _LoadScreenType = new FormLinkNullable<IFallout3MajorRecordGetter>();
-        public IFormLinkNullable<IFallout3MajorRecordGetter> LoadScreenType
+        private readonly IFormLinkNullable<ILoadScreenTypeGetter> _LoadScreenType = new FormLinkNullable<ILoadScreenTypeGetter>();
+        public IFormLinkNullable<ILoadScreenTypeGetter> LoadScreenType
         {
             get => _LoadScreenType;
             set => _LoadScreenType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> ILoadScreenGetter.LoadScreenType => this.LoadScreenType;
+        IFormLinkNullableGetter<ILoadScreenTypeGetter> ILoadScreenGetter.LoadScreenType => this.LoadScreenType;
         #endregion
 
         #region To String
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Fallout3
         new String? SmallIconFilename { get; set; }
         new String Description { get; set; }
         new ExtendedList<LoadScreenLocation> Locations { get; }
-        new IFormLinkNullable<IFallout3MajorRecordGetter> LoadScreenType { get; set; }
+        new IFormLinkNullable<ILoadScreenTypeGetter> LoadScreenType { get; set; }
         #region Mutagen
         new LoadScreen.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Fallout3
         String? SmallIconFilename { get; }
         String Description { get; }
         IReadOnlyList<ILoadScreenLocationGetter> Locations { get; }
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> LoadScreenType { get; }
+        IFormLinkNullableGetter<ILoadScreenTypeGetter> LoadScreenType { get; }
 
         #region Mutagen
         LoadScreen.MajorFlag MajorFlags { get; }
@@ -1631,10 +1631,13 @@ namespace Mutagen.Bethesda.Fallout3
                         writer: subWriter,
                         translationParams: conv);
                 });
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.LoadScreenType,
-                header: translationParams.ConvertToCustom(RecordTypes.WMI1));
+            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            {
+                FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.LoadScreenType,
+                    header: translationParams.ConvertToCustom(RecordTypes.WMI1));
+            }
         }
 
         public void Write(
@@ -1742,8 +1745,11 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.WMI1:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadScreenType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.LoadScreenType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LoadScreen_FieldIndex.LoadScreenType;
                 }
                 default:
@@ -1821,7 +1827,7 @@ namespace Mutagen.Bethesda.Fallout3
         public IReadOnlyList<ILoadScreenLocationGetter> Locations { get; private set; } = [];
         #region LoadScreenType
         private int? _LoadScreenTypeLocation;
-        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> LoadScreenType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _LoadScreenTypeLocation);
+        public IFormLinkNullableGetter<ILoadScreenTypeGetter> LoadScreenType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILoadScreenTypeGetter>(_package, _recordData, _LoadScreenTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

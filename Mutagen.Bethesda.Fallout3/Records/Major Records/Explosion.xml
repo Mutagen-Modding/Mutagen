@@ -25,7 +25,6 @@
           <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
         </Fields>
       </Data>
-      <FormLink name="ImageSpaceAdapterRef" refName="ImageSpaceAdapter" recordType="IMAD" />
       <FormLink name="PlacedImpactObject" recordType="INAM">
         <Interface>IExplodeSpawn</Interface>
       </FormLink>

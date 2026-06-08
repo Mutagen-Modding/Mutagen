@@ -3,7 +3,7 @@
   <Object name="Debris" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="DEBR">
     <Fields>
-      <RefList name="Models" refName="DebrisModel" />
+      <RefList name="Models" refName="DebrisModel" nullable="False" />
     </Fields>
   </Object>
   <Object name="DebrisModel" objType="Subrecord">
@@ -11,9 +11,9 @@
       <Data>
         <Fields>
           <UInt8 name="Percentage" />
-          <String name="ModelFilename" binaryType="NullTerminate" />
+          <String name="ModelFileName" binaryType="NullTerminate" />
           <Break />
-          <UInt8 name="HasCollision" />
+          <Bool name="HasCollision" byteLength="1" />
         </Fields>
       </Data>
       <ByteArray name="TextureFileHashes" recordType="MODT" />

@@ -7,7 +7,9 @@
       <String name="SmallIconFilename" recordType="MICO" />
       <String name="Description" recordType="DESC" nullable="False" />
       <RefList name="Locations" refName="LoadScreenLocation" />
-      <FormLink name="LoadScreenType" recordType="WMI1" refName="Fallout3MajorRecord" />
+      <FormLink name="LoadScreenType" recordType="WMI1" refName="LoadScreenType">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
     </Fields>
   </Object>
   <Object name="LoadScreenLocation" objType="Subrecord" recordType="LNAM">

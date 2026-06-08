@@ -4,8 +4,7 @@
           recordType="ANIO">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="IdleAnimation" recordType="DATA" refName="IdleAnimation" />
-      <FormLink name="UnloadAnimation" refName="IdleAnimation" recordType="IDLE" />
+      <FormLink name="Animation" recordType="DATA" refName="IdleAnimation" />
     </Fields>
   </Object>
 </Loqui>

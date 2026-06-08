@@ -3,90 +3,90 @@
   <Object name="CombatStyle" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="CSTY">
     <Fields>
-      <Data recordType="CSTD" nullable="False">
+      <Data recordType="CSTD">
         <Fields>
-          <UInt8 name="DodgeChance" />
-          <UInt8 name="LeftRightChance" />
-          <ByteArray name="Unused1" byteLength="2" nullable="False" />
-          <Float name="DodgeLRTimerMin" />
-          <Float name="DodgeLRTimerMax" />
-          <Float name="DodgeForwardTimerMin" />
-          <Float name="DodgeForwardTimerMax" />
-          <Float name="DodgeBackTimerMin" />
-          <Float name="DodgeBackTimerMax" />
-          <Float name="IdleTimerMin" />
-          <Float name="IdleTimerMax" />
-          <UInt8 name="BlockChance" />
-          <UInt8 name="AttackChance" />
-          <ByteArray name="Unused2" byteLength="2" nullable="False" />
-          <Float name="RecoilStaggerBonusToAttack" />
-          <Float name="UnconsciousBonusToAttack" />
-          <Float name="HandToHandBonusToAttack" />
-          <UInt8 name="PowerAttackChance" />
-          <ByteArray name="Unused3" byteLength="3" nullable="False" />
-          <Float name="RecoilStaggerBonusToPowerAttack" />
-          <Float name="UnconsciousBonusToPowerAttack" />
-          <UInt8 name="PowerAttackNormal" />
-          <UInt8 name="PowerAttackForward" />
-          <UInt8 name="PowerAttackBack" />
-          <UInt8 name="PowerAttackLeft" />
-          <UInt8 name="PowerAttackRight" />
-          <ByteArray name="Unused4" byteLength="3" nullable="False" />
-          <Float name="HoldTimerMin" />
-          <Float name="HoldTimerMax" />
-          <UInt16 name="Flags" />
-          <ByteArray name="Unused5" byteLength="2" nullable="False" />
-          <UInt8 name="AcrobaticDodgeChance" />
-          <UInt8 name="RushingAttackChance" />
-          <ByteArray name="Unused6" byteLength="2" nullable="False" />
-          <Float name="RushingAttackDistanceMult" />
+          <Percent name="StandardManeuverDecisionDodgeChance" integerType="Byte" />
+          <Percent name="StandardManeuverDecisionLeftRightChance" integerType="Byte" />
+          <ByteArray name="StandardUnused1" byteLength="2" nullable="False" />
+          <Float name="StandardManeuverDecisionDodgeLRTimerMin" />
+          <Float name="StandardManeuverDecisionDodgeLRTimerMax" />
+          <Float name="StandardManeuverDecisionDodgeForwardTimerMin" />
+          <Float name="StandardManeuverDecisionDodgeForwardTimerMax" />
+          <Float name="StandardManeuverDecisionDodgeBackTimerMin" />
+          <Float name="StandardManeuverDecisionDodgeBackTimerMax" />
+          <Float name="StandardManeuverDecisionIdleTimerMin" />
+          <Float name="StandardManeuverDecisionIdleTimerMax" />
+          <Percent name="StandardMeleeDecisionBlockChance" integerType="Byte" />
+          <Percent name="StandardMeleeDecisionAttackChance" integerType="Byte" />
+          <ByteArray name="StandardUnused2" byteLength="2" nullable="False" />
+          <Float name="StandardMeleeDecisionRecoilStaggerBonusToAttack" />
+          <Float name="StandardMeleeDecisionUnconsciousBonusToAttack" />
+          <Float name="StandardMeleeDecisionHandToHandBonusToAttack" />
+          <Percent name="StandardMeleeDecisionPowerAttackChance" integerType="Byte" />
+          <ByteArray name="StandardUnused3" byteLength="3" nullable="False" />
+          <Float name="StandardMeleeDecisionRecoilStaggerBonusToPowerAttack" />
+          <Float name="StandardMeleeDecisionUnconsciousBonusToPowerAttack" />
+          <UInt8 name="StandardMeleeDecisionPowerAttackNormal" />
+          <UInt8 name="StandardMeleeDecisionPowerAttackForward" />
+          <UInt8 name="StandardMeleeDecisionPowerAttackBack" />
+          <UInt8 name="StandardMeleeDecisionPowerAttackLeft" />
+          <UInt8 name="StandardMeleeDecisionPowerAttackRight" />
+          <ByteArray name="StandardUnused4" byteLength="3" nullable="False" />
+          <Float name="StandardMeleeDecisionHoldTimerMin" />
+          <Float name="StandardMeleeDecisionHoldTimerMax" />
+          <Enum name="StandardFlags" enumName="CombatStyle.Flag" byteLength="2" />
+          <ByteArray name="StandardUnused5" byteLength="2" nullable="False" />
+          <Percent name="StandardMeleeDecisionAcrobaticDodgeChance" integerType="Byte" />
+          <Percent name="StandardMeleeDecisionRushingAttackChance" integerType="Byte" />
+          <ByteArray name="StandardUnused6" byteLength="2" nullable="False" />
+          <Float name="StandardMeleeDecisionRushingAttackDistanceMult" />
         </Fields>
       </Data>
 
       <Data recordType="CSAD">
         <Fields>
-          <Float name="DodgeFatigueModMult" />
-          <Float name="DodgeFatigueModBase" />
-          <Float name="EncumbSpeedModBase" />
-          <Float name="EncumbSpeedModMult" />
-          <Float name="DodgeWhileUnderAttackMult" />
-          <Float name="DodgeNotUnderAttackMult" />
-          <Float name="DodgeBackWhileUnderAttackMult" />
-          <Float name="DodgeBackNotUnderAttackMult" />
-          <Float name="DodgeForwardWhileAttackingMult" />
-          <Float name="DodgeForwardNotAttackingMult" />
-          <Float name="BlockSkillModifierMult" />
-          <Float name="BlockSkillModifierBase" />
-          <Float name="BlockWhileUnderAttackMult" />
-          <Float name="BlockNotUnderAttackMult" />
-          <Float name="AttackSkillModifierMult" />
-          <Float name="AttackSkillModifierBase" />
-          <Float name="AttackWhileUnderAttackMult" />
-          <Float name="AttackNotUnderAttackMult" />
-          <Float name="AttackDuringBlockMult" />
-          <Float name="PowerAttackFatigueModBase" />
-          <Float name="PowerAttackFatigueModMult" />
+          <Float name="AdvancedDodgeFatigueModMult" />
+          <Float name="AdvancedDodgeFatigueModBase" />
+          <Float name="AdvancedEncumbSpeedModBase" />
+          <Float name="AdvancedEncumbSpeedModMult" />
+          <Float name="AdvancedDodgeWhileUnderAttackMult" />
+          <Float name="AdvancedDodgeNotUnderAttackMult" />
+          <Float name="AdvancedDodgeBackWhileUnderAttackMult" />
+          <Float name="AdvancedDodgeBackNotUnderAttackMult" />
+          <Float name="AdvancedDodgeForwardWhileAttackingMult" />
+          <Float name="AdvancedDodgeForwardNotAttackingMult" />
+          <Float name="AdvancedBlockSkillModifierMult" />
+          <Float name="AdvancedBlockSkillModifierBase" />
+          <Float name="AdvancedBlockWhileUnderAttackMult" />
+          <Float name="AdvancedBlockNotUnderAttackMult" />
+          <Float name="AdvancedAttackSkillModifierMult" />
+          <Float name="AdvancedAttackSkillModifierBase" />
+          <Float name="AdvancedAttackWhileUnderAttackMult" />
+          <Float name="AdvancedAttackNotUnderAttackMult" />
+          <Float name="AdvancedAttackDuringBlockMult" />
+          <Float name="AdvancedPowerAttackFatigueModBase" />
+          <Float name="AdvancedPowerAttackFatigueModMult" />
         </Fields>
       </Data>
 
       <Data recordType="CSSD">
         <Fields>
-          <Float name="CoverSearchRadius" />
-          <Float name="TakeCoverChance" />
-          <Float name="WaitTimerMin" />
-          <Float name="WaitTimerMax" />
-          <Float name="WaitToFireTimerMin" />
-          <Float name="WaitToFireTimerMax" />
-          <Float name="FireTimerMin" />
-          <Float name="FireTimerMax" />
-          <Float name="RangedWeaponRangeMultMin" />
-          <ByteArray name="Unused" byteLength="4" nullable="False" />
-          <UInt32 name="WeaponRestrictions" />
-          <Float name="RangedWeaponRangeMultMax" />
-          <Float name="MaxTargetingFov" />
-          <Float name="CombatRadius" />
-          <Float name="SemiAutoFiringDelayMultMin" />
-          <Float name="SemiAutoFiringDelayMultMax" />
+          <Float name="SimpleCoverSearchRadius" />
+          <Float name="SimpleTakeCoverChance" />
+          <Float name="SimpleWaitTimerMin" />
+          <Float name="SimpleWaitTimerMax" />
+          <Float name="SimpleWaitToFireTimerMin" />
+          <Float name="SimpleWaitToFireTimerMax" />
+          <Float name="SimpleFireTimerMin" />
+          <Float name="SimpleFireTimerMax" />
+          <Float name="SimpleRangedWeaponRangeMultMin" />
+          <ByteArray name="SimpleUnused" byteLength="4" nullable="False" />
+          <Enum name="SimpleWeaponRestrictions" enumName="CombatStyle.WeaponRestriction" byteLength="4" />
+          <Float name="SimpleRangedWeaponRangeMultMax" />
+          <Float name="SimpleMaxTargetingFov" />
+          <Float name="SimpleCombatRadius" />
+          <Float name="SimpleSemiAutoFiringDelayMultMin" />
+          <Float name="SimpleSemiAutoFiringDelayMultMax" />
         </Fields>
       </Data>
     </Fields>
