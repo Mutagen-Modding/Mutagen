@@ -1556,5 +1556,6 @@
     <Compile Include="Records\Major Records\WaterData_Generated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\Link\IActorBase_Generated.cs" />
   </ItemGroup>
 </Project>

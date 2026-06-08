@@ -82,57 +82,48 @@ namespace Mutagen.Bethesda.Fallout3
         public Byte Unused2 { get; set; } = default(Byte);
         #endregion
         #region ActorBase
-        private readonly IFormLinkNullable<INpcGetter> _ActorBase = new FormLinkNullable<INpcGetter>();
-        public IFormLinkNullable<INpcGetter> ActorBase
+        private readonly IFormLinkNullable<IActorBaseGetter> _ActorBase = new FormLinkNullable<IActorBaseGetter>();
+        public IFormLinkNullable<IActorBaseGetter> ActorBase
         {
             get => _ActorBase;
             set => _ActorBase.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<INpcGetter> IRagdollGetter.ActorBase => this.ActorBase;
+        IFormLinkNullableGetter<IActorBaseGetter> IRagdollGetter.ActorBase => this.ActorBase;
         #endregion
         #region BodyPartData
-        private readonly IFormLinkNullable<IBodyPartDataGetter> _BodyPartData = new FormLinkNullable<IBodyPartDataGetter>();
-        public IFormLinkNullable<IBodyPartDataGetter> BodyPartData
+        private readonly IFormLink<IBodyPartDataGetter> _BodyPartData = new FormLink<IBodyPartDataGetter>();
+        public IFormLink<IBodyPartDataGetter> BodyPartData
         {
             get => _BodyPartData;
             set => _BodyPartData.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IBodyPartDataGetter> IRagdollGetter.BodyPartData => this.BodyPartData;
+        IFormLinkGetter<IBodyPartDataGetter> IRagdollGetter.BodyPartData => this.BodyPartData;
         #endregion
         #region FeedbackData
+        public RagdollFeedbackData FeedbackData { get; set; } = new RagdollFeedbackData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RagdollFeedbackData? _FeedbackData;
-        public RagdollFeedbackData? FeedbackData
-        {
-            get => _FeedbackData;
-            set => _FeedbackData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRagdollFeedbackDataGetter? IRagdollGetter.FeedbackData => this.FeedbackData;
+        IRagdollFeedbackDataGetter IRagdollGetter.FeedbackData => FeedbackData;
         #endregion
         #region FeedbackDynamicBones
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FeedbackDynamicBones;
-        public MemorySlice<Byte>? FeedbackDynamicBones
+        private ExtendedList<UInt16>? _FeedbackDynamicBones;
+        public ExtendedList<UInt16>? FeedbackDynamicBones
         {
             get => this._FeedbackDynamicBones;
             set => this._FeedbackDynamicBones = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IRagdollGetter.FeedbackDynamicBones => this.FeedbackDynamicBones;
+        IReadOnlyList<UInt16>? IRagdollGetter.FeedbackDynamicBones => _FeedbackDynamicBones;
+        #endregion
+
         #endregion
         #region PoseMatchingData
+        public RagdollPoseMatchingData PoseMatchingData { get; set; } = new RagdollPoseMatchingData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RagdollPoseMatchingData? _PoseMatchingData;
-        public RagdollPoseMatchingData? PoseMatchingData
-        {
-            get => _PoseMatchingData;
-            set => _PoseMatchingData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRagdollPoseMatchingDataGetter? IRagdollGetter.PoseMatchingData => this.PoseMatchingData;
+        IRagdollPoseMatchingDataGetter IRagdollGetter.PoseMatchingData => PoseMatchingData;
         #endregion
         #region DeathPose
         public String? DeathPose { get; set; }
@@ -176,7 +167,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ActorBase = initialValue;
                 this.BodyPartData = initialValue;
                 this.FeedbackData = new MaskItem<TItem, RagdollFeedbackData.Mask<TItem>?>(initialValue, new RagdollFeedbackData.Mask<TItem>(initialValue));
-                this.FeedbackDynamicBones = initialValue;
+                this.FeedbackDynamicBones = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.PoseMatchingData = new MaskItem<TItem, RagdollPoseMatchingData.Mask<TItem>?>(initialValue, new RagdollPoseMatchingData.Mask<TItem>(initialValue));
                 this.DeathPose = initialValue;
             }
@@ -225,7 +216,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ActorBase = ActorBase;
                 this.BodyPartData = BodyPartData;
                 this.FeedbackData = new MaskItem<TItem, RagdollFeedbackData.Mask<TItem>?>(FeedbackData, new RagdollFeedbackData.Mask<TItem>(FeedbackData));
-                this.FeedbackDynamicBones = FeedbackDynamicBones;
+                this.FeedbackDynamicBones = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FeedbackDynamicBones, []);
                 this.PoseMatchingData = new MaskItem<TItem, RagdollPoseMatchingData.Mask<TItem>?>(PoseMatchingData, new RagdollPoseMatchingData.Mask<TItem>(PoseMatchingData));
                 this.DeathPose = DeathPose;
             }
@@ -251,7 +242,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem ActorBase;
             public TItem BodyPartData;
             public MaskItem<TItem, RagdollFeedbackData.Mask<TItem>?>? FeedbackData { get; set; }
-            public TItem FeedbackDynamicBones;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? FeedbackDynamicBones;
             public MaskItem<TItem, RagdollPoseMatchingData.Mask<TItem>?>? PoseMatchingData { get; set; }
             public TItem DeathPose;
             #endregion
@@ -328,7 +319,17 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.FeedbackData.Overall)) return false;
                     if (this.FeedbackData.Specific != null && !this.FeedbackData.Specific.All(eval)) return false;
                 }
-                if (!eval(this.FeedbackDynamicBones)) return false;
+                if (this.FeedbackDynamicBones != null)
+                {
+                    if (!eval(this.FeedbackDynamicBones.Overall)) return false;
+                    if (this.FeedbackDynamicBones.Specific != null)
+                    {
+                        foreach (var item in this.FeedbackDynamicBones.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (PoseMatchingData != null)
                 {
                     if (!eval(this.PoseMatchingData.Overall)) return false;
@@ -359,7 +360,17 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.FeedbackData.Overall)) return true;
                     if (this.FeedbackData.Specific != null && this.FeedbackData.Specific.Any(eval)) return true;
                 }
-                if (eval(this.FeedbackDynamicBones)) return true;
+                if (this.FeedbackDynamicBones != null)
+                {
+                    if (eval(this.FeedbackDynamicBones.Overall)) return true;
+                    if (this.FeedbackDynamicBones.Specific != null)
+                    {
+                        foreach (var item in this.FeedbackDynamicBones.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (PoseMatchingData != null)
                 {
                     if (eval(this.PoseMatchingData.Overall)) return true;
@@ -393,7 +404,20 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ActorBase = eval(this.ActorBase);
                 obj.BodyPartData = eval(this.BodyPartData);
                 obj.FeedbackData = this.FeedbackData == null ? null : new MaskItem<R, RagdollFeedbackData.Mask<R>?>(eval(this.FeedbackData.Overall), this.FeedbackData.Specific?.Translate(eval));
-                obj.FeedbackDynamicBones = eval(this.FeedbackDynamicBones);
+                if (FeedbackDynamicBones != null)
+                {
+                    obj.FeedbackDynamicBones = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FeedbackDynamicBones.Overall), []);
+                    if (FeedbackDynamicBones.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.FeedbackDynamicBones.Specific = l;
+                        foreach (var item in FeedbackDynamicBones.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.PoseMatchingData = this.PoseMatchingData == null ? null : new MaskItem<R, RagdollPoseMatchingData.Mask<R>?>(eval(this.PoseMatchingData.Overall), this.PoseMatchingData.Specific?.Translate(eval));
                 obj.DeathPose = eval(this.DeathPose);
             }
@@ -462,9 +486,26 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         FeedbackData?.Print(sb);
                     }
-                    if (printMask?.FeedbackDynamicBones ?? true)
+                    if ((printMask?.FeedbackDynamicBones?.Overall ?? true)
+                        && FeedbackDynamicBones is {} FeedbackDynamicBonesItem)
                     {
-                        sb.AppendItem(FeedbackDynamicBones, "FeedbackDynamicBones");
+                        sb.AppendLine("FeedbackDynamicBones =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(FeedbackDynamicBonesItem.Overall);
+                            if (FeedbackDynamicBonesItem.Specific != null)
+                            {
+                                foreach (var subItem in FeedbackDynamicBonesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem, "Bone");
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.PoseMatchingData?.Overall ?? true)
                     {
@@ -497,7 +538,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? ActorBase;
             public Exception? BodyPartData;
             public MaskItem<Exception?, RagdollFeedbackData.ErrorMask?>? FeedbackData;
-            public Exception? FeedbackDynamicBones;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? FeedbackDynamicBones;
             public MaskItem<Exception?, RagdollPoseMatchingData.ErrorMask?>? PoseMatchingData;
             public Exception? DeathPose;
             #endregion
@@ -585,7 +626,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.FeedbackData = new MaskItem<Exception?, RagdollFeedbackData.ErrorMask?>(ex, null);
                         break;
                     case Ragdoll_FieldIndex.FeedbackDynamicBones:
-                        this.FeedbackDynamicBones = ex;
+                        this.FeedbackDynamicBones = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Ragdoll_FieldIndex.PoseMatchingData:
                         this.PoseMatchingData = new MaskItem<Exception?, RagdollPoseMatchingData.ErrorMask?>(ex, null);
@@ -641,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.FeedbackData = (MaskItem<Exception?, RagdollFeedbackData.ErrorMask?>?)obj;
                         break;
                     case Ragdoll_FieldIndex.FeedbackDynamicBones:
-                        this.FeedbackDynamicBones = (Exception?)obj;
+                        this.FeedbackDynamicBones = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Ragdoll_FieldIndex.PoseMatchingData:
                         this.PoseMatchingData = (MaskItem<Exception?, RagdollPoseMatchingData.ErrorMask?>?)obj;
@@ -733,8 +774,25 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(BodyPartData, "BodyPartData");
                 }
                 FeedbackData?.Print(sb);
+                if (FeedbackDynamicBones is {} FeedbackDynamicBonesItem)
                 {
-                    sb.AppendItem(FeedbackDynamicBones, "FeedbackDynamicBones");
+                    sb.AppendLine("FeedbackDynamicBones =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(FeedbackDynamicBonesItem.Overall);
+                        if (FeedbackDynamicBonesItem.Specific != null)
+                        {
+                            foreach (var subItem in FeedbackDynamicBonesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem, "Bone");
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 PoseMatchingData?.Print(sb);
                 {
@@ -760,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ActorBase = this.ActorBase.Combine(rhs.ActorBase);
                 ret.BodyPartData = this.BodyPartData.Combine(rhs.BodyPartData);
                 ret.FeedbackData = this.FeedbackData.Combine(rhs.FeedbackData, (l, r) => l.Combine(r));
-                ret.FeedbackDynamicBones = this.FeedbackDynamicBones.Combine(rhs.FeedbackDynamicBones);
+                ret.FeedbackDynamicBones = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FeedbackDynamicBones?.Overall, rhs.FeedbackDynamicBones?.Overall), Noggog.ExceptionExt.Combine(this.FeedbackDynamicBones?.Specific, rhs.FeedbackDynamicBones?.Specific));
                 ret.PoseMatchingData = this.PoseMatchingData.Combine(rhs.PoseMatchingData, (l, r) => l.Combine(r));
                 ret.DeathPose = this.DeathPose.Combine(rhs.DeathPose);
                 return ret;
@@ -988,11 +1046,11 @@ namespace Mutagen.Bethesda.Fallout3
         new Boolean GrabIkEnabled { get; set; }
         new Boolean PoseMatchingEnabled { get; set; }
         new Byte Unused2 { get; set; }
-        new IFormLinkNullable<INpcGetter> ActorBase { get; set; }
-        new IFormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
-        new RagdollFeedbackData? FeedbackData { get; set; }
-        new MemorySlice<Byte>? FeedbackDynamicBones { get; set; }
-        new RagdollPoseMatchingData? PoseMatchingData { get; set; }
+        new IFormLinkNullable<IActorBaseGetter> ActorBase { get; set; }
+        new IFormLink<IBodyPartDataGetter> BodyPartData { get; set; }
+        new RagdollFeedbackData FeedbackData { get; set; }
+        new ExtendedList<UInt16>? FeedbackDynamicBones { get; set; }
+        new RagdollPoseMatchingData PoseMatchingData { get; set; }
         new String? DeathPose { get; set; }
     }
 
@@ -1021,11 +1079,11 @@ namespace Mutagen.Bethesda.Fallout3
         Boolean GrabIkEnabled { get; }
         Boolean PoseMatchingEnabled { get; }
         Byte Unused2 { get; }
-        IFormLinkNullableGetter<INpcGetter> ActorBase { get; }
-        IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData { get; }
-        IRagdollFeedbackDataGetter? FeedbackData { get; }
-        ReadOnlyMemorySlice<Byte>? FeedbackDynamicBones { get; }
-        IRagdollPoseMatchingDataGetter? PoseMatchingData { get; }
+        IFormLinkNullableGetter<IActorBaseGetter> ActorBase { get; }
+        IFormLinkGetter<IBodyPartDataGetter> BodyPartData { get; }
+        IRagdollFeedbackDataGetter FeedbackData { get; }
+        IReadOnlyList<UInt16>? FeedbackDynamicBones { get; }
+        IRagdollPoseMatchingDataGetter PoseMatchingData { get; }
         String? DeathPose { get; }
 
     }
@@ -1326,9 +1384,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.Unused2 = default(Byte);
             item.ActorBase.Clear();
             item.BodyPartData.Clear();
-            item.FeedbackData = null;
-            item.FeedbackDynamicBones = default;
-            item.PoseMatchingData = null;
+            item.FeedbackData.Clear();
+            item.FeedbackDynamicBones = null;
+            item.PoseMatchingData.Clear();
             item.DeathPose = default;
             base.Clear(item);
         }
@@ -1427,17 +1485,12 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Unused2 = item.Unused2 == rhs.Unused2;
             ret.ActorBase = item.ActorBase.Equals(rhs.ActorBase);
             ret.BodyPartData = item.BodyPartData.Equals(rhs.BodyPartData);
-            ret.FeedbackData = EqualsMaskHelper.EqualsHelper(
-                item.FeedbackData,
-                rhs.FeedbackData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+            ret.FeedbackData = MaskItemExt.Factory(item.FeedbackData.GetEqualsMask(rhs.FeedbackData, include), include);
+            ret.FeedbackDynamicBones = item.FeedbackDynamicBones.CollectionEqualsHelper(
+                rhs.FeedbackDynamicBones,
+                (l, r) => l == r,
                 include);
-            ret.FeedbackDynamicBones = MemorySliceExt.SequenceEqual(item.FeedbackDynamicBones, rhs.FeedbackDynamicBones);
-            ret.PoseMatchingData = EqualsMaskHelper.EqualsHelper(
-                item.PoseMatchingData,
-                rhs.PoseMatchingData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.PoseMatchingData = MaskItemExt.Factory(item.PoseMatchingData.GetEqualsMask(rhs.PoseMatchingData, include), include);
             ret.DeathPose = string.Equals(item.DeathPose, rhs.DeathPose);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1530,22 +1583,30 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.BodyPartData ?? true)
             {
-                sb.AppendItem(item.BodyPartData.FormKeyNullable, "BodyPartData");
+                sb.AppendItem(item.BodyPartData.FormKey, "BodyPartData");
             }
-            if ((printMask?.FeedbackData?.Overall ?? true)
-                && item.FeedbackData is {} FeedbackDataItem)
+            if (printMask?.FeedbackData?.Overall ?? true)
             {
-                FeedbackDataItem?.Print(sb, "FeedbackData");
+                item.FeedbackData?.Print(sb, "FeedbackData");
             }
-            if ((printMask?.FeedbackDynamicBones ?? true)
+            if ((printMask?.FeedbackDynamicBones?.Overall ?? true)
                 && item.FeedbackDynamicBones is {} FeedbackDynamicBonesItem)
             {
-                sb.AppendLine($"FeedbackDynamicBones => {SpanExt.ToHexString(FeedbackDynamicBonesItem)}");
+                sb.AppendLine("FeedbackDynamicBones =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in FeedbackDynamicBonesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem, "Bone");
+                        }
+                    }
+                }
             }
-            if ((printMask?.PoseMatchingData?.Overall ?? true)
-                && item.PoseMatchingData is {} PoseMatchingDataItem)
+            if (printMask?.PoseMatchingData?.Overall ?? true)
             {
-                PoseMatchingDataItem?.Print(sb, "PoseMatchingData");
+                item.PoseMatchingData?.Print(sb, "PoseMatchingData");
             }
             if ((printMask?.DeathPose ?? true)
                 && item.DeathPose is {} DeathPoseItem)
@@ -1656,7 +1717,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.FeedbackDynamicBones) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FeedbackDynamicBones, rhs.FeedbackDynamicBones)) return false;
+                if (!lhs.FeedbackDynamicBones.SequenceEqualNullable(rhs.FeedbackDynamicBones)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.PoseMatchingData) ?? true))
             {
@@ -1709,18 +1770,9 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Unused2);
             hash.Add(item.ActorBase);
             hash.Add(item.BodyPartData);
-            if (item.FeedbackData is {} FeedbackDataitem)
-            {
-                hash.Add(FeedbackDataitem);
-            }
-            if (item.FeedbackDynamicBones is {} FeedbackDynamicBonesItem)
-            {
-                hash.Add(FeedbackDynamicBonesItem);
-            }
-            if (item.PoseMatchingData is {} PoseMatchingDataitem)
-            {
-                hash.Add(PoseMatchingDataitem);
-            }
+            hash.Add(item.FeedbackData);
+            hash.Add(item.FeedbackDynamicBones);
+            hash.Add(item.PoseMatchingData);
             if (item.DeathPose is {} DeathPoseitem)
             {
                 hash.Add(DeathPoseitem);
@@ -1758,10 +1810,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return ActorBaseInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.BodyPartData, out var BodyPartDataInfo))
-            {
-                yield return BodyPartDataInfo;
-            }
+            yield return FormLinkInformation.Factory(obj.BodyPartData);
             yield break;
         }
         
@@ -1878,22 +1927,18 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.BodyPartData) ?? true))
             {
-                item.BodyPartData.SetTo(rhs.BodyPartData.FormKeyNullable);
+                item.BodyPartData.SetTo(rhs.BodyPartData.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.FeedbackData) ?? true))
             {
                 errorMask?.PushIndex((int)Ragdoll_FieldIndex.FeedbackData);
                 try
                 {
-                    if(rhs.FeedbackData is {} rhsFeedbackData)
+                    if ((copyMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.FeedbackData) ?? true))
                     {
-                        item.FeedbackData = rhsFeedbackData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Ragdoll_FieldIndex.FeedbackData));
-                    }
-                    else
-                    {
-                        item.FeedbackData = default;
+                        item.FeedbackData = rhs.FeedbackData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Ragdoll_FieldIndex.FeedbackData),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1908,13 +1953,28 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.FeedbackDynamicBones) ?? true))
             {
-                if(rhs.FeedbackDynamicBones is {} FeedbackDynamicBonesrhs)
+                errorMask?.PushIndex((int)Ragdoll_FieldIndex.FeedbackDynamicBones);
+                try
                 {
-                    item.FeedbackDynamicBones = FeedbackDynamicBonesrhs.ToArray();
+                    if ((rhs.FeedbackDynamicBones != null))
+                    {
+                        item.FeedbackDynamicBones = 
+                            rhs.FeedbackDynamicBones
+                            .ToExtendedList<UInt16>();
+                    }
+                    else
+                    {
+                        item.FeedbackDynamicBones = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.FeedbackDynamicBones = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.PoseMatchingData) ?? true))
@@ -1922,15 +1982,11 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)Ragdoll_FieldIndex.PoseMatchingData);
                 try
                 {
-                    if(rhs.PoseMatchingData is {} rhsPoseMatchingData)
+                    if ((copyMask?.GetShouldTranslate((int)Ragdoll_FieldIndex.PoseMatchingData) ?? true))
                     {
-                        item.PoseMatchingData = rhsPoseMatchingData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Ragdoll_FieldIndex.PoseMatchingData));
-                    }
-                    else
-                    {
-                        item.PoseMatchingData = default;
+                        item.PoseMatchingData = rhs.PoseMatchingData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Ragdoll_FieldIndex.PoseMatchingData),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2135,28 +2191,25 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.ActorBase,
                 header: translationParams.ConvertToCustom(RecordTypes.XNAM));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BodyPartData,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
-            if (item.FeedbackData is {} FeedbackDataItem)
-            {
-                ((RagdollFeedbackDataBinaryWriteTranslation)((IBinaryItem)FeedbackDataItem).BinaryWriteTranslator).Write(
-                    item: FeedbackDataItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            var FeedbackDataItem = item.FeedbackData;
+            ((RagdollFeedbackDataBinaryWriteTranslation)((IBinaryItem)FeedbackDataItem).BinaryWriteTranslator).Write(
+                item: FeedbackDataItem,
                 writer: writer,
-                item: item.FeedbackDynamicBones,
-                header: translationParams.ConvertToCustom(RecordTypes.RAFB));
-            if (item.PoseMatchingData is {} PoseMatchingDataItem)
-            {
-                ((RagdollPoseMatchingDataBinaryWriteTranslation)((IBinaryItem)PoseMatchingDataItem).BinaryWriteTranslator).Write(
-                    item: PoseMatchingDataItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt16>.Instance.Write(
+                writer: writer,
+                items: item.FeedbackDynamicBones,
+                recordType: translationParams.ConvertToCustom(RecordTypes.RAFB),
+                transl: UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            var PoseMatchingDataItem = item.PoseMatchingData;
+            ((RagdollPoseMatchingDataBinaryWriteTranslation)((IBinaryItem)PoseMatchingDataItem).BinaryWriteTranslator).Write(
+                item: PoseMatchingDataItem,
+                writer: writer,
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DeathPose,
@@ -2278,7 +2331,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RAFB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FeedbackDynamicBones = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FeedbackDynamicBones = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt16>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<UInt16>();
                     return (int)Ragdoll_FieldIndex.FeedbackDynamicBones;
                 }
                 case RecordTypeInts.RAPS:
@@ -2401,23 +2458,22 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region ActorBase
         private int? _ActorBaseLocation;
-        public IFormLinkNullableGetter<INpcGetter> ActorBase => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _ActorBaseLocation);
+        public IFormLinkNullableGetter<IActorBaseGetter> ActorBase => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorBaseGetter>(_package, _recordData, _ActorBaseLocation);
         #endregion
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
+        public IFormLinkGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         #region FeedbackData
         private RangeInt32? _FeedbackDataLocation;
-        public IRagdollFeedbackDataGetter? FeedbackData => _FeedbackDataLocation.HasValue ? RagdollFeedbackDataBinaryOverlay.RagdollFeedbackDataFactory(_recordData.Slice(_FeedbackDataLocation!.Value.Min), _package) : default;
+        private IRagdollFeedbackDataGetter? _FeedbackData => _FeedbackDataLocation.HasValue ? RagdollFeedbackDataBinaryOverlay.RagdollFeedbackDataFactory(_recordData.Slice(_FeedbackDataLocation!.Value.Min), _package) : default;
+        public IRagdollFeedbackDataGetter FeedbackData => _FeedbackData ?? new RagdollFeedbackData();
         #endregion
-        #region FeedbackDynamicBones
-        private int? _FeedbackDynamicBonesLocation;
-        public ReadOnlyMemorySlice<Byte>? FeedbackDynamicBones => _FeedbackDynamicBonesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FeedbackDynamicBonesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<UInt16>? FeedbackDynamicBones { get; private set; }
         #region PoseMatchingData
         private RangeInt32? _PoseMatchingDataLocation;
-        public IRagdollPoseMatchingDataGetter? PoseMatchingData => _PoseMatchingDataLocation.HasValue ? RagdollPoseMatchingDataBinaryOverlay.RagdollPoseMatchingDataFactory(_recordData.Slice(_PoseMatchingDataLocation!.Value.Min), _package) : default;
+        private IRagdollPoseMatchingDataGetter? _PoseMatchingData => _PoseMatchingDataLocation.HasValue ? RagdollPoseMatchingDataBinaryOverlay.RagdollPoseMatchingDataFactory(_recordData.Slice(_PoseMatchingDataLocation!.Value.Min), _package) : default;
+        public IRagdollPoseMatchingDataGetter PoseMatchingData => _PoseMatchingData ?? new RagdollPoseMatchingData();
         #endregion
         #region DeathPose
         private int? _DeathPoseLocation;
@@ -2519,7 +2575,12 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RAFB:
                 {
-                    _FeedbackDynamicBonesLocation = (stream.Position - offset);
+                    this.FeedbackDynamicBones = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt16>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 2,
+                        getter: (s, p) => BinaryPrimitives.ReadUInt16LittleEndian(s));
                     return (int)Ragdoll_FieldIndex.FeedbackDynamicBones;
                 }
                 case RecordTypeInts.RAPS:

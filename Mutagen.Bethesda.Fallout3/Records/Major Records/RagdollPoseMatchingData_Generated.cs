@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region MatchBone3
         public UInt16 MatchBone3 { get; set; } = default(UInt16);
         #endregion
-        #region Flags
-        public Byte Flags { get; set; } = default(Byte);
+        #region IsDisableOnMove
+        public Boolean IsDisableOnMove { get; set; } = default(Boolean);
         #endregion
         #region Unused
         public Byte Unused { get; set; } = default(Byte);
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MatchBone1 = initialValue;
                 this.MatchBone2 = initialValue;
                 this.MatchBone3 = initialValue;
-                this.Flags = initialValue;
+                this.IsDisableOnMove = initialValue;
                 this.Unused = initialValue;
                 this.MotorsStrength = initialValue;
                 this.PoseActivationDelayTime = initialValue;
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MatchBone1,
                 TItem MatchBone2,
                 TItem MatchBone3,
-                TItem Flags,
+                TItem IsDisableOnMove,
                 TItem Unused,
                 TItem MotorsStrength,
                 TItem PoseActivationDelayTime,
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MatchBone1 = MatchBone1;
                 this.MatchBone2 = MatchBone2;
                 this.MatchBone3 = MatchBone3;
-                this.Flags = Flags;
+                this.IsDisableOnMove = IsDisableOnMove;
                 this.Unused = Unused;
                 this.MotorsStrength = MotorsStrength;
                 this.PoseActivationDelayTime = PoseActivationDelayTime;
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem MatchBone1;
             public TItem MatchBone2;
             public TItem MatchBone3;
-            public TItem Flags;
+            public TItem IsDisableOnMove;
             public TItem Unused;
             public TItem MotorsStrength;
             public TItem PoseActivationDelayTime;
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MatchBone1, rhs.MatchBone1)) return false;
                 if (!object.Equals(this.MatchBone2, rhs.MatchBone2)) return false;
                 if (!object.Equals(this.MatchBone3, rhs.MatchBone3)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.IsDisableOnMove, rhs.IsDisableOnMove)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.MotorsStrength, rhs.MotorsStrength)) return false;
                 if (!object.Equals(this.PoseActivationDelayTime, rhs.PoseActivationDelayTime)) return false;
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MatchBone1);
                 hash.Add(this.MatchBone2);
                 hash.Add(this.MatchBone3);
-                hash.Add(this.Flags);
+                hash.Add(this.IsDisableOnMove);
                 hash.Add(this.Unused);
                 hash.Add(this.MotorsStrength);
                 hash.Add(this.PoseActivationDelayTime);
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.MatchBone1)) return false;
                 if (!eval(this.MatchBone2)) return false;
                 if (!eval(this.MatchBone3)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.IsDisableOnMove)) return false;
                 if (!eval(this.Unused)) return false;
                 if (!eval(this.MotorsStrength)) return false;
                 if (!eval(this.PoseActivationDelayTime)) return false;
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.MatchBone1)) return true;
                 if (eval(this.MatchBone2)) return true;
                 if (eval(this.MatchBone3)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.IsDisableOnMove)) return true;
                 if (eval(this.Unused)) return true;
                 if (eval(this.MotorsStrength)) return true;
                 if (eval(this.PoseActivationDelayTime)) return true;
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MatchBone1 = eval(this.MatchBone1);
                 obj.MatchBone2 = eval(this.MatchBone2);
                 obj.MatchBone3 = eval(this.MatchBone3);
-                obj.Flags = eval(this.Flags);
+                obj.IsDisableOnMove = eval(this.IsDisableOnMove);
                 obj.Unused = eval(this.Unused);
                 obj.MotorsStrength = eval(this.MotorsStrength);
                 obj.PoseActivationDelayTime = eval(this.PoseActivationDelayTime);
@@ -288,9 +288,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(MatchBone3, "MatchBone3");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.IsDisableOnMove ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(IsDisableOnMove, "IsDisableOnMove");
                     }
                     if (printMask?.Unused ?? true)
                     {
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? MatchBone1;
             public Exception? MatchBone2;
             public Exception? MatchBone3;
-            public Exception? Flags;
+            public Exception? IsDisableOnMove;
             public Exception? Unused;
             public Exception? MotorsStrength;
             public Exception? PoseActivationDelayTime;
@@ -359,8 +359,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MatchBone2;
                     case RagdollPoseMatchingData_FieldIndex.MatchBone3:
                         return MatchBone3;
-                    case RagdollPoseMatchingData_FieldIndex.Flags:
-                        return Flags;
+                    case RagdollPoseMatchingData_FieldIndex.IsDisableOnMove:
+                        return IsDisableOnMove;
                     case RagdollPoseMatchingData_FieldIndex.Unused:
                         return Unused;
                     case RagdollPoseMatchingData_FieldIndex.MotorsStrength:
@@ -390,8 +390,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RagdollPoseMatchingData_FieldIndex.MatchBone3:
                         this.MatchBone3 = ex;
                         break;
-                    case RagdollPoseMatchingData_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case RagdollPoseMatchingData_FieldIndex.IsDisableOnMove:
+                        this.IsDisableOnMove = ex;
                         break;
                     case RagdollPoseMatchingData_FieldIndex.Unused:
                         this.Unused = ex;
@@ -427,8 +427,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case RagdollPoseMatchingData_FieldIndex.MatchBone3:
                         this.MatchBone3 = (Exception?)obj;
                         break;
-                    case RagdollPoseMatchingData_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case RagdollPoseMatchingData_FieldIndex.IsDisableOnMove:
+                        this.IsDisableOnMove = (Exception?)obj;
                         break;
                     case RagdollPoseMatchingData_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MatchBone1 != null) return true;
                 if (MatchBone2 != null) return true;
                 if (MatchBone3 != null) return true;
-                if (Flags != null) return true;
+                if (IsDisableOnMove != null) return true;
                 if (Unused != null) return true;
                 if (MotorsStrength != null) return true;
                 if (PoseActivationDelayTime != null) return true;
@@ -497,7 +497,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(MatchBone3, "MatchBone3");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(IsDisableOnMove, "IsDisableOnMove");
                 }
                 {
                     sb.AppendItem(Unused, "Unused");
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MatchBone1 = this.MatchBone1.Combine(rhs.MatchBone1);
                 ret.MatchBone2 = this.MatchBone2.Combine(rhs.MatchBone2);
                 ret.MatchBone3 = this.MatchBone3.Combine(rhs.MatchBone3);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.IsDisableOnMove = this.IsDisableOnMove.Combine(rhs.IsDisableOnMove);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.MotorsStrength = this.MotorsStrength.Combine(rhs.MotorsStrength);
                 ret.PoseActivationDelayTime = this.PoseActivationDelayTime.Combine(rhs.PoseActivationDelayTime);
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool MatchBone1;
             public bool MatchBone2;
             public bool MatchBone3;
-            public bool Flags;
+            public bool IsDisableOnMove;
             public bool Unused;
             public bool MotorsStrength;
             public bool PoseActivationDelayTime;
@@ -575,7 +575,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MatchBone1 = defaultOn;
                 this.MatchBone2 = defaultOn;
                 this.MatchBone3 = defaultOn;
-                this.Flags = defaultOn;
+                this.IsDisableOnMove = defaultOn;
                 this.Unused = defaultOn;
                 this.MotorsStrength = defaultOn;
                 this.PoseActivationDelayTime = defaultOn;
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MatchBone1, null));
                 ret.Add((MatchBone2, null));
                 ret.Add((MatchBone3, null));
-                ret.Add((Flags, null));
+                ret.Add((IsDisableOnMove, null));
                 ret.Add((Unused, null));
                 ret.Add((MotorsStrength, null));
                 ret.Add((PoseActivationDelayTime, null));
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout3
         new UInt16 MatchBone1 { get; set; }
         new UInt16 MatchBone2 { get; set; }
         new UInt16 MatchBone3 { get; set; }
-        new Byte Flags { get; set; }
+        new Boolean IsDisableOnMove { get; set; }
         new Byte Unused { get; set; }
         new Single MotorsStrength { get; set; }
         new Single PoseActivationDelayTime { get; set; }
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Fallout3
         UInt16 MatchBone1 { get; }
         UInt16 MatchBone2 { get; }
         UInt16 MatchBone3 { get; }
-        Byte Flags { get; }
+        Boolean IsDisableOnMove { get; }
         Byte Unused { get; }
         Single MotorsStrength { get; }
         Single PoseActivationDelayTime { get; }
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Fallout3
         MatchBone1 = 0,
         MatchBone2 = 1,
         MatchBone3 = 2,
-        Flags = 3,
+        IsDisableOnMove = 3,
         Unused = 4,
         MotorsStrength = 5,
         PoseActivationDelayTime = 6,
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.MatchBone1 = default(UInt16);
             item.MatchBone2 = default(UInt16);
             item.MatchBone3 = default(UInt16);
-            item.Flags = default(Byte);
+            item.IsDisableOnMove = default(Boolean);
             item.Unused = default(Byte);
             item.MotorsStrength = default(Single);
             item.PoseActivationDelayTime = default(Single);
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MatchBone1 = item.MatchBone1 == rhs.MatchBone1;
             ret.MatchBone2 = item.MatchBone2 == rhs.MatchBone2;
             ret.MatchBone3 = item.MatchBone3 == rhs.MatchBone3;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.IsDisableOnMove = item.IsDisableOnMove == rhs.IsDisableOnMove;
             ret.Unused = item.Unused == rhs.Unused;
             ret.MotorsStrength = item.MotorsStrength.EqualsWithin(rhs.MotorsStrength);
             ret.PoseActivationDelayTime = item.PoseActivationDelayTime.EqualsWithin(rhs.PoseActivationDelayTime);
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.MatchBone3, "MatchBone3");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.IsDisableOnMove ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.IsDisableOnMove, "IsDisableOnMove");
             }
             if (printMask?.Unused ?? true)
             {
@@ -1144,9 +1144,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.MatchBone3 != rhs.MatchBone3) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)RagdollPoseMatchingData_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)RagdollPoseMatchingData_FieldIndex.IsDisableOnMove) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.IsDisableOnMove != rhs.IsDisableOnMove) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RagdollPoseMatchingData_FieldIndex.Unused) ?? true))
             {
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MatchBone1);
             hash.Add(item.MatchBone2);
             hash.Add(item.MatchBone3);
-            hash.Add(item.Flags);
+            hash.Add(item.IsDisableOnMove);
             hash.Add(item.Unused);
             hash.Add(item.MotorsStrength);
             hash.Add(item.PoseActivationDelayTime);
@@ -1227,9 +1227,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.MatchBone3 = rhs.MatchBone3;
             }
-            if ((copyMask?.GetShouldTranslate((int)RagdollPoseMatchingData_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RagdollPoseMatchingData_FieldIndex.IsDisableOnMove) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.IsDisableOnMove = rhs.IsDisableOnMove;
             }
             if ((copyMask?.GetShouldTranslate((int)RagdollPoseMatchingData_FieldIndex.Unused) ?? true))
             {
@@ -1362,7 +1362,7 @@ namespace Mutagen.Bethesda.Fallout3
             writer.Write(item.MatchBone1);
             writer.Write(item.MatchBone2);
             writer.Write(item.MatchBone3);
-            writer.Write(item.Flags);
+            writer.Write(item.IsDisableOnMove);
             writer.Write(item.Unused);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.MatchBone1 = frame.ReadUInt16();
             item.MatchBone2 = frame.ReadUInt16();
             item.MatchBone3 = frame.ReadUInt16();
-            item.Flags = frame.ReadUInt8();
+            item.IsDisableOnMove = frame.ReadBoolean();
             item.Unused = frame.ReadUInt8();
             item.MotorsStrength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.PoseActivationDelayTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Fallout3
         public UInt16 MatchBone1 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
         public UInt16 MatchBone2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
         public UInt16 MatchBone3 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
-        public Byte Flags => _structData.Span[0x6];
+        public Boolean IsDisableOnMove => _structData.Slice(0x6, 0x1)[0] >= 1;
         public Byte Unused => _structData.Span[0x7];
         public Single MotorsStrength => _structData.Slice(0x8, 0x4).Float();
         public Single PoseActivationDelayTime => _structData.Slice(0xC, 0x4).Float();

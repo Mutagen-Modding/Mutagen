@@ -16,11 +16,15 @@
           <UInt8 name="Unused2" />
         </Fields>
       </Data>
-      <FormLink name="ActorBase" recordType="XNAM" refName="Npc" />
-      <FormLink name="BodyPartData" recordType="TNAM" refName="BodyPartData" />
-      <RefDirect name="FeedbackData" refName="RagdollFeedbackData" />
-      <ByteArray name="FeedbackDynamicBones" recordType="RAFB" />
-      <RefDirect name="PoseMatchingData" refName="RagdollPoseMatchingData" />
+      <FormLink name="ActorBase" recordType="XNAM">
+        <Interface>IActorBase</Interface>
+      </FormLink>
+      <FormLink name="BodyPartData" recordType="TNAM" refName="BodyPartData" nullable="False" />
+      <RefDirect name="FeedbackData" refName="RagdollFeedbackData" nullable="False" />
+      <List name="FeedbackDynamicBones" recordType="RAFB">
+        <UInt16 name="Bone" />
+      </List>
+      <RefDirect name="PoseMatchingData" refName="RagdollPoseMatchingData" nullable="False" />
       <String name="DeathPose" recordType="ANAM" />
     </Fields>
   </Object>
@@ -48,7 +52,7 @@
       <UInt16 name="MatchBone1" />
       <UInt16 name="MatchBone2" />
       <UInt16 name="MatchBone3" />
-      <UInt8 name="Flags" />
+      <Bool name="IsDisableOnMove" byteLength="1" />
       <UInt8 name="Unused" />
       <Float name="MotorsStrength" />
       <Float name="PoseActivationDelayTime" />

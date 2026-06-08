@@ -2207,6 +2207,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ICreature :
+        IActorBase,
         ICreatureGetter,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
@@ -2281,6 +2282,7 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.CREA)]
     public partial interface ICreatureGetter :
         IFallout3MajorRecordGetter,
+        IActorBaseGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,

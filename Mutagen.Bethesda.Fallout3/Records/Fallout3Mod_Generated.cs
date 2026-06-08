@@ -6271,6 +6271,11 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "IActorBase":
+                case "IActorBaseGetter":
+                    Remove(obj, keys, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IActorValueOrPerk":
                 case "IActorValueOrPerkGetter":
                     Remove(obj, keys, typeof(IActorValueInformationGetter), throwIfUnknown: throwIfUnknown);

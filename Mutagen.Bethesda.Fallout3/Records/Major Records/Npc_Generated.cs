@@ -2665,6 +2665,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface INpc :
+        IActorBase,
         IFallout3MajorRecordInternal,
         IFormLinkContainer,
         IHasDestructible,
@@ -2753,6 +2754,7 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.NPC_)]
     public partial interface INpcGetter :
         IFallout3MajorRecordGetter,
+        IActorBaseGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHasDestructibleGetter,

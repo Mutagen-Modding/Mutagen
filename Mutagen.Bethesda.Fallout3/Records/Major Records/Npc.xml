@@ -68,6 +68,7 @@
       <Float name="Height" recordType="NAM6" nullable="False" />
       <Float name="Weight" recordType="NAM7" nullable="False" />
     </Fields>
+    <LinkInterface>IActorBase</LinkInterface>
     <LinkInterface>INpcSpawn</LinkInterface>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>IPackageLocationObject</LinkInterface>
