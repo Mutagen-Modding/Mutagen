@@ -29,7 +29,7 @@
           <FormLink name="DoctorsBag" refName="Ingestible">
             <ModHeaderVersioning version="1.32" />
           </FormLink>
-          <FormLink name="MissFortunNpc" refName="Npc">
+          <FormLink name="MissFortuneNpc" refName="Npc">
             <ModHeaderVersioning version="1.32" />
           </FormLink>
           <FormLink name="MissFortuneFaction" refName="Faction">
