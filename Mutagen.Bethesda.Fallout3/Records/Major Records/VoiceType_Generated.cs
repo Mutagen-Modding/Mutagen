@@ -54,9 +54,9 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Flags
-        public VoiceType.VoiceTypeFlag? Flags { get; set; }
+        public VoiceType.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        VoiceType.VoiceTypeFlag? IVoiceTypeGetter.Flags => this.Flags;
+        VoiceType.Flag? IVoiceTypeGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IVoiceTypeInternal>,
         IVoiceTypeGetter
     {
-        new VoiceType.VoiceTypeFlag? Flags { get; set; }
+        new VoiceType.Flag? Flags { get; set; }
     }
 
     public partial interface IVoiceTypeInternal :
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IVoiceTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => VoiceType_Registration.Instance;
-        VoiceType.VoiceTypeFlag? Flags { get; }
+        VoiceType.Flag? Flags { get; }
 
     }
 
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            EnumBinaryTranslation<VoiceType.VoiceTypeFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<VoiceType.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
@@ -1329,7 +1329,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<VoiceType.VoiceTypeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<VoiceType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)VoiceType_FieldIndex.Flags;
@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Flags
         private int? _FlagsLocation;
-        public VoiceType.VoiceTypeFlag? Flags => EnumBinaryTranslation<VoiceType.VoiceTypeFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
+        public VoiceType.Flag? Flags => EnumBinaryTranslation<VoiceType.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
