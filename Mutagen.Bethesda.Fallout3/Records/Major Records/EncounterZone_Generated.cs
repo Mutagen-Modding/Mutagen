@@ -71,30 +71,7 @@ namespace Mutagen.Bethesda.Fallout3
         public SByte MinLevel { get; set; } = default(SByte);
         #endregion
         #region Flags
-        public Byte Flags { get; set; } = default(Byte);
-        #endregion
-        #region Unused
-        public Byte Unused { get; set; } = default(Byte);
-        #endregion
-        #region FactionOwner
-        private readonly IFormLinkNullable<IFactionGetter> _FactionOwner = new FormLinkNullable<IFactionGetter>();
-        public IFormLinkNullable<IFactionGetter> FactionOwner
-        {
-            get => _FactionOwner;
-            set => _FactionOwner.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFactionGetter> IEncounterZoneGetter.FactionOwner => this.FactionOwner;
-        #endregion
-        #region NpcOwner
-        private readonly IFormLinkNullable<INpcGetter> _NpcOwner = new FormLinkNullable<INpcGetter>();
-        public IFormLinkNullable<INpcGetter> NpcOwner
-        {
-            get => _NpcOwner;
-            set => _NpcOwner.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<INpcGetter> IEncounterZoneGetter.NpcOwner => this.NpcOwner;
+        public EncounterZone.Flag Flags { get; set; } = default(EncounterZone.Flag);
         #endregion
 
         #region To String
@@ -125,9 +102,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Rank = initialValue;
                 this.MinLevel = initialValue;
                 this.Flags = initialValue;
-                this.Unused = initialValue;
-                this.FactionOwner = initialValue;
-                this.NpcOwner = initialValue;
             }
 
             public Mask(
@@ -141,10 +115,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Owner,
                 TItem Rank,
                 TItem MinLevel,
-                TItem Flags,
-                TItem Unused,
-                TItem FactionOwner,
-                TItem NpcOwner)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -158,9 +129,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Rank = Rank;
                 this.MinLevel = MinLevel;
                 this.Flags = Flags;
-                this.Unused = Unused;
-                this.FactionOwner = FactionOwner;
-                this.NpcOwner = NpcOwner;
             }
 
             #pragma warning disable CS8618
@@ -176,9 +144,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Rank;
             public TItem MinLevel;
             public TItem Flags;
-            public TItem Unused;
-            public TItem FactionOwner;
-            public TItem NpcOwner;
             #endregion
 
             #region Equals
@@ -196,9 +161,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Rank, rhs.Rank)) return false;
                 if (!object.Equals(this.MinLevel, rhs.MinLevel)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Unused, rhs.Unused)) return false;
-                if (!object.Equals(this.FactionOwner, rhs.FactionOwner)) return false;
-                if (!object.Equals(this.NpcOwner, rhs.NpcOwner)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -208,9 +170,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Rank);
                 hash.Add(this.MinLevel);
                 hash.Add(this.Flags);
-                hash.Add(this.Unused);
-                hash.Add(this.FactionOwner);
-                hash.Add(this.NpcOwner);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -225,9 +184,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Rank)) return false;
                 if (!eval(this.MinLevel)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Unused)) return false;
-                if (!eval(this.FactionOwner)) return false;
-                if (!eval(this.NpcOwner)) return false;
                 return true;
             }
             #endregion
@@ -240,9 +196,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Rank)) return true;
                 if (eval(this.MinLevel)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Unused)) return true;
-                if (eval(this.FactionOwner)) return true;
-                if (eval(this.NpcOwner)) return true;
                 return false;
             }
             #endregion
@@ -262,9 +215,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Rank = eval(this.Rank);
                 obj.MinLevel = eval(this.MinLevel);
                 obj.Flags = eval(this.Flags);
-                obj.Unused = eval(this.Unused);
-                obj.FactionOwner = eval(this.FactionOwner);
-                obj.NpcOwner = eval(this.NpcOwner);
             }
             #endregion
 
@@ -299,18 +249,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Unused ?? true)
-                    {
-                        sb.AppendItem(Unused, "Unused");
-                    }
-                    if (printMask?.FactionOwner ?? true)
-                    {
-                        sb.AppendItem(FactionOwner, "FactionOwner");
-                    }
-                    if (printMask?.NpcOwner ?? true)
-                    {
-                        sb.AppendItem(NpcOwner, "NpcOwner");
-                    }
                 }
             }
             #endregion
@@ -326,9 +264,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Rank;
             public Exception? MinLevel;
             public Exception? Flags;
-            public Exception? Unused;
-            public Exception? FactionOwner;
-            public Exception? NpcOwner;
             #endregion
 
             #region IErrorMask
@@ -345,12 +280,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return MinLevel;
                     case EncounterZone_FieldIndex.Flags:
                         return Flags;
-                    case EncounterZone_FieldIndex.Unused:
-                        return Unused;
-                    case EncounterZone_FieldIndex.FactionOwner:
-                        return FactionOwner;
-                    case EncounterZone_FieldIndex.NpcOwner:
-                        return NpcOwner;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -372,15 +301,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case EncounterZone_FieldIndex.Flags:
                         this.Flags = ex;
-                        break;
-                    case EncounterZone_FieldIndex.Unused:
-                        this.Unused = ex;
-                        break;
-                    case EncounterZone_FieldIndex.FactionOwner:
-                        this.FactionOwner = ex;
-                        break;
-                    case EncounterZone_FieldIndex.NpcOwner:
-                        this.NpcOwner = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -405,15 +325,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case EncounterZone_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case EncounterZone_FieldIndex.Unused:
-                        this.Unused = (Exception?)obj;
-                        break;
-                    case EncounterZone_FieldIndex.FactionOwner:
-                        this.FactionOwner = (Exception?)obj;
-                        break;
-                    case EncounterZone_FieldIndex.NpcOwner:
-                        this.NpcOwner = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -427,9 +338,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Rank != null) return true;
                 if (MinLevel != null) return true;
                 if (Flags != null) return true;
-                if (Unused != null) return true;
-                if (FactionOwner != null) return true;
-                if (NpcOwner != null) return true;
                 return false;
             }
             #endregion
@@ -468,15 +376,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
-                {
-                    sb.AppendItem(Unused, "Unused");
-                }
-                {
-                    sb.AppendItem(FactionOwner, "FactionOwner");
-                }
-                {
-                    sb.AppendItem(NpcOwner, "NpcOwner");
-                }
             }
             #endregion
 
@@ -489,9 +388,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Rank = this.Rank.Combine(rhs.Rank);
                 ret.MinLevel = this.MinLevel.Combine(rhs.MinLevel);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.FactionOwner = this.FactionOwner.Combine(rhs.FactionOwner);
-                ret.NpcOwner = this.NpcOwner.Combine(rhs.NpcOwner);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -518,9 +414,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Rank;
             public bool MinLevel;
             public bool Flags;
-            public bool Unused;
-            public bool FactionOwner;
-            public bool NpcOwner;
             #endregion
 
             #region Ctors
@@ -533,9 +426,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Rank = defaultOn;
                 this.MinLevel = defaultOn;
                 this.Flags = defaultOn;
-                this.Unused = defaultOn;
-                this.FactionOwner = defaultOn;
-                this.NpcOwner = defaultOn;
             }
 
             #endregion
@@ -547,9 +437,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Rank, null));
                 ret.Add((MinLevel, null));
                 ret.Add((Flags, null));
-                ret.Add((Unused, null));
-                ret.Add((FactionOwner, null));
-                ret.Add((NpcOwner, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -689,10 +576,7 @@ namespace Mutagen.Bethesda.Fallout3
         new IFormLink<IOwnerGetter> Owner { get; set; }
         new SByte Rank { get; set; }
         new SByte MinLevel { get; set; }
-        new Byte Flags { get; set; }
-        new Byte Unused { get; set; }
-        new IFormLinkNullable<IFactionGetter> FactionOwner { get; set; }
-        new IFormLinkNullable<INpcGetter> NpcOwner { get; set; }
+        new EncounterZone.Flag Flags { get; set; }
     }
 
     public partial interface IEncounterZoneInternal :
@@ -714,10 +598,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<IOwnerGetter> Owner { get; }
         SByte Rank { get; }
         SByte MinLevel { get; }
-        Byte Flags { get; }
-        Byte Unused { get; }
-        IFormLinkNullableGetter<IFactionGetter> FactionOwner { get; }
-        IFormLinkNullableGetter<INpcGetter> NpcOwner { get; }
+        EncounterZone.Flag Flags { get; }
 
     }
 
@@ -898,9 +779,6 @@ namespace Mutagen.Bethesda.Fallout3
         Rank = 8,
         MinLevel = 9,
         Flags = 10,
-        Unused = 11,
-        FactionOwner = 12,
-        NpcOwner = 13,
     }
     #endregion
 
@@ -911,9 +789,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(EncounterZone.Mask<>);
 
@@ -946,9 +824,7 @@ namespace Mutagen.Bethesda.Fallout3
             var triggers = RecordCollection.Factory(RecordTypes.ECZN);
             var all = RecordCollection.Factory(
                 RecordTypes.ECZN,
-                RecordTypes.DATA,
-                RecordTypes.FACT,
-                RecordTypes.NPC_);
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -996,10 +872,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Owner.Clear();
             item.Rank = default(SByte);
             item.MinLevel = default(SByte);
-            item.Flags = default(Byte);
-            item.Unused = default(Byte);
-            item.FactionOwner.Clear();
-            item.NpcOwner.Clear();
+            item.Flags = default(EncounterZone.Flag);
             base.Clear(item);
         }
         
@@ -1018,8 +891,6 @@ namespace Mutagen.Bethesda.Fallout3
         {
             base.RemapLinks(obj, mapping);
             obj.Owner.Relink(mapping);
-            obj.FactionOwner.Relink(mapping);
-            obj.NpcOwner.Relink(mapping);
         }
         
         #endregion
@@ -1091,9 +962,6 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Rank = item.Rank == rhs.Rank;
             ret.MinLevel = item.MinLevel == rhs.MinLevel;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Unused = item.Unused == rhs.Unused;
-            ret.FactionOwner = item.FactionOwner.Equals(rhs.FactionOwner);
-            ret.NpcOwner = item.NpcOwner.Equals(rhs.NpcOwner);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1158,18 +1026,6 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Unused ?? true)
-            {
-                sb.AppendItem(item.Unused, "Unused");
-            }
-            if (printMask?.FactionOwner ?? true)
-            {
-                sb.AppendItem(item.FactionOwner.FormKeyNullable, "FactionOwner");
-            }
-            if (printMask?.NpcOwner ?? true)
-            {
-                sb.AppendItem(item.NpcOwner.FormKeyNullable, "NpcOwner");
             }
         }
         
@@ -1237,18 +1093,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Unused) ?? true))
-            {
-                if (lhs.Unused != rhs.Unused) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.FactionOwner) ?? true))
-            {
-                if (!lhs.FactionOwner.Equals(rhs.FactionOwner)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.NpcOwner) ?? true))
-            {
-                if (!lhs.NpcOwner.Equals(rhs.NpcOwner)) return false;
-            }
             return true;
         }
         
@@ -1281,9 +1125,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Rank);
             hash.Add(item.MinLevel);
             hash.Add(item.Flags);
-            hash.Add(item.Unused);
-            hash.Add(item.FactionOwner);
-            hash.Add(item.NpcOwner);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1314,14 +1155,6 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             yield return FormLinkInformation.Factory(obj.Owner);
-            if (FormLinkInformation.TryFactory(obj.FactionOwner, out var FactionOwnerInfo))
-            {
-                yield return FactionOwnerInfo;
-            }
-            if (FormLinkInformation.TryFactory(obj.NpcOwner, out var NpcOwnerInfo))
-            {
-                yield return NpcOwnerInfo;
-            }
             yield break;
         }
         
@@ -1411,18 +1244,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Unused) ?? true))
-            {
-                item.Unused = rhs.Unused;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.FactionOwner) ?? true))
-            {
-                item.FactionOwner.SetTo(rhs.FactionOwner.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.NpcOwner) ?? true))
-            {
-                item.NpcOwner.SetTo(rhs.NpcOwner.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1600,17 +1421,11 @@ namespace Mutagen.Bethesda.Fallout3
                     item: item.Owner);
                 writer.Write(item.Rank);
                 writer.Write(item.MinLevel);
-                writer.Write(item.Flags);
-                writer.Write(item.Unused);
+                EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 2);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.FactionOwner,
-                header: translationParams.ConvertToCustom(RecordTypes.FACT));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.NpcOwner,
-                header: translationParams.ConvertToCustom(RecordTypes.NPC_));
         }
 
         public void Write(
@@ -1689,23 +1504,11 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Rank = dataFrame.ReadInt8();
                     if (dataFrame.Remaining < 1) return null;
                     item.MinLevel = dataFrame.ReadInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Flags = dataFrame.ReadUInt8();
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Unused = dataFrame.ReadUInt8();
-                    return (int)EncounterZone_FieldIndex.Unused;
-                }
-                case RecordTypeInts.FACT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionOwner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)EncounterZone_FieldIndex.FactionOwner;
-                }
-                case RecordTypeInts.NPC_:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NpcOwner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)EncounterZone_FieldIndex.NpcOwner;
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Flags = EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
+                    return (int)EncounterZone_FieldIndex.Flags;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1785,20 +1588,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Byte Flags => _Flags_IsSet ? _recordData.Span[_FlagsLocation] : default;
-        #endregion
-        #region Unused
-        private int _UnusedLocation => _DATALocation!.Value.Min + 0x7;
-        private bool _Unused_IsSet => _DATALocation.HasValue;
-        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
-        #endregion
-        #region FactionOwner
-        private int? _FactionOwnerLocation;
-        public IFormLinkNullableGetter<IFactionGetter> FactionOwner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _FactionOwnerLocation);
-        #endregion
-        #region NpcOwner
-        private int? _NpcOwnerLocation;
-        public IFormLinkNullableGetter<INpcGetter> NpcOwner => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _NpcOwnerLocation);
+        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1872,17 +1662,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)EncounterZone_FieldIndex.Unused;
-                }
-                case RecordTypeInts.FACT:
-                {
-                    _FactionOwnerLocation = (stream.Position - offset);
-                    return (int)EncounterZone_FieldIndex.FactionOwner;
-                }
-                case RecordTypeInts.NPC_:
-                {
-                    _NpcOwnerLocation = (stream.Position - offset);
-                    return (int)EncounterZone_FieldIndex.NpcOwner;
+                    return (int)EncounterZone_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

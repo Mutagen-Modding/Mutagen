@@ -3,19 +3,16 @@
   <Object name="EncounterZone" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="ECZN">
     <Fields>
-      <Data>
+      <Data nullable="False">
         <Fields>
           <FormLink name="Owner">
             <Interface>IOwner</Interface>
           </FormLink>
           <Int8 name="Rank" />
           <Int8 name="MinLevel" />
-          <UInt8 name="Flags" />
-          <UInt8 name="Unused" />
+          <Enum name="Flags" enumName="EncounterZone.Flag" byteLength="2" />
         </Fields>
       </Data>
-      <FormLink name="FactionOwner" refName="Faction" recordType="FACT" />
-      <FormLink name="NpcOwner" refName="Npc" recordType="NPC_" />
     </Fields>
   </Object>
 </Loqui>
