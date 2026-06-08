@@ -177,8 +177,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region DamageResistance
         public Int16 DamageResistance { get; set; } = default(Int16);
         #endregion
-        #region Flags
-        public UInt16 Flags { get; set; } = default(UInt16);
+        #region ModulatesVoice
+        public Boolean ModulatesVoice { get; set; } = default(Boolean);
         #endregion
         #region DamageThreshold
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -195,25 +195,16 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused = new byte[4];
-        public MemorySlice<Byte> Unused
+        private UInt32 _Unused;
+        public UInt32 Unused
         {
-            get => _Unused;
-            set => this._Unused = value;
+            get => this._Unused;
+            set
+            {
+                this.DNAMDataTypeState &= ~DNAMDataType.Break0;
+                this._Unused = value;
+            }
         }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IArmorAddonGetter.Unused => this.Unused;
-        #endregion
-        #region BMDT
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _BMDT;
-        public MemorySlice<Byte>? BMDT
-        {
-            get => this._BMDT;
-            set => this._BMDT = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IArmorAddonGetter.BMDT => this.BMDT;
         #endregion
         #region DNAMDataTypeState
         public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default(ArmorAddon.DNAMDataType);
@@ -259,10 +250,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MaxCondition = initialValue;
                 this.Weight = initialValue;
                 this.DamageResistance = initialValue;
-                this.Flags = initialValue;
+                this.ModulatesVoice = initialValue;
                 this.DamageThreshold = initialValue;
                 this.Unused = initialValue;
-                this.BMDT = initialValue;
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -290,10 +280,9 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MaxCondition,
                 TItem Weight,
                 TItem DamageResistance,
-                TItem Flags,
+                TItem ModulatesVoice,
                 TItem DamageThreshold,
                 TItem Unused,
-                TItem BMDT,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -320,10 +309,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MaxCondition = MaxCondition;
                 this.Weight = Weight;
                 this.DamageResistance = DamageResistance;
-                this.Flags = Flags;
+                this.ModulatesVoice = ModulatesVoice;
                 this.DamageThreshold = DamageThreshold;
                 this.Unused = Unused;
-                this.BMDT = BMDT;
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -352,10 +340,9 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem MaxCondition;
             public TItem Weight;
             public TItem DamageResistance;
-            public TItem Flags;
+            public TItem ModulatesVoice;
             public TItem DamageThreshold;
             public TItem Unused;
-            public TItem BMDT;
             public TItem DNAMDataTypeState;
             #endregion
 
@@ -386,10 +373,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MaxCondition, rhs.MaxCondition)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.DamageResistance, rhs.DamageResistance)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ModulatesVoice, rhs.ModulatesVoice)) return false;
                 if (!object.Equals(this.DamageThreshold, rhs.DamageThreshold)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
-                if (!object.Equals(this.BMDT, rhs.BMDT)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -412,10 +398,9 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MaxCondition);
                 hash.Add(this.Weight);
                 hash.Add(this.DamageResistance);
-                hash.Add(this.Flags);
+                hash.Add(this.ModulatesVoice);
                 hash.Add(this.DamageThreshold);
                 hash.Add(this.Unused);
-                hash.Add(this.BMDT);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -467,10 +452,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.MaxCondition)) return false;
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.DamageResistance)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.ModulatesVoice)) return false;
                 if (!eval(this.DamageThreshold)) return false;
                 if (!eval(this.Unused)) return false;
-                if (!eval(this.BMDT)) return false;
                 if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -520,10 +504,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.MaxCondition)) return true;
                 if (eval(this.Weight)) return true;
                 if (eval(this.DamageResistance)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.ModulatesVoice)) return true;
                 if (eval(this.DamageThreshold)) return true;
                 if (eval(this.Unused)) return true;
-                if (eval(this.BMDT)) return true;
                 if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
@@ -556,10 +539,9 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MaxCondition = eval(this.MaxCondition);
                 obj.Weight = eval(this.Weight);
                 obj.DamageResistance = eval(this.DamageResistance);
-                obj.Flags = eval(this.Flags);
+                obj.ModulatesVoice = eval(this.ModulatesVoice);
                 obj.DamageThreshold = eval(this.DamageThreshold);
                 obj.Unused = eval(this.Unused);
-                obj.BMDT = eval(this.BMDT);
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
@@ -643,9 +625,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DamageResistance, "DamageResistance");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.ModulatesVoice ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(ModulatesVoice, "ModulatesVoice");
                     }
                     if (printMask?.DamageThreshold ?? true)
                     {
@@ -654,10 +636,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.Unused ?? true)
                     {
                         sb.AppendItem(Unused, "Unused");
-                    }
-                    if (printMask?.BMDT ?? true)
-                    {
-                        sb.AppendItem(BMDT, "BMDT");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
@@ -690,10 +668,9 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? MaxCondition;
             public Exception? Weight;
             public Exception? DamageResistance;
-            public Exception? Flags;
+            public Exception? ModulatesVoice;
             public Exception? DamageThreshold;
             public Exception? Unused;
-            public Exception? BMDT;
             public Exception? DNAMDataTypeState;
             #endregion
 
@@ -735,14 +712,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return Weight;
                     case ArmorAddon_FieldIndex.DamageResistance:
                         return DamageResistance;
-                    case ArmorAddon_FieldIndex.Flags:
-                        return Flags;
+                    case ArmorAddon_FieldIndex.ModulatesVoice:
+                        return ModulatesVoice;
                     case ArmorAddon_FieldIndex.DamageThreshold:
                         return DamageThreshold;
                     case ArmorAddon_FieldIndex.Unused:
                         return Unused;
-                    case ArmorAddon_FieldIndex.BMDT:
-                        return BMDT;
                     case ArmorAddon_FieldIndex.DNAMDataTypeState:
                         return DNAMDataTypeState;
                     default:
@@ -803,17 +778,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case ArmorAddon_FieldIndex.DamageResistance:
                         this.DamageResistance = ex;
                         break;
-                    case ArmorAddon_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ArmorAddon_FieldIndex.ModulatesVoice:
+                        this.ModulatesVoice = ex;
                         break;
                     case ArmorAddon_FieldIndex.DamageThreshold:
                         this.DamageThreshold = ex;
                         break;
                     case ArmorAddon_FieldIndex.Unused:
                         this.Unused = ex;
-                        break;
-                    case ArmorAddon_FieldIndex.BMDT:
-                        this.BMDT = ex;
                         break;
                     case ArmorAddon_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = ex;
@@ -877,17 +849,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case ArmorAddon_FieldIndex.DamageResistance:
                         this.DamageResistance = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ArmorAddon_FieldIndex.ModulatesVoice:
+                        this.ModulatesVoice = (Exception?)obj;
                         break;
                     case ArmorAddon_FieldIndex.DamageThreshold:
                         this.DamageThreshold = (Exception?)obj;
                         break;
                     case ArmorAddon_FieldIndex.Unused:
                         this.Unused = (Exception?)obj;
-                        break;
-                    case ArmorAddon_FieldIndex.BMDT:
-                        this.BMDT = (Exception?)obj;
                         break;
                     case ArmorAddon_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = (Exception?)obj;
@@ -917,10 +886,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MaxCondition != null) return true;
                 if (Weight != null) return true;
                 if (DamageResistance != null) return true;
-                if (Flags != null) return true;
+                if (ModulatesVoice != null) return true;
                 if (DamageThreshold != null) return true;
                 if (Unused != null) return true;
-                if (BMDT != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
             }
@@ -985,16 +953,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(DamageResistance, "DamageResistance");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(ModulatesVoice, "ModulatesVoice");
                 }
                 {
                     sb.AppendItem(DamageThreshold, "DamageThreshold");
                 }
                 {
                     sb.AppendItem(Unused, "Unused");
-                }
-                {
-                    sb.AppendItem(BMDT, "BMDT");
                 }
                 {
                     sb.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
@@ -1023,10 +988,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MaxCondition = this.MaxCondition.Combine(rhs.MaxCondition);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.DamageResistance = this.DamageResistance.Combine(rhs.DamageResistance);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ModulatesVoice = this.ModulatesVoice.Combine(rhs.ModulatesVoice);
                 ret.DamageThreshold = this.DamageThreshold.Combine(rhs.DamageThreshold);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
-                ret.BMDT = this.BMDT.Combine(rhs.BMDT);
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -1066,10 +1030,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool MaxCondition;
             public bool Weight;
             public bool DamageResistance;
-            public bool Flags;
+            public bool ModulatesVoice;
             public bool DamageThreshold;
             public bool Unused;
-            public bool BMDT;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -1089,10 +1052,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MaxCondition = defaultOn;
                 this.Weight = defaultOn;
                 this.DamageResistance = defaultOn;
-                this.Flags = defaultOn;
+                this.ModulatesVoice = defaultOn;
                 this.DamageThreshold = defaultOn;
                 this.Unused = defaultOn;
-                this.BMDT = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
 
@@ -1117,10 +1079,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MaxCondition, null));
                 ret.Add((Weight, null));
                 ret.Add((DamageResistance, null));
-                ret.Add((Flags, null));
+                ret.Add((ModulatesVoice, null));
                 ret.Add((DamageThreshold, null));
                 ret.Add((Unused, null));
-                ret.Add((BMDT, null));
                 ret.Add((DNAMDataTypeState, null));
             }
 
@@ -1290,10 +1251,9 @@ namespace Mutagen.Bethesda.Fallout3
         new Int32 MaxCondition { get; set; }
         new Single Weight { get; set; }
         new Int16 DamageResistance { get; set; }
-        new UInt16 Flags { get; set; }
+        new Boolean ModulatesVoice { get; set; }
         new Single DamageThreshold { get; set; }
-        new MemorySlice<Byte> Unused { get; set; }
-        new MemorySlice<Byte>? BMDT { get; set; }
+        new UInt32 Unused { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -1344,10 +1304,9 @@ namespace Mutagen.Bethesda.Fallout3
         Int32 MaxCondition { get; }
         Single Weight { get; }
         Int16 DamageResistance { get; }
-        UInt16 Flags { get; }
+        Boolean ModulatesVoice { get; }
         Single DamageThreshold { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
-        ReadOnlyMemorySlice<Byte>? BMDT { get; }
+        UInt32 Unused { get; }
         ArmorAddon.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -1541,11 +1500,10 @@ namespace Mutagen.Bethesda.Fallout3
         MaxCondition = 20,
         Weight = 21,
         DamageResistance = 22,
-        Flags = 23,
+        ModulatesVoice = 23,
         DamageThreshold = 24,
         Unused = 25,
-        BMDT = 26,
-        DNAMDataTypeState = 27,
+        DNAMDataTypeState = 26,
     }
     #endregion
 
@@ -1556,9 +1514,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -1709,10 +1667,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.MaxCondition = default(Int32);
             item.Weight = default(Single);
             item.DamageResistance = default(Int16);
-            item.Flags = default(UInt16);
+            item.ModulatesVoice = default(Boolean);
             item.DamageThreshold = default(Single);
-            item.Unused = new byte[4];
-            item.BMDT = default;
+            item.Unused = default(UInt32);
             item.DNAMDataTypeState = default(ArmorAddon.DNAMDataType);
             base.Clear(item);
         }
@@ -1834,10 +1791,9 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MaxCondition = item.MaxCondition == rhs.MaxCondition;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.DamageResistance = item.DamageResistance == rhs.DamageResistance;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.ModulatesVoice = item.ModulatesVoice == rhs.ModulatesVoice;
             ret.DamageThreshold = item.DamageThreshold.EqualsWithin(rhs.DamageThreshold);
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
-            ret.BMDT = MemorySliceExt.SequenceEqual(item.BMDT, rhs.BMDT);
+            ret.Unused = item.Unused == rhs.Unused;
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1961,9 +1917,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DamageResistance, "DamageResistance");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.ModulatesVoice ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.ModulatesVoice, "ModulatesVoice");
             }
             if (printMask?.DamageThreshold ?? true)
             {
@@ -1971,12 +1927,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if (printMask?.Unused ?? true)
             {
-                sb.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
-            }
-            if ((printMask?.BMDT ?? true)
-                && item.BMDT is {} BMDTItem)
-            {
-                sb.AppendLine($"BMDT => {SpanExt.ToHexString(BMDTItem)}");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.DNAMDataTypeState ?? true)
             {
@@ -2120,9 +2071,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.DamageResistance != rhs.DamageResistance) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ModulatesVoice) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.ModulatesVoice != rhs.ModulatesVoice) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DamageThreshold) ?? true))
             {
@@ -2130,11 +2081,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unused) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BMDT) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.BMDT, rhs.BMDT)) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -2211,13 +2158,9 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MaxCondition);
             hash.Add(item.Weight);
             hash.Add(item.DamageResistance);
-            hash.Add(item.Flags);
+            hash.Add(item.ModulatesVoice);
             hash.Add(item.DamageThreshold);
             hash.Add(item.Unused);
-            if (item.BMDT is {} BMDTItem)
-            {
-                hash.Add(BMDTItem);
-            }
             hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2538,9 +2481,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.DamageResistance = rhs.DamageResistance;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ModulatesVoice) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.ModulatesVoice = rhs.ModulatesVoice;
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DamageThreshold) ?? true))
             {
@@ -2548,18 +2491,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
-            }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BMDT) ?? true))
-            {
-                if(rhs.BMDT is {} BMDTrhs)
-                {
-                    item.BMDT = BMDTrhs.ToArray();
-                }
-                else
-                {
-                    item.BMDT = default;
-                }
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -2822,21 +2754,21 @@ namespace Mutagen.Bethesda.Fallout3
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
                 writer.Write(item.DamageResistance);
-                writer.Write(item.Flags);
+                writer.Write(item.ModulatesVoice, length: 2);
                 if (!item.DNAMDataTypeState.HasFlag(ArmorAddon.DNAMDataType.Break0))
                 {
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.DamageThreshold);
-                    ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.Unused);
+                    if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.DamageThreshold);
+                    }
+                    if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        writer.Write(item.Unused);
+                    }
                 }
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.BMDT,
-                header: translationParams.ConvertToCustom(RecordTypes.BMDT));
         }
 
         public void Write(
@@ -2930,33 +2862,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.BMDT:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Name)
-                    {
-                        item.BipedData = Mutagen.Bethesda.Fallout3.BipedData.CreateFromBinary(frame: frame);
-                        return new ParseResult((int)ArmorAddon_FieldIndex.BipedData, nextRecordType);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Unused)
-                    {
-                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.BMDT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                        return new ParseResult((int)ArmorAddon_FieldIndex.BMDT, nextRecordType);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
-                        {
-                            case 0:
-                                item.BipedData = Mutagen.Bethesda.Fallout3.BipedData.CreateFromBinary(frame: frame);
-                                return new ParseResult((int)ArmorAddon_FieldIndex.BipedData, nextRecordType);
-                            case 1:
-                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.BMDT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                                return new ParseResult((int)ArmorAddon_FieldIndex.BMDT, nextRecordType);
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    item.BipedData = Mutagen.Bethesda.Fallout3.BipedData.CreateFromBinary(frame: frame);
+                    return (int)ArmorAddon_FieldIndex.BipedData;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
@@ -3113,15 +3020,24 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 2) return null;
                     item.DamageResistance = dataFrame.ReadInt16();
                     if (dataFrame.Remaining < 2) return null;
-                    item.Flags = dataFrame.ReadUInt16();
+                    item.ModulatesVoice = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 2);
                     if (dataFrame.Complete)
                     {
                         item.DNAMDataTypeState |= ArmorAddon.DNAMDataType.Break0;
-                        return (int)ArmorAddon_FieldIndex.Flags;
+                        return (int)ArmorAddon_FieldIndex.ModulatesVoice;
                     }
                     if (dataFrame.Remaining < 4) return null;
-                    item.DamageThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        item.DamageThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
+                    {
+                        item.Unused = dataFrame.ReadUInt32();
+                    }
                     return (int)ArmorAddon_FieldIndex.Unused;
                 }
                 default:
@@ -3248,24 +3164,22 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _DamageResistance_IsSet => _DNAMLocation.HasValue;
         public Int16 DamageResistance => _DamageResistance_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_DamageResistanceLocation, 2)) : default(Int16);
         #endregion
-        #region Flags
-        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x2;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public UInt16 Flags => _Flags_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_FlagsLocation, 2)) : default(UInt16);
+        #region ModulatesVoice
+        private int _ModulatesVoiceLocation => _DNAMLocation!.Value.Min + 0x2;
+        private bool _ModulatesVoice_IsSet => _DNAMLocation.HasValue;
+        public Boolean ModulatesVoice => _ModulatesVoice_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_ModulatesVoiceLocation, 2)) >= 1 : default(Boolean);
         #endregion
         #region DamageThreshold
         private int _DamageThresholdLocation => _DNAMLocation!.Value.Min + 0x4;
-        private bool _DamageThreshold_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ArmorAddon.DNAMDataType.Break0);
+        private bool _DamageThreshold_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ArmorAddon.DNAMDataType.Break0) && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
         public Single DamageThreshold => _DamageThreshold_IsSet ? _recordData.Slice(_DamageThresholdLocation, 4).Float() : default(Single);
+        int DamageThresholdModHeaderVersioningOffset => _package.MetaData.ModHeaderVersion!.Value < 1.32f ? -4 : 0;
         #endregion
         #region Unused
-        private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x8;
-        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ArmorAddon.DNAMDataType.Break0);
-        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _recordData.Span.Slice(_UnusedLocation, 4).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
-        #endregion
-        #region BMDT
-        private int? _BMDTLocation;
-        public ReadOnlyMemorySlice<Byte>? BMDT => _BMDTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BMDTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private int _UnusedLocation => _DNAMLocation!.Value.Min + DamageThresholdModHeaderVersioningOffset + 0x8;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ArmorAddon.DNAMDataType.Break0) && _package.MetaData.ModHeaderVersion!.Value >= 1.32f;
+        public UInt32 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnusedLocation, 4)) : default(UInt32);
+        int UnusedModHeaderVersioningOffset => DamageThresholdModHeaderVersioningOffset + (_package.MetaData.ModHeaderVersion!.Value < 1.32f ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3348,35 +3262,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.BMDT:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Name)
-                    {
-                        _BipedDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                        return new ParseResult((int)ArmorAddon_FieldIndex.BipedData, type);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Unused)
-                    {
-                        _BMDTLocation = (stream.Position - offset);
-                        return new ParseResult((int)ArmorAddon_FieldIndex.BMDT, type);
-                    }
-                    else
-                    {
-                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
-                        {
-                            case 0:
-                            {
-                                _BipedDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                                return new ParseResult((int)ArmorAddon_FieldIndex.BipedData, type);
-                            }
-                            case 1:
-                            {
-                                _BMDTLocation = (stream.Position - offset);
-                                return new ParseResult((int)ArmorAddon_FieldIndex.BMDT, type);
-                            }
-                            default:
-                                throw new NotImplementedException();
-                        }
-                    }
+                    _BipedDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)ArmorAddon_FieldIndex.BipedData;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:

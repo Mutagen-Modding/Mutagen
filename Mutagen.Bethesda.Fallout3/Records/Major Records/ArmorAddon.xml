@@ -7,7 +7,6 @@
       <String name="Name" recordType="FULL" />
       <RefDirect name="BipedData" refName="BipedData" nullable="False" />
 
-      <!-- Male body -->
       <RefDirect name="MaleBipedModel" refName="Model" />
       <RefDirect name="MaleWorldModel" refName="Model">
         <RecordTypeOverrides>
@@ -19,7 +18,6 @@
       <String name="MaleIcon" recordType="ICON" />
       <String name="MaleMessageIcon" recordType="MICO" />
 
-      <!-- Female body -->
       <RefDirect name="FemaleBipedModel" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD3" />
@@ -48,17 +46,20 @@
         </Fields>
       </Data>
 
-      <Data recordType="DNAM">
+      <Data recordType="DNAM" nullable="False">
         <Fields>
           <Int16 name="DamageResistance" />
-          <UInt16 name="Flags" />
+          <Bool name="ModulatesVoice" byteLength="2" />
           <Break />
-          <Float name="DamageThreshold" />
-          <ByteArray name="Unused" byteLength="4" nullable="False" />
+          <Float name="DamageThreshold">
+            <ModHeaderVersioning version="1.32" />
+          </Float>
+          <UInt32 name="Unused">
+            <ModHeaderVersioning version="1.32" />
+          </UInt32>
         </Fields>
       </Data>
-          <ByteArray name="BMDT" recordType="BMDT" />
-</Fields>
+    </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
