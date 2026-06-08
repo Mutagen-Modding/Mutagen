@@ -40,7 +40,6 @@
     <Compile Include="Enum\CreatureType.cs" />
     <Compile Include="Enum\ImpactMaterialType.cs" />
     <Compile Include="Enum\WorldImpactMaterialType.cs" />
-    <Compile Include="Enum\ImpactOrientation.cs" />
     <Compile Include="Enum\Mood.cs" />
     <Compile Include="Enum\SoundType.cs" />
     <Compile Include="Enum\WaterType.cs" />

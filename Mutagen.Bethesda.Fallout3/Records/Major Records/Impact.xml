@@ -4,14 +4,14 @@
           recordType="IPCT">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <Data>
+      <Data nullable="False">
         <Fields>
           <Float name="Duration" />
-          <Enum name="Orientation" enumName="ImpactOrientation" byteLength="4" />
+          <Enum name="Orientation" enumName="Impact.OrientationType" byteLength="4" />
           <Float name="AngleThreshold" />
           <Float name="PlacementRadius" />
           <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
-          <UInt32 name="Flags" />
+          <Bool name="NoDecalData" byteLength="4" />
         </Fields>
       </Data>
       <RefDirect name="Decal" refName="Decal" />

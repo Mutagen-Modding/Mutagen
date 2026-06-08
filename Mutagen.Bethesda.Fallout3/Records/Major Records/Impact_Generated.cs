@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Single Duration { get; set; } = default(Single);
         #endregion
         #region Orientation
-        public ImpactOrientation Orientation { get; set; } = default(ImpactOrientation);
+        public Impact.OrientationType Orientation { get; set; } = default(Impact.OrientationType);
         #endregion
         #region AngleThreshold
         public Single AngleThreshold { get; set; } = default(Single);
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region SoundLevel
         public SoundLevel SoundLevel { get; set; } = default(SoundLevel);
         #endregion
-        #region Flags
-        public UInt32 Flags { get; set; } = default(UInt32);
+        #region NoDecalData
+        public Boolean NoDecalData { get; set; } = default(Boolean);
         #endregion
         #region Decal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AngleThreshold = initialValue;
                 this.PlacementRadius = initialValue;
                 this.SoundLevel = initialValue;
-                this.Flags = initialValue;
+                this.NoDecalData = initialValue;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
                 this.TextureSet = initialValue;
                 this.Sound1 = initialValue;
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem AngleThreshold,
                 TItem PlacementRadius,
                 TItem SoundLevel,
-                TItem Flags,
+                TItem NoDecalData,
                 TItem Decal,
                 TItem TextureSet,
                 TItem Sound1,
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AngleThreshold = AngleThreshold;
                 this.PlacementRadius = PlacementRadius;
                 this.SoundLevel = SoundLevel;
-                this.Flags = Flags;
+                this.NoDecalData = NoDecalData;
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
                 this.TextureSet = TextureSet;
                 this.Sound1 = Sound1;
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem AngleThreshold;
             public TItem PlacementRadius;
             public TItem SoundLevel;
-            public TItem Flags;
+            public TItem NoDecalData;
             public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
             public TItem TextureSet;
             public TItem Sound1;
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.AngleThreshold, rhs.AngleThreshold)) return false;
                 if (!object.Equals(this.PlacementRadius, rhs.PlacementRadius)) return false;
                 if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.NoDecalData, rhs.NoDecalData)) return false;
                 if (!object.Equals(this.Decal, rhs.Decal)) return false;
                 if (!object.Equals(this.TextureSet, rhs.TextureSet)) return false;
                 if (!object.Equals(this.Sound1, rhs.Sound1)) return false;
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.AngleThreshold);
                 hash.Add(this.PlacementRadius);
                 hash.Add(this.SoundLevel);
-                hash.Add(this.Flags);
+                hash.Add(this.NoDecalData);
                 hash.Add(this.Decal);
                 hash.Add(this.TextureSet);
                 hash.Add(this.Sound1);
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.AngleThreshold)) return false;
                 if (!eval(this.PlacementRadius)) return false;
                 if (!eval(this.SoundLevel)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.NoDecalData)) return false;
                 if (Decal != null)
                 {
                     if (!eval(this.Decal.Overall)) return false;
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.AngleThreshold)) return true;
                 if (eval(this.PlacementRadius)) return true;
                 if (eval(this.SoundLevel)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.NoDecalData)) return true;
                 if (Decal != null)
                 {
                     if (eval(this.Decal.Overall)) return true;
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.AngleThreshold = eval(this.AngleThreshold);
                 obj.PlacementRadius = eval(this.PlacementRadius);
                 obj.SoundLevel = eval(this.SoundLevel);
-                obj.Flags = eval(this.Flags);
+                obj.NoDecalData = eval(this.NoDecalData);
                 obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal.Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
                 obj.TextureSet = eval(this.TextureSet);
                 obj.Sound1 = eval(this.Sound1);
@@ -395,9 +395,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.NoDecalData ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(NoDecalData, "NoDecalData");
                     }
                     if (printMask?.Decal?.Overall ?? true)
                     {
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? AngleThreshold;
             public Exception? PlacementRadius;
             public Exception? SoundLevel;
-            public Exception? Flags;
+            public Exception? NoDecalData;
             public MaskItem<Exception?, Decal.ErrorMask?>? Decal;
             public Exception? TextureSet;
             public Exception? Sound1;
@@ -457,8 +457,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return PlacementRadius;
                     case Impact_FieldIndex.SoundLevel:
                         return SoundLevel;
-                    case Impact_FieldIndex.Flags:
-                        return Flags;
+                    case Impact_FieldIndex.NoDecalData:
+                        return NoDecalData;
                     case Impact_FieldIndex.Decal:
                         return Decal;
                     case Impact_FieldIndex.TextureSet:
@@ -495,8 +495,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Impact_FieldIndex.SoundLevel:
                         this.SoundLevel = ex;
                         break;
-                    case Impact_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Impact_FieldIndex.NoDecalData:
+                        this.NoDecalData = ex;
                         break;
                     case Impact_FieldIndex.Decal:
                         this.Decal = new MaskItem<Exception?, Decal.ErrorMask?>(ex, null);
@@ -539,8 +539,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Impact_FieldIndex.SoundLevel:
                         this.SoundLevel = (Exception?)obj;
                         break;
-                    case Impact_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Impact_FieldIndex.NoDecalData:
+                        this.NoDecalData = (Exception?)obj;
                         break;
                     case Impact_FieldIndex.Decal:
                         this.Decal = (MaskItem<Exception?, Decal.ErrorMask?>?)obj;
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (AngleThreshold != null) return true;
                 if (PlacementRadius != null) return true;
                 if (SoundLevel != null) return true;
-                if (Flags != null) return true;
+                if (NoDecalData != null) return true;
                 if (Decal != null) return true;
                 if (TextureSet != null) return true;
                 if (Sound1 != null) return true;
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(SoundLevel, "SoundLevel");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(NoDecalData, "NoDecalData");
                 }
                 Decal?.Print(sb);
                 {
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.AngleThreshold = this.AngleThreshold.Combine(rhs.AngleThreshold);
                 ret.PlacementRadius = this.PlacementRadius.Combine(rhs.PlacementRadius);
                 ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.NoDecalData = this.NoDecalData.Combine(rhs.NoDecalData);
                 ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
                 ret.TextureSet = this.TextureSet.Combine(rhs.TextureSet);
                 ret.Sound1 = this.Sound1.Combine(rhs.Sound1);
@@ -676,7 +676,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool AngleThreshold;
             public bool PlacementRadius;
             public bool SoundLevel;
-            public bool Flags;
+            public bool NoDecalData;
             public Decal.TranslationMask? Decal;
             public bool TextureSet;
             public bool Sound1;
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AngleThreshold = defaultOn;
                 this.PlacementRadius = defaultOn;
                 this.SoundLevel = defaultOn;
-                this.Flags = defaultOn;
+                this.NoDecalData = defaultOn;
                 this.TextureSet = defaultOn;
                 this.Sound1 = defaultOn;
                 this.Sound2 = defaultOn;
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((AngleThreshold, null));
                 ret.Add((PlacementRadius, null));
                 ret.Add((SoundLevel, null));
-                ret.Add((Flags, null));
+                ret.Add((NoDecalData, null));
                 ret.Add((Decal != null ? Decal.OnOverall : DefaultOn, Decal?.GetCrystal()));
                 ret.Add((TextureSet, null));
                 ret.Add((Sound1, null));
@@ -858,11 +858,11 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         new Model? Model { get; set; }
         new Single Duration { get; set; }
-        new ImpactOrientation Orientation { get; set; }
+        new Impact.OrientationType Orientation { get; set; }
         new Single AngleThreshold { get; set; }
         new Single PlacementRadius { get; set; }
         new SoundLevel SoundLevel { get; set; }
-        new UInt32 Flags { get; set; }
+        new Boolean NoDecalData { get; set; }
         new Decal? Decal { get; set; }
         new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new IFormLinkNullable<ISoundGetter> Sound1 { get; set; }
@@ -893,11 +893,11 @@ namespace Mutagen.Bethesda.Fallout3
         IModelGetter? Model { get; }
         #endregion
         Single Duration { get; }
-        ImpactOrientation Orientation { get; }
+        Impact.OrientationType Orientation { get; }
         Single AngleThreshold { get; }
         Single PlacementRadius { get; }
         SoundLevel SoundLevel { get; }
-        UInt32 Flags { get; }
+        Boolean NoDecalData { get; }
         IDecalGetter? Decal { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound1 { get; }
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Fallout3
         AngleThreshold = 10,
         PlacementRadius = 11,
         SoundLevel = 12,
-        Flags = 13,
+        NoDecalData = 13,
         Decal = 14,
         TextureSet = 15,
         Sound1 = 16,
@@ -1190,11 +1190,11 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Model = null;
             item.Duration = default(Single);
-            item.Orientation = default(ImpactOrientation);
+            item.Orientation = default(Impact.OrientationType);
             item.AngleThreshold = default(Single);
             item.PlacementRadius = default(Single);
             item.SoundLevel = default(SoundLevel);
-            item.Flags = default(UInt32);
+            item.NoDecalData = default(Boolean);
             item.Decal = null;
             item.TextureSet.Clear();
             item.Sound1.Clear();
@@ -1297,7 +1297,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.AngleThreshold = item.AngleThreshold.EqualsWithin(rhs.AngleThreshold);
             ret.PlacementRadius = item.PlacementRadius.EqualsWithin(rhs.PlacementRadius);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.NoDecalData = item.NoDecalData == rhs.NoDecalData;
             ret.Decal = EqualsMaskHelper.EqualsHelper(
                 item.Decal,
                 rhs.Decal,
@@ -1380,9 +1380,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.SoundLevel, "SoundLevel");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.NoDecalData ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.NoDecalData, "NoDecalData");
             }
             if ((printMask?.Decal?.Overall ?? true)
                 && item.Decal is {} DecalItem)
@@ -1479,9 +1479,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.NoDecalData != rhs.NoDecalData) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
@@ -1540,7 +1540,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.AngleThreshold);
             hash.Add(item.PlacementRadius);
             hash.Add(item.SoundLevel);
-            hash.Add(item.Flags);
+            hash.Add(item.NoDecalData);
             if (item.Decal is {} Decalitem)
             {
                 hash.Add(Decalitem);
@@ -1716,9 +1716,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.SoundLevel = rhs.SoundLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.NoDecalData) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.NoDecalData = rhs.NoDecalData;
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Fallout3
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Duration);
-                EnumBinaryTranslation<ImpactOrientation, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<Impact.OrientationType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Orientation,
                     length: 4);
@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Fallout3
                     writer,
                     item.SoundLevel,
                     length: 4);
-                writer.Write(item.Flags);
+                writer.Write(item.NoDecalData, length: 4);
             }
             if (item.Decal is {} DecalItem)
             {
@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 4) return null;
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Orientation = EnumBinaryTranslation<ImpactOrientation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Orientation = EnumBinaryTranslation<Impact.OrientationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
@@ -2072,8 +2072,10 @@ namespace Mutagen.Bethesda.Fallout3
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Flags = dataFrame.ReadUInt32();
-                    return (int)Impact_FieldIndex.Flags;
+                    item.NoDecalData = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                        reader: dataFrame,
+                        byteLength: 4);
+                    return (int)Impact_FieldIndex.NoDecalData;
                 }
                 case RecordTypeInts.DODT:
                 {
@@ -2167,7 +2169,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Orientation_IsSet => _DATALocation.HasValue;
-        public ImpactOrientation Orientation => _Orientation_IsSet ? (ImpactOrientation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OrientationLocation, 0x4)) : default;
+        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OrientationLocation, 0x4)) : default;
         #endregion
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
@@ -2184,10 +2186,10 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
         public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
         #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public UInt32 Flags => _Flags_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_FlagsLocation, 4)) : default(UInt32);
+        #region NoDecalData
+        private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _NoDecalData_IsSet => _DATALocation.HasValue;
+        public Boolean NoDecalData => _NoDecalData_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_NoDecalDataLocation, 4)) >= 1 : default(Boolean);
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
@@ -2289,7 +2291,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Impact_FieldIndex.Flags;
+                    return (int)Impact_FieldIndex.NoDecalData;
                 }
                 case RecordTypeInts.DODT:
                 {
