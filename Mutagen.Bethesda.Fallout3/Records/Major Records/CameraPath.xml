@@ -10,8 +10,7 @@
           <FormLink name="Previous" refName="CameraPath" />
         </Fields>
       </Data>
-      <Enum name="Zoom" enumName="CameraPath.ZoomType" byteLength="1" nullable="False" binary="Custom" recordType="DATA" />
-      <Bool name="ZoomMustHaveCameraShots" binary="NoGeneration" />
+      <Enum name="Zoom" enumName="CameraPath.ZoomType" byteLength="1" nullable="False" recordType="DATA" />
       <List name="Shots">
         <FormLink recordType="SNAM" refName="CameraShot" />
       </List>

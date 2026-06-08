@@ -91,9 +91,6 @@ namespace Mutagen.Bethesda.Fallout3
         #region Zoom
         public CameraPath.ZoomType Zoom { get; set; } = default(CameraPath.ZoomType);
         #endregion
-        #region ZoomMustHaveCameraShots
-        public Boolean ZoomMustHaveCameraShots { get; set; } = default(Boolean);
-        #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<ICameraShotGetter>> _Shots = new ExtendedList<IFormLinkGetter<ICameraShotGetter>>();
@@ -137,7 +134,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Parent = initialValue;
                 this.Previous = initialValue;
                 this.Zoom = initialValue;
-                this.ZoomMustHaveCameraShots = initialValue;
                 this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
             }
 
@@ -153,7 +149,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Parent,
                 TItem Previous,
                 TItem Zoom,
-                TItem ZoomMustHaveCameraShots,
                 TItem Shots)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -168,7 +163,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Parent = Parent;
                 this.Previous = Previous;
                 this.Zoom = Zoom;
-                this.ZoomMustHaveCameraShots = ZoomMustHaveCameraShots;
                 this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Shots, []);
             }
 
@@ -185,7 +179,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Parent;
             public TItem Previous;
             public TItem Zoom;
-            public TItem ZoomMustHaveCameraShots;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Shots;
             #endregion
 
@@ -204,7 +197,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 if (!object.Equals(this.Previous, rhs.Previous)) return false;
                 if (!object.Equals(this.Zoom, rhs.Zoom)) return false;
-                if (!object.Equals(this.ZoomMustHaveCameraShots, rhs.ZoomMustHaveCameraShots)) return false;
                 if (!object.Equals(this.Shots, rhs.Shots)) return false;
                 return true;
             }
@@ -215,7 +207,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Parent);
                 hash.Add(this.Previous);
                 hash.Add(this.Zoom);
-                hash.Add(this.ZoomMustHaveCameraShots);
                 hash.Add(this.Shots);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -242,7 +233,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Parent)) return false;
                 if (!eval(this.Previous)) return false;
                 if (!eval(this.Zoom)) return false;
-                if (!eval(this.ZoomMustHaveCameraShots)) return false;
                 if (this.Shots != null)
                 {
                     if (!eval(this.Shots.Overall)) return false;
@@ -277,7 +267,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Parent)) return true;
                 if (eval(this.Previous)) return true;
                 if (eval(this.Zoom)) return true;
-                if (eval(this.ZoomMustHaveCameraShots)) return true;
                 if (this.Shots != null)
                 {
                     if (eval(this.Shots.Overall)) return true;
@@ -322,7 +311,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Parent = eval(this.Parent);
                 obj.Previous = eval(this.Previous);
                 obj.Zoom = eval(this.Zoom);
-                obj.ZoomMustHaveCameraShots = eval(this.ZoomMustHaveCameraShots);
                 if (Shots != null)
                 {
                     obj.Shots = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Shots.Overall), []);
@@ -386,10 +374,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Zoom, "Zoom");
                     }
-                    if (printMask?.ZoomMustHaveCameraShots ?? true)
-                    {
-                        sb.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
-                    }
                     if ((printMask?.Shots?.Overall ?? true)
                         && Shots is {} ShotsItem)
                     {
@@ -426,7 +410,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Parent;
             public Exception? Previous;
             public Exception? Zoom;
-            public Exception? ZoomMustHaveCameraShots;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Shots;
             #endregion
 
@@ -444,8 +427,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return Previous;
                     case CameraPath_FieldIndex.Zoom:
                         return Zoom;
-                    case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                        return ZoomMustHaveCameraShots;
                     case CameraPath_FieldIndex.Shots:
                         return Shots;
                     default:
@@ -469,9 +450,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case CameraPath_FieldIndex.Zoom:
                         this.Zoom = ex;
-                        break;
-                    case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                        this.ZoomMustHaveCameraShots = ex;
                         break;
                     case CameraPath_FieldIndex.Shots:
                         this.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -499,9 +477,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case CameraPath_FieldIndex.Zoom:
                         this.Zoom = (Exception?)obj;
                         break;
-                    case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
-                        this.ZoomMustHaveCameraShots = (Exception?)obj;
-                        break;
                     case CameraPath_FieldIndex.Shots:
                         this.Shots = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -518,7 +493,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Parent != null) return true;
                 if (Previous != null) return true;
                 if (Zoom != null) return true;
-                if (ZoomMustHaveCameraShots != null) return true;
                 if (Shots != null) return true;
                 return false;
             }
@@ -573,9 +547,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Zoom, "Zoom");
                 }
-                {
-                    sb.AppendItem(ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
-                }
                 if (Shots is {} ShotsItem)
                 {
                     sb.AppendLine("Shots =>");
@@ -608,7 +579,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Parent = this.Parent.Combine(rhs.Parent);
                 ret.Previous = this.Previous.Combine(rhs.Previous);
                 ret.Zoom = this.Zoom.Combine(rhs.Zoom);
-                ret.ZoomMustHaveCameraShots = this.ZoomMustHaveCameraShots.Combine(rhs.ZoomMustHaveCameraShots);
                 ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), Noggog.ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
                 return ret;
             }
@@ -636,7 +606,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Parent;
             public bool Previous;
             public bool Zoom;
-            public bool ZoomMustHaveCameraShots;
             public bool Shots;
             #endregion
 
@@ -649,7 +618,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Parent = defaultOn;
                 this.Previous = defaultOn;
                 this.Zoom = defaultOn;
-                this.ZoomMustHaveCameraShots = defaultOn;
                 this.Shots = defaultOn;
             }
 
@@ -662,7 +630,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Parent, null));
                 ret.Add((Previous, null));
                 ret.Add((Zoom, null));
-                ret.Add((ZoomMustHaveCameraShots, null));
                 ret.Add((Shots, null));
             }
 
@@ -804,7 +771,6 @@ namespace Mutagen.Bethesda.Fallout3
         new IFormLink<ICameraPathGetter> Parent { get; set; }
         new IFormLink<ICameraPathGetter> Previous { get; set; }
         new CameraPath.ZoomType Zoom { get; set; }
-        new Boolean ZoomMustHaveCameraShots { get; set; }
         new ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
     }
 
@@ -828,7 +794,6 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkGetter<ICameraPathGetter> Parent { get; }
         IFormLinkGetter<ICameraPathGetter> Previous { get; }
         CameraPath.ZoomType Zoom { get; }
-        Boolean ZoomMustHaveCameraShots { get; }
         IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
 
     }
@@ -1010,8 +975,7 @@ namespace Mutagen.Bethesda.Fallout3
         Parent = 8,
         Previous = 9,
         Zoom = 10,
-        ZoomMustHaveCameraShots = 11,
-        Shots = 12,
+        Shots = 11,
     }
     #endregion
 
@@ -1022,9 +986,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(CameraPath.Mask<>);
 
@@ -1109,7 +1073,6 @@ namespace Mutagen.Bethesda.Fallout3
             item.Parent.Clear();
             item.Previous.Clear();
             item.Zoom = default(CameraPath.ZoomType);
-            item.ZoomMustHaveCameraShots = default(Boolean);
             item.Shots.Clear();
             base.Clear(item);
         }
@@ -1206,7 +1169,6 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.Previous = item.Previous.Equals(rhs.Previous);
             ret.Zoom = item.Zoom == rhs.Zoom;
-            ret.ZoomMustHaveCameraShots = item.ZoomMustHaveCameraShots == rhs.ZoomMustHaveCameraShots;
             ret.Shots = item.Shots.CollectionEqualsHelper(
                 rhs.Shots,
                 (l, r) => object.Equals(l, r),
@@ -1285,10 +1247,6 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Zoom ?? true)
             {
                 sb.AppendItem(item.Zoom, "Zoom");
-            }
-            if (printMask?.ZoomMustHaveCameraShots ?? true)
-            {
-                sb.AppendItem(item.ZoomMustHaveCameraShots, "ZoomMustHaveCameraShots");
             }
             if (printMask?.Shots?.Overall ?? true)
             {
@@ -1370,10 +1328,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Zoom != rhs.Zoom) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots) ?? true))
-            {
-                if (lhs.ZoomMustHaveCameraShots != rhs.ZoomMustHaveCameraShots) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
             {
                 if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
@@ -1410,7 +1364,6 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Parent);
             hash.Add(item.Previous);
             hash.Add(item.Zoom);
-            hash.Add(item.ZoomMustHaveCameraShots);
             hash.Add(item.Shots);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1560,10 +1513,6 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
             {
                 item.Zoom = rhs.Zoom;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots) ?? true))
-            {
-                item.ZoomMustHaveCameraShots = rhs.ZoomMustHaveCameraShots;
             }
             if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
             {
@@ -1744,15 +1693,6 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly CameraPathBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            ICameraPathGetter item,
-            MutagenWriter writer)
-        {
-            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ICameraPathGetter item,
             MutagenWriter writer,
@@ -1782,9 +1722,11 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     item: item.Previous);
             }
-            CameraPathBinaryWriteTranslation.WriteBinaryZoom(
-                writer: writer,
-                item: item);
+            EnumBinaryTranslation<CameraPath.ZoomType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Zoom,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraShotGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Shots,
@@ -1795,19 +1737,6 @@ namespace Mutagen.Bethesda.Fallout3
                         item: subItem,
                         header: translationParams.ConvertToCustom(RecordTypes.SNAM));
                 });
-        }
-
-        public static partial void WriteBinaryZoomCustom(
-            MutagenWriter writer,
-            ICameraPathGetter item);
-
-        public static void WriteBinaryZoom(
-            MutagenWriter writer,
-            ICameraPathGetter item)
-        {
-            WriteBinaryZoomCustom(
-                writer: writer,
-                item: item);
         }
 
         public void Write(
@@ -1864,15 +1793,6 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly CameraPathBinaryCreateTranslation Instance = new CameraPathBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CPTH;
-        public static void FillBinaryStructs(
-            ICameraPathInternal item,
-            MutagenFrame frame)
-        {
-            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             ICameraPathInternal item,
             MutagenFrame frame,
@@ -1907,10 +1827,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    CameraPathBinaryCreateTranslation.FillBinaryZoomCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Zoom = EnumBinaryTranslation<CameraPath.ZoomType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
@@ -1933,11 +1853,6 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams.WithNoConverter());
             }
         }
-
-        public static partial void FillBinaryZoomCustom(
-            MutagenFrame frame,
-            ICameraPathInternal item,
-            PreviousParse lastParsed);
 
     }
 
@@ -1999,12 +1914,8 @@ namespace Mutagen.Bethesda.Fallout3
         public IFormLinkGetter<ICameraPathGetter> Previous => _Previous_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(_package, _recordData.Span.Slice(_PreviousLocation, 0x4), isSet: _Previous_IsSet) : FormLink<ICameraPathGetter>.Null;
         #endregion
         #region Zoom
-        partial void ZoomCustomParse(
-            OverlayStream stream,
-            int finalPos,
-            int offset);
-        public partial CameraPath.ZoomType GetZoomCustom();
-        public CameraPath.ZoomType Zoom => GetZoomCustom();
+        private int? _ZoomLocation;
+        public CameraPath.ZoomType Zoom => EnumBinaryTranslation<CameraPath.ZoomType, MutagenFrame, MutagenWriter>.Instance.ParseRecord(_ZoomLocation, _recordData, _package, 1);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; private set; } = [];
         partial void CustomFactoryEnd(
@@ -2098,10 +2009,7 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    ZoomCustomParse(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset);
+                    _ZoomLocation = (stream.Position - offset);
                     return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
