@@ -137,7 +137,6 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             ImageSpaceData_Registration.Instance,
             Impact_Registration.Instance,
             ImpactDataSet_Registration.Instance,
-            ImpactDataSetData_Registration.Instance,
             Ingestible_Registration.Instance,
             Ingredient_Registration.Instance,
             IslandData_Registration.Instance,

@@ -3,23 +3,25 @@
   <Object name="ImpactDataSet" baseClass="Fallout3MajorRecord" objType="Record"
           recordType="IPDS">
     <Fields>
-      <RefDirect name="Data" refName="ImpactDataSetData" nullable="False" />
-    </Fields>
-  </Object>
-  <Object name="ImpactDataSetData" objType="Subrecord" recordType="DATA">
-    <Fields>
-      <!-- Required fields (xEdit elements 0-8) -->
-      <FormLink name="Stone" refName="Impact" />
-      <FormLink name="Dirt" refName="Impact" />
-      <FormLink name="Grass" refName="Impact" />
-      <FormLink name="Glass" refName="Impact" />
-      <FormLink name="Metal" refName="Impact" />
-      <FormLink name="Wood" refName="Impact" />
-      <FormLink name="Organic" refName="Impact" />
-      <FormLink name="Cloth" refName="Impact" />
-      <FormLink name="Water" refName="Impact" />
-      <!-- Optional from xEdit element 9: HollowMetal, OrganicBug, OrganicGlow -->
-      <ByteArray name="Remaining" />
+      <Data nullable="False">
+        <Fields>
+          <FormLink name="Stone" refName="Impact" />
+          <FormLink name="Dirt" refName="Impact" />
+          <FormLink name="Grass" refName="Impact" />
+          <FormLink name="Glass" refName="Impact" />
+          <FormLink name="Metal" refName="Impact" />
+          <FormLink name="Wood" refName="Impact" />
+          <FormLink name="Organic" refName="Impact" />
+          <FormLink name="Cloth" refName="Impact" />
+          <FormLink name="Water" refName="Impact" />
+          <Break />
+          <FormLink name="HollowMetal" refName="Impact" />
+          <Break />
+          <FormLink name="OrganicBug" refName="Impact" />
+          <Break />
+          <FormLink name="OrganicGlow" refName="Impact" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

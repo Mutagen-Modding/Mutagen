@@ -54,10 +54,128 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        public ImpactDataSetData Data { get; set; } = new ImpactDataSetData();
+        #region Stone
+        private readonly IFormLink<IImpactGetter> _Stone = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Stone
+        {
+            get => _Stone;
+            set => _Stone.SetTo(value);
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IImpactDataSetDataGetter IImpactDataSetGetter.Data => Data;
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Stone => this.Stone;
+        #endregion
+        #region Dirt
+        private readonly IFormLink<IImpactGetter> _Dirt = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Dirt
+        {
+            get => _Dirt;
+            set => _Dirt.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Dirt => this.Dirt;
+        #endregion
+        #region Grass
+        private readonly IFormLink<IImpactGetter> _Grass = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Grass
+        {
+            get => _Grass;
+            set => _Grass.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Grass => this.Grass;
+        #endregion
+        #region Glass
+        private readonly IFormLink<IImpactGetter> _Glass = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Glass
+        {
+            get => _Glass;
+            set => _Glass.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Glass => this.Glass;
+        #endregion
+        #region Metal
+        private readonly IFormLink<IImpactGetter> _Metal = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Metal
+        {
+            get => _Metal;
+            set => _Metal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Metal => this.Metal;
+        #endregion
+        #region Wood
+        private readonly IFormLink<IImpactGetter> _Wood = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Wood
+        {
+            get => _Wood;
+            set => _Wood.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Wood => this.Wood;
+        #endregion
+        #region Organic
+        private readonly IFormLink<IImpactGetter> _Organic = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Organic
+        {
+            get => _Organic;
+            set => _Organic.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Organic => this.Organic;
+        #endregion
+        #region Cloth
+        private readonly IFormLink<IImpactGetter> _Cloth = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Cloth
+        {
+            get => _Cloth;
+            set => _Cloth.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Cloth => this.Cloth;
+        #endregion
+        #region Water
+        private readonly IFormLink<IImpactGetter> _Water = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> Water
+        {
+            get => _Water;
+            set => _Water.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.Water => this.Water;
+        #endregion
+        #region HollowMetal
+        private readonly IFormLink<IImpactGetter> _HollowMetal = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> HollowMetal
+        {
+            get => _HollowMetal;
+            set => _HollowMetal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.HollowMetal => this.HollowMetal;
+        #endregion
+        #region OrganicBug
+        private readonly IFormLink<IImpactGetter> _OrganicBug = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> OrganicBug
+        {
+            get => _OrganicBug;
+            set => _OrganicBug.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.OrganicBug => this.OrganicBug;
+        #endregion
+        #region OrganicGlow
+        private readonly IFormLink<IImpactGetter> _OrganicGlow = new FormLink<IImpactGetter>();
+        public IFormLink<IImpactGetter> OrganicGlow
+        {
+            get => _OrganicGlow;
+            set => _OrganicGlow.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactGetter> IImpactDataSetGetter.OrganicGlow => this.OrganicGlow;
+        #endregion
+        #region DATADataTypeState
+        public ImpactDataSet.DATADataType DATADataTypeState { get; set; } = default(ImpactDataSet.DATADataType);
         #endregion
 
         #region To String
@@ -84,7 +202,19 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Data = new MaskItem<TItem, ImpactDataSetData.Mask<TItem>?>(initialValue, new ImpactDataSetData.Mask<TItem>(initialValue));
+                this.Stone = initialValue;
+                this.Dirt = initialValue;
+                this.Grass = initialValue;
+                this.Glass = initialValue;
+                this.Metal = initialValue;
+                this.Wood = initialValue;
+                this.Organic = initialValue;
+                this.Cloth = initialValue;
+                this.Water = initialValue;
+                this.HollowMetal = initialValue;
+                this.OrganicBug = initialValue;
+                this.OrganicGlow = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -95,7 +225,19 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
-                TItem Data)
+                TItem Stone,
+                TItem Dirt,
+                TItem Grass,
+                TItem Glass,
+                TItem Metal,
+                TItem Wood,
+                TItem Organic,
+                TItem Cloth,
+                TItem Water,
+                TItem HollowMetal,
+                TItem OrganicBug,
+                TItem OrganicGlow,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -105,7 +247,19 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
-                this.Data = new MaskItem<TItem, ImpactDataSetData.Mask<TItem>?>(Data, new ImpactDataSetData.Mask<TItem>(Data));
+                this.Stone = Stone;
+                this.Dirt = Dirt;
+                this.Grass = Grass;
+                this.Glass = Glass;
+                this.Metal = Metal;
+                this.Wood = Wood;
+                this.Organic = Organic;
+                this.Cloth = Cloth;
+                this.Water = Water;
+                this.HollowMetal = HollowMetal;
+                this.OrganicBug = OrganicBug;
+                this.OrganicGlow = OrganicGlow;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -117,7 +271,19 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public MaskItem<TItem, ImpactDataSetData.Mask<TItem>?>? Data { get; set; }
+            public TItem Stone;
+            public TItem Dirt;
+            public TItem Grass;
+            public TItem Glass;
+            public TItem Metal;
+            public TItem Wood;
+            public TItem Organic;
+            public TItem Cloth;
+            public TItem Water;
+            public TItem HollowMetal;
+            public TItem OrganicBug;
+            public TItem OrganicGlow;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -131,13 +297,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Stone, rhs.Stone)) return false;
+                if (!object.Equals(this.Dirt, rhs.Dirt)) return false;
+                if (!object.Equals(this.Grass, rhs.Grass)) return false;
+                if (!object.Equals(this.Glass, rhs.Glass)) return false;
+                if (!object.Equals(this.Metal, rhs.Metal)) return false;
+                if (!object.Equals(this.Wood, rhs.Wood)) return false;
+                if (!object.Equals(this.Organic, rhs.Organic)) return false;
+                if (!object.Equals(this.Cloth, rhs.Cloth)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.HollowMetal, rhs.HollowMetal)) return false;
+                if (!object.Equals(this.OrganicBug, rhs.OrganicBug)) return false;
+                if (!object.Equals(this.OrganicGlow, rhs.OrganicGlow)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
+                hash.Add(this.Stone);
+                hash.Add(this.Dirt);
+                hash.Add(this.Grass);
+                hash.Add(this.Glass);
+                hash.Add(this.Metal);
+                hash.Add(this.Wood);
+                hash.Add(this.Organic);
+                hash.Add(this.Cloth);
+                hash.Add(this.Water);
+                hash.Add(this.HollowMetal);
+                hash.Add(this.OrganicBug);
+                hash.Add(this.OrganicGlow);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -148,11 +338,19 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Stone)) return false;
+                if (!eval(this.Dirt)) return false;
+                if (!eval(this.Grass)) return false;
+                if (!eval(this.Glass)) return false;
+                if (!eval(this.Metal)) return false;
+                if (!eval(this.Wood)) return false;
+                if (!eval(this.Organic)) return false;
+                if (!eval(this.Cloth)) return false;
+                if (!eval(this.Water)) return false;
+                if (!eval(this.HollowMetal)) return false;
+                if (!eval(this.OrganicBug)) return false;
+                if (!eval(this.OrganicGlow)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -161,11 +359,19 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Stone)) return true;
+                if (eval(this.Dirt)) return true;
+                if (eval(this.Grass)) return true;
+                if (eval(this.Glass)) return true;
+                if (eval(this.Metal)) return true;
+                if (eval(this.Wood)) return true;
+                if (eval(this.Organic)) return true;
+                if (eval(this.Cloth)) return true;
+                if (eval(this.Water)) return true;
+                if (eval(this.HollowMetal)) return true;
+                if (eval(this.OrganicBug)) return true;
+                if (eval(this.OrganicGlow)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -181,7 +387,19 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Data = this.Data == null ? null : new MaskItem<R, ImpactDataSetData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Stone = eval(this.Stone);
+                obj.Dirt = eval(this.Dirt);
+                obj.Grass = eval(this.Grass);
+                obj.Glass = eval(this.Glass);
+                obj.Metal = eval(this.Metal);
+                obj.Wood = eval(this.Wood);
+                obj.Organic = eval(this.Organic);
+                obj.Cloth = eval(this.Cloth);
+                obj.Water = eval(this.Water);
+                obj.HollowMetal = eval(this.HollowMetal);
+                obj.OrganicBug = eval(this.OrganicBug);
+                obj.OrganicGlow = eval(this.OrganicGlow);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -200,9 +418,57 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(ImpactDataSet.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Stone ?? true)
                     {
-                        Data?.Print(sb);
+                        sb.AppendItem(Stone, "Stone");
+                    }
+                    if (printMask?.Dirt ?? true)
+                    {
+                        sb.AppendItem(Dirt, "Dirt");
+                    }
+                    if (printMask?.Grass ?? true)
+                    {
+                        sb.AppendItem(Grass, "Grass");
+                    }
+                    if (printMask?.Glass ?? true)
+                    {
+                        sb.AppendItem(Glass, "Glass");
+                    }
+                    if (printMask?.Metal ?? true)
+                    {
+                        sb.AppendItem(Metal, "Metal");
+                    }
+                    if (printMask?.Wood ?? true)
+                    {
+                        sb.AppendItem(Wood, "Wood");
+                    }
+                    if (printMask?.Organic ?? true)
+                    {
+                        sb.AppendItem(Organic, "Organic");
+                    }
+                    if (printMask?.Cloth ?? true)
+                    {
+                        sb.AppendItem(Cloth, "Cloth");
+                    }
+                    if (printMask?.Water ?? true)
+                    {
+                        sb.AppendItem(Water, "Water");
+                    }
+                    if (printMask?.HollowMetal ?? true)
+                    {
+                        sb.AppendItem(HollowMetal, "HollowMetal");
+                    }
+                    if (printMask?.OrganicBug ?? true)
+                    {
+                        sb.AppendItem(OrganicBug, "OrganicBug");
+                    }
+                    if (printMask?.OrganicGlow ?? true)
+                    {
+                        sb.AppendItem(OrganicGlow, "OrganicGlow");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
             }
@@ -215,7 +481,19 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, ImpactDataSetData.ErrorMask?>? Data;
+            public Exception? Stone;
+            public Exception? Dirt;
+            public Exception? Grass;
+            public Exception? Glass;
+            public Exception? Metal;
+            public Exception? Wood;
+            public Exception? Organic;
+            public Exception? Cloth;
+            public Exception? Water;
+            public Exception? HollowMetal;
+            public Exception? OrganicBug;
+            public Exception? OrganicGlow;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -224,8 +502,32 @@ namespace Mutagen.Bethesda.Fallout3
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImpactDataSet_FieldIndex.Data:
-                        return Data;
+                    case ImpactDataSet_FieldIndex.Stone:
+                        return Stone;
+                    case ImpactDataSet_FieldIndex.Dirt:
+                        return Dirt;
+                    case ImpactDataSet_FieldIndex.Grass:
+                        return Grass;
+                    case ImpactDataSet_FieldIndex.Glass:
+                        return Glass;
+                    case ImpactDataSet_FieldIndex.Metal:
+                        return Metal;
+                    case ImpactDataSet_FieldIndex.Wood:
+                        return Wood;
+                    case ImpactDataSet_FieldIndex.Organic:
+                        return Organic;
+                    case ImpactDataSet_FieldIndex.Cloth:
+                        return Cloth;
+                    case ImpactDataSet_FieldIndex.Water:
+                        return Water;
+                    case ImpactDataSet_FieldIndex.HollowMetal:
+                        return HollowMetal;
+                    case ImpactDataSet_FieldIndex.OrganicBug:
+                        return OrganicBug;
+                    case ImpactDataSet_FieldIndex.OrganicGlow:
+                        return OrganicGlow;
+                    case ImpactDataSet_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -236,8 +538,44 @@ namespace Mutagen.Bethesda.Fallout3
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImpactDataSet_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, ImpactDataSetData.ErrorMask?>(ex, null);
+                    case ImpactDataSet_FieldIndex.Stone:
+                        this.Stone = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Dirt:
+                        this.Dirt = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Grass:
+                        this.Grass = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Glass:
+                        this.Glass = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Metal:
+                        this.Metal = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Wood:
+                        this.Wood = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Organic:
+                        this.Organic = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Cloth:
+                        this.Cloth = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.Water:
+                        this.Water = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.HollowMetal:
+                        this.HollowMetal = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.OrganicBug:
+                        this.OrganicBug = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.OrganicGlow:
+                        this.OrganicGlow = ex;
+                        break;
+                    case ImpactDataSet_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -250,8 +588,44 @@ namespace Mutagen.Bethesda.Fallout3
                 ImpactDataSet_FieldIndex enu = (ImpactDataSet_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImpactDataSet_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, ImpactDataSetData.ErrorMask?>?)obj;
+                    case ImpactDataSet_FieldIndex.Stone:
+                        this.Stone = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Dirt:
+                        this.Dirt = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Grass:
+                        this.Grass = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Glass:
+                        this.Glass = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Metal:
+                        this.Metal = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Wood:
+                        this.Wood = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Organic:
+                        this.Organic = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Cloth:
+                        this.Cloth = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.Water:
+                        this.Water = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.HollowMetal:
+                        this.HollowMetal = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.OrganicBug:
+                        this.OrganicBug = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.OrganicGlow:
+                        this.OrganicGlow = (Exception?)obj;
+                        break;
+                    case ImpactDataSet_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -262,7 +636,19 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
+                if (Stone != null) return true;
+                if (Dirt != null) return true;
+                if (Grass != null) return true;
+                if (Glass != null) return true;
+                if (Metal != null) return true;
+                if (Wood != null) return true;
+                if (Organic != null) return true;
+                if (Cloth != null) return true;
+                if (Water != null) return true;
+                if (HollowMetal != null) return true;
+                if (OrganicBug != null) return true;
+                if (OrganicGlow != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -289,7 +675,45 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                Data?.Print(sb);
+                {
+                    sb.AppendItem(Stone, "Stone");
+                }
+                {
+                    sb.AppendItem(Dirt, "Dirt");
+                }
+                {
+                    sb.AppendItem(Grass, "Grass");
+                }
+                {
+                    sb.AppendItem(Glass, "Glass");
+                }
+                {
+                    sb.AppendItem(Metal, "Metal");
+                }
+                {
+                    sb.AppendItem(Wood, "Wood");
+                }
+                {
+                    sb.AppendItem(Organic, "Organic");
+                }
+                {
+                    sb.AppendItem(Cloth, "Cloth");
+                }
+                {
+                    sb.AppendItem(Water, "Water");
+                }
+                {
+                    sb.AppendItem(HollowMetal, "HollowMetal");
+                }
+                {
+                    sb.AppendItem(OrganicBug, "OrganicBug");
+                }
+                {
+                    sb.AppendItem(OrganicGlow, "OrganicGlow");
+                }
+                {
+                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
+                }
             }
             #endregion
 
@@ -298,7 +722,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Stone = this.Stone.Combine(rhs.Stone);
+                ret.Dirt = this.Dirt.Combine(rhs.Dirt);
+                ret.Grass = this.Grass.Combine(rhs.Grass);
+                ret.Glass = this.Glass.Combine(rhs.Glass);
+                ret.Metal = this.Metal.Combine(rhs.Metal);
+                ret.Wood = this.Wood.Combine(rhs.Wood);
+                ret.Organic = this.Organic.Combine(rhs.Organic);
+                ret.Cloth = this.Cloth.Combine(rhs.Cloth);
+                ret.Water = this.Water.Combine(rhs.Water);
+                ret.HollowMetal = this.HollowMetal.Combine(rhs.HollowMetal);
+                ret.OrganicBug = this.OrganicBug.Combine(rhs.OrganicBug);
+                ret.OrganicGlow = this.OrganicGlow.Combine(rhs.OrganicGlow);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -321,7 +757,19 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public ImpactDataSetData.TranslationMask? Data;
+            public bool Stone;
+            public bool Dirt;
+            public bool Grass;
+            public bool Glass;
+            public bool Metal;
+            public bool Wood;
+            public bool Organic;
+            public bool Cloth;
+            public bool Water;
+            public bool HollowMetal;
+            public bool OrganicBug;
+            public bool OrganicGlow;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -330,6 +778,19 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Stone = defaultOn;
+                this.Dirt = defaultOn;
+                this.Grass = defaultOn;
+                this.Glass = defaultOn;
+                this.Metal = defaultOn;
+                this.Wood = defaultOn;
+                this.Organic = defaultOn;
+                this.Cloth = defaultOn;
+                this.Water = defaultOn;
+                this.HollowMetal = defaultOn;
+                this.OrganicBug = defaultOn;
+                this.OrganicGlow = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -337,7 +798,19 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
+                ret.Add((Stone, null));
+                ret.Add((Dirt, null));
+                ret.Add((Grass, null));
+                ret.Add((Glass, null));
+                ret.Add((Metal, null));
+                ret.Add((Wood, null));
+                ret.Add((Organic, null));
+                ret.Add((Cloth, null));
+                ret.Add((Water, null));
+                ret.Add((HollowMetal, null));
+                ret.Add((OrganicBug, null));
+                ret.Add((OrganicGlow, null));
+                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -390,6 +863,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IImpactDataSet);
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1,
+            Break1 = 2,
+            Break2 = 4
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -474,7 +954,19 @@ namespace Mutagen.Bethesda.Fallout3
         IImpactDataSetGetter,
         ILoquiObjectSetter<IImpactDataSetInternal>
     {
-        new ImpactDataSetData Data { get; set; }
+        new IFormLink<IImpactGetter> Stone { get; set; }
+        new IFormLink<IImpactGetter> Dirt { get; set; }
+        new IFormLink<IImpactGetter> Grass { get; set; }
+        new IFormLink<IImpactGetter> Glass { get; set; }
+        new IFormLink<IImpactGetter> Metal { get; set; }
+        new IFormLink<IImpactGetter> Wood { get; set; }
+        new IFormLink<IImpactGetter> Organic { get; set; }
+        new IFormLink<IImpactGetter> Cloth { get; set; }
+        new IFormLink<IImpactGetter> Water { get; set; }
+        new IFormLink<IImpactGetter> HollowMetal { get; set; }
+        new IFormLink<IImpactGetter> OrganicBug { get; set; }
+        new IFormLink<IImpactGetter> OrganicGlow { get; set; }
+        new ImpactDataSet.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IImpactDataSetInternal :
@@ -493,7 +985,19 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<IImpactDataSetGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImpactDataSet_Registration.Instance;
-        IImpactDataSetDataGetter Data { get; }
+        IFormLinkGetter<IImpactGetter> Stone { get; }
+        IFormLinkGetter<IImpactGetter> Dirt { get; }
+        IFormLinkGetter<IImpactGetter> Grass { get; }
+        IFormLinkGetter<IImpactGetter> Glass { get; }
+        IFormLinkGetter<IImpactGetter> Metal { get; }
+        IFormLinkGetter<IImpactGetter> Wood { get; }
+        IFormLinkGetter<IImpactGetter> Organic { get; }
+        IFormLinkGetter<IImpactGetter> Cloth { get; }
+        IFormLinkGetter<IImpactGetter> Water { get; }
+        IFormLinkGetter<IImpactGetter> HollowMetal { get; }
+        IFormLinkGetter<IImpactGetter> OrganicBug { get; }
+        IFormLinkGetter<IImpactGetter> OrganicGlow { get; }
+        ImpactDataSet.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -670,7 +1174,19 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        Data = 7,
+        Stone = 7,
+        Dirt = 8,
+        Grass = 9,
+        Glass = 10,
+        Metal = 11,
+        Wood = 12,
+        Organic = 13,
+        Cloth = 14,
+        Water = 15,
+        HollowMetal = 16,
+        OrganicBug = 17,
+        OrganicGlow = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -681,9 +1197,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(ImpactDataSet.Mask<>);
 
@@ -761,7 +1277,19 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IImpactDataSetInternal item)
         {
             ClearPartial();
-            item.Data.Clear();
+            item.Stone.Clear();
+            item.Dirt.Clear();
+            item.Grass.Clear();
+            item.Glass.Clear();
+            item.Metal.Clear();
+            item.Wood.Clear();
+            item.Organic.Clear();
+            item.Cloth.Clear();
+            item.Water.Clear();
+            item.HollowMetal.Clear();
+            item.OrganicBug.Clear();
+            item.OrganicGlow.Clear();
+            item.DATADataTypeState = default(ImpactDataSet.DATADataType);
             base.Clear(item);
         }
         
@@ -779,7 +1307,18 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IImpactDataSet obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Data.RemapLinks(mapping);
+            obj.Stone.Relink(mapping);
+            obj.Dirt.Relink(mapping);
+            obj.Grass.Relink(mapping);
+            obj.Glass.Relink(mapping);
+            obj.Metal.Relink(mapping);
+            obj.Wood.Relink(mapping);
+            obj.Organic.Relink(mapping);
+            obj.Cloth.Relink(mapping);
+            obj.Water.Relink(mapping);
+            obj.HollowMetal.Relink(mapping);
+            obj.OrganicBug.Relink(mapping);
+            obj.OrganicGlow.Relink(mapping);
         }
         
         #endregion
@@ -847,7 +1386,19 @@ namespace Mutagen.Bethesda.Fallout3
             ImpactDataSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Stone = item.Stone.Equals(rhs.Stone);
+            ret.Dirt = item.Dirt.Equals(rhs.Dirt);
+            ret.Grass = item.Grass.Equals(rhs.Grass);
+            ret.Glass = item.Glass.Equals(rhs.Glass);
+            ret.Metal = item.Metal.Equals(rhs.Metal);
+            ret.Wood = item.Wood.Equals(rhs.Wood);
+            ret.Organic = item.Organic.Equals(rhs.Organic);
+            ret.Cloth = item.Cloth.Equals(rhs.Cloth);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.HollowMetal = item.HollowMetal.Equals(rhs.HollowMetal);
+            ret.OrganicBug = item.OrganicBug.Equals(rhs.OrganicBug);
+            ret.OrganicGlow = item.OrganicGlow.Equals(rhs.OrganicGlow);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -897,9 +1448,57 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Stone ?? true)
             {
-                item.Data?.Print(sb, "Data");
+                sb.AppendItem(item.Stone.FormKey, "Stone");
+            }
+            if (printMask?.Dirt ?? true)
+            {
+                sb.AppendItem(item.Dirt.FormKey, "Dirt");
+            }
+            if (printMask?.Grass ?? true)
+            {
+                sb.AppendItem(item.Grass.FormKey, "Grass");
+            }
+            if (printMask?.Glass ?? true)
+            {
+                sb.AppendItem(item.Glass.FormKey, "Glass");
+            }
+            if (printMask?.Metal ?? true)
+            {
+                sb.AppendItem(item.Metal.FormKey, "Metal");
+            }
+            if (printMask?.Wood ?? true)
+            {
+                sb.AppendItem(item.Wood.FormKey, "Wood");
+            }
+            if (printMask?.Organic ?? true)
+            {
+                sb.AppendItem(item.Organic.FormKey, "Organic");
+            }
+            if (printMask?.Cloth ?? true)
+            {
+                sb.AppendItem(item.Cloth.FormKey, "Cloth");
+            }
+            if (printMask?.Water ?? true)
+            {
+                sb.AppendItem(item.Water.FormKey, "Water");
+            }
+            if (printMask?.HollowMetal ?? true)
+            {
+                sb.AppendItem(item.HollowMetal.FormKey, "HollowMetal");
+            }
+            if (printMask?.OrganicBug ?? true)
+            {
+                sb.AppendItem(item.OrganicBug.FormKey, "OrganicBug");
+            }
+            if (printMask?.OrganicGlow ?? true)
+            {
+                sb.AppendItem(item.OrganicGlow.FormKey, "OrganicGlow");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -951,13 +1550,57 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Stone) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
-                {
-                    if (!((ImpactDataSetDataCommon)((IImpactDataSetDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)ImpactDataSet_FieldIndex.Data))) return false;
-                }
-                else if (!isDataEqual) return false;
+                if (!lhs.Stone.Equals(rhs.Stone)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Dirt) ?? true))
+            {
+                if (!lhs.Dirt.Equals(rhs.Dirt)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Grass) ?? true))
+            {
+                if (!lhs.Grass.Equals(rhs.Grass)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Glass) ?? true))
+            {
+                if (!lhs.Glass.Equals(rhs.Glass)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Metal) ?? true))
+            {
+                if (!lhs.Metal.Equals(rhs.Metal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Wood) ?? true))
+            {
+                if (!lhs.Wood.Equals(rhs.Wood)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Organic) ?? true))
+            {
+                if (!lhs.Organic.Equals(rhs.Organic)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Cloth) ?? true))
+            {
+                if (!lhs.Cloth.Equals(rhs.Cloth)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.HollowMetal) ?? true))
+            {
+                if (!lhs.HollowMetal.Equals(rhs.HollowMetal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.OrganicBug) ?? true))
+            {
+                if (!lhs.OrganicBug.Equals(rhs.OrganicBug)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.OrganicGlow) ?? true))
+            {
+                if (!lhs.OrganicGlow.Equals(rhs.OrganicGlow)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -987,7 +1630,19 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IImpactDataSetGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Data);
+            hash.Add(item.Stone);
+            hash.Add(item.Dirt);
+            hash.Add(item.Grass);
+            hash.Add(item.Glass);
+            hash.Add(item.Metal);
+            hash.Add(item.Wood);
+            hash.Add(item.Organic);
+            hash.Add(item.Cloth);
+            hash.Add(item.Water);
+            hash.Add(item.HollowMetal);
+            hash.Add(item.OrganicBug);
+            hash.Add(item.OrganicGlow);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1017,10 +1672,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            foreach (var item in obj.Data.EnumerateFormLinks(iterateNestedRecords))
-            {
-                yield return item;
-            }
+            yield return FormLinkInformation.Factory(obj.Stone);
+            yield return FormLinkInformation.Factory(obj.Dirt);
+            yield return FormLinkInformation.Factory(obj.Grass);
+            yield return FormLinkInformation.Factory(obj.Glass);
+            yield return FormLinkInformation.Factory(obj.Metal);
+            yield return FormLinkInformation.Factory(obj.Wood);
+            yield return FormLinkInformation.Factory(obj.Organic);
+            yield return FormLinkInformation.Factory(obj.Cloth);
+            yield return FormLinkInformation.Factory(obj.Water);
+            yield return FormLinkInformation.Factory(obj.HollowMetal);
+            yield return FormLinkInformation.Factory(obj.OrganicBug);
+            yield return FormLinkInformation.Factory(obj.OrganicGlow);
             yield break;
         }
         
@@ -1095,27 +1758,57 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Stone) ?? true))
             {
-                errorMask?.PushIndex((int)ImpactDataSet_FieldIndex.Data);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)ImpactDataSet_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Stone.SetTo(rhs.Stone.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Dirt) ?? true))
+            {
+                item.Dirt.SetTo(rhs.Dirt.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Grass) ?? true))
+            {
+                item.Grass.SetTo(rhs.Grass.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Glass) ?? true))
+            {
+                item.Glass.SetTo(rhs.Glass.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Metal) ?? true))
+            {
+                item.Metal.SetTo(rhs.Metal.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Wood) ?? true))
+            {
+                item.Wood.SetTo(rhs.Wood.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Organic) ?? true))
+            {
+                item.Organic.SetTo(rhs.Organic.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Cloth) ?? true))
+            {
+                item.Cloth.SetTo(rhs.Cloth.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Water) ?? true))
+            {
+                item.Water.SetTo(rhs.Water.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.HollowMetal) ?? true))
+            {
+                item.HollowMetal.SetTo(rhs.HollowMetal.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.OrganicBug) ?? true))
+            {
+                item.OrganicBug.SetTo(rhs.OrganicBug.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.OrganicGlow) ?? true))
+            {
+                item.OrganicGlow.SetTo(rhs.OrganicGlow.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1277,6 +1970,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly ImpactDataSetBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            IImpactDataSetGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IImpactDataSetGetter item,
             MutagenWriter writer,
@@ -1286,11 +1988,54 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            var DataItem = item.Data;
-            ((ImpactDataSetDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                translationParams: translationParams);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Stone);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Dirt);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Grass);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Glass);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Metal);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Wood);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Organic);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Cloth);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Water);
+                if (!item.DATADataTypeState.HasFlag(ImpactDataSet.DATADataType.Break0))
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.HollowMetal);
+                    if (!item.DATADataTypeState.HasFlag(ImpactDataSet.DATADataType.Break1))
+                    {
+                        FormLinkBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.OrganicBug);
+                        if (!item.DATADataTypeState.HasFlag(ImpactDataSet.DATADataType.Break2))
+                        {
+                            FormLinkBinaryTranslation.Instance.Write(
+                                writer: writer,
+                                item: item.OrganicGlow);
+                        }
+                    }
+                }
+            }
         }
 
         public void Write(
@@ -1347,6 +2092,15 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly ImpactDataSetBinaryCreateTranslation Instance = new ImpactDataSetBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.IPDS;
+        public static void FillBinaryStructs(
+            IImpactDataSetInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
         public static ParseResult FillBinaryRecordTypes(
             IImpactDataSetInternal item,
             MutagenFrame frame,
@@ -1361,8 +2115,48 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.DATA:
                 {
-                    item.Data = Mutagen.Bethesda.Fallout3.ImpactDataSetData.CreateFromBinary(frame: frame);
-                    return (int)ImpactDataSet_FieldIndex.Data;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Stone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Dirt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Grass.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Glass.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Metal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Wood.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Organic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Cloth.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= ImpactDataSet.DATADataType.Break0;
+                        return (int)ImpactDataSet_FieldIndex.Water;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HollowMetal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= ImpactDataSet.DATADataType.Break1;
+                        return (int)ImpactDataSet_FieldIndex.HollowMetal;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    item.OrganicBug.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= ImpactDataSet.DATADataType.Break2;
+                        return (int)ImpactDataSet_FieldIndex.OrganicBug;
+                    }
+                    if (dataFrame.Remaining < 4) return null;
+                    item.OrganicGlow.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ImpactDataSet_FieldIndex.OrganicGlow;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1423,10 +2217,67 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(IImpactDataSetGetter);
 
 
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IImpactDataSetDataGetter? _Data => _DataLocation.HasValue ? ImpactDataSetDataBinaryOverlay.ImpactDataSetDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
-        public IImpactDataSetDataGetter Data => _Data ?? new ImpactDataSetData();
+        private RangeInt32? _DATALocation;
+        public ImpactDataSet.DATADataType DATADataTypeState { get; private set; }
+        #region Stone
+        private int _StoneLocation => _DATALocation!.Value.Min;
+        private bool _Stone_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Stone => _Stone_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_StoneLocation, 0x4), isSet: _Stone_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Dirt
+        private int _DirtLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _Dirt_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Dirt => _Dirt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_DirtLocation, 0x4), isSet: _Dirt_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Grass
+        private int _GrassLocation => _DATALocation!.Value.Min + 0x8;
+        private bool _Grass_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Grass => _Grass_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_GrassLocation, 0x4), isSet: _Grass_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Glass
+        private int _GlassLocation => _DATALocation!.Value.Min + 0xC;
+        private bool _Glass_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Glass => _Glass_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_GlassLocation, 0x4), isSet: _Glass_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Metal
+        private int _MetalLocation => _DATALocation!.Value.Min + 0x10;
+        private bool _Metal_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Metal => _Metal_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_MetalLocation, 0x4), isSet: _Metal_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Wood
+        private int _WoodLocation => _DATALocation!.Value.Min + 0x14;
+        private bool _Wood_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Wood => _Wood_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_WoodLocation, 0x4), isSet: _Wood_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Organic
+        private int _OrganicLocation => _DATALocation!.Value.Min + 0x18;
+        private bool _Organic_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Organic => _Organic_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_OrganicLocation, 0x4), isSet: _Organic_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Cloth
+        private int _ClothLocation => _DATALocation!.Value.Min + 0x1C;
+        private bool _Cloth_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Cloth => _Cloth_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_ClothLocation, 0x4), isSet: _Cloth_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region Water
+        private int _WaterLocation => _DATALocation!.Value.Min + 0x20;
+        private bool _Water_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactGetter> Water => _Water_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_WaterLocation, 0x4), isSet: _Water_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region HollowMetal
+        private int _HollowMetalLocation => _DATALocation!.Value.Min + 0x24;
+        private bool _HollowMetal_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ImpactDataSet.DATADataType.Break0);
+        public IFormLinkGetter<IImpactGetter> HollowMetal => _HollowMetal_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_HollowMetalLocation, 0x4), isSet: _HollowMetal_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region OrganicBug
+        private int _OrganicBugLocation => _DATALocation!.Value.Min + 0x28;
+        private bool _OrganicBug_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ImpactDataSet.DATADataType.Break1);
+        public IFormLinkGetter<IImpactGetter> OrganicBug => _OrganicBug_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_OrganicBugLocation, 0x4), isSet: _OrganicBug_IsSet) : FormLink<IImpactGetter>.Null;
+        #endregion
+        #region OrganicGlow
+        private int _OrganicGlowLocation => _DATALocation!.Value.Min + 0x2C;
+        private bool _OrganicGlow_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ImpactDataSet.DATADataType.Break2);
+        public IFormLinkGetter<IImpactGetter> OrganicGlow => _OrganicGlow_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _recordData.Span.Slice(_OrganicGlowLocation, 0x4), isSet: _OrganicGlow_IsSet) : FormLink<IImpactGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1499,8 +2350,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)ImpactDataSet_FieldIndex.Data;
+                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x24)
+                    {
+                        this.DATADataTypeState |= ImpactDataSet.DATADataType.Break0;
+                    }
+                    if (subLen <= 0x28)
+                    {
+                        this.DATADataTypeState |= ImpactDataSet.DATADataType.Break1;
+                    }
+                    if (subLen <= 0x2C)
+                    {
+                        this.DATADataTypeState |= ImpactDataSet.DATADataType.Break2;
+                    }
+                    return (int)ImpactDataSet_FieldIndex.OrganicGlow;
                 }
                 default:
                     return base.FillRecordType(

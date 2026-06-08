@@ -1312,9 +1312,6 @@
     <Compile Include="Records\Major Records\DialogResponseData_Generated.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ImpactDataSetData_Generated.cs">
-      <DependentUpon>ImpactDataSet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PerkData_Generated.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
