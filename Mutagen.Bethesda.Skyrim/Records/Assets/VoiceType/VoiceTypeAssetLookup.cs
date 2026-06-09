@@ -671,18 +671,18 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        //Conditions
-        if (alias.Conditions.Any())
-        {
-            var voices = GetVoices(alias.Conditions, quest, currentMod);
-            if (additionalVoices != null) voices.Insert(additionalVoices);
-            return voices;
-        }
-
         //Created object
         if (alias.CreateReferenceToObject != null)
         {
             var voices = GetVoices(alias.CreateReferenceToObject.Object.FormKey);
+            if (additionalVoices != null) voices.Insert(additionalVoices);
+            return voices;
+        }
+
+        //Conditions
+        if (alias.Conditions.Any())
+        {
+            var voices = GetVoices(alias.Conditions, quest, currentMod);
             if (additionalVoices != null) voices.Insert(additionalVoices);
             return voices;
         }
