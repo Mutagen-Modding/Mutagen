@@ -134,7 +134,6 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             IdleMarker_Registration.Instance,
             ImageSpace_Registration.Instance,
             ImageSpaceAdapter_Registration.Instance,
-            ImageSpaceData_Registration.Instance,
             Impact_Registration.Instance,
             ImpactDataSet_Registration.Instance,
             Ingestible_Registration.Instance,

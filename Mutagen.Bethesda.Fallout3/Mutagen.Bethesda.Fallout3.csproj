@@ -899,9 +899,6 @@
     <Compile Include="Records\Major Records\IdleAnimationRelatedAnimations_Generated.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ImageSpaceData_Generated.cs">
-      <DependentUpon>ImageSpace.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\KeyFrame_Generated.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
