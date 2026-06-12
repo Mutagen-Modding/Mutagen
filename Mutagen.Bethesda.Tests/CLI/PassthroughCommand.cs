@@ -22,6 +22,9 @@ public class PassthroughCommand
     [Option('n', "nickname", HelpText = "Nickname suffix for cache folder")]
     public string NicknameSuffix { get; set; } = string.Empty;
 
+    [Option('t', "temp-folder", HelpText = "Override the cache folder location (defaults to system temp). Route large games to an SSD to avoid filling tmpfs/RAM.")]
+    public string? TempFolder { get; set; }
+
     // Test mode flags
     [Option("test-normal", Default = true, HelpText = "Run normal import/export test")]
     public bool TestNormal { get; set; }
@@ -119,6 +122,7 @@ public class PassthroughCommand
                 PassthroughSettings = new PassthroughSettings()
                 {
                     CacheReuse = BuildCacheReuse(),
+                    TempFolderOverride = TempFolder,
                     TestNormal = TestNormal,
                     TestBinaryOverlay = TestOverlay,
                     TestCopyIn = TestCopyIn,
@@ -154,7 +158,7 @@ public class PassthroughCommand
             };
 
             var nickname = $"{Path.GetFileName(PathToMod)}{NicknameSuffix}";
-            var cacheFolder = PassthroughTest.GetTestFolderPath(nickname, Release).Path;
+            var cacheFolder = PassthroughTest.GetTestFolderPath(nickname, Release, TempFolder).Path;
 
             if (Json)
             {

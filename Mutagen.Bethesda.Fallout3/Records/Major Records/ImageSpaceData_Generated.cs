@@ -29,6 +29,7 @@ using RecordTypes = Mutagen.Bethesda.Fallout3.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -113,14 +114,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region GetHitDampingConstant
         public Single GetHitDampingConstant { get; set; } = default(Single);
         #endregion
-        #region NightEyeTintRed
-        public Single NightEyeTintRed { get; set; } = default(Single);
-        #endregion
-        #region NightEyeTintGreen
-        public Single NightEyeTintGreen { get; set; } = default(Single);
-        #endregion
-        #region NightEyeTintBlue
-        public Single NightEyeTintBlue { get; set; } = default(Single);
+        #region NightEyeTintColor
+        public Color NightEyeTintColor { get; set; } = default(Color);
         #endregion
         #region NightEyeBrightness
         public Single NightEyeBrightness { get; set; } = default(Single);
@@ -137,28 +132,69 @@ namespace Mutagen.Bethesda.Fallout3
         #region CinematicBrightnessValue
         public Single CinematicBrightnessValue { get; set; } = default(Single);
         #endregion
-        #region CinematicTintRed
-        public Single CinematicTintRed { get; set; } = default(Single);
-        #endregion
-        #region CinematicTintGreen
-        public Single CinematicTintGreen { get; set; } = default(Single);
-        #endregion
-        #region CinematicTintBlue
-        public Single CinematicTintBlue { get; set; } = default(Single);
+        #region CinematicTintColor
+        public Color CinematicTintColor { get; set; } = default(Color);
         #endregion
         #region CinematicTintValue
         public Single CinematicTintValue { get; set; } = default(Single);
         #endregion
-        #region Remaining
+        #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Remaining = new byte[0];
-        public MemorySlice<Byte> Remaining
+        private MemorySlice<Byte> _Unknown = new byte[4];
+        public MemorySlice<Byte> Unknown
         {
-            get => _Remaining;
-            set => this._Remaining = value;
+            get => _Unknown;
+            set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IImageSpaceDataGetter.Remaining => this.Remaining;
+        ReadOnlyMemorySlice<Byte> IImageSpaceDataGetter.Unknown => this.Unknown;
+        #endregion
+        #region Unused1
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused1 = new byte[4];
+        public MemorySlice<Byte> Unused1
+        {
+            get => _Unused1;
+            set => this._Unused1 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IImageSpaceDataGetter.Unused1 => this.Unused1;
+        #endregion
+        #region Unused2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused2 = new byte[4];
+        public MemorySlice<Byte> Unused2
+        {
+            get => _Unused2;
+            set => this._Unused2 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IImageSpaceDataGetter.Unused2 => this.Unused2;
+        #endregion
+        #region Unused3
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused3 = new byte[4];
+        public MemorySlice<Byte> Unused3
+        {
+            get => _Unused3;
+            set => this._Unused3 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IImageSpaceDataGetter.Unused3 => this.Unused3;
+        #endregion
+        #region Flags
+        public ImageSpace.Flag Flags { get; set; } = default(ImageSpace.Flag);
+        #endregion
+        #region Unused4
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused4 = new byte[3];
+        public MemorySlice<Byte> Unused4
+        {
+            get => _Unused4;
+            set => this._Unused4 = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IImageSpaceDataGetter.Unused4 => this.Unused4;
         #endregion
 
         #region To String
@@ -220,19 +256,20 @@ namespace Mutagen.Bethesda.Fallout3
                 this.GetHitBlurRadius = initialValue;
                 this.GetHitBlurDampingConstant = initialValue;
                 this.GetHitDampingConstant = initialValue;
-                this.NightEyeTintRed = initialValue;
-                this.NightEyeTintGreen = initialValue;
-                this.NightEyeTintBlue = initialValue;
+                this.NightEyeTintColor = initialValue;
                 this.NightEyeBrightness = initialValue;
                 this.CinematicSaturation = initialValue;
                 this.CinematicContrastAvgLumValue = initialValue;
                 this.CinematicContrastValue = initialValue;
                 this.CinematicBrightnessValue = initialValue;
-                this.CinematicTintRed = initialValue;
-                this.CinematicTintGreen = initialValue;
-                this.CinematicTintBlue = initialValue;
+                this.CinematicTintColor = initialValue;
                 this.CinematicTintValue = initialValue;
-                this.Remaining = initialValue;
+                this.Unknown = initialValue;
+                this.Unused1 = initialValue;
+                this.Unused2 = initialValue;
+                this.Unused3 = initialValue;
+                this.Flags = initialValue;
+                this.Unused4 = initialValue;
             }
 
             public Mask(
@@ -257,19 +294,20 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem GetHitBlurRadius,
                 TItem GetHitBlurDampingConstant,
                 TItem GetHitDampingConstant,
-                TItem NightEyeTintRed,
-                TItem NightEyeTintGreen,
-                TItem NightEyeTintBlue,
+                TItem NightEyeTintColor,
                 TItem NightEyeBrightness,
                 TItem CinematicSaturation,
                 TItem CinematicContrastAvgLumValue,
                 TItem CinematicContrastValue,
                 TItem CinematicBrightnessValue,
-                TItem CinematicTintRed,
-                TItem CinematicTintGreen,
-                TItem CinematicTintBlue,
+                TItem CinematicTintColor,
                 TItem CinematicTintValue,
-                TItem Remaining)
+                TItem Unknown,
+                TItem Unused1,
+                TItem Unused2,
+                TItem Unused3,
+                TItem Flags,
+                TItem Unused4)
             {
                 this.HdrEyeAdaptSpeed = HdrEyeAdaptSpeed;
                 this.HdrBlurRadius = HdrBlurRadius;
@@ -292,19 +330,20 @@ namespace Mutagen.Bethesda.Fallout3
                 this.GetHitBlurRadius = GetHitBlurRadius;
                 this.GetHitBlurDampingConstant = GetHitBlurDampingConstant;
                 this.GetHitDampingConstant = GetHitDampingConstant;
-                this.NightEyeTintRed = NightEyeTintRed;
-                this.NightEyeTintGreen = NightEyeTintGreen;
-                this.NightEyeTintBlue = NightEyeTintBlue;
+                this.NightEyeTintColor = NightEyeTintColor;
                 this.NightEyeBrightness = NightEyeBrightness;
                 this.CinematicSaturation = CinematicSaturation;
                 this.CinematicContrastAvgLumValue = CinematicContrastAvgLumValue;
                 this.CinematicContrastValue = CinematicContrastValue;
                 this.CinematicBrightnessValue = CinematicBrightnessValue;
-                this.CinematicTintRed = CinematicTintRed;
-                this.CinematicTintGreen = CinematicTintGreen;
-                this.CinematicTintBlue = CinematicTintBlue;
+                this.CinematicTintColor = CinematicTintColor;
                 this.CinematicTintValue = CinematicTintValue;
-                this.Remaining = Remaining;
+                this.Unknown = Unknown;
+                this.Unused1 = Unused1;
+                this.Unused2 = Unused2;
+                this.Unused3 = Unused3;
+                this.Flags = Flags;
+                this.Unused4 = Unused4;
             }
 
             #pragma warning disable CS8618
@@ -337,19 +376,20 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem GetHitBlurRadius;
             public TItem GetHitBlurDampingConstant;
             public TItem GetHitDampingConstant;
-            public TItem NightEyeTintRed;
-            public TItem NightEyeTintGreen;
-            public TItem NightEyeTintBlue;
+            public TItem NightEyeTintColor;
             public TItem NightEyeBrightness;
             public TItem CinematicSaturation;
             public TItem CinematicContrastAvgLumValue;
             public TItem CinematicContrastValue;
             public TItem CinematicBrightnessValue;
-            public TItem CinematicTintRed;
-            public TItem CinematicTintGreen;
-            public TItem CinematicTintBlue;
+            public TItem CinematicTintColor;
             public TItem CinematicTintValue;
-            public TItem Remaining;
+            public TItem Unknown;
+            public TItem Unused1;
+            public TItem Unused2;
+            public TItem Unused3;
+            public TItem Flags;
+            public TItem Unused4;
             #endregion
 
             #region Equals
@@ -383,19 +423,20 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.GetHitBlurRadius, rhs.GetHitBlurRadius)) return false;
                 if (!object.Equals(this.GetHitBlurDampingConstant, rhs.GetHitBlurDampingConstant)) return false;
                 if (!object.Equals(this.GetHitDampingConstant, rhs.GetHitDampingConstant)) return false;
-                if (!object.Equals(this.NightEyeTintRed, rhs.NightEyeTintRed)) return false;
-                if (!object.Equals(this.NightEyeTintGreen, rhs.NightEyeTintGreen)) return false;
-                if (!object.Equals(this.NightEyeTintBlue, rhs.NightEyeTintBlue)) return false;
+                if (!object.Equals(this.NightEyeTintColor, rhs.NightEyeTintColor)) return false;
                 if (!object.Equals(this.NightEyeBrightness, rhs.NightEyeBrightness)) return false;
                 if (!object.Equals(this.CinematicSaturation, rhs.CinematicSaturation)) return false;
                 if (!object.Equals(this.CinematicContrastAvgLumValue, rhs.CinematicContrastAvgLumValue)) return false;
                 if (!object.Equals(this.CinematicContrastValue, rhs.CinematicContrastValue)) return false;
                 if (!object.Equals(this.CinematicBrightnessValue, rhs.CinematicBrightnessValue)) return false;
-                if (!object.Equals(this.CinematicTintRed, rhs.CinematicTintRed)) return false;
-                if (!object.Equals(this.CinematicTintGreen, rhs.CinematicTintGreen)) return false;
-                if (!object.Equals(this.CinematicTintBlue, rhs.CinematicTintBlue)) return false;
+                if (!object.Equals(this.CinematicTintColor, rhs.CinematicTintColor)) return false;
                 if (!object.Equals(this.CinematicTintValue, rhs.CinematicTintValue)) return false;
-                if (!object.Equals(this.Remaining, rhs.Remaining)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
+                if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unused4, rhs.Unused4)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -422,19 +463,20 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.GetHitBlurRadius);
                 hash.Add(this.GetHitBlurDampingConstant);
                 hash.Add(this.GetHitDampingConstant);
-                hash.Add(this.NightEyeTintRed);
-                hash.Add(this.NightEyeTintGreen);
-                hash.Add(this.NightEyeTintBlue);
+                hash.Add(this.NightEyeTintColor);
                 hash.Add(this.NightEyeBrightness);
                 hash.Add(this.CinematicSaturation);
                 hash.Add(this.CinematicContrastAvgLumValue);
                 hash.Add(this.CinematicContrastValue);
                 hash.Add(this.CinematicBrightnessValue);
-                hash.Add(this.CinematicTintRed);
-                hash.Add(this.CinematicTintGreen);
-                hash.Add(this.CinematicTintBlue);
+                hash.Add(this.CinematicTintColor);
                 hash.Add(this.CinematicTintValue);
-                hash.Add(this.Remaining);
+                hash.Add(this.Unknown);
+                hash.Add(this.Unused1);
+                hash.Add(this.Unused2);
+                hash.Add(this.Unused3);
+                hash.Add(this.Flags);
+                hash.Add(this.Unused4);
                 return hash.ToHashCode();
             }
 
@@ -464,19 +506,20 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.GetHitBlurRadius)) return false;
                 if (!eval(this.GetHitBlurDampingConstant)) return false;
                 if (!eval(this.GetHitDampingConstant)) return false;
-                if (!eval(this.NightEyeTintRed)) return false;
-                if (!eval(this.NightEyeTintGreen)) return false;
-                if (!eval(this.NightEyeTintBlue)) return false;
+                if (!eval(this.NightEyeTintColor)) return false;
                 if (!eval(this.NightEyeBrightness)) return false;
                 if (!eval(this.CinematicSaturation)) return false;
                 if (!eval(this.CinematicContrastAvgLumValue)) return false;
                 if (!eval(this.CinematicContrastValue)) return false;
                 if (!eval(this.CinematicBrightnessValue)) return false;
-                if (!eval(this.CinematicTintRed)) return false;
-                if (!eval(this.CinematicTintGreen)) return false;
-                if (!eval(this.CinematicTintBlue)) return false;
+                if (!eval(this.CinematicTintColor)) return false;
                 if (!eval(this.CinematicTintValue)) return false;
-                if (!eval(this.Remaining)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unused1)) return false;
+                if (!eval(this.Unused2)) return false;
+                if (!eval(this.Unused3)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Unused4)) return false;
                 return true;
             }
             #endregion
@@ -505,19 +548,20 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.GetHitBlurRadius)) return true;
                 if (eval(this.GetHitBlurDampingConstant)) return true;
                 if (eval(this.GetHitDampingConstant)) return true;
-                if (eval(this.NightEyeTintRed)) return true;
-                if (eval(this.NightEyeTintGreen)) return true;
-                if (eval(this.NightEyeTintBlue)) return true;
+                if (eval(this.NightEyeTintColor)) return true;
                 if (eval(this.NightEyeBrightness)) return true;
                 if (eval(this.CinematicSaturation)) return true;
                 if (eval(this.CinematicContrastAvgLumValue)) return true;
                 if (eval(this.CinematicContrastValue)) return true;
                 if (eval(this.CinematicBrightnessValue)) return true;
-                if (eval(this.CinematicTintRed)) return true;
-                if (eval(this.CinematicTintGreen)) return true;
-                if (eval(this.CinematicTintBlue)) return true;
+                if (eval(this.CinematicTintColor)) return true;
                 if (eval(this.CinematicTintValue)) return true;
-                if (eval(this.Remaining)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Unused1)) return true;
+                if (eval(this.Unused2)) return true;
+                if (eval(this.Unused3)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Unused4)) return true;
                 return false;
             }
             #endregion
@@ -553,19 +597,20 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.GetHitBlurRadius = eval(this.GetHitBlurRadius);
                 obj.GetHitBlurDampingConstant = eval(this.GetHitBlurDampingConstant);
                 obj.GetHitDampingConstant = eval(this.GetHitDampingConstant);
-                obj.NightEyeTintRed = eval(this.NightEyeTintRed);
-                obj.NightEyeTintGreen = eval(this.NightEyeTintGreen);
-                obj.NightEyeTintBlue = eval(this.NightEyeTintBlue);
+                obj.NightEyeTintColor = eval(this.NightEyeTintColor);
                 obj.NightEyeBrightness = eval(this.NightEyeBrightness);
                 obj.CinematicSaturation = eval(this.CinematicSaturation);
                 obj.CinematicContrastAvgLumValue = eval(this.CinematicContrastAvgLumValue);
                 obj.CinematicContrastValue = eval(this.CinematicContrastValue);
                 obj.CinematicBrightnessValue = eval(this.CinematicBrightnessValue);
-                obj.CinematicTintRed = eval(this.CinematicTintRed);
-                obj.CinematicTintGreen = eval(this.CinematicTintGreen);
-                obj.CinematicTintBlue = eval(this.CinematicTintBlue);
+                obj.CinematicTintColor = eval(this.CinematicTintColor);
                 obj.CinematicTintValue = eval(this.CinematicTintValue);
-                obj.Remaining = eval(this.Remaining);
+                obj.Unknown = eval(this.Unknown);
+                obj.Unused1 = eval(this.Unused1);
+                obj.Unused2 = eval(this.Unused2);
+                obj.Unused3 = eval(this.Unused3);
+                obj.Flags = eval(this.Flags);
+                obj.Unused4 = eval(this.Unused4);
             }
             #endregion
 
@@ -668,17 +713,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(GetHitDampingConstant, "GetHitDampingConstant");
                     }
-                    if (printMask?.NightEyeTintRed ?? true)
+                    if (printMask?.NightEyeTintColor ?? true)
                     {
-                        sb.AppendItem(NightEyeTintRed, "NightEyeTintRed");
-                    }
-                    if (printMask?.NightEyeTintGreen ?? true)
-                    {
-                        sb.AppendItem(NightEyeTintGreen, "NightEyeTintGreen");
-                    }
-                    if (printMask?.NightEyeTintBlue ?? true)
-                    {
-                        sb.AppendItem(NightEyeTintBlue, "NightEyeTintBlue");
+                        sb.AppendItem(NightEyeTintColor, "NightEyeTintColor");
                     }
                     if (printMask?.NightEyeBrightness ?? true)
                     {
@@ -700,25 +737,37 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(CinematicBrightnessValue, "CinematicBrightnessValue");
                     }
-                    if (printMask?.CinematicTintRed ?? true)
+                    if (printMask?.CinematicTintColor ?? true)
                     {
-                        sb.AppendItem(CinematicTintRed, "CinematicTintRed");
-                    }
-                    if (printMask?.CinematicTintGreen ?? true)
-                    {
-                        sb.AppendItem(CinematicTintGreen, "CinematicTintGreen");
-                    }
-                    if (printMask?.CinematicTintBlue ?? true)
-                    {
-                        sb.AppendItem(CinematicTintBlue, "CinematicTintBlue");
+                        sb.AppendItem(CinematicTintColor, "CinematicTintColor");
                     }
                     if (printMask?.CinematicTintValue ?? true)
                     {
                         sb.AppendItem(CinematicTintValue, "CinematicTintValue");
                     }
-                    if (printMask?.Remaining ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(Remaining, "Remaining");
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.Unused1 ?? true)
+                    {
+                        sb.AppendItem(Unused1, "Unused1");
+                    }
+                    if (printMask?.Unused2 ?? true)
+                    {
+                        sb.AppendItem(Unused2, "Unused2");
+                    }
+                    if (printMask?.Unused3 ?? true)
+                    {
+                        sb.AppendItem(Unused3, "Unused3");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Unused4 ?? true)
+                    {
+                        sb.AppendItem(Unused4, "Unused4");
                     }
                 }
             }
@@ -765,19 +814,20 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? GetHitBlurRadius;
             public Exception? GetHitBlurDampingConstant;
             public Exception? GetHitDampingConstant;
-            public Exception? NightEyeTintRed;
-            public Exception? NightEyeTintGreen;
-            public Exception? NightEyeTintBlue;
+            public Exception? NightEyeTintColor;
             public Exception? NightEyeBrightness;
             public Exception? CinematicSaturation;
             public Exception? CinematicContrastAvgLumValue;
             public Exception? CinematicContrastValue;
             public Exception? CinematicBrightnessValue;
-            public Exception? CinematicTintRed;
-            public Exception? CinematicTintGreen;
-            public Exception? CinematicTintBlue;
+            public Exception? CinematicTintColor;
             public Exception? CinematicTintValue;
-            public Exception? Remaining;
+            public Exception? Unknown;
+            public Exception? Unused1;
+            public Exception? Unused2;
+            public Exception? Unused3;
+            public Exception? Flags;
+            public Exception? Unused4;
             #endregion
 
             #region IErrorMask
@@ -828,12 +878,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return GetHitBlurDampingConstant;
                     case ImageSpaceData_FieldIndex.GetHitDampingConstant:
                         return GetHitDampingConstant;
-                    case ImageSpaceData_FieldIndex.NightEyeTintRed:
-                        return NightEyeTintRed;
-                    case ImageSpaceData_FieldIndex.NightEyeTintGreen:
-                        return NightEyeTintGreen;
-                    case ImageSpaceData_FieldIndex.NightEyeTintBlue:
-                        return NightEyeTintBlue;
+                    case ImageSpaceData_FieldIndex.NightEyeTintColor:
+                        return NightEyeTintColor;
                     case ImageSpaceData_FieldIndex.NightEyeBrightness:
                         return NightEyeBrightness;
                     case ImageSpaceData_FieldIndex.CinematicSaturation:
@@ -844,16 +890,22 @@ namespace Mutagen.Bethesda.Fallout3
                         return CinematicContrastValue;
                     case ImageSpaceData_FieldIndex.CinematicBrightnessValue:
                         return CinematicBrightnessValue;
-                    case ImageSpaceData_FieldIndex.CinematicTintRed:
-                        return CinematicTintRed;
-                    case ImageSpaceData_FieldIndex.CinematicTintGreen:
-                        return CinematicTintGreen;
-                    case ImageSpaceData_FieldIndex.CinematicTintBlue:
-                        return CinematicTintBlue;
+                    case ImageSpaceData_FieldIndex.CinematicTintColor:
+                        return CinematicTintColor;
                     case ImageSpaceData_FieldIndex.CinematicTintValue:
                         return CinematicTintValue;
-                    case ImageSpaceData_FieldIndex.Remaining:
-                        return Remaining;
+                    case ImageSpaceData_FieldIndex.Unknown:
+                        return Unknown;
+                    case ImageSpaceData_FieldIndex.Unused1:
+                        return Unused1;
+                    case ImageSpaceData_FieldIndex.Unused2:
+                        return Unused2;
+                    case ImageSpaceData_FieldIndex.Unused3:
+                        return Unused3;
+                    case ImageSpaceData_FieldIndex.Flags:
+                        return Flags;
+                    case ImageSpaceData_FieldIndex.Unused4:
+                        return Unused4;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -927,14 +979,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceData_FieldIndex.GetHitDampingConstant:
                         this.GetHitDampingConstant = ex;
                         break;
-                    case ImageSpaceData_FieldIndex.NightEyeTintRed:
-                        this.NightEyeTintRed = ex;
-                        break;
-                    case ImageSpaceData_FieldIndex.NightEyeTintGreen:
-                        this.NightEyeTintGreen = ex;
-                        break;
-                    case ImageSpaceData_FieldIndex.NightEyeTintBlue:
-                        this.NightEyeTintBlue = ex;
+                    case ImageSpaceData_FieldIndex.NightEyeTintColor:
+                        this.NightEyeTintColor = ex;
                         break;
                     case ImageSpaceData_FieldIndex.NightEyeBrightness:
                         this.NightEyeBrightness = ex;
@@ -951,20 +997,29 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceData_FieldIndex.CinematicBrightnessValue:
                         this.CinematicBrightnessValue = ex;
                         break;
-                    case ImageSpaceData_FieldIndex.CinematicTintRed:
-                        this.CinematicTintRed = ex;
-                        break;
-                    case ImageSpaceData_FieldIndex.CinematicTintGreen:
-                        this.CinematicTintGreen = ex;
-                        break;
-                    case ImageSpaceData_FieldIndex.CinematicTintBlue:
-                        this.CinematicTintBlue = ex;
+                    case ImageSpaceData_FieldIndex.CinematicTintColor:
+                        this.CinematicTintColor = ex;
                         break;
                     case ImageSpaceData_FieldIndex.CinematicTintValue:
                         this.CinematicTintValue = ex;
                         break;
-                    case ImageSpaceData_FieldIndex.Remaining:
-                        this.Remaining = ex;
+                    case ImageSpaceData_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused1:
+                        this.Unused1 = ex;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused2:
+                        this.Unused2 = ex;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused3:
+                        this.Unused3 = ex;
+                        break;
+                    case ImageSpaceData_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused4:
+                        this.Unused4 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1039,14 +1094,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceData_FieldIndex.GetHitDampingConstant:
                         this.GetHitDampingConstant = (Exception?)obj;
                         break;
-                    case ImageSpaceData_FieldIndex.NightEyeTintRed:
-                        this.NightEyeTintRed = (Exception?)obj;
-                        break;
-                    case ImageSpaceData_FieldIndex.NightEyeTintGreen:
-                        this.NightEyeTintGreen = (Exception?)obj;
-                        break;
-                    case ImageSpaceData_FieldIndex.NightEyeTintBlue:
-                        this.NightEyeTintBlue = (Exception?)obj;
+                    case ImageSpaceData_FieldIndex.NightEyeTintColor:
+                        this.NightEyeTintColor = (Exception?)obj;
                         break;
                     case ImageSpaceData_FieldIndex.NightEyeBrightness:
                         this.NightEyeBrightness = (Exception?)obj;
@@ -1063,20 +1112,29 @@ namespace Mutagen.Bethesda.Fallout3
                     case ImageSpaceData_FieldIndex.CinematicBrightnessValue:
                         this.CinematicBrightnessValue = (Exception?)obj;
                         break;
-                    case ImageSpaceData_FieldIndex.CinematicTintRed:
-                        this.CinematicTintRed = (Exception?)obj;
-                        break;
-                    case ImageSpaceData_FieldIndex.CinematicTintGreen:
-                        this.CinematicTintGreen = (Exception?)obj;
-                        break;
-                    case ImageSpaceData_FieldIndex.CinematicTintBlue:
-                        this.CinematicTintBlue = (Exception?)obj;
+                    case ImageSpaceData_FieldIndex.CinematicTintColor:
+                        this.CinematicTintColor = (Exception?)obj;
                         break;
                     case ImageSpaceData_FieldIndex.CinematicTintValue:
                         this.CinematicTintValue = (Exception?)obj;
                         break;
-                    case ImageSpaceData_FieldIndex.Remaining:
-                        this.Remaining = (Exception?)obj;
+                    case ImageSpaceData_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused1:
+                        this.Unused1 = (Exception?)obj;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused3:
+                        this.Unused3 = (Exception?)obj;
+                        break;
+                    case ImageSpaceData_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case ImageSpaceData_FieldIndex.Unused4:
+                        this.Unused4 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1107,19 +1165,20 @@ namespace Mutagen.Bethesda.Fallout3
                 if (GetHitBlurRadius != null) return true;
                 if (GetHitBlurDampingConstant != null) return true;
                 if (GetHitDampingConstant != null) return true;
-                if (NightEyeTintRed != null) return true;
-                if (NightEyeTintGreen != null) return true;
-                if (NightEyeTintBlue != null) return true;
+                if (NightEyeTintColor != null) return true;
                 if (NightEyeBrightness != null) return true;
                 if (CinematicSaturation != null) return true;
                 if (CinematicContrastAvgLumValue != null) return true;
                 if (CinematicContrastValue != null) return true;
                 if (CinematicBrightnessValue != null) return true;
-                if (CinematicTintRed != null) return true;
-                if (CinematicTintGreen != null) return true;
-                if (CinematicTintBlue != null) return true;
+                if (CinematicTintColor != null) return true;
                 if (CinematicTintValue != null) return true;
-                if (Remaining != null) return true;
+                if (Unknown != null) return true;
+                if (Unused1 != null) return true;
+                if (Unused2 != null) return true;
+                if (Unused3 != null) return true;
+                if (Flags != null) return true;
+                if (Unused4 != null) return true;
                 return false;
             }
             #endregion
@@ -1209,13 +1268,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(GetHitDampingConstant, "GetHitDampingConstant");
                 }
                 {
-                    sb.AppendItem(NightEyeTintRed, "NightEyeTintRed");
-                }
-                {
-                    sb.AppendItem(NightEyeTintGreen, "NightEyeTintGreen");
-                }
-                {
-                    sb.AppendItem(NightEyeTintBlue, "NightEyeTintBlue");
+                    sb.AppendItem(NightEyeTintColor, "NightEyeTintColor");
                 }
                 {
                     sb.AppendItem(NightEyeBrightness, "NightEyeBrightness");
@@ -1233,19 +1286,28 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(CinematicBrightnessValue, "CinematicBrightnessValue");
                 }
                 {
-                    sb.AppendItem(CinematicTintRed, "CinematicTintRed");
-                }
-                {
-                    sb.AppendItem(CinematicTintGreen, "CinematicTintGreen");
-                }
-                {
-                    sb.AppendItem(CinematicTintBlue, "CinematicTintBlue");
+                    sb.AppendItem(CinematicTintColor, "CinematicTintColor");
                 }
                 {
                     sb.AppendItem(CinematicTintValue, "CinematicTintValue");
                 }
                 {
-                    sb.AppendItem(Remaining, "Remaining");
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Unused1, "Unused1");
+                }
+                {
+                    sb.AppendItem(Unused2, "Unused2");
+                }
+                {
+                    sb.AppendItem(Unused3, "Unused3");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Unused4, "Unused4");
                 }
             }
             #endregion
@@ -1276,19 +1338,20 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.GetHitBlurRadius = this.GetHitBlurRadius.Combine(rhs.GetHitBlurRadius);
                 ret.GetHitBlurDampingConstant = this.GetHitBlurDampingConstant.Combine(rhs.GetHitBlurDampingConstant);
                 ret.GetHitDampingConstant = this.GetHitDampingConstant.Combine(rhs.GetHitDampingConstant);
-                ret.NightEyeTintRed = this.NightEyeTintRed.Combine(rhs.NightEyeTintRed);
-                ret.NightEyeTintGreen = this.NightEyeTintGreen.Combine(rhs.NightEyeTintGreen);
-                ret.NightEyeTintBlue = this.NightEyeTintBlue.Combine(rhs.NightEyeTintBlue);
+                ret.NightEyeTintColor = this.NightEyeTintColor.Combine(rhs.NightEyeTintColor);
                 ret.NightEyeBrightness = this.NightEyeBrightness.Combine(rhs.NightEyeBrightness);
                 ret.CinematicSaturation = this.CinematicSaturation.Combine(rhs.CinematicSaturation);
                 ret.CinematicContrastAvgLumValue = this.CinematicContrastAvgLumValue.Combine(rhs.CinematicContrastAvgLumValue);
                 ret.CinematicContrastValue = this.CinematicContrastValue.Combine(rhs.CinematicContrastValue);
                 ret.CinematicBrightnessValue = this.CinematicBrightnessValue.Combine(rhs.CinematicBrightnessValue);
-                ret.CinematicTintRed = this.CinematicTintRed.Combine(rhs.CinematicTintRed);
-                ret.CinematicTintGreen = this.CinematicTintGreen.Combine(rhs.CinematicTintGreen);
-                ret.CinematicTintBlue = this.CinematicTintBlue.Combine(rhs.CinematicTintBlue);
+                ret.CinematicTintColor = this.CinematicTintColor.Combine(rhs.CinematicTintColor);
                 ret.CinematicTintValue = this.CinematicTintValue.Combine(rhs.CinematicTintValue);
-                ret.Remaining = this.Remaining.Combine(rhs.Remaining);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
+                ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unused4 = this.Unused4.Combine(rhs.Unused4);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1333,19 +1396,20 @@ namespace Mutagen.Bethesda.Fallout3
             public bool GetHitBlurRadius;
             public bool GetHitBlurDampingConstant;
             public bool GetHitDampingConstant;
-            public bool NightEyeTintRed;
-            public bool NightEyeTintGreen;
-            public bool NightEyeTintBlue;
+            public bool NightEyeTintColor;
             public bool NightEyeBrightness;
             public bool CinematicSaturation;
             public bool CinematicContrastAvgLumValue;
             public bool CinematicContrastValue;
             public bool CinematicBrightnessValue;
-            public bool CinematicTintRed;
-            public bool CinematicTintGreen;
-            public bool CinematicTintBlue;
+            public bool CinematicTintColor;
             public bool CinematicTintValue;
-            public bool Remaining;
+            public bool Unknown;
+            public bool Unused1;
+            public bool Unused2;
+            public bool Unused3;
+            public bool Flags;
+            public bool Unused4;
             #endregion
 
             #region Ctors
@@ -1376,19 +1440,20 @@ namespace Mutagen.Bethesda.Fallout3
                 this.GetHitBlurRadius = defaultOn;
                 this.GetHitBlurDampingConstant = defaultOn;
                 this.GetHitDampingConstant = defaultOn;
-                this.NightEyeTintRed = defaultOn;
-                this.NightEyeTintGreen = defaultOn;
-                this.NightEyeTintBlue = defaultOn;
+                this.NightEyeTintColor = defaultOn;
                 this.NightEyeBrightness = defaultOn;
                 this.CinematicSaturation = defaultOn;
                 this.CinematicContrastAvgLumValue = defaultOn;
                 this.CinematicContrastValue = defaultOn;
                 this.CinematicBrightnessValue = defaultOn;
-                this.CinematicTintRed = defaultOn;
-                this.CinematicTintGreen = defaultOn;
-                this.CinematicTintBlue = defaultOn;
+                this.CinematicTintColor = defaultOn;
                 this.CinematicTintValue = defaultOn;
-                this.Remaining = defaultOn;
+                this.Unknown = defaultOn;
+                this.Unused1 = defaultOn;
+                this.Unused2 = defaultOn;
+                this.Unused3 = defaultOn;
+                this.Flags = defaultOn;
+                this.Unused4 = defaultOn;
             }
 
             #endregion
@@ -1425,19 +1490,20 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((GetHitBlurRadius, null));
                 ret.Add((GetHitBlurDampingConstant, null));
                 ret.Add((GetHitDampingConstant, null));
-                ret.Add((NightEyeTintRed, null));
-                ret.Add((NightEyeTintGreen, null));
-                ret.Add((NightEyeTintBlue, null));
+                ret.Add((NightEyeTintColor, null));
                 ret.Add((NightEyeBrightness, null));
                 ret.Add((CinematicSaturation, null));
                 ret.Add((CinematicContrastAvgLumValue, null));
                 ret.Add((CinematicContrastValue, null));
                 ret.Add((CinematicBrightnessValue, null));
-                ret.Add((CinematicTintRed, null));
-                ret.Add((CinematicTintGreen, null));
-                ret.Add((CinematicTintBlue, null));
+                ret.Add((CinematicTintColor, null));
                 ret.Add((CinematicTintValue, null));
-                ret.Add((Remaining, null));
+                ret.Add((Unknown, null));
+                ret.Add((Unused1, null));
+                ret.Add((Unused2, null));
+                ret.Add((Unused3, null));
+                ret.Add((Flags, null));
+                ret.Add((Unused4, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1531,19 +1597,20 @@ namespace Mutagen.Bethesda.Fallout3
         new Single GetHitBlurRadius { get; set; }
         new Single GetHitBlurDampingConstant { get; set; }
         new Single GetHitDampingConstant { get; set; }
-        new Single NightEyeTintRed { get; set; }
-        new Single NightEyeTintGreen { get; set; }
-        new Single NightEyeTintBlue { get; set; }
+        new Color NightEyeTintColor { get; set; }
         new Single NightEyeBrightness { get; set; }
         new Single CinematicSaturation { get; set; }
         new Single CinematicContrastAvgLumValue { get; set; }
         new Single CinematicContrastValue { get; set; }
         new Single CinematicBrightnessValue { get; set; }
-        new Single CinematicTintRed { get; set; }
-        new Single CinematicTintGreen { get; set; }
-        new Single CinematicTintBlue { get; set; }
+        new Color CinematicTintColor { get; set; }
         new Single CinematicTintValue { get; set; }
-        new MemorySlice<Byte> Remaining { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
+        new MemorySlice<Byte> Unused1 { get; set; }
+        new MemorySlice<Byte> Unused2 { get; set; }
+        new MemorySlice<Byte> Unused3 { get; set; }
+        new ImageSpace.Flag Flags { get; set; }
+        new MemorySlice<Byte> Unused4 { get; set; }
     }
 
     public partial interface IImageSpaceDataGetter :
@@ -1579,19 +1646,20 @@ namespace Mutagen.Bethesda.Fallout3
         Single GetHitBlurRadius { get; }
         Single GetHitBlurDampingConstant { get; }
         Single GetHitDampingConstant { get; }
-        Single NightEyeTintRed { get; }
-        Single NightEyeTintGreen { get; }
-        Single NightEyeTintBlue { get; }
+        Color NightEyeTintColor { get; }
         Single NightEyeBrightness { get; }
         Single CinematicSaturation { get; }
         Single CinematicContrastAvgLumValue { get; }
         Single CinematicContrastValue { get; }
         Single CinematicBrightnessValue { get; }
-        Single CinematicTintRed { get; }
-        Single CinematicTintGreen { get; }
-        Single CinematicTintBlue { get; }
+        Color CinematicTintColor { get; }
         Single CinematicTintValue { get; }
-        ReadOnlyMemorySlice<Byte> Remaining { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        ReadOnlyMemorySlice<Byte> Unused1 { get; }
+        ReadOnlyMemorySlice<Byte> Unused2 { get; }
+        ReadOnlyMemorySlice<Byte> Unused3 { get; }
+        ImageSpace.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte> Unused4 { get; }
 
     }
 
@@ -1782,19 +1850,20 @@ namespace Mutagen.Bethesda.Fallout3
         GetHitBlurRadius = 18,
         GetHitBlurDampingConstant = 19,
         GetHitDampingConstant = 20,
-        NightEyeTintRed = 21,
-        NightEyeTintGreen = 22,
-        NightEyeTintBlue = 23,
-        NightEyeBrightness = 24,
-        CinematicSaturation = 25,
-        CinematicContrastAvgLumValue = 26,
-        CinematicContrastValue = 27,
-        CinematicBrightnessValue = 28,
-        CinematicTintRed = 29,
-        CinematicTintGreen = 30,
-        CinematicTintBlue = 31,
-        CinematicTintValue = 32,
-        Remaining = 33,
+        NightEyeTintColor = 21,
+        NightEyeBrightness = 22,
+        CinematicSaturation = 23,
+        CinematicContrastAvgLumValue = 24,
+        CinematicContrastValue = 25,
+        CinematicBrightnessValue = 26,
+        CinematicTintColor = 27,
+        CinematicTintValue = 28,
+        Unknown = 29,
+        Unused1 = 30,
+        Unused2 = 31,
+        Unused3 = 32,
+        Flags = 33,
+        Unused4 = 34,
     }
     #endregion
 
@@ -1805,9 +1874,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 34;
+        public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(ImageSpaceData.Mask<>);
 
@@ -1901,19 +1970,20 @@ namespace Mutagen.Bethesda.Fallout3
             item.GetHitBlurRadius = default(Single);
             item.GetHitBlurDampingConstant = default(Single);
             item.GetHitDampingConstant = default(Single);
-            item.NightEyeTintRed = default(Single);
-            item.NightEyeTintGreen = default(Single);
-            item.NightEyeTintBlue = default(Single);
+            item.NightEyeTintColor = default(Color);
             item.NightEyeBrightness = default(Single);
             item.CinematicSaturation = default(Single);
             item.CinematicContrastAvgLumValue = default(Single);
             item.CinematicContrastValue = default(Single);
             item.CinematicBrightnessValue = default(Single);
-            item.CinematicTintRed = default(Single);
-            item.CinematicTintGreen = default(Single);
-            item.CinematicTintBlue = default(Single);
+            item.CinematicTintColor = default(Color);
             item.CinematicTintValue = default(Single);
-            item.Remaining = [];
+            item.Unknown = new byte[4];
+            item.Unused1 = new byte[4];
+            item.Unused2 = new byte[4];
+            item.Unused3 = new byte[4];
+            item.Flags = default(ImageSpace.Flag);
+            item.Unused4 = new byte[3];
         }
         
         #region Mutagen
@@ -1988,19 +2058,20 @@ namespace Mutagen.Bethesda.Fallout3
             ret.GetHitBlurRadius = item.GetHitBlurRadius.EqualsWithin(rhs.GetHitBlurRadius);
             ret.GetHitBlurDampingConstant = item.GetHitBlurDampingConstant.EqualsWithin(rhs.GetHitBlurDampingConstant);
             ret.GetHitDampingConstant = item.GetHitDampingConstant.EqualsWithin(rhs.GetHitDampingConstant);
-            ret.NightEyeTintRed = item.NightEyeTintRed.EqualsWithin(rhs.NightEyeTintRed);
-            ret.NightEyeTintGreen = item.NightEyeTintGreen.EqualsWithin(rhs.NightEyeTintGreen);
-            ret.NightEyeTintBlue = item.NightEyeTintBlue.EqualsWithin(rhs.NightEyeTintBlue);
+            ret.NightEyeTintColor = item.NightEyeTintColor.ColorOnlyEquals(rhs.NightEyeTintColor);
             ret.NightEyeBrightness = item.NightEyeBrightness.EqualsWithin(rhs.NightEyeBrightness);
             ret.CinematicSaturation = item.CinematicSaturation.EqualsWithin(rhs.CinematicSaturation);
             ret.CinematicContrastAvgLumValue = item.CinematicContrastAvgLumValue.EqualsWithin(rhs.CinematicContrastAvgLumValue);
             ret.CinematicContrastValue = item.CinematicContrastValue.EqualsWithin(rhs.CinematicContrastValue);
             ret.CinematicBrightnessValue = item.CinematicBrightnessValue.EqualsWithin(rhs.CinematicBrightnessValue);
-            ret.CinematicTintRed = item.CinematicTintRed.EqualsWithin(rhs.CinematicTintRed);
-            ret.CinematicTintGreen = item.CinematicTintGreen.EqualsWithin(rhs.CinematicTintGreen);
-            ret.CinematicTintBlue = item.CinematicTintBlue.EqualsWithin(rhs.CinematicTintBlue);
+            ret.CinematicTintColor = item.CinematicTintColor.ColorOnlyEquals(rhs.CinematicTintColor);
             ret.CinematicTintValue = item.CinematicTintValue.EqualsWithin(rhs.CinematicTintValue);
-            ret.Remaining = MemoryExtensions.SequenceEqual(item.Remaining.Span, rhs.Remaining.Span);
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unused1 = MemoryExtensions.SequenceEqual(item.Unused1.Span, rhs.Unused1.Span);
+            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
+            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Unused4 = MemoryExtensions.SequenceEqual(item.Unused4.Span, rhs.Unused4.Span);
         }
         
         public string Print(
@@ -2129,17 +2200,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.GetHitDampingConstant, "GetHitDampingConstant");
             }
-            if (printMask?.NightEyeTintRed ?? true)
+            if (printMask?.NightEyeTintColor ?? true)
             {
-                sb.AppendItem(item.NightEyeTintRed, "NightEyeTintRed");
-            }
-            if (printMask?.NightEyeTintGreen ?? true)
-            {
-                sb.AppendItem(item.NightEyeTintGreen, "NightEyeTintGreen");
-            }
-            if (printMask?.NightEyeTintBlue ?? true)
-            {
-                sb.AppendItem(item.NightEyeTintBlue, "NightEyeTintBlue");
+                sb.AppendItem(item.NightEyeTintColor, "NightEyeTintColor");
             }
             if (printMask?.NightEyeBrightness ?? true)
             {
@@ -2161,25 +2224,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.CinematicBrightnessValue, "CinematicBrightnessValue");
             }
-            if (printMask?.CinematicTintRed ?? true)
+            if (printMask?.CinematicTintColor ?? true)
             {
-                sb.AppendItem(item.CinematicTintRed, "CinematicTintRed");
-            }
-            if (printMask?.CinematicTintGreen ?? true)
-            {
-                sb.AppendItem(item.CinematicTintGreen, "CinematicTintGreen");
-            }
-            if (printMask?.CinematicTintBlue ?? true)
-            {
-                sb.AppendItem(item.CinematicTintBlue, "CinematicTintBlue");
+                sb.AppendItem(item.CinematicTintColor, "CinematicTintColor");
             }
             if (printMask?.CinematicTintValue ?? true)
             {
                 sb.AppendItem(item.CinematicTintValue, "CinematicTintValue");
             }
-            if (printMask?.Remaining ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                sb.AppendLine($"Remaining => {SpanExt.ToHexString(item.Remaining)}");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.Unused1 ?? true)
+            {
+                sb.AppendLine($"Unused1 => {SpanExt.ToHexString(item.Unused1)}");
+            }
+            if (printMask?.Unused2 ?? true)
+            {
+                sb.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+            }
+            if (printMask?.Unused3 ?? true)
+            {
+                sb.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Unused4 ?? true)
+            {
+                sb.AppendLine($"Unused4 => {SpanExt.ToHexString(item.Unused4)}");
             }
         }
         
@@ -2274,17 +2349,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.GetHitDampingConstant.EqualsWithin(rhs.GetHitDampingConstant)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintRed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintColor) ?? true))
             {
-                if (!lhs.NightEyeTintRed.EqualsWithin(rhs.NightEyeTintRed)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintGreen) ?? true))
-            {
-                if (!lhs.NightEyeTintGreen.EqualsWithin(rhs.NightEyeTintGreen)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintBlue) ?? true))
-            {
-                if (!lhs.NightEyeTintBlue.EqualsWithin(rhs.NightEyeTintBlue)) return false;
+                if (!lhs.NightEyeTintColor.ColorOnlyEquals(rhs.NightEyeTintColor)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeBrightness) ?? true))
             {
@@ -2306,25 +2373,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.CinematicBrightnessValue.EqualsWithin(rhs.CinematicBrightnessValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintRed) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintColor) ?? true))
             {
-                if (!lhs.CinematicTintRed.EqualsWithin(rhs.CinematicTintRed)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintGreen) ?? true))
-            {
-                if (!lhs.CinematicTintGreen.EqualsWithin(rhs.CinematicTintGreen)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintBlue) ?? true))
-            {
-                if (!lhs.CinematicTintBlue.EqualsWithin(rhs.CinematicTintBlue)) return false;
+                if (!lhs.CinematicTintColor.ColorOnlyEquals(rhs.CinematicTintColor)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintValue) ?? true))
             {
                 if (!lhs.CinematicTintValue.EqualsWithin(rhs.CinematicTintValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Remaining) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unknown) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Remaining.Span, rhs.Remaining.Span)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused1) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused1.Span, rhs.Unused1.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused4) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused4.Span, rhs.Unused4.Span)) return false;
             }
             return true;
         }
@@ -2353,19 +2432,20 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.GetHitBlurRadius);
             hash.Add(item.GetHitBlurDampingConstant);
             hash.Add(item.GetHitDampingConstant);
-            hash.Add(item.NightEyeTintRed);
-            hash.Add(item.NightEyeTintGreen);
-            hash.Add(item.NightEyeTintBlue);
+            hash.Add(item.NightEyeTintColor);
             hash.Add(item.NightEyeBrightness);
             hash.Add(item.CinematicSaturation);
             hash.Add(item.CinematicContrastAvgLumValue);
             hash.Add(item.CinematicContrastValue);
             hash.Add(item.CinematicBrightnessValue);
-            hash.Add(item.CinematicTintRed);
-            hash.Add(item.CinematicTintGreen);
-            hash.Add(item.CinematicTintBlue);
+            hash.Add(item.CinematicTintColor);
             hash.Add(item.CinematicTintValue);
-            hash.Add(item.Remaining);
+            hash.Add(item.Unknown);
+            hash.Add(item.Unused1);
+            hash.Add(item.Unused2);
+            hash.Add(item.Unused3);
+            hash.Add(item.Flags);
+            hash.Add(item.Unused4);
             return hash.ToHashCode();
         }
         
@@ -2482,17 +2562,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.GetHitDampingConstant = rhs.GetHitDampingConstant;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintRed) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintColor) ?? true))
             {
-                item.NightEyeTintRed = rhs.NightEyeTintRed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintGreen) ?? true))
-            {
-                item.NightEyeTintGreen = rhs.NightEyeTintGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeTintBlue) ?? true))
-            {
-                item.NightEyeTintBlue = rhs.NightEyeTintBlue;
+                item.NightEyeTintColor = rhs.NightEyeTintColor;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.NightEyeBrightness) ?? true))
             {
@@ -2514,25 +2586,37 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.CinematicBrightnessValue = rhs.CinematicBrightnessValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintRed) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintColor) ?? true))
             {
-                item.CinematicTintRed = rhs.CinematicTintRed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintGreen) ?? true))
-            {
-                item.CinematicTintGreen = rhs.CinematicTintGreen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintBlue) ?? true))
-            {
-                item.CinematicTintBlue = rhs.CinematicTintBlue;
+                item.CinematicTintColor = rhs.CinematicTintColor;
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.CinematicTintValue) ?? true))
             {
                 item.CinematicTintValue = rhs.CinematicTintValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Remaining) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unknown) ?? true))
             {
-                item.Remaining = rhs.Remaining.ToArray();
+                item.Unknown = rhs.Unknown.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused1) ?? true))
+            {
+                item.Unused1 = rhs.Unused1.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused2) ?? true))
+            {
+                item.Unused2 = rhs.Unused2.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused3) ?? true))
+            {
+                item.Unused3 = rhs.Unused3.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ImageSpaceData_FieldIndex.Unused4) ?? true))
+            {
+                item.Unused4 = rhs.Unused4.ToArray();
             }
             DeepCopyInCustom(
                 item: item,
@@ -2684,9 +2768,12 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.HdrTreeDimmer);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.HdrSkinDimmer);
+            if (writer.MetaData.FormVersion!.Value >= 10)
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.HdrSkinDimmer);
+            }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.BloomBlurRadius);
@@ -2705,15 +2792,10 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GetHitDampingConstant);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NightEyeTintRed);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.NightEyeTintGreen);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.NightEyeTintBlue);
+                item: item.NightEyeTintColor,
+                binaryType: ColorBinaryType.NoAlphaFloat);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NightEyeBrightness);
@@ -2729,21 +2811,47 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CinematicBrightnessValue);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CinematicTintRed);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CinematicTintGreen);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CinematicTintBlue);
+                item: item.CinematicTintColor,
+                binaryType: ColorBinaryType.NoAlphaFloat);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CinematicTintValue);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Remaining);
+                item: item.Unknown);
+            if (writer.MetaData.FormVersion!.Value >= 10)
+            {
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused1);
+            }
+            if (writer.MetaData.FormVersion!.Value >= 10)
+            {
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused2);
+            }
+            if (writer.MetaData.FormVersion!.Value >= 10)
+            {
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused3);
+            }
+            if (writer.MetaData.FormVersion!.Value >= 13)
+            {
+                EnumBinaryTranslation<ImageSpace.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+            }
+            if (writer.MetaData.FormVersion!.Value >= 13)
+            {
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Unused4);
+            }
         }
 
         public void Write(
@@ -2798,26 +2906,47 @@ namespace Mutagen.Bethesda.Fallout3
             item.HdrSunlightDimmer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.HdrGrassDimmer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.HdrTreeDimmer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.HdrSkinDimmer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.MetaData.FormVersion!.Value >= 10)
+            {
+                item.HdrSkinDimmer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            }
             item.BloomBlurRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.BloomAlphaMultInterior = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.BloomAlphaMultExterior = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GetHitBlurRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GetHitBlurDampingConstant = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GetHitDampingConstant = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.NightEyeTintRed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.NightEyeTintGreen = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.NightEyeTintBlue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NightEyeTintColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
             item.NightEyeBrightness = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.CinematicSaturation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.CinematicContrastAvgLumValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.CinematicContrastValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.CinematicBrightnessValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.CinematicTintRed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.CinematicTintGreen = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.CinematicTintBlue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CinematicTintColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
             item.CinematicTintValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Remaining = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            if (frame.MetaData.FormVersion!.Value >= 10)
+            {
+                item.Unused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            }
+            if (frame.MetaData.FormVersion!.Value >= 10)
+            {
+                item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            }
+            if (frame.MetaData.FormVersion!.Value >= 10)
+            {
+                item.Unused3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            }
+            if (frame.MetaData.FormVersion!.Value >= 13)
+            {
+                item.Flags = EnumBinaryTranslation<ImageSpace.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 1);
+            }
+            if (frame.MetaData.FormVersion!.Value >= 13)
+            {
+                item.Unused4 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
+            }
         }
 
     }
@@ -2897,28 +3026,45 @@ namespace Mutagen.Bethesda.Fallout3
         public Single HdrSunlightDimmer => _structData.Slice(0x2C, 0x4).Float();
         public Single HdrGrassDimmer => _structData.Slice(0x30, 0x4).Float();
         public Single HdrTreeDimmer => _structData.Slice(0x34, 0x4).Float();
+        #region HdrSkinDimmer
         public Single HdrSkinDimmer => _structData.Slice(0x38, 0x4).Float();
-        public Single BloomBlurRadius => _structData.Slice(0x3C, 0x4).Float();
-        public Single BloomAlphaMultInterior => _structData.Slice(0x40, 0x4).Float();
-        public Single BloomAlphaMultExterior => _structData.Slice(0x44, 0x4).Float();
-        public Single GetHitBlurRadius => _structData.Slice(0x48, 0x4).Float();
-        public Single GetHitBlurDampingConstant => _structData.Slice(0x4C, 0x4).Float();
-        public Single GetHitDampingConstant => _structData.Slice(0x50, 0x4).Float();
-        public Single NightEyeTintRed => _structData.Slice(0x54, 0x4).Float();
-        public Single NightEyeTintGreen => _structData.Slice(0x58, 0x4).Float();
-        public Single NightEyeTintBlue => _structData.Slice(0x5C, 0x4).Float();
-        public Single NightEyeBrightness => _structData.Slice(0x60, 0x4).Float();
-        public Single CinematicSaturation => _structData.Slice(0x64, 0x4).Float();
-        public Single CinematicContrastAvgLumValue => _structData.Slice(0x68, 0x4).Float();
-        public Single CinematicContrastValue => _structData.Slice(0x6C, 0x4).Float();
-        public Single CinematicBrightnessValue => _structData.Slice(0x70, 0x4).Float();
-        public Single CinematicTintRed => _structData.Slice(0x74, 0x4).Float();
-        public Single CinematicTintGreen => _structData.Slice(0x78, 0x4).Float();
-        public Single CinematicTintBlue => _structData.Slice(0x7C, 0x4).Float();
-        public Single CinematicTintValue => _structData.Slice(0x80, 0x4).Float();
-        #region Remaining
-        public ReadOnlyMemorySlice<Byte> Remaining => _structData.Span.Slice(0x84).ToArray();
-        protected int RemainingEndingPos;
+        int HdrSkinDimmerVersioningOffset => _package.FormVersion!.FormVersion!.Value < 10 ? -4 : 0;
+        #endregion
+        public Single BloomBlurRadius => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x3C, 0x4).Float();
+        public Single BloomAlphaMultInterior => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x40, 0x4).Float();
+        public Single BloomAlphaMultExterior => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x44, 0x4).Float();
+        public Single GetHitBlurRadius => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x48, 0x4).Float();
+        public Single GetHitBlurDampingConstant => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x4C, 0x4).Float();
+        public Single GetHitDampingConstant => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x50, 0x4).Float();
+        public Color NightEyeTintColor => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x54, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
+        public Single NightEyeBrightness => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x60, 0x4).Float();
+        public Single CinematicSaturation => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x64, 0x4).Float();
+        public Single CinematicContrastAvgLumValue => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x68, 0x4).Float();
+        public Single CinematicContrastValue => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x6C, 0x4).Float();
+        public Single CinematicBrightnessValue => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x70, 0x4).Float();
+        public Color CinematicTintColor => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x74, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
+        public Single CinematicTintValue => _structData.Slice(HdrSkinDimmerVersioningOffset + 0x80, 0x4).Float();
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(HdrSkinDimmerVersioningOffset + 0x84, 0x4).ToArray();
+        #region Unused1
+        public ReadOnlyMemorySlice<Byte> Unused1 => _structData.Span.Slice(HdrSkinDimmerVersioningOffset + 0x88, 0x4).ToArray();
+        int Unused1VersioningOffset => HdrSkinDimmerVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 10 ? -4 : 0);
+        #endregion
+        #region Unused2
+        public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(Unused1VersioningOffset + 0x8C, 0x4).ToArray();
+        int Unused2VersioningOffset => Unused1VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 10 ? -4 : 0);
+        #endregion
+        #region Unused3
+        public ReadOnlyMemorySlice<Byte> Unused3 => _structData.Span.Slice(Unused2VersioningOffset + 0x90, 0x4).ToArray();
+        int Unused3VersioningOffset => Unused2VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 10 ? -4 : 0);
+        #endregion
+        #region Flags
+        private bool _Flags_IsSet => _package.FormVersion!.FormVersion!.Value >= 13;
+        public ImageSpace.Flag Flags => _Flags_IsSet ? (ImageSpace.Flag)_structData.Span.Slice(Unused3VersioningOffset + 0x94, 0x1)[0] : default;
+        int FlagsVersioningOffset => Unused3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 13 ? -1 : 0);
+        #endregion
+        #region Unused4
+        public ReadOnlyMemorySlice<Byte> Unused4 => _structData.Span.Slice(FlagsVersioningOffset + 0x95, 0x3).ToArray();
+        int Unused4VersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 13 ? -3 : 0);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2945,12 +3091,13 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x98,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new ImageSpaceDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            stream.Position += 0x98 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
