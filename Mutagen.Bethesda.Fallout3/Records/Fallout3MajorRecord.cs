@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins.Records;
+
 namespace Mutagen.Bethesda.Fallout3;
 
 public partial class Fallout3MajorRecord
@@ -25,12 +27,16 @@ public partial class Fallout3MajorRecord
         set => this.MajorRecordFlagsRaw = (int)value;
     }
 
-    protected override ushort? FormVersionAbstract => null;
+    protected override ushort? FormVersionAbstract => this.FormVersion;
+}
+
+public partial interface IFallout3MajorRecord : IFormVersionSetter
+{
 }
 
 internal partial class Fallout3MajorRecordBinaryOverlay
 {
-    protected override ushort? FormVersionAbstract => null;
+    protected override ushort? FormVersionAbstract => this.FormVersion;
 
     public Fallout3MajorRecord.Fallout3MajorRecordFlag Fallout3MajorRecordFlags
     {
