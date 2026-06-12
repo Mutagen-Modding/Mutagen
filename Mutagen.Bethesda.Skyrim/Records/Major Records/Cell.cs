@@ -8,8 +8,10 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Skyrim.Assets;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -34,6 +36,36 @@ public partial class Cell
         HandChanged = 0x0040,
         ShowSky = 0x0080,
         UseSkyLighting = 0x0100,
+    }
+}
+
+partial class CellCommon
+{
+    public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(ICellGetter obj, IAssetLinkCache linkCache, Type? assetType)
+    {
+        if (assetType != null && assetType != typeof(SkyrimTextureAssetType)) yield break;
+        
+        // Only exterior cells
+        if ((obj.Flags & Cell.Flag.IsInteriorCell) != 0) yield break;
+        if (obj.Grid is not {} grid) yield break;
+        
+        // Only cells with water
+        if (obj.Water.IsNull) yield break;
+        if (!obj.Water.TryResolve(linkCache.FormLinkCache, out var water)) yield break;
+
+        // Only water with flowmaps enabled
+        if ((water.Flags & Water.Flag.EnableFlowmap) == 0) yield break;
+
+        var modFilename = obj.FormKey.ModKey.FileName.String;
+        yield return new AssetLinkGetter<SkyrimTextureAssetType>($@"Textures\Water\{modFilename}\Flow.{grid.Point.X}.{grid.Point.Y}.dds");
+    }
+}
+
+partial class CellSetterCommon
+{
+    private static partial void RemapResolvedAssetLinks(ICell obj, IReadOnlyDictionary<IAssetLinkGetter, string> mapping, IAssetLinkCache? linkCache, AssetLinkQuery queryCategories)
+    {
+        // Nothing to do here, we can't change the form key or location of the cell
     }
 }
 

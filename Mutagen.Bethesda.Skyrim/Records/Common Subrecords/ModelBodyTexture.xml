@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ModelBodyTexture" objType="Subrecord">
+    <Fields>
+      <AssetLink name="File" recordType="MODL" nullable="False" assetType="SkyrimBodyTexture" />
+      <ByteArray name="Data" recordType="MODT" />
+      <RefList name="AlternateTextures" refName="AlternateTexture" counterLength="4" recordType="MODS" />
+    </Fields>
+  </Object>
+</Loqui>

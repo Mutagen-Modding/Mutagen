@@ -2092,6 +2092,28 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            try
+            {
+                DeepCopyInInternal(
+                    item: item,
+                    rhs: rhs,
+                    errorMask: errorMask,
+                    copyMask: copyMask,
+                    deepCopy: deepCopy);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, rhs);
+            }
+        }
+        
+        private void DeepCopyInInternal(
+            INote item,
+            INoteGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
             base.DeepCopyIn(
                 (IStarfieldMajorRecord)item,
                 (IStarfieldMajorRecordGetter)rhs,

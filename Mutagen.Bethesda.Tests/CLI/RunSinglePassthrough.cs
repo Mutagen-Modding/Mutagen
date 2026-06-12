@@ -22,6 +22,9 @@ public class RunSinglePassthrough
     [Option('d', "DataFolder")]
     public string? DataFolder { get; set; }
 
+    [Option('t', "TempFolder", HelpText = "Override the cache folder location (defaults to system temp).")]
+    public string? TempFolder { get; set; }
+
     public async Task<int> Run()
     {
         try
@@ -33,6 +36,7 @@ public class RunSinglePassthrough
                 PassthroughSettings = new PassthroughSettings()
                 {
                     CacheReuse = new CacheReuse(ReuseCaches),
+                    TempFolderOverride = TempFolder,
                     TestNormal = true,
                     TestBinaryOverlay = true,
                     DeleteCachesAfter = false,

@@ -62,7 +62,11 @@ public abstract class PassthroughTest
     };
     protected abstract Processor ProcessorFactory();
     
-    public static DirectoryPath GetTestFolderPath(string nickname, GameRelease release) => Path.Combine(Path.GetTempPath(), "Mutagen_Binary_Tests", release.ToString(), nickname);
+    public static DirectoryPath GetTestFolderPath(string nickname, GameRelease release, string? tempFolderOverride = null)
+    {
+        var root = string.IsNullOrWhiteSpace(tempFolderOverride) ? Path.GetTempPath() : tempFolderOverride;
+        return Path.Combine(root, "Mutagen_Binary_Tests", release.ToString(), nickname);
+    }
 
     public PassthroughTest(PassthroughTestParams param, GameRelease release)
     {
@@ -103,7 +107,7 @@ public abstract class PassthroughTest
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {
-        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname, GameRelease), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
+        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname, GameRelease, Settings.TempFolderOverride), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
 
         var test = new Test(
             $"Setup Processed Files",

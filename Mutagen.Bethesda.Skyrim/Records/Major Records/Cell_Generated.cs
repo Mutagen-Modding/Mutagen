@@ -3113,6 +3113,12 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        private static partial void RemapResolvedAssetLinks(
+            ICell obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories);
+        
         public void RemapAssetLinks(
             ICell obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
@@ -3120,6 +3126,7 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            RemapResolvedAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
@@ -4587,11 +4594,20 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
+        public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(ICellGetter obj, IAssetLinkCache linkCache, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Resolved))
+            {
+                if (linkCache == null) throw new ArgumentNullException("No link cache was given on a query interested in resolved assets");
+                foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))
+                {
+                    yield return additional;
+                }
             }
             foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
@@ -4665,6 +4681,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void DeepCopyIn(
+            ICell item,
+            ICellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            try
+            {
+                DeepCopyInInternal(
+                    item: item,
+                    rhs: rhs,
+                    errorMask: errorMask,
+                    copyMask: copyMask,
+                    deepCopy: deepCopy);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, rhs);
+            }
+        }
+        
+        private void DeepCopyInInternal(
             ICell item,
             ICellGetter rhs,
             ErrorMaskBuilder? errorMask,

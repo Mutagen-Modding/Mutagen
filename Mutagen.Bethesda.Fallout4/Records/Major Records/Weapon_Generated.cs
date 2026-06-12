@@ -5555,6 +5555,28 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            try
+            {
+                DeepCopyInInternal(
+                    item: item,
+                    rhs: rhs,
+                    errorMask: errorMask,
+                    copyMask: copyMask,
+                    deepCopy: deepCopy);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, rhs);
+            }
+        }
+        
+        private void DeepCopyInInternal(
+            IWeapon item,
+            IWeaponGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
             base.DeepCopyIn(
                 (IFallout4MajorRecord)item,
                 (IFallout4MajorRecordGetter)rhs,

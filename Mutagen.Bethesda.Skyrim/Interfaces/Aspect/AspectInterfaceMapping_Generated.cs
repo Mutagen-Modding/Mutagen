@@ -219,7 +219,6 @@ namespace Mutagen.Bethesda.Skyrim
                     AnimatedObject_Registration.Instance,
                     ArmorModel_Registration.Instance,
                     ArtObject_Registration.Instance,
-                    BodyData_Registration.Instance,
                     BodyPartData_Registration.Instance,
                     Book_Registration.Instance,
                     CameraShot_Registration.Instance,
