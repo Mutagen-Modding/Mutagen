@@ -60,7 +60,8 @@ class Program
                     TestImport = false,
                     ParallelModTranslations = false,
                     TestCopyIn = false,
-                    Trimming = new TrimmingSettings()
+                    Trimming = new TrimmingSettings(),
+                    TempFolderOverride = cmd.TempFolder
                 },
                 TargetGroups = new List<TargetGroup>()
                 {

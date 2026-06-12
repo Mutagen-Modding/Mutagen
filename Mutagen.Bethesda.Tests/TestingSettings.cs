@@ -96,6 +96,7 @@ public record PassthroughSettings
     public bool TestCopyIn { get; set; }
     public bool ParallelModTranslations { get; set; }
     public bool ThrowOnUnknown { get; set; } = true;
+    public string? TempFolderOverride { get; set; }
 
     public bool HasAnyToRun => TestNormal
                                || TestBinaryOverlay
