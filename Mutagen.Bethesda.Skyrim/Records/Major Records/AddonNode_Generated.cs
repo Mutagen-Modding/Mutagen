@@ -1476,6 +1476,28 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            try
+            {
+                DeepCopyInInternal(
+                    item: item,
+                    rhs: rhs,
+                    errorMask: errorMask,
+                    copyMask: copyMask,
+                    deepCopy: deepCopy);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, rhs);
+            }
+        }
+        
+        private void DeepCopyInInternal(
+            IAddonNode item,
+            IAddonNodeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
             base.DeepCopyIn(
                 (ISkyrimMajorRecord)item,
                 (ISkyrimMajorRecordGetter)rhs,

@@ -1592,6 +1592,28 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            try
+            {
+                DeepCopyInInternal(
+                    item: item,
+                    rhs: rhs,
+                    errorMask: errorMask,
+                    copyMask: copyMask,
+                    deepCopy: deepCopy);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, rhs);
+            }
+        }
+        
+        private void DeepCopyInInternal(
+            IPlacedCreature item,
+            IPlacedCreatureGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
             base.DeepCopyIn(
                 (IOblivionMajorRecord)item,
                 (IOblivionMajorRecordGetter)rhs,
