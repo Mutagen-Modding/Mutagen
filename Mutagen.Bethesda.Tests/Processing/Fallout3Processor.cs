@@ -60,6 +60,7 @@ public class Fallout3Processor : Processor
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.WATR, ProcessWaters);
         AddDynamicProcessing(RecordTypes.IMAD, ProcessImageSpaceAdapters);
+        AddDynamicProcessing(RecordTypes.ANIO, ProcessAnimatedObjects);
         AddDynamicProcessing(
             ProcessPlaced,
             PlacedObject_Registration.TriggeringRecordType,
@@ -134,6 +135,13 @@ public class Fallout3Processor : Processor
             RecordTypes.QSTI, RecordTypes.TPIC, RecordTypes.PNAM, RecordTypes.NAME,
             RecordTypes.TCLT, RecordTypes.TCLF, RecordTypes.TCFU, RecordTypes.SNDD,
             RecordTypes.ANAM, RecordTypes.KNAM, RecordTypes.SNAM, RecordTypes.LNAM);
+    }
+
+    private void ProcessAnimatedObjects(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        NormalizeFormIdOverflows(majorFrame, fileOffset, RecordTypes.DATA);
     }
 
     private void ProcessQuests(
