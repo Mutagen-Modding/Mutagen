@@ -3,7 +3,7 @@
   <Object name="LightingTemplate" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="LGTM">
     <Fields>
-      <Data recordType="DATA" nullable="False">
+      <Data recordType="DATA">
         <Fields>
           <Color name="AmbientColor" binaryType="Alpha" />
           <Color name="DirectionalColor" binaryType="Alpha" />
