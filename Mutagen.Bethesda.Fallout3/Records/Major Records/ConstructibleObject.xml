@@ -10,7 +10,7 @@
       <FormLink name="Script" recordType="SCRI" refName="Script" />
       <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
       <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
-      <Data recordType="DATA" nullable="False">
+      <Data recordType="DATA">
         <Fields>
           <Int32 name="Value" />
           <Float name="Weight" />
