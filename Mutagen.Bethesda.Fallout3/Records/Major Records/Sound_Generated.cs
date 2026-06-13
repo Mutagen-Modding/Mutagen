@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Fallout3
             set => _Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundDataInternalGetter? ISoundGetter.Data => this.Data;
+        ISoundDataGetter? ISoundGetter.Data => this.Data;
         #endregion
         #region AttenuationCurve
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         String? File { get; }
         Byte? RandomChancePercent { get; }
-        ISoundDataInternalGetter? Data { get; }
+        ISoundDataGetter? Data { get; }
         ReadOnlyMemorySlice<Int16>? AttenuationCurve { get; }
         Int16? ReverbAttenuationControl { get; }
         Int32? Priority { get; }
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Data
         private RecordType _DataType;
         private RangeInt32? _DataLocation;
-        public ISoundDataInternalGetter? Data
+        public ISoundDataGetter? Data
         {
             get
             {

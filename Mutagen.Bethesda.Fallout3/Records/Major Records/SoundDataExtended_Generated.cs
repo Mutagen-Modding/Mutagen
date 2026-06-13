@@ -40,9 +40,9 @@ namespace Mutagen.Bethesda.Fallout3
     #region Class
     public partial class SoundDataExtended :
         SoundData,
-        IEquatable<ISoundDataExtendedInternalGetter>,
+        IEquatable<ISoundDataExtendedGetter>,
         ILoquiObjectSetter<SoundDataExtended>,
-        ISoundDataExtendedInternal
+        ISoundDataExtended
     {
         #region Ctor
         public SoundDataExtended()
@@ -72,8 +72,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Priority
         public Int32 Priority { get; set; } = default(Int32);
         #endregion
-        #region Unknown2
-        public Int64 Unknown2 { get; set; } = default(Int64);
+        #region LoopBegin
+        public Int32 LoopBegin { get; set; } = default(Int32);
+        #endregion
+        #region LoopEnd
+        public Int32 LoopEnd { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -93,11 +96,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISoundDataExtendedInternalGetter rhs) return false;
+            if (obj is not ISoundDataExtendedGetter rhs) return false;
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISoundDataExtendedInternalGetter? obj)
+        public bool Equals(ISoundDataExtendedGetter? obj)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
@@ -119,36 +122,39 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ReverbAttenuationControl = initialValue;
                 this.Priority = initialValue;
-                this.Unknown2 = initialValue;
+                this.LoopBegin = initialValue;
+                this.LoopEnd = initialValue;
             }
 
             public Mask(
                 TItem MinimumAttenuationDistance,
                 TItem MaximumAttenuationDistance,
                 TItem FrequencyAdjustment,
-                TItem Unknown,
+                TItem Unused,
                 TItem Flags,
-                TItem StaticAttenuation,
+                TItem StaticAttenuationCdB,
                 TItem StopTime,
                 TItem StartTime,
                 TItem AttenuationCurve,
                 TItem ReverbAttenuationControl,
                 TItem Priority,
-                TItem Unknown2)
+                TItem LoopBegin,
+                TItem LoopEnd)
             : base(
                 MinimumAttenuationDistance: MinimumAttenuationDistance,
                 MaximumAttenuationDistance: MaximumAttenuationDistance,
                 FrequencyAdjustment: FrequencyAdjustment,
-                Unknown: Unknown,
+                Unused: Unused,
                 Flags: Flags,
-                StaticAttenuation: StaticAttenuation,
+                StaticAttenuationCdB: StaticAttenuationCdB,
                 StopTime: StopTime,
                 StartTime: StartTime)
             {
                 this.AttenuationCurve = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttenuationCurve, []);
                 this.ReverbAttenuationControl = ReverbAttenuationControl;
                 this.Priority = Priority;
-                this.Unknown2 = Unknown2;
+                this.LoopBegin = LoopBegin;
+                this.LoopEnd = LoopEnd;
             }
 
             #pragma warning disable CS8618
@@ -163,7 +169,8 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttenuationCurve;
             public TItem ReverbAttenuationControl;
             public TItem Priority;
-            public TItem Unknown2;
+            public TItem LoopBegin;
+            public TItem LoopEnd;
             #endregion
 
             #region Equals
@@ -180,7 +187,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.AttenuationCurve, rhs.AttenuationCurve)) return false;
                 if (!object.Equals(this.ReverbAttenuationControl, rhs.ReverbAttenuationControl)) return false;
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.LoopBegin, rhs.LoopBegin)) return false;
+                if (!object.Equals(this.LoopEnd, rhs.LoopEnd)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -189,7 +197,8 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.AttenuationCurve);
                 hash.Add(this.ReverbAttenuationControl);
                 hash.Add(this.Priority);
-                hash.Add(this.Unknown2);
+                hash.Add(this.LoopBegin);
+                hash.Add(this.LoopEnd);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -213,7 +222,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (!eval(this.ReverbAttenuationControl)) return false;
                 if (!eval(this.Priority)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.LoopBegin)) return false;
+                if (!eval(this.LoopEnd)) return false;
                 return true;
             }
             #endregion
@@ -235,7 +245,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 if (eval(this.ReverbAttenuationControl)) return true;
                 if (eval(this.Priority)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.LoopBegin)) return true;
+                if (eval(this.LoopEnd)) return true;
                 return false;
             }
             #endregion
@@ -267,7 +278,8 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 obj.ReverbAttenuationControl = eval(this.ReverbAttenuationControl);
                 obj.Priority = eval(this.Priority);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.LoopBegin = eval(this.LoopBegin);
+                obj.LoopEnd = eval(this.LoopEnd);
             }
             #endregion
 
@@ -315,9 +327,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Priority, "Priority");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.LoopBegin ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(LoopBegin, "LoopBegin");
+                    }
+                    if (printMask?.LoopEnd ?? true)
+                    {
+                        sb.AppendItem(LoopEnd, "LoopEnd");
                     }
                 }
             }
@@ -333,7 +349,8 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttenuationCurve;
             public Exception? ReverbAttenuationControl;
             public Exception? Priority;
-            public Exception? Unknown2;
+            public Exception? LoopBegin;
+            public Exception? LoopEnd;
             #endregion
 
             #region IErrorMask
@@ -348,8 +365,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return ReverbAttenuationControl;
                     case SoundDataExtended_FieldIndex.Priority:
                         return Priority;
-                    case SoundDataExtended_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case SoundDataExtended_FieldIndex.LoopBegin:
+                        return LoopBegin;
+                    case SoundDataExtended_FieldIndex.LoopEnd:
+                        return LoopEnd;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -369,8 +388,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case SoundDataExtended_FieldIndex.Priority:
                         this.Priority = ex;
                         break;
-                    case SoundDataExtended_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case SoundDataExtended_FieldIndex.LoopBegin:
+                        this.LoopBegin = ex;
+                        break;
+                    case SoundDataExtended_FieldIndex.LoopEnd:
+                        this.LoopEnd = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -392,8 +414,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case SoundDataExtended_FieldIndex.Priority:
                         this.Priority = (Exception?)obj;
                         break;
-                    case SoundDataExtended_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case SoundDataExtended_FieldIndex.LoopBegin:
+                        this.LoopBegin = (Exception?)obj;
+                        break;
+                    case SoundDataExtended_FieldIndex.LoopEnd:
+                        this.LoopEnd = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -407,7 +432,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (AttenuationCurve != null) return true;
                 if (ReverbAttenuationControl != null) return true;
                 if (Priority != null) return true;
-                if (Unknown2 != null) return true;
+                if (LoopBegin != null) return true;
+                if (LoopEnd != null) return true;
                 return false;
             }
             #endregion
@@ -461,7 +487,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Priority, "Priority");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(LoopBegin, "LoopBegin");
+                }
+                {
+                    sb.AppendItem(LoopEnd, "LoopEnd");
                 }
             }
             #endregion
@@ -474,7 +503,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.AttenuationCurve = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Overall, rhs.AttenuationCurve?.Overall), Noggog.ExceptionExt.Combine(this.AttenuationCurve?.Specific, rhs.AttenuationCurve?.Specific));
                 ret.ReverbAttenuationControl = this.ReverbAttenuationControl.Combine(rhs.ReverbAttenuationControl);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.LoopBegin = this.LoopBegin.Combine(rhs.LoopBegin);
+                ret.LoopEnd = this.LoopEnd.Combine(rhs.LoopEnd);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -500,7 +530,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool AttenuationCurve;
             public bool ReverbAttenuationControl;
             public bool Priority;
-            public bool Unknown2;
+            public bool LoopBegin;
+            public bool LoopEnd;
             #endregion
 
             #region Ctors
@@ -512,7 +543,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AttenuationCurve = defaultOn;
                 this.ReverbAttenuationControl = defaultOn;
                 this.Priority = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.LoopBegin = defaultOn;
+                this.LoopEnd = defaultOn;
             }
 
             #endregion
@@ -523,7 +555,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((AttenuationCurve, null));
                 ret.Add((ReverbAttenuationControl, null));
                 ret.Add((Priority, null));
-                ret.Add((Unknown2, null));
+                ret.Add((LoopBegin, null));
+                ret.Add((LoopEnd, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -591,56 +624,44 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ISoundDataExtended :
-        ILoquiObjectSetter<ISoundDataExtendedInternal>,
-        ISoundDataExtendedInternalGetter,
-        ISoundDataInternal
+        ILoquiObjectSetter<ISoundDataExtended>,
+        ISoundData,
+        ISoundDataExtendedGetter
     {
         new Int16[] AttenuationCurve { get; }
         new Int16 ReverbAttenuationControl { get; set; }
         new Int32 Priority { get; set; }
-        new Int64 Unknown2 { get; set; }
-    }
-
-    public partial interface ISoundDataExtendedInternal :
-        ISoundDataInternal,
-        ISoundDataExtended,
-        ISoundDataExtendedInternalGetter
-    {
+        new Int32 LoopBegin { get; set; }
+        new Int32 LoopEnd { get; set; }
     }
 
     public partial interface ISoundDataExtendedGetter :
         ISoundDataGetter,
         IBinaryItem,
-        ILoquiObject<ISoundDataExtendedInternalGetter>
+        ILoquiObject<ISoundDataExtendedGetter>
     {
         static new ILoquiRegistration StaticRegistration => SoundDataExtended_Registration.Instance;
         ReadOnlyMemorySlice<Int16> AttenuationCurve { get; }
         Int16 ReverbAttenuationControl { get; }
         Int32 Priority { get; }
-        Int64 Unknown2 { get; }
+        Int32 LoopBegin { get; }
+        Int32 LoopEnd { get; }
 
     }
 
-    public partial interface ISoundDataExtendedInternalGetter :
-        ISoundDataInternalGetter,
-        ISoundDataExtendedGetter
-    {
-
-
-    }
     #endregion
 
     #region Common MixIn
     public static partial class SoundDataExtendedMixIn
     {
-        public static void Clear(this ISoundDataExtendedInternal item)
+        public static void Clear(this ISoundDataExtended item)
         {
             ((SoundDataExtendedSetterCommon)((ISoundDataExtendedGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static SoundDataExtended.Mask<bool> GetEqualsMask(
-            this ISoundDataExtendedInternalGetter item,
-            ISoundDataExtendedInternalGetter rhs,
+            this ISoundDataExtendedGetter item,
+            ISoundDataExtendedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).GetEqualsMask(
@@ -650,7 +671,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static string Print(
-            this ISoundDataExtendedInternalGetter item,
+            this ISoundDataExtendedGetter item,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
@@ -661,7 +682,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void Print(
-            this ISoundDataExtendedInternalGetter item,
+            this ISoundDataExtendedGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
@@ -674,8 +695,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this ISoundDataExtendedInternalGetter item,
-            ISoundDataExtendedInternalGetter rhs,
+            this ISoundDataExtendedGetter item,
+            ISoundDataExtendedGetter rhs,
             SoundDataExtended.TranslationMask? equalsMask = null)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).Equals(
@@ -685,8 +706,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ISoundDataExtendedInternal lhs,
-            ISoundDataExtendedInternalGetter rhs,
+            this ISoundDataExtended lhs,
+            ISoundDataExtendedGetter rhs,
             out SoundDataExtended.ErrorMask errorMask,
             SoundDataExtended.TranslationMask? copyMask = null)
         {
@@ -701,8 +722,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ISoundDataExtendedInternal lhs,
-            ISoundDataExtendedInternalGetter rhs,
+            this ISoundDataExtended lhs,
+            ISoundDataExtendedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -715,7 +736,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static SoundDataExtended DeepCopy(
-            this ISoundDataExtendedInternalGetter item,
+            this ISoundDataExtendedGetter item,
             SoundDataExtended.TranslationMask? copyMask = null)
         {
             return ((SoundDataExtendedSetterTranslationCommon)((ISoundDataExtendedGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
@@ -724,7 +745,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static SoundDataExtended DeepCopy(
-            this ISoundDataExtendedInternalGetter item,
+            this ISoundDataExtendedGetter item,
             out SoundDataExtended.ErrorMask errorMask,
             SoundDataExtended.TranslationMask? copyMask = null)
         {
@@ -735,7 +756,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static SoundDataExtended DeepCopy(
-            this ISoundDataExtendedInternalGetter item,
+            this ISoundDataExtendedGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
@@ -747,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISoundDataExtendedInternal item,
+            this ISoundDataExtended item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -772,15 +793,16 @@ namespace Mutagen.Bethesda.Fallout3
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
         FrequencyAdjustment = 2,
-        Unknown = 3,
+        Unused = 3,
         Flags = 4,
-        StaticAttenuation = 5,
+        StaticAttenuationCdB = 5,
         StopTime = 6,
         StartTime = 7,
         AttenuationCurve = 8,
         ReverbAttenuationControl = 9,
         Priority = 10,
-        Unknown2 = 11,
+        LoopBegin = 11,
+        LoopEnd = 12,
     }
     #endregion
 
@@ -791,9 +813,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SoundDataExtended.Mask<>);
 
@@ -803,11 +825,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type GetterType = typeof(ISoundDataExtendedGetter);
 
-        public static readonly Type? InternalGetterType = typeof(ISoundDataExtendedInternalGetter);
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ISoundDataExtended);
 
-        public static readonly Type? InternalSetterType = typeof(ISoundDataExtendedInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Fallout3.SoundDataExtended";
 
@@ -863,19 +885,20 @@ namespace Mutagen.Bethesda.Fallout3
 
         partial void ClearPartial();
         
-        public void Clear(ISoundDataExtendedInternal item)
+        public void Clear(ISoundDataExtended item)
         {
             ClearPartial();
             item.AttenuationCurve.Reset();
             item.ReverbAttenuationControl = default(Int16);
             item.Priority = default(Int32);
-            item.Unknown2 = default(Int64);
+            item.LoopBegin = default(Int32);
+            item.LoopEnd = default(Int32);
             base.Clear(item);
         }
         
-        public override void Clear(ISoundDataInternal item)
+        public override void Clear(ISoundData item)
         {
-            Clear(item: (ISoundDataExtendedInternal)item);
+            Clear(item: (ISoundDataExtended)item);
         }
         
         #region Mutagen
@@ -887,7 +910,7 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISoundDataExtendedInternal item,
+            ISoundDataExtended item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -903,7 +926,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public override void CopyInFromBinary(
-            ISoundDataInternal item,
+            ISoundData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -921,8 +944,8 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly SoundDataExtendedCommon Instance = new SoundDataExtendedCommon();
 
         public SoundDataExtended.Mask<bool> GetEqualsMask(
-            ISoundDataExtendedInternalGetter item,
-            ISoundDataExtendedInternalGetter rhs,
+            ISoundDataExtendedGetter item,
+            ISoundDataExtendedGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundDataExtended.Mask<bool>(false);
@@ -935,8 +958,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            ISoundDataExtendedInternalGetter item,
-            ISoundDataExtendedInternalGetter rhs,
+            ISoundDataExtendedGetter item,
+            ISoundDataExtendedGetter rhs,
             SoundDataExtended.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
@@ -947,12 +970,13 @@ namespace Mutagen.Bethesda.Fallout3
                 include);
             ret.ReverbAttenuationControl = item.ReverbAttenuationControl == rhs.ReverbAttenuationControl;
             ret.Priority = item.Priority == rhs.Priority;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.LoopBegin = item.LoopBegin == rhs.LoopBegin;
+            ret.LoopEnd = item.LoopEnd == rhs.LoopEnd;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
@@ -966,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             SoundDataExtended.Mask<bool>? printMask = null)
@@ -989,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             StructuredStringBuilder sb,
             SoundDataExtended.Mask<bool>? printMask = null)
         {
@@ -1019,9 +1043,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Priority, "Priority");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.LoopBegin ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.LoopBegin, "LoopBegin");
+            }
+            if (printMask?.LoopEnd ?? true)
+            {
+                sb.AppendItem(item.LoopEnd, "LoopEnd");
             }
         }
         
@@ -1035,11 +1063,11 @@ namespace Mutagen.Bethesda.Fallout3
                     return (SoundDataExtended_FieldIndex)((int)index);
                 case SoundData_FieldIndex.FrequencyAdjustment:
                     return (SoundDataExtended_FieldIndex)((int)index);
-                case SoundData_FieldIndex.Unknown:
+                case SoundData_FieldIndex.Unused:
                     return (SoundDataExtended_FieldIndex)((int)index);
                 case SoundData_FieldIndex.Flags:
                     return (SoundDataExtended_FieldIndex)((int)index);
-                case SoundData_FieldIndex.StaticAttenuation:
+                case SoundData_FieldIndex.StaticAttenuationCdB:
                     return (SoundDataExtended_FieldIndex)((int)index);
                 case SoundData_FieldIndex.StopTime:
                     return (SoundDataExtended_FieldIndex)((int)index);
@@ -1052,12 +1080,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISoundDataExtendedInternalGetter? lhs,
-            ISoundDataExtendedInternalGetter? rhs,
+            ISoundDataExtendedGetter? lhs,
+            ISoundDataExtendedGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((ISoundDataInternalGetter)lhs, (ISoundDataInternalGetter)rhs, equalsMask)) return false;
+            if (!base.Equals((ISoundDataGetter)lhs, (ISoundDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.AttenuationCurve) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual<Int16>(lhs.AttenuationCurve.Span!, rhs.AttenuationCurve.Span!)) return false;
@@ -1070,38 +1098,43 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Priority != rhs.Priority) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.LoopBegin) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.LoopBegin != rhs.LoopBegin) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.LoopEnd) ?? true))
+            {
+                if (lhs.LoopEnd != rhs.LoopEnd) return false;
             }
             return true;
         }
         
         public override bool Equals(
-            ISoundDataInternalGetter? lhs,
-            ISoundDataInternalGetter? rhs,
+            ISoundDataGetter? lhs,
+            ISoundDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (ISoundDataExtendedInternalGetter?)lhs,
-                rhs: rhs as ISoundDataExtendedInternalGetter,
+                lhs: (ISoundDataExtendedGetter?)lhs,
+                rhs: rhs as ISoundDataExtendedGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(ISoundDataExtendedInternalGetter item)
+        public virtual int GetHashCode(ISoundDataExtendedGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.AttenuationCurve);
             hash.Add(item.ReverbAttenuationControl);
             hash.Add(item.Priority);
-            hash.Add(item.Unknown2);
+            hash.Add(item.LoopBegin);
+            hash.Add(item.LoopEnd);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(ISoundDataInternalGetter item)
+        public override int GetHashCode(ISoundDataGetter item)
         {
-            return GetHashCode(item: (ISoundDataExtendedInternalGetter)item);
+            return GetHashCode(item: (ISoundDataExtendedGetter)item);
         }
         
         #endregion
@@ -1127,21 +1160,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ISoundDataExtendedInternal item,
-            ISoundDataExtendedInternalGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public void DeepCopyIn(
             ISoundDataExtended item,
             ISoundDataExtendedGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1166,9 +1184,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Priority = rhs.Priority;
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.LoopBegin) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.LoopBegin = rhs.LoopBegin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.LoopEnd) ?? true))
+            {
+                item.LoopEnd = rhs.LoopEnd;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1184,20 +1206,6 @@ namespace Mutagen.Bethesda.Fallout3
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
-        public override void DeepCopyIn(
-            ISoundDataInternal item,
-            ISoundDataInternalGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISoundDataExtendedInternal)item,
-                rhs: (ISoundDataExtendedInternalGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
         
         public override void DeepCopyIn(
             ISoundData item,
@@ -1217,7 +1225,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
         public SoundDataExtended DeepCopy(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             SoundDataExtended.TranslationMask? copyMask = null)
         {
             SoundDataExtended ret = (SoundDataExtended)((SoundDataExtendedCommon)((ISoundDataExtendedGetter)item).CommonInstance()!).GetNew();
@@ -1231,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public SoundDataExtended DeepCopy(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             out SoundDataExtended.ErrorMask errorMask,
             SoundDataExtended.TranslationMask? copyMask = null)
         {
@@ -1248,7 +1256,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public SoundDataExtended DeepCopy(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
@@ -1301,7 +1309,7 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly SoundDataExtendedBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             MutagenWriter writer)
         {
             SoundDataBinaryWriteTranslation.WriteEmbedded(
@@ -1313,12 +1321,13 @@ namespace Mutagen.Bethesda.Fallout3
                 transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             writer.Write(item.ReverbAttenuationControl);
             writer.Write(item.Priority);
-            writer.Write(item.Unknown2);
+            writer.Write(item.LoopBegin);
+            writer.Write(item.LoopEnd);
         }
 
         public void Write(
             MutagenWriter writer,
-            ISoundDataExtendedInternalGetter item,
+            ISoundDataExtendedGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
@@ -1339,18 +1348,18 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISoundDataExtendedInternalGetter)item,
+                item: (ISoundDataExtendedGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             TypedWriteParams translationParams)
         {
             Write(
-                item: (ISoundDataExtendedInternalGetter)item,
+                item: (ISoundDataExtendedGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1362,7 +1371,7 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly SoundDataExtendedBinaryCreateTranslation Instance = new SoundDataExtendedBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ISoundDataExtendedInternal item,
+            ISoundDataExtended item,
             MutagenFrame frame)
         {
             SoundDataBinaryCreateTranslation.FillBinaryStructs(
@@ -1375,7 +1384,8 @@ namespace Mutagen.Bethesda.Fallout3
                     transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.ReverbAttenuationControl = frame.ReadInt16();
             item.Priority = frame.ReadInt32();
-            item.Unknown2 = frame.ReadInt64();
+            item.LoopBegin = frame.ReadInt32();
+            item.LoopEnd = frame.ReadInt32();
         }
 
     }
@@ -1395,7 +1405,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     internal partial class SoundDataExtendedBinaryOverlay :
         SoundDataBinaryOverlay,
-        ISoundDataExtendedInternalGetter
+        ISoundDataExtendedGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1425,7 +1435,8 @@ namespace Mutagen.Bethesda.Fallout3
         public ReadOnlyMemorySlice<Int16> AttenuationCurve => BinaryOverlayArrayHelper.Int16SliceFromFixedSize(_structData.Slice(0xC), amount: 5);
         public Int16 ReverbAttenuationControl => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x16, 0x2));
         public Int32 Priority => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
-        public Int64 Unknown2 => BinaryPrimitives.ReadInt64LittleEndian(_structData.Slice(0x1C, 0x8));
+        public Int32 LoopBegin => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x1C, 0x4));
+        public Int32 LoopEnd => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x20, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1442,7 +1453,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static ISoundDataExtendedInternalGetter SoundDataExtendedFactory(
+        public static ISoundDataExtendedGetter SoundDataExtendedFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1465,7 +1476,7 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static ISoundDataExtendedInternalGetter SoundDataExtendedFactory(
+        public static ISoundDataExtendedGetter SoundDataExtendedFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1493,11 +1504,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISoundDataExtendedInternalGetter rhs) return false;
+            if (obj is not ISoundDataExtendedGetter rhs) return false;
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISoundDataExtendedInternalGetter? obj)
+        public bool Equals(ISoundDataExtendedGetter? obj)
         {
             return ((SoundDataExtendedCommon)((ISoundDataExtendedGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }

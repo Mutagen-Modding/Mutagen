@@ -17,16 +17,16 @@
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>
-  <Object name="SoundData" objType="Subrecord" recordType="SNDX" forceInternalInterface="true">
+  <Object name="SoundData" objType="Subrecord" recordType="SNDX">
     <Fields>
-      <UInt16 name="MinimumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
-      <UInt16 name="MaximumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
+      <UInt8 name="MinimumAttenuationDistance" />
+      <UInt8 name="MaximumAttenuationDistance" />
       <Int8 name="FrequencyAdjustment" />
-      <Int8 name="Unknown" byteLength="1" />
+      <UInt8 name="Unused" />
       <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />
-      <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
-      <Float name="StopTime" binary="Custom" min="0" max="1434.375" byteLength="1" />
-      <Float name="StartTime" binary="Custom" min="0" max="1434.375" byteLength="1" />
+      <Int16 name="StaticAttenuationCdB" />
+      <UInt8 name="StopTime" />
+      <UInt8 name="StartTime" />
     </Fields>
   </Object>
   <Object name="SoundDataExtended" baseClass="SoundData" objType="Subrecord" recordType="SNDD">
@@ -36,7 +36,8 @@
       </Array>
       <Int16 name="ReverbAttenuationControl" />
       <Int32 name="Priority" />
-      <Int64 name="Unknown2" />
+      <Int32 name="LoopBegin" />
+      <Int32 name="LoopEnd" />
     </Fields>
   </Object>
 </Loqui>

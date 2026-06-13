@@ -41,9 +41,9 @@ namespace Mutagen.Bethesda.Fallout3
     /// Implemented by: [SoundDataExtended]
     /// </summary>
     public partial class SoundData :
-        IEquatable<ISoundDataInternalGetter>,
+        IEquatable<ISoundDataGetter>,
         ILoquiObjectSetter<SoundData>,
-        ISoundDataInternal
+        ISoundData
     {
         #region Ctor
         public SoundData()
@@ -53,25 +53,29 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region MinimumAttenuationDistance
+        public Byte MinimumAttenuationDistance { get; set; } = default(Byte);
+        #endregion
+        #region MaximumAttenuationDistance
+        public Byte MaximumAttenuationDistance { get; set; } = default(Byte);
+        #endregion
         #region FrequencyAdjustment
         public SByte FrequencyAdjustment { get; set; } = default(SByte);
         #endregion
-        #region Unknown
-        public SByte Unknown { get; set; } = default(SByte);
+        #region Unused
+        public Byte Unused { get; set; } = default(Byte);
         #endregion
         #region Flags
         public SoundData.Flag Flags { get; set; } = default(SoundData.Flag);
         #endregion
-        #region StaticAttenuation
-        public Single StaticAttenuation { get; set; } = default(Single);
+        #region StaticAttenuationCdB
+        public Int16 StaticAttenuationCdB { get; set; } = default(Int16);
         #endregion
         #region StopTime
-        public Single StopTime { get; set; } = default(Single);
-        public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
+        public Byte StopTime { get; set; } = default(Byte);
         #endregion
         #region StartTime
-        public Single StartTime { get; set; } = default(Single);
-        public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
+        public Byte StartTime { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -91,11 +95,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISoundDataInternalGetter rhs) return false;
+            if (obj is not ISoundDataGetter rhs) return false;
             return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISoundDataInternalGetter? obj)
+        public bool Equals(ISoundDataGetter? obj)
         {
             return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
@@ -115,9 +119,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MinimumAttenuationDistance = initialValue;
                 this.MaximumAttenuationDistance = initialValue;
                 this.FrequencyAdjustment = initialValue;
-                this.Unknown = initialValue;
+                this.Unused = initialValue;
                 this.Flags = initialValue;
-                this.StaticAttenuation = initialValue;
+                this.StaticAttenuationCdB = initialValue;
                 this.StopTime = initialValue;
                 this.StartTime = initialValue;
             }
@@ -126,18 +130,18 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MinimumAttenuationDistance,
                 TItem MaximumAttenuationDistance,
                 TItem FrequencyAdjustment,
-                TItem Unknown,
+                TItem Unused,
                 TItem Flags,
-                TItem StaticAttenuation,
+                TItem StaticAttenuationCdB,
                 TItem StopTime,
                 TItem StartTime)
             {
                 this.MinimumAttenuationDistance = MinimumAttenuationDistance;
                 this.MaximumAttenuationDistance = MaximumAttenuationDistance;
                 this.FrequencyAdjustment = FrequencyAdjustment;
-                this.Unknown = Unknown;
+                this.Unused = Unused;
                 this.Flags = Flags;
-                this.StaticAttenuation = StaticAttenuation;
+                this.StaticAttenuationCdB = StaticAttenuationCdB;
                 this.StopTime = StopTime;
                 this.StartTime = StartTime;
             }
@@ -154,9 +158,9 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem MinimumAttenuationDistance;
             public TItem MaximumAttenuationDistance;
             public TItem FrequencyAdjustment;
-            public TItem Unknown;
+            public TItem Unused;
             public TItem Flags;
-            public TItem StaticAttenuation;
+            public TItem StaticAttenuationCdB;
             public TItem StopTime;
             public TItem StartTime;
             #endregion
@@ -174,9 +178,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MinimumAttenuationDistance, rhs.MinimumAttenuationDistance)) return false;
                 if (!object.Equals(this.MaximumAttenuationDistance, rhs.MaximumAttenuationDistance)) return false;
                 if (!object.Equals(this.FrequencyAdjustment, rhs.FrequencyAdjustment)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.StaticAttenuation, rhs.StaticAttenuation)) return false;
+                if (!object.Equals(this.StaticAttenuationCdB, rhs.StaticAttenuationCdB)) return false;
                 if (!object.Equals(this.StopTime, rhs.StopTime)) return false;
                 if (!object.Equals(this.StartTime, rhs.StartTime)) return false;
                 return true;
@@ -187,9 +191,9 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MinimumAttenuationDistance);
                 hash.Add(this.MaximumAttenuationDistance);
                 hash.Add(this.FrequencyAdjustment);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unused);
                 hash.Add(this.Flags);
-                hash.Add(this.StaticAttenuation);
+                hash.Add(this.StaticAttenuationCdB);
                 hash.Add(this.StopTime);
                 hash.Add(this.StartTime);
                 return hash.ToHashCode();
@@ -203,9 +207,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.MinimumAttenuationDistance)) return false;
                 if (!eval(this.MaximumAttenuationDistance)) return false;
                 if (!eval(this.FrequencyAdjustment)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unused)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.StaticAttenuation)) return false;
+                if (!eval(this.StaticAttenuationCdB)) return false;
                 if (!eval(this.StopTime)) return false;
                 if (!eval(this.StartTime)) return false;
                 return true;
@@ -218,9 +222,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.MinimumAttenuationDistance)) return true;
                 if (eval(this.MaximumAttenuationDistance)) return true;
                 if (eval(this.FrequencyAdjustment)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unused)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.StaticAttenuation)) return true;
+                if (eval(this.StaticAttenuationCdB)) return true;
                 if (eval(this.StopTime)) return true;
                 if (eval(this.StartTime)) return true;
                 return false;
@@ -240,9 +244,9 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MinimumAttenuationDistance = eval(this.MinimumAttenuationDistance);
                 obj.MaximumAttenuationDistance = eval(this.MaximumAttenuationDistance);
                 obj.FrequencyAdjustment = eval(this.FrequencyAdjustment);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unused = eval(this.Unused);
                 obj.Flags = eval(this.Flags);
-                obj.StaticAttenuation = eval(this.StaticAttenuation);
+                obj.StaticAttenuationCdB = eval(this.StaticAttenuationCdB);
                 obj.StopTime = eval(this.StopTime);
                 obj.StartTime = eval(this.StartTime);
             }
@@ -275,17 +279,17 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(FrequencyAdjustment, "FrequencyAdjustment");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(Unused, "Unused");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.StaticAttenuation ?? true)
+                    if (printMask?.StaticAttenuationCdB ?? true)
                     {
-                        sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                        sb.AppendItem(StaticAttenuationCdB, "StaticAttenuationCdB");
                     }
                     if (printMask?.StopTime ?? true)
                     {
@@ -322,9 +326,9 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? MinimumAttenuationDistance;
             public Exception? MaximumAttenuationDistance;
             public Exception? FrequencyAdjustment;
-            public Exception? Unknown;
+            public Exception? Unused;
             public Exception? Flags;
-            public Exception? StaticAttenuation;
+            public Exception? StaticAttenuationCdB;
             public Exception? StopTime;
             public Exception? StartTime;
             #endregion
@@ -341,12 +345,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return MaximumAttenuationDistance;
                     case SoundData_FieldIndex.FrequencyAdjustment:
                         return FrequencyAdjustment;
-                    case SoundData_FieldIndex.Unknown:
-                        return Unknown;
+                    case SoundData_FieldIndex.Unused:
+                        return Unused;
                     case SoundData_FieldIndex.Flags:
                         return Flags;
-                    case SoundData_FieldIndex.StaticAttenuation:
-                        return StaticAttenuation;
+                    case SoundData_FieldIndex.StaticAttenuationCdB:
+                        return StaticAttenuationCdB;
                     case SoundData_FieldIndex.StopTime:
                         return StopTime;
                     case SoundData_FieldIndex.StartTime:
@@ -370,14 +374,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case SoundData_FieldIndex.FrequencyAdjustment:
                         this.FrequencyAdjustment = ex;
                         break;
-                    case SoundData_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case SoundData_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case SoundData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case SoundData_FieldIndex.StaticAttenuation:
-                        this.StaticAttenuation = ex;
+                    case SoundData_FieldIndex.StaticAttenuationCdB:
+                        this.StaticAttenuationCdB = ex;
                         break;
                     case SoundData_FieldIndex.StopTime:
                         this.StopTime = ex;
@@ -404,14 +408,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case SoundData_FieldIndex.FrequencyAdjustment:
                         this.FrequencyAdjustment = (Exception?)obj;
                         break;
-                    case SoundData_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case SoundData_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     case SoundData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case SoundData_FieldIndex.StaticAttenuation:
-                        this.StaticAttenuation = (Exception?)obj;
+                    case SoundData_FieldIndex.StaticAttenuationCdB:
+                        this.StaticAttenuationCdB = (Exception?)obj;
                         break;
                     case SoundData_FieldIndex.StopTime:
                         this.StopTime = (Exception?)obj;
@@ -430,9 +434,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MinimumAttenuationDistance != null) return true;
                 if (MaximumAttenuationDistance != null) return true;
                 if (FrequencyAdjustment != null) return true;
-                if (Unknown != null) return true;
+                if (Unused != null) return true;
                 if (Flags != null) return true;
-                if (StaticAttenuation != null) return true;
+                if (StaticAttenuationCdB != null) return true;
                 if (StopTime != null) return true;
                 if (StartTime != null) return true;
                 return false;
@@ -470,13 +474,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(FrequencyAdjustment, "FrequencyAdjustment");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(Unused, "Unused");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(StaticAttenuation, "StaticAttenuation");
+                    sb.AppendItem(StaticAttenuationCdB, "StaticAttenuationCdB");
                 }
                 {
                     sb.AppendItem(StopTime, "StopTime");
@@ -495,9 +499,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MinimumAttenuationDistance = this.MinimumAttenuationDistance.Combine(rhs.MinimumAttenuationDistance);
                 ret.MaximumAttenuationDistance = this.MaximumAttenuationDistance.Combine(rhs.MaximumAttenuationDistance);
                 ret.FrequencyAdjustment = this.FrequencyAdjustment.Combine(rhs.FrequencyAdjustment);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.StaticAttenuation = this.StaticAttenuation.Combine(rhs.StaticAttenuation);
+                ret.StaticAttenuationCdB = this.StaticAttenuationCdB.Combine(rhs.StaticAttenuationCdB);
                 ret.StopTime = this.StopTime.Combine(rhs.StopTime);
                 ret.StartTime = this.StartTime.Combine(rhs.StartTime);
                 return ret;
@@ -526,9 +530,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool MinimumAttenuationDistance;
             public bool MaximumAttenuationDistance;
             public bool FrequencyAdjustment;
-            public bool Unknown;
+            public bool Unused;
             public bool Flags;
-            public bool StaticAttenuation;
+            public bool StaticAttenuationCdB;
             public bool StopTime;
             public bool StartTime;
             #endregion
@@ -543,9 +547,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MinimumAttenuationDistance = defaultOn;
                 this.MaximumAttenuationDistance = defaultOn;
                 this.FrequencyAdjustment = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unused = defaultOn;
                 this.Flags = defaultOn;
-                this.StaticAttenuation = defaultOn;
+                this.StaticAttenuationCdB = defaultOn;
                 this.StopTime = defaultOn;
                 this.StartTime = defaultOn;
             }
@@ -566,9 +570,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MinimumAttenuationDistance, null));
                 ret.Add((MaximumAttenuationDistance, null));
                 ret.Add((FrequencyAdjustment, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unused, null));
                 ret.Add((Flags, null));
-                ret.Add((StaticAttenuation, null));
+                ret.Add((StaticAttenuationCdB, null));
                 ret.Add((StopTime, null));
                 ret.Add((StartTime, null));
             }
@@ -643,23 +647,17 @@ namespace Mutagen.Bethesda.Fallout3
     /// Implemented by: [SoundDataExtended]
     /// </summary>
     public partial interface ISoundData :
-        ILoquiObjectSetter<ISoundDataInternal>,
-        ISoundDataInternalGetter
+        ILoquiObjectSetter<ISoundData>,
+        ISoundDataGetter
     {
-        new UInt16 MinimumAttenuationDistance { get; set; }
-        new UInt16 MaximumAttenuationDistance { get; set; }
+        new Byte MinimumAttenuationDistance { get; set; }
+        new Byte MaximumAttenuationDistance { get; set; }
         new SByte FrequencyAdjustment { get; set; }
-        new SByte Unknown { get; set; }
+        new Byte Unused { get; set; }
         new SoundData.Flag Flags { get; set; }
-        new Single StaticAttenuation { get; set; }
-        new Single StopTime { get; set; }
-        new Single StartTime { get; set; }
-    }
-
-    public partial interface ISoundDataInternal :
-        ISoundData,
-        ISoundDataInternalGetter
-    {
+        new Int16 StaticAttenuationCdB { get; set; }
+        new Byte StopTime { get; set; }
+        new Byte StartTime { get; set; }
     }
 
     /// <summary>
@@ -668,7 +666,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ISoundDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ISoundDataInternalGetter>
+        ILoquiObject<ISoundDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -677,35 +675,30 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SoundData_Registration.Instance;
-        UInt16 MinimumAttenuationDistance { get; }
-        UInt16 MaximumAttenuationDistance { get; }
+        Byte MinimumAttenuationDistance { get; }
+        Byte MaximumAttenuationDistance { get; }
         SByte FrequencyAdjustment { get; }
-        SByte Unknown { get; }
+        Byte Unused { get; }
         SoundData.Flag Flags { get; }
-        Single StaticAttenuation { get; }
-        Single StopTime { get; }
-        Single StartTime { get; }
+        Int16 StaticAttenuationCdB { get; }
+        Byte StopTime { get; }
+        Byte StartTime { get; }
 
     }
 
-    public partial interface ISoundDataInternalGetter : ISoundDataGetter
-    {
-
-
-    }
     #endregion
 
     #region Common MixIn
     public static partial class SoundDataMixIn
     {
-        public static void Clear(this ISoundDataInternal item)
+        public static void Clear(this ISoundData item)
         {
             ((SoundDataSetterCommon)((ISoundDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
         public static SoundData.Mask<bool> GetEqualsMask(
-            this ISoundDataInternalGetter item,
-            ISoundDataInternalGetter rhs,
+            this ISoundDataGetter item,
+            ISoundDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             return ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).GetEqualsMask(
@@ -715,7 +708,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static string Print(
-            this ISoundDataInternalGetter item,
+            this ISoundDataGetter item,
             string? name = null,
             SoundData.Mask<bool>? printMask = null)
         {
@@ -726,7 +719,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void Print(
-            this ISoundDataInternalGetter item,
+            this ISoundDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             SoundData.Mask<bool>? printMask = null)
@@ -739,8 +732,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this ISoundDataInternalGetter item,
-            ISoundDataInternalGetter rhs,
+            this ISoundDataGetter item,
+            ISoundDataGetter rhs,
             SoundData.TranslationMask? equalsMask = null)
         {
             return ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).Equals(
@@ -750,8 +743,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ISoundDataInternal lhs,
-            ISoundDataInternalGetter rhs)
+            this ISoundData lhs,
+            ISoundDataGetter rhs)
         {
             ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
@@ -762,8 +755,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ISoundDataInternal lhs,
-            ISoundDataInternalGetter rhs,
+            this ISoundData lhs,
+            ISoundDataGetter rhs,
             SoundData.TranslationMask? copyMask = null)
         {
             ((SoundDataSetterTranslationCommon)((ISoundDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
@@ -775,8 +768,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ISoundDataInternal lhs,
-            ISoundDataInternalGetter rhs,
+            this ISoundData lhs,
+            ISoundDataGetter rhs,
             out SoundData.ErrorMask errorMask,
             SoundData.TranslationMask? copyMask = null)
         {
@@ -791,8 +784,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static void DeepCopyIn(
-            this ISoundDataInternal lhs,
-            ISoundDataInternalGetter rhs,
+            this ISoundData lhs,
+            ISoundDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -805,7 +798,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static SoundData DeepCopy(
-            this ISoundDataInternalGetter item,
+            this ISoundDataGetter item,
             SoundData.TranslationMask? copyMask = null)
         {
             return ((SoundDataSetterTranslationCommon)((ISoundDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
@@ -814,7 +807,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static SoundData DeepCopy(
-            this ISoundDataInternalGetter item,
+            this ISoundDataGetter item,
             out SoundData.ErrorMask errorMask,
             SoundData.TranslationMask? copyMask = null)
         {
@@ -825,7 +818,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static SoundData DeepCopy(
-            this ISoundDataInternalGetter item,
+            this ISoundDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
@@ -837,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISoundDataInternal item,
+            this ISoundData item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
@@ -862,9 +855,9 @@ namespace Mutagen.Bethesda.Fallout3
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
         FrequencyAdjustment = 2,
-        Unknown = 3,
+        Unused = 3,
         Flags = 4,
-        StaticAttenuation = 5,
+        StaticAttenuationCdB = 5,
         StopTime = 6,
         StartTime = 7,
     }
@@ -889,11 +882,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type GetterType = typeof(ISoundDataGetter);
 
-        public static readonly Type? InternalGetterType = typeof(ISoundDataInternalGetter);
+        public static readonly Type? InternalGetterType = null;
 
         public static readonly Type SetterType = typeof(ISoundData);
 
-        public static readonly Type? InternalSetterType = typeof(ISoundDataInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Fallout3.SoundData";
 
@@ -950,17 +943,17 @@ namespace Mutagen.Bethesda.Fallout3
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISoundDataInternal item)
+        public virtual void Clear(ISoundData item)
         {
             ClearPartial();
-            item.MinimumAttenuationDistance = default(UInt16);
-            item.MaximumAttenuationDistance = default(UInt16);
+            item.MinimumAttenuationDistance = default(Byte);
+            item.MaximumAttenuationDistance = default(Byte);
             item.FrequencyAdjustment = default(SByte);
-            item.Unknown = default(SByte);
+            item.Unused = default(Byte);
             item.Flags = default(SoundData.Flag);
-            item.StaticAttenuation = default(Single);
-            item.StopTime = default(Single);
-            item.StartTime = default(Single);
+            item.StaticAttenuationCdB = default(Int16);
+            item.StopTime = default(Byte);
+            item.StartTime = default(Byte);
         }
         
         #region Mutagen
@@ -972,7 +965,7 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISoundDataInternal item,
+            ISoundData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -995,8 +988,8 @@ namespace Mutagen.Bethesda.Fallout3
         public static readonly SoundDataCommon Instance = new SoundDataCommon();
 
         public SoundData.Mask<bool> GetEqualsMask(
-            ISoundDataInternalGetter item,
-            ISoundDataInternalGetter rhs,
+            ISoundDataGetter item,
+            ISoundDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             var ret = new SoundData.Mask<bool>(false);
@@ -1009,23 +1002,23 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            ISoundDataInternalGetter item,
-            ISoundDataInternalGetter rhs,
+            ISoundDataGetter item,
+            ISoundDataGetter rhs,
             SoundData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.MinimumAttenuationDistance = item.MinimumAttenuationDistance == rhs.MinimumAttenuationDistance;
             ret.MaximumAttenuationDistance = item.MaximumAttenuationDistance == rhs.MaximumAttenuationDistance;
             ret.FrequencyAdjustment = item.FrequencyAdjustment == rhs.FrequencyAdjustment;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unused = item.Unused == rhs.Unused;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.StaticAttenuation = item.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation);
-            ret.StopTime = item.StopTime.EqualsWithin(rhs.StopTime);
-            ret.StartTime = item.StartTime.EqualsWithin(rhs.StartTime);
+            ret.StaticAttenuationCdB = item.StaticAttenuationCdB == rhs.StaticAttenuationCdB;
+            ret.StopTime = item.StopTime == rhs.StopTime;
+            ret.StartTime = item.StartTime == rhs.StartTime;
         }
         
         public string Print(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             string? name = null,
             SoundData.Mask<bool>? printMask = null)
         {
@@ -1039,7 +1032,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
             SoundData.Mask<bool>? printMask = null)
@@ -1062,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             StructuredStringBuilder sb,
             SoundData.Mask<bool>? printMask = null)
         {
@@ -1078,17 +1071,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.FrequencyAdjustment, "FrequencyAdjustment");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unused ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.StaticAttenuation ?? true)
+            if (printMask?.StaticAttenuationCdB ?? true)
             {
-                sb.AppendItem(item.StaticAttenuation, "StaticAttenuation");
+                sb.AppendItem(item.StaticAttenuationCdB, "StaticAttenuationCdB");
             }
             if (printMask?.StopTime ?? true)
             {
@@ -1102,8 +1095,8 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISoundDataInternalGetter? lhs,
-            ISoundDataInternalGetter? rhs,
+            ISoundDataGetter? lhs,
+            ISoundDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -1119,38 +1112,38 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.Unused) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.Unused != rhs.Unused) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.StaticAttenuation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.StaticAttenuationCdB) ?? true))
             {
-                if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
+                if (lhs.StaticAttenuationCdB != rhs.StaticAttenuationCdB) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.StopTime) ?? true))
             {
-                if (!lhs.StopTime.EqualsWithin(rhs.StopTime)) return false;
+                if (lhs.StopTime != rhs.StopTime) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundData_FieldIndex.StartTime) ?? true))
             {
-                if (!lhs.StartTime.EqualsWithin(rhs.StartTime)) return false;
+                if (lhs.StartTime != rhs.StartTime) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ISoundDataInternalGetter item)
+        public virtual int GetHashCode(ISoundDataGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.MinimumAttenuationDistance);
             hash.Add(item.MaximumAttenuationDistance);
             hash.Add(item.FrequencyAdjustment);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unused);
             hash.Add(item.Flags);
-            hash.Add(item.StaticAttenuation);
+            hash.Add(item.StaticAttenuationCdB);
             hash.Add(item.StopTime);
             hash.Add(item.StartTime);
             return hash.ToHashCode();
@@ -1179,21 +1172,6 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region DeepCopyIn
         public virtual void DeepCopyIn(
-            ISoundDataInternal item,
-            ISoundDataInternalGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            DeepCopyIn(
-                (ISoundData)item,
-                (ISoundDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public virtual void DeepCopyIn(
             ISoundData item,
             ISoundDataGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1212,17 +1190,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.FrequencyAdjustment = rhs.FrequencyAdjustment;
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.Unused) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.StaticAttenuation) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.StaticAttenuationCdB) ?? true))
             {
-                item.StaticAttenuation = rhs.StaticAttenuation;
+                item.StaticAttenuationCdB = rhs.StaticAttenuationCdB;
             }
             if ((copyMask?.GetShouldTranslate((int)SoundData_FieldIndex.StopTime) ?? true))
             {
@@ -1249,7 +1227,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
         public SoundData DeepCopy(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             SoundData.TranslationMask? copyMask = null)
         {
             SoundData ret = (SoundData)((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).GetNew();
@@ -1263,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public SoundData DeepCopy(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             out SoundData.ErrorMask errorMask,
             SoundData.TranslationMask? copyMask = null)
         {
@@ -1280,7 +1258,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public SoundData DeepCopy(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
@@ -1337,90 +1315,25 @@ namespace Mutagen.Bethesda.Fallout3
         public static readonly SoundDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             MutagenWriter writer)
         {
-            SoundDataBinaryWriteTranslation.WriteBinaryMinimumAttenuationDistance(
-                writer: writer,
-                item: item);
-            SoundDataBinaryWriteTranslation.WriteBinaryMaximumAttenuationDistance(
-                writer: writer,
-                item: item);
+            writer.Write(item.MinimumAttenuationDistance);
+            writer.Write(item.MaximumAttenuationDistance);
             writer.Write(item.FrequencyAdjustment);
-            writer.Write(item.Unknown);
+            writer.Write(item.Unused);
             EnumBinaryTranslation<SoundData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.StaticAttenuation,
-                integerType: FloatIntegerType.UShort,
-                multiplier: 100f,
-                divisor: null);
-            SoundDataBinaryWriteTranslation.WriteBinaryStopTime(
-                writer: writer,
-                item: item);
-            SoundDataBinaryWriteTranslation.WriteBinaryStartTime(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryMinimumAttenuationDistanceCustom(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item);
-
-        public static void WriteBinaryMinimumAttenuationDistance(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item)
-        {
-            WriteBinaryMinimumAttenuationDistanceCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryMaximumAttenuationDistanceCustom(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item);
-
-        public static void WriteBinaryMaximumAttenuationDistance(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item)
-        {
-            WriteBinaryMaximumAttenuationDistanceCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryStopTimeCustom(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item);
-
-        public static void WriteBinaryStopTime(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item)
-        {
-            WriteBinaryStopTimeCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryStartTimeCustom(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item);
-
-        public static void WriteBinaryStartTime(
-            MutagenWriter writer,
-            ISoundDataInternalGetter item)
-        {
-            WriteBinaryStartTimeCustom(
-                writer: writer,
-                item: item);
+            writer.Write(item.StaticAttenuationCdB);
+            writer.Write(item.StopTime);
+            writer.Write(item.StartTime);
         }
 
         public virtual void Write(
             MutagenWriter writer,
-            ISoundDataInternalGetter item,
+            ISoundDataGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
@@ -1441,7 +1354,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISoundDataInternalGetter)item,
+                item: (ISoundDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1453,48 +1366,20 @@ namespace Mutagen.Bethesda.Fallout3
         public static readonly SoundDataBinaryCreateTranslation Instance = new SoundDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ISoundDataInternal item,
+            ISoundData item,
             MutagenFrame frame)
         {
-            SoundDataBinaryCreateTranslation.FillBinaryMinimumAttenuationDistanceCustom(
-                frame: frame,
-                item: item);
-            SoundDataBinaryCreateTranslation.FillBinaryMaximumAttenuationDistanceCustom(
-                frame: frame,
-                item: item);
+            item.MinimumAttenuationDistance = frame.ReadUInt8();
+            item.MaximumAttenuationDistance = frame.ReadUInt8();
             item.FrequencyAdjustment = frame.ReadInt8();
-            item.Unknown = frame.ReadInt8();
+            item.Unused = frame.ReadUInt8();
             item.Flags = EnumBinaryTranslation<SoundData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
-            item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                integerType: FloatIntegerType.UShort,
-                multiplier: null,
-                divisor: 100f);
-            SoundDataBinaryCreateTranslation.FillBinaryStopTimeCustom(
-                frame: frame,
-                item: item);
-            SoundDataBinaryCreateTranslation.FillBinaryStartTimeCustom(
-                frame: frame,
-                item: item);
+            item.StaticAttenuationCdB = frame.ReadInt16();
+            item.StopTime = frame.ReadUInt8();
+            item.StartTime = frame.ReadUInt8();
         }
-
-        public static partial void FillBinaryMinimumAttenuationDistanceCustom(
-            MutagenFrame frame,
-            ISoundDataInternal item);
-
-        public static partial void FillBinaryMaximumAttenuationDistanceCustom(
-            MutagenFrame frame,
-            ISoundDataInternal item);
-
-        public static partial void FillBinaryStopTimeCustom(
-            MutagenFrame frame,
-            ISoundDataInternal item);
-
-        public static partial void FillBinaryStartTimeCustom(
-            MutagenFrame frame,
-            ISoundDataInternal item);
 
     }
 
@@ -1505,7 +1390,7 @@ namespace Mutagen.Bethesda.Fallout3
     public static class SoundDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ISoundDataInternalGetter item,
+            this ISoundDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
@@ -1524,7 +1409,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     internal partial class SoundDataBinaryOverlay :
         PluginBinaryOverlay,
-        ISoundDataInternalGetter
+        ISoundDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1559,18 +1444,14 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public Byte MinimumAttenuationDistance => _structData.Span[0x0];
+        public Byte MaximumAttenuationDistance => _structData.Span[0x1];
         public SByte FrequencyAdjustment => (sbyte)_structData.Slice(0x2, 0x1)[0];
-        public SByte Unknown => (sbyte)_structData.Slice(0x3, 0x1)[0];
+        public Byte Unused => _structData.Span[0x3];
         public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
-        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_structData.Slice(0x8, 0x2), FloatIntegerType.UShort, multiplier: null, divisor: 100f);
-        #region StopTime
-        public partial Single GetStopTimeCustom(int location);
-        public Single StopTime => GetStopTimeCustom(location: 0xA);
-        #endregion
-        #region StartTime
-        public partial Single GetStartTimeCustom(int location);
-        public Single StartTime => GetStartTimeCustom(location: 0xB);
-        #endregion
+        public Int16 StaticAttenuationCdB => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
+        public Byte StopTime => _structData.Span[0xA];
+        public Byte StartTime => _structData.Span[0xB];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1587,7 +1468,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static ISoundDataInternalGetter SoundDataFactory(
+        public static ISoundDataGetter SoundDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1610,7 +1491,7 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static ISoundDataInternalGetter SoundDataFactory(
+        public static ISoundDataGetter SoundDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1638,11 +1519,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISoundDataInternalGetter rhs) return false;
+            if (obj is not ISoundDataGetter rhs) return false;
             return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISoundDataInternalGetter? obj)
+        public bool Equals(ISoundDataGetter? obj)
         {
             return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
