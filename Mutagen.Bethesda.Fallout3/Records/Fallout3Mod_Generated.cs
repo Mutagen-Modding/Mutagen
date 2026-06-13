@@ -5772,6 +5772,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LoadScreens.RemapLinks(mapping);
             obj.AnimatedObjects.RemapLinks(mapping);
             obj.Waters.RemapLinks(mapping);
+            obj.EffectShaders.RemapLinks(mapping);
             obj.Explosions.RemapLinks(mapping);
             obj.ImageSpaceAdapters.RemapLinks(mapping);
             obj.Messages.RemapLinks(mapping);
@@ -9335,6 +9336,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Waters.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }

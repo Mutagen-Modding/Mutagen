@@ -10,13 +10,11 @@
   </Object>
   <Object name="EffectShaderData" objType="Subrecord" recordType="DATA">
     <Fields>
-      <!-- Membrane Shader flags + padding -->
-      <UInt8 name="Flags" />
+      <Enum name="Flags" enumName="EffectShaderData.Flag" byteLength="1" />
       <ByteArray name="Unused1" byteLength="3" nullable="False" />
-      <UInt32 name="MembraneShaderSourceBlendMode" />
-      <UInt32 name="MembraneShaderBlendOperation" />
-      <UInt32 name="MembraneShaderZTestFunction" />
-      <!-- Fill/Texture Effect -->
+      <Enum name="MembraneShaderSourceBlendMode" enumName="EffectShaderData.BlendMode" byteLength="4" />
+      <Enum name="MembraneShaderBlendOperation" enumName="EffectShaderData.BlendOperation" byteLength="4" />
+      <Enum name="MembraneShaderZTestFunction" enumName="EffectShaderData.ZTest" byteLength="4" />
       <Color name="FillTextureEffectColor" binaryType="Alpha" />
       <Float name="FillTextureEffectAlphaFadeInTime" />
       <Float name="FillTextureEffectFullAlphaTime" />
@@ -26,7 +24,6 @@
       <Float name="FillTextureEffectAlphaPulseFrequency" />
       <Float name="FillTextureEffectTextureAnimationSpeedU" />
       <Float name="FillTextureEffectTextureAnimationSpeedV" />
-      <!-- Edge Effect -->
       <Float name="EdgeEffectFallOff" />
       <Color name="EdgeEffectColor" binaryType="Alpha" />
       <Float name="EdgeEffectAlphaFadeInTime" />
@@ -37,12 +34,11 @@
       <Float name="EdgeEffectAlphaPulseFrequency" />
       <Float name="FillTextureEffectFullAlphaRatio" />
       <Float name="EdgeEffectFullAlphaRatio" />
-      <UInt32 name="MembraneShaderDestBlendMode" />
-      <!-- Particle Shader -->
-      <UInt32 name="ParticleShaderSourceBlendMode" />
-      <UInt32 name="ParticleShaderBlendOperation" />
-      <UInt32 name="ParticleShaderZTestFunction" />
-      <UInt32 name="ParticleShaderDestBlendMode" />
+      <Enum name="MembraneShaderDestBlendMode" enumName="EffectShaderData.BlendMode" byteLength="4" />
+      <Enum name="ParticleShaderSourceBlendMode" enumName="EffectShaderData.BlendMode" byteLength="4" />
+      <Enum name="ParticleShaderBlendOperation" enumName="EffectShaderData.BlendOperation" byteLength="4" />
+      <Enum name="ParticleShaderZTestFunction" enumName="EffectShaderData.ZTest" byteLength="4" />
+      <Enum name="ParticleShaderDestBlendMode" enumName="EffectShaderData.BlendMode" byteLength="4" />
       <Float name="ParticleShaderParticleBirthRampUpTime" />
       <Float name="ParticleShaderFullParticleBirthTime" />
       <Float name="ParticleShaderParticleBirthRampDownTime" />
@@ -62,7 +58,6 @@
       <Float name="ParticleShaderScaleKey2" />
       <Float name="ParticleShaderScaleKey1Time" />
       <Float name="ParticleShaderScaleKey2Time" />
-      <!-- Color Keys -->
       <Color name="ColorKey1Color" binaryType="Alpha" />
       <Color name="ColorKey2Color" binaryType="Alpha" />
       <Color name="ColorKey3Color" binaryType="Alpha" />
@@ -72,8 +67,32 @@
       <Float name="ColorKey1ColorKeyTime" />
       <Float name="ColorKey2ColorKeyTime" />
       <Float name="ColorKey3ColorKeyTime" />
-      <!-- FO3 extended fields (optional some records have shorter DATA) -->
-      <ByteArray name="ExtendedData" />
+      <Break />
+      <Float name="ParticleShaderInitialSpeedAlongNormalVariance" />
+      <Float name="ParticleShaderInitialRotation" />
+      <Float name="ParticleShaderInitialRotationVariance" />
+      <Float name="ParticleShaderRotationSpeed" />
+      <Float name="ParticleShaderRotationSpeedVariance" />
+      <Break />
+      <FormLink name="AddonModels" refName="Debris" />
+      <Break />
+      <Float name="HolesStartTime" />
+      <Float name="HolesEndTime" />
+      <Float name="HolesStartValue" />
+      <Float name="HolesEndValue" />
+      <Float name="EdgeWidth" />
+      <Color name="EdgeColor" binaryType="Alpha" />
+      <Float name="ExplosionWindSpeed" />
+      <UInt32 name="TextureCountU" />
+      <UInt32 name="TextureCountV" />
+      <Break />
+      <Float name="AddonModelsFadeInTime" />
+      <Float name="AddonModelsFadeOutTime" />
+      <Float name="AddonModelsScaleStart" />
+      <Float name="AddonModelsScaleEnd" />
+      <Break />
+      <Float name="AddonModelsScaleInTime" />
+      <Float name="AddonModelsScaleOutTime" />
     </Fields>
   </Object>
 </Loqui>

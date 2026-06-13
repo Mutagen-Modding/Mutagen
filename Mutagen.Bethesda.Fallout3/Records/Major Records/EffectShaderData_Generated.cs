@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -51,8 +52,11 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public EffectShaderData.VersioningBreaks Versioning { get; set; } = default(EffectShaderData.VersioningBreaks);
+        #endregion
         #region Flags
-        public Byte Flags { get; set; } = default(Byte);
+        public EffectShaderData.Flag Flags { get; set; } = default(EffectShaderData.Flag);
         #endregion
         #region Unused1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -66,13 +70,13 @@ namespace Mutagen.Bethesda.Fallout3
         ReadOnlyMemorySlice<Byte> IEffectShaderDataGetter.Unused1 => this.Unused1;
         #endregion
         #region MembraneShaderSourceBlendMode
-        public UInt32 MembraneShaderSourceBlendMode { get; set; } = default(UInt32);
+        public EffectShaderData.BlendMode MembraneShaderSourceBlendMode { get; set; } = default(EffectShaderData.BlendMode);
         #endregion
         #region MembraneShaderBlendOperation
-        public UInt32 MembraneShaderBlendOperation { get; set; } = default(UInt32);
+        public EffectShaderData.BlendOperation MembraneShaderBlendOperation { get; set; } = default(EffectShaderData.BlendOperation);
         #endregion
         #region MembraneShaderZTestFunction
-        public UInt32 MembraneShaderZTestFunction { get; set; } = default(UInt32);
+        public EffectShaderData.ZTest MembraneShaderZTestFunction { get; set; } = default(EffectShaderData.ZTest);
         #endregion
         #region FillTextureEffectColor
         public Color FillTextureEffectColor { get; set; } = default(Color);
@@ -132,19 +136,19 @@ namespace Mutagen.Bethesda.Fallout3
         public Single EdgeEffectFullAlphaRatio { get; set; } = default(Single);
         #endregion
         #region MembraneShaderDestBlendMode
-        public UInt32 MembraneShaderDestBlendMode { get; set; } = default(UInt32);
+        public EffectShaderData.BlendMode MembraneShaderDestBlendMode { get; set; } = default(EffectShaderData.BlendMode);
         #endregion
         #region ParticleShaderSourceBlendMode
-        public UInt32 ParticleShaderSourceBlendMode { get; set; } = default(UInt32);
+        public EffectShaderData.BlendMode ParticleShaderSourceBlendMode { get; set; } = default(EffectShaderData.BlendMode);
         #endregion
         #region ParticleShaderBlendOperation
-        public UInt32 ParticleShaderBlendOperation { get; set; } = default(UInt32);
+        public EffectShaderData.BlendOperation ParticleShaderBlendOperation { get; set; } = default(EffectShaderData.BlendOperation);
         #endregion
         #region ParticleShaderZTestFunction
-        public UInt32 ParticleShaderZTestFunction { get; set; } = default(UInt32);
+        public EffectShaderData.ZTest ParticleShaderZTestFunction { get; set; } = default(EffectShaderData.ZTest);
         #endregion
         #region ParticleShaderDestBlendMode
-        public UInt32 ParticleShaderDestBlendMode { get; set; } = default(UInt32);
+        public EffectShaderData.BlendMode ParticleShaderDestBlendMode { get; set; } = default(EffectShaderData.BlendMode);
         #endregion
         #region ParticleShaderParticleBirthRampUpTime
         public Single ParticleShaderParticleBirthRampUpTime { get; set; } = default(Single);
@@ -230,16 +234,75 @@ namespace Mutagen.Bethesda.Fallout3
         #region ColorKey3ColorKeyTime
         public Single ColorKey3ColorKeyTime { get; set; } = default(Single);
         #endregion
-        #region ExtendedData
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _ExtendedData = new byte[0];
-        public MemorySlice<Byte> ExtendedData
+        #region ParticleShaderInitialSpeedAlongNormalVariance
+        public Single ParticleShaderInitialSpeedAlongNormalVariance { get; set; } = default(Single);
+        #endregion
+        #region ParticleShaderInitialRotation
+        public Single ParticleShaderInitialRotation { get; set; } = default(Single);
+        #endregion
+        #region ParticleShaderInitialRotationVariance
+        public Single ParticleShaderInitialRotationVariance { get; set; } = default(Single);
+        #endregion
+        #region ParticleShaderRotationSpeed
+        public Single ParticleShaderRotationSpeed { get; set; } = default(Single);
+        #endregion
+        #region ParticleShaderRotationSpeedVariance
+        public Single ParticleShaderRotationSpeedVariance { get; set; } = default(Single);
+        #endregion
+        #region AddonModels
+        private readonly IFormLink<IDebrisGetter> _AddonModels = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> AddonModels
         {
-            get => _ExtendedData;
-            set => this._ExtendedData = value;
+            get => _AddonModels;
+            set => _AddonModels.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IEffectShaderDataGetter.ExtendedData => this.ExtendedData;
+        IFormLinkGetter<IDebrisGetter> IEffectShaderDataGetter.AddonModels => this.AddonModels;
+        #endregion
+        #region HolesStartTime
+        public Single HolesStartTime { get; set; } = default(Single);
+        #endregion
+        #region HolesEndTime
+        public Single HolesEndTime { get; set; } = default(Single);
+        #endregion
+        #region HolesStartValue
+        public Single HolesStartValue { get; set; } = default(Single);
+        #endregion
+        #region HolesEndValue
+        public Single HolesEndValue { get; set; } = default(Single);
+        #endregion
+        #region EdgeWidth
+        public Single EdgeWidth { get; set; } = default(Single);
+        #endregion
+        #region EdgeColor
+        public Color EdgeColor { get; set; } = default(Color);
+        #endregion
+        #region ExplosionWindSpeed
+        public Single ExplosionWindSpeed { get; set; } = default(Single);
+        #endregion
+        #region TextureCountU
+        public UInt32 TextureCountU { get; set; } = default(UInt32);
+        #endregion
+        #region TextureCountV
+        public UInt32 TextureCountV { get; set; } = default(UInt32);
+        #endregion
+        #region AddonModelsFadeInTime
+        public Single AddonModelsFadeInTime { get; set; } = default(Single);
+        #endregion
+        #region AddonModelsFadeOutTime
+        public Single AddonModelsFadeOutTime { get; set; } = default(Single);
+        #endregion
+        #region AddonModelsScaleStart
+        public Single AddonModelsScaleStart { get; set; } = default(Single);
+        #endregion
+        #region AddonModelsScaleEnd
+        public Single AddonModelsScaleEnd { get; set; } = default(Single);
+        #endregion
+        #region AddonModelsScaleInTime
+        public Single AddonModelsScaleInTime { get; set; } = default(Single);
+        #endregion
+        #region AddonModelsScaleOutTime
+        public Single AddonModelsScaleOutTime { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -280,6 +343,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Flags = initialValue;
                 this.Unused1 = initialValue;
                 this.MembraneShaderSourceBlendMode = initialValue;
@@ -337,10 +401,31 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ColorKey1ColorKeyTime = initialValue;
                 this.ColorKey2ColorKeyTime = initialValue;
                 this.ColorKey3ColorKeyTime = initialValue;
-                this.ExtendedData = initialValue;
+                this.ParticleShaderInitialSpeedAlongNormalVariance = initialValue;
+                this.ParticleShaderInitialRotation = initialValue;
+                this.ParticleShaderInitialRotationVariance = initialValue;
+                this.ParticleShaderRotationSpeed = initialValue;
+                this.ParticleShaderRotationSpeedVariance = initialValue;
+                this.AddonModels = initialValue;
+                this.HolesStartTime = initialValue;
+                this.HolesEndTime = initialValue;
+                this.HolesStartValue = initialValue;
+                this.HolesEndValue = initialValue;
+                this.EdgeWidth = initialValue;
+                this.EdgeColor = initialValue;
+                this.ExplosionWindSpeed = initialValue;
+                this.TextureCountU = initialValue;
+                this.TextureCountV = initialValue;
+                this.AddonModelsFadeInTime = initialValue;
+                this.AddonModelsFadeOutTime = initialValue;
+                this.AddonModelsScaleStart = initialValue;
+                this.AddonModelsScaleEnd = initialValue;
+                this.AddonModelsScaleInTime = initialValue;
+                this.AddonModelsScaleOutTime = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Flags,
                 TItem Unused1,
                 TItem MembraneShaderSourceBlendMode,
@@ -398,8 +483,29 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem ColorKey1ColorKeyTime,
                 TItem ColorKey2ColorKeyTime,
                 TItem ColorKey3ColorKeyTime,
-                TItem ExtendedData)
+                TItem ParticleShaderInitialSpeedAlongNormalVariance,
+                TItem ParticleShaderInitialRotation,
+                TItem ParticleShaderInitialRotationVariance,
+                TItem ParticleShaderRotationSpeed,
+                TItem ParticleShaderRotationSpeedVariance,
+                TItem AddonModels,
+                TItem HolesStartTime,
+                TItem HolesEndTime,
+                TItem HolesStartValue,
+                TItem HolesEndValue,
+                TItem EdgeWidth,
+                TItem EdgeColor,
+                TItem ExplosionWindSpeed,
+                TItem TextureCountU,
+                TItem TextureCountV,
+                TItem AddonModelsFadeInTime,
+                TItem AddonModelsFadeOutTime,
+                TItem AddonModelsScaleStart,
+                TItem AddonModelsScaleEnd,
+                TItem AddonModelsScaleInTime,
+                TItem AddonModelsScaleOutTime)
             {
+                this.Versioning = Versioning;
                 this.Flags = Flags;
                 this.Unused1 = Unused1;
                 this.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendMode;
@@ -457,7 +563,27 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ColorKey1ColorKeyTime = ColorKey1ColorKeyTime;
                 this.ColorKey2ColorKeyTime = ColorKey2ColorKeyTime;
                 this.ColorKey3ColorKeyTime = ColorKey3ColorKeyTime;
-                this.ExtendedData = ExtendedData;
+                this.ParticleShaderInitialSpeedAlongNormalVariance = ParticleShaderInitialSpeedAlongNormalVariance;
+                this.ParticleShaderInitialRotation = ParticleShaderInitialRotation;
+                this.ParticleShaderInitialRotationVariance = ParticleShaderInitialRotationVariance;
+                this.ParticleShaderRotationSpeed = ParticleShaderRotationSpeed;
+                this.ParticleShaderRotationSpeedVariance = ParticleShaderRotationSpeedVariance;
+                this.AddonModels = AddonModels;
+                this.HolesStartTime = HolesStartTime;
+                this.HolesEndTime = HolesEndTime;
+                this.HolesStartValue = HolesStartValue;
+                this.HolesEndValue = HolesEndValue;
+                this.EdgeWidth = EdgeWidth;
+                this.EdgeColor = EdgeColor;
+                this.ExplosionWindSpeed = ExplosionWindSpeed;
+                this.TextureCountU = TextureCountU;
+                this.TextureCountV = TextureCountV;
+                this.AddonModelsFadeInTime = AddonModelsFadeInTime;
+                this.AddonModelsFadeOutTime = AddonModelsFadeOutTime;
+                this.AddonModelsScaleStart = AddonModelsScaleStart;
+                this.AddonModelsScaleEnd = AddonModelsScaleEnd;
+                this.AddonModelsScaleInTime = AddonModelsScaleInTime;
+                this.AddonModelsScaleOutTime = AddonModelsScaleOutTime;
             }
 
             #pragma warning disable CS8618
@@ -469,6 +595,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Flags;
             public TItem Unused1;
             public TItem MembraneShaderSourceBlendMode;
@@ -526,7 +653,27 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem ColorKey1ColorKeyTime;
             public TItem ColorKey2ColorKeyTime;
             public TItem ColorKey3ColorKeyTime;
-            public TItem ExtendedData;
+            public TItem ParticleShaderInitialSpeedAlongNormalVariance;
+            public TItem ParticleShaderInitialRotation;
+            public TItem ParticleShaderInitialRotationVariance;
+            public TItem ParticleShaderRotationSpeed;
+            public TItem ParticleShaderRotationSpeedVariance;
+            public TItem AddonModels;
+            public TItem HolesStartTime;
+            public TItem HolesEndTime;
+            public TItem HolesStartValue;
+            public TItem HolesEndValue;
+            public TItem EdgeWidth;
+            public TItem EdgeColor;
+            public TItem ExplosionWindSpeed;
+            public TItem TextureCountU;
+            public TItem TextureCountV;
+            public TItem AddonModelsFadeInTime;
+            public TItem AddonModelsFadeOutTime;
+            public TItem AddonModelsScaleStart;
+            public TItem AddonModelsScaleEnd;
+            public TItem AddonModelsScaleInTime;
+            public TItem AddonModelsScaleOutTime;
             #endregion
 
             #region Equals
@@ -539,6 +686,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Unused1, rhs.Unused1)) return false;
                 if (!object.Equals(this.MembraneShaderSourceBlendMode, rhs.MembraneShaderSourceBlendMode)) return false;
@@ -596,12 +744,33 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ColorKey1ColorKeyTime, rhs.ColorKey1ColorKeyTime)) return false;
                 if (!object.Equals(this.ColorKey2ColorKeyTime, rhs.ColorKey2ColorKeyTime)) return false;
                 if (!object.Equals(this.ColorKey3ColorKeyTime, rhs.ColorKey3ColorKeyTime)) return false;
-                if (!object.Equals(this.ExtendedData, rhs.ExtendedData)) return false;
+                if (!object.Equals(this.ParticleShaderInitialSpeedAlongNormalVariance, rhs.ParticleShaderInitialSpeedAlongNormalVariance)) return false;
+                if (!object.Equals(this.ParticleShaderInitialRotation, rhs.ParticleShaderInitialRotation)) return false;
+                if (!object.Equals(this.ParticleShaderInitialRotationVariance, rhs.ParticleShaderInitialRotationVariance)) return false;
+                if (!object.Equals(this.ParticleShaderRotationSpeed, rhs.ParticleShaderRotationSpeed)) return false;
+                if (!object.Equals(this.ParticleShaderRotationSpeedVariance, rhs.ParticleShaderRotationSpeedVariance)) return false;
+                if (!object.Equals(this.AddonModels, rhs.AddonModels)) return false;
+                if (!object.Equals(this.HolesStartTime, rhs.HolesStartTime)) return false;
+                if (!object.Equals(this.HolesEndTime, rhs.HolesEndTime)) return false;
+                if (!object.Equals(this.HolesStartValue, rhs.HolesStartValue)) return false;
+                if (!object.Equals(this.HolesEndValue, rhs.HolesEndValue)) return false;
+                if (!object.Equals(this.EdgeWidth, rhs.EdgeWidth)) return false;
+                if (!object.Equals(this.EdgeColor, rhs.EdgeColor)) return false;
+                if (!object.Equals(this.ExplosionWindSpeed, rhs.ExplosionWindSpeed)) return false;
+                if (!object.Equals(this.TextureCountU, rhs.TextureCountU)) return false;
+                if (!object.Equals(this.TextureCountV, rhs.TextureCountV)) return false;
+                if (!object.Equals(this.AddonModelsFadeInTime, rhs.AddonModelsFadeInTime)) return false;
+                if (!object.Equals(this.AddonModelsFadeOutTime, rhs.AddonModelsFadeOutTime)) return false;
+                if (!object.Equals(this.AddonModelsScaleStart, rhs.AddonModelsScaleStart)) return false;
+                if (!object.Equals(this.AddonModelsScaleEnd, rhs.AddonModelsScaleEnd)) return false;
+                if (!object.Equals(this.AddonModelsScaleInTime, rhs.AddonModelsScaleInTime)) return false;
+                if (!object.Equals(this.AddonModelsScaleOutTime, rhs.AddonModelsScaleOutTime)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Flags);
                 hash.Add(this.Unused1);
                 hash.Add(this.MembraneShaderSourceBlendMode);
@@ -659,7 +828,27 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ColorKey1ColorKeyTime);
                 hash.Add(this.ColorKey2ColorKeyTime);
                 hash.Add(this.ColorKey3ColorKeyTime);
-                hash.Add(this.ExtendedData);
+                hash.Add(this.ParticleShaderInitialSpeedAlongNormalVariance);
+                hash.Add(this.ParticleShaderInitialRotation);
+                hash.Add(this.ParticleShaderInitialRotationVariance);
+                hash.Add(this.ParticleShaderRotationSpeed);
+                hash.Add(this.ParticleShaderRotationSpeedVariance);
+                hash.Add(this.AddonModels);
+                hash.Add(this.HolesStartTime);
+                hash.Add(this.HolesEndTime);
+                hash.Add(this.HolesStartValue);
+                hash.Add(this.HolesEndValue);
+                hash.Add(this.EdgeWidth);
+                hash.Add(this.EdgeColor);
+                hash.Add(this.ExplosionWindSpeed);
+                hash.Add(this.TextureCountU);
+                hash.Add(this.TextureCountV);
+                hash.Add(this.AddonModelsFadeInTime);
+                hash.Add(this.AddonModelsFadeOutTime);
+                hash.Add(this.AddonModelsScaleStart);
+                hash.Add(this.AddonModelsScaleEnd);
+                hash.Add(this.AddonModelsScaleInTime);
+                hash.Add(this.AddonModelsScaleOutTime);
                 return hash.ToHashCode();
             }
 
@@ -668,6 +857,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Unused1)) return false;
                 if (!eval(this.MembraneShaderSourceBlendMode)) return false;
@@ -725,7 +915,27 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.ColorKey1ColorKeyTime)) return false;
                 if (!eval(this.ColorKey2ColorKeyTime)) return false;
                 if (!eval(this.ColorKey3ColorKeyTime)) return false;
-                if (!eval(this.ExtendedData)) return false;
+                if (!eval(this.ParticleShaderInitialSpeedAlongNormalVariance)) return false;
+                if (!eval(this.ParticleShaderInitialRotation)) return false;
+                if (!eval(this.ParticleShaderInitialRotationVariance)) return false;
+                if (!eval(this.ParticleShaderRotationSpeed)) return false;
+                if (!eval(this.ParticleShaderRotationSpeedVariance)) return false;
+                if (!eval(this.AddonModels)) return false;
+                if (!eval(this.HolesStartTime)) return false;
+                if (!eval(this.HolesEndTime)) return false;
+                if (!eval(this.HolesStartValue)) return false;
+                if (!eval(this.HolesEndValue)) return false;
+                if (!eval(this.EdgeWidth)) return false;
+                if (!eval(this.EdgeColor)) return false;
+                if (!eval(this.ExplosionWindSpeed)) return false;
+                if (!eval(this.TextureCountU)) return false;
+                if (!eval(this.TextureCountV)) return false;
+                if (!eval(this.AddonModelsFadeInTime)) return false;
+                if (!eval(this.AddonModelsFadeOutTime)) return false;
+                if (!eval(this.AddonModelsScaleStart)) return false;
+                if (!eval(this.AddonModelsScaleEnd)) return false;
+                if (!eval(this.AddonModelsScaleInTime)) return false;
+                if (!eval(this.AddonModelsScaleOutTime)) return false;
                 return true;
             }
             #endregion
@@ -733,6 +943,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Unused1)) return true;
                 if (eval(this.MembraneShaderSourceBlendMode)) return true;
@@ -790,7 +1001,27 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.ColorKey1ColorKeyTime)) return true;
                 if (eval(this.ColorKey2ColorKeyTime)) return true;
                 if (eval(this.ColorKey3ColorKeyTime)) return true;
-                if (eval(this.ExtendedData)) return true;
+                if (eval(this.ParticleShaderInitialSpeedAlongNormalVariance)) return true;
+                if (eval(this.ParticleShaderInitialRotation)) return true;
+                if (eval(this.ParticleShaderInitialRotationVariance)) return true;
+                if (eval(this.ParticleShaderRotationSpeed)) return true;
+                if (eval(this.ParticleShaderRotationSpeedVariance)) return true;
+                if (eval(this.AddonModels)) return true;
+                if (eval(this.HolesStartTime)) return true;
+                if (eval(this.HolesEndTime)) return true;
+                if (eval(this.HolesStartValue)) return true;
+                if (eval(this.HolesEndValue)) return true;
+                if (eval(this.EdgeWidth)) return true;
+                if (eval(this.EdgeColor)) return true;
+                if (eval(this.ExplosionWindSpeed)) return true;
+                if (eval(this.TextureCountU)) return true;
+                if (eval(this.TextureCountV)) return true;
+                if (eval(this.AddonModelsFadeInTime)) return true;
+                if (eval(this.AddonModelsFadeOutTime)) return true;
+                if (eval(this.AddonModelsScaleStart)) return true;
+                if (eval(this.AddonModelsScaleEnd)) return true;
+                if (eval(this.AddonModelsScaleInTime)) return true;
+                if (eval(this.AddonModelsScaleOutTime)) return true;
                 return false;
             }
             #endregion
@@ -805,6 +1036,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Flags = eval(this.Flags);
                 obj.Unused1 = eval(this.Unused1);
                 obj.MembraneShaderSourceBlendMode = eval(this.MembraneShaderSourceBlendMode);
@@ -862,7 +1094,27 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ColorKey1ColorKeyTime = eval(this.ColorKey1ColorKeyTime);
                 obj.ColorKey2ColorKeyTime = eval(this.ColorKey2ColorKeyTime);
                 obj.ColorKey3ColorKeyTime = eval(this.ColorKey3ColorKeyTime);
-                obj.ExtendedData = eval(this.ExtendedData);
+                obj.ParticleShaderInitialSpeedAlongNormalVariance = eval(this.ParticleShaderInitialSpeedAlongNormalVariance);
+                obj.ParticleShaderInitialRotation = eval(this.ParticleShaderInitialRotation);
+                obj.ParticleShaderInitialRotationVariance = eval(this.ParticleShaderInitialRotationVariance);
+                obj.ParticleShaderRotationSpeed = eval(this.ParticleShaderRotationSpeed);
+                obj.ParticleShaderRotationSpeedVariance = eval(this.ParticleShaderRotationSpeedVariance);
+                obj.AddonModels = eval(this.AddonModels);
+                obj.HolesStartTime = eval(this.HolesStartTime);
+                obj.HolesEndTime = eval(this.HolesEndTime);
+                obj.HolesStartValue = eval(this.HolesStartValue);
+                obj.HolesEndValue = eval(this.HolesEndValue);
+                obj.EdgeWidth = eval(this.EdgeWidth);
+                obj.EdgeColor = eval(this.EdgeColor);
+                obj.ExplosionWindSpeed = eval(this.ExplosionWindSpeed);
+                obj.TextureCountU = eval(this.TextureCountU);
+                obj.TextureCountV = eval(this.TextureCountV);
+                obj.AddonModelsFadeInTime = eval(this.AddonModelsFadeInTime);
+                obj.AddonModelsFadeOutTime = eval(this.AddonModelsFadeOutTime);
+                obj.AddonModelsScaleStart = eval(this.AddonModelsScaleStart);
+                obj.AddonModelsScaleEnd = eval(this.AddonModelsScaleEnd);
+                obj.AddonModelsScaleInTime = eval(this.AddonModelsScaleInTime);
+                obj.AddonModelsScaleOutTime = eval(this.AddonModelsScaleOutTime);
             }
             #endregion
 
@@ -881,6 +1133,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(EffectShaderData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        sb.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
@@ -1109,9 +1365,89 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
                     }
-                    if (printMask?.ExtendedData ?? true)
+                    if (printMask?.ParticleShaderInitialSpeedAlongNormalVariance ?? true)
                     {
-                        sb.AppendItem(ExtendedData, "ExtendedData");
+                        sb.AppendItem(ParticleShaderInitialSpeedAlongNormalVariance, "ParticleShaderInitialSpeedAlongNormalVariance");
+                    }
+                    if (printMask?.ParticleShaderInitialRotation ?? true)
+                    {
+                        sb.AppendItem(ParticleShaderInitialRotation, "ParticleShaderInitialRotation");
+                    }
+                    if (printMask?.ParticleShaderInitialRotationVariance ?? true)
+                    {
+                        sb.AppendItem(ParticleShaderInitialRotationVariance, "ParticleShaderInitialRotationVariance");
+                    }
+                    if (printMask?.ParticleShaderRotationSpeed ?? true)
+                    {
+                        sb.AppendItem(ParticleShaderRotationSpeed, "ParticleShaderRotationSpeed");
+                    }
+                    if (printMask?.ParticleShaderRotationSpeedVariance ?? true)
+                    {
+                        sb.AppendItem(ParticleShaderRotationSpeedVariance, "ParticleShaderRotationSpeedVariance");
+                    }
+                    if (printMask?.AddonModels ?? true)
+                    {
+                        sb.AppendItem(AddonModels, "AddonModels");
+                    }
+                    if (printMask?.HolesStartTime ?? true)
+                    {
+                        sb.AppendItem(HolesStartTime, "HolesStartTime");
+                    }
+                    if (printMask?.HolesEndTime ?? true)
+                    {
+                        sb.AppendItem(HolesEndTime, "HolesEndTime");
+                    }
+                    if (printMask?.HolesStartValue ?? true)
+                    {
+                        sb.AppendItem(HolesStartValue, "HolesStartValue");
+                    }
+                    if (printMask?.HolesEndValue ?? true)
+                    {
+                        sb.AppendItem(HolesEndValue, "HolesEndValue");
+                    }
+                    if (printMask?.EdgeWidth ?? true)
+                    {
+                        sb.AppendItem(EdgeWidth, "EdgeWidth");
+                    }
+                    if (printMask?.EdgeColor ?? true)
+                    {
+                        sb.AppendItem(EdgeColor, "EdgeColor");
+                    }
+                    if (printMask?.ExplosionWindSpeed ?? true)
+                    {
+                        sb.AppendItem(ExplosionWindSpeed, "ExplosionWindSpeed");
+                    }
+                    if (printMask?.TextureCountU ?? true)
+                    {
+                        sb.AppendItem(TextureCountU, "TextureCountU");
+                    }
+                    if (printMask?.TextureCountV ?? true)
+                    {
+                        sb.AppendItem(TextureCountV, "TextureCountV");
+                    }
+                    if (printMask?.AddonModelsFadeInTime ?? true)
+                    {
+                        sb.AppendItem(AddonModelsFadeInTime, "AddonModelsFadeInTime");
+                    }
+                    if (printMask?.AddonModelsFadeOutTime ?? true)
+                    {
+                        sb.AppendItem(AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
+                    }
+                    if (printMask?.AddonModelsScaleStart ?? true)
+                    {
+                        sb.AppendItem(AddonModelsScaleStart, "AddonModelsScaleStart");
+                    }
+                    if (printMask?.AddonModelsScaleEnd ?? true)
+                    {
+                        sb.AppendItem(AddonModelsScaleEnd, "AddonModelsScaleEnd");
+                    }
+                    if (printMask?.AddonModelsScaleInTime ?? true)
+                    {
+                        sb.AppendItem(AddonModelsScaleInTime, "AddonModelsScaleInTime");
+                    }
+                    if (printMask?.AddonModelsScaleOutTime ?? true)
+                    {
+                        sb.AppendItem(AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
                     }
                 }
             }
@@ -1137,6 +1473,7 @@ namespace Mutagen.Bethesda.Fallout3
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Flags;
             public Exception? Unused1;
             public Exception? MembraneShaderSourceBlendMode;
@@ -1194,7 +1531,27 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? ColorKey1ColorKeyTime;
             public Exception? ColorKey2ColorKeyTime;
             public Exception? ColorKey3ColorKeyTime;
-            public Exception? ExtendedData;
+            public Exception? ParticleShaderInitialSpeedAlongNormalVariance;
+            public Exception? ParticleShaderInitialRotation;
+            public Exception? ParticleShaderInitialRotationVariance;
+            public Exception? ParticleShaderRotationSpeed;
+            public Exception? ParticleShaderRotationSpeedVariance;
+            public Exception? AddonModels;
+            public Exception? HolesStartTime;
+            public Exception? HolesEndTime;
+            public Exception? HolesStartValue;
+            public Exception? HolesEndValue;
+            public Exception? EdgeWidth;
+            public Exception? EdgeColor;
+            public Exception? ExplosionWindSpeed;
+            public Exception? TextureCountU;
+            public Exception? TextureCountV;
+            public Exception? AddonModelsFadeInTime;
+            public Exception? AddonModelsFadeOutTime;
+            public Exception? AddonModelsScaleStart;
+            public Exception? AddonModelsScaleEnd;
+            public Exception? AddonModelsScaleInTime;
+            public Exception? AddonModelsScaleOutTime;
             #endregion
 
             #region IErrorMask
@@ -1203,6 +1560,8 @@ namespace Mutagen.Bethesda.Fallout3
                 EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShaderData_FieldIndex.Versioning:
+                        return Versioning;
                     case EffectShaderData_FieldIndex.Flags:
                         return Flags;
                     case EffectShaderData_FieldIndex.Unused1:
@@ -1317,8 +1676,48 @@ namespace Mutagen.Bethesda.Fallout3
                         return ColorKey2ColorKeyTime;
                     case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                         return ColorKey3ColorKeyTime;
-                    case EffectShaderData_FieldIndex.ExtendedData:
-                        return ExtendedData;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialSpeedAlongNormalVariance:
+                        return ParticleShaderInitialSpeedAlongNormalVariance;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialRotation:
+                        return ParticleShaderInitialRotation;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialRotationVariance:
+                        return ParticleShaderInitialRotationVariance;
+                    case EffectShaderData_FieldIndex.ParticleShaderRotationSpeed:
+                        return ParticleShaderRotationSpeed;
+                    case EffectShaderData_FieldIndex.ParticleShaderRotationSpeedVariance:
+                        return ParticleShaderRotationSpeedVariance;
+                    case EffectShaderData_FieldIndex.AddonModels:
+                        return AddonModels;
+                    case EffectShaderData_FieldIndex.HolesStartTime:
+                        return HolesStartTime;
+                    case EffectShaderData_FieldIndex.HolesEndTime:
+                        return HolesEndTime;
+                    case EffectShaderData_FieldIndex.HolesStartValue:
+                        return HolesStartValue;
+                    case EffectShaderData_FieldIndex.HolesEndValue:
+                        return HolesEndValue;
+                    case EffectShaderData_FieldIndex.EdgeWidth:
+                        return EdgeWidth;
+                    case EffectShaderData_FieldIndex.EdgeColor:
+                        return EdgeColor;
+                    case EffectShaderData_FieldIndex.ExplosionWindSpeed:
+                        return ExplosionWindSpeed;
+                    case EffectShaderData_FieldIndex.TextureCountU:
+                        return TextureCountU;
+                    case EffectShaderData_FieldIndex.TextureCountV:
+                        return TextureCountV;
+                    case EffectShaderData_FieldIndex.AddonModelsFadeInTime:
+                        return AddonModelsFadeInTime;
+                    case EffectShaderData_FieldIndex.AddonModelsFadeOutTime:
+                        return AddonModelsFadeOutTime;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleStart:
+                        return AddonModelsScaleStart;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleEnd:
+                        return AddonModelsScaleEnd;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleInTime:
+                        return AddonModelsScaleInTime;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleOutTime:
+                        return AddonModelsScaleOutTime;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1329,6 +1728,9 @@ namespace Mutagen.Bethesda.Fallout3
                 EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShaderData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case EffectShaderData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
@@ -1500,8 +1902,68 @@ namespace Mutagen.Bethesda.Fallout3
                     case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                         this.ColorKey3ColorKeyTime = ex;
                         break;
-                    case EffectShaderData_FieldIndex.ExtendedData:
-                        this.ExtendedData = ex;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialSpeedAlongNormalVariance:
+                        this.ParticleShaderInitialSpeedAlongNormalVariance = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialRotation:
+                        this.ParticleShaderInitialRotation = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialRotationVariance:
+                        this.ParticleShaderInitialRotationVariance = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderRotationSpeed:
+                        this.ParticleShaderRotationSpeed = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderRotationSpeedVariance:
+                        this.ParticleShaderRotationSpeedVariance = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModels:
+                        this.AddonModels = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesStartTime:
+                        this.HolesStartTime = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesEndTime:
+                        this.HolesEndTime = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesStartValue:
+                        this.HolesStartValue = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesEndValue:
+                        this.HolesEndValue = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.EdgeWidth:
+                        this.EdgeWidth = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.EdgeColor:
+                        this.EdgeColor = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.ExplosionWindSpeed:
+                        this.ExplosionWindSpeed = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.TextureCountU:
+                        this.TextureCountU = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.TextureCountV:
+                        this.TextureCountV = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsFadeInTime:
+                        this.AddonModelsFadeInTime = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsFadeOutTime:
+                        this.AddonModelsFadeOutTime = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleStart:
+                        this.AddonModelsScaleStart = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleEnd:
+                        this.AddonModelsScaleEnd = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleInTime:
+                        this.AddonModelsScaleInTime = ex;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleOutTime:
+                        this.AddonModelsScaleOutTime = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1513,6 +1975,9 @@ namespace Mutagen.Bethesda.Fallout3
                 EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShaderData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case EffectShaderData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
@@ -1684,8 +2149,68 @@ namespace Mutagen.Bethesda.Fallout3
                     case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                         this.ColorKey3ColorKeyTime = (Exception?)obj;
                         break;
-                    case EffectShaderData_FieldIndex.ExtendedData:
-                        this.ExtendedData = (Exception?)obj;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialSpeedAlongNormalVariance:
+                        this.ParticleShaderInitialSpeedAlongNormalVariance = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialRotation:
+                        this.ParticleShaderInitialRotation = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderInitialRotationVariance:
+                        this.ParticleShaderInitialRotationVariance = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderRotationSpeed:
+                        this.ParticleShaderRotationSpeed = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.ParticleShaderRotationSpeedVariance:
+                        this.ParticleShaderRotationSpeedVariance = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModels:
+                        this.AddonModels = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesStartTime:
+                        this.HolesStartTime = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesEndTime:
+                        this.HolesEndTime = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesStartValue:
+                        this.HolesStartValue = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.HolesEndValue:
+                        this.HolesEndValue = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.EdgeWidth:
+                        this.EdgeWidth = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.EdgeColor:
+                        this.EdgeColor = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.ExplosionWindSpeed:
+                        this.ExplosionWindSpeed = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.TextureCountU:
+                        this.TextureCountU = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.TextureCountV:
+                        this.TextureCountV = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsFadeInTime:
+                        this.AddonModelsFadeInTime = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsFadeOutTime:
+                        this.AddonModelsFadeOutTime = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleStart:
+                        this.AddonModelsScaleStart = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleEnd:
+                        this.AddonModelsScaleEnd = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleInTime:
+                        this.AddonModelsScaleInTime = (Exception?)obj;
+                        break;
+                    case EffectShaderData_FieldIndex.AddonModelsScaleOutTime:
+                        this.AddonModelsScaleOutTime = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1695,6 +2220,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Flags != null) return true;
                 if (Unused1 != null) return true;
                 if (MembraneShaderSourceBlendMode != null) return true;
@@ -1752,7 +2278,27 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ColorKey1ColorKeyTime != null) return true;
                 if (ColorKey2ColorKeyTime != null) return true;
                 if (ColorKey3ColorKeyTime != null) return true;
-                if (ExtendedData != null) return true;
+                if (ParticleShaderInitialSpeedAlongNormalVariance != null) return true;
+                if (ParticleShaderInitialRotation != null) return true;
+                if (ParticleShaderInitialRotationVariance != null) return true;
+                if (ParticleShaderRotationSpeed != null) return true;
+                if (ParticleShaderRotationSpeedVariance != null) return true;
+                if (AddonModels != null) return true;
+                if (HolesStartTime != null) return true;
+                if (HolesEndTime != null) return true;
+                if (HolesStartValue != null) return true;
+                if (HolesEndValue != null) return true;
+                if (EdgeWidth != null) return true;
+                if (EdgeColor != null) return true;
+                if (ExplosionWindSpeed != null) return true;
+                if (TextureCountU != null) return true;
+                if (TextureCountV != null) return true;
+                if (AddonModelsFadeInTime != null) return true;
+                if (AddonModelsFadeOutTime != null) return true;
+                if (AddonModelsScaleStart != null) return true;
+                if (AddonModelsScaleEnd != null) return true;
+                if (AddonModelsScaleInTime != null) return true;
+                if (AddonModelsScaleOutTime != null) return true;
                 return false;
             }
             #endregion
@@ -1778,6 +2324,9 @@ namespace Mutagen.Bethesda.Fallout3
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
+                {
+                    sb.AppendItem(Versioning, "Versioning");
+                }
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
@@ -1950,7 +2499,67 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
                 }
                 {
-                    sb.AppendItem(ExtendedData, "ExtendedData");
+                    sb.AppendItem(ParticleShaderInitialSpeedAlongNormalVariance, "ParticleShaderInitialSpeedAlongNormalVariance");
+                }
+                {
+                    sb.AppendItem(ParticleShaderInitialRotation, "ParticleShaderInitialRotation");
+                }
+                {
+                    sb.AppendItem(ParticleShaderInitialRotationVariance, "ParticleShaderInitialRotationVariance");
+                }
+                {
+                    sb.AppendItem(ParticleShaderRotationSpeed, "ParticleShaderRotationSpeed");
+                }
+                {
+                    sb.AppendItem(ParticleShaderRotationSpeedVariance, "ParticleShaderRotationSpeedVariance");
+                }
+                {
+                    sb.AppendItem(AddonModels, "AddonModels");
+                }
+                {
+                    sb.AppendItem(HolesStartTime, "HolesStartTime");
+                }
+                {
+                    sb.AppendItem(HolesEndTime, "HolesEndTime");
+                }
+                {
+                    sb.AppendItem(HolesStartValue, "HolesStartValue");
+                }
+                {
+                    sb.AppendItem(HolesEndValue, "HolesEndValue");
+                }
+                {
+                    sb.AppendItem(EdgeWidth, "EdgeWidth");
+                }
+                {
+                    sb.AppendItem(EdgeColor, "EdgeColor");
+                }
+                {
+                    sb.AppendItem(ExplosionWindSpeed, "ExplosionWindSpeed");
+                }
+                {
+                    sb.AppendItem(TextureCountU, "TextureCountU");
+                }
+                {
+                    sb.AppendItem(TextureCountV, "TextureCountV");
+                }
+                {
+                    sb.AppendItem(AddonModelsFadeInTime, "AddonModelsFadeInTime");
+                }
+                {
+                    sb.AppendItem(AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleStart, "AddonModelsScaleStart");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleEnd, "AddonModelsScaleEnd");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleInTime, "AddonModelsScaleInTime");
+                }
+                {
+                    sb.AppendItem(AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
                 }
             }
             #endregion
@@ -1960,6 +2569,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Unused1 = this.Unused1.Combine(rhs.Unused1);
                 ret.MembraneShaderSourceBlendMode = this.MembraneShaderSourceBlendMode.Combine(rhs.MembraneShaderSourceBlendMode);
@@ -2017,7 +2627,27 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ColorKey1ColorKeyTime = this.ColorKey1ColorKeyTime.Combine(rhs.ColorKey1ColorKeyTime);
                 ret.ColorKey2ColorKeyTime = this.ColorKey2ColorKeyTime.Combine(rhs.ColorKey2ColorKeyTime);
                 ret.ColorKey3ColorKeyTime = this.ColorKey3ColorKeyTime.Combine(rhs.ColorKey3ColorKeyTime);
-                ret.ExtendedData = this.ExtendedData.Combine(rhs.ExtendedData);
+                ret.ParticleShaderInitialSpeedAlongNormalVariance = this.ParticleShaderInitialSpeedAlongNormalVariance.Combine(rhs.ParticleShaderInitialSpeedAlongNormalVariance);
+                ret.ParticleShaderInitialRotation = this.ParticleShaderInitialRotation.Combine(rhs.ParticleShaderInitialRotation);
+                ret.ParticleShaderInitialRotationVariance = this.ParticleShaderInitialRotationVariance.Combine(rhs.ParticleShaderInitialRotationVariance);
+                ret.ParticleShaderRotationSpeed = this.ParticleShaderRotationSpeed.Combine(rhs.ParticleShaderRotationSpeed);
+                ret.ParticleShaderRotationSpeedVariance = this.ParticleShaderRotationSpeedVariance.Combine(rhs.ParticleShaderRotationSpeedVariance);
+                ret.AddonModels = this.AddonModels.Combine(rhs.AddonModels);
+                ret.HolesStartTime = this.HolesStartTime.Combine(rhs.HolesStartTime);
+                ret.HolesEndTime = this.HolesEndTime.Combine(rhs.HolesEndTime);
+                ret.HolesStartValue = this.HolesStartValue.Combine(rhs.HolesStartValue);
+                ret.HolesEndValue = this.HolesEndValue.Combine(rhs.HolesEndValue);
+                ret.EdgeWidth = this.EdgeWidth.Combine(rhs.EdgeWidth);
+                ret.EdgeColor = this.EdgeColor.Combine(rhs.EdgeColor);
+                ret.ExplosionWindSpeed = this.ExplosionWindSpeed.Combine(rhs.ExplosionWindSpeed);
+                ret.TextureCountU = this.TextureCountU.Combine(rhs.TextureCountU);
+                ret.TextureCountV = this.TextureCountV.Combine(rhs.TextureCountV);
+                ret.AddonModelsFadeInTime = this.AddonModelsFadeInTime.Combine(rhs.AddonModelsFadeInTime);
+                ret.AddonModelsFadeOutTime = this.AddonModelsFadeOutTime.Combine(rhs.AddonModelsFadeOutTime);
+                ret.AddonModelsScaleStart = this.AddonModelsScaleStart.Combine(rhs.AddonModelsScaleStart);
+                ret.AddonModelsScaleEnd = this.AddonModelsScaleEnd.Combine(rhs.AddonModelsScaleEnd);
+                ret.AddonModelsScaleInTime = this.AddonModelsScaleInTime.Combine(rhs.AddonModelsScaleInTime);
+                ret.AddonModelsScaleOutTime = this.AddonModelsScaleOutTime.Combine(rhs.AddonModelsScaleOutTime);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2041,6 +2671,7 @@ namespace Mutagen.Bethesda.Fallout3
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Versioning;
             public bool Flags;
             public bool Unused1;
             public bool MembraneShaderSourceBlendMode;
@@ -2098,7 +2729,27 @@ namespace Mutagen.Bethesda.Fallout3
             public bool ColorKey1ColorKeyTime;
             public bool ColorKey2ColorKeyTime;
             public bool ColorKey3ColorKeyTime;
-            public bool ExtendedData;
+            public bool ParticleShaderInitialSpeedAlongNormalVariance;
+            public bool ParticleShaderInitialRotation;
+            public bool ParticleShaderInitialRotationVariance;
+            public bool ParticleShaderRotationSpeed;
+            public bool ParticleShaderRotationSpeedVariance;
+            public bool AddonModels;
+            public bool HolesStartTime;
+            public bool HolesEndTime;
+            public bool HolesStartValue;
+            public bool HolesEndValue;
+            public bool EdgeWidth;
+            public bool EdgeColor;
+            public bool ExplosionWindSpeed;
+            public bool TextureCountU;
+            public bool TextureCountV;
+            public bool AddonModelsFadeInTime;
+            public bool AddonModelsFadeOutTime;
+            public bool AddonModelsScaleStart;
+            public bool AddonModelsScaleEnd;
+            public bool AddonModelsScaleInTime;
+            public bool AddonModelsScaleOutTime;
             #endregion
 
             #region Ctors
@@ -2108,6 +2759,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Versioning = defaultOn;
                 this.Flags = defaultOn;
                 this.Unused1 = defaultOn;
                 this.MembraneShaderSourceBlendMode = defaultOn;
@@ -2165,7 +2817,27 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ColorKey1ColorKeyTime = defaultOn;
                 this.ColorKey2ColorKeyTime = defaultOn;
                 this.ColorKey3ColorKeyTime = defaultOn;
-                this.ExtendedData = defaultOn;
+                this.ParticleShaderInitialSpeedAlongNormalVariance = defaultOn;
+                this.ParticleShaderInitialRotation = defaultOn;
+                this.ParticleShaderInitialRotationVariance = defaultOn;
+                this.ParticleShaderRotationSpeed = defaultOn;
+                this.ParticleShaderRotationSpeedVariance = defaultOn;
+                this.AddonModels = defaultOn;
+                this.HolesStartTime = defaultOn;
+                this.HolesEndTime = defaultOn;
+                this.HolesStartValue = defaultOn;
+                this.HolesEndValue = defaultOn;
+                this.EdgeWidth = defaultOn;
+                this.EdgeColor = defaultOn;
+                this.ExplosionWindSpeed = defaultOn;
+                this.TextureCountU = defaultOn;
+                this.TextureCountV = defaultOn;
+                this.AddonModelsFadeInTime = defaultOn;
+                this.AddonModelsFadeOutTime = defaultOn;
+                this.AddonModelsScaleStart = defaultOn;
+                this.AddonModelsScaleEnd = defaultOn;
+                this.AddonModelsScaleInTime = defaultOn;
+                this.AddonModelsScaleOutTime = defaultOn;
             }
 
             #endregion
@@ -2181,6 +2853,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Flags, null));
                 ret.Add((Unused1, null));
                 ret.Add((MembraneShaderSourceBlendMode, null));
@@ -2238,7 +2911,27 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ColorKey1ColorKeyTime, null));
                 ret.Add((ColorKey2ColorKeyTime, null));
                 ret.Add((ColorKey3ColorKeyTime, null));
-                ret.Add((ExtendedData, null));
+                ret.Add((ParticleShaderInitialSpeedAlongNormalVariance, null));
+                ret.Add((ParticleShaderInitialRotation, null));
+                ret.Add((ParticleShaderInitialRotationVariance, null));
+                ret.Add((ParticleShaderRotationSpeed, null));
+                ret.Add((ParticleShaderRotationSpeedVariance, null));
+                ret.Add((AddonModels, null));
+                ret.Add((HolesStartTime, null));
+                ret.Add((HolesEndTime, null));
+                ret.Add((HolesStartValue, null));
+                ret.Add((HolesEndValue, null));
+                ret.Add((EdgeWidth, null));
+                ret.Add((EdgeColor, null));
+                ret.Add((ExplosionWindSpeed, null));
+                ret.Add((TextureCountU, null));
+                ret.Add((TextureCountV, null));
+                ret.Add((AddonModelsFadeInTime, null));
+                ret.Add((AddonModelsFadeOutTime, null));
+                ret.Add((AddonModelsScaleStart, null));
+                ret.Add((AddonModelsScaleEnd, null));
+                ret.Add((AddonModelsScaleInTime, null));
+                ret.Add((AddonModelsScaleOutTime, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2247,6 +2940,20 @@ namespace Mutagen.Bethesda.Fallout3
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1,
+            Break1 = 2,
+            Break2 = 4,
+            Break3 = 8,
+            Break4 = 16
+        }
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => EffectShaderDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectShaderDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -2309,13 +3016,15 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface IEffectShaderData :
         IEffectShaderDataGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IEffectShaderData>
     {
-        new Byte Flags { get; set; }
+        new EffectShaderData.VersioningBreaks Versioning { get; set; }
+        new EffectShaderData.Flag Flags { get; set; }
         new MemorySlice<Byte> Unused1 { get; set; }
-        new UInt32 MembraneShaderSourceBlendMode { get; set; }
-        new UInt32 MembraneShaderBlendOperation { get; set; }
-        new UInt32 MembraneShaderZTestFunction { get; set; }
+        new EffectShaderData.BlendMode MembraneShaderSourceBlendMode { get; set; }
+        new EffectShaderData.BlendOperation MembraneShaderBlendOperation { get; set; }
+        new EffectShaderData.ZTest MembraneShaderZTestFunction { get; set; }
         new Color FillTextureEffectColor { get; set; }
         new Single FillTextureEffectAlphaFadeInTime { get; set; }
         new Single FillTextureEffectFullAlphaTime { get; set; }
@@ -2335,11 +3044,11 @@ namespace Mutagen.Bethesda.Fallout3
         new Single EdgeEffectAlphaPulseFrequency { get; set; }
         new Single FillTextureEffectFullAlphaRatio { get; set; }
         new Single EdgeEffectFullAlphaRatio { get; set; }
-        new UInt32 MembraneShaderDestBlendMode { get; set; }
-        new UInt32 ParticleShaderSourceBlendMode { get; set; }
-        new UInt32 ParticleShaderBlendOperation { get; set; }
-        new UInt32 ParticleShaderZTestFunction { get; set; }
-        new UInt32 ParticleShaderDestBlendMode { get; set; }
+        new EffectShaderData.BlendMode MembraneShaderDestBlendMode { get; set; }
+        new EffectShaderData.BlendMode ParticleShaderSourceBlendMode { get; set; }
+        new EffectShaderData.BlendOperation ParticleShaderBlendOperation { get; set; }
+        new EffectShaderData.ZTest ParticleShaderZTestFunction { get; set; }
+        new EffectShaderData.BlendMode ParticleShaderDestBlendMode { get; set; }
         new Single ParticleShaderParticleBirthRampUpTime { get; set; }
         new Single ParticleShaderFullParticleBirthTime { get; set; }
         new Single ParticleShaderParticleBirthRampDownTime { get; set; }
@@ -2368,12 +3077,33 @@ namespace Mutagen.Bethesda.Fallout3
         new Single ColorKey1ColorKeyTime { get; set; }
         new Single ColorKey2ColorKeyTime { get; set; }
         new Single ColorKey3ColorKeyTime { get; set; }
-        new MemorySlice<Byte> ExtendedData { get; set; }
+        new Single ParticleShaderInitialSpeedAlongNormalVariance { get; set; }
+        new Single ParticleShaderInitialRotation { get; set; }
+        new Single ParticleShaderInitialRotationVariance { get; set; }
+        new Single ParticleShaderRotationSpeed { get; set; }
+        new Single ParticleShaderRotationSpeedVariance { get; set; }
+        new IFormLink<IDebrisGetter> AddonModels { get; set; }
+        new Single HolesStartTime { get; set; }
+        new Single HolesEndTime { get; set; }
+        new Single HolesStartValue { get; set; }
+        new Single HolesEndValue { get; set; }
+        new Single EdgeWidth { get; set; }
+        new Color EdgeColor { get; set; }
+        new Single ExplosionWindSpeed { get; set; }
+        new UInt32 TextureCountU { get; set; }
+        new UInt32 TextureCountV { get; set; }
+        new Single AddonModelsFadeInTime { get; set; }
+        new Single AddonModelsFadeOutTime { get; set; }
+        new Single AddonModelsScaleStart { get; set; }
+        new Single AddonModelsScaleEnd { get; set; }
+        new Single AddonModelsScaleInTime { get; set; }
+        new Single AddonModelsScaleOutTime { get; set; }
     }
 
     public partial interface IEffectShaderDataGetter :
         ILoquiObject,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IEffectShaderDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -2383,11 +3113,12 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => EffectShaderData_Registration.Instance;
-        Byte Flags { get; }
+        EffectShaderData.VersioningBreaks Versioning { get; }
+        EffectShaderData.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unused1 { get; }
-        UInt32 MembraneShaderSourceBlendMode { get; }
-        UInt32 MembraneShaderBlendOperation { get; }
-        UInt32 MembraneShaderZTestFunction { get; }
+        EffectShaderData.BlendMode MembraneShaderSourceBlendMode { get; }
+        EffectShaderData.BlendOperation MembraneShaderBlendOperation { get; }
+        EffectShaderData.ZTest MembraneShaderZTestFunction { get; }
         Color FillTextureEffectColor { get; }
         Single FillTextureEffectAlphaFadeInTime { get; }
         Single FillTextureEffectFullAlphaTime { get; }
@@ -2407,11 +3138,11 @@ namespace Mutagen.Bethesda.Fallout3
         Single EdgeEffectAlphaPulseFrequency { get; }
         Single FillTextureEffectFullAlphaRatio { get; }
         Single EdgeEffectFullAlphaRatio { get; }
-        UInt32 MembraneShaderDestBlendMode { get; }
-        UInt32 ParticleShaderSourceBlendMode { get; }
-        UInt32 ParticleShaderBlendOperation { get; }
-        UInt32 ParticleShaderZTestFunction { get; }
-        UInt32 ParticleShaderDestBlendMode { get; }
+        EffectShaderData.BlendMode MembraneShaderDestBlendMode { get; }
+        EffectShaderData.BlendMode ParticleShaderSourceBlendMode { get; }
+        EffectShaderData.BlendOperation ParticleShaderBlendOperation { get; }
+        EffectShaderData.ZTest ParticleShaderZTestFunction { get; }
+        EffectShaderData.BlendMode ParticleShaderDestBlendMode { get; }
         Single ParticleShaderParticleBirthRampUpTime { get; }
         Single ParticleShaderFullParticleBirthTime { get; }
         Single ParticleShaderParticleBirthRampDownTime { get; }
@@ -2440,7 +3171,27 @@ namespace Mutagen.Bethesda.Fallout3
         Single ColorKey1ColorKeyTime { get; }
         Single ColorKey2ColorKeyTime { get; }
         Single ColorKey3ColorKeyTime { get; }
-        ReadOnlyMemorySlice<Byte> ExtendedData { get; }
+        Single ParticleShaderInitialSpeedAlongNormalVariance { get; }
+        Single ParticleShaderInitialRotation { get; }
+        Single ParticleShaderInitialRotationVariance { get; }
+        Single ParticleShaderRotationSpeed { get; }
+        Single ParticleShaderRotationSpeedVariance { get; }
+        IFormLinkGetter<IDebrisGetter> AddonModels { get; }
+        Single HolesStartTime { get; }
+        Single HolesEndTime { get; }
+        Single HolesStartValue { get; }
+        Single HolesEndValue { get; }
+        Single EdgeWidth { get; }
+        Color EdgeColor { get; }
+        Single ExplosionWindSpeed { get; }
+        UInt32 TextureCountU { get; }
+        UInt32 TextureCountV { get; }
+        Single AddonModelsFadeInTime { get; }
+        Single AddonModelsFadeOutTime { get; }
+        Single AddonModelsScaleStart { get; }
+        Single AddonModelsScaleEnd { get; }
+        Single AddonModelsScaleInTime { get; }
+        Single AddonModelsScaleOutTime { get; }
 
     }
 
@@ -2610,64 +3361,85 @@ namespace Mutagen.Bethesda.Fallout3
     #region Field Index
     internal enum EffectShaderData_FieldIndex
     {
-        Flags = 0,
-        Unused1 = 1,
-        MembraneShaderSourceBlendMode = 2,
-        MembraneShaderBlendOperation = 3,
-        MembraneShaderZTestFunction = 4,
-        FillTextureEffectColor = 5,
-        FillTextureEffectAlphaFadeInTime = 6,
-        FillTextureEffectFullAlphaTime = 7,
-        FillTextureEffectAlphaFadeOutTime = 8,
-        FillTextureEffectPersistentAlphaRatio = 9,
-        FillTextureEffectAlphaPulseAmplitude = 10,
-        FillTextureEffectAlphaPulseFrequency = 11,
-        FillTextureEffectTextureAnimationSpeedU = 12,
-        FillTextureEffectTextureAnimationSpeedV = 13,
-        EdgeEffectFallOff = 14,
-        EdgeEffectColor = 15,
-        EdgeEffectAlphaFadeInTime = 16,
-        EdgeEffectFullAlphaTime = 17,
-        EdgeEffectAlphaFadeOutTime = 18,
-        EdgeEffectPersistentAlphaRatio = 19,
-        EdgeEffectAlphaPulseAmplitude = 20,
-        EdgeEffectAlphaPulseFrequency = 21,
-        FillTextureEffectFullAlphaRatio = 22,
-        EdgeEffectFullAlphaRatio = 23,
-        MembraneShaderDestBlendMode = 24,
-        ParticleShaderSourceBlendMode = 25,
-        ParticleShaderBlendOperation = 26,
-        ParticleShaderZTestFunction = 27,
-        ParticleShaderDestBlendMode = 28,
-        ParticleShaderParticleBirthRampUpTime = 29,
-        ParticleShaderFullParticleBirthTime = 30,
-        ParticleShaderParticleBirthRampDownTime = 31,
-        ParticleShaderFullParticleBirthRatio = 32,
-        ParticleShaderPersistentParticleBirthRatio = 33,
-        ParticleShaderParticleLifetime = 34,
-        ParticleShaderParticleLifetimePlusMinus = 35,
-        ParticleShaderInitialSpeedAlongNormal = 36,
-        ParticleShaderAccelerationAlongNormal = 37,
-        ParticleShaderInitialVelocity1 = 38,
-        ParticleShaderInitialVelocity2 = 39,
-        ParticleShaderInitialVelocity3 = 40,
-        ParticleShaderAcceleration1 = 41,
-        ParticleShaderAcceleration2 = 42,
-        ParticleShaderAcceleration3 = 43,
-        ParticleShaderScaleKey1 = 44,
-        ParticleShaderScaleKey2 = 45,
-        ParticleShaderScaleKey1Time = 46,
-        ParticleShaderScaleKey2Time = 47,
-        ColorKey1Color = 48,
-        ColorKey2Color = 49,
-        ColorKey3Color = 50,
-        ColorKey1ColorAlpha = 51,
-        ColorKey2ColorAlpha = 52,
-        ColorKey3ColorAlpha = 53,
-        ColorKey1ColorKeyTime = 54,
-        ColorKey2ColorKeyTime = 55,
-        ColorKey3ColorKeyTime = 56,
-        ExtendedData = 57,
+        Versioning = 0,
+        Flags = 1,
+        Unused1 = 2,
+        MembraneShaderSourceBlendMode = 3,
+        MembraneShaderBlendOperation = 4,
+        MembraneShaderZTestFunction = 5,
+        FillTextureEffectColor = 6,
+        FillTextureEffectAlphaFadeInTime = 7,
+        FillTextureEffectFullAlphaTime = 8,
+        FillTextureEffectAlphaFadeOutTime = 9,
+        FillTextureEffectPersistentAlphaRatio = 10,
+        FillTextureEffectAlphaPulseAmplitude = 11,
+        FillTextureEffectAlphaPulseFrequency = 12,
+        FillTextureEffectTextureAnimationSpeedU = 13,
+        FillTextureEffectTextureAnimationSpeedV = 14,
+        EdgeEffectFallOff = 15,
+        EdgeEffectColor = 16,
+        EdgeEffectAlphaFadeInTime = 17,
+        EdgeEffectFullAlphaTime = 18,
+        EdgeEffectAlphaFadeOutTime = 19,
+        EdgeEffectPersistentAlphaRatio = 20,
+        EdgeEffectAlphaPulseAmplitude = 21,
+        EdgeEffectAlphaPulseFrequency = 22,
+        FillTextureEffectFullAlphaRatio = 23,
+        EdgeEffectFullAlphaRatio = 24,
+        MembraneShaderDestBlendMode = 25,
+        ParticleShaderSourceBlendMode = 26,
+        ParticleShaderBlendOperation = 27,
+        ParticleShaderZTestFunction = 28,
+        ParticleShaderDestBlendMode = 29,
+        ParticleShaderParticleBirthRampUpTime = 30,
+        ParticleShaderFullParticleBirthTime = 31,
+        ParticleShaderParticleBirthRampDownTime = 32,
+        ParticleShaderFullParticleBirthRatio = 33,
+        ParticleShaderPersistentParticleBirthRatio = 34,
+        ParticleShaderParticleLifetime = 35,
+        ParticleShaderParticleLifetimePlusMinus = 36,
+        ParticleShaderInitialSpeedAlongNormal = 37,
+        ParticleShaderAccelerationAlongNormal = 38,
+        ParticleShaderInitialVelocity1 = 39,
+        ParticleShaderInitialVelocity2 = 40,
+        ParticleShaderInitialVelocity3 = 41,
+        ParticleShaderAcceleration1 = 42,
+        ParticleShaderAcceleration2 = 43,
+        ParticleShaderAcceleration3 = 44,
+        ParticleShaderScaleKey1 = 45,
+        ParticleShaderScaleKey2 = 46,
+        ParticleShaderScaleKey1Time = 47,
+        ParticleShaderScaleKey2Time = 48,
+        ColorKey1Color = 49,
+        ColorKey2Color = 50,
+        ColorKey3Color = 51,
+        ColorKey1ColorAlpha = 52,
+        ColorKey2ColorAlpha = 53,
+        ColorKey3ColorAlpha = 54,
+        ColorKey1ColorKeyTime = 55,
+        ColorKey2ColorKeyTime = 56,
+        ColorKey3ColorKeyTime = 57,
+        ParticleShaderInitialSpeedAlongNormalVariance = 58,
+        ParticleShaderInitialRotation = 59,
+        ParticleShaderInitialRotationVariance = 60,
+        ParticleShaderRotationSpeed = 61,
+        ParticleShaderRotationSpeedVariance = 62,
+        AddonModels = 63,
+        HolesStartTime = 64,
+        HolesEndTime = 65,
+        HolesStartValue = 66,
+        HolesEndValue = 67,
+        EdgeWidth = 68,
+        EdgeColor = 69,
+        ExplosionWindSpeed = 70,
+        TextureCountU = 71,
+        TextureCountV = 72,
+        AddonModelsFadeInTime = 73,
+        AddonModelsFadeOutTime = 74,
+        AddonModelsScaleStart = 75,
+        AddonModelsScaleEnd = 76,
+        AddonModelsScaleInTime = 77,
+        AddonModelsScaleOutTime = 78,
     }
     #endregion
 
@@ -2678,9 +3450,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 58;
+        public const ushort AdditionalFieldCount = 79;
 
-        public const ushort FieldCount = 58;
+        public const ushort FieldCount = 79;
 
         public static readonly Type MaskType = typeof(EffectShaderData.Mask<>);
 
@@ -2753,11 +3525,12 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IEffectShaderData item)
         {
             ClearPartial();
-            item.Flags = default(Byte);
+            item.Versioning = default(EffectShaderData.VersioningBreaks);
+            item.Flags = default(EffectShaderData.Flag);
             item.Unused1 = new byte[3];
-            item.MembraneShaderSourceBlendMode = default(UInt32);
-            item.MembraneShaderBlendOperation = default(UInt32);
-            item.MembraneShaderZTestFunction = default(UInt32);
+            item.MembraneShaderSourceBlendMode = default(EffectShaderData.BlendMode);
+            item.MembraneShaderBlendOperation = default(EffectShaderData.BlendOperation);
+            item.MembraneShaderZTestFunction = default(EffectShaderData.ZTest);
             item.FillTextureEffectColor = default(Color);
             item.FillTextureEffectAlphaFadeInTime = default(Single);
             item.FillTextureEffectFullAlphaTime = default(Single);
@@ -2777,11 +3550,11 @@ namespace Mutagen.Bethesda.Fallout3
             item.EdgeEffectAlphaPulseFrequency = default(Single);
             item.FillTextureEffectFullAlphaRatio = default(Single);
             item.EdgeEffectFullAlphaRatio = default(Single);
-            item.MembraneShaderDestBlendMode = default(UInt32);
-            item.ParticleShaderSourceBlendMode = default(UInt32);
-            item.ParticleShaderBlendOperation = default(UInt32);
-            item.ParticleShaderZTestFunction = default(UInt32);
-            item.ParticleShaderDestBlendMode = default(UInt32);
+            item.MembraneShaderDestBlendMode = default(EffectShaderData.BlendMode);
+            item.ParticleShaderSourceBlendMode = default(EffectShaderData.BlendMode);
+            item.ParticleShaderBlendOperation = default(EffectShaderData.BlendOperation);
+            item.ParticleShaderZTestFunction = default(EffectShaderData.ZTest);
+            item.ParticleShaderDestBlendMode = default(EffectShaderData.BlendMode);
             item.ParticleShaderParticleBirthRampUpTime = default(Single);
             item.ParticleShaderFullParticleBirthTime = default(Single);
             item.ParticleShaderParticleBirthRampDownTime = default(Single);
@@ -2810,12 +3583,33 @@ namespace Mutagen.Bethesda.Fallout3
             item.ColorKey1ColorKeyTime = default(Single);
             item.ColorKey2ColorKeyTime = default(Single);
             item.ColorKey3ColorKeyTime = default(Single);
-            item.ExtendedData = [];
+            item.ParticleShaderInitialSpeedAlongNormalVariance = default(Single);
+            item.ParticleShaderInitialRotation = default(Single);
+            item.ParticleShaderInitialRotationVariance = default(Single);
+            item.ParticleShaderRotationSpeed = default(Single);
+            item.ParticleShaderRotationSpeedVariance = default(Single);
+            item.AddonModels.Clear();
+            item.HolesStartTime = default(Single);
+            item.HolesEndTime = default(Single);
+            item.HolesStartValue = default(Single);
+            item.HolesEndValue = default(Single);
+            item.EdgeWidth = default(Single);
+            item.EdgeColor = default(Color);
+            item.ExplosionWindSpeed = default(Single);
+            item.TextureCountU = default(UInt32);
+            item.TextureCountV = default(UInt32);
+            item.AddonModelsFadeInTime = default(Single);
+            item.AddonModelsFadeOutTime = default(Single);
+            item.AddonModelsScaleStart = default(Single);
+            item.AddonModelsScaleEnd = default(Single);
+            item.AddonModelsScaleInTime = default(Single);
+            item.AddonModelsScaleOutTime = default(Single);
         }
         
         #region Mutagen
         public void RemapLinks(IEffectShaderData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.AddonModels.Relink(mapping);
         }
         
         #endregion
@@ -2864,6 +3658,7 @@ namespace Mutagen.Bethesda.Fallout3
             EffectShaderData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Unused1 = MemoryExtensions.SequenceEqual(item.Unused1.Span, rhs.Unused1.Span);
             ret.MembraneShaderSourceBlendMode = item.MembraneShaderSourceBlendMode == rhs.MembraneShaderSourceBlendMode;
@@ -2921,7 +3716,27 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ColorKey1ColorKeyTime = item.ColorKey1ColorKeyTime.EqualsWithin(rhs.ColorKey1ColorKeyTime);
             ret.ColorKey2ColorKeyTime = item.ColorKey2ColorKeyTime.EqualsWithin(rhs.ColorKey2ColorKeyTime);
             ret.ColorKey3ColorKeyTime = item.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime);
-            ret.ExtendedData = MemoryExtensions.SequenceEqual(item.ExtendedData.Span, rhs.ExtendedData.Span);
+            ret.ParticleShaderInitialSpeedAlongNormalVariance = item.ParticleShaderInitialSpeedAlongNormalVariance.EqualsWithin(rhs.ParticleShaderInitialSpeedAlongNormalVariance);
+            ret.ParticleShaderInitialRotation = item.ParticleShaderInitialRotation.EqualsWithin(rhs.ParticleShaderInitialRotation);
+            ret.ParticleShaderInitialRotationVariance = item.ParticleShaderInitialRotationVariance.EqualsWithin(rhs.ParticleShaderInitialRotationVariance);
+            ret.ParticleShaderRotationSpeed = item.ParticleShaderRotationSpeed.EqualsWithin(rhs.ParticleShaderRotationSpeed);
+            ret.ParticleShaderRotationSpeedVariance = item.ParticleShaderRotationSpeedVariance.EqualsWithin(rhs.ParticleShaderRotationSpeedVariance);
+            ret.AddonModels = item.AddonModels.Equals(rhs.AddonModels);
+            ret.HolesStartTime = item.HolesStartTime.EqualsWithin(rhs.HolesStartTime);
+            ret.HolesEndTime = item.HolesEndTime.EqualsWithin(rhs.HolesEndTime);
+            ret.HolesStartValue = item.HolesStartValue.EqualsWithin(rhs.HolesStartValue);
+            ret.HolesEndValue = item.HolesEndValue.EqualsWithin(rhs.HolesEndValue);
+            ret.EdgeWidth = item.EdgeWidth.EqualsWithin(rhs.EdgeWidth);
+            ret.EdgeColor = item.EdgeColor.ColorOnlyEquals(rhs.EdgeColor);
+            ret.ExplosionWindSpeed = item.ExplosionWindSpeed.EqualsWithin(rhs.ExplosionWindSpeed);
+            ret.TextureCountU = item.TextureCountU == rhs.TextureCountU;
+            ret.TextureCountV = item.TextureCountV == rhs.TextureCountV;
+            ret.AddonModelsFadeInTime = item.AddonModelsFadeInTime.EqualsWithin(rhs.AddonModelsFadeInTime);
+            ret.AddonModelsFadeOutTime = item.AddonModelsFadeOutTime.EqualsWithin(rhs.AddonModelsFadeOutTime);
+            ret.AddonModelsScaleStart = item.AddonModelsScaleStart.EqualsWithin(rhs.AddonModelsScaleStart);
+            ret.AddonModelsScaleEnd = item.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd);
+            ret.AddonModelsScaleInTime = item.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime);
+            ret.AddonModelsScaleOutTime = item.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime);
         }
         
         public string Print(
@@ -2966,6 +3781,10 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             EffectShaderData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                sb.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
@@ -3194,9 +4013,89 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
             }
-            if (printMask?.ExtendedData ?? true)
+            if (printMask?.ParticleShaderInitialSpeedAlongNormalVariance ?? true)
             {
-                sb.AppendLine($"ExtendedData => {SpanExt.ToHexString(item.ExtendedData)}");
+                sb.AppendItem(item.ParticleShaderInitialSpeedAlongNormalVariance, "ParticleShaderInitialSpeedAlongNormalVariance");
+            }
+            if (printMask?.ParticleShaderInitialRotation ?? true)
+            {
+                sb.AppendItem(item.ParticleShaderInitialRotation, "ParticleShaderInitialRotation");
+            }
+            if (printMask?.ParticleShaderInitialRotationVariance ?? true)
+            {
+                sb.AppendItem(item.ParticleShaderInitialRotationVariance, "ParticleShaderInitialRotationVariance");
+            }
+            if (printMask?.ParticleShaderRotationSpeed ?? true)
+            {
+                sb.AppendItem(item.ParticleShaderRotationSpeed, "ParticleShaderRotationSpeed");
+            }
+            if (printMask?.ParticleShaderRotationSpeedVariance ?? true)
+            {
+                sb.AppendItem(item.ParticleShaderRotationSpeedVariance, "ParticleShaderRotationSpeedVariance");
+            }
+            if (printMask?.AddonModels ?? true)
+            {
+                sb.AppendItem(item.AddonModels.FormKey, "AddonModels");
+            }
+            if (printMask?.HolesStartTime ?? true)
+            {
+                sb.AppendItem(item.HolesStartTime, "HolesStartTime");
+            }
+            if (printMask?.HolesEndTime ?? true)
+            {
+                sb.AppendItem(item.HolesEndTime, "HolesEndTime");
+            }
+            if (printMask?.HolesStartValue ?? true)
+            {
+                sb.AppendItem(item.HolesStartValue, "HolesStartValue");
+            }
+            if (printMask?.HolesEndValue ?? true)
+            {
+                sb.AppendItem(item.HolesEndValue, "HolesEndValue");
+            }
+            if (printMask?.EdgeWidth ?? true)
+            {
+                sb.AppendItem(item.EdgeWidth, "EdgeWidth");
+            }
+            if (printMask?.EdgeColor ?? true)
+            {
+                sb.AppendItem(item.EdgeColor, "EdgeColor");
+            }
+            if (printMask?.ExplosionWindSpeed ?? true)
+            {
+                sb.AppendItem(item.ExplosionWindSpeed, "ExplosionWindSpeed");
+            }
+            if (printMask?.TextureCountU ?? true)
+            {
+                sb.AppendItem(item.TextureCountU, "TextureCountU");
+            }
+            if (printMask?.TextureCountV ?? true)
+            {
+                sb.AppendItem(item.TextureCountV, "TextureCountV");
+            }
+            if (printMask?.AddonModelsFadeInTime ?? true)
+            {
+                sb.AppendItem(item.AddonModelsFadeInTime, "AddonModelsFadeInTime");
+            }
+            if (printMask?.AddonModelsFadeOutTime ?? true)
+            {
+                sb.AppendItem(item.AddonModelsFadeOutTime, "AddonModelsFadeOutTime");
+            }
+            if (printMask?.AddonModelsScaleStart ?? true)
+            {
+                sb.AppendItem(item.AddonModelsScaleStart, "AddonModelsScaleStart");
+            }
+            if (printMask?.AddonModelsScaleEnd ?? true)
+            {
+                sb.AppendItem(item.AddonModelsScaleEnd, "AddonModelsScaleEnd");
+            }
+            if (printMask?.AddonModelsScaleInTime ?? true)
+            {
+                sb.AppendItem(item.AddonModelsScaleInTime, "AddonModelsScaleInTime");
+            }
+            if (printMask?.AddonModelsScaleOutTime ?? true)
+            {
+                sb.AppendItem(item.AddonModelsScaleOutTime, "AddonModelsScaleOutTime");
             }
         }
         
@@ -3207,6 +4106,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
@@ -3435,9 +4338,89 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ExtendedData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderInitialSpeedAlongNormalVariance) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.ExtendedData.Span, rhs.ExtendedData.Span)) return false;
+                if (!lhs.ParticleShaderInitialSpeedAlongNormalVariance.EqualsWithin(rhs.ParticleShaderInitialSpeedAlongNormalVariance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderInitialRotation) ?? true))
+            {
+                if (!lhs.ParticleShaderInitialRotation.EqualsWithin(rhs.ParticleShaderInitialRotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderInitialRotationVariance) ?? true))
+            {
+                if (!lhs.ParticleShaderInitialRotationVariance.EqualsWithin(rhs.ParticleShaderInitialRotationVariance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderRotationSpeed) ?? true))
+            {
+                if (!lhs.ParticleShaderRotationSpeed.EqualsWithin(rhs.ParticleShaderRotationSpeed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderRotationSpeedVariance) ?? true))
+            {
+                if (!lhs.ParticleShaderRotationSpeedVariance.EqualsWithin(rhs.ParticleShaderRotationSpeedVariance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModels) ?? true))
+            {
+                if (!lhs.AddonModels.Equals(rhs.AddonModels)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesStartTime) ?? true))
+            {
+                if (!lhs.HolesStartTime.EqualsWithin(rhs.HolesStartTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesEndTime) ?? true))
+            {
+                if (!lhs.HolesEndTime.EqualsWithin(rhs.HolesEndTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesStartValue) ?? true))
+            {
+                if (!lhs.HolesStartValue.EqualsWithin(rhs.HolesStartValue)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesEndValue) ?? true))
+            {
+                if (!lhs.HolesEndValue.EqualsWithin(rhs.HolesEndValue)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.EdgeWidth) ?? true))
+            {
+                if (!lhs.EdgeWidth.EqualsWithin(rhs.EdgeWidth)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.EdgeColor) ?? true))
+            {
+                if (!lhs.EdgeColor.ColorOnlyEquals(rhs.EdgeColor)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ExplosionWindSpeed) ?? true))
+            {
+                if (!lhs.ExplosionWindSpeed.EqualsWithin(rhs.ExplosionWindSpeed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.TextureCountU) ?? true))
+            {
+                if (lhs.TextureCountU != rhs.TextureCountU) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.TextureCountV) ?? true))
+            {
+                if (lhs.TextureCountV != rhs.TextureCountV) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsFadeInTime) ?? true))
+            {
+                if (!lhs.AddonModelsFadeInTime.EqualsWithin(rhs.AddonModelsFadeInTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsFadeOutTime) ?? true))
+            {
+                if (!lhs.AddonModelsFadeOutTime.EqualsWithin(rhs.AddonModelsFadeOutTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleStart) ?? true))
+            {
+                if (!lhs.AddonModelsScaleStart.EqualsWithin(rhs.AddonModelsScaleStart)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleEnd) ?? true))
+            {
+                if (!lhs.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleInTime) ?? true))
+            {
+                if (!lhs.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleOutTime) ?? true))
+            {
+                if (!lhs.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime)) return false;
             }
             return true;
         }
@@ -3445,6 +4428,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IEffectShaderDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Flags);
             hash.Add(item.Unused1);
             hash.Add(item.MembraneShaderSourceBlendMode);
@@ -3502,7 +4486,27 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.ColorKey1ColorKeyTime);
             hash.Add(item.ColorKey2ColorKeyTime);
             hash.Add(item.ColorKey3ColorKeyTime);
-            hash.Add(item.ExtendedData);
+            hash.Add(item.ParticleShaderInitialSpeedAlongNormalVariance);
+            hash.Add(item.ParticleShaderInitialRotation);
+            hash.Add(item.ParticleShaderInitialRotationVariance);
+            hash.Add(item.ParticleShaderRotationSpeed);
+            hash.Add(item.ParticleShaderRotationSpeedVariance);
+            hash.Add(item.AddonModels);
+            hash.Add(item.HolesStartTime);
+            hash.Add(item.HolesEndTime);
+            hash.Add(item.HolesStartValue);
+            hash.Add(item.HolesEndValue);
+            hash.Add(item.EdgeWidth);
+            hash.Add(item.EdgeColor);
+            hash.Add(item.ExplosionWindSpeed);
+            hash.Add(item.TextureCountU);
+            hash.Add(item.TextureCountV);
+            hash.Add(item.AddonModelsFadeInTime);
+            hash.Add(item.AddonModelsFadeOutTime);
+            hash.Add(item.AddonModelsScaleStart);
+            hash.Add(item.AddonModelsScaleEnd);
+            hash.Add(item.AddonModelsScaleInTime);
+            hash.Add(item.AddonModelsScaleOutTime);
             return hash.ToHashCode();
         }
         
@@ -3517,6 +4521,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEffectShaderDataGetter obj, bool iterateNestedRecords = true)
         {
+            yield return FormLinkInformation.Factory(obj.AddonModels);
             yield break;
         }
         
@@ -3535,6 +4540,10 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -3763,9 +4772,94 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ColorKey3ColorKeyTime = rhs.ColorKey3ColorKeyTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ExtendedData) ?? true))
+            if (rhs.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderInitialSpeedAlongNormalVariance) ?? true))
             {
-                item.ExtendedData = rhs.ExtendedData.ToArray();
+                item.ParticleShaderInitialSpeedAlongNormalVariance = rhs.ParticleShaderInitialSpeedAlongNormalVariance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderInitialRotation) ?? true))
+            {
+                item.ParticleShaderInitialRotation = rhs.ParticleShaderInitialRotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderInitialRotationVariance) ?? true))
+            {
+                item.ParticleShaderInitialRotationVariance = rhs.ParticleShaderInitialRotationVariance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderRotationSpeed) ?? true))
+            {
+                item.ParticleShaderRotationSpeed = rhs.ParticleShaderRotationSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderRotationSpeedVariance) ?? true))
+            {
+                item.ParticleShaderRotationSpeedVariance = rhs.ParticleShaderRotationSpeedVariance;
+            }
+            if (rhs.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break1)) return;
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModels) ?? true))
+            {
+                item.AddonModels.SetTo(rhs.AddonModels.FormKey);
+            }
+            if (rhs.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break2)) return;
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesStartTime) ?? true))
+            {
+                item.HolesStartTime = rhs.HolesStartTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesEndTime) ?? true))
+            {
+                item.HolesEndTime = rhs.HolesEndTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesStartValue) ?? true))
+            {
+                item.HolesStartValue = rhs.HolesStartValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.HolesEndValue) ?? true))
+            {
+                item.HolesEndValue = rhs.HolesEndValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.EdgeWidth) ?? true))
+            {
+                item.EdgeWidth = rhs.EdgeWidth;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.EdgeColor) ?? true))
+            {
+                item.EdgeColor = rhs.EdgeColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ExplosionWindSpeed) ?? true))
+            {
+                item.ExplosionWindSpeed = rhs.ExplosionWindSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.TextureCountU) ?? true))
+            {
+                item.TextureCountU = rhs.TextureCountU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.TextureCountV) ?? true))
+            {
+                item.TextureCountV = rhs.TextureCountV;
+            }
+            if (rhs.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break3)) return;
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsFadeInTime) ?? true))
+            {
+                item.AddonModelsFadeInTime = rhs.AddonModelsFadeInTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsFadeOutTime) ?? true))
+            {
+                item.AddonModelsFadeOutTime = rhs.AddonModelsFadeOutTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleStart) ?? true))
+            {
+                item.AddonModelsScaleStart = rhs.AddonModelsScaleStart;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleEnd) ?? true))
+            {
+                item.AddonModelsScaleEnd = rhs.AddonModelsScaleEnd;
+            }
+            if (rhs.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break4)) return;
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleInTime) ?? true))
+            {
+                item.AddonModelsScaleInTime = rhs.AddonModelsScaleInTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.AddonModelsScaleOutTime) ?? true))
+            {
+                item.AddonModelsScaleOutTime = rhs.AddonModelsScaleOutTime;
             }
             DeepCopyInCustom(
                 item: item,
@@ -3875,13 +4969,25 @@ namespace Mutagen.Bethesda.Fallout3
             IEffectShaderDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Flags);
+            EnumBinaryTranslation<EffectShaderData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 1);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unused1);
-            writer.Write(item.MembraneShaderSourceBlendMode);
-            writer.Write(item.MembraneShaderBlendOperation);
-            writer.Write(item.MembraneShaderZTestFunction);
+            EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.MembraneShaderSourceBlendMode,
+                length: 4);
+            EnumBinaryTranslation<EffectShaderData.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.MembraneShaderBlendOperation,
+                length: 4);
+            EnumBinaryTranslation<EffectShaderData.ZTest, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.MembraneShaderZTestFunction,
+                length: 4);
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectColor);
@@ -3939,11 +5045,26 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectFullAlphaRatio);
-            writer.Write(item.MembraneShaderDestBlendMode);
-            writer.Write(item.ParticleShaderSourceBlendMode);
-            writer.Write(item.ParticleShaderBlendOperation);
-            writer.Write(item.ParticleShaderZTestFunction);
-            writer.Write(item.ParticleShaderDestBlendMode);
+            EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.MembraneShaderDestBlendMode,
+                length: 4);
+            EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.ParticleShaderSourceBlendMode,
+                length: 4);
+            EnumBinaryTranslation<EffectShaderData.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.ParticleShaderBlendOperation,
+                length: 4);
+            EnumBinaryTranslation<EffectShaderData.ZTest, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.ParticleShaderZTestFunction,
+                length: 4);
+            EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.ParticleShaderDestBlendMode,
+                length: 4);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ParticleShaderParticleBirthRampUpTime);
@@ -4028,9 +5149,80 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ColorKey3ColorKeyTime);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ExtendedData);
+            if (!item.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break0))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleShaderInitialSpeedAlongNormalVariance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleShaderInitialRotation);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleShaderInitialRotationVariance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleShaderRotationSpeed);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ParticleShaderRotationSpeedVariance);
+                if (!item.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break1))
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.AddonModels);
+                    if (!item.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break2))
+                    {
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.HolesStartTime);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.HolesEndTime);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.HolesStartValue);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.HolesEndValue);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.EdgeWidth);
+                        ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.EdgeColor);
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                            writer: writer,
+                            item: item.ExplosionWindSpeed);
+                        writer.Write(item.TextureCountU);
+                        writer.Write(item.TextureCountV);
+                        if (!item.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break3))
+                        {
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                writer: writer,
+                                item: item.AddonModelsFadeInTime);
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                writer: writer,
+                                item: item.AddonModelsFadeOutTime);
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                writer: writer,
+                                item: item.AddonModelsScaleStart);
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                writer: writer,
+                                item: item.AddonModelsScaleEnd);
+                            if (!item.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break4))
+                            {
+                                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                    writer: writer,
+                                    item: item.AddonModelsScaleInTime);
+                                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                                    writer: writer,
+                                    item: item.AddonModelsScaleOutTime);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void Write(
@@ -4071,11 +5263,19 @@ namespace Mutagen.Bethesda.Fallout3
             IEffectShaderData item,
             MutagenFrame frame)
         {
-            item.Flags = frame.ReadUInt8();
+            item.Flags = EnumBinaryTranslation<EffectShaderData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Unused1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
-            item.MembraneShaderSourceBlendMode = frame.ReadUInt32();
-            item.MembraneShaderBlendOperation = frame.ReadUInt32();
-            item.MembraneShaderZTestFunction = frame.ReadUInt32();
+            item.MembraneShaderSourceBlendMode = EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.MembraneShaderBlendOperation = EnumBinaryTranslation<EffectShaderData.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.MembraneShaderZTestFunction = EnumBinaryTranslation<EffectShaderData.ZTest, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FillTextureEffectColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.FillTextureEffectAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FillTextureEffectFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -4095,11 +5295,21 @@ namespace Mutagen.Bethesda.Fallout3
             item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FillTextureEffectFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.EdgeEffectFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.MembraneShaderDestBlendMode = frame.ReadUInt32();
-            item.ParticleShaderSourceBlendMode = frame.ReadUInt32();
-            item.ParticleShaderBlendOperation = frame.ReadUInt32();
-            item.ParticleShaderZTestFunction = frame.ReadUInt32();
-            item.ParticleShaderDestBlendMode = frame.ReadUInt32();
+            item.MembraneShaderDestBlendMode = EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderSourceBlendMode = EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderBlendOperation = EnumBinaryTranslation<EffectShaderData.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderZTestFunction = EnumBinaryTranslation<EffectShaderData.ZTest, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderDestBlendMode = EnumBinaryTranslation<EffectShaderData.BlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.ParticleShaderParticleBirthRampUpTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ParticleShaderFullParticleBirthTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ParticleShaderParticleBirthRampDownTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -4128,7 +5338,52 @@ namespace Mutagen.Bethesda.Fallout3
             item.ColorKey1ColorKeyTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ColorKey2ColorKeyTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ColorKey3ColorKeyTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.ExtendedData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= EffectShaderData.VersioningBreaks.Break0;
+                return;
+            }
+            item.ParticleShaderInitialSpeedAlongNormalVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ParticleShaderInitialRotation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ParticleShaderInitialRotationVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ParticleShaderRotationSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ParticleShaderRotationSpeedVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= EffectShaderData.VersioningBreaks.Break1;
+                return;
+            }
+            item.AddonModels.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            if (frame.Complete)
+            {
+                item.Versioning |= EffectShaderData.VersioningBreaks.Break2;
+                return;
+            }
+            item.HolesStartTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.HolesEndTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.HolesStartValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.HolesEndValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.EdgeWidth = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.EdgeColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.ExplosionWindSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.TextureCountU = frame.ReadUInt32();
+            item.TextureCountV = frame.ReadUInt32();
+            if (frame.Complete)
+            {
+                item.Versioning |= EffectShaderData.VersioningBreaks.Break3;
+                return;
+            }
+            item.AddonModelsFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AddonModelsFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AddonModelsScaleStart = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AddonModelsScaleEnd = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            if (frame.Complete)
+            {
+                item.Versioning |= EffectShaderData.VersioningBreaks.Break4;
+                return;
+            }
+            item.AddonModelsScaleInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AddonModelsScaleOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -4180,6 +5435,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => EffectShaderDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectShaderDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4194,11 +5450,12 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public Byte Flags => _structData.Span[0x0];
+        public EffectShaderData.VersioningBreaks Versioning { get; private set; }
+        public EffectShaderData.Flag Flags => (EffectShaderData.Flag)_structData.Span.Slice(0x0, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused1 => _structData.Span.Slice(0x1, 0x3).ToArray();
-        public UInt32 MembraneShaderSourceBlendMode => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public UInt32 MembraneShaderBlendOperation => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public UInt32 MembraneShaderZTestFunction => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public EffectShaderData.BlendMode MembraneShaderSourceBlendMode => (EffectShaderData.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
+        public EffectShaderData.BlendOperation MembraneShaderBlendOperation => (EffectShaderData.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public EffectShaderData.ZTest MembraneShaderZTestFunction => (EffectShaderData.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xC, 0x4));
         public Color FillTextureEffectColor => _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single FillTextureEffectAlphaFadeInTime => _structData.Slice(0x14, 0x4).Float();
         public Single FillTextureEffectFullAlphaTime => _structData.Slice(0x18, 0x4).Float();
@@ -4218,11 +5475,11 @@ namespace Mutagen.Bethesda.Fallout3
         public Single EdgeEffectAlphaPulseFrequency => _structData.Slice(0x50, 0x4).Float();
         public Single FillTextureEffectFullAlphaRatio => _structData.Slice(0x54, 0x4).Float();
         public Single EdgeEffectFullAlphaRatio => _structData.Slice(0x58, 0x4).Float();
-        public UInt32 MembraneShaderDestBlendMode => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x5C, 0x4));
-        public UInt32 ParticleShaderSourceBlendMode => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x60, 0x4));
-        public UInt32 ParticleShaderBlendOperation => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x64, 0x4));
-        public UInt32 ParticleShaderZTestFunction => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x68, 0x4));
-        public UInt32 ParticleShaderDestBlendMode => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x6C, 0x4));
+        public EffectShaderData.BlendMode MembraneShaderDestBlendMode => (EffectShaderData.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x5C, 0x4));
+        public EffectShaderData.BlendMode ParticleShaderSourceBlendMode => (EffectShaderData.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x60, 0x4));
+        public EffectShaderData.BlendOperation ParticleShaderBlendOperation => (EffectShaderData.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x64, 0x4));
+        public EffectShaderData.ZTest ParticleShaderZTestFunction => (EffectShaderData.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x68, 0x4));
+        public EffectShaderData.BlendMode ParticleShaderDestBlendMode => (EffectShaderData.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x6C, 0x4));
         public Single ParticleShaderParticleBirthRampUpTime => _structData.Slice(0x70, 0x4).Float();
         public Single ParticleShaderFullParticleBirthTime => _structData.Slice(0x74, 0x4).Float();
         public Single ParticleShaderParticleBirthRampDownTime => _structData.Slice(0x78, 0x4).Float();
@@ -4251,10 +5508,27 @@ namespace Mutagen.Bethesda.Fallout3
         public Single ColorKey1ColorKeyTime => _structData.Slice(0xD4, 0x4).Float();
         public Single ColorKey2ColorKeyTime => _structData.Slice(0xD8, 0x4).Float();
         public Single ColorKey3ColorKeyTime => _structData.Slice(0xDC, 0x4).Float();
-        #region ExtendedData
-        public ReadOnlyMemorySlice<Byte> ExtendedData => _structData.Span.Slice(0xE0).ToArray();
-        protected int ExtendedDataEndingPos;
-        #endregion
+        public Single ParticleShaderInitialSpeedAlongNormalVariance => _structData.Length <= 0xE0 ? default : _structData.Slice(0xE0, 0x4).Float();
+        public Single ParticleShaderInitialRotation => _structData.Length <= 0xE4 ? default : _structData.Slice(0xE4, 0x4).Float();
+        public Single ParticleShaderInitialRotationVariance => _structData.Length <= 0xE8 ? default : _structData.Slice(0xE8, 0x4).Float();
+        public Single ParticleShaderRotationSpeed => _structData.Length <= 0xEC ? default : _structData.Slice(0xEC, 0x4).Float();
+        public Single ParticleShaderRotationSpeedVariance => _structData.Length <= 0xF0 ? default : _structData.Slice(0xF0, 0x4).Float();
+        public IFormLinkGetter<IDebrisGetter> AddonModels => _structData.Length <= 0xF4 ? FormLink<IDebrisGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _structData.Span.Slice(0xF4, 0x4));
+        public Single HolesStartTime => _structData.Length <= 0xF8 ? default : _structData.Slice(0xF8, 0x4).Float();
+        public Single HolesEndTime => _structData.Length <= 0xFC ? default : _structData.Slice(0xFC, 0x4).Float();
+        public Single HolesStartValue => _structData.Length <= 0x100 ? default : _structData.Slice(0x100, 0x4).Float();
+        public Single HolesEndValue => _structData.Length <= 0x104 ? default : _structData.Slice(0x104, 0x4).Float();
+        public Single EdgeWidth => _structData.Length <= 0x108 ? default : _structData.Slice(0x108, 0x4).Float();
+        public Color EdgeColor => _structData.Length <= 0x10C ? default : _structData.Slice(0x10C, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single ExplosionWindSpeed => _structData.Length <= 0x110 ? default : _structData.Slice(0x110, 0x4).Float();
+        public UInt32 TextureCountU => _structData.Length <= 0x114 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x114, 0x4));
+        public UInt32 TextureCountV => _structData.Length <= 0x118 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x118, 0x4));
+        public Single AddonModelsFadeInTime => _structData.Length <= 0x11C ? default : _structData.Slice(0x11C, 0x4).Float();
+        public Single AddonModelsFadeOutTime => _structData.Length <= 0x120 ? default : _structData.Slice(0x120, 0x4).Float();
+        public Single AddonModelsScaleStart => _structData.Length <= 0x124 ? default : _structData.Slice(0x124, 0x4).Float();
+        public Single AddonModelsScaleEnd => _structData.Length <= 0x128 ? default : _structData.Slice(0x128, 0x4).Float();
+        public Single AddonModelsScaleInTime => _structData.Length <= 0x12C ? default : _structData.Slice(0x12C, 0x4).Float();
+        public Single AddonModelsScaleOutTime => _structData.Length <= 0x130 ? default : _structData.Slice(0x130, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -4280,12 +5554,32 @@ namespace Mutagen.Bethesda.Fallout3
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
+                length: 0x134,
                 memoryPair: out var memoryPair,
-                offset: out var offset,
-                finalPos: out var finalPos);
+                offset: out var offset);
             var ret = new EffectShaderDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
+            if (ret._structData.Length <= 0xE0)
+            {
+                ret.Versioning |= EffectShaderData.VersioningBreaks.Break0;
+            }
+            if (ret._structData.Length <= 0xF4)
+            {
+                ret.Versioning |= EffectShaderData.VersioningBreaks.Break1;
+            }
+            if (ret._structData.Length <= 0xF8)
+            {
+                ret.Versioning |= EffectShaderData.VersioningBreaks.Break2;
+            }
+            if (ret._structData.Length <= 0x11C)
+            {
+                ret.Versioning |= EffectShaderData.VersioningBreaks.Break3;
+            }
+            if (ret._structData.Length <= 0x12C)
+            {
+                ret.Versioning |= EffectShaderData.VersioningBreaks.Break4;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
