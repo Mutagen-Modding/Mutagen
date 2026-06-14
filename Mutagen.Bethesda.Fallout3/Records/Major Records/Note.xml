@@ -20,6 +20,7 @@
       <RefDirect name="Data" refName="ANoteData" binary="NoGeneration" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRecipeItem</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IExplodeSpawn</LinkInterface>
   </Object>

@@ -2244,9 +2244,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Recipe</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter> Recipe(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter> Recipe(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRecipeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -2256,9 +2256,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Recipe</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter> Recipe(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter> Recipe(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRecipeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRecipe, IRecipeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -3056,6 +3056,30 @@ namespace Mutagen.Bethesda.Fallout3
             return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IRecipeItem
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IRecipeItem</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipeItem, IRecipeItemGetter> IRecipeItem(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipeItem, IRecipeItemGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IRecipeItemGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRecipeItem, IRecipeItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IRecipeItem
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IRecipeItem</returns>
+        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipeItem, IRecipeItemGetter> IRecipeItem(this IEnumerable<IFallout3ModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, IRecipeItem, IRecipeItemGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IRecipeItemGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, IRecipeItem, IRecipeItemGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
 
         /// <summary>

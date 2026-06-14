@@ -146,6 +146,7 @@ namespace Mutagen.Bethesda.Fallout3
             _FormLists_Object = new Fallout3Group<FormList>(this);
             _ItemMods_Object = new Fallout3Group<ItemMod>(this);
             _Reputations_Object = new Fallout3Group<Reputation>(this);
+            _Recipes_Object = new Fallout3Group<Recipe>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -760,6 +761,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IReputationGetter> IFallout3ModGetter.Reputations => _Reputations_Object;
         #endregion
+        #region Recipes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Recipe> _Recipes_Object;
+        public Fallout3Group<Recipe> Recipes => _Recipes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IRecipeGetter> IFallout3ModGetter.Recipes => _Recipes_Object;
+        #endregion
 
         #region To String
 
@@ -886,6 +894,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.FormLists = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.ItemMods = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Reputations = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Recipes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -975,7 +984,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MusicTypes,
                 TItem FormLists,
                 TItem ItemMods,
-                TItem Reputations)
+                TItem Reputations,
+                TItem Recipes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1064,6 +1074,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.FormLists = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(FormLists, new Fallout3Group.Mask<TItem>(FormLists));
                 this.ItemMods = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ItemMods, new Fallout3Group.Mask<TItem>(ItemMods));
                 this.Reputations = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Reputations, new Fallout3Group.Mask<TItem>(Reputations));
+                this.Recipes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Recipes, new Fallout3Group.Mask<TItem>(Recipes));
             }
 
             #pragma warning disable CS8618
@@ -1162,6 +1173,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? FormLists { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ItemMods { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Reputations { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Recipes { get; set; }
             #endregion
 
             #region Equals
@@ -1261,6 +1273,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
                 if (!object.Equals(this.ItemMods, rhs.ItemMods)) return false;
                 if (!object.Equals(this.Reputations, rhs.Reputations)) return false;
+                if (!object.Equals(this.Recipes, rhs.Recipes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1353,6 +1366,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.FormLists);
                 hash.Add(this.ItemMods);
                 hash.Add(this.Reputations);
+                hash.Add(this.Recipes);
                 return hash.ToHashCode();
             }
 
@@ -1796,6 +1810,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Reputations.Overall)) return false;
                     if (this.Reputations.Specific != null && !this.Reputations.Specific.All(eval)) return false;
                 }
+                if (Recipes != null)
+                {
+                    if (!eval(this.Recipes.Overall)) return false;
+                    if (this.Recipes.Specific != null && !this.Recipes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2238,6 +2257,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Reputations.Overall)) return true;
                     if (this.Reputations.Specific != null && this.Reputations.Specific.Any(eval)) return true;
                 }
+                if (Recipes != null)
+                {
+                    if (eval(this.Recipes.Overall)) return true;
+                    if (this.Recipes.Specific != null && this.Recipes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2339,6 +2363,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
                 obj.ItemMods = this.ItemMods == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ItemMods.Overall), this.ItemMods.Specific?.Translate(eval));
                 obj.Reputations = this.Reputations == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Reputations.Overall), this.Reputations.Specific?.Translate(eval));
+                obj.Recipes = this.Recipes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Recipes.Overall), this.Recipes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2705,6 +2730,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Reputations?.Print(sb);
                     }
+                    if (printMask?.Recipes?.Overall ?? true)
+                    {
+                        Recipes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2816,6 +2845,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<ItemMod.ErrorMask>?>? ItemMods;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Reputation.ErrorMask>?>? Reputations;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Recipe.ErrorMask>?>? Recipes;
             #endregion
 
             #region IErrorMask
@@ -2998,6 +3028,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return ItemMods;
                     case Fallout3Mod_FieldIndex.Reputations:
                         return Reputations;
+                    case Fallout3Mod_FieldIndex.Recipes:
+                        return Recipes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3268,6 +3300,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Reputations:
                         this.Reputations = new MaskItem<Exception?, Fallout3Group.ErrorMask<Reputation.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Recipes:
+                        this.Recipes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Recipe.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3540,6 +3575,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Reputations:
                         this.Reputations = (MaskItem<Exception?, Fallout3Group.ErrorMask<Reputation.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Recipes:
+                        this.Recipes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Recipe.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3635,6 +3673,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (FormLists != null) return true;
                 if (ItemMods != null) return true;
                 if (Reputations != null) return true;
+                if (Recipes != null) return true;
                 return false;
             }
             #endregion
@@ -3747,6 +3786,7 @@ namespace Mutagen.Bethesda.Fallout3
                 FormLists?.Print(sb);
                 ItemMods?.Print(sb);
                 Reputations?.Print(sb);
+                Recipes?.Print(sb);
             }
             #endregion
 
@@ -3842,6 +3882,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
                 ret.ItemMods = this.ItemMods.Combine(rhs.ItemMods, (l, r) => l.Combine(r));
                 ret.Reputations = this.Reputations.Combine(rhs.Reputations, (l, r) => l.Combine(r));
+                ret.Recipes = this.Recipes.Combine(rhs.Recipes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3952,6 +3993,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<FormList.TranslationMask>? FormLists;
             public Fallout3Group.TranslationMask<ItemMod.TranslationMask>? ItemMods;
             public Fallout3Group.TranslationMask<Reputation.TranslationMask>? Reputations;
+            public Fallout3Group.TranslationMask<Recipe.TranslationMask>? Recipes;
             #endregion
 
             #region Ctors
@@ -4063,6 +4105,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
                 ret.Add((ItemMods != null ? ItemMods.OnOverall : DefaultOn, ItemMods?.GetCrystal()));
                 ret.Add((Reputations != null ? Reputations.OnOverall : DefaultOn, Reputations?.GetCrystal()));
+                ret.Add((Recipes != null ? Recipes.OnOverall : DefaultOn, Recipes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4208,6 +4251,7 @@ namespace Mutagen.Bethesda.Fallout3
             _FormLists_Object = new Fallout3Group<FormList>(this);
             _ItemMods_Object = new Fallout3Group<ItemMod>(this);
             _Reputations_Object = new Fallout3Group<Reputation>(this);
+            _Recipes_Object = new Fallout3Group<Recipe>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4561,6 +4605,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Reputations.RecordCache.Set(rhsMod.Reputations.RecordCache.Items);
             }
+            if (mask?.Recipes ?? true)
+            {
+                this.Recipes.RecordCache.Set(rhsMod.Recipes.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -4910,6 +4958,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<FormList> FormLists { get; }
         new Fallout3Group<ItemMod> ItemMods { get; }
         new Fallout3Group<Reputation> Reputations { get; }
+        new Fallout3Group<Recipe> Recipes { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5016,6 +5065,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IFormListGetter> FormLists { get; }
         IFallout3GroupGetter<IItemModGetter> ItemMods { get; }
         IFallout3GroupGetter<IReputationGetter> Reputations { get; }
+        IFallout3GroupGetter<IRecipeGetter> Recipes { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -5653,6 +5703,7 @@ namespace Mutagen.Bethesda.Fallout3
         FormLists = 84,
         ItemMods = 85,
         Reputations = 86,
+        Recipes = 87,
     }
     #endregion
 
@@ -5663,9 +5714,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 87;
+        public const ushort AdditionalFieldCount = 88;
 
-        public const ushort FieldCount = 87;
+        public const ushort FieldCount = 88;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -5817,6 +5868,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.FormLists.Clear();
             item.ItemMods.Clear();
             item.Reputations.Clear();
+            item.Recipes.Clear();
         }
         
         #region Mutagen
@@ -5894,6 +5946,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.DefaultObjectManagers.RemapLinks(mapping);
             obj.FormLists.RemapLinks(mapping);
             obj.ItemMods.RemapLinks(mapping);
+            obj.Recipes.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6041,6 +6094,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.FormLists.Remove(keys);
             obj.ItemMods.Remove(keys);
             obj.Reputations.Remove(keys);
+            obj.Recipes.Remove(keys);
         }
         
         public void Remove(
@@ -6627,6 +6681,19 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "IRecipeItem":
+                case "IRecipeItemGetter":
+                    Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(INoteGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
                     Remove(obj, keys, typeof(ILandscapeTextureGetter), throwIfUnknown: throwIfUnknown);
@@ -6939,6 +7006,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IRagdoll":
                 case "IRagdollInternal":
                     obj.Ragdolls.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Recipe":
+                case "IRecipeGetter":
+                case "IRecipe":
+                case "IRecipeInternal":
+                    obj.Recipes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -7389,6 +7464,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
             ret.ItemMods = MaskItemExt.Factory(item.ItemMods.GetEqualsMask(rhs.ItemMods, include), include);
             ret.Reputations = MaskItemExt.Factory(item.Reputations.GetEqualsMask(rhs.Reputations, include), include);
+            ret.Recipes = MaskItemExt.Factory(item.Recipes.GetEqualsMask(rhs.Recipes, include), include);
         }
         
         public string Print(
@@ -7780,6 +7856,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Reputations?.Overall ?? true)
             {
                 item.Reputations?.Print(sb, "Reputations");
+            }
+            if (printMask?.Recipes?.Overall ?? true)
+            {
+                item.Recipes?.Print(sb, "Recipes");
             }
         }
         
@@ -8486,6 +8566,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isReputationsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Recipes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Recipes, rhs.Recipes, out var lhsRecipes, out var rhsRecipes, out var isRecipesEqual))
+                {
+                    if (!object.Equals(lhsRecipes, rhsRecipes)) return false;
+                }
+                else if (!isRecipesEqual) return false;
+            }
             return true;
         }
         
@@ -8579,6 +8667,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.FormLists);
             hash.Add(item.ItemMods);
             hash.Add(item.Reputations);
+            hash.Add(item.Recipes);
             return hash.ToHashCode();
         }
         
@@ -9054,6 +9143,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IReputation":
                 case "IReputationInternal":
                     return obj.Reputations;
+                case "Recipe":
+                case "IRecipeGetter":
+                case "IRecipe":
+                case "IRecipeInternal":
+                    return obj.Recipes;
                 default:
                     return null;
             }
@@ -9071,7 +9165,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[86];
+            Stream[] outputStreams = new Stream[87];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -9159,6 +9253,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.FormLists, 83, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.ItemMods, 84, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Reputations, 85, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Recipes, 86, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -9290,6 +9385,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.FormLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.ItemMods.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Reputations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Recipes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -9592,6 +9688,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.ItemMods.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Recipes.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -9951,6 +10051,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Reputations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Recipes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10748,6 +10852,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IRagdoll":
                 case "IRagdollInternal":
                     foreach (var item in obj.Ragdolls.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Recipe":
+                case "IRecipeGetter":
+                case "IRecipe":
+                case "IRecipeInternal":
+                    foreach (var item in obj.Recipes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11558,6 +11671,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Ragdolls,
                 groupGetter: (m) => m.Ragdolls))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Recipe, IRecipeGetter>(
+                srcGroup: obj.Recipes,
+                type: typeof(IRecipeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Recipes,
+                groupGetter: (m) => m.Recipes))
             {
                 yield return item;
             }
@@ -12992,6 +13114,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Ragdolls,
                         groupGetter: (m) => m.Ragdolls))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Recipe":
+                case "IRecipeGetter":
+                case "IRecipe":
+                case "IRecipeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Recipe, IRecipeGetter>(
+                        srcGroup: obj.Recipes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Recipes,
+                        groupGetter: (m) => m.Recipes))
                     {
                         yield return item;
                     }
@@ -15103,6 +15239,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Recipes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Recipes);
+                try
+                {
+                    item.Recipes.DeepCopyIn(
+                        rhs: rhs.Recipes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Recipes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -15292,6 +15448,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool FormLists;
         public bool ItemMods;
         public bool Reputations;
+        public bool Recipes;
         public GroupMask()
         {
         }
@@ -15383,6 +15540,7 @@ namespace Mutagen.Bethesda.Fallout3
             FormLists = defaultValue;
             ItemMods = defaultValue;
             Reputations = defaultValue;
+            Recipes = defaultValue;
         }
     }
 
@@ -16387,6 +16545,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ReputationsItem).BinaryWriteTranslator).Write<IReputationGetter>(
                         item: ReputationsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Recipes ?? true)
+            {
+                var RecipesItem = item.Recipes;
+                if (RecipesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)RecipesItem).BinaryWriteTranslator).Write<IRecipeGetter>(
+                        item: RecipesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -17665,6 +17834,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Reputations;
                 }
+                case RecordTypeInts.RCPE:
+                {
+                    if (importMask?.Recipes ?? true)
+                    {
+                        item.Recipes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Recipes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -18260,6 +18443,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IReputationGetter>? _Reputations => _ReputationsLocations != null ? Fallout3GroupBinaryOverlay<IReputationGetter>.Fallout3GroupFactory(_stream, _ReputationsLocations, _package) : default;
         public IFallout3GroupGetter<IReputationGetter> Reputations => _Reputations ?? new Fallout3Group<Reputation>(this);
         #endregion
+        #region Recipes
+        private List<RangeInt64>? _RecipesLocations;
+        private IFallout3GroupGetter<IRecipeGetter>? _Recipes => _RecipesLocations != null ? Fallout3GroupBinaryOverlay<IRecipeGetter>.Fallout3GroupFactory(_stream, _RecipesLocations, _package) : default;
+        public IFallout3GroupGetter<IRecipeGetter> Recipes => _Recipes ?? new Fallout3Group<Recipe>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -18849,6 +19037,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _ReputationsLocations ??= new();
                     _ReputationsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Reputations;
+                }
+                case RecordTypeInts.RCPE:
+                {
+                    _RecipesLocations ??= new();
+                    _RecipesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Recipes;
                 }
                 default:
                     return default(int?);

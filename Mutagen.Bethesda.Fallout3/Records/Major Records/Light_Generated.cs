@@ -1096,6 +1096,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
+        IRecipeItem,
         IWeightValue
     {
         /// <summary>
@@ -1162,6 +1163,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
         IPlaceableObjectGetter,
+        IRecipeItemGetter,
         IWeightValueGetter
     {
         static new ILoquiRegistration StaticRegistration => Light_Registration.Instance;

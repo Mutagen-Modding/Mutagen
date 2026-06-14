@@ -306,6 +306,28 @@ internal class Fallout3LinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IPlaced),
                 Getter: typeof(IPlacedGetter)));
         dict[typeof(IPlacedGetter)] = dict[typeof(IPlaced)] with { Setter = false };
+        dict[typeof(IRecipeItem)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                CaravanCard_Registration.Instance,
+                CaravanMoney_Registration.Instance,
+                CasinoChip_Registration.Instance,
+                Ingestible_Registration.Instance,
+                ItemMod_Registration.Instance,
+                Key_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Note_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IRecipeItem),
+                Getter: typeof(IRecipeItemGetter)));
+        dict[typeof(IRecipeItemGetter)] = dict[typeof(IRecipeItem)] with { Setter = false };
         dict[typeof(IRegionTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

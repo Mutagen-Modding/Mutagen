@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Item
-        private readonly IFormLink<IFallout3MajorRecordGetter> _Item = new FormLink<IFallout3MajorRecordGetter>();
-        public IFormLink<IFallout3MajorRecordGetter> Item
+        private readonly IFormLinkNullable<IRecipeItemGetter> _Item = new FormLinkNullable<IRecipeItemGetter>();
+        public IFormLinkNullable<IRecipeItemGetter> Item
         {
             get => _Item;
             set => _Item.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFallout3MajorRecordGetter> IRecipeIngredientGetter.Item => this.Item;
+        IFormLinkNullableGetter<IRecipeItemGetter> IRecipeIngredientGetter.Item => this.Item;
         #endregion
         #region Quantity
         public UInt32? Quantity { get; set; }
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IRecipeIngredient>,
         IRecipeIngredientGetter
     {
-        new IFormLink<IFallout3MajorRecordGetter> Item { get; set; }
+        new IFormLinkNullable<IRecipeItemGetter> Item { get; set; }
         new UInt32? Quantity { get; set; }
     }
 
@@ -479,7 +479,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => RecipeIngredient_Registration.Instance;
-        IFormLinkGetter<IFallout3MajorRecordGetter> Item { get; }
+        IFormLinkNullableGetter<IRecipeItemGetter> Item { get; }
         UInt32? Quantity { get; }
 
     }
@@ -690,17 +690,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.RCIL;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.RCIL);
             var all = RecordCollection.Factory(
                 RecordTypes.RCIL,
                 RecordTypes.RCQY);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RecipeIngredientBinaryWriteTranslation);
         #region Interface
@@ -760,12 +756,10 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: RecipeIngredientBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: RecipeIngredientBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
@@ -844,7 +838,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (printMask?.Item ?? true)
             {
-                sb.AppendItem(item.Item.FormKey, "Item");
+                sb.AppendItem(item.Item.FormKeyNullable, "Item");
             }
             if ((printMask?.Quantity ?? true)
                 && item.Quantity is {} QuantityItem)
@@ -893,7 +887,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRecipeIngredientGetter obj, bool iterateNestedRecords = true)
         {
-            yield return FormLinkInformation.Factory(obj.Item);
+            if (FormLinkInformation.TryFactory(obj.Item, out var ItemInfo))
+            {
+                yield return ItemInfo;
+            }
             yield break;
         }
         
@@ -914,7 +911,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if ((copyMask?.GetShouldTranslate((int)RecipeIngredient_FieldIndex.Item) ?? true))
             {
-                item.Item.SetTo(rhs.Item.FormKey);
+                item.Item.SetTo(rhs.Item.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)RecipeIngredient_FieldIndex.Quantity) ?? true))
             {
@@ -1024,20 +1021,15 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public static readonly RecipeIngredientBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IRecipeIngredientGetter item,
-            MutagenWriter writer)
-        {
-            FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Item);
-        }
-
         public static void WriteRecordTypes(
             IRecipeIngredientGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Item,
+                header: translationParams.ConvertToCustom(RecordTypes.RCIL));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quantity,
@@ -1049,20 +1041,10 @@ namespace Mutagen.Bethesda.Fallout3
             IRecipeIngredientGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
+            WriteRecordTypes(
+                item: item,
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RCIL),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-                WriteRecordTypes(
-                    item: item,
-                    writer: writerToUse,
-                    translationParams: translationParams);
-            }
+                translationParams: translationParams);
         }
 
         public void Write(
@@ -1082,13 +1064,6 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public static readonly RecipeIngredientBinaryCreateTranslation Instance = new RecipeIngredientBinaryCreateTranslation();
 
-        public static void FillBinaryStructs(
-            IRecipeIngredient item,
-            MutagenFrame frame)
-        {
-            item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IRecipeIngredient item,
             MutagenFrame frame,
@@ -1101,8 +1076,16 @@ namespace Mutagen.Bethesda.Fallout3
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.RCIL:
+                {
+                    if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Item, translationParams)) return ParseResult.Stop;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)RecipeIngredient_FieldIndex.Item;
+                }
                 case RecordTypeInts.RCQY:
                 {
+                    if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Quantity, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quantity = frame.ReadUInt32();
                     return (int)RecipeIngredient_FieldIndex.Quantity;
@@ -1176,7 +1159,10 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout3MajorRecordGetter> Item => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout3MajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        #region Item
+        private int? _ItemLocation;
+        public IFormLinkNullableGetter<IRecipeItemGetter> Item => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRecipeItemGetter>(_package, _recordData, _ItemLocation);
+        #endregion
         #region Quantity
         private int? _QuantityLocation;
         public UInt32? Quantity => _QuantityLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QuantityLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
@@ -1202,7 +1188,7 @@ namespace Mutagen.Bethesda.Fallout3
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractSubrecordStructMemory(
+            stream = ExtractTypelessSubrecordRecordMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
@@ -1212,13 +1198,9 @@ namespace Mutagen.Bethesda.Fallout3
             var ret = new RecipeIngredientBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            ret.CustomFactoryEnd(
+            ret.FillTypelessSubrecordTypes(
                 stream: stream,
-                finalPos: finalPos,
-                offset: offset);
-            ret.FillSubrecordTypes(
-                stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
@@ -1248,8 +1230,15 @@ namespace Mutagen.Bethesda.Fallout3
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.RCIL:
+                {
+                    if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Item, translationParams)) return ParseResult.Stop;
+                    _ItemLocation = (stream.Position - offset);
+                    return (int)RecipeIngredient_FieldIndex.Item;
+                }
                 case RecordTypeInts.RCQY:
                 {
+                    if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Quantity, translationParams)) return ParseResult.Stop;
                     _QuantityLocation = (stream.Position - offset);
                     return (int)RecipeIngredient_FieldIndex.Quantity;
                 }

@@ -116,6 +116,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IFormListGetter>? _formLists;
     private MergedGroup<IItemModGetter>? _itemMods;
     private MergedGroup<IReputationGetter>? _reputations;
+    private MergedGroup<IRecipeGetter>? _recipes;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -411,6 +412,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IReputationGetter> Reputations =>
         _reputations ??= new MergedGroup<IReputationGetter>(
             _sourceMods.Select(m => m.Reputations));
+    public IFallout3GroupGetter<IRecipeGetter> Recipes =>
+        _recipes ??= new MergedGroup<IRecipeGetter>(
+            _sourceMods.Select(m => m.Recipes));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

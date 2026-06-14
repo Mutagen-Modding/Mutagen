@@ -985,7 +985,8 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptional,
         IPackageLocationObject,
         IPackageTargetObject,
-        IPlaceableObject
+        IPlaceableObject,
+        IRecipeItem
     {
         /// <summary>
         /// Aspects: IObjectBoundedOptional
@@ -1038,7 +1039,8 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IRecipeItemGetter
     {
         static new ILoquiRegistration StaticRegistration => CaravanCard_Registration.Instance;
         #region ObjectBounds

@@ -1792,7 +1792,8 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBounded,
         IPackageLocationObject,
         IPackageTargetObject,
-        IPlaceableObject
+        IPlaceableObject,
+        IRecipeItem
     {
         /// <summary>
         /// Aspects: IObjectBounded
@@ -1864,7 +1865,8 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IRecipeItemGetter
     {
         static new ILoquiRegistration StaticRegistration => Armor_Registration.Instance;
         #region ObjectBounds

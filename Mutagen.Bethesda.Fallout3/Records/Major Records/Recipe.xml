@@ -3,9 +3,9 @@
   <Object name="Recipe" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="RCPE">
     <Fields>
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="Conditions" refName="Condition" />
-      <Data recordType="DATA" nullable="False">
+      <Data recordType="DATA">
         <Fields>
           <Enum name="Skill" enumName="ActorValue" byteLength="4" />
           <UInt32 name="Level" />
@@ -17,15 +17,19 @@
       <RefList name="Outputs" refName="RecipeOutput" />
     </Fields>
   </Object>
-  <Object name="RecipeIngredient" objType="Subrecord" recordType="RCIL">
+  <Object name="RecipeIngredient" objType="Subrecord">
     <Fields>
-      <FormLink name="Item" refName="Fallout3MajorRecord" />
+      <FormLink name="Item" recordType="RCIL">
+        <Interface>IRecipeItem</Interface>
+      </FormLink>
       <UInt32 name="Quantity" recordType="RCQY" />
     </Fields>
   </Object>
-  <Object name="RecipeOutput" objType="Subrecord" recordType="RCOD">
+  <Object name="RecipeOutput" objType="Subrecord">
     <Fields>
-      <FormLink name="Item" refName="Fallout3MajorRecord" />
+      <FormLink name="Item" recordType="RCOD">
+        <Interface>IRecipeItem</Interface>
+      </FormLink>
       <UInt32 name="Quantity" recordType="RCQY" />
     </Fields>
   </Object>

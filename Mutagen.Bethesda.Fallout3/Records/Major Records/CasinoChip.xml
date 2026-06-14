@@ -13,6 +13,7 @@
       <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRecipeItem</LinkInterface>
     <LinkInterface>IPackageLocationObject</LinkInterface>
     <LinkInterface>IPackageTargetObject</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>

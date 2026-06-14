@@ -941,6 +941,7 @@ namespace Mutagen.Bethesda.Fallout3
         INoteGetter,
         IObjectBoundedOptional,
         IPlaceableObject,
+        IRecipeItem,
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
@@ -990,6 +991,7 @@ namespace Mutagen.Bethesda.Fallout3
         INamedRequiredGetter,
         IObjectBoundedOptionalGetter,
         IPlaceableObjectGetter,
+        IRecipeItemGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

@@ -1572,5 +1572,6 @@
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IActorBase_Generated.cs" />
+    <Compile Include="Interfaces\Link\IRecipeItem_Generated.cs" />
   </ItemGroup>
 </Project>

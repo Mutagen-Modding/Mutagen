@@ -18,6 +18,7 @@
       <Enum name="CardValue" enumName="CaravanValue" recordType="INTV" byteLength="4" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRecipeItem</LinkInterface>
     <LinkInterface>IPackageLocationObject</LinkInterface>
     <LinkInterface>IPackageTargetObject</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>

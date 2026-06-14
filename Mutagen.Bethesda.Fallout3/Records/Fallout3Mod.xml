@@ -93,6 +93,7 @@
       <Group name="FormLists" refName="FormList" />
       <Group name="ItemMods" refName="ItemMod" />
       <Group name="Reputations" refName="Reputation" />
+      <Group name="Recipes" refName="Recipe" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

@@ -5212,6 +5212,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
+        IRecipeItem,
         IWeaponGetter
     {
         /// <summary>
@@ -5379,7 +5380,8 @@ namespace Mutagen.Bethesda.Fallout3
         IObjectBoundedOptionalGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
-        IPlaceableObjectGetter
+        IPlaceableObjectGetter,
+        IRecipeItemGetter
     {
         static new ILoquiRegistration StaticRegistration => Weapon_Registration.Instance;
         #region ObjectBounds

@@ -24,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -57,16 +58,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRecipeGetter.Name => this.Name;
+        ITranslatedStringGetter? IRecipeGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -956,12 +975,14 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IRecipeInternal>,
         INamed,
         INamedRequired,
-        IRecipeGetter
+        IRecipeGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new ActorValue Skill { get; set; }
         new UInt32 Level { get; set; }
@@ -986,14 +1007,16 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IRecipeGetter>,
         IMapsToGetter<IRecipeGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Recipe_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ActorValue Skill { get; }
@@ -1378,7 +1401,7 @@ namespace Mutagen.Bethesda.Fallout3
             Recipe.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1559,7 +1582,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Recipe_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Recipe_FieldIndex.Conditions) ?? true))
             {
@@ -1769,7 +1792,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Recipe_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Recipe_FieldIndex.Conditions) ?? true))
             {
@@ -2032,7 +2055,8 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
@@ -2153,6 +2177,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Recipe_FieldIndex.Name;
@@ -2184,14 +2210,53 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)Recipe_FieldIndex.SubCategory;
                 }
                 case RecordTypeInts.RCIL:
+                case RecordTypeInts.RCQY:
                 {
-                    item.Ingredients.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RecipeIngredient>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: RecipeIngredient_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: RecipeIngredient.TryCreateFromBinary));
-                    return (int)Recipe_FieldIndex.Ingredients;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Recipe_FieldIndex.SubCategory)
+                    {
+                        item.Ingredients.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RecipeIngredient>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: RecipeIngredient_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: RecipeIngredient.TryCreateFromBinary));
+                        return new ParseResult((int)Recipe_FieldIndex.Ingredients, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Recipe_FieldIndex.Ingredients)
+                    {
+                        item.Outputs.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RecipeOutput>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: RecipeOutput_Registration.TriggerSpecs,
+                                translationParams: translationParams,
+                                transl: RecipeOutput.TryCreateFromBinary));
+                        return new ParseResult((int)Recipe_FieldIndex.Outputs, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                item.Ingredients.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RecipeIngredient>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: RecipeIngredient_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: RecipeIngredient.TryCreateFromBinary));
+                                return new ParseResult((int)Recipe_FieldIndex.Ingredients, nextRecordType);
+                            case 1:
+                                item.Outputs.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RecipeOutput>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: RecipeOutput_Registration.TriggerSpecs,
+                                        translationParams: translationParams,
+                                        transl: RecipeOutput.TryCreateFromBinary));
+                                return new ParseResult((int)Recipe_FieldIndex.Outputs, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.RCOD:
                 {
@@ -2264,10 +2329,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
@@ -2389,33 +2458,61 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)Recipe_FieldIndex.SubCategory;
                 }
                 case RecordTypeInts.RCIL:
+                case RecordTypeInts.RCQY:
                 {
-                    this.Ingredients = BinaryOverlayList.FactoryByArray<IRecipeIngredientGetter>(
-                        mem: stream.RemainingMemory,
-                        package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => RecipeIngredientBinaryOverlay.RecipeIngredientFactory(new OverlayStream(s, p), p, recConv),
-                        locs: ParseRecordLocations(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Recipe_FieldIndex.SubCategory)
+                    {
+                        this.Ingredients = this.ParseRepeatedTypelessSubrecord<IRecipeIngredientGetter>(
                             stream: stream,
+                            translationParams: translationParams,
                             trigger: RecipeIngredient_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
-                    return (int)Recipe_FieldIndex.Ingredients;
+                            factory: RecipeIngredientBinaryOverlay.RecipeIngredientFactory);
+                        return new ParseResult((int)Recipe_FieldIndex.Ingredients, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Recipe_FieldIndex.Ingredients)
+                    {
+                        this.Outputs = this.ParseRepeatedTypelessSubrecord<IRecipeOutputGetter>(
+                            stream: stream,
+                            translationParams: translationParams,
+                            trigger: RecipeOutput_Registration.TriggerSpecs,
+                            factory: RecipeOutputBinaryOverlay.RecipeOutputFactory);
+                        return new ParseResult((int)Recipe_FieldIndex.Outputs, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                this.Ingredients = this.ParseRepeatedTypelessSubrecord<IRecipeIngredientGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: RecipeIngredient_Registration.TriggerSpecs,
+                                    factory: RecipeIngredientBinaryOverlay.RecipeIngredientFactory);
+                                return new ParseResult((int)Recipe_FieldIndex.Ingredients, type);
+                            }
+                            case 1:
+                            {
+                                this.Outputs = this.ParseRepeatedTypelessSubrecord<IRecipeOutputGetter>(
+                                    stream: stream,
+                                    translationParams: translationParams,
+                                    trigger: RecipeOutput_Registration.TriggerSpecs,
+                                    factory: RecipeOutputBinaryOverlay.RecipeOutputFactory);
+                                return new ParseResult((int)Recipe_FieldIndex.Outputs, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.RCOD:
                 {
-                    this.Outputs = BinaryOverlayList.FactoryByArray<IRecipeOutputGetter>(
-                        mem: stream.RemainingMemory,
-                        package: _package,
+                    this.Outputs = this.ParseRepeatedTypelessSubrecord<IRecipeOutputGetter>(
+                        stream: stream,
                         translationParams: translationParams,
-                        getter: (s, p, recConv) => RecipeOutputBinaryOverlay.RecipeOutputFactory(new OverlayStream(s, p), p, recConv),
-                        locs: ParseRecordLocations(
-                            stream: stream,
-                            trigger: RecipeOutput_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
-                            constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                        trigger: RecipeOutput_Registration.TriggerSpecs,
+                        factory: RecipeOutputBinaryOverlay.RecipeOutputFactory);
                     return (int)Recipe_FieldIndex.Outputs;
                 }
                 default:

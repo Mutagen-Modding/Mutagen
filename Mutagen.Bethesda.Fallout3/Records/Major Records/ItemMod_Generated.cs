@@ -954,6 +954,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
+        IRecipeItem,
         ITranslatedNamed,
         ITranslatedNamedRequired,
         IWeightValue
@@ -1012,6 +1013,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
         IPlaceableObjectGetter,
+        IRecipeItemGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter,
         IWeightValueGetter

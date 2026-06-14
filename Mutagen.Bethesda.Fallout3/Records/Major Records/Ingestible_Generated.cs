@@ -1201,6 +1201,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
+        IRecipeItem,
         ITranslatedNamedRequired
     {
         /// <summary>
@@ -1266,6 +1267,7 @@ namespace Mutagen.Bethesda.Fallout3
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
         IPlaceableObjectGetter,
+        IRecipeItemGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Ingestible_Registration.Instance;
