@@ -92,6 +92,7 @@
       <Group name="MusicTypes" refName="MusicType" />
       <Group name="FormLists" refName="FormList" />
       <Group name="ItemMods" refName="ItemMod" />
+      <Group name="Reputations" refName="Reputation" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

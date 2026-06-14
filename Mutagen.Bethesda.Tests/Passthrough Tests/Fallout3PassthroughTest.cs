@@ -443,7 +443,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("LGTM"),
             new RecordType("MUSC"),
             new RecordType("FLST"),
-            new RecordType("IMOD"));
+            new RecordType("IMOD"),
+            new RecordType("REPU"));
         return ret;
     }
 }

@@ -7,15 +7,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -23,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -56,31 +60,57 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IReputationGetter.Name => this.Name;
+        ITranslatedStringGetter? IReputationGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
         }
         #endregion
         #endregion
-        #region LargeIconFilename
-        public String? LargeIconFilename { get; set; }
+        #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IReputationGetter.LargeIconFilename => this.LargeIconFilename;
+        private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IReputationGetter.Icons => this.Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
-        #region SmallIconFilename
-        public String? SmallIconFilename { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IReputationGetter.SmallIconFilename => this.SmallIconFilename;
         #endregion
         #region Value
         public Single? Value { get; set; }
@@ -113,8 +143,7 @@ namespace Mutagen.Bethesda.Fallout3
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.LargeIconFilename = initialValue;
-                this.SmallIconFilename = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Value = initialValue;
             }
 
@@ -127,8 +156,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
                 TItem Name,
-                TItem LargeIconFilename,
-                TItem SmallIconFilename,
+                TItem Icons,
                 TItem Value)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -140,8 +168,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Name = Name;
-                this.LargeIconFilename = LargeIconFilename;
-                this.SmallIconFilename = SmallIconFilename;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Value = Value;
             }
 
@@ -155,8 +182,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Name;
-            public TItem LargeIconFilename;
-            public TItem SmallIconFilename;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public TItem Value;
             #endregion
 
@@ -172,8 +198,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
-                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 return true;
             }
@@ -181,8 +206,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 var hash = new HashCode();
                 hash.Add(this.Name);
-                hash.Add(this.LargeIconFilename);
-                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Icons);
                 hash.Add(this.Value);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -195,8 +219,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
-                if (!eval(this.LargeIconFilename)) return false;
-                if (!eval(this.SmallIconFilename)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Value)) return false;
                 return true;
             }
@@ -207,8 +234,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
-                if (eval(this.LargeIconFilename)) return true;
-                if (eval(this.SmallIconFilename)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Value)) return true;
                 return false;
             }
@@ -226,8 +256,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
-                obj.LargeIconFilename = eval(this.LargeIconFilename);
-                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.Value = eval(this.Value);
             }
             #endregion
@@ -251,13 +280,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.LargeIconFilename ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        sb.AppendItem(LargeIconFilename, "LargeIconFilename");
-                    }
-                    if (printMask?.SmallIconFilename ?? true)
-                    {
-                        sb.AppendItem(SmallIconFilename, "SmallIconFilename");
+                        Icons?.Print(sb);
                     }
                     if (printMask?.Value ?? true)
                     {
@@ -275,8 +300,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public Exception? Name;
-            public Exception? LargeIconFilename;
-            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public Exception? Value;
             #endregion
 
@@ -288,10 +312,8 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case Reputation_FieldIndex.Name:
                         return Name;
-                    case Reputation_FieldIndex.LargeIconFilename:
-                        return LargeIconFilename;
-                    case Reputation_FieldIndex.SmallIconFilename:
-                        return SmallIconFilename;
+                    case Reputation_FieldIndex.Icons:
+                        return Icons;
                     case Reputation_FieldIndex.Value:
                         return Value;
                     default:
@@ -307,11 +329,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Reputation_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Reputation_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = ex;
-                        break;
-                    case Reputation_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = ex;
+                    case Reputation_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     case Reputation_FieldIndex.Value:
                         this.Value = ex;
@@ -330,11 +349,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Reputation_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Reputation_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = (Exception?)obj;
-                        break;
-                    case Reputation_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = (Exception?)obj;
+                    case Reputation_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     case Reputation_FieldIndex.Value:
                         this.Value = (Exception?)obj;
@@ -349,8 +365,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (Name != null) return true;
-                if (LargeIconFilename != null) return true;
-                if (SmallIconFilename != null) return true;
+                if (Icons != null) return true;
                 if (Value != null) return true;
                 return false;
             }
@@ -381,12 +396,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                {
-                    sb.AppendItem(LargeIconFilename, "LargeIconFilename");
-                }
-                {
-                    sb.AppendItem(SmallIconFilename, "SmallIconFilename");
-                }
+                Icons?.Print(sb);
                 {
                     sb.AppendItem(Value, "Value");
                 }
@@ -399,8 +409,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
-                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Value = this.Value.Combine(rhs.Value);
                 return ret;
             }
@@ -425,8 +434,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public bool Name;
-            public bool LargeIconFilename;
-            public bool SmallIconFilename;
+            public Icons.TranslationMask? Icons;
             public bool Value;
             #endregion
 
@@ -437,8 +445,6 @@ namespace Mutagen.Bethesda.Fallout3
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
-                this.LargeIconFilename = defaultOn;
-                this.SmallIconFilename = defaultOn;
                 this.Value = defaultOn;
             }
 
@@ -448,8 +454,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((LargeIconFilename, null));
-                ret.Add((SmallIconFilename, null));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Value, null));
             }
 
@@ -501,6 +506,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IReputation);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ReputationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ReputationSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ReputationSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ReputationSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -580,18 +589,24 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface IReputation :
+        IAssetLinkContainer,
         IFallout3MajorRecordInternal,
+        IHasIcons,
         ILoquiObjectSetter<IReputationInternal>,
         INamed,
         INamedRequired,
-        IReputationGetter
+        IReputationGetter,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
-        new String? LargeIconFilename { get; set; }
-        new String? SmallIconFilename { get; set; }
+        new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons? Icons { get; set; }
         new Single? Value { get; set; }
     }
 
@@ -605,21 +620,29 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.REPU)]
     public partial interface IReputationGetter :
         IFallout3MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IHasIconsGetter,
         ILoquiObject<IReputationGetter>,
         IMapsToGetter<IReputationGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Reputation_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
-        String? LargeIconFilename { get; }
-        String? SmallIconFilename { get; }
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter? Icons { get; }
+        #endregion
         Single? Value { get; }
 
     }
@@ -798,9 +821,8 @@ namespace Mutagen.Bethesda.Fallout3
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
         Name = 7,
-        LargeIconFilename = 8,
-        SmallIconFilename = 9,
-        Value = 10,
+        Icons = 8,
+        Value = 9,
     }
     #endregion
 
@@ -811,9 +833,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Reputation.Mask<>);
 
@@ -848,7 +870,6 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.REPU,
                 RecordTypes.FULL,
                 RecordTypes.ICON,
-                RecordTypes.MICO,
                 RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -895,8 +916,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Name = default;
-            item.LargeIconFilename = default;
-            item.SmallIconFilename = default;
+            item.Icons = null;
             item.Value = default;
             base.Clear(item);
         }
@@ -915,6 +935,32 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IReputation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IReputation obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IReputation obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Icons?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -982,9 +1028,12 @@ namespace Mutagen.Bethesda.Fallout3
             Reputation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
-            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Value = item.Value.EqualsWithin(rhs.Value);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1040,15 +1089,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.LargeIconFilename ?? true)
-                && item.LargeIconFilename is {} LargeIconFilenameItem)
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons is {} IconsItem)
             {
-                sb.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
-            }
-            if ((printMask?.SmallIconFilename ?? true)
-                && item.SmallIconFilename is {} SmallIconFilenameItem)
-            {
-                sb.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+                IconsItem?.Print(sb, "Icons");
             }
             if ((printMask?.Value ?? true)
                 && item.Value is {} ValueItem)
@@ -1107,15 +1151,15 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Reputation_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Reputation_FieldIndex.LargeIconFilename) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Reputation_FieldIndex.Icons) ?? true))
             {
-                if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Reputation_FieldIndex.SmallIconFilename) ?? true))
-            {
-                if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)Reputation_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Reputation_FieldIndex.Value) ?? true))
             {
@@ -1153,13 +1197,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Nameitem);
             }
-            if (item.LargeIconFilename is {} LargeIconFilenameitem)
+            if (item.Icons is {} Iconsitem)
             {
-                hash.Add(LargeIconFilenameitem);
-            }
-            if (item.SmallIconFilename is {} SmallIconFilenameitem)
-            {
-                hash.Add(SmallIconFilenameitem);
+                hash.Add(Iconsitem);
             }
             if (item.Value is {} Valueitem)
             {
@@ -1193,6 +1233,22 @@ namespace Mutagen.Bethesda.Fallout3
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IReputationGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1292,15 +1348,33 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Reputation_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Reputation_FieldIndex.LargeIconFilename) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Reputation_FieldIndex.Icons) ?? true))
             {
-                item.LargeIconFilename = rhs.LargeIconFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Reputation_FieldIndex.SmallIconFilename) ?? true))
-            {
-                item.SmallIconFilename = rhs.SmallIconFilename;
+                errorMask?.PushIndex((int)Reputation_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons is {} rhsIcons)
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Reputation_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Reputation_FieldIndex.Value) ?? true))
             {
@@ -1479,17 +1553,15 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.LargeIconFilename,
-                header: translationParams.ConvertToCustom(RecordTypes.ICON),
-                binaryType: StringBinaryType.NullTerminate);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.SmallIconFilename,
-                header: translationParams.ConvertToCustom(RecordTypes.MICO),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            if (item.Icons is {} IconsItem)
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Value,
@@ -1567,27 +1639,18 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Reputation_FieldIndex.Name;
                 }
                 case RecordTypeInts.ICON:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LargeIconFilename = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)Reputation_FieldIndex.LargeIconFilename;
-                }
-                case RecordTypeInts.MICO:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SmallIconFilename = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)Reputation_FieldIndex.SmallIconFilename;
+                    item.Icons = Mutagen.Bethesda.Fallout3.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Reputation_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -1639,6 +1702,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ReputationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ReputationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1655,20 +1719,17 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        #region LargeIconFilename
-        private int? _LargeIconFilenameLocation;
-        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LargeIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region SmallIconFilename
-        private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmallIconFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
+        public IIconsGetter? Icons { get; private set; }
         #region Value
         private int? _ValueLocation;
         public Single? Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
@@ -1749,13 +1810,11 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ICON:
                 {
-                    _LargeIconFilenameLocation = (stream.Position - offset);
-                    return (int)Reputation_FieldIndex.LargeIconFilename;
-                }
-                case RecordTypeInts.MICO:
-                {
-                    _SmallIconFilenameLocation = (stream.Position - offset);
-                    return (int)Reputation_FieldIndex.SmallIconFilename;
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Reputation_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DATA:
                 {

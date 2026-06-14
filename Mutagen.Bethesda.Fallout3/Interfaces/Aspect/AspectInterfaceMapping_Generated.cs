@@ -87,6 +87,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Perk_Registration.Instance,
                     Quest_Registration.Instance,
                     Region_Registration.Instance,
+                    Reputation_Registration.Instance,
                     Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
@@ -295,6 +296,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Note_Registration.Instance,
                     Projectile_Registration.Instance,
                     Race_Registration.Instance,
+                    Reputation_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
@@ -313,6 +315,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Note_Registration.Instance,
                     Projectile_Registration.Instance,
                     Race_Registration.Instance,
+                    Reputation_Registration.Instance,
                     TalkingActivator_Registration.Instance,
                 },
                 new InterfaceMappingTypes(

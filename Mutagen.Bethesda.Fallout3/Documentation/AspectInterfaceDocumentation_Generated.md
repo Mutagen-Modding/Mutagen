@@ -51,6 +51,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Perk
 - Quest
 - Region
+- Reputation
 - Tree
 ### IHasVoiceType
 - Creature
@@ -466,6 +467,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Region
 - IHasIcons
 ### Reputation
+- IHasIcons
 - INamed
 ### Sound
 - IObjectBounded
