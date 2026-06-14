@@ -2398,7 +2398,6 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.NVDP,
                 RecordTypes.NVGD,
                 RecordTypes.NVEX,
-                RecordTypes.PNAM,
                 RecordTypes.PBEA,
                 RecordTypes.ACRE,
                 RecordTypes.PGRE,

@@ -779,7 +779,13 @@
     <Compile Include="Records\Major Records\MusicType_Generated.cs">
       <DependentUpon>MusicType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NavigationMesh.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\NavigationMesh_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshGridCell_Generated.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NavigationMeshInfoMap_Generated.cs">
@@ -947,16 +953,25 @@
     <Compile Include="Records\Major Records\MessageButton_Generated.cs">
       <DependentUpon>Message.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ANavmeshParent_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceNavmeshParent_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellNavmeshParent_Generated.cs">
-      <DependentUpon>NavigationMesh.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\NavigationMeshData_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshTriangle.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshTriangle_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshDoorLink_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshGrid_Generated.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshEdgeLink.cs">
+      <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NavmeshEdgeLink_Generated.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PackageIdles.cs">

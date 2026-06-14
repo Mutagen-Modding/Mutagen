@@ -72,102 +72,84 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Vertices;
-        public MemorySlice<Byte>? Vertices
+        private ExtendedList<P3Float>? _Vertices;
+        public ExtendedList<P3Float>? Vertices
         {
             get => this._Vertices;
             set => this._Vertices = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.Vertices => this.Vertices;
+        IReadOnlyList<P3Float>? INavigationMeshGetter.Vertices => _Vertices;
+        #endregion
+
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _Triangles;
-        public MemorySlice<Byte>? Triangles
+        private ExtendedList<NavmeshTriangle>? _Triangles;
+        public ExtendedList<NavmeshTriangle>? Triangles
         {
             get => this._Triangles;
             set => this._Triangles = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.Triangles => this.Triangles;
+        IReadOnlyList<INavmeshTriangleGetter>? INavigationMeshGetter.Triangles => _Triangles;
+        #endregion
+
         #endregion
         #region CoverTriangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CoverTriangles;
-        public MemorySlice<Byte>? CoverTriangles
+        private ExtendedList<UInt16>? _CoverTriangles;
+        public ExtendedList<UInt16>? CoverTriangles
         {
             get => this._CoverTriangles;
             set => this._CoverTriangles = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.CoverTriangles => this.CoverTriangles;
+        IReadOnlyList<UInt16>? INavigationMeshGetter.CoverTriangles => _CoverTriangles;
+        #endregion
+
         #endregion
         #region DoorLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DoorLinks;
-        public MemorySlice<Byte>? DoorLinks
+        private ExtendedList<NavmeshDoorLink>? _DoorLinks;
+        public ExtendedList<NavmeshDoorLink>? DoorLinks
         {
             get => this._DoorLinks;
             set => this._DoorLinks = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.DoorLinks => this.DoorLinks;
+        IReadOnlyList<INavmeshDoorLinkGetter>? INavigationMeshGetter.DoorLinks => _DoorLinks;
+        #endregion
+
         #endregion
         #region NavmeshGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _NavmeshGrid;
-        public MemorySlice<Byte>? NavmeshGrid
+        private NavmeshGrid? _NavmeshGrid;
+        public NavmeshGrid? NavmeshGrid
         {
-            get => this._NavmeshGrid;
-            set => this._NavmeshGrid = value;
+            get => _NavmeshGrid;
+            set => _NavmeshGrid = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.NavmeshGrid => this.NavmeshGrid;
+        INavmeshGridGetter? INavigationMeshGetter.NavmeshGrid => this.NavmeshGrid;
         #endregion
         #region EdgeLinks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _EdgeLinks;
-        public MemorySlice<Byte>? EdgeLinks
+        private ExtendedList<NavmeshEdgeLink>? _EdgeLinks;
+        public ExtendedList<NavmeshEdgeLink>? EdgeLinks
         {
             get => this._EdgeLinks;
             set => this._EdgeLinks = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.EdgeLinks => this.EdgeLinks;
+        IReadOnlyList<INavmeshEdgeLinkGetter>? INavigationMeshGetter.EdgeLinks => _EdgeLinks;
         #endregion
-        #region ONAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ONAM;
-        public MemorySlice<Byte>? ONAM
-        {
-            get => this._ONAM;
-            set => this._ONAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.ONAM => this.ONAM;
-        #endregion
-        #region PNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PNAM;
-        public MemorySlice<Byte>? PNAM
-        {
-            get => this._PNAM;
-            set => this._PNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.PNAM => this.PNAM;
-        #endregion
-        #region NNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _NNAM;
-        public MemorySlice<Byte>? NNAM
-        {
-            get => this._NNAM;
-            set => this._NNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INavigationMeshGetter.NNAM => this.NNAM;
+
         #endregion
 
         #region To String
@@ -196,15 +178,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Version = initialValue;
                 this.Data = new MaskItem<TItem, NavigationMeshData.Mask<TItem>?>(initialValue, new NavigationMeshData.Mask<TItem>(initialValue));
-                this.Vertices = initialValue;
-                this.Triangles = initialValue;
-                this.CoverTriangles = initialValue;
-                this.DoorLinks = initialValue;
-                this.NavmeshGrid = initialValue;
-                this.EdgeLinks = initialValue;
-                this.ONAM = initialValue;
-                this.PNAM = initialValue;
-                this.NNAM = initialValue;
+                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(initialValue, []);
+                this.CoverTriangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.DoorLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshDoorLink.Mask<TItem>?>>?>(initialValue, []);
+                this.NavmeshGrid = new MaskItem<TItem, NavmeshGrid.Mask<TItem>?>(initialValue, new NavmeshGrid.Mask<TItem>(initialValue));
+                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshEdgeLink.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -222,10 +201,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CoverTriangles,
                 TItem DoorLinks,
                 TItem NavmeshGrid,
-                TItem EdgeLinks,
-                TItem ONAM,
-                TItem PNAM,
-                TItem NNAM)
+                TItem EdgeLinks)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -237,15 +213,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Version = Version;
                 this.Data = new MaskItem<TItem, NavigationMeshData.Mask<TItem>?>(Data, new NavigationMeshData.Mask<TItem>(Data));
-                this.Vertices = Vertices;
-                this.Triangles = Triangles;
-                this.CoverTriangles = CoverTriangles;
-                this.DoorLinks = DoorLinks;
-                this.NavmeshGrid = NavmeshGrid;
-                this.EdgeLinks = EdgeLinks;
-                this.ONAM = ONAM;
-                this.PNAM = PNAM;
-                this.NNAM = NNAM;
+                this.Vertices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Vertices, []);
+                this.Triangles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>(Triangles, []);
+                this.CoverTriangles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CoverTriangles, []);
+                this.DoorLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshDoorLink.Mask<TItem>?>>?>(DoorLinks, []);
+                this.NavmeshGrid = new MaskItem<TItem, NavmeshGrid.Mask<TItem>?>(NavmeshGrid, new NavmeshGrid.Mask<TItem>(NavmeshGrid));
+                this.EdgeLinks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshEdgeLink.Mask<TItem>?>>?>(EdgeLinks, []);
             }
 
             #pragma warning disable CS8618
@@ -259,15 +232,12 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Version;
             public MaskItem<TItem, NavigationMeshData.Mask<TItem>?>? Data { get; set; }
-            public TItem Vertices;
-            public TItem Triangles;
-            public TItem CoverTriangles;
-            public TItem DoorLinks;
-            public TItem NavmeshGrid;
-            public TItem EdgeLinks;
-            public TItem ONAM;
-            public TItem PNAM;
-            public TItem NNAM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Vertices;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshTriangle.Mask<TItem>?>>?>? Triangles;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CoverTriangles;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshDoorLink.Mask<TItem>?>>?>? DoorLinks;
+            public MaskItem<TItem, NavmeshGrid.Mask<TItem>?>? NavmeshGrid { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, NavmeshEdgeLink.Mask<TItem>?>>?>? EdgeLinks;
             #endregion
 
             #region Equals
@@ -289,9 +259,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.DoorLinks, rhs.DoorLinks)) return false;
                 if (!object.Equals(this.NavmeshGrid, rhs.NavmeshGrid)) return false;
                 if (!object.Equals(this.EdgeLinks, rhs.EdgeLinks)) return false;
-                if (!object.Equals(this.ONAM, rhs.ONAM)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
-                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -305,9 +272,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.DoorLinks);
                 hash.Add(this.NavmeshGrid);
                 hash.Add(this.EdgeLinks);
-                hash.Add(this.ONAM);
-                hash.Add(this.PNAM);
-                hash.Add(this.NNAM);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -324,15 +288,69 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Data.Overall)) return false;
                     if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Vertices)) return false;
-                if (!eval(this.Triangles)) return false;
-                if (!eval(this.CoverTriangles)) return false;
-                if (!eval(this.DoorLinks)) return false;
-                if (!eval(this.NavmeshGrid)) return false;
-                if (!eval(this.EdgeLinks)) return false;
-                if (!eval(this.ONAM)) return false;
-                if (!eval(this.PNAM)) return false;
-                if (!eval(this.NNAM)) return false;
+                if (this.Vertices != null)
+                {
+                    if (!eval(this.Vertices.Overall)) return false;
+                    if (this.Vertices.Specific != null)
+                    {
+                        foreach (var item in this.Vertices.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Triangles != null)
+                {
+                    if (!eval(this.Triangles.Overall)) return false;
+                    if (this.Triangles.Specific != null)
+                    {
+                        foreach (var item in this.Triangles.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CoverTriangles != null)
+                {
+                    if (!eval(this.CoverTriangles.Overall)) return false;
+                    if (this.CoverTriangles.Specific != null)
+                    {
+                        foreach (var item in this.CoverTriangles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.DoorLinks != null)
+                {
+                    if (!eval(this.DoorLinks.Overall)) return false;
+                    if (this.DoorLinks.Specific != null)
+                    {
+                        foreach (var item in this.DoorLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavmeshGrid != null)
+                {
+                    if (!eval(this.NavmeshGrid.Overall)) return false;
+                    if (this.NavmeshGrid.Specific != null && !this.NavmeshGrid.Specific.All(eval)) return false;
+                }
+                if (this.EdgeLinks != null)
+                {
+                    if (!eval(this.EdgeLinks.Overall)) return false;
+                    if (this.EdgeLinks.Specific != null)
+                    {
+                        foreach (var item in this.EdgeLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -347,15 +365,69 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Data.Overall)) return true;
                     if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Vertices)) return true;
-                if (eval(this.Triangles)) return true;
-                if (eval(this.CoverTriangles)) return true;
-                if (eval(this.DoorLinks)) return true;
-                if (eval(this.NavmeshGrid)) return true;
-                if (eval(this.EdgeLinks)) return true;
-                if (eval(this.ONAM)) return true;
-                if (eval(this.PNAM)) return true;
-                if (eval(this.NNAM)) return true;
+                if (this.Vertices != null)
+                {
+                    if (eval(this.Vertices.Overall)) return true;
+                    if (this.Vertices.Specific != null)
+                    {
+                        foreach (var item in this.Vertices.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Triangles != null)
+                {
+                    if (eval(this.Triangles.Overall)) return true;
+                    if (this.Triangles.Specific != null)
+                    {
+                        foreach (var item in this.Triangles.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.CoverTriangles != null)
+                {
+                    if (eval(this.CoverTriangles.Overall)) return true;
+                    if (this.CoverTriangles.Specific != null)
+                    {
+                        foreach (var item in this.CoverTriangles.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.DoorLinks != null)
+                {
+                    if (eval(this.DoorLinks.Overall)) return true;
+                    if (this.DoorLinks.Specific != null)
+                    {
+                        foreach (var item in this.DoorLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (NavmeshGrid != null)
+                {
+                    if (eval(this.NavmeshGrid.Overall)) return true;
+                    if (this.NavmeshGrid.Specific != null && this.NavmeshGrid.Specific.Any(eval)) return true;
+                }
+                if (this.EdgeLinks != null)
+                {
+                    if (eval(this.EdgeLinks.Overall)) return true;
+                    if (this.EdgeLinks.Specific != null)
+                    {
+                        foreach (var item in this.EdgeLinks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -373,15 +445,80 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.Version = eval(this.Version);
                 obj.Data = this.Data == null ? null : new MaskItem<R, NavigationMeshData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.Vertices = eval(this.Vertices);
-                obj.Triangles = eval(this.Triangles);
-                obj.CoverTriangles = eval(this.CoverTriangles);
-                obj.DoorLinks = eval(this.DoorLinks);
-                obj.NavmeshGrid = eval(this.NavmeshGrid);
-                obj.EdgeLinks = eval(this.EdgeLinks);
-                obj.ONAM = eval(this.ONAM);
-                obj.PNAM = eval(this.PNAM);
-                obj.NNAM = eval(this.NNAM);
+                if (Vertices != null)
+                {
+                    obj.Vertices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Vertices.Overall), []);
+                    if (Vertices.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Vertices.Specific = l;
+                        foreach (var item in Vertices.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Triangles != null)
+                {
+                    obj.Triangles = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>?>(eval(this.Triangles.Overall), []);
+                    if (Triangles.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>>();
+                        obj.Triangles.Specific = l;
+                        foreach (var item in Triangles.Specific)
+                        {
+                            MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshTriangle.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (CoverTriangles != null)
+                {
+                    obj.CoverTriangles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CoverTriangles.Overall), []);
+                    if (CoverTriangles.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CoverTriangles.Specific = l;
+                        foreach (var item in CoverTriangles.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (DoorLinks != null)
+                {
+                    obj.DoorLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshDoorLink.Mask<R>?>>?>(eval(this.DoorLinks.Overall), []);
+                    if (DoorLinks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavmeshDoorLink.Mask<R>?>>();
+                        obj.DoorLinks.Specific = l;
+                        foreach (var item in DoorLinks.Specific)
+                        {
+                            MaskItemIndexed<R, NavmeshDoorLink.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshDoorLink.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.NavmeshGrid = this.NavmeshGrid == null ? null : new MaskItem<R, NavmeshGrid.Mask<R>?>(eval(this.NavmeshGrid.Overall), this.NavmeshGrid.Specific?.Translate(eval));
+                if (EdgeLinks != null)
+                {
+                    obj.EdgeLinks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, NavmeshEdgeLink.Mask<R>?>>?>(eval(this.EdgeLinks.Overall), []);
+                    if (EdgeLinks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, NavmeshEdgeLink.Mask<R>?>>();
+                        obj.EdgeLinks.Specific = l;
+                        foreach (var item in EdgeLinks.Specific)
+                        {
+                            MaskItemIndexed<R, NavmeshEdgeLink.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, NavmeshEdgeLink.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -408,41 +545,108 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Data?.Print(sb);
                     }
-                    if (printMask?.Vertices ?? true)
+                    if ((printMask?.Vertices?.Overall ?? true)
+                        && Vertices is {} VerticesItem)
                     {
-                        sb.AppendItem(Vertices, "Vertices");
+                        sb.AppendLine("Vertices =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(VerticesItem.Overall);
+                            if (VerticesItem.Specific != null)
+                            {
+                                foreach (var subItem in VerticesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (printMask?.Triangles ?? true)
+                    if ((printMask?.Triangles?.Overall ?? true)
+                        && Triangles is {} TrianglesItem)
                     {
-                        sb.AppendItem(Triangles, "Triangles");
+                        sb.AppendLine("Triangles =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TrianglesItem.Overall);
+                            if (TrianglesItem.Specific != null)
+                            {
+                                foreach (var subItem in TrianglesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (printMask?.CoverTriangles ?? true)
+                    if ((printMask?.CoverTriangles?.Overall ?? true)
+                        && CoverTriangles is {} CoverTrianglesItem)
                     {
-                        sb.AppendItem(CoverTriangles, "CoverTriangles");
+                        sb.AppendLine("CoverTriangles =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CoverTrianglesItem.Overall);
+                            if (CoverTrianglesItem.Specific != null)
+                            {
+                                foreach (var subItem in CoverTrianglesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (printMask?.DoorLinks ?? true)
+                    if ((printMask?.DoorLinks?.Overall ?? true)
+                        && DoorLinks is {} DoorLinksItem)
                     {
-                        sb.AppendItem(DoorLinks, "DoorLinks");
+                        sb.AppendLine("DoorLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(DoorLinksItem.Overall);
+                            if (DoorLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in DoorLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (printMask?.NavmeshGrid ?? true)
+                    if (printMask?.NavmeshGrid?.Overall ?? true)
                     {
-                        sb.AppendItem(NavmeshGrid, "NavmeshGrid");
+                        NavmeshGrid?.Print(sb);
                     }
-                    if (printMask?.EdgeLinks ?? true)
+                    if ((printMask?.EdgeLinks?.Overall ?? true)
+                        && EdgeLinks is {} EdgeLinksItem)
                     {
-                        sb.AppendItem(EdgeLinks, "EdgeLinks");
-                    }
-                    if (printMask?.ONAM ?? true)
-                    {
-                        sb.AppendItem(ONAM, "ONAM");
-                    }
-                    if (printMask?.PNAM ?? true)
-                    {
-                        sb.AppendItem(PNAM, "PNAM");
-                    }
-                    if (printMask?.NNAM ?? true)
-                    {
-                        sb.AppendItem(NNAM, "NNAM");
+                        sb.AppendLine("EdgeLinks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(EdgeLinksItem.Overall);
+                            if (EdgeLinksItem.Specific != null)
+                            {
+                                foreach (var subItem in EdgeLinksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -457,15 +661,12 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public Exception? Version;
             public MaskItem<Exception?, NavigationMeshData.ErrorMask?>? Data;
-            public Exception? Vertices;
-            public Exception? Triangles;
-            public Exception? CoverTriangles;
-            public Exception? DoorLinks;
-            public Exception? NavmeshGrid;
-            public Exception? EdgeLinks;
-            public Exception? ONAM;
-            public Exception? PNAM;
-            public Exception? NNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Vertices;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>? Triangles;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CoverTriangles;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshDoorLink.ErrorMask?>>?>? DoorLinks;
+            public MaskItem<Exception?, NavmeshGrid.ErrorMask?>? NavmeshGrid;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshEdgeLink.ErrorMask?>>?>? EdgeLinks;
             #endregion
 
             #region IErrorMask
@@ -490,12 +691,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return NavmeshGrid;
                     case NavigationMesh_FieldIndex.EdgeLinks:
                         return EdgeLinks;
-                    case NavigationMesh_FieldIndex.ONAM:
-                        return ONAM;
-                    case NavigationMesh_FieldIndex.PNAM:
-                        return PNAM;
-                    case NavigationMesh_FieldIndex.NNAM:
-                        return NNAM;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -513,31 +708,22 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Data = new MaskItem<Exception?, NavigationMeshData.ErrorMask?>(ex, null);
                         break;
                     case NavigationMesh_FieldIndex.Vertices:
-                        this.Vertices = ex;
+                        this.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case NavigationMesh_FieldIndex.Triangles:
-                        this.Triangles = ex;
+                        this.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(ex, null);
                         break;
                     case NavigationMesh_FieldIndex.CoverTriangles:
-                        this.CoverTriangles = ex;
+                        this.CoverTriangles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case NavigationMesh_FieldIndex.DoorLinks:
-                        this.DoorLinks = ex;
+                        this.DoorLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshDoorLink.ErrorMask?>>?>(ex, null);
                         break;
                     case NavigationMesh_FieldIndex.NavmeshGrid:
-                        this.NavmeshGrid = ex;
+                        this.NavmeshGrid = new MaskItem<Exception?, NavmeshGrid.ErrorMask?>(ex, null);
                         break;
                     case NavigationMesh_FieldIndex.EdgeLinks:
-                        this.EdgeLinks = ex;
-                        break;
-                    case NavigationMesh_FieldIndex.ONAM:
-                        this.ONAM = ex;
-                        break;
-                    case NavigationMesh_FieldIndex.PNAM:
-                        this.PNAM = ex;
-                        break;
-                    case NavigationMesh_FieldIndex.NNAM:
-                        this.NNAM = ex;
+                        this.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshEdgeLink.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -557,31 +743,22 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Data = (MaskItem<Exception?, NavigationMeshData.ErrorMask?>?)obj;
                         break;
                     case NavigationMesh_FieldIndex.Vertices:
-                        this.Vertices = (Exception?)obj;
+                        this.Vertices = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case NavigationMesh_FieldIndex.Triangles:
-                        this.Triangles = (Exception?)obj;
+                        this.Triangles = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>)obj;
                         break;
                     case NavigationMesh_FieldIndex.CoverTriangles:
-                        this.CoverTriangles = (Exception?)obj;
+                        this.CoverTriangles = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case NavigationMesh_FieldIndex.DoorLinks:
-                        this.DoorLinks = (Exception?)obj;
+                        this.DoorLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshDoorLink.ErrorMask?>>?>)obj;
                         break;
                     case NavigationMesh_FieldIndex.NavmeshGrid:
-                        this.NavmeshGrid = (Exception?)obj;
+                        this.NavmeshGrid = (MaskItem<Exception?, NavmeshGrid.ErrorMask?>?)obj;
                         break;
                     case NavigationMesh_FieldIndex.EdgeLinks:
-                        this.EdgeLinks = (Exception?)obj;
-                        break;
-                    case NavigationMesh_FieldIndex.ONAM:
-                        this.ONAM = (Exception?)obj;
-                        break;
-                    case NavigationMesh_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
-                        break;
-                    case NavigationMesh_FieldIndex.NNAM:
-                        this.NNAM = (Exception?)obj;
+                        this.EdgeLinks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshEdgeLink.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -600,9 +777,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (DoorLinks != null) return true;
                 if (NavmeshGrid != null) return true;
                 if (EdgeLinks != null) return true;
-                if (ONAM != null) return true;
-                if (PNAM != null) return true;
-                if (NNAM != null) return true;
                 return false;
             }
             #endregion
@@ -633,32 +807,100 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Version, "Version");
                 }
                 Data?.Print(sb);
+                if (Vertices is {} VerticesItem)
                 {
-                    sb.AppendItem(Vertices, "Vertices");
+                    sb.AppendLine("Vertices =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(VerticesItem.Overall);
+                        if (VerticesItem.Specific != null)
+                        {
+                            foreach (var subItem in VerticesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+                if (Triangles is {} TrianglesItem)
                 {
-                    sb.AppendItem(Triangles, "Triangles");
+                    sb.AppendLine("Triangles =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TrianglesItem.Overall);
+                        if (TrianglesItem.Specific != null)
+                        {
+                            foreach (var subItem in TrianglesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
+                if (CoverTriangles is {} CoverTrianglesItem)
                 {
-                    sb.AppendItem(CoverTriangles, "CoverTriangles");
+                    sb.AppendLine("CoverTriangles =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CoverTrianglesItem.Overall);
+                        if (CoverTrianglesItem.Specific != null)
+                        {
+                            foreach (var subItem in CoverTrianglesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+                if (DoorLinks is {} DoorLinksItem)
                 {
-                    sb.AppendItem(DoorLinks, "DoorLinks");
+                    sb.AppendLine("DoorLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(DoorLinksItem.Overall);
+                        if (DoorLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in DoorLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
+                NavmeshGrid?.Print(sb);
+                if (EdgeLinks is {} EdgeLinksItem)
                 {
-                    sb.AppendItem(NavmeshGrid, "NavmeshGrid");
-                }
-                {
-                    sb.AppendItem(EdgeLinks, "EdgeLinks");
-                }
-                {
-                    sb.AppendItem(ONAM, "ONAM");
-                }
-                {
-                    sb.AppendItem(PNAM, "PNAM");
-                }
-                {
-                    sb.AppendItem(NNAM, "NNAM");
+                    sb.AppendLine("EdgeLinks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(EdgeLinksItem.Overall);
+                        if (EdgeLinksItem.Specific != null)
+                        {
+                            foreach (var subItem in EdgeLinksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -670,15 +912,12 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.Version = this.Version.Combine(rhs.Version);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Vertices = this.Vertices.Combine(rhs.Vertices);
-                ret.Triangles = this.Triangles.Combine(rhs.Triangles);
-                ret.CoverTriangles = this.CoverTriangles.Combine(rhs.CoverTriangles);
-                ret.DoorLinks = this.DoorLinks.Combine(rhs.DoorLinks);
-                ret.NavmeshGrid = this.NavmeshGrid.Combine(rhs.NavmeshGrid);
-                ret.EdgeLinks = this.EdgeLinks.Combine(rhs.EdgeLinks);
-                ret.ONAM = this.ONAM.Combine(rhs.ONAM);
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
-                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
+                ret.Vertices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Vertices?.Overall, rhs.Vertices?.Overall), Noggog.ExceptionExt.Combine(this.Vertices?.Specific, rhs.Vertices?.Specific));
+                ret.Triangles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshTriangle.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Triangles?.Overall, rhs.Triangles?.Overall), Noggog.ExceptionExt.Combine(this.Triangles?.Specific, rhs.Triangles?.Specific));
+                ret.CoverTriangles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CoverTriangles?.Overall, rhs.CoverTriangles?.Overall), Noggog.ExceptionExt.Combine(this.CoverTriangles?.Specific, rhs.CoverTriangles?.Specific));
+                ret.DoorLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshDoorLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.DoorLinks?.Overall, rhs.DoorLinks?.Overall), Noggog.ExceptionExt.Combine(this.DoorLinks?.Specific, rhs.DoorLinks?.Specific));
+                ret.NavmeshGrid = this.NavmeshGrid.Combine(rhs.NavmeshGrid, (l, r) => l.Combine(r));
+                ret.EdgeLinks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, NavmeshEdgeLink.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EdgeLinks?.Overall, rhs.EdgeLinks?.Overall), Noggog.ExceptionExt.Combine(this.EdgeLinks?.Specific, rhs.EdgeLinks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -704,14 +943,11 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Version;
             public NavigationMeshData.TranslationMask? Data;
             public bool Vertices;
-            public bool Triangles;
+            public NavmeshTriangle.TranslationMask? Triangles;
             public bool CoverTriangles;
-            public bool DoorLinks;
-            public bool NavmeshGrid;
-            public bool EdgeLinks;
-            public bool ONAM;
-            public bool PNAM;
-            public bool NNAM;
+            public NavmeshDoorLink.TranslationMask? DoorLinks;
+            public NavmeshGrid.TranslationMask? NavmeshGrid;
+            public NavmeshEdgeLink.TranslationMask? EdgeLinks;
             #endregion
 
             #region Ctors
@@ -722,14 +958,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Version = defaultOn;
                 this.Vertices = defaultOn;
-                this.Triangles = defaultOn;
                 this.CoverTriangles = defaultOn;
-                this.DoorLinks = defaultOn;
-                this.NavmeshGrid = defaultOn;
-                this.EdgeLinks = defaultOn;
-                this.ONAM = defaultOn;
-                this.PNAM = defaultOn;
-                this.NNAM = defaultOn;
             }
 
             #endregion
@@ -740,14 +969,11 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Version, null));
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
                 ret.Add((Vertices, null));
-                ret.Add((Triangles, null));
+                ret.Add((Triangles == null ? DefaultOn : !Triangles.GetCrystal().CopyNothing, Triangles?.GetCrystal()));
                 ret.Add((CoverTriangles, null));
-                ret.Add((DoorLinks, null));
-                ret.Add((NavmeshGrid, null));
-                ret.Add((EdgeLinks, null));
-                ret.Add((ONAM, null));
-                ret.Add((PNAM, null));
-                ret.Add((NNAM, null));
+                ret.Add((DoorLinks == null ? DefaultOn : !DoorLinks.GetCrystal().CopyNothing, DoorLinks?.GetCrystal()));
+                ret.Add((NavmeshGrid != null ? NavmeshGrid.OnOverall : DefaultOn, NavmeshGrid?.GetCrystal()));
+                ret.Add((EdgeLinks == null ? DefaultOn : !EdgeLinks.GetCrystal().CopyNothing, EdgeLinks?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -800,6 +1026,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(INavigationMesh);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -886,15 +1117,16 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new UInt32? Version { get; set; }
         new NavigationMeshData? Data { get; set; }
-        new MemorySlice<Byte>? Vertices { get; set; }
-        new MemorySlice<Byte>? Triangles { get; set; }
-        new MemorySlice<Byte>? CoverTriangles { get; set; }
-        new MemorySlice<Byte>? DoorLinks { get; set; }
-        new MemorySlice<Byte>? NavmeshGrid { get; set; }
-        new MemorySlice<Byte>? EdgeLinks { get; set; }
-        new MemorySlice<Byte>? ONAM { get; set; }
-        new MemorySlice<Byte>? PNAM { get; set; }
-        new MemorySlice<Byte>? NNAM { get; set; }
+        new ExtendedList<P3Float>? Vertices { get; set; }
+        new ExtendedList<NavmeshTriangle>? Triangles { get; set; }
+        new ExtendedList<UInt16>? CoverTriangles { get; set; }
+        new ExtendedList<NavmeshDoorLink>? DoorLinks { get; set; }
+        new NavmeshGrid? NavmeshGrid { get; set; }
+        new ExtendedList<NavmeshEdgeLink>? EdgeLinks { get; set; }
+        #region Mutagen
+        new NavigationMesh.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface INavigationMeshInternal :
@@ -915,15 +1147,16 @@ namespace Mutagen.Bethesda.Fallout3
         static new ILoquiRegistration StaticRegistration => NavigationMesh_Registration.Instance;
         UInt32? Version { get; }
         INavigationMeshDataGetter? Data { get; }
-        ReadOnlyMemorySlice<Byte>? Vertices { get; }
-        ReadOnlyMemorySlice<Byte>? Triangles { get; }
-        ReadOnlyMemorySlice<Byte>? CoverTriangles { get; }
-        ReadOnlyMemorySlice<Byte>? DoorLinks { get; }
-        ReadOnlyMemorySlice<Byte>? NavmeshGrid { get; }
-        ReadOnlyMemorySlice<Byte>? EdgeLinks { get; }
-        ReadOnlyMemorySlice<Byte>? ONAM { get; }
-        ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        ReadOnlyMemorySlice<Byte>? NNAM { get; }
+        IReadOnlyList<P3Float>? Vertices { get; }
+        IReadOnlyList<INavmeshTriangleGetter>? Triangles { get; }
+        IReadOnlyList<UInt16>? CoverTriangles { get; }
+        IReadOnlyList<INavmeshDoorLinkGetter>? DoorLinks { get; }
+        INavmeshGridGetter? NavmeshGrid { get; }
+        IReadOnlyList<INavmeshEdgeLinkGetter>? EdgeLinks { get; }
+
+        #region Mutagen
+        NavigationMesh.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1108,9 +1341,6 @@ namespace Mutagen.Bethesda.Fallout3
         DoorLinks = 12,
         NavmeshGrid = 13,
         EdgeLinks = 14,
-        ONAM = 15,
-        PNAM = 16,
-        NNAM = 17,
     }
     #endregion
 
@@ -1121,9 +1351,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(NavigationMesh.Mask<>);
 
@@ -1163,10 +1393,7 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.NVCA,
                 RecordTypes.NVDP,
                 RecordTypes.NVGD,
-                RecordTypes.NVEX,
-                RecordTypes.ONAM,
-                RecordTypes.PNAM,
-                RecordTypes.NNAM);
+                RecordTypes.NVEX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1213,15 +1440,12 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Version = default;
             item.Data = null;
-            item.Vertices = default;
-            item.Triangles = default;
-            item.CoverTriangles = default;
-            item.DoorLinks = default;
-            item.NavmeshGrid = default;
-            item.EdgeLinks = default;
-            item.ONAM = default;
-            item.PNAM = default;
-            item.NNAM = default;
+            item.Vertices = null;
+            item.Triangles = null;
+            item.CoverTriangles = null;
+            item.DoorLinks = null;
+            item.NavmeshGrid = null;
+            item.EdgeLinks = null;
             base.Clear(item);
         }
         
@@ -1240,6 +1464,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             base.RemapLinks(obj, mapping);
             obj.Data?.RemapLinks(mapping);
+            obj.DoorLinks?.RemapLinks(mapping);
+            obj.EdgeLinks?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1313,15 +1539,31 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Data,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Vertices = MemorySliceExt.SequenceEqual(item.Vertices, rhs.Vertices);
-            ret.Triangles = MemorySliceExt.SequenceEqual(item.Triangles, rhs.Triangles);
-            ret.CoverTriangles = MemorySliceExt.SequenceEqual(item.CoverTriangles, rhs.CoverTriangles);
-            ret.DoorLinks = MemorySliceExt.SequenceEqual(item.DoorLinks, rhs.DoorLinks);
-            ret.NavmeshGrid = MemorySliceExt.SequenceEqual(item.NavmeshGrid, rhs.NavmeshGrid);
-            ret.EdgeLinks = MemorySliceExt.SequenceEqual(item.EdgeLinks, rhs.EdgeLinks);
-            ret.ONAM = MemorySliceExt.SequenceEqual(item.ONAM, rhs.ONAM);
-            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
-            ret.NNAM = MemorySliceExt.SequenceEqual(item.NNAM, rhs.NNAM);
+            ret.Vertices = item.Vertices.CollectionEqualsHelper(
+                rhs.Vertices,
+                (l, r) => l.Equals(r),
+                include);
+            ret.Triangles = item.Triangles.CollectionEqualsHelper(
+                rhs.Triangles,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.CoverTriangles = item.CoverTriangles.CollectionEqualsHelper(
+                rhs.CoverTriangles,
+                (l, r) => l == r,
+                include);
+            ret.DoorLinks = item.DoorLinks.CollectionEqualsHelper(
+                rhs.DoorLinks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.NavmeshGrid = EqualsMaskHelper.EqualsHelper(
+                item.NavmeshGrid,
+                rhs.NavmeshGrid,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.EdgeLinks = item.EdgeLinks.CollectionEqualsHelper(
+                rhs.EdgeLinks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1381,50 +1623,85 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 DataItem?.Print(sb, "Data");
             }
-            if ((printMask?.Vertices ?? true)
+            if ((printMask?.Vertices?.Overall ?? true)
                 && item.Vertices is {} VerticesItem)
             {
-                sb.AppendLine($"Vertices => {SpanExt.ToHexString(VerticesItem)}");
+                sb.AppendLine("Vertices =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in VerticesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
             }
-            if ((printMask?.Triangles ?? true)
+            if ((printMask?.Triangles?.Overall ?? true)
                 && item.Triangles is {} TrianglesItem)
             {
-                sb.AppendLine($"Triangles => {SpanExt.ToHexString(TrianglesItem)}");
+                sb.AppendLine("Triangles =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in TrianglesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
-            if ((printMask?.CoverTriangles ?? true)
+            if ((printMask?.CoverTriangles?.Overall ?? true)
                 && item.CoverTriangles is {} CoverTrianglesItem)
             {
-                sb.AppendLine($"CoverTriangles => {SpanExt.ToHexString(CoverTrianglesItem)}");
+                sb.AppendLine("CoverTriangles =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in CoverTrianglesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
             }
-            if ((printMask?.DoorLinks ?? true)
+            if ((printMask?.DoorLinks?.Overall ?? true)
                 && item.DoorLinks is {} DoorLinksItem)
             {
-                sb.AppendLine($"DoorLinks => {SpanExt.ToHexString(DoorLinksItem)}");
+                sb.AppendLine("DoorLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in DoorLinksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
-            if ((printMask?.NavmeshGrid ?? true)
+            if ((printMask?.NavmeshGrid?.Overall ?? true)
                 && item.NavmeshGrid is {} NavmeshGridItem)
             {
-                sb.AppendLine($"NavmeshGrid => {SpanExt.ToHexString(NavmeshGridItem)}");
+                NavmeshGridItem?.Print(sb, "NavmeshGrid");
             }
-            if ((printMask?.EdgeLinks ?? true)
+            if ((printMask?.EdgeLinks?.Overall ?? true)
                 && item.EdgeLinks is {} EdgeLinksItem)
             {
-                sb.AppendLine($"EdgeLinks => {SpanExt.ToHexString(EdgeLinksItem)}");
-            }
-            if ((printMask?.ONAM ?? true)
-                && item.ONAM is {} ONAMItem)
-            {
-                sb.AppendLine($"ONAM => {SpanExt.ToHexString(ONAMItem)}");
-            }
-            if ((printMask?.PNAM ?? true)
-                && item.PNAM is {} PNAMItem)
-            {
-                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
-            }
-            if ((printMask?.NNAM ?? true)
-                && item.NNAM is {} NNAMItem)
-            {
-                sb.AppendLine($"NNAM => {SpanExt.ToHexString(NNAMItem)}");
+                sb.AppendLine("EdgeLinks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in EdgeLinksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
@@ -1490,39 +1767,31 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Vertices) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.Vertices, rhs.Vertices)) return false;
+                if (!lhs.Vertices.SequenceEqualNullable(rhs.Vertices)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Triangles) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.Triangles, rhs.Triangles)) return false;
+                if (!lhs.Triangles.SequenceEqualNullable(rhs.Triangles, (l, r) => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.Triangles)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.CoverTriangles) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CoverTriangles, rhs.CoverTriangles)) return false;
+                if (!lhs.CoverTriangles.SequenceEqualNullable(rhs.CoverTriangles)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.DoorLinks) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DoorLinks, rhs.DoorLinks)) return false;
+                if (!lhs.DoorLinks.SequenceEqualNullable(rhs.DoorLinks, (l, r) => ((NavmeshDoorLinkCommon)((INavmeshDoorLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.DoorLinks)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGrid) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.NavmeshGrid, rhs.NavmeshGrid)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.NavmeshGrid, rhs.NavmeshGrid, out var lhsNavmeshGrid, out var rhsNavmeshGrid, out var isNavmeshGridEqual))
+                {
+                    if (!((NavmeshGridCommon)((INavmeshGridGetter)lhsNavmeshGrid).CommonInstance()!).Equals(lhsNavmeshGrid, rhsNavmeshGrid, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGrid))) return false;
+                }
+                else if (!isNavmeshGridEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.EdgeLinks) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.EdgeLinks, rhs.EdgeLinks)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.ONAM, rhs.ONAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.NNAM, rhs.NNAM)) return false;
+                if (!lhs.EdgeLinks.SequenceEqualNullable(rhs.EdgeLinks, (l, r) => ((NavmeshEdgeLinkCommon)((INavmeshEdgeLinkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.EdgeLinks)))) return false;
             }
             return true;
         }
@@ -1560,42 +1829,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Dataitem);
             }
-            if (item.Vertices is {} VerticesItem)
+            hash.Add(item.Vertices);
+            hash.Add(item.Triangles);
+            hash.Add(item.CoverTriangles);
+            hash.Add(item.DoorLinks);
+            if (item.NavmeshGrid is {} NavmeshGriditem)
             {
-                hash.Add(VerticesItem);
+                hash.Add(NavmeshGriditem);
             }
-            if (item.Triangles is {} TrianglesItem)
-            {
-                hash.Add(TrianglesItem);
-            }
-            if (item.CoverTriangles is {} CoverTrianglesItem)
-            {
-                hash.Add(CoverTrianglesItem);
-            }
-            if (item.DoorLinks is {} DoorLinksItem)
-            {
-                hash.Add(DoorLinksItem);
-            }
-            if (item.NavmeshGrid is {} NavmeshGridItem)
-            {
-                hash.Add(NavmeshGridItem);
-            }
-            if (item.EdgeLinks is {} EdgeLinksItem)
-            {
-                hash.Add(EdgeLinksItem);
-            }
-            if (item.ONAM is {} ONAMItem)
-            {
-                hash.Add(ONAMItem);
-            }
-            if (item.PNAM is {} PNAMItem)
-            {
-                hash.Add(PNAMItem);
-            }
-            if (item.NNAM is {} NNAMItem)
-            {
-                hash.Add(NNAMItem);
-            }
+            hash.Add(item.EdgeLinks);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1630,6 +1872,20 @@ namespace Mutagen.Bethesda.Fallout3
                 foreach (var item in DataItems.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
+                }
+            }
+            if (obj.DoorLinks is {} DoorLinksItem)
+            {
+                foreach (var item in DoorLinksItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.EdgeLinks is {} EdgeLinksItem)
+            {
+                foreach (var item in EdgeLinksItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                {
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             yield break;
@@ -1760,101 +2016,176 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Vertices) ?? true))
             {
-                if(rhs.Vertices is {} Verticesrhs)
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.Vertices);
+                try
                 {
-                    item.Vertices = Verticesrhs.ToArray();
+                    if ((rhs.Vertices != null))
+                    {
+                        item.Vertices = 
+                            rhs.Vertices
+                            .ToExtendedList<P3Float>();
+                    }
+                    else
+                    {
+                        item.Vertices = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Vertices = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.Triangles) ?? true))
             {
-                if(rhs.Triangles is {} Trianglesrhs)
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.Triangles);
+                try
                 {
-                    item.Triangles = Trianglesrhs.ToArray();
+                    if ((rhs.Triangles != null))
+                    {
+                        item.Triangles = 
+                            rhs.Triangles
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<NavmeshTriangle>();
+                    }
+                    else
+                    {
+                        item.Triangles = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.Triangles = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.CoverTriangles) ?? true))
             {
-                if(rhs.CoverTriangles is {} CoverTrianglesrhs)
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.CoverTriangles);
+                try
                 {
-                    item.CoverTriangles = CoverTrianglesrhs.ToArray();
+                    if ((rhs.CoverTriangles != null))
+                    {
+                        item.CoverTriangles = 
+                            rhs.CoverTriangles
+                            .ToExtendedList<UInt16>();
+                    }
+                    else
+                    {
+                        item.CoverTriangles = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CoverTriangles = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.DoorLinks) ?? true))
             {
-                if(rhs.DoorLinks is {} DoorLinksrhs)
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.DoorLinks);
+                try
                 {
-                    item.DoorLinks = DoorLinksrhs.ToArray();
+                    if ((rhs.DoorLinks != null))
+                    {
+                        item.DoorLinks = 
+                            rhs.DoorLinks
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<NavmeshDoorLink>();
+                    }
+                    else
+                    {
+                        item.DoorLinks = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.DoorLinks = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NavmeshGrid) ?? true))
             {
-                if(rhs.NavmeshGrid is {} NavmeshGridrhs)
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.NavmeshGrid);
+                try
                 {
-                    item.NavmeshGrid = NavmeshGridrhs.ToArray();
+                    if(rhs.NavmeshGrid is {} rhsNavmeshGrid)
+                    {
+                        item.NavmeshGrid = rhsNavmeshGrid.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)NavigationMesh_FieldIndex.NavmeshGrid));
+                    }
+                    else
+                    {
+                        item.NavmeshGrid = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.NavmeshGrid = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.EdgeLinks) ?? true))
             {
-                if(rhs.EdgeLinks is {} EdgeLinksrhs)
+                errorMask?.PushIndex((int)NavigationMesh_FieldIndex.EdgeLinks);
+                try
                 {
-                    item.EdgeLinks = EdgeLinksrhs.ToArray();
+                    if ((rhs.EdgeLinks != null))
+                    {
+                        item.EdgeLinks = 
+                            rhs.EdgeLinks
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<NavmeshEdgeLink>();
+                    }
+                    else
+                    {
+                        item.EdgeLinks = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.EdgeLinks = default;
+                    errorMask.ReportException(ex);
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.ONAM) ?? true))
-            {
-                if(rhs.ONAM is {} ONAMrhs)
+                finally
                 {
-                    item.ONAM = ONAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ONAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.PNAM) ?? true))
-            {
-                if(rhs.PNAM is {} PNAMrhs)
-                {
-                    item.PNAM = PNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.PNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMesh_FieldIndex.NNAM) ?? true))
-            {
-                if(rhs.NNAM is {} NNAMrhs)
-                {
-                    item.NNAM = NNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.NNAM = default;
+                    errorMask?.PopIndex();
                 }
             }
             DeepCopyInCustom(
@@ -2037,42 +2368,59 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
-                item: item.Vertices,
-                header: translationParams.ConvertToCustom(RecordTypes.NVVX));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                items: item.Vertices,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NVVX),
+                transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
                 writer: writer,
-                item: item.Triangles,
-                header: translationParams.ConvertToCustom(RecordTypes.NVTR));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                items: item.Triangles,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NVTR),
+                transl: (MutagenWriter subWriter, INavmeshTriangleGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshTriangleBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt16>.Instance.Write(
                 writer: writer,
-                item: item.CoverTriangles,
-                header: translationParams.ConvertToCustom(RecordTypes.NVCA));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                items: item.CoverTriangles,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NVCA),
+                transl: UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshDoorLinkGetter>.Instance.Write(
                 writer: writer,
-                item: item.DoorLinks,
-                header: translationParams.ConvertToCustom(RecordTypes.NVDP));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                items: item.DoorLinks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NVDP),
+                transl: (MutagenWriter subWriter, INavmeshDoorLinkGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshDoorLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            if (item.NavmeshGrid is {} NavmeshGridItem)
+            {
+                ((NavmeshGridBinaryWriteTranslation)((IBinaryItem)NavmeshGridItem).BinaryWriteTranslator).Write(
+                    item: NavmeshGridItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshEdgeLinkGetter>.Instance.Write(
                 writer: writer,
-                item: item.NavmeshGrid,
-                header: translationParams.ConvertToCustom(RecordTypes.NVGD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.EdgeLinks,
-                header: translationParams.ConvertToCustom(RecordTypes.NVEX));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ONAM,
-                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.PNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.NNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.NNAM));
+                items: item.EdgeLinks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.NVEX),
+                transl: (MutagenWriter subWriter, INavmeshEdgeLinkGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((NavmeshEdgeLinkBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
@@ -2155,56 +2503,57 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NVVX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Vertices = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Vertices = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<P3Float>();
                     return (int)NavigationMesh_FieldIndex.Vertices;
                 }
                 case RecordTypeInts.NVTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Triangles = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Triangles = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: NavmeshTriangle.TryCreateFromBinary)
+                        .CastExtendedList<NavmeshTriangle>();
                     return (int)NavigationMesh_FieldIndex.Triangles;
                 }
                 case RecordTypeInts.NVCA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CoverTriangles = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.CoverTriangles = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt16>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<UInt16>();
                     return (int)NavigationMesh_FieldIndex.CoverTriangles;
                 }
                 case RecordTypeInts.NVDP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DoorLinks = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DoorLinks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshDoorLink>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: NavmeshDoorLink.TryCreateFromBinary)
+                        .CastExtendedList<NavmeshDoorLink>();
                     return (int)NavigationMesh_FieldIndex.DoorLinks;
                 }
                 case RecordTypeInts.NVGD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NavmeshGrid = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.NavmeshGrid = Mutagen.Bethesda.Fallout3.NavmeshGrid.CreateFromBinary(frame: frame);
                     return (int)NavigationMesh_FieldIndex.NavmeshGrid;
                 }
                 case RecordTypeInts.NVEX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EdgeLinks = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.EdgeLinks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshEdgeLink>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: NavmeshEdgeLink.TryCreateFromBinary)
+                        .CastExtendedList<NavmeshEdgeLink>();
                     return (int)NavigationMesh_FieldIndex.EdgeLinks;
-                }
-                case RecordTypeInts.ONAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ONAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)NavigationMesh_FieldIndex.ONAM;
-                }
-                case RecordTypeInts.PNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)NavigationMesh_FieldIndex.PNAM;
-                }
-                case RecordTypeInts.NNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)NavigationMesh_FieldIndex.NNAM;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2264,6 +2613,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
         protected override Type LinkType => typeof(INavigationMeshGetter);
 
+        public NavigationMesh.MajorFlag MajorFlags => (NavigationMesh.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Version
         private int? _VersionLocation;
@@ -2273,42 +2623,15 @@ namespace Mutagen.Bethesda.Fallout3
         private RangeInt32? _DataLocation;
         public INavigationMeshDataGetter? Data => _DataLocation.HasValue ? NavigationMeshDataBinaryOverlay.NavigationMeshDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
-        #region Vertices
-        private int? _VerticesLocation;
-        public ReadOnlyMemorySlice<Byte>? Vertices => _VerticesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _VerticesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region Triangles
-        private int? _TrianglesLocation;
-        public ReadOnlyMemorySlice<Byte>? Triangles => _TrianglesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrianglesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region CoverTriangles
-        private int? _CoverTrianglesLocation;
-        public ReadOnlyMemorySlice<Byte>? CoverTriangles => _CoverTrianglesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CoverTrianglesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region DoorLinks
-        private int? _DoorLinksLocation;
-        public ReadOnlyMemorySlice<Byte>? DoorLinks => _DoorLinksLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DoorLinksLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<P3Float>? Vertices { get; private set; }
+        public IReadOnlyList<INavmeshTriangleGetter>? Triangles { get; private set; }
+        public IReadOnlyList<UInt16>? CoverTriangles { get; private set; }
+        public IReadOnlyList<INavmeshDoorLinkGetter>? DoorLinks { get; private set; }
         #region NavmeshGrid
-        private int? _NavmeshGridLocation;
-        public ReadOnlyMemorySlice<Byte>? NavmeshGrid => _NavmeshGridLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NavmeshGridLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private RangeInt32? _NavmeshGridLocation;
+        public INavmeshGridGetter? NavmeshGrid => _NavmeshGridLocation.HasValue ? NavmeshGridBinaryOverlay.NavmeshGridFactory(_recordData.Slice(_NavmeshGridLocation!.Value.Min), _package) : default;
         #endregion
-        #region EdgeLinks
-        private int? _EdgeLinksLocation;
-        public ReadOnlyMemorySlice<Byte>? EdgeLinks => _EdgeLinksLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EdgeLinksLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region ONAM
-        private int? _ONAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ONAM => _ONAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ONAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region PNAM
-        private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region NNAM
-        private int? _NNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyList<INavmeshEdgeLinkGetter>? EdgeLinks { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2390,48 +2713,58 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.NVVX:
                 {
-                    _VerticesLocation = (stream.Position - offset);
+                    this.Vertices = BinaryOverlayList.FactoryByStartIndexWithTrigger<P3Float>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 12,
+                        getter: (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     return (int)NavigationMesh_FieldIndex.Vertices;
                 }
                 case RecordTypeInts.NVTR:
                 {
-                    _TrianglesLocation = (stream.Position - offset);
+                    this.Triangles = BinaryOverlayList.FactoryByStartIndexWithTrigger<INavmeshTriangleGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 16,
+                        getter: (s, p) => NavmeshTriangleBinaryOverlay.NavmeshTriangleFactory(s, p));
                     return (int)NavigationMesh_FieldIndex.Triangles;
                 }
                 case RecordTypeInts.NVCA:
                 {
-                    _CoverTrianglesLocation = (stream.Position - offset);
+                    this.CoverTriangles = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt16>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 2,
+                        getter: (s, p) => BinaryPrimitives.ReadUInt16LittleEndian(s));
                     return (int)NavigationMesh_FieldIndex.CoverTriangles;
                 }
                 case RecordTypeInts.NVDP:
                 {
-                    _DoorLinksLocation = (stream.Position - offset);
+                    this.DoorLinks = BinaryOverlayList.FactoryByStartIndexWithTrigger<INavmeshDoorLinkGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 8,
+                        getter: (s, p) => NavmeshDoorLinkBinaryOverlay.NavmeshDoorLinkFactory(s, p));
                     return (int)NavigationMesh_FieldIndex.DoorLinks;
                 }
                 case RecordTypeInts.NVGD:
                 {
-                    _NavmeshGridLocation = (stream.Position - offset);
+                    _NavmeshGridLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)NavigationMesh_FieldIndex.NavmeshGrid;
                 }
                 case RecordTypeInts.NVEX:
                 {
-                    _EdgeLinksLocation = (stream.Position - offset);
+                    this.EdgeLinks = BinaryOverlayList.FactoryByStartIndexWithTrigger<INavmeshEdgeLinkGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 10,
+                        getter: (s, p) => NavmeshEdgeLinkBinaryOverlay.NavmeshEdgeLinkFactory(s, p));
                     return (int)NavigationMesh_FieldIndex.EdgeLinks;
-                }
-                case RecordTypeInts.ONAM:
-                {
-                    _ONAMLocation = (stream.Position - offset);
-                    return (int)NavigationMesh_FieldIndex.ONAM;
-                }
-                case RecordTypeInts.PNAM:
-                {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)NavigationMesh_FieldIndex.PNAM;
-                }
-                case RecordTypeInts.NNAM:
-                {
-                    _NNAMLocation = (stream.Position - offset);
-                    return (int)NavigationMesh_FieldIndex.NNAM;
                 }
                 default:
                     return base.FillRecordType(

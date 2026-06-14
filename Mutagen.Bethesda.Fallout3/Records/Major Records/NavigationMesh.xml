@@ -1,32 +1,20 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="NavigationMesh" objType="Record" baseClass="Fallout3MajorRecord"
-          recordType="NAVM">
+          recordType="NAVM" majorFlag="true">
     <Fields>
       <UInt32 name="Version" recordType="NVER" />
       <RefDirect name="Data" refName="NavigationMeshData" />
-      <ByteArray name="Vertices" recordType="NVVX" />
-      <ByteArray name="Triangles" recordType="NVTR" />
-      <ByteArray name="CoverTriangles" recordType="NVCA" />
-      <ByteArray name="DoorLinks" recordType="NVDP" />
-      <ByteArray name="NavmeshGrid" recordType="NVGD" />
-      <ByteArray name="EdgeLinks" recordType="NVEX" />
-      <ByteArray name="ONAM" recordType="ONAM" />
-      <ByteArray name="PNAM" recordType="PNAM" />
-      <ByteArray name="NNAM" recordType="NNAM" />
-    </Fields>
-  </Object>
-  <Object name="ANavmeshParent" abstract="true" objType="Subrecord" />
-  <Object name="WorldspaceNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
-    <Fields>
-      <FormLink name="Parent" refName="Worldspace" />
-      <P2Int16 name="Coordinates" />
-    </Fields>
-  </Object>
-  <Object name="CellNavmeshParent" objType="Subrecord" baseClass="ANavmeshParent">
-    <Fields>
-      <FormLink name="UnusedWorldspaceParent" refName="Worldspace" />
-      <FormLink name="Parent" refName="Cell" />
+      <List name="Vertices" recordType="NVVX">
+        <P3Float />
+      </List>
+      <RefList name="Triangles" refName="NavmeshTriangle" recordType="NVTR" />
+      <List name="CoverTriangles" recordType="NVCA">
+        <UInt16 />
+      </List>
+      <RefList name="DoorLinks" refName="NavmeshDoorLink" recordType="NVDP" />
+      <RefDirect name="NavmeshGrid" refName="NavmeshGrid" />
+      <RefList name="EdgeLinks" refName="NavmeshEdgeLink" recordType="NVEX" />
     </Fields>
   </Object>
   <Object name="NavigationMeshData" objType="Subrecord" recordType="DATA">
@@ -37,6 +25,47 @@
       <UInt32 name="EdgeLinkCount" />
       <UInt32 name="CoverTriangleCount" />
       <UInt32 name="DoorLinkCount" />
+    </Fields>
+  </Object>
+  <Object name="NavmeshTriangle" objType="Subrecord">
+    <Fields>
+      <P3UInt16 name="Vertices" />
+      <Int16 name="EdgeLink_0_1" />
+      <Int16 name="EdgeLink_1_2" />
+      <Int16 name="EdgeLink_2_0" />
+      <Enum name="Flags" enumName="NavmeshTriangle.Flag" byteLength="2" />
+      <UInt16 name="CoverFlags" />
+    </Fields>
+  </Object>
+  <Object name="NavmeshDoorLink" objType="Subrecord">
+    <Fields>
+      <FormLink name="DoorReference" refName="PlacedObject" />
+      <UInt16 name="Triangle" />
+      <UInt16 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="NavmeshGrid" objType="Subrecord" recordType="NVGD">
+    <Fields>
+      <UInt32 name="Divisor" />
+      <Float name="MaxDistanceX" />
+      <Float name="MaxDistanceY" />
+      <P3Float name="Min" />
+      <P3Float name="Max" />
+      <RefList name="Cells" refName="NavmeshGridCell" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="NavmeshGridCell" objType="Subrecord">
+    <Fields>
+      <List name="Triangles" counterLength="2">
+        <UInt16 />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="NavmeshEdgeLink" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="NavmeshEdgeLink.LinkType" byteLength="4" />
+      <FormLink name="Mesh" refName="NavigationMesh" />
+      <UInt16 name="Triangle" />
     </Fields>
   </Object>
 </Loqui>
