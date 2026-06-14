@@ -94,6 +94,7 @@
       <Group name="ItemMods" refName="ItemMod" />
       <Group name="Reputations" refName="Reputation" />
       <Group name="Recipes" refName="Recipe" />
+      <Group name="RecipeCategories" refName="RecipeCategory" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

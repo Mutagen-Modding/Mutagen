@@ -445,7 +445,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("FLST"),
             new RecordType("IMOD"),
             new RecordType("REPU"),
-            new RecordType("RCPE"));
+            new RecordType("RCPE"),
+            new RecordType("RCCT"));
         return ret;
     }
 }
