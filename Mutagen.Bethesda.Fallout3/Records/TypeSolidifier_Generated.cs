@@ -420,9 +420,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CasinoChip</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter> CasinoChip(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter> CasinoChip(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICasinoChipGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -432,9 +432,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on CasinoChip</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter> CasinoChip(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter> CasinoChip(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICasinoChipGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ICasinoChip, ICasinoChipGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
