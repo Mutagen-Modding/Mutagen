@@ -290,6 +290,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Class_Registration.Instance,
                     HeadPart_Registration.Instance,
@@ -310,6 +311,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Class_Registration.Instance,
                     Eyes_Registration.Instance,

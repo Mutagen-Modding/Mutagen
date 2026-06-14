@@ -96,6 +96,7 @@
       <Group name="Recipes" refName="Recipe" />
       <Group name="RecipeCategories" refName="RecipeCategory" />
       <Group name="CasinoChips" refName="CasinoChip" />
+      <Group name="Casinos" refName="Casino" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

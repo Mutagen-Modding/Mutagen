@@ -1335,7 +1335,6 @@
     <Compile Include="Enum\AmmoEffectType.cs" />
     <Compile Include="Enum\CaravanSuit.cs" />
     <Compile Include="Enum\CaravanValue.cs" />
-    <Compile Include="Enum\CasinoFlag.cs" />
     <Compile Include="Enum\ChallengeFlag.cs" />
     <Compile Include="Enum\ChallengeType.cs" />
     <Compile Include="Enum\LoadScreenTypeEnum.cs" />

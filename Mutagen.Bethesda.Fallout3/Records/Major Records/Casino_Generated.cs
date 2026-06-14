@@ -24,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -57,16 +58,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICasinoGetter.Name => this.Name;
+        ITranslatedStringGetter? ICasinoGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -76,8 +95,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region DecksPercentBeforeShuffle
         public Single DecksPercentBeforeShuffle { get; set; } = default(Single);
         #endregion
-        #region BlackjackPayoutRatio
-        public Single BlackjackPayoutRatio { get; set; } = default(Single);
+        #region BlackJackPayoutRatio
+        public Single BlackJackPayoutRatio { get; set; } = default(Single);
         #endregion
         #region SlotReelSymbol1
         public UInt32 SlotReelSymbol1 { get; set; } = default(UInt32);
@@ -126,27 +145,53 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IQuestGetter> ICasinoGetter.CasinoWinningsQuest => this.CasinoWinningsQuest;
         #endregion
-        #region Flags
-        public CasinoFlag Flags { get; set; } = default(CasinoFlag);
+        #region DealerStayOnSoft17
+        public Boolean DealerStayOnSoft17 { get; set; } = default(Boolean);
         #endregion
-        #region ChipModels
+        #region ChipModelOneDollar
+        public String? ChipModelOneDollar { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _ChipModels;
-        public ExtendedList<String>? ChipModels
-        {
-            get => this._ChipModels;
-            set => this._ChipModels = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String>? ICasinoGetter.ChipModels => _ChipModels;
+        String? ICasinoGetter.ChipModelOneDollar => this.ChipModelOneDollar;
         #endregion
-
+        #region ChipModelFiveDollar
+        public String? ChipModelFiveDollar { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.ChipModelFiveDollar => this.ChipModelFiveDollar;
+        #endregion
+        #region ChipModelTenDollar
+        public String? ChipModelTenDollar { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.ChipModelTenDollar => this.ChipModelTenDollar;
+        #endregion
+        #region ChipModelTwentyFiveDollar
+        public String? ChipModelTwentyFiveDollar { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.ChipModelTwentyFiveDollar => this.ChipModelTwentyFiveDollar;
+        #endregion
+        #region ChipModelOneHundredDollar
+        public String? ChipModelOneHundredDollar { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.ChipModelOneHundredDollar => this.ChipModelOneHundredDollar;
+        #endregion
+        #region ChipModelFiveHundredDollar
+        public String? ChipModelFiveHundredDollar { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.ChipModelFiveHundredDollar => this.ChipModelFiveHundredDollar;
+        #endregion
+        #region ChipModelRoulette
+        public String? ChipModelRoulette { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.ChipModelRoulette => this.ChipModelRoulette;
         #endregion
         #region SlotMachineModel
         public String? SlotMachineModel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICasinoGetter.SlotMachineModel => this.SlotMachineModel;
+        #endregion
+        #region SlotMachineModel2
+        public String? SlotMachineModel2 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.SlotMachineModel2 => this.SlotMachineModel2;
         #endregion
         #region BlackJackTableModel
         public String? BlackJackTableModel { get; set; }
@@ -163,33 +208,60 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICasinoGetter.RouletteTableModel => this.RouletteTableModel;
         #endregion
-        #region SlotReelTextures
+        #region SlotReelTextureSymbol1
+        public String? SlotReelTextureSymbol1 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _SlotReelTextures;
-        public ExtendedList<String>? SlotReelTextures
-        {
-            get => this._SlotReelTextures;
-            set => this._SlotReelTextures = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String>? ICasinoGetter.SlotReelTextures => _SlotReelTextures;
+        String? ICasinoGetter.SlotReelTextureSymbol1 => this.SlotReelTextureSymbol1;
         #endregion
-
-        #endregion
-        #region BlackjackDeckTextures
+        #region SlotReelTextureSymbol2
+        public String? SlotReelTextureSymbol2 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _BlackjackDeckTextures;
-        public ExtendedList<String>? BlackjackDeckTextures
-        {
-            get => this._BlackjackDeckTextures;
-            set => this._BlackjackDeckTextures = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String>? ICasinoGetter.BlackjackDeckTextures => _BlackjackDeckTextures;
+        String? ICasinoGetter.SlotReelTextureSymbol2 => this.SlotReelTextureSymbol2;
         #endregion
-
+        #region SlotReelTextureSymbol3
+        public String? SlotReelTextureSymbol3 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.SlotReelTextureSymbol3 => this.SlotReelTextureSymbol3;
+        #endregion
+        #region SlotReelTextureSymbol4
+        public String? SlotReelTextureSymbol4 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.SlotReelTextureSymbol4 => this.SlotReelTextureSymbol4;
+        #endregion
+        #region SlotReelTextureSymbol5
+        public String? SlotReelTextureSymbol5 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.SlotReelTextureSymbol5 => this.SlotReelTextureSymbol5;
+        #endregion
+        #region SlotReelTextureSymbol6
+        public String? SlotReelTextureSymbol6 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.SlotReelTextureSymbol6 => this.SlotReelTextureSymbol6;
+        #endregion
+        #region SlotReelTextureSymbolW
+        public String? SlotReelTextureSymbolW { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.SlotReelTextureSymbolW => this.SlotReelTextureSymbolW;
+        #endregion
+        #region BlackJackDeckTexture1
+        public String? BlackJackDeckTexture1 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.BlackJackDeckTexture1 => this.BlackJackDeckTexture1;
+        #endregion
+        #region BlackJackDeckTexture2
+        public String? BlackJackDeckTexture2 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.BlackJackDeckTexture2 => this.BlackJackDeckTexture2;
+        #endregion
+        #region BlackJackDeckTexture3
+        public String? BlackJackDeckTexture3 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.BlackJackDeckTexture3 => this.BlackJackDeckTexture3;
+        #endregion
+        #region BlackJackDeckTexture4
+        public String? BlackJackDeckTexture4 { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ICasinoGetter.BlackJackDeckTexture4 => this.BlackJackDeckTexture4;
         #endregion
 
         #region To String
@@ -218,7 +290,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = initialValue;
                 this.DecksPercentBeforeShuffle = initialValue;
-                this.BlackjackPayoutRatio = initialValue;
+                this.BlackJackPayoutRatio = initialValue;
                 this.SlotReelSymbol1 = initialValue;
                 this.SlotReelSymbol2 = initialValue;
                 this.SlotReelSymbol3 = initialValue;
@@ -230,14 +302,30 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MaxWinnings = initialValue;
                 this.Currency = initialValue;
                 this.CasinoWinningsQuest = initialValue;
-                this.Flags = initialValue;
-                this.ChipModels = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.DealerStayOnSoft17 = initialValue;
+                this.ChipModelOneDollar = initialValue;
+                this.ChipModelFiveDollar = initialValue;
+                this.ChipModelTenDollar = initialValue;
+                this.ChipModelTwentyFiveDollar = initialValue;
+                this.ChipModelOneHundredDollar = initialValue;
+                this.ChipModelFiveHundredDollar = initialValue;
+                this.ChipModelRoulette = initialValue;
                 this.SlotMachineModel = initialValue;
+                this.SlotMachineModel2 = initialValue;
                 this.BlackJackTableModel = initialValue;
                 this.BlackJackTableModelRelated = initialValue;
                 this.RouletteTableModel = initialValue;
-                this.SlotReelTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
-                this.BlackjackDeckTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.SlotReelTextureSymbol1 = initialValue;
+                this.SlotReelTextureSymbol2 = initialValue;
+                this.SlotReelTextureSymbol3 = initialValue;
+                this.SlotReelTextureSymbol4 = initialValue;
+                this.SlotReelTextureSymbol5 = initialValue;
+                this.SlotReelTextureSymbol6 = initialValue;
+                this.SlotReelTextureSymbolW = initialValue;
+                this.BlackJackDeckTexture1 = initialValue;
+                this.BlackJackDeckTexture2 = initialValue;
+                this.BlackJackDeckTexture3 = initialValue;
+                this.BlackJackDeckTexture4 = initialValue;
             }
 
             public Mask(
@@ -250,7 +338,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Fallout3MajorRecordFlags,
                 TItem Name,
                 TItem DecksPercentBeforeShuffle,
-                TItem BlackjackPayoutRatio,
+                TItem BlackJackPayoutRatio,
                 TItem SlotReelSymbol1,
                 TItem SlotReelSymbol2,
                 TItem SlotReelSymbol3,
@@ -262,14 +350,30 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MaxWinnings,
                 TItem Currency,
                 TItem CasinoWinningsQuest,
-                TItem Flags,
-                TItem ChipModels,
+                TItem DealerStayOnSoft17,
+                TItem ChipModelOneDollar,
+                TItem ChipModelFiveDollar,
+                TItem ChipModelTenDollar,
+                TItem ChipModelTwentyFiveDollar,
+                TItem ChipModelOneHundredDollar,
+                TItem ChipModelFiveHundredDollar,
+                TItem ChipModelRoulette,
                 TItem SlotMachineModel,
+                TItem SlotMachineModel2,
                 TItem BlackJackTableModel,
                 TItem BlackJackTableModelRelated,
                 TItem RouletteTableModel,
-                TItem SlotReelTextures,
-                TItem BlackjackDeckTextures)
+                TItem SlotReelTextureSymbol1,
+                TItem SlotReelTextureSymbol2,
+                TItem SlotReelTextureSymbol3,
+                TItem SlotReelTextureSymbol4,
+                TItem SlotReelTextureSymbol5,
+                TItem SlotReelTextureSymbol6,
+                TItem SlotReelTextureSymbolW,
+                TItem BlackJackDeckTexture1,
+                TItem BlackJackDeckTexture2,
+                TItem BlackJackDeckTexture3,
+                TItem BlackJackDeckTexture4)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -281,7 +385,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = Name;
                 this.DecksPercentBeforeShuffle = DecksPercentBeforeShuffle;
-                this.BlackjackPayoutRatio = BlackjackPayoutRatio;
+                this.BlackJackPayoutRatio = BlackJackPayoutRatio;
                 this.SlotReelSymbol1 = SlotReelSymbol1;
                 this.SlotReelSymbol2 = SlotReelSymbol2;
                 this.SlotReelSymbol3 = SlotReelSymbol3;
@@ -293,14 +397,30 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MaxWinnings = MaxWinnings;
                 this.Currency = Currency;
                 this.CasinoWinningsQuest = CasinoWinningsQuest;
-                this.Flags = Flags;
-                this.ChipModels = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ChipModels, []);
+                this.DealerStayOnSoft17 = DealerStayOnSoft17;
+                this.ChipModelOneDollar = ChipModelOneDollar;
+                this.ChipModelFiveDollar = ChipModelFiveDollar;
+                this.ChipModelTenDollar = ChipModelTenDollar;
+                this.ChipModelTwentyFiveDollar = ChipModelTwentyFiveDollar;
+                this.ChipModelOneHundredDollar = ChipModelOneHundredDollar;
+                this.ChipModelFiveHundredDollar = ChipModelFiveHundredDollar;
+                this.ChipModelRoulette = ChipModelRoulette;
                 this.SlotMachineModel = SlotMachineModel;
+                this.SlotMachineModel2 = SlotMachineModel2;
                 this.BlackJackTableModel = BlackJackTableModel;
                 this.BlackJackTableModelRelated = BlackJackTableModelRelated;
                 this.RouletteTableModel = RouletteTableModel;
-                this.SlotReelTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotReelTextures, []);
-                this.BlackjackDeckTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BlackjackDeckTextures, []);
+                this.SlotReelTextureSymbol1 = SlotReelTextureSymbol1;
+                this.SlotReelTextureSymbol2 = SlotReelTextureSymbol2;
+                this.SlotReelTextureSymbol3 = SlotReelTextureSymbol3;
+                this.SlotReelTextureSymbol4 = SlotReelTextureSymbol4;
+                this.SlotReelTextureSymbol5 = SlotReelTextureSymbol5;
+                this.SlotReelTextureSymbol6 = SlotReelTextureSymbol6;
+                this.SlotReelTextureSymbolW = SlotReelTextureSymbolW;
+                this.BlackJackDeckTexture1 = BlackJackDeckTexture1;
+                this.BlackJackDeckTexture2 = BlackJackDeckTexture2;
+                this.BlackJackDeckTexture3 = BlackJackDeckTexture3;
+                this.BlackJackDeckTexture4 = BlackJackDeckTexture4;
             }
 
             #pragma warning disable CS8618
@@ -314,7 +434,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Name;
             public TItem DecksPercentBeforeShuffle;
-            public TItem BlackjackPayoutRatio;
+            public TItem BlackJackPayoutRatio;
             public TItem SlotReelSymbol1;
             public TItem SlotReelSymbol2;
             public TItem SlotReelSymbol3;
@@ -326,14 +446,30 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem MaxWinnings;
             public TItem Currency;
             public TItem CasinoWinningsQuest;
-            public TItem Flags;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ChipModels;
+            public TItem DealerStayOnSoft17;
+            public TItem ChipModelOneDollar;
+            public TItem ChipModelFiveDollar;
+            public TItem ChipModelTenDollar;
+            public TItem ChipModelTwentyFiveDollar;
+            public TItem ChipModelOneHundredDollar;
+            public TItem ChipModelFiveHundredDollar;
+            public TItem ChipModelRoulette;
             public TItem SlotMachineModel;
+            public TItem SlotMachineModel2;
             public TItem BlackJackTableModel;
             public TItem BlackJackTableModelRelated;
             public TItem RouletteTableModel;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SlotReelTextures;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? BlackjackDeckTextures;
+            public TItem SlotReelTextureSymbol1;
+            public TItem SlotReelTextureSymbol2;
+            public TItem SlotReelTextureSymbol3;
+            public TItem SlotReelTextureSymbol4;
+            public TItem SlotReelTextureSymbol5;
+            public TItem SlotReelTextureSymbol6;
+            public TItem SlotReelTextureSymbolW;
+            public TItem BlackJackDeckTexture1;
+            public TItem BlackJackDeckTexture2;
+            public TItem BlackJackDeckTexture3;
+            public TItem BlackJackDeckTexture4;
             #endregion
 
             #region Equals
@@ -349,7 +485,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.DecksPercentBeforeShuffle, rhs.DecksPercentBeforeShuffle)) return false;
-                if (!object.Equals(this.BlackjackPayoutRatio, rhs.BlackjackPayoutRatio)) return false;
+                if (!object.Equals(this.BlackJackPayoutRatio, rhs.BlackJackPayoutRatio)) return false;
                 if (!object.Equals(this.SlotReelSymbol1, rhs.SlotReelSymbol1)) return false;
                 if (!object.Equals(this.SlotReelSymbol2, rhs.SlotReelSymbol2)) return false;
                 if (!object.Equals(this.SlotReelSymbol3, rhs.SlotReelSymbol3)) return false;
@@ -361,14 +497,30 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MaxWinnings, rhs.MaxWinnings)) return false;
                 if (!object.Equals(this.Currency, rhs.Currency)) return false;
                 if (!object.Equals(this.CasinoWinningsQuest, rhs.CasinoWinningsQuest)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.ChipModels, rhs.ChipModels)) return false;
+                if (!object.Equals(this.DealerStayOnSoft17, rhs.DealerStayOnSoft17)) return false;
+                if (!object.Equals(this.ChipModelOneDollar, rhs.ChipModelOneDollar)) return false;
+                if (!object.Equals(this.ChipModelFiveDollar, rhs.ChipModelFiveDollar)) return false;
+                if (!object.Equals(this.ChipModelTenDollar, rhs.ChipModelTenDollar)) return false;
+                if (!object.Equals(this.ChipModelTwentyFiveDollar, rhs.ChipModelTwentyFiveDollar)) return false;
+                if (!object.Equals(this.ChipModelOneHundredDollar, rhs.ChipModelOneHundredDollar)) return false;
+                if (!object.Equals(this.ChipModelFiveHundredDollar, rhs.ChipModelFiveHundredDollar)) return false;
+                if (!object.Equals(this.ChipModelRoulette, rhs.ChipModelRoulette)) return false;
                 if (!object.Equals(this.SlotMachineModel, rhs.SlotMachineModel)) return false;
+                if (!object.Equals(this.SlotMachineModel2, rhs.SlotMachineModel2)) return false;
                 if (!object.Equals(this.BlackJackTableModel, rhs.BlackJackTableModel)) return false;
                 if (!object.Equals(this.BlackJackTableModelRelated, rhs.BlackJackTableModelRelated)) return false;
                 if (!object.Equals(this.RouletteTableModel, rhs.RouletteTableModel)) return false;
-                if (!object.Equals(this.SlotReelTextures, rhs.SlotReelTextures)) return false;
-                if (!object.Equals(this.BlackjackDeckTextures, rhs.BlackjackDeckTextures)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbol1, rhs.SlotReelTextureSymbol1)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbol2, rhs.SlotReelTextureSymbol2)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbol3, rhs.SlotReelTextureSymbol3)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbol4, rhs.SlotReelTextureSymbol4)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbol5, rhs.SlotReelTextureSymbol5)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbol6, rhs.SlotReelTextureSymbol6)) return false;
+                if (!object.Equals(this.SlotReelTextureSymbolW, rhs.SlotReelTextureSymbolW)) return false;
+                if (!object.Equals(this.BlackJackDeckTexture1, rhs.BlackJackDeckTexture1)) return false;
+                if (!object.Equals(this.BlackJackDeckTexture2, rhs.BlackJackDeckTexture2)) return false;
+                if (!object.Equals(this.BlackJackDeckTexture3, rhs.BlackJackDeckTexture3)) return false;
+                if (!object.Equals(this.BlackJackDeckTexture4, rhs.BlackJackDeckTexture4)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -376,7 +528,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.Name);
                 hash.Add(this.DecksPercentBeforeShuffle);
-                hash.Add(this.BlackjackPayoutRatio);
+                hash.Add(this.BlackJackPayoutRatio);
                 hash.Add(this.SlotReelSymbol1);
                 hash.Add(this.SlotReelSymbol2);
                 hash.Add(this.SlotReelSymbol3);
@@ -388,14 +540,30 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MaxWinnings);
                 hash.Add(this.Currency);
                 hash.Add(this.CasinoWinningsQuest);
-                hash.Add(this.Flags);
-                hash.Add(this.ChipModels);
+                hash.Add(this.DealerStayOnSoft17);
+                hash.Add(this.ChipModelOneDollar);
+                hash.Add(this.ChipModelFiveDollar);
+                hash.Add(this.ChipModelTenDollar);
+                hash.Add(this.ChipModelTwentyFiveDollar);
+                hash.Add(this.ChipModelOneHundredDollar);
+                hash.Add(this.ChipModelFiveHundredDollar);
+                hash.Add(this.ChipModelRoulette);
                 hash.Add(this.SlotMachineModel);
+                hash.Add(this.SlotMachineModel2);
                 hash.Add(this.BlackJackTableModel);
                 hash.Add(this.BlackJackTableModelRelated);
                 hash.Add(this.RouletteTableModel);
-                hash.Add(this.SlotReelTextures);
-                hash.Add(this.BlackjackDeckTextures);
+                hash.Add(this.SlotReelTextureSymbol1);
+                hash.Add(this.SlotReelTextureSymbol2);
+                hash.Add(this.SlotReelTextureSymbol3);
+                hash.Add(this.SlotReelTextureSymbol4);
+                hash.Add(this.SlotReelTextureSymbol5);
+                hash.Add(this.SlotReelTextureSymbol6);
+                hash.Add(this.SlotReelTextureSymbolW);
+                hash.Add(this.BlackJackDeckTexture1);
+                hash.Add(this.BlackJackDeckTexture2);
+                hash.Add(this.BlackJackDeckTexture3);
+                hash.Add(this.BlackJackDeckTexture4);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -408,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.DecksPercentBeforeShuffle)) return false;
-                if (!eval(this.BlackjackPayoutRatio)) return false;
+                if (!eval(this.BlackJackPayoutRatio)) return false;
                 if (!eval(this.SlotReelSymbol1)) return false;
                 if (!eval(this.SlotReelSymbol2)) return false;
                 if (!eval(this.SlotReelSymbol3)) return false;
@@ -420,44 +588,30 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.MaxWinnings)) return false;
                 if (!eval(this.Currency)) return false;
                 if (!eval(this.CasinoWinningsQuest)) return false;
-                if (!eval(this.Flags)) return false;
-                if (this.ChipModels != null)
-                {
-                    if (!eval(this.ChipModels.Overall)) return false;
-                    if (this.ChipModels.Specific != null)
-                    {
-                        foreach (var item in this.ChipModels.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.DealerStayOnSoft17)) return false;
+                if (!eval(this.ChipModelOneDollar)) return false;
+                if (!eval(this.ChipModelFiveDollar)) return false;
+                if (!eval(this.ChipModelTenDollar)) return false;
+                if (!eval(this.ChipModelTwentyFiveDollar)) return false;
+                if (!eval(this.ChipModelOneHundredDollar)) return false;
+                if (!eval(this.ChipModelFiveHundredDollar)) return false;
+                if (!eval(this.ChipModelRoulette)) return false;
                 if (!eval(this.SlotMachineModel)) return false;
+                if (!eval(this.SlotMachineModel2)) return false;
                 if (!eval(this.BlackJackTableModel)) return false;
                 if (!eval(this.BlackJackTableModelRelated)) return false;
                 if (!eval(this.RouletteTableModel)) return false;
-                if (this.SlotReelTextures != null)
-                {
-                    if (!eval(this.SlotReelTextures.Overall)) return false;
-                    if (this.SlotReelTextures.Specific != null)
-                    {
-                        foreach (var item in this.SlotReelTextures.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (this.BlackjackDeckTextures != null)
-                {
-                    if (!eval(this.BlackjackDeckTextures.Overall)) return false;
-                    if (this.BlackjackDeckTextures.Specific != null)
-                    {
-                        foreach (var item in this.BlackjackDeckTextures.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.SlotReelTextureSymbol1)) return false;
+                if (!eval(this.SlotReelTextureSymbol2)) return false;
+                if (!eval(this.SlotReelTextureSymbol3)) return false;
+                if (!eval(this.SlotReelTextureSymbol4)) return false;
+                if (!eval(this.SlotReelTextureSymbol5)) return false;
+                if (!eval(this.SlotReelTextureSymbol6)) return false;
+                if (!eval(this.SlotReelTextureSymbolW)) return false;
+                if (!eval(this.BlackJackDeckTexture1)) return false;
+                if (!eval(this.BlackJackDeckTexture2)) return false;
+                if (!eval(this.BlackJackDeckTexture3)) return false;
+                if (!eval(this.BlackJackDeckTexture4)) return false;
                 return true;
             }
             #endregion
@@ -468,7 +622,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.DecksPercentBeforeShuffle)) return true;
-                if (eval(this.BlackjackPayoutRatio)) return true;
+                if (eval(this.BlackJackPayoutRatio)) return true;
                 if (eval(this.SlotReelSymbol1)) return true;
                 if (eval(this.SlotReelSymbol2)) return true;
                 if (eval(this.SlotReelSymbol3)) return true;
@@ -480,44 +634,30 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.MaxWinnings)) return true;
                 if (eval(this.Currency)) return true;
                 if (eval(this.CasinoWinningsQuest)) return true;
-                if (eval(this.Flags)) return true;
-                if (this.ChipModels != null)
-                {
-                    if (eval(this.ChipModels.Overall)) return true;
-                    if (this.ChipModels.Specific != null)
-                    {
-                        foreach (var item in this.ChipModels.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (eval(this.DealerStayOnSoft17)) return true;
+                if (eval(this.ChipModelOneDollar)) return true;
+                if (eval(this.ChipModelFiveDollar)) return true;
+                if (eval(this.ChipModelTenDollar)) return true;
+                if (eval(this.ChipModelTwentyFiveDollar)) return true;
+                if (eval(this.ChipModelOneHundredDollar)) return true;
+                if (eval(this.ChipModelFiveHundredDollar)) return true;
+                if (eval(this.ChipModelRoulette)) return true;
                 if (eval(this.SlotMachineModel)) return true;
+                if (eval(this.SlotMachineModel2)) return true;
                 if (eval(this.BlackJackTableModel)) return true;
                 if (eval(this.BlackJackTableModelRelated)) return true;
                 if (eval(this.RouletteTableModel)) return true;
-                if (this.SlotReelTextures != null)
-                {
-                    if (eval(this.SlotReelTextures.Overall)) return true;
-                    if (this.SlotReelTextures.Specific != null)
-                    {
-                        foreach (var item in this.SlotReelTextures.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (this.BlackjackDeckTextures != null)
-                {
-                    if (eval(this.BlackjackDeckTextures.Overall)) return true;
-                    if (this.BlackjackDeckTextures.Specific != null)
-                    {
-                        foreach (var item in this.BlackjackDeckTextures.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (eval(this.SlotReelTextureSymbol1)) return true;
+                if (eval(this.SlotReelTextureSymbol2)) return true;
+                if (eval(this.SlotReelTextureSymbol3)) return true;
+                if (eval(this.SlotReelTextureSymbol4)) return true;
+                if (eval(this.SlotReelTextureSymbol5)) return true;
+                if (eval(this.SlotReelTextureSymbol6)) return true;
+                if (eval(this.SlotReelTextureSymbolW)) return true;
+                if (eval(this.BlackJackDeckTexture1)) return true;
+                if (eval(this.BlackJackDeckTexture2)) return true;
+                if (eval(this.BlackJackDeckTexture3)) return true;
+                if (eval(this.BlackJackDeckTexture4)) return true;
                 return false;
             }
             #endregion
@@ -535,7 +675,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
                 obj.DecksPercentBeforeShuffle = eval(this.DecksPercentBeforeShuffle);
-                obj.BlackjackPayoutRatio = eval(this.BlackjackPayoutRatio);
+                obj.BlackJackPayoutRatio = eval(this.BlackJackPayoutRatio);
                 obj.SlotReelSymbol1 = eval(this.SlotReelSymbol1);
                 obj.SlotReelSymbol2 = eval(this.SlotReelSymbol2);
                 obj.SlotReelSymbol3 = eval(this.SlotReelSymbol3);
@@ -547,53 +687,30 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MaxWinnings = eval(this.MaxWinnings);
                 obj.Currency = eval(this.Currency);
                 obj.CasinoWinningsQuest = eval(this.CasinoWinningsQuest);
-                obj.Flags = eval(this.Flags);
-                if (ChipModels != null)
-                {
-                    obj.ChipModels = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ChipModels.Overall), []);
-                    if (ChipModels.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.ChipModels.Specific = l;
-                        foreach (var item in ChipModels.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
+                obj.DealerStayOnSoft17 = eval(this.DealerStayOnSoft17);
+                obj.ChipModelOneDollar = eval(this.ChipModelOneDollar);
+                obj.ChipModelFiveDollar = eval(this.ChipModelFiveDollar);
+                obj.ChipModelTenDollar = eval(this.ChipModelTenDollar);
+                obj.ChipModelTwentyFiveDollar = eval(this.ChipModelTwentyFiveDollar);
+                obj.ChipModelOneHundredDollar = eval(this.ChipModelOneHundredDollar);
+                obj.ChipModelFiveHundredDollar = eval(this.ChipModelFiveHundredDollar);
+                obj.ChipModelRoulette = eval(this.ChipModelRoulette);
                 obj.SlotMachineModel = eval(this.SlotMachineModel);
+                obj.SlotMachineModel2 = eval(this.SlotMachineModel2);
                 obj.BlackJackTableModel = eval(this.BlackJackTableModel);
                 obj.BlackJackTableModelRelated = eval(this.BlackJackTableModelRelated);
                 obj.RouletteTableModel = eval(this.RouletteTableModel);
-                if (SlotReelTextures != null)
-                {
-                    obj.SlotReelTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotReelTextures.Overall), []);
-                    if (SlotReelTextures.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.SlotReelTextures.Specific = l;
-                        foreach (var item in SlotReelTextures.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
-                if (BlackjackDeckTextures != null)
-                {
-                    obj.BlackjackDeckTextures = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BlackjackDeckTextures.Overall), []);
-                    if (BlackjackDeckTextures.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.BlackjackDeckTextures.Specific = l;
-                        foreach (var item in BlackjackDeckTextures.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
+                obj.SlotReelTextureSymbol1 = eval(this.SlotReelTextureSymbol1);
+                obj.SlotReelTextureSymbol2 = eval(this.SlotReelTextureSymbol2);
+                obj.SlotReelTextureSymbol3 = eval(this.SlotReelTextureSymbol3);
+                obj.SlotReelTextureSymbol4 = eval(this.SlotReelTextureSymbol4);
+                obj.SlotReelTextureSymbol5 = eval(this.SlotReelTextureSymbol5);
+                obj.SlotReelTextureSymbol6 = eval(this.SlotReelTextureSymbol6);
+                obj.SlotReelTextureSymbolW = eval(this.SlotReelTextureSymbolW);
+                obj.BlackJackDeckTexture1 = eval(this.BlackJackDeckTexture1);
+                obj.BlackJackDeckTexture2 = eval(this.BlackJackDeckTexture2);
+                obj.BlackJackDeckTexture3 = eval(this.BlackJackDeckTexture3);
+                obj.BlackJackDeckTexture4 = eval(this.BlackJackDeckTexture4);
             }
             #endregion
 
@@ -620,9 +737,9 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DecksPercentBeforeShuffle, "DecksPercentBeforeShuffle");
                     }
-                    if (printMask?.BlackjackPayoutRatio ?? true)
+                    if (printMask?.BlackJackPayoutRatio ?? true)
                     {
-                        sb.AppendItem(BlackjackPayoutRatio, "BlackjackPayoutRatio");
+                        sb.AppendItem(BlackJackPayoutRatio, "BlackJackPayoutRatio");
                     }
                     if (printMask?.SlotReelSymbol1 ?? true)
                     {
@@ -668,34 +785,45 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(CasinoWinningsQuest, "CasinoWinningsQuest");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.DealerStayOnSoft17 ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(DealerStayOnSoft17, "DealerStayOnSoft17");
                     }
-                    if ((printMask?.ChipModels?.Overall ?? true)
-                        && ChipModels is {} ChipModelsItem)
+                    if (printMask?.ChipModelOneDollar ?? true)
                     {
-                        sb.AppendLine("ChipModels =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(ChipModelsItem.Overall);
-                            if (ChipModelsItem.Specific != null)
-                            {
-                                foreach (var subItem in ChipModelsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(ChipModelOneDollar, "ChipModelOneDollar");
+                    }
+                    if (printMask?.ChipModelFiveDollar ?? true)
+                    {
+                        sb.AppendItem(ChipModelFiveDollar, "ChipModelFiveDollar");
+                    }
+                    if (printMask?.ChipModelTenDollar ?? true)
+                    {
+                        sb.AppendItem(ChipModelTenDollar, "ChipModelTenDollar");
+                    }
+                    if (printMask?.ChipModelTwentyFiveDollar ?? true)
+                    {
+                        sb.AppendItem(ChipModelTwentyFiveDollar, "ChipModelTwentyFiveDollar");
+                    }
+                    if (printMask?.ChipModelOneHundredDollar ?? true)
+                    {
+                        sb.AppendItem(ChipModelOneHundredDollar, "ChipModelOneHundredDollar");
+                    }
+                    if (printMask?.ChipModelFiveHundredDollar ?? true)
+                    {
+                        sb.AppendItem(ChipModelFiveHundredDollar, "ChipModelFiveHundredDollar");
+                    }
+                    if (printMask?.ChipModelRoulette ?? true)
+                    {
+                        sb.AppendItem(ChipModelRoulette, "ChipModelRoulette");
                     }
                     if (printMask?.SlotMachineModel ?? true)
                     {
                         sb.AppendItem(SlotMachineModel, "SlotMachineModel");
+                    }
+                    if (printMask?.SlotMachineModel2 ?? true)
+                    {
+                        sb.AppendItem(SlotMachineModel2, "SlotMachineModel2");
                     }
                     if (printMask?.BlackJackTableModel ?? true)
                     {
@@ -709,47 +837,49 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(RouletteTableModel, "RouletteTableModel");
                     }
-                    if ((printMask?.SlotReelTextures?.Overall ?? true)
-                        && SlotReelTextures is {} SlotReelTexturesItem)
+                    if (printMask?.SlotReelTextureSymbol1 ?? true)
                     {
-                        sb.AppendLine("SlotReelTextures =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(SlotReelTexturesItem.Overall);
-                            if (SlotReelTexturesItem.Specific != null)
-                            {
-                                foreach (var subItem in SlotReelTexturesItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(SlotReelTextureSymbol1, "SlotReelTextureSymbol1");
                     }
-                    if ((printMask?.BlackjackDeckTextures?.Overall ?? true)
-                        && BlackjackDeckTextures is {} BlackjackDeckTexturesItem)
+                    if (printMask?.SlotReelTextureSymbol2 ?? true)
                     {
-                        sb.AppendLine("BlackjackDeckTextures =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(BlackjackDeckTexturesItem.Overall);
-                            if (BlackjackDeckTexturesItem.Specific != null)
-                            {
-                                foreach (var subItem in BlackjackDeckTexturesItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(SlotReelTextureSymbol2, "SlotReelTextureSymbol2");
+                    }
+                    if (printMask?.SlotReelTextureSymbol3 ?? true)
+                    {
+                        sb.AppendItem(SlotReelTextureSymbol3, "SlotReelTextureSymbol3");
+                    }
+                    if (printMask?.SlotReelTextureSymbol4 ?? true)
+                    {
+                        sb.AppendItem(SlotReelTextureSymbol4, "SlotReelTextureSymbol4");
+                    }
+                    if (printMask?.SlotReelTextureSymbol5 ?? true)
+                    {
+                        sb.AppendItem(SlotReelTextureSymbol5, "SlotReelTextureSymbol5");
+                    }
+                    if (printMask?.SlotReelTextureSymbol6 ?? true)
+                    {
+                        sb.AppendItem(SlotReelTextureSymbol6, "SlotReelTextureSymbol6");
+                    }
+                    if (printMask?.SlotReelTextureSymbolW ?? true)
+                    {
+                        sb.AppendItem(SlotReelTextureSymbolW, "SlotReelTextureSymbolW");
+                    }
+                    if (printMask?.BlackJackDeckTexture1 ?? true)
+                    {
+                        sb.AppendItem(BlackJackDeckTexture1, "BlackJackDeckTexture1");
+                    }
+                    if (printMask?.BlackJackDeckTexture2 ?? true)
+                    {
+                        sb.AppendItem(BlackJackDeckTexture2, "BlackJackDeckTexture2");
+                    }
+                    if (printMask?.BlackJackDeckTexture3 ?? true)
+                    {
+                        sb.AppendItem(BlackJackDeckTexture3, "BlackJackDeckTexture3");
+                    }
+                    if (printMask?.BlackJackDeckTexture4 ?? true)
+                    {
+                        sb.AppendItem(BlackJackDeckTexture4, "BlackJackDeckTexture4");
                     }
                 }
             }
@@ -764,7 +894,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public Exception? Name;
             public Exception? DecksPercentBeforeShuffle;
-            public Exception? BlackjackPayoutRatio;
+            public Exception? BlackJackPayoutRatio;
             public Exception? SlotReelSymbol1;
             public Exception? SlotReelSymbol2;
             public Exception? SlotReelSymbol3;
@@ -776,14 +906,30 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? MaxWinnings;
             public Exception? Currency;
             public Exception? CasinoWinningsQuest;
-            public Exception? Flags;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ChipModels;
+            public Exception? DealerStayOnSoft17;
+            public Exception? ChipModelOneDollar;
+            public Exception? ChipModelFiveDollar;
+            public Exception? ChipModelTenDollar;
+            public Exception? ChipModelTwentyFiveDollar;
+            public Exception? ChipModelOneHundredDollar;
+            public Exception? ChipModelFiveHundredDollar;
+            public Exception? ChipModelRoulette;
             public Exception? SlotMachineModel;
+            public Exception? SlotMachineModel2;
             public Exception? BlackJackTableModel;
             public Exception? BlackJackTableModelRelated;
             public Exception? RouletteTableModel;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SlotReelTextures;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? BlackjackDeckTextures;
+            public Exception? SlotReelTextureSymbol1;
+            public Exception? SlotReelTextureSymbol2;
+            public Exception? SlotReelTextureSymbol3;
+            public Exception? SlotReelTextureSymbol4;
+            public Exception? SlotReelTextureSymbol5;
+            public Exception? SlotReelTextureSymbol6;
+            public Exception? SlotReelTextureSymbolW;
+            public Exception? BlackJackDeckTexture1;
+            public Exception? BlackJackDeckTexture2;
+            public Exception? BlackJackDeckTexture3;
+            public Exception? BlackJackDeckTexture4;
             #endregion
 
             #region IErrorMask
@@ -796,8 +942,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Name;
                     case Casino_FieldIndex.DecksPercentBeforeShuffle:
                         return DecksPercentBeforeShuffle;
-                    case Casino_FieldIndex.BlackjackPayoutRatio:
-                        return BlackjackPayoutRatio;
+                    case Casino_FieldIndex.BlackJackPayoutRatio:
+                        return BlackJackPayoutRatio;
                     case Casino_FieldIndex.SlotReelSymbol1:
                         return SlotReelSymbol1;
                     case Casino_FieldIndex.SlotReelSymbol2:
@@ -820,22 +966,54 @@ namespace Mutagen.Bethesda.Fallout3
                         return Currency;
                     case Casino_FieldIndex.CasinoWinningsQuest:
                         return CasinoWinningsQuest;
-                    case Casino_FieldIndex.Flags:
-                        return Flags;
-                    case Casino_FieldIndex.ChipModels:
-                        return ChipModels;
+                    case Casino_FieldIndex.DealerStayOnSoft17:
+                        return DealerStayOnSoft17;
+                    case Casino_FieldIndex.ChipModelOneDollar:
+                        return ChipModelOneDollar;
+                    case Casino_FieldIndex.ChipModelFiveDollar:
+                        return ChipModelFiveDollar;
+                    case Casino_FieldIndex.ChipModelTenDollar:
+                        return ChipModelTenDollar;
+                    case Casino_FieldIndex.ChipModelTwentyFiveDollar:
+                        return ChipModelTwentyFiveDollar;
+                    case Casino_FieldIndex.ChipModelOneHundredDollar:
+                        return ChipModelOneHundredDollar;
+                    case Casino_FieldIndex.ChipModelFiveHundredDollar:
+                        return ChipModelFiveHundredDollar;
+                    case Casino_FieldIndex.ChipModelRoulette:
+                        return ChipModelRoulette;
                     case Casino_FieldIndex.SlotMachineModel:
                         return SlotMachineModel;
+                    case Casino_FieldIndex.SlotMachineModel2:
+                        return SlotMachineModel2;
                     case Casino_FieldIndex.BlackJackTableModel:
                         return BlackJackTableModel;
                     case Casino_FieldIndex.BlackJackTableModelRelated:
                         return BlackJackTableModelRelated;
                     case Casino_FieldIndex.RouletteTableModel:
                         return RouletteTableModel;
-                    case Casino_FieldIndex.SlotReelTextures:
-                        return SlotReelTextures;
-                    case Casino_FieldIndex.BlackjackDeckTextures:
-                        return BlackjackDeckTextures;
+                    case Casino_FieldIndex.SlotReelTextureSymbol1:
+                        return SlotReelTextureSymbol1;
+                    case Casino_FieldIndex.SlotReelTextureSymbol2:
+                        return SlotReelTextureSymbol2;
+                    case Casino_FieldIndex.SlotReelTextureSymbol3:
+                        return SlotReelTextureSymbol3;
+                    case Casino_FieldIndex.SlotReelTextureSymbol4:
+                        return SlotReelTextureSymbol4;
+                    case Casino_FieldIndex.SlotReelTextureSymbol5:
+                        return SlotReelTextureSymbol5;
+                    case Casino_FieldIndex.SlotReelTextureSymbol6:
+                        return SlotReelTextureSymbol6;
+                    case Casino_FieldIndex.SlotReelTextureSymbolW:
+                        return SlotReelTextureSymbolW;
+                    case Casino_FieldIndex.BlackJackDeckTexture1:
+                        return BlackJackDeckTexture1;
+                    case Casino_FieldIndex.BlackJackDeckTexture2:
+                        return BlackJackDeckTexture2;
+                    case Casino_FieldIndex.BlackJackDeckTexture3:
+                        return BlackJackDeckTexture3;
+                    case Casino_FieldIndex.BlackJackDeckTexture4:
+                        return BlackJackDeckTexture4;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -852,8 +1030,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Casino_FieldIndex.DecksPercentBeforeShuffle:
                         this.DecksPercentBeforeShuffle = ex;
                         break;
-                    case Casino_FieldIndex.BlackjackPayoutRatio:
-                        this.BlackjackPayoutRatio = ex;
+                    case Casino_FieldIndex.BlackJackPayoutRatio:
+                        this.BlackJackPayoutRatio = ex;
                         break;
                     case Casino_FieldIndex.SlotReelSymbol1:
                         this.SlotReelSymbol1 = ex;
@@ -888,14 +1066,35 @@ namespace Mutagen.Bethesda.Fallout3
                     case Casino_FieldIndex.CasinoWinningsQuest:
                         this.CasinoWinningsQuest = ex;
                         break;
-                    case Casino_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Casino_FieldIndex.DealerStayOnSoft17:
+                        this.DealerStayOnSoft17 = ex;
                         break;
-                    case Casino_FieldIndex.ChipModels:
-                        this.ChipModels = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Casino_FieldIndex.ChipModelOneDollar:
+                        this.ChipModelOneDollar = ex;
+                        break;
+                    case Casino_FieldIndex.ChipModelFiveDollar:
+                        this.ChipModelFiveDollar = ex;
+                        break;
+                    case Casino_FieldIndex.ChipModelTenDollar:
+                        this.ChipModelTenDollar = ex;
+                        break;
+                    case Casino_FieldIndex.ChipModelTwentyFiveDollar:
+                        this.ChipModelTwentyFiveDollar = ex;
+                        break;
+                    case Casino_FieldIndex.ChipModelOneHundredDollar:
+                        this.ChipModelOneHundredDollar = ex;
+                        break;
+                    case Casino_FieldIndex.ChipModelFiveHundredDollar:
+                        this.ChipModelFiveHundredDollar = ex;
+                        break;
+                    case Casino_FieldIndex.ChipModelRoulette:
+                        this.ChipModelRoulette = ex;
                         break;
                     case Casino_FieldIndex.SlotMachineModel:
                         this.SlotMachineModel = ex;
+                        break;
+                    case Casino_FieldIndex.SlotMachineModel2:
+                        this.SlotMachineModel2 = ex;
                         break;
                     case Casino_FieldIndex.BlackJackTableModel:
                         this.BlackJackTableModel = ex;
@@ -906,11 +1105,38 @@ namespace Mutagen.Bethesda.Fallout3
                     case Casino_FieldIndex.RouletteTableModel:
                         this.RouletteTableModel = ex;
                         break;
-                    case Casino_FieldIndex.SlotReelTextures:
-                        this.SlotReelTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Casino_FieldIndex.SlotReelTextureSymbol1:
+                        this.SlotReelTextureSymbol1 = ex;
                         break;
-                    case Casino_FieldIndex.BlackjackDeckTextures:
-                        this.BlackjackDeckTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Casino_FieldIndex.SlotReelTextureSymbol2:
+                        this.SlotReelTextureSymbol2 = ex;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol3:
+                        this.SlotReelTextureSymbol3 = ex;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol4:
+                        this.SlotReelTextureSymbol4 = ex;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol5:
+                        this.SlotReelTextureSymbol5 = ex;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol6:
+                        this.SlotReelTextureSymbol6 = ex;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbolW:
+                        this.SlotReelTextureSymbolW = ex;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture1:
+                        this.BlackJackDeckTexture1 = ex;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture2:
+                        this.BlackJackDeckTexture2 = ex;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture3:
+                        this.BlackJackDeckTexture3 = ex;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture4:
+                        this.BlackJackDeckTexture4 = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -929,8 +1155,8 @@ namespace Mutagen.Bethesda.Fallout3
                     case Casino_FieldIndex.DecksPercentBeforeShuffle:
                         this.DecksPercentBeforeShuffle = (Exception?)obj;
                         break;
-                    case Casino_FieldIndex.BlackjackPayoutRatio:
-                        this.BlackjackPayoutRatio = (Exception?)obj;
+                    case Casino_FieldIndex.BlackJackPayoutRatio:
+                        this.BlackJackPayoutRatio = (Exception?)obj;
                         break;
                     case Casino_FieldIndex.SlotReelSymbol1:
                         this.SlotReelSymbol1 = (Exception?)obj;
@@ -965,14 +1191,35 @@ namespace Mutagen.Bethesda.Fallout3
                     case Casino_FieldIndex.CasinoWinningsQuest:
                         this.CasinoWinningsQuest = (Exception?)obj;
                         break;
-                    case Casino_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Casino_FieldIndex.DealerStayOnSoft17:
+                        this.DealerStayOnSoft17 = (Exception?)obj;
                         break;
-                    case Casino_FieldIndex.ChipModels:
-                        this.ChipModels = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Casino_FieldIndex.ChipModelOneDollar:
+                        this.ChipModelOneDollar = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.ChipModelFiveDollar:
+                        this.ChipModelFiveDollar = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.ChipModelTenDollar:
+                        this.ChipModelTenDollar = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.ChipModelTwentyFiveDollar:
+                        this.ChipModelTwentyFiveDollar = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.ChipModelOneHundredDollar:
+                        this.ChipModelOneHundredDollar = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.ChipModelFiveHundredDollar:
+                        this.ChipModelFiveHundredDollar = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.ChipModelRoulette:
+                        this.ChipModelRoulette = (Exception?)obj;
                         break;
                     case Casino_FieldIndex.SlotMachineModel:
                         this.SlotMachineModel = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.SlotMachineModel2:
+                        this.SlotMachineModel2 = (Exception?)obj;
                         break;
                     case Casino_FieldIndex.BlackJackTableModel:
                         this.BlackJackTableModel = (Exception?)obj;
@@ -983,11 +1230,38 @@ namespace Mutagen.Bethesda.Fallout3
                     case Casino_FieldIndex.RouletteTableModel:
                         this.RouletteTableModel = (Exception?)obj;
                         break;
-                    case Casino_FieldIndex.SlotReelTextures:
-                        this.SlotReelTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Casino_FieldIndex.SlotReelTextureSymbol1:
+                        this.SlotReelTextureSymbol1 = (Exception?)obj;
                         break;
-                    case Casino_FieldIndex.BlackjackDeckTextures:
-                        this.BlackjackDeckTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Casino_FieldIndex.SlotReelTextureSymbol2:
+                        this.SlotReelTextureSymbol2 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol3:
+                        this.SlotReelTextureSymbol3 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol4:
+                        this.SlotReelTextureSymbol4 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol5:
+                        this.SlotReelTextureSymbol5 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbol6:
+                        this.SlotReelTextureSymbol6 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.SlotReelTextureSymbolW:
+                        this.SlotReelTextureSymbolW = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture1:
+                        this.BlackJackDeckTexture1 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture2:
+                        this.BlackJackDeckTexture2 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture3:
+                        this.BlackJackDeckTexture3 = (Exception?)obj;
+                        break;
+                    case Casino_FieldIndex.BlackJackDeckTexture4:
+                        this.BlackJackDeckTexture4 = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1000,7 +1274,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (Name != null) return true;
                 if (DecksPercentBeforeShuffle != null) return true;
-                if (BlackjackPayoutRatio != null) return true;
+                if (BlackJackPayoutRatio != null) return true;
                 if (SlotReelSymbol1 != null) return true;
                 if (SlotReelSymbol2 != null) return true;
                 if (SlotReelSymbol3 != null) return true;
@@ -1012,14 +1286,30 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MaxWinnings != null) return true;
                 if (Currency != null) return true;
                 if (CasinoWinningsQuest != null) return true;
-                if (Flags != null) return true;
-                if (ChipModels != null) return true;
+                if (DealerStayOnSoft17 != null) return true;
+                if (ChipModelOneDollar != null) return true;
+                if (ChipModelFiveDollar != null) return true;
+                if (ChipModelTenDollar != null) return true;
+                if (ChipModelTwentyFiveDollar != null) return true;
+                if (ChipModelOneHundredDollar != null) return true;
+                if (ChipModelFiveHundredDollar != null) return true;
+                if (ChipModelRoulette != null) return true;
                 if (SlotMachineModel != null) return true;
+                if (SlotMachineModel2 != null) return true;
                 if (BlackJackTableModel != null) return true;
                 if (BlackJackTableModelRelated != null) return true;
                 if (RouletteTableModel != null) return true;
-                if (SlotReelTextures != null) return true;
-                if (BlackjackDeckTextures != null) return true;
+                if (SlotReelTextureSymbol1 != null) return true;
+                if (SlotReelTextureSymbol2 != null) return true;
+                if (SlotReelTextureSymbol3 != null) return true;
+                if (SlotReelTextureSymbol4 != null) return true;
+                if (SlotReelTextureSymbol5 != null) return true;
+                if (SlotReelTextureSymbol6 != null) return true;
+                if (SlotReelTextureSymbolW != null) return true;
+                if (BlackJackDeckTexture1 != null) return true;
+                if (BlackJackDeckTexture2 != null) return true;
+                if (BlackJackDeckTexture3 != null) return true;
+                if (BlackJackDeckTexture4 != null) return true;
                 return false;
             }
             #endregion
@@ -1053,7 +1343,7 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(DecksPercentBeforeShuffle, "DecksPercentBeforeShuffle");
                 }
                 {
-                    sb.AppendItem(BlackjackPayoutRatio, "BlackjackPayoutRatio");
+                    sb.AppendItem(BlackJackPayoutRatio, "BlackJackPayoutRatio");
                 }
                 {
                     sb.AppendItem(SlotReelSymbol1, "SlotReelSymbol1");
@@ -1089,30 +1379,34 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(CasinoWinningsQuest, "CasinoWinningsQuest");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(DealerStayOnSoft17, "DealerStayOnSoft17");
                 }
-                if (ChipModels is {} ChipModelsItem)
                 {
-                    sb.AppendLine("ChipModels =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(ChipModelsItem.Overall);
-                        if (ChipModelsItem.Specific != null)
-                        {
-                            foreach (var subItem in ChipModelsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(ChipModelOneDollar, "ChipModelOneDollar");
+                }
+                {
+                    sb.AppendItem(ChipModelFiveDollar, "ChipModelFiveDollar");
+                }
+                {
+                    sb.AppendItem(ChipModelTenDollar, "ChipModelTenDollar");
+                }
+                {
+                    sb.AppendItem(ChipModelTwentyFiveDollar, "ChipModelTwentyFiveDollar");
+                }
+                {
+                    sb.AppendItem(ChipModelOneHundredDollar, "ChipModelOneHundredDollar");
+                }
+                {
+                    sb.AppendItem(ChipModelFiveHundredDollar, "ChipModelFiveHundredDollar");
+                }
+                {
+                    sb.AppendItem(ChipModelRoulette, "ChipModelRoulette");
                 }
                 {
                     sb.AppendItem(SlotMachineModel, "SlotMachineModel");
+                }
+                {
+                    sb.AppendItem(SlotMachineModel2, "SlotMachineModel2");
                 }
                 {
                     sb.AppendItem(BlackJackTableModel, "BlackJackTableModel");
@@ -1123,45 +1417,38 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(RouletteTableModel, "RouletteTableModel");
                 }
-                if (SlotReelTextures is {} SlotReelTexturesItem)
                 {
-                    sb.AppendLine("SlotReelTextures =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(SlotReelTexturesItem.Overall);
-                        if (SlotReelTexturesItem.Specific != null)
-                        {
-                            foreach (var subItem in SlotReelTexturesItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(SlotReelTextureSymbol1, "SlotReelTextureSymbol1");
                 }
-                if (BlackjackDeckTextures is {} BlackjackDeckTexturesItem)
                 {
-                    sb.AppendLine("BlackjackDeckTextures =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(BlackjackDeckTexturesItem.Overall);
-                        if (BlackjackDeckTexturesItem.Specific != null)
-                        {
-                            foreach (var subItem in BlackjackDeckTexturesItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(SlotReelTextureSymbol2, "SlotReelTextureSymbol2");
+                }
+                {
+                    sb.AppendItem(SlotReelTextureSymbol3, "SlotReelTextureSymbol3");
+                }
+                {
+                    sb.AppendItem(SlotReelTextureSymbol4, "SlotReelTextureSymbol4");
+                }
+                {
+                    sb.AppendItem(SlotReelTextureSymbol5, "SlotReelTextureSymbol5");
+                }
+                {
+                    sb.AppendItem(SlotReelTextureSymbol6, "SlotReelTextureSymbol6");
+                }
+                {
+                    sb.AppendItem(SlotReelTextureSymbolW, "SlotReelTextureSymbolW");
+                }
+                {
+                    sb.AppendItem(BlackJackDeckTexture1, "BlackJackDeckTexture1");
+                }
+                {
+                    sb.AppendItem(BlackJackDeckTexture2, "BlackJackDeckTexture2");
+                }
+                {
+                    sb.AppendItem(BlackJackDeckTexture3, "BlackJackDeckTexture3");
+                }
+                {
+                    sb.AppendItem(BlackJackDeckTexture4, "BlackJackDeckTexture4");
                 }
             }
             #endregion
@@ -1173,7 +1460,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.DecksPercentBeforeShuffle = this.DecksPercentBeforeShuffle.Combine(rhs.DecksPercentBeforeShuffle);
-                ret.BlackjackPayoutRatio = this.BlackjackPayoutRatio.Combine(rhs.BlackjackPayoutRatio);
+                ret.BlackJackPayoutRatio = this.BlackJackPayoutRatio.Combine(rhs.BlackJackPayoutRatio);
                 ret.SlotReelSymbol1 = this.SlotReelSymbol1.Combine(rhs.SlotReelSymbol1);
                 ret.SlotReelSymbol2 = this.SlotReelSymbol2.Combine(rhs.SlotReelSymbol2);
                 ret.SlotReelSymbol3 = this.SlotReelSymbol3.Combine(rhs.SlotReelSymbol3);
@@ -1185,14 +1472,30 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MaxWinnings = this.MaxWinnings.Combine(rhs.MaxWinnings);
                 ret.Currency = this.Currency.Combine(rhs.Currency);
                 ret.CasinoWinningsQuest = this.CasinoWinningsQuest.Combine(rhs.CasinoWinningsQuest);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.ChipModels = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ChipModels?.Overall, rhs.ChipModels?.Overall), Noggog.ExceptionExt.Combine(this.ChipModels?.Specific, rhs.ChipModels?.Specific));
+                ret.DealerStayOnSoft17 = this.DealerStayOnSoft17.Combine(rhs.DealerStayOnSoft17);
+                ret.ChipModelOneDollar = this.ChipModelOneDollar.Combine(rhs.ChipModelOneDollar);
+                ret.ChipModelFiveDollar = this.ChipModelFiveDollar.Combine(rhs.ChipModelFiveDollar);
+                ret.ChipModelTenDollar = this.ChipModelTenDollar.Combine(rhs.ChipModelTenDollar);
+                ret.ChipModelTwentyFiveDollar = this.ChipModelTwentyFiveDollar.Combine(rhs.ChipModelTwentyFiveDollar);
+                ret.ChipModelOneHundredDollar = this.ChipModelOneHundredDollar.Combine(rhs.ChipModelOneHundredDollar);
+                ret.ChipModelFiveHundredDollar = this.ChipModelFiveHundredDollar.Combine(rhs.ChipModelFiveHundredDollar);
+                ret.ChipModelRoulette = this.ChipModelRoulette.Combine(rhs.ChipModelRoulette);
                 ret.SlotMachineModel = this.SlotMachineModel.Combine(rhs.SlotMachineModel);
+                ret.SlotMachineModel2 = this.SlotMachineModel2.Combine(rhs.SlotMachineModel2);
                 ret.BlackJackTableModel = this.BlackJackTableModel.Combine(rhs.BlackJackTableModel);
                 ret.BlackJackTableModelRelated = this.BlackJackTableModelRelated.Combine(rhs.BlackJackTableModelRelated);
                 ret.RouletteTableModel = this.RouletteTableModel.Combine(rhs.RouletteTableModel);
-                ret.SlotReelTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SlotReelTextures?.Overall, rhs.SlotReelTextures?.Overall), Noggog.ExceptionExt.Combine(this.SlotReelTextures?.Specific, rhs.SlotReelTextures?.Specific));
-                ret.BlackjackDeckTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.BlackjackDeckTextures?.Overall, rhs.BlackjackDeckTextures?.Overall), Noggog.ExceptionExt.Combine(this.BlackjackDeckTextures?.Specific, rhs.BlackjackDeckTextures?.Specific));
+                ret.SlotReelTextureSymbol1 = this.SlotReelTextureSymbol1.Combine(rhs.SlotReelTextureSymbol1);
+                ret.SlotReelTextureSymbol2 = this.SlotReelTextureSymbol2.Combine(rhs.SlotReelTextureSymbol2);
+                ret.SlotReelTextureSymbol3 = this.SlotReelTextureSymbol3.Combine(rhs.SlotReelTextureSymbol3);
+                ret.SlotReelTextureSymbol4 = this.SlotReelTextureSymbol4.Combine(rhs.SlotReelTextureSymbol4);
+                ret.SlotReelTextureSymbol5 = this.SlotReelTextureSymbol5.Combine(rhs.SlotReelTextureSymbol5);
+                ret.SlotReelTextureSymbol6 = this.SlotReelTextureSymbol6.Combine(rhs.SlotReelTextureSymbol6);
+                ret.SlotReelTextureSymbolW = this.SlotReelTextureSymbolW.Combine(rhs.SlotReelTextureSymbolW);
+                ret.BlackJackDeckTexture1 = this.BlackJackDeckTexture1.Combine(rhs.BlackJackDeckTexture1);
+                ret.BlackJackDeckTexture2 = this.BlackJackDeckTexture2.Combine(rhs.BlackJackDeckTexture2);
+                ret.BlackJackDeckTexture3 = this.BlackJackDeckTexture3.Combine(rhs.BlackJackDeckTexture3);
+                ret.BlackJackDeckTexture4 = this.BlackJackDeckTexture4.Combine(rhs.BlackJackDeckTexture4);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1217,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public bool Name;
             public bool DecksPercentBeforeShuffle;
-            public bool BlackjackPayoutRatio;
+            public bool BlackJackPayoutRatio;
             public bool SlotReelSymbol1;
             public bool SlotReelSymbol2;
             public bool SlotReelSymbol3;
@@ -1229,14 +1532,30 @@ namespace Mutagen.Bethesda.Fallout3
             public bool MaxWinnings;
             public bool Currency;
             public bool CasinoWinningsQuest;
-            public bool Flags;
-            public bool ChipModels;
+            public bool DealerStayOnSoft17;
+            public bool ChipModelOneDollar;
+            public bool ChipModelFiveDollar;
+            public bool ChipModelTenDollar;
+            public bool ChipModelTwentyFiveDollar;
+            public bool ChipModelOneHundredDollar;
+            public bool ChipModelFiveHundredDollar;
+            public bool ChipModelRoulette;
             public bool SlotMachineModel;
+            public bool SlotMachineModel2;
             public bool BlackJackTableModel;
             public bool BlackJackTableModelRelated;
             public bool RouletteTableModel;
-            public bool SlotReelTextures;
-            public bool BlackjackDeckTextures;
+            public bool SlotReelTextureSymbol1;
+            public bool SlotReelTextureSymbol2;
+            public bool SlotReelTextureSymbol3;
+            public bool SlotReelTextureSymbol4;
+            public bool SlotReelTextureSymbol5;
+            public bool SlotReelTextureSymbol6;
+            public bool SlotReelTextureSymbolW;
+            public bool BlackJackDeckTexture1;
+            public bool BlackJackDeckTexture2;
+            public bool BlackJackDeckTexture3;
+            public bool BlackJackDeckTexture4;
             #endregion
 
             #region Ctors
@@ -1247,7 +1566,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = defaultOn;
                 this.DecksPercentBeforeShuffle = defaultOn;
-                this.BlackjackPayoutRatio = defaultOn;
+                this.BlackJackPayoutRatio = defaultOn;
                 this.SlotReelSymbol1 = defaultOn;
                 this.SlotReelSymbol2 = defaultOn;
                 this.SlotReelSymbol3 = defaultOn;
@@ -1259,14 +1578,30 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MaxWinnings = defaultOn;
                 this.Currency = defaultOn;
                 this.CasinoWinningsQuest = defaultOn;
-                this.Flags = defaultOn;
-                this.ChipModels = defaultOn;
+                this.DealerStayOnSoft17 = defaultOn;
+                this.ChipModelOneDollar = defaultOn;
+                this.ChipModelFiveDollar = defaultOn;
+                this.ChipModelTenDollar = defaultOn;
+                this.ChipModelTwentyFiveDollar = defaultOn;
+                this.ChipModelOneHundredDollar = defaultOn;
+                this.ChipModelFiveHundredDollar = defaultOn;
+                this.ChipModelRoulette = defaultOn;
                 this.SlotMachineModel = defaultOn;
+                this.SlotMachineModel2 = defaultOn;
                 this.BlackJackTableModel = defaultOn;
                 this.BlackJackTableModelRelated = defaultOn;
                 this.RouletteTableModel = defaultOn;
-                this.SlotReelTextures = defaultOn;
-                this.BlackjackDeckTextures = defaultOn;
+                this.SlotReelTextureSymbol1 = defaultOn;
+                this.SlotReelTextureSymbol2 = defaultOn;
+                this.SlotReelTextureSymbol3 = defaultOn;
+                this.SlotReelTextureSymbol4 = defaultOn;
+                this.SlotReelTextureSymbol5 = defaultOn;
+                this.SlotReelTextureSymbol6 = defaultOn;
+                this.SlotReelTextureSymbolW = defaultOn;
+                this.BlackJackDeckTexture1 = defaultOn;
+                this.BlackJackDeckTexture2 = defaultOn;
+                this.BlackJackDeckTexture3 = defaultOn;
+                this.BlackJackDeckTexture4 = defaultOn;
             }
 
             #endregion
@@ -1276,7 +1611,7 @@ namespace Mutagen.Bethesda.Fallout3
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((DecksPercentBeforeShuffle, null));
-                ret.Add((BlackjackPayoutRatio, null));
+                ret.Add((BlackJackPayoutRatio, null));
                 ret.Add((SlotReelSymbol1, null));
                 ret.Add((SlotReelSymbol2, null));
                 ret.Add((SlotReelSymbol3, null));
@@ -1288,14 +1623,30 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MaxWinnings, null));
                 ret.Add((Currency, null));
                 ret.Add((CasinoWinningsQuest, null));
-                ret.Add((Flags, null));
-                ret.Add((ChipModels, null));
+                ret.Add((DealerStayOnSoft17, null));
+                ret.Add((ChipModelOneDollar, null));
+                ret.Add((ChipModelFiveDollar, null));
+                ret.Add((ChipModelTenDollar, null));
+                ret.Add((ChipModelTwentyFiveDollar, null));
+                ret.Add((ChipModelOneHundredDollar, null));
+                ret.Add((ChipModelFiveHundredDollar, null));
+                ret.Add((ChipModelRoulette, null));
                 ret.Add((SlotMachineModel, null));
+                ret.Add((SlotMachineModel2, null));
                 ret.Add((BlackJackTableModel, null));
                 ret.Add((BlackJackTableModelRelated, null));
                 ret.Add((RouletteTableModel, null));
-                ret.Add((SlotReelTextures, null));
-                ret.Add((BlackjackDeckTextures, null));
+                ret.Add((SlotReelTextureSymbol1, null));
+                ret.Add((SlotReelTextureSymbol2, null));
+                ret.Add((SlotReelTextureSymbol3, null));
+                ret.Add((SlotReelTextureSymbol4, null));
+                ret.Add((SlotReelTextureSymbol5, null));
+                ret.Add((SlotReelTextureSymbol6, null));
+                ret.Add((SlotReelTextureSymbolW, null));
+                ret.Add((BlackJackDeckTexture1, null));
+                ret.Add((BlackJackDeckTexture2, null));
+                ret.Add((BlackJackDeckTexture3, null));
+                ret.Add((BlackJackDeckTexture4, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1432,14 +1783,16 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<ICasinoInternal>,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new Single DecksPercentBeforeShuffle { get; set; }
-        new Single BlackjackPayoutRatio { get; set; }
+        new Single BlackJackPayoutRatio { get; set; }
         new UInt32 SlotReelSymbol1 { get; set; }
         new UInt32 SlotReelSymbol2 { get; set; }
         new UInt32 SlotReelSymbol3 { get; set; }
@@ -1451,14 +1804,30 @@ namespace Mutagen.Bethesda.Fallout3
         new UInt32 MaxWinnings { get; set; }
         new IFormLink<ICasinoChipGetter> Currency { get; set; }
         new IFormLink<IQuestGetter> CasinoWinningsQuest { get; set; }
-        new CasinoFlag Flags { get; set; }
-        new ExtendedList<String>? ChipModels { get; set; }
+        new Boolean DealerStayOnSoft17 { get; set; }
+        new String? ChipModelOneDollar { get; set; }
+        new String? ChipModelFiveDollar { get; set; }
+        new String? ChipModelTenDollar { get; set; }
+        new String? ChipModelTwentyFiveDollar { get; set; }
+        new String? ChipModelOneHundredDollar { get; set; }
+        new String? ChipModelFiveHundredDollar { get; set; }
+        new String? ChipModelRoulette { get; set; }
         new String? SlotMachineModel { get; set; }
+        new String? SlotMachineModel2 { get; set; }
         new String? BlackJackTableModel { get; set; }
         new String? BlackJackTableModelRelated { get; set; }
         new String? RouletteTableModel { get; set; }
-        new ExtendedList<String>? SlotReelTextures { get; set; }
-        new ExtendedList<String>? BlackjackDeckTextures { get; set; }
+        new String? SlotReelTextureSymbol1 { get; set; }
+        new String? SlotReelTextureSymbol2 { get; set; }
+        new String? SlotReelTextureSymbol3 { get; set; }
+        new String? SlotReelTextureSymbol4 { get; set; }
+        new String? SlotReelTextureSymbol5 { get; set; }
+        new String? SlotReelTextureSymbol6 { get; set; }
+        new String? SlotReelTextureSymbolW { get; set; }
+        new String? BlackJackDeckTexture1 { get; set; }
+        new String? BlackJackDeckTexture2 { get; set; }
+        new String? BlackJackDeckTexture3 { get; set; }
+        new String? BlackJackDeckTexture4 { get; set; }
     }
 
     public partial interface ICasinoInternal :
@@ -1476,17 +1845,19 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<ICasinoGetter>,
         IMapsToGetter<ICasinoGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Casino_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         Single DecksPercentBeforeShuffle { get; }
-        Single BlackjackPayoutRatio { get; }
+        Single BlackJackPayoutRatio { get; }
         UInt32 SlotReelSymbol1 { get; }
         UInt32 SlotReelSymbol2 { get; }
         UInt32 SlotReelSymbol3 { get; }
@@ -1498,14 +1869,30 @@ namespace Mutagen.Bethesda.Fallout3
         UInt32 MaxWinnings { get; }
         IFormLinkGetter<ICasinoChipGetter> Currency { get; }
         IFormLinkGetter<IQuestGetter> CasinoWinningsQuest { get; }
-        CasinoFlag Flags { get; }
-        IReadOnlyList<String>? ChipModels { get; }
+        Boolean DealerStayOnSoft17 { get; }
+        String? ChipModelOneDollar { get; }
+        String? ChipModelFiveDollar { get; }
+        String? ChipModelTenDollar { get; }
+        String? ChipModelTwentyFiveDollar { get; }
+        String? ChipModelOneHundredDollar { get; }
+        String? ChipModelFiveHundredDollar { get; }
+        String? ChipModelRoulette { get; }
         String? SlotMachineModel { get; }
+        String? SlotMachineModel2 { get; }
         String? BlackJackTableModel { get; }
         String? BlackJackTableModelRelated { get; }
         String? RouletteTableModel { get; }
-        IReadOnlyList<String>? SlotReelTextures { get; }
-        IReadOnlyList<String>? BlackjackDeckTextures { get; }
+        String? SlotReelTextureSymbol1 { get; }
+        String? SlotReelTextureSymbol2 { get; }
+        String? SlotReelTextureSymbol3 { get; }
+        String? SlotReelTextureSymbol4 { get; }
+        String? SlotReelTextureSymbol5 { get; }
+        String? SlotReelTextureSymbol6 { get; }
+        String? SlotReelTextureSymbolW { get; }
+        String? BlackJackDeckTexture1 { get; }
+        String? BlackJackDeckTexture2 { get; }
+        String? BlackJackDeckTexture3 { get; }
+        String? BlackJackDeckTexture4 { get; }
 
     }
 
@@ -1684,7 +2071,7 @@ namespace Mutagen.Bethesda.Fallout3
         Fallout3MajorRecordFlags = 6,
         Name = 7,
         DecksPercentBeforeShuffle = 8,
-        BlackjackPayoutRatio = 9,
+        BlackJackPayoutRatio = 9,
         SlotReelSymbol1 = 10,
         SlotReelSymbol2 = 11,
         SlotReelSymbol3 = 12,
@@ -1696,14 +2083,30 @@ namespace Mutagen.Bethesda.Fallout3
         MaxWinnings = 18,
         Currency = 19,
         CasinoWinningsQuest = 20,
-        Flags = 21,
-        ChipModels = 22,
-        SlotMachineModel = 23,
-        BlackJackTableModel = 24,
-        BlackJackTableModelRelated = 25,
-        RouletteTableModel = 26,
-        SlotReelTextures = 27,
-        BlackjackDeckTextures = 28,
+        DealerStayOnSoft17 = 21,
+        ChipModelOneDollar = 22,
+        ChipModelFiveDollar = 23,
+        ChipModelTenDollar = 24,
+        ChipModelTwentyFiveDollar = 25,
+        ChipModelOneHundredDollar = 26,
+        ChipModelFiveHundredDollar = 27,
+        ChipModelRoulette = 28,
+        SlotMachineModel = 29,
+        SlotMachineModel2 = 30,
+        BlackJackTableModel = 31,
+        BlackJackTableModelRelated = 32,
+        RouletteTableModel = 33,
+        SlotReelTextureSymbol1 = 34,
+        SlotReelTextureSymbol2 = 35,
+        SlotReelTextureSymbol3 = 36,
+        SlotReelTextureSymbol4 = 37,
+        SlotReelTextureSymbol5 = 38,
+        SlotReelTextureSymbol6 = 39,
+        SlotReelTextureSymbolW = 40,
+        BlackJackDeckTexture1 = 41,
+        BlackJackDeckTexture2 = 42,
+        BlackJackDeckTexture3 = 43,
+        BlackJackDeckTexture4 = 44,
     }
     #endregion
 
@@ -1714,9 +2117,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 38;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 45;
 
         public static readonly Type MaskType = typeof(Casino.Mask<>);
 
@@ -1804,7 +2207,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Name = default;
             item.DecksPercentBeforeShuffle = default(Single);
-            item.BlackjackPayoutRatio = default(Single);
+            item.BlackJackPayoutRatio = default(Single);
             item.SlotReelSymbol1 = default(UInt32);
             item.SlotReelSymbol2 = default(UInt32);
             item.SlotReelSymbol3 = default(UInt32);
@@ -1816,14 +2219,30 @@ namespace Mutagen.Bethesda.Fallout3
             item.MaxWinnings = default(UInt32);
             item.Currency.Clear();
             item.CasinoWinningsQuest.Clear();
-            item.Flags = default(CasinoFlag);
-            item.ChipModels = null;
+            item.DealerStayOnSoft17 = default(Boolean);
+            item.ChipModelOneDollar = default;
+            item.ChipModelFiveDollar = default;
+            item.ChipModelTenDollar = default;
+            item.ChipModelTwentyFiveDollar = default;
+            item.ChipModelOneHundredDollar = default;
+            item.ChipModelFiveHundredDollar = default;
+            item.ChipModelRoulette = default;
             item.SlotMachineModel = default;
+            item.SlotMachineModel2 = default;
             item.BlackJackTableModel = default;
             item.BlackJackTableModelRelated = default;
             item.RouletteTableModel = default;
-            item.SlotReelTextures = null;
-            item.BlackjackDeckTextures = null;
+            item.SlotReelTextureSymbol1 = default;
+            item.SlotReelTextureSymbol2 = default;
+            item.SlotReelTextureSymbol3 = default;
+            item.SlotReelTextureSymbol4 = default;
+            item.SlotReelTextureSymbol5 = default;
+            item.SlotReelTextureSymbol6 = default;
+            item.SlotReelTextureSymbolW = default;
+            item.BlackJackDeckTexture1 = default;
+            item.BlackJackDeckTexture2 = default;
+            item.BlackJackDeckTexture3 = default;
+            item.BlackJackDeckTexture4 = default;
             base.Clear(item);
         }
         
@@ -1910,9 +2329,9 @@ namespace Mutagen.Bethesda.Fallout3
             Casino.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.DecksPercentBeforeShuffle = item.DecksPercentBeforeShuffle.EqualsWithin(rhs.DecksPercentBeforeShuffle);
-            ret.BlackjackPayoutRatio = item.BlackjackPayoutRatio.EqualsWithin(rhs.BlackjackPayoutRatio);
+            ret.BlackJackPayoutRatio = item.BlackJackPayoutRatio.EqualsWithin(rhs.BlackJackPayoutRatio);
             ret.SlotReelSymbol1 = item.SlotReelSymbol1 == rhs.SlotReelSymbol1;
             ret.SlotReelSymbol2 = item.SlotReelSymbol2 == rhs.SlotReelSymbol2;
             ret.SlotReelSymbol3 = item.SlotReelSymbol3 == rhs.SlotReelSymbol3;
@@ -1924,23 +2343,30 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MaxWinnings = item.MaxWinnings == rhs.MaxWinnings;
             ret.Currency = item.Currency.Equals(rhs.Currency);
             ret.CasinoWinningsQuest = item.CasinoWinningsQuest.Equals(rhs.CasinoWinningsQuest);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.ChipModels = item.ChipModels.CollectionEqualsHelper(
-                rhs.ChipModels,
-                (l, r) => string.Equals(l, r),
-                include);
+            ret.DealerStayOnSoft17 = item.DealerStayOnSoft17 == rhs.DealerStayOnSoft17;
+            ret.ChipModelOneDollar = string.Equals(item.ChipModelOneDollar, rhs.ChipModelOneDollar);
+            ret.ChipModelFiveDollar = string.Equals(item.ChipModelFiveDollar, rhs.ChipModelFiveDollar);
+            ret.ChipModelTenDollar = string.Equals(item.ChipModelTenDollar, rhs.ChipModelTenDollar);
+            ret.ChipModelTwentyFiveDollar = string.Equals(item.ChipModelTwentyFiveDollar, rhs.ChipModelTwentyFiveDollar);
+            ret.ChipModelOneHundredDollar = string.Equals(item.ChipModelOneHundredDollar, rhs.ChipModelOneHundredDollar);
+            ret.ChipModelFiveHundredDollar = string.Equals(item.ChipModelFiveHundredDollar, rhs.ChipModelFiveHundredDollar);
+            ret.ChipModelRoulette = string.Equals(item.ChipModelRoulette, rhs.ChipModelRoulette);
             ret.SlotMachineModel = string.Equals(item.SlotMachineModel, rhs.SlotMachineModel);
+            ret.SlotMachineModel2 = string.Equals(item.SlotMachineModel2, rhs.SlotMachineModel2);
             ret.BlackJackTableModel = string.Equals(item.BlackJackTableModel, rhs.BlackJackTableModel);
             ret.BlackJackTableModelRelated = string.Equals(item.BlackJackTableModelRelated, rhs.BlackJackTableModelRelated);
             ret.RouletteTableModel = string.Equals(item.RouletteTableModel, rhs.RouletteTableModel);
-            ret.SlotReelTextures = item.SlotReelTextures.CollectionEqualsHelper(
-                rhs.SlotReelTextures,
-                (l, r) => string.Equals(l, r),
-                include);
-            ret.BlackjackDeckTextures = item.BlackjackDeckTextures.CollectionEqualsHelper(
-                rhs.BlackjackDeckTextures,
-                (l, r) => string.Equals(l, r),
-                include);
+            ret.SlotReelTextureSymbol1 = string.Equals(item.SlotReelTextureSymbol1, rhs.SlotReelTextureSymbol1);
+            ret.SlotReelTextureSymbol2 = string.Equals(item.SlotReelTextureSymbol2, rhs.SlotReelTextureSymbol2);
+            ret.SlotReelTextureSymbol3 = string.Equals(item.SlotReelTextureSymbol3, rhs.SlotReelTextureSymbol3);
+            ret.SlotReelTextureSymbol4 = string.Equals(item.SlotReelTextureSymbol4, rhs.SlotReelTextureSymbol4);
+            ret.SlotReelTextureSymbol5 = string.Equals(item.SlotReelTextureSymbol5, rhs.SlotReelTextureSymbol5);
+            ret.SlotReelTextureSymbol6 = string.Equals(item.SlotReelTextureSymbol6, rhs.SlotReelTextureSymbol6);
+            ret.SlotReelTextureSymbolW = string.Equals(item.SlotReelTextureSymbolW, rhs.SlotReelTextureSymbolW);
+            ret.BlackJackDeckTexture1 = string.Equals(item.BlackJackDeckTexture1, rhs.BlackJackDeckTexture1);
+            ret.BlackJackDeckTexture2 = string.Equals(item.BlackJackDeckTexture2, rhs.BlackJackDeckTexture2);
+            ret.BlackJackDeckTexture3 = string.Equals(item.BlackJackDeckTexture3, rhs.BlackJackDeckTexture3);
+            ret.BlackJackDeckTexture4 = string.Equals(item.BlackJackDeckTexture4, rhs.BlackJackDeckTexture4);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1999,9 +2425,9 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DecksPercentBeforeShuffle, "DecksPercentBeforeShuffle");
             }
-            if (printMask?.BlackjackPayoutRatio ?? true)
+            if (printMask?.BlackJackPayoutRatio ?? true)
             {
-                sb.AppendItem(item.BlackjackPayoutRatio, "BlackjackPayoutRatio");
+                sb.AppendItem(item.BlackJackPayoutRatio, "BlackJackPayoutRatio");
             }
             if (printMask?.SlotReelSymbol1 ?? true)
             {
@@ -2047,29 +2473,54 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.CasinoWinningsQuest.FormKey, "CasinoWinningsQuest");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.DealerStayOnSoft17 ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.DealerStayOnSoft17, "DealerStayOnSoft17");
             }
-            if ((printMask?.ChipModels?.Overall ?? true)
-                && item.ChipModels is {} ChipModelsItem)
+            if ((printMask?.ChipModelOneDollar ?? true)
+                && item.ChipModelOneDollar is {} ChipModelOneDollarItem)
             {
-                sb.AppendLine("ChipModels =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in ChipModelsItem)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem);
-                        }
-                    }
-                }
+                sb.AppendItem(ChipModelOneDollarItem, "ChipModelOneDollar");
+            }
+            if ((printMask?.ChipModelFiveDollar ?? true)
+                && item.ChipModelFiveDollar is {} ChipModelFiveDollarItem)
+            {
+                sb.AppendItem(ChipModelFiveDollarItem, "ChipModelFiveDollar");
+            }
+            if ((printMask?.ChipModelTenDollar ?? true)
+                && item.ChipModelTenDollar is {} ChipModelTenDollarItem)
+            {
+                sb.AppendItem(ChipModelTenDollarItem, "ChipModelTenDollar");
+            }
+            if ((printMask?.ChipModelTwentyFiveDollar ?? true)
+                && item.ChipModelTwentyFiveDollar is {} ChipModelTwentyFiveDollarItem)
+            {
+                sb.AppendItem(ChipModelTwentyFiveDollarItem, "ChipModelTwentyFiveDollar");
+            }
+            if ((printMask?.ChipModelOneHundredDollar ?? true)
+                && item.ChipModelOneHundredDollar is {} ChipModelOneHundredDollarItem)
+            {
+                sb.AppendItem(ChipModelOneHundredDollarItem, "ChipModelOneHundredDollar");
+            }
+            if ((printMask?.ChipModelFiveHundredDollar ?? true)
+                && item.ChipModelFiveHundredDollar is {} ChipModelFiveHundredDollarItem)
+            {
+                sb.AppendItem(ChipModelFiveHundredDollarItem, "ChipModelFiveHundredDollar");
+            }
+            if ((printMask?.ChipModelRoulette ?? true)
+                && item.ChipModelRoulette is {} ChipModelRouletteItem)
+            {
+                sb.AppendItem(ChipModelRouletteItem, "ChipModelRoulette");
             }
             if ((printMask?.SlotMachineModel ?? true)
                 && item.SlotMachineModel is {} SlotMachineModelItem)
             {
                 sb.AppendItem(SlotMachineModelItem, "SlotMachineModel");
+            }
+            if ((printMask?.SlotMachineModel2 ?? true)
+                && item.SlotMachineModel2 is {} SlotMachineModel2Item)
+            {
+                sb.AppendItem(SlotMachineModel2Item, "SlotMachineModel2");
             }
             if ((printMask?.BlackJackTableModel ?? true)
                 && item.BlackJackTableModel is {} BlackJackTableModelItem)
@@ -2086,35 +2537,60 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(RouletteTableModelItem, "RouletteTableModel");
             }
-            if ((printMask?.SlotReelTextures?.Overall ?? true)
-                && item.SlotReelTextures is {} SlotReelTexturesItem)
+            if ((printMask?.SlotReelTextureSymbol1 ?? true)
+                && item.SlotReelTextureSymbol1 is {} SlotReelTextureSymbol1Item)
             {
-                sb.AppendLine("SlotReelTextures =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in SlotReelTexturesItem)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem);
-                        }
-                    }
-                }
+                sb.AppendItem(SlotReelTextureSymbol1Item, "SlotReelTextureSymbol1");
             }
-            if ((printMask?.BlackjackDeckTextures?.Overall ?? true)
-                && item.BlackjackDeckTextures is {} BlackjackDeckTexturesItem)
+            if ((printMask?.SlotReelTextureSymbol2 ?? true)
+                && item.SlotReelTextureSymbol2 is {} SlotReelTextureSymbol2Item)
             {
-                sb.AppendLine("BlackjackDeckTextures =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in BlackjackDeckTexturesItem)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem);
-                        }
-                    }
-                }
+                sb.AppendItem(SlotReelTextureSymbol2Item, "SlotReelTextureSymbol2");
+            }
+            if ((printMask?.SlotReelTextureSymbol3 ?? true)
+                && item.SlotReelTextureSymbol3 is {} SlotReelTextureSymbol3Item)
+            {
+                sb.AppendItem(SlotReelTextureSymbol3Item, "SlotReelTextureSymbol3");
+            }
+            if ((printMask?.SlotReelTextureSymbol4 ?? true)
+                && item.SlotReelTextureSymbol4 is {} SlotReelTextureSymbol4Item)
+            {
+                sb.AppendItem(SlotReelTextureSymbol4Item, "SlotReelTextureSymbol4");
+            }
+            if ((printMask?.SlotReelTextureSymbol5 ?? true)
+                && item.SlotReelTextureSymbol5 is {} SlotReelTextureSymbol5Item)
+            {
+                sb.AppendItem(SlotReelTextureSymbol5Item, "SlotReelTextureSymbol5");
+            }
+            if ((printMask?.SlotReelTextureSymbol6 ?? true)
+                && item.SlotReelTextureSymbol6 is {} SlotReelTextureSymbol6Item)
+            {
+                sb.AppendItem(SlotReelTextureSymbol6Item, "SlotReelTextureSymbol6");
+            }
+            if ((printMask?.SlotReelTextureSymbolW ?? true)
+                && item.SlotReelTextureSymbolW is {} SlotReelTextureSymbolWItem)
+            {
+                sb.AppendItem(SlotReelTextureSymbolWItem, "SlotReelTextureSymbolW");
+            }
+            if ((printMask?.BlackJackDeckTexture1 ?? true)
+                && item.BlackJackDeckTexture1 is {} BlackJackDeckTexture1Item)
+            {
+                sb.AppendItem(BlackJackDeckTexture1Item, "BlackJackDeckTexture1");
+            }
+            if ((printMask?.BlackJackDeckTexture2 ?? true)
+                && item.BlackJackDeckTexture2 is {} BlackJackDeckTexture2Item)
+            {
+                sb.AppendItem(BlackJackDeckTexture2Item, "BlackJackDeckTexture2");
+            }
+            if ((printMask?.BlackJackDeckTexture3 ?? true)
+                && item.BlackJackDeckTexture3 is {} BlackJackDeckTexture3Item)
+            {
+                sb.AppendItem(BlackJackDeckTexture3Item, "BlackJackDeckTexture3");
+            }
+            if ((printMask?.BlackJackDeckTexture4 ?? true)
+                && item.BlackJackDeckTexture4 is {} BlackJackDeckTexture4Item)
+            {
+                sb.AppendItem(BlackJackDeckTexture4Item, "BlackJackDeckTexture4");
             }
         }
         
@@ -2168,15 +2644,15 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.DecksPercentBeforeShuffle) ?? true))
             {
                 if (!lhs.DecksPercentBeforeShuffle.EqualsWithin(rhs.DecksPercentBeforeShuffle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackjackPayoutRatio) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackPayoutRatio) ?? true))
             {
-                if (!lhs.BlackjackPayoutRatio.EqualsWithin(rhs.BlackjackPayoutRatio)) return false;
+                if (!lhs.BlackJackPayoutRatio.EqualsWithin(rhs.BlackJackPayoutRatio)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelSymbol1) ?? true))
             {
@@ -2222,17 +2698,45 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.CasinoWinningsQuest.Equals(rhs.CasinoWinningsQuest)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.DealerStayOnSoft17) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.DealerStayOnSoft17 != rhs.DealerStayOnSoft17) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModels) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelOneDollar) ?? true))
             {
-                if (!lhs.ChipModels.SequenceEqualNullable(rhs.ChipModels)) return false;
+                if (!string.Equals(lhs.ChipModelOneDollar, rhs.ChipModelOneDollar)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelFiveDollar) ?? true))
+            {
+                if (!string.Equals(lhs.ChipModelFiveDollar, rhs.ChipModelFiveDollar)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelTenDollar) ?? true))
+            {
+                if (!string.Equals(lhs.ChipModelTenDollar, rhs.ChipModelTenDollar)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelTwentyFiveDollar) ?? true))
+            {
+                if (!string.Equals(lhs.ChipModelTwentyFiveDollar, rhs.ChipModelTwentyFiveDollar)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelOneHundredDollar) ?? true))
+            {
+                if (!string.Equals(lhs.ChipModelOneHundredDollar, rhs.ChipModelOneHundredDollar)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelFiveHundredDollar) ?? true))
+            {
+                if (!string.Equals(lhs.ChipModelFiveHundredDollar, rhs.ChipModelFiveHundredDollar)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelRoulette) ?? true))
+            {
+                if (!string.Equals(lhs.ChipModelRoulette, rhs.ChipModelRoulette)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotMachineModel) ?? true))
             {
                 if (!string.Equals(lhs.SlotMachineModel, rhs.SlotMachineModel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotMachineModel2) ?? true))
+            {
+                if (!string.Equals(lhs.SlotMachineModel2, rhs.SlotMachineModel2)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackTableModel) ?? true))
             {
@@ -2246,13 +2750,49 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!string.Equals(lhs.RouletteTableModel, rhs.RouletteTableModel)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol1) ?? true))
             {
-                if (!lhs.SlotReelTextures.SequenceEqualNullable(rhs.SlotReelTextures)) return false;
+                if (!string.Equals(lhs.SlotReelTextureSymbol1, rhs.SlotReelTextureSymbol1)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackjackDeckTextures) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol2) ?? true))
             {
-                if (!lhs.BlackjackDeckTextures.SequenceEqualNullable(rhs.BlackjackDeckTextures)) return false;
+                if (!string.Equals(lhs.SlotReelTextureSymbol2, rhs.SlotReelTextureSymbol2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol3) ?? true))
+            {
+                if (!string.Equals(lhs.SlotReelTextureSymbol3, rhs.SlotReelTextureSymbol3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol4) ?? true))
+            {
+                if (!string.Equals(lhs.SlotReelTextureSymbol4, rhs.SlotReelTextureSymbol4)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol5) ?? true))
+            {
+                if (!string.Equals(lhs.SlotReelTextureSymbol5, rhs.SlotReelTextureSymbol5)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol6) ?? true))
+            {
+                if (!string.Equals(lhs.SlotReelTextureSymbol6, rhs.SlotReelTextureSymbol6)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbolW) ?? true))
+            {
+                if (!string.Equals(lhs.SlotReelTextureSymbolW, rhs.SlotReelTextureSymbolW)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture1) ?? true))
+            {
+                if (!string.Equals(lhs.BlackJackDeckTexture1, rhs.BlackJackDeckTexture1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture2) ?? true))
+            {
+                if (!string.Equals(lhs.BlackJackDeckTexture2, rhs.BlackJackDeckTexture2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture3) ?? true))
+            {
+                if (!string.Equals(lhs.BlackJackDeckTexture3, rhs.BlackJackDeckTexture3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture4) ?? true))
+            {
+                if (!string.Equals(lhs.BlackJackDeckTexture4, rhs.BlackJackDeckTexture4)) return false;
             }
             return true;
         }
@@ -2287,7 +2827,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(Nameitem);
             }
             hash.Add(item.DecksPercentBeforeShuffle);
-            hash.Add(item.BlackjackPayoutRatio);
+            hash.Add(item.BlackJackPayoutRatio);
             hash.Add(item.SlotReelSymbol1);
             hash.Add(item.SlotReelSymbol2);
             hash.Add(item.SlotReelSymbol3);
@@ -2299,11 +2839,42 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MaxWinnings);
             hash.Add(item.Currency);
             hash.Add(item.CasinoWinningsQuest);
-            hash.Add(item.Flags);
-            hash.Add(item.ChipModels);
+            hash.Add(item.DealerStayOnSoft17);
+            if (item.ChipModelOneDollar is {} ChipModelOneDollaritem)
+            {
+                hash.Add(ChipModelOneDollaritem);
+            }
+            if (item.ChipModelFiveDollar is {} ChipModelFiveDollaritem)
+            {
+                hash.Add(ChipModelFiveDollaritem);
+            }
+            if (item.ChipModelTenDollar is {} ChipModelTenDollaritem)
+            {
+                hash.Add(ChipModelTenDollaritem);
+            }
+            if (item.ChipModelTwentyFiveDollar is {} ChipModelTwentyFiveDollaritem)
+            {
+                hash.Add(ChipModelTwentyFiveDollaritem);
+            }
+            if (item.ChipModelOneHundredDollar is {} ChipModelOneHundredDollaritem)
+            {
+                hash.Add(ChipModelOneHundredDollaritem);
+            }
+            if (item.ChipModelFiveHundredDollar is {} ChipModelFiveHundredDollaritem)
+            {
+                hash.Add(ChipModelFiveHundredDollaritem);
+            }
+            if (item.ChipModelRoulette is {} ChipModelRouletteitem)
+            {
+                hash.Add(ChipModelRouletteitem);
+            }
             if (item.SlotMachineModel is {} SlotMachineModelitem)
             {
                 hash.Add(SlotMachineModelitem);
+            }
+            if (item.SlotMachineModel2 is {} SlotMachineModel2item)
+            {
+                hash.Add(SlotMachineModel2item);
             }
             if (item.BlackJackTableModel is {} BlackJackTableModelitem)
             {
@@ -2317,8 +2888,50 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(RouletteTableModelitem);
             }
-            hash.Add(item.SlotReelTextures);
-            hash.Add(item.BlackjackDeckTextures);
+            if (item.SlotReelTextureSymbol1 is {} SlotReelTextureSymbol1item)
+            {
+                hash.Add(SlotReelTextureSymbol1item);
+            }
+            if (item.SlotReelTextureSymbol2 is {} SlotReelTextureSymbol2item)
+            {
+                hash.Add(SlotReelTextureSymbol2item);
+            }
+            if (item.SlotReelTextureSymbol3 is {} SlotReelTextureSymbol3item)
+            {
+                hash.Add(SlotReelTextureSymbol3item);
+            }
+            if (item.SlotReelTextureSymbol4 is {} SlotReelTextureSymbol4item)
+            {
+                hash.Add(SlotReelTextureSymbol4item);
+            }
+            if (item.SlotReelTextureSymbol5 is {} SlotReelTextureSymbol5item)
+            {
+                hash.Add(SlotReelTextureSymbol5item);
+            }
+            if (item.SlotReelTextureSymbol6 is {} SlotReelTextureSymbol6item)
+            {
+                hash.Add(SlotReelTextureSymbol6item);
+            }
+            if (item.SlotReelTextureSymbolW is {} SlotReelTextureSymbolWitem)
+            {
+                hash.Add(SlotReelTextureSymbolWitem);
+            }
+            if (item.BlackJackDeckTexture1 is {} BlackJackDeckTexture1item)
+            {
+                hash.Add(BlackJackDeckTexture1item);
+            }
+            if (item.BlackJackDeckTexture2 is {} BlackJackDeckTexture2item)
+            {
+                hash.Add(BlackJackDeckTexture2item);
+            }
+            if (item.BlackJackDeckTexture3 is {} BlackJackDeckTexture3item)
+            {
+                hash.Add(BlackJackDeckTexture3item);
+            }
+            if (item.BlackJackDeckTexture4 is {} BlackJackDeckTexture4item)
+            {
+                hash.Add(BlackJackDeckTexture4item);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2448,15 +3061,15 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.DecksPercentBeforeShuffle) ?? true))
             {
                 item.DecksPercentBeforeShuffle = rhs.DecksPercentBeforeShuffle;
             }
-            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackjackPayoutRatio) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackPayoutRatio) ?? true))
             {
-                item.BlackjackPayoutRatio = rhs.BlackjackPayoutRatio;
+                item.BlackJackPayoutRatio = rhs.BlackJackPayoutRatio;
             }
             if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelSymbol1) ?? true))
             {
@@ -2502,39 +3115,45 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.CasinoWinningsQuest.SetTo(rhs.CasinoWinningsQuest.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.DealerStayOnSoft17) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.DealerStayOnSoft17 = rhs.DealerStayOnSoft17;
             }
-            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModels) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelOneDollar) ?? true))
             {
-                errorMask?.PushIndex((int)Casino_FieldIndex.ChipModels);
-                try
-                {
-                    if ((rhs.ChipModels != null))
-                    {
-                        item.ChipModels = 
-                            rhs.ChipModels
-                            .ToExtendedList<String>();
-                    }
-                    else
-                    {
-                        item.ChipModels = null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ChipModelOneDollar = rhs.ChipModelOneDollar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelFiveDollar) ?? true))
+            {
+                item.ChipModelFiveDollar = rhs.ChipModelFiveDollar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelTenDollar) ?? true))
+            {
+                item.ChipModelTenDollar = rhs.ChipModelTenDollar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelTwentyFiveDollar) ?? true))
+            {
+                item.ChipModelTwentyFiveDollar = rhs.ChipModelTwentyFiveDollar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelOneHundredDollar) ?? true))
+            {
+                item.ChipModelOneHundredDollar = rhs.ChipModelOneHundredDollar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelFiveHundredDollar) ?? true))
+            {
+                item.ChipModelFiveHundredDollar = rhs.ChipModelFiveHundredDollar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.ChipModelRoulette) ?? true))
+            {
+                item.ChipModelRoulette = rhs.ChipModelRoulette;
             }
             if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotMachineModel) ?? true))
             {
                 item.SlotMachineModel = rhs.SlotMachineModel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotMachineModel2) ?? true))
+            {
+                item.SlotMachineModel2 = rhs.SlotMachineModel2;
             }
             if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackTableModel) ?? true))
             {
@@ -2548,57 +3167,49 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.RouletteTableModel = rhs.RouletteTableModel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextures) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol1) ?? true))
             {
-                errorMask?.PushIndex((int)Casino_FieldIndex.SlotReelTextures);
-                try
-                {
-                    if ((rhs.SlotReelTextures != null))
-                    {
-                        item.SlotReelTextures = 
-                            rhs.SlotReelTextures
-                            .ToExtendedList<String>();
-                    }
-                    else
-                    {
-                        item.SlotReelTextures = null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SlotReelTextureSymbol1 = rhs.SlotReelTextureSymbol1;
             }
-            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackjackDeckTextures) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol2) ?? true))
             {
-                errorMask?.PushIndex((int)Casino_FieldIndex.BlackjackDeckTextures);
-                try
-                {
-                    if ((rhs.BlackjackDeckTextures != null))
-                    {
-                        item.BlackjackDeckTextures = 
-                            rhs.BlackjackDeckTextures
-                            .ToExtendedList<String>();
-                    }
-                    else
-                    {
-                        item.BlackjackDeckTextures = null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SlotReelTextureSymbol2 = rhs.SlotReelTextureSymbol2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol3) ?? true))
+            {
+                item.SlotReelTextureSymbol3 = rhs.SlotReelTextureSymbol3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol4) ?? true))
+            {
+                item.SlotReelTextureSymbol4 = rhs.SlotReelTextureSymbol4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol5) ?? true))
+            {
+                item.SlotReelTextureSymbol5 = rhs.SlotReelTextureSymbol5;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbol6) ?? true))
+            {
+                item.SlotReelTextureSymbol6 = rhs.SlotReelTextureSymbol6;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.SlotReelTextureSymbolW) ?? true))
+            {
+                item.SlotReelTextureSymbolW = rhs.SlotReelTextureSymbolW;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture1) ?? true))
+            {
+                item.BlackJackDeckTexture1 = rhs.BlackJackDeckTexture1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture2) ?? true))
+            {
+                item.BlackJackDeckTexture2 = rhs.BlackJackDeckTexture2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture3) ?? true))
+            {
+                item.BlackJackDeckTexture3 = rhs.BlackJackDeckTexture3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Casino_FieldIndex.BlackJackDeckTexture4) ?? true))
+            {
+                item.BlackJackDeckTexture4 = rhs.BlackJackDeckTexture4;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2773,7 +3384,8 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2781,7 +3393,7 @@ namespace Mutagen.Bethesda.Fallout3
                     item: item.DecksPercentBeforeShuffle);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BlackjackPayoutRatio);
+                    item: item.BlackJackPayoutRatio);
                 writer.Write(item.SlotReelSymbol1);
                 writer.Write(item.SlotReelSymbol2);
                 writer.Write(item.SlotReelSymbol3);
@@ -2797,20 +3409,51 @@ namespace Mutagen.Bethesda.Fallout3
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CasinoWinningsQuest);
-                EnumBinaryTranslation<CasinoFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 4);
+                writer.Write(item.DealerStayOnSoft17, length: 4);
             }
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                items: item.ChipModels,
-                recordType: translationParams.ConvertToCustom(RecordTypes.MODL),
-                writeNullSuffix: true,
-                transl: StringBinaryTranslation.Instance.Write);
+                item: item.ChipModelOneDollar,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ChipModelFiveDollar,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ChipModelTenDollar,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ChipModelTwentyFiveDollar,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ChipModelOneHundredDollar,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ChipModelFiveHundredDollar,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ChipModelRoulette,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SlotMachineModel,
+                header: translationParams.ConvertToCustom(RecordTypes.MODL),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SlotMachineModel2,
                 header: translationParams.ConvertToCustom(RecordTypes.MOD2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
@@ -2828,18 +3471,61 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.RouletteTableModel,
                 header: translationParams.ConvertToCustom(RecordTypes.MOD4),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Write(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                items: item.SlotReelTextures,
-                recordType: translationParams.ConvertToCustom(RecordTypes.ICON),
-                writeNullSuffix: true,
-                transl: StringBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Write(
+                item: item.SlotReelTextureSymbol1,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                items: item.BlackjackDeckTextures,
-                recordType: translationParams.ConvertToCustom(RecordTypes.ICO2),
-                writeNullSuffix: true,
-                transl: StringBinaryTranslation.Instance.Write);
+                item: item.SlotReelTextureSymbol2,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SlotReelTextureSymbol3,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SlotReelTextureSymbol4,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SlotReelTextureSymbol5,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SlotReelTextureSymbol6,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SlotReelTextureSymbolW,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BlackJackDeckTexture1,
+                header: translationParams.ConvertToCustom(RecordTypes.ICO2),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BlackJackDeckTexture2,
+                header: translationParams.ConvertToCustom(RecordTypes.ICO2),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BlackJackDeckTexture3,
+                header: translationParams.ConvertToCustom(RecordTypes.ICO2),
+                binaryType: StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BlackJackDeckTexture4,
+                header: translationParams.ConvertToCustom(RecordTypes.ICO2),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -2913,6 +3599,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Casino_FieldIndex.Name;
@@ -2924,7 +3612,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 4) return null;
                     item.DecksPercentBeforeShuffle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BlackjackPayoutRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BlackJackPayoutRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.SlotReelSymbol1 = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;
@@ -2948,36 +3636,159 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 4) return null;
                     item.CasinoWinningsQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.Flags = EnumBinaryTranslation<CasinoFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.DealerStayOnSoft17 = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                         reader: dataFrame,
-                        length: 4);
-                    return (int)Casino_FieldIndex.Flags;
+                        byteLength: 4);
+                    return (int)Casino_FieldIndex.DealerStayOnSoft17;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChipModels = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.DealerStayOnSoft17)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelOneDollar = StringBinaryTranslation.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
-                            {
-                                return StringBinaryTranslation.Instance.Parse(
-                                    r,
-                                    item: out listSubItem,
-                                    parseWhole: false,
-                                    binaryType: StringBinaryType.NullTerminate);
-                            })
-                        .CastExtendedList<String>();
-                    return (int)Casino_FieldIndex.ChipModels;
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelOneDollar, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelOneDollar)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelFiveDollar = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelFiveDollar, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelFiveDollar)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelTenDollar = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelTenDollar, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelTenDollar)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelTwentyFiveDollar = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelTwentyFiveDollar, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelTwentyFiveDollar)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelOneHundredDollar = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelOneHundredDollar, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelOneHundredDollar)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelFiveHundredDollar = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelFiveHundredDollar, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelFiveHundredDollar)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.ChipModelRoulette = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelRoulette, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelRoulette)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotMachineModel = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotMachineModel, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelOneDollar = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelOneDollar, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelFiveDollar = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelFiveDollar, nextRecordType);
+                            case 2:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelTenDollar = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelTenDollar, nextRecordType);
+                            case 3:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelTwentyFiveDollar = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelTwentyFiveDollar, nextRecordType);
+                            case 4:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelOneHundredDollar = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelOneHundredDollar, nextRecordType);
+                            case 5:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelFiveHundredDollar = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelFiveHundredDollar, nextRecordType);
+                            case 6:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.ChipModelRoulette = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelRoulette, nextRecordType);
+                            case 7:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotMachineModel = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotMachineModel, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SlotMachineModel = StringBinaryTranslation.Instance.Parse(
+                    item.SlotMachineModel2 = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Casino_FieldIndex.SlotMachineModel;
+                    return (int)Casino_FieldIndex.SlotMachineModel2;
                 }
                 case RecordTypeInts.MOD3:
                 {
@@ -3008,37 +3819,203 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ICON:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SlotReelTextures = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.RouletteTableModel)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbol1 = StringBinaryTranslation.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
-                            {
-                                return StringBinaryTranslation.Instance.Parse(
-                                    r,
-                                    item: out listSubItem,
-                                    parseWhole: false,
-                                    binaryType: StringBinaryType.NullTerminate);
-                            })
-                        .CastExtendedList<String>();
-                    return (int)Casino_FieldIndex.SlotReelTextures;
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol1, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol1)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbol2 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol2, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol2)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbol3 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol3, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol3)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbol4 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol4, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol4)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbol5 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol5, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol5)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbol6 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol6, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol6)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SlotReelTextureSymbolW = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbolW, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbol1 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol1, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbol2 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol2, nextRecordType);
+                            case 2:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbol3 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol3, nextRecordType);
+                            case 3:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbol4 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol4, nextRecordType);
+                            case 4:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbol5 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol5, nextRecordType);
+                            case 5:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbol6 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol6, nextRecordType);
+                            case 6:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.SlotReelTextureSymbolW = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbolW, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.ICO2:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlackjackDeckTextures = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbolW)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.BlackJackDeckTexture1 = StringBinaryTranslation.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
-                            {
-                                return StringBinaryTranslation.Instance.Parse(
-                                    r,
-                                    item: out listSubItem,
-                                    parseWhole: false,
-                                    binaryType: StringBinaryType.NullTerminate);
-                            })
-                        .CastExtendedList<String>();
-                    return (int)Casino_FieldIndex.BlackjackDeckTextures;
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture1, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.BlackJackDeckTexture1)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.BlackJackDeckTexture2 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture2, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.BlackJackDeckTexture2)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.BlackJackDeckTexture3 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture3, nextRecordType);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.BlackJackDeckTexture3)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.BlackJackDeckTexture4 = StringBinaryTranslation.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture4, nextRecordType);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
+                        {
+                            case 0:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.BlackJackDeckTexture1 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture1, nextRecordType);
+                            case 1:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.BlackJackDeckTexture2 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture2, nextRecordType);
+                            case 2:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.BlackJackDeckTexture3 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture3, nextRecordType);
+                            case 3:
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.BlackJackDeckTexture4 = StringBinaryTranslation.Instance.Parse(
+                                    reader: frame.SpawnWithLength(contentLength),
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture4, nextRecordType);
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3101,10 +4078,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         private RangeInt32? _DATALocation;
@@ -3113,10 +4094,10 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _DecksPercentBeforeShuffle_IsSet => _DATALocation.HasValue;
         public Single DecksPercentBeforeShuffle => _DecksPercentBeforeShuffle_IsSet ? _recordData.Slice(_DecksPercentBeforeShuffleLocation, 4).Float() : default(Single);
         #endregion
-        #region BlackjackPayoutRatio
-        private int _BlackjackPayoutRatioLocation => _DATALocation!.Value.Min + 0x4;
-        private bool _BlackjackPayoutRatio_IsSet => _DATALocation.HasValue;
-        public Single BlackjackPayoutRatio => _BlackjackPayoutRatio_IsSet ? _recordData.Slice(_BlackjackPayoutRatioLocation, 4).Float() : default(Single);
+        #region BlackJackPayoutRatio
+        private int _BlackJackPayoutRatioLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _BlackJackPayoutRatio_IsSet => _DATALocation.HasValue;
+        public Single BlackJackPayoutRatio => _BlackJackPayoutRatio_IsSet ? _recordData.Slice(_BlackJackPayoutRatioLocation, 4).Float() : default(Single);
         #endregion
         #region SlotReelSymbol1
         private int _SlotReelSymbol1Location => _DATALocation!.Value.Min + 0x8;
@@ -3173,15 +4154,46 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _CasinoWinningsQuest_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IQuestGetter> CasinoWinningsQuest => _CasinoWinningsQuest_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IQuestGetter>(_package, _recordData.Span.Slice(_CasinoWinningsQuestLocation, 0x4), isSet: _CasinoWinningsQuest_IsSet) : FormLink<IQuestGetter>.Null;
         #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value.Min + 0x34;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public CasinoFlag Flags => _Flags_IsSet ? (CasinoFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #region DealerStayOnSoft17
+        private int _DealerStayOnSoft17Location => _DATALocation!.Value.Min + 0x34;
+        private bool _DealerStayOnSoft17_IsSet => _DATALocation.HasValue;
+        public Boolean DealerStayOnSoft17 => _DealerStayOnSoft17_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_DealerStayOnSoft17Location, 4)) >= 1 : default(Boolean);
         #endregion
-        public IReadOnlyList<String>? ChipModels { get; private set; }
+        #region ChipModelOneDollar
+        private int? _ChipModelOneDollarLocation;
+        public String? ChipModelOneDollar => _ChipModelOneDollarLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelOneDollarLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ChipModelFiveDollar
+        private int? _ChipModelFiveDollarLocation;
+        public String? ChipModelFiveDollar => _ChipModelFiveDollarLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelFiveDollarLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ChipModelTenDollar
+        private int? _ChipModelTenDollarLocation;
+        public String? ChipModelTenDollar => _ChipModelTenDollarLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelTenDollarLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ChipModelTwentyFiveDollar
+        private int? _ChipModelTwentyFiveDollarLocation;
+        public String? ChipModelTwentyFiveDollar => _ChipModelTwentyFiveDollarLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelTwentyFiveDollarLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ChipModelOneHundredDollar
+        private int? _ChipModelOneHundredDollarLocation;
+        public String? ChipModelOneHundredDollar => _ChipModelOneHundredDollarLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelOneHundredDollarLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ChipModelFiveHundredDollar
+        private int? _ChipModelFiveHundredDollarLocation;
+        public String? ChipModelFiveHundredDollar => _ChipModelFiveHundredDollarLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelFiveHundredDollarLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region ChipModelRoulette
+        private int? _ChipModelRouletteLocation;
+        public String? ChipModelRoulette => _ChipModelRouletteLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChipModelRouletteLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         #region SlotMachineModel
         private int? _SlotMachineModelLocation;
         public String? SlotMachineModel => _SlotMachineModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotMachineModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotMachineModel2
+        private int? _SlotMachineModel2Location;
+        public String? SlotMachineModel2 => _SlotMachineModel2Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotMachineModel2Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region BlackJackTableModel
         private int? _BlackJackTableModelLocation;
@@ -3195,8 +4207,50 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _RouletteTableModelLocation;
         public String? RouletteTableModel => _RouletteTableModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RouletteTableModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<String>? SlotReelTextures { get; private set; }
-        public IReadOnlyList<String>? BlackjackDeckTextures { get; private set; }
+        #region SlotReelTextureSymbol1
+        private int? _SlotReelTextureSymbol1Location;
+        public String? SlotReelTextureSymbol1 => _SlotReelTextureSymbol1Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbol1Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotReelTextureSymbol2
+        private int? _SlotReelTextureSymbol2Location;
+        public String? SlotReelTextureSymbol2 => _SlotReelTextureSymbol2Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbol2Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotReelTextureSymbol3
+        private int? _SlotReelTextureSymbol3Location;
+        public String? SlotReelTextureSymbol3 => _SlotReelTextureSymbol3Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbol3Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotReelTextureSymbol4
+        private int? _SlotReelTextureSymbol4Location;
+        public String? SlotReelTextureSymbol4 => _SlotReelTextureSymbol4Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbol4Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotReelTextureSymbol5
+        private int? _SlotReelTextureSymbol5Location;
+        public String? SlotReelTextureSymbol5 => _SlotReelTextureSymbol5Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbol5Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotReelTextureSymbol6
+        private int? _SlotReelTextureSymbol6Location;
+        public String? SlotReelTextureSymbol6 => _SlotReelTextureSymbol6Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbol6Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region SlotReelTextureSymbolW
+        private int? _SlotReelTextureSymbolWLocation;
+        public String? SlotReelTextureSymbolW => _SlotReelTextureSymbolWLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SlotReelTextureSymbolWLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region BlackJackDeckTexture1
+        private int? _BlackJackDeckTexture1Location;
+        public String? BlackJackDeckTexture1 => _BlackJackDeckTexture1Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlackJackDeckTexture1Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region BlackJackDeckTexture2
+        private int? _BlackJackDeckTexture2Location;
+        public String? BlackJackDeckTexture2 => _BlackJackDeckTexture2Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlackJackDeckTexture2Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region BlackJackDeckTexture3
+        private int? _BlackJackDeckTexture3Location;
+        public String? BlackJackDeckTexture3 => _BlackJackDeckTexture3Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlackJackDeckTexture3Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
+        #region BlackJackDeckTexture4
+        private int? _BlackJackDeckTexture4Location;
+        public String? BlackJackDeckTexture4 => _BlackJackDeckTexture4Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlackJackDeckTexture4Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3274,22 +4328,104 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Casino_FieldIndex.Flags;
+                    return (int)Casino_FieldIndex.DealerStayOnSoft17;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    this.ChipModels = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
-                        trimNullSuffix: true);
-                    return (int)Casino_FieldIndex.ChipModels;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.DealerStayOnSoft17)
+                    {
+                        _ChipModelOneDollarLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelOneDollar, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelOneDollar)
+                    {
+                        _ChipModelFiveDollarLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelFiveDollar, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelFiveDollar)
+                    {
+                        _ChipModelTenDollarLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelTenDollar, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelTenDollar)
+                    {
+                        _ChipModelTwentyFiveDollarLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelTwentyFiveDollar, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelTwentyFiveDollar)
+                    {
+                        _ChipModelOneHundredDollarLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelOneHundredDollar, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelOneHundredDollar)
+                    {
+                        _ChipModelFiveHundredDollarLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelFiveHundredDollar, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelFiveHundredDollar)
+                    {
+                        _ChipModelRouletteLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.ChipModelRoulette, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.ChipModelRoulette)
+                    {
+                        _SlotMachineModelLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotMachineModel, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _ChipModelOneDollarLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelOneDollar, type);
+                            }
+                            case 1:
+                            {
+                                _ChipModelFiveDollarLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelFiveDollar, type);
+                            }
+                            case 2:
+                            {
+                                _ChipModelTenDollarLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelTenDollar, type);
+                            }
+                            case 3:
+                            {
+                                _ChipModelTwentyFiveDollarLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelTwentyFiveDollar, type);
+                            }
+                            case 4:
+                            {
+                                _ChipModelOneHundredDollarLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelOneHundredDollar, type);
+                            }
+                            case 5:
+                            {
+                                _ChipModelFiveHundredDollarLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelFiveHundredDollar, type);
+                            }
+                            case 6:
+                            {
+                                _ChipModelRouletteLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.ChipModelRoulette, type);
+                            }
+                            case 7:
+                            {
+                                _SlotMachineModelLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotMachineModel, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.MOD2:
                 {
-                    _SlotMachineModelLocation = (stream.Position - offset);
-                    return (int)Casino_FieldIndex.SlotMachineModel;
+                    _SlotMachineModel2Location = (stream.Position - offset);
+                    return (int)Casino_FieldIndex.SlotMachineModel2;
                 }
                 case RecordTypeInts.MOD3:
                 {
@@ -3308,23 +4444,137 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ICON:
                 {
-                    this.SlotReelTextures = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
-                        trimNullSuffix: true);
-                    return (int)Casino_FieldIndex.SlotReelTextures;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.RouletteTableModel)
+                    {
+                        _SlotReelTextureSymbol1Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol1, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol1)
+                    {
+                        _SlotReelTextureSymbol2Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol2, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol2)
+                    {
+                        _SlotReelTextureSymbol3Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol3, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol3)
+                    {
+                        _SlotReelTextureSymbol4Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol4, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol4)
+                    {
+                        _SlotReelTextureSymbol5Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol5, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol5)
+                    {
+                        _SlotReelTextureSymbol6Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol6, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbol6)
+                    {
+                        _SlotReelTextureSymbolWLocation = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbolW, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _SlotReelTextureSymbol1Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol1, type);
+                            }
+                            case 1:
+                            {
+                                _SlotReelTextureSymbol2Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol2, type);
+                            }
+                            case 2:
+                            {
+                                _SlotReelTextureSymbol3Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol3, type);
+                            }
+                            case 3:
+                            {
+                                _SlotReelTextureSymbol4Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol4, type);
+                            }
+                            case 4:
+                            {
+                                _SlotReelTextureSymbol5Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol5, type);
+                            }
+                            case 5:
+                            {
+                                _SlotReelTextureSymbol6Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbol6, type);
+                            }
+                            case 6:
+                            {
+                                _SlotReelTextureSymbolWLocation = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.SlotReelTextureSymbolW, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 case RecordTypeInts.ICO2:
                 {
-                    this.BlackjackDeckTextures = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
-                        trimNullSuffix: true);
-                    return (int)Casino_FieldIndex.BlackjackDeckTextures;
+                    if (!lastParsed.ParsedIndex.HasValue
+                        || lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.SlotReelTextureSymbolW)
+                    {
+                        _BlackJackDeckTexture1Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture1, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.BlackJackDeckTexture1)
+                    {
+                        _BlackJackDeckTexture2Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture2, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.BlackJackDeckTexture2)
+                    {
+                        _BlackJackDeckTexture3Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture3, type);
+                    }
+                    else if (lastParsed.ParsedIndex.Value <= (int)Casino_FieldIndex.BlackJackDeckTexture3)
+                    {
+                        _BlackJackDeckTexture4Location = (stream.Position - offset);
+                        return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture4, type);
+                    }
+                    else
+                    {
+                        switch (recordParseCount?.GetOrAdd(type) ?? 0)
+                        {
+                            case 0:
+                            {
+                                _BlackJackDeckTexture1Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture1, type);
+                            }
+                            case 1:
+                            {
+                                _BlackJackDeckTexture2Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture2, type);
+                            }
+                            case 2:
+                            {
+                                _BlackJackDeckTexture3Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture3, type);
+                            }
+                            case 3:
+                            {
+                                _BlackJackDeckTexture4Location = (stream.Position - offset);
+                                return new ParseResult((int)Casino_FieldIndex.BlackJackDeckTexture4, type);
+                            }
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
                 }
                 default:
                     return base.FillRecordType(

@@ -119,6 +119,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<IRecipeGetter>? _recipes;
     private MergedGroup<IRecipeCategoryGetter>? _recipeCategories;
     private MergedGroup<ICasinoChipGetter>? _casinoChips;
+    private MergedGroup<ICasinoGetter>? _casinos;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -423,6 +424,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<ICasinoChipGetter> CasinoChips =>
         _casinoChips ??= new MergedGroup<ICasinoChipGetter>(
             _sourceMods.Select(m => m.CasinoChips));
+    public IFallout3GroupGetter<ICasinoGetter> Casinos =>
+        _casinos ??= new MergedGroup<ICasinoGetter>(
+            _sourceMods.Select(m => m.Casinos));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

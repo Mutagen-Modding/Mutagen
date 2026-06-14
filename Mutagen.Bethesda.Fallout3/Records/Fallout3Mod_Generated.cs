@@ -149,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Recipes_Object = new Fallout3Group<Recipe>(this);
             _RecipeCategories_Object = new Fallout3Group<RecipeCategory>(this);
             _CasinoChips_Object = new Fallout3Group<CasinoChip>(this);
+            _Casinos_Object = new Fallout3Group<Casino>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -784,6 +785,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ICasinoChipGetter> IFallout3ModGetter.CasinoChips => _CasinoChips_Object;
         #endregion
+        #region Casinos
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Casino> _Casinos_Object;
+        public Fallout3Group<Casino> Casinos => _Casinos_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICasinoGetter> IFallout3ModGetter.Casinos => _Casinos_Object;
+        #endregion
 
         #region To String
 
@@ -913,6 +921,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Recipes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.RecipeCategories = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.CasinoChips = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Casinos = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1005,7 +1014,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Reputations,
                 TItem Recipes,
                 TItem RecipeCategories,
-                TItem CasinoChips)
+                TItem CasinoChips,
+                TItem Casinos)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1097,6 +1107,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Recipes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Recipes, new Fallout3Group.Mask<TItem>(Recipes));
                 this.RecipeCategories = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(RecipeCategories, new Fallout3Group.Mask<TItem>(RecipeCategories));
                 this.CasinoChips = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CasinoChips, new Fallout3Group.Mask<TItem>(CasinoChips));
+                this.Casinos = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Casinos, new Fallout3Group.Mask<TItem>(Casinos));
             }
 
             #pragma warning disable CS8618
@@ -1198,6 +1209,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Recipes { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? RecipeCategories { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CasinoChips { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Casinos { get; set; }
             #endregion
 
             #region Equals
@@ -1300,6 +1312,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Recipes, rhs.Recipes)) return false;
                 if (!object.Equals(this.RecipeCategories, rhs.RecipeCategories)) return false;
                 if (!object.Equals(this.CasinoChips, rhs.CasinoChips)) return false;
+                if (!object.Equals(this.Casinos, rhs.Casinos)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1395,6 +1408,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Recipes);
                 hash.Add(this.RecipeCategories);
                 hash.Add(this.CasinoChips);
+                hash.Add(this.Casinos);
                 return hash.ToHashCode();
             }
 
@@ -1853,6 +1867,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.CasinoChips.Overall)) return false;
                     if (this.CasinoChips.Specific != null && !this.CasinoChips.Specific.All(eval)) return false;
                 }
+                if (Casinos != null)
+                {
+                    if (!eval(this.Casinos.Overall)) return false;
+                    if (this.Casinos.Specific != null && !this.Casinos.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2310,6 +2329,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.CasinoChips.Overall)) return true;
                     if (this.CasinoChips.Specific != null && this.CasinoChips.Specific.Any(eval)) return true;
                 }
+                if (Casinos != null)
+                {
+                    if (eval(this.Casinos.Overall)) return true;
+                    if (this.Casinos.Specific != null && this.Casinos.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2414,6 +2438,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Recipes = this.Recipes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Recipes.Overall), this.Recipes.Specific?.Translate(eval));
                 obj.RecipeCategories = this.RecipeCategories == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.RecipeCategories.Overall), this.RecipeCategories.Specific?.Translate(eval));
                 obj.CasinoChips = this.CasinoChips == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CasinoChips.Overall), this.CasinoChips.Specific?.Translate(eval));
+                obj.Casinos = this.Casinos == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Casinos.Overall), this.Casinos.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2792,6 +2817,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         CasinoChips?.Print(sb);
                     }
+                    if (printMask?.Casinos?.Overall ?? true)
+                    {
+                        Casinos?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2906,6 +2935,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Recipe.ErrorMask>?>? Recipes;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<RecipeCategory.ErrorMask>?>? RecipeCategories;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CasinoChip.ErrorMask>?>? CasinoChips;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Casino.ErrorMask>?>? Casinos;
             #endregion
 
             #region IErrorMask
@@ -3094,6 +3124,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return RecipeCategories;
                     case Fallout3Mod_FieldIndex.CasinoChips:
                         return CasinoChips;
+                    case Fallout3Mod_FieldIndex.Casinos:
+                        return Casinos;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3373,6 +3405,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.CasinoChips:
                         this.CasinoChips = new MaskItem<Exception?, Fallout3Group.ErrorMask<CasinoChip.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Casinos:
+                        this.Casinos = new MaskItem<Exception?, Fallout3Group.ErrorMask<Casino.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3654,6 +3689,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.CasinoChips:
                         this.CasinoChips = (MaskItem<Exception?, Fallout3Group.ErrorMask<CasinoChip.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Casinos:
+                        this.Casinos = (MaskItem<Exception?, Fallout3Group.ErrorMask<Casino.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3752,6 +3790,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Recipes != null) return true;
                 if (RecipeCategories != null) return true;
                 if (CasinoChips != null) return true;
+                if (Casinos != null) return true;
                 return false;
             }
             #endregion
@@ -3867,6 +3906,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Recipes?.Print(sb);
                 RecipeCategories?.Print(sb);
                 CasinoChips?.Print(sb);
+                Casinos?.Print(sb);
             }
             #endregion
 
@@ -3965,6 +4005,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Recipes = this.Recipes.Combine(rhs.Recipes, (l, r) => l.Combine(r));
                 ret.RecipeCategories = this.RecipeCategories.Combine(rhs.RecipeCategories, (l, r) => l.Combine(r));
                 ret.CasinoChips = this.CasinoChips.Combine(rhs.CasinoChips, (l, r) => l.Combine(r));
+                ret.Casinos = this.Casinos.Combine(rhs.Casinos, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4078,6 +4119,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Recipe.TranslationMask>? Recipes;
             public Fallout3Group.TranslationMask<RecipeCategory.TranslationMask>? RecipeCategories;
             public Fallout3Group.TranslationMask<CasinoChip.TranslationMask>? CasinoChips;
+            public Fallout3Group.TranslationMask<Casino.TranslationMask>? Casinos;
             #endregion
 
             #region Ctors
@@ -4192,6 +4234,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Recipes != null ? Recipes.OnOverall : DefaultOn, Recipes?.GetCrystal()));
                 ret.Add((RecipeCategories != null ? RecipeCategories.OnOverall : DefaultOn, RecipeCategories?.GetCrystal()));
                 ret.Add((CasinoChips != null ? CasinoChips.OnOverall : DefaultOn, CasinoChips?.GetCrystal()));
+                ret.Add((Casinos != null ? Casinos.OnOverall : DefaultOn, Casinos?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4340,6 +4383,7 @@ namespace Mutagen.Bethesda.Fallout3
             _Recipes_Object = new Fallout3Group<Recipe>(this);
             _RecipeCategories_Object = new Fallout3Group<RecipeCategory>(this);
             _CasinoChips_Object = new Fallout3Group<CasinoChip>(this);
+            _Casinos_Object = new Fallout3Group<Casino>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4705,6 +4749,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.CasinoChips.RecordCache.Set(rhsMod.CasinoChips.RecordCache.Items);
             }
+            if (mask?.Casinos ?? true)
+            {
+                this.Casinos.RecordCache.Set(rhsMod.Casinos.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5057,6 +5105,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Recipe> Recipes { get; }
         new Fallout3Group<RecipeCategory> RecipeCategories { get; }
         new Fallout3Group<CasinoChip> CasinoChips { get; }
+        new Fallout3Group<Casino> Casinos { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5166,6 +5215,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IRecipeGetter> Recipes { get; }
         IFallout3GroupGetter<IRecipeCategoryGetter> RecipeCategories { get; }
         IFallout3GroupGetter<ICasinoChipGetter> CasinoChips { get; }
+        IFallout3GroupGetter<ICasinoGetter> Casinos { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -5806,6 +5856,7 @@ namespace Mutagen.Bethesda.Fallout3
         Recipes = 87,
         RecipeCategories = 88,
         CasinoChips = 89,
+        Casinos = 90,
     }
     #endregion
 
@@ -5816,9 +5867,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 90;
+        public const ushort AdditionalFieldCount = 91;
 
-        public const ushort FieldCount = 90;
+        public const ushort FieldCount = 91;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -5973,6 +6024,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Recipes.Clear();
             item.RecipeCategories.Clear();
             item.CasinoChips.Clear();
+            item.Casinos.Clear();
         }
         
         #region Mutagen
@@ -6052,6 +6104,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.ItemMods.RemapLinks(mapping);
             obj.Recipes.RemapLinks(mapping);
             obj.CasinoChips.RemapLinks(mapping);
+            obj.Casinos.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6202,6 +6255,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Recipes.Remove(keys);
             obj.RecipeCategories.Remove(keys);
             obj.CasinoChips.Remove(keys);
+            obj.Casinos.Remove(keys);
         }
         
         public void Remove(
@@ -6314,6 +6368,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     obj.CameraShots.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Casino":
+                case "ICasinoGetter":
+                case "ICasino":
+                case "ICasinoInternal":
+                    obj.Casinos.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -7603,6 +7665,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Recipes = MaskItemExt.Factory(item.Recipes.GetEqualsMask(rhs.Recipes, include), include);
             ret.RecipeCategories = MaskItemExt.Factory(item.RecipeCategories.GetEqualsMask(rhs.RecipeCategories, include), include);
             ret.CasinoChips = MaskItemExt.Factory(item.CasinoChips.GetEqualsMask(rhs.CasinoChips, include), include);
+            ret.Casinos = MaskItemExt.Factory(item.Casinos.GetEqualsMask(rhs.Casinos, include), include);
         }
         
         public string Print(
@@ -8006,6 +8069,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.CasinoChips?.Overall ?? true)
             {
                 item.CasinoChips?.Print(sb, "CasinoChips");
+            }
+            if (printMask?.Casinos?.Overall ?? true)
+            {
+                item.Casinos?.Print(sb, "Casinos");
             }
         }
         
@@ -8736,6 +8803,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isCasinoChipsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Casinos) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Casinos, rhs.Casinos, out var lhsCasinos, out var rhsCasinos, out var isCasinosEqual))
+                {
+                    if (!object.Equals(lhsCasinos, rhsCasinos)) return false;
+                }
+                else if (!isCasinosEqual) return false;
+            }
             return true;
         }
         
@@ -8832,6 +8907,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Recipes);
             hash.Add(item.RecipeCategories);
             hash.Add(item.CasinoChips);
+            hash.Add(item.Casinos);
             return hash.ToHashCode();
         }
         
@@ -9322,6 +9398,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICasinoChip":
                 case "ICasinoChipInternal":
                     return obj.CasinoChips;
+                case "Casino":
+                case "ICasinoGetter":
+                case "ICasino":
+                case "ICasinoInternal":
+                    return obj.Casinos;
                 default:
                     return null;
             }
@@ -9339,7 +9420,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[89];
+            Stream[] outputStreams = new Stream[90];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -9430,6 +9511,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Recipes, 86, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.RecipeCategories, 87, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.CasinoChips, 88, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Casinos, 89, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -9564,6 +9646,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Recipes.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.RecipeCategories.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.CasinoChips.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Casinos.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -9874,6 +9957,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.CasinoChips.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Casinos.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -10248,6 +10335,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.Casinos.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -10403,6 +10494,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Casino":
+                case "ICasinoGetter":
+                case "ICasino":
+                case "ICasinoInternal":
+                    foreach (var item in obj.Casinos.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11349,6 +11449,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Casino, ICasinoGetter>(
+                srcGroup: obj.Casinos,
+                type: typeof(ICasinoGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Casinos,
+                groupGetter: (m) => m.Casinos))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CasinoChip, ICasinoChipGetter>(
                 srcGroup: obj.CasinoChips,
                 type: typeof(ICasinoChipGetter),
@@ -12261,6 +12370,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.CameraShots,
                         groupGetter: (m) => m.CameraShots))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Casino":
+                case "ICasinoGetter":
+                case "ICasino":
+                case "ICasinoInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Casino, ICasinoGetter>(
+                        srcGroup: obj.Casinos,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Casinos,
+                        groupGetter: (m) => m.Casinos))
                     {
                         yield return item;
                     }
@@ -15557,6 +15680,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Casinos) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Casinos);
+                try
+                {
+                    item.Casinos.DeepCopyIn(
+                        rhs: rhs.Casinos,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Casinos));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -15749,6 +15892,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Recipes;
         public bool RecipeCategories;
         public bool CasinoChips;
+        public bool Casinos;
         public GroupMask()
         {
         }
@@ -15843,6 +15987,7 @@ namespace Mutagen.Bethesda.Fallout3
             Recipes = defaultValue;
             RecipeCategories = defaultValue;
             CasinoChips = defaultValue;
+            Casinos = defaultValue;
         }
     }
 
@@ -16880,6 +17025,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CasinoChipsItem).BinaryWriteTranslator).Write<ICasinoChipGetter>(
                         item: CasinoChipsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Casinos ?? true)
+            {
+                var CasinosItem = item.Casinos;
+                if (CasinosItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CasinosItem).BinaryWriteTranslator).Write<ICasinoGetter>(
+                        item: CasinosItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18200,6 +18356,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.CasinoChips;
                 }
+                case RecordTypeInts.CSNO:
+                {
+                    if (importMask?.Casinos ?? true)
+                    {
+                        item.Casinos.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Casinos;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -18810,6 +18980,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<ICasinoChipGetter>? _CasinoChips => _CasinoChipsLocations != null ? Fallout3GroupBinaryOverlay<ICasinoChipGetter>.Fallout3GroupFactory(_stream, _CasinoChipsLocations, _package) : default;
         public IFallout3GroupGetter<ICasinoChipGetter> CasinoChips => _CasinoChips ?? new Fallout3Group<CasinoChip>(this);
         #endregion
+        #region Casinos
+        private List<RangeInt64>? _CasinosLocations;
+        private IFallout3GroupGetter<ICasinoGetter>? _Casinos => _CasinosLocations != null ? Fallout3GroupBinaryOverlay<ICasinoGetter>.Fallout3GroupFactory(_stream, _CasinosLocations, _package) : default;
+        public IFallout3GroupGetter<ICasinoGetter> Casinos => _Casinos ?? new Fallout3Group<Casino>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -19417,6 +19592,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _CasinoChipsLocations ??= new();
                     _CasinoChipsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.CasinoChips;
+                }
+                case RecordTypeInts.CSNO:
+                {
+                    _CasinosLocations ??= new();
+                    _CasinosLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Casinos;
                 }
                 default:
                     return default(int?);
