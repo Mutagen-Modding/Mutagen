@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -58,35 +59,55 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region ObjectBounds
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds? _ObjectBounds;
         /// <summary>
-        /// Aspects: IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
-        public ObjectBounds? ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IItemModGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
         {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value;
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter? IItemModGetter.ObjectBounds => this.ObjectBounds;
-        #region Aspects
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IItemModGetter.Name => this.Name;
+        ITranslatedStringGetter? IItemModGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -140,9 +161,9 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkNullableGetter<IScriptGetter> IItemModGetter.Script => this.Script;
         #endregion
         #region Description
-        public String? Description { get; set; }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IItemModGetter.Description => this.Description;
+        ITranslatedStringGetter? IItemModGetter.Description => this.Description;
         #endregion
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -929,20 +950,22 @@ namespace Mutagen.Bethesda.Fallout3
         IModeled,
         INamed,
         INamedRequired,
-        IObjectBoundedOptional,
+        IObjectBounded,
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
+        ITranslatedNamed,
+        ITranslatedNamedRequired,
         IWeightValue
     {
         /// <summary>
-        /// Aspects: IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
-        new ObjectBounds? ObjectBounds { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -952,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         new Icons? Icons { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         /// <summary>
         /// Aspects: IHasDestructible
         /// </summary>
@@ -985,24 +1008,26 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter,
+        IObjectBoundedGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
         IPlaceableObjectGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter,
         IWeightValueGetter
     {
         static new ILoquiRegistration StaticRegistration => ItemMod_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
-        IObjectBoundsGetter? ObjectBounds { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         #region Model
         /// <summary>
@@ -1017,7 +1042,7 @@ namespace Mutagen.Bethesda.Fallout3
         IIconsGetter? Icons { get; }
         #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        String? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         #region Destructible
         /// <summary>
         /// Aspects: IHasDestructibleGetter
@@ -1319,7 +1344,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IItemModInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = null;
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
             item.Icons = null;
@@ -1445,12 +1470,8 @@ namespace Mutagen.Bethesda.Fallout3
             ItemMod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds,
-                rhs.ObjectBounds,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1462,7 +1483,7 @@ namespace Mutagen.Bethesda.Fallout3
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = item.Script.Equals(rhs.Script);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
                 item.Destructible,
                 rhs.Destructible,
@@ -1521,10 +1542,9 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds is {} ObjectBoundsItem)
+            if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -1631,7 +1651,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Model) ?? true))
             {
@@ -1655,7 +1675,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Description) ?? true))
             {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Destructible) ?? true))
             {
@@ -1709,10 +1729,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IItemModGetter item)
         {
             var hash = new HashCode();
-            if (item.ObjectBounds is {} ObjectBoundsitem)
-            {
-                hash.Add(ObjectBoundsitem);
-            }
+            hash.Add(item.ObjectBounds);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -1910,15 +1927,11 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)ItemMod_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    if ((copyMask?.GetShouldTranslate((int)ItemMod_FieldIndex.ObjectBounds) ?? true))
                     {
-                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)ItemMod_FieldIndex.ObjectBounds));
-                    }
-                    else
-                    {
-                        item.ObjectBounds = default;
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ItemMod_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1933,7 +1946,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Model) ?? true))
             {
@@ -1993,7 +2006,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)ItemMod_FieldIndex.Destructible) ?? true))
             {
@@ -2206,18 +2219,17 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            if (item.ObjectBounds is {} ObjectBoundsItem)
-            {
-                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -2240,7 +2252,8 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Destructible is {} DestructibleItem)
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -2341,6 +2354,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)ItemMod_FieldIndex.Name;
@@ -2374,6 +2389,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)ItemMod_FieldIndex.Description;
@@ -2470,14 +2487,19 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
@@ -2488,7 +2510,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound

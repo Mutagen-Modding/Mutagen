@@ -144,6 +144,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LightingTemplates_Object = new Fallout3Group<LightingTemplate>(this);
             _MusicTypes_Object = new Fallout3Group<MusicType>(this);
             _FormLists_Object = new Fallout3Group<FormList>(this);
+            _ItemMods_Object = new Fallout3Group<ItemMod>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -744,6 +745,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IFormListGetter> IFallout3ModGetter.FormLists => _FormLists_Object;
         #endregion
+        #region ItemMods
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<ItemMod> _ItemMods_Object;
+        public Fallout3Group<ItemMod> ItemMods => _ItemMods_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IItemModGetter> IFallout3ModGetter.ItemMods => _ItemMods_Object;
+        #endregion
 
         #region To String
 
@@ -868,6 +876,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LightingTemplates = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MusicTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.FormLists = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.ItemMods = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -955,7 +964,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem DefaultObjectManagers,
                 TItem LightingTemplates,
                 TItem MusicTypes,
-                TItem FormLists)
+                TItem FormLists,
+                TItem ItemMods)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1042,6 +1052,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LightingTemplates = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LightingTemplates, new Fallout3Group.Mask<TItem>(LightingTemplates));
                 this.MusicTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MusicTypes, new Fallout3Group.Mask<TItem>(MusicTypes));
                 this.FormLists = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(FormLists, new Fallout3Group.Mask<TItem>(FormLists));
+                this.ItemMods = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(ItemMods, new Fallout3Group.Mask<TItem>(ItemMods));
             }
 
             #pragma warning disable CS8618
@@ -1138,6 +1149,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LightingTemplates { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MusicTypes { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? FormLists { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? ItemMods { get; set; }
             #endregion
 
             #region Equals
@@ -1235,6 +1247,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
                 if (!object.Equals(this.MusicTypes, rhs.MusicTypes)) return false;
                 if (!object.Equals(this.FormLists, rhs.FormLists)) return false;
+                if (!object.Equals(this.ItemMods, rhs.ItemMods)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1325,6 +1338,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.LightingTemplates);
                 hash.Add(this.MusicTypes);
                 hash.Add(this.FormLists);
+                hash.Add(this.ItemMods);
                 return hash.ToHashCode();
             }
 
@@ -1758,6 +1772,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.FormLists.Overall)) return false;
                     if (this.FormLists.Specific != null && !this.FormLists.Specific.All(eval)) return false;
                 }
+                if (ItemMods != null)
+                {
+                    if (!eval(this.ItemMods.Overall)) return false;
+                    if (this.ItemMods.Specific != null && !this.ItemMods.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2190,6 +2209,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.FormLists.Overall)) return true;
                     if (this.FormLists.Specific != null && this.FormLists.Specific.Any(eval)) return true;
                 }
+                if (ItemMods != null)
+                {
+                    if (eval(this.ItemMods.Overall)) return true;
+                    if (this.ItemMods.Specific != null && this.ItemMods.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2289,6 +2313,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
                 obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
                 obj.FormLists = this.FormLists == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.FormLists.Overall), this.FormLists.Specific?.Translate(eval));
+                obj.ItemMods = this.ItemMods == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.ItemMods.Overall), this.ItemMods.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2647,6 +2672,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         FormLists?.Print(sb);
                     }
+                    if (printMask?.ItemMods?.Overall ?? true)
+                    {
+                        ItemMods?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2756,6 +2785,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>? FormLists;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<ItemMod.ErrorMask>?>? ItemMods;
             #endregion
 
             #region IErrorMask
@@ -2934,6 +2964,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MusicTypes;
                     case Fallout3Mod_FieldIndex.FormLists:
                         return FormLists;
+                    case Fallout3Mod_FieldIndex.ItemMods:
+                        return ItemMods;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3198,6 +3230,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.FormLists:
                         this.FormLists = new MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.ItemMods:
+                        this.ItemMods = new MaskItem<Exception?, Fallout3Group.ErrorMask<ItemMod.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3464,6 +3499,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.FormLists:
                         this.FormLists = (MaskItem<Exception?, Fallout3Group.ErrorMask<FormList.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.ItemMods:
+                        this.ItemMods = (MaskItem<Exception?, Fallout3Group.ErrorMask<ItemMod.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3557,6 +3595,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (LightingTemplates != null) return true;
                 if (MusicTypes != null) return true;
                 if (FormLists != null) return true;
+                if (ItemMods != null) return true;
                 return false;
             }
             #endregion
@@ -3667,6 +3706,7 @@ namespace Mutagen.Bethesda.Fallout3
                 LightingTemplates?.Print(sb);
                 MusicTypes?.Print(sb);
                 FormLists?.Print(sb);
+                ItemMods?.Print(sb);
             }
             #endregion
 
@@ -3760,6 +3800,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
                 ret.MusicTypes = this.MusicTypes.Combine(rhs.MusicTypes, (l, r) => l.Combine(r));
                 ret.FormLists = this.FormLists.Combine(rhs.FormLists, (l, r) => l.Combine(r));
+                ret.ItemMods = this.ItemMods.Combine(rhs.ItemMods, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3868,6 +3909,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<LightingTemplate.TranslationMask>? LightingTemplates;
             public Fallout3Group.TranslationMask<MusicType.TranslationMask>? MusicTypes;
             public Fallout3Group.TranslationMask<FormList.TranslationMask>? FormLists;
+            public Fallout3Group.TranslationMask<ItemMod.TranslationMask>? ItemMods;
             #endregion
 
             #region Ctors
@@ -3977,6 +4019,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((LightingTemplates != null ? LightingTemplates.OnOverall : DefaultOn, LightingTemplates?.GetCrystal()));
                 ret.Add((MusicTypes != null ? MusicTypes.OnOverall : DefaultOn, MusicTypes?.GetCrystal()));
                 ret.Add((FormLists != null ? FormLists.OnOverall : DefaultOn, FormLists?.GetCrystal()));
+                ret.Add((ItemMods != null ? ItemMods.OnOverall : DefaultOn, ItemMods?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4120,6 +4163,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LightingTemplates_Object = new Fallout3Group<LightingTemplate>(this);
             _MusicTypes_Object = new Fallout3Group<MusicType>(this);
             _FormLists_Object = new Fallout3Group<FormList>(this);
+            _ItemMods_Object = new Fallout3Group<ItemMod>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4464,6 +4508,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.FormLists ?? true)
             {
                 this.FormLists.RecordCache.Set(rhsMod.FormLists.RecordCache.Items);
+            }
+            if (mask?.ItemMods ?? true)
+            {
+                this.ItemMods.RecordCache.Set(rhsMod.ItemMods.RecordCache.Items);
             }
         }
 
@@ -4812,6 +4860,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<LightingTemplate> LightingTemplates { get; }
         new Fallout3Group<MusicType> MusicTypes { get; }
         new Fallout3Group<FormList> FormLists { get; }
+        new Fallout3Group<ItemMod> ItemMods { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -4916,6 +4965,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
         IFallout3GroupGetter<IMusicTypeGetter> MusicTypes { get; }
         IFallout3GroupGetter<IFormListGetter> FormLists { get; }
+        IFallout3GroupGetter<IItemModGetter> ItemMods { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -5551,6 +5601,7 @@ namespace Mutagen.Bethesda.Fallout3
         LightingTemplates = 82,
         MusicTypes = 83,
         FormLists = 84,
+        ItemMods = 85,
     }
     #endregion
 
@@ -5561,9 +5612,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 85;
+        public const ushort AdditionalFieldCount = 86;
 
-        public const ushort FieldCount = 85;
+        public const ushort FieldCount = 86;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -5713,6 +5764,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.LightingTemplates.Clear();
             item.MusicTypes.Clear();
             item.FormLists.Clear();
+            item.ItemMods.Clear();
         }
         
         #region Mutagen
@@ -5789,6 +5841,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Ragdolls.RemapLinks(mapping);
             obj.DefaultObjectManagers.RemapLinks(mapping);
             obj.FormLists.RemapLinks(mapping);
+            obj.ItemMods.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -5934,6 +5987,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LightingTemplates.Remove(keys);
             obj.MusicTypes.Remove(keys);
             obj.FormLists.Remove(keys);
+            obj.ItemMods.Remove(keys);
         }
         
         public void Remove(
@@ -6339,6 +6393,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IGrassGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
@@ -6362,6 +6417,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
@@ -6442,6 +6498,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
@@ -6464,6 +6521,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IFurnitureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
@@ -6489,6 +6547,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IGrassGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIdleMarkerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IKeyGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledCreatureGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
@@ -6525,6 +6584,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IRelatableGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
+                    break;
+                case "ItemMod":
+                case "IItemModGetter":
+                case "IItemMod":
+                case "IItemModInternal":
+                    obj.ItemMods.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "Key":
                 case "IKeyGetter":
@@ -7085,6 +7152,12 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.ItemMods.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7115,6 +7188,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.ActorValueInformation.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ItemMods.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -7245,6 +7319,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
             ret.MusicTypes = MaskItemExt.Factory(item.MusicTypes.GetEqualsMask(rhs.MusicTypes, include), include);
             ret.FormLists = MaskItemExt.Factory(item.FormLists.GetEqualsMask(rhs.FormLists, include), include);
+            ret.ItemMods = MaskItemExt.Factory(item.ItemMods.GetEqualsMask(rhs.ItemMods, include), include);
         }
         
         public string Print(
@@ -7628,6 +7703,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.FormLists?.Overall ?? true)
             {
                 item.FormLists?.Print(sb, "FormLists");
+            }
+            if (printMask?.ItemMods?.Overall ?? true)
+            {
+                item.ItemMods?.Print(sb, "ItemMods");
             }
         }
         
@@ -8318,6 +8397,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isFormListsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ItemMods) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ItemMods, rhs.ItemMods, out var lhsItemMods, out var rhsItemMods, out var isItemModsEqual))
+                {
+                    if (!object.Equals(lhsItemMods, rhsItemMods)) return false;
+                }
+                else if (!isItemModsEqual) return false;
+            }
             return true;
         }
         
@@ -8409,6 +8496,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.LightingTemplates);
             hash.Add(item.MusicTypes);
             hash.Add(item.FormLists);
+            hash.Add(item.ItemMods);
             return hash.ToHashCode();
         }
         
@@ -8874,6 +8962,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IFormList":
                 case "IFormListInternal":
                     return obj.FormLists;
+                case "ItemMod":
+                case "IItemModGetter":
+                case "IItemMod":
+                case "IItemModInternal":
+                    return obj.ItemMods;
                 default:
                     return null;
             }
@@ -8891,7 +8984,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[84];
+            Stream[] outputStreams = new Stream[85];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -8977,6 +9070,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 81, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MusicTypes, 82, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.FormLists, 83, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ItemMods, 84, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -9106,6 +9200,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.FormLists.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ItemMods.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -9404,6 +9499,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.FormLists.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ItemMods.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -9755,6 +9854,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.FormLists.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ItemMods.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10205,6 +10308,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IIngredient":
                 case "IIngredientInternal":
                     foreach (var item in obj.Ingredients.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ItemMod":
+                case "IItemModGetter":
+                case "IItemMod":
+                case "IItemModInternal":
+                    foreach (var item in obj.ItemMods.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11101,6 +11213,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Ingredients,
                 groupGetter: (m) => m.Ingredients))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ItemMod, IItemModGetter>(
+                srcGroup: obj.ItemMods,
+                type: typeof(IItemModGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.ItemMods,
+                groupGetter: (m) => m.ItemMods))
             {
                 yield return item;
             }
@@ -12154,6 +12275,20 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "ItemMod":
+                case "IItemModGetter":
+                case "IItemMod":
+                case "IItemModInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, ItemMod, IItemModGetter>(
+                        srcGroup: obj.ItemMods,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.ItemMods,
+                        groupGetter: (m) => m.ItemMods))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
@@ -13074,6 +13209,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.ActorValueInformation.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ItemMods.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }
@@ -14795,6 +14934,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.ItemMods) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.ItemMods);
+                try
+                {
+                    item.ItemMods.DeepCopyIn(
+                        rhs: rhs.ItemMods,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.ItemMods));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -14982,6 +15141,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool LightingTemplates;
         public bool MusicTypes;
         public bool FormLists;
+        public bool ItemMods;
         public GroupMask()
         {
         }
@@ -15071,6 +15231,7 @@ namespace Mutagen.Bethesda.Fallout3
             LightingTemplates = defaultValue;
             MusicTypes = defaultValue;
             FormLists = defaultValue;
+            ItemMods = defaultValue;
         }
     }
 
@@ -16053,6 +16214,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)FormListsItem).BinaryWriteTranslator).Write<IFormListGetter>(
                         item: FormListsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.ItemMods ?? true)
+            {
+                var ItemModsItem = item.ItemMods;
+                if (ItemModsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ItemModsItem).BinaryWriteTranslator).Write<IItemModGetter>(
+                        item: ItemModsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -17303,6 +17475,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.FormLists;
                 }
+                case RecordTypeInts.IMOD:
+                {
+                    if (importMask?.ItemMods ?? true)
+                    {
+                        item.ItemMods.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.ItemMods;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -17888,6 +18074,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? Fallout3GroupBinaryOverlay<IFormListGetter>.Fallout3GroupFactory(_stream, _FormListsLocations, _package) : default;
         public IFallout3GroupGetter<IFormListGetter> FormLists => _FormLists ?? new Fallout3Group<FormList>(this);
         #endregion
+        #region ItemMods
+        private List<RangeInt64>? _ItemModsLocations;
+        private IFallout3GroupGetter<IItemModGetter>? _ItemMods => _ItemModsLocations != null ? Fallout3GroupBinaryOverlay<IItemModGetter>.Fallout3GroupFactory(_stream, _ItemModsLocations, _package) : default;
+        public IFallout3GroupGetter<IItemModGetter> ItemMods => _ItemMods ?? new Fallout3Group<ItemMod>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -18465,6 +18656,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _FormListsLocations ??= new();
                     _FormListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.FormLists;
+                }
+                case RecordTypeInts.IMOD:
+                {
+                    _ItemModsLocations ??= new();
+                    _ItemModsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.ItemMods;
                 }
                 default:
                     return default(int?);
