@@ -97,6 +97,7 @@
       <Group name="RecipeCategories" refName="RecipeCategory" />
       <Group name="CasinoChips" refName="CasinoChip" />
       <Group name="Casinos" refName="Casino" />
+      <Group name="LoadScreenTypes" refName="LoadScreenType" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

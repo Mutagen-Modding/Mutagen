@@ -3,7 +3,7 @@
   <Object name="LoadScreenType" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="LSCT">
     <Fields>
-      <Data recordType="DATA" nullable="False">
+      <Data recordType="DATA">
         <Fields>
           <Enum name="Type" enumName="LoadScreenTypeEnum" byteLength="4" />
           <UInt32 name="X" />
@@ -11,18 +11,18 @@
           <UInt32 name="Width" />
           <UInt32 name="Height" />
           <Float name="Orientation" />
-          <UInt32 name="Font" />
+          <Enum name="Font" enumName="LoadScreenItemEnum" byteLength="4" />
           <Float name="FontColorR" />
           <Float name="FontColorG" />
           <Float name="FontColorB" />
-          <UInt32 name="Alignment" />
+          <Enum name="Alignment" enumName="LoadScreenAlignment" byteLength="4" />
           <ByteArray name="Unknown1" byteLength="20" nullable="False" />
-          <UInt32 name="Font2" />
+          <Enum name="Font2" enumName="LoadScreenItemEnum" byteLength="4" />
           <Float name="Font2ColorR" />
           <Float name="Font2ColorG" />
           <Float name="Font2ColorB" />
-          <ByteArray name="Unknown2" byteLength="4" nullable="False" />
-          <UInt32 name="Stats" />
+          <Int32 name="Unknown2" />
+          <Enum name="Stats" enumName="LoadScreenItemEnum" byteLength="4" />
         </Fields>
       </Data>
     </Fields>

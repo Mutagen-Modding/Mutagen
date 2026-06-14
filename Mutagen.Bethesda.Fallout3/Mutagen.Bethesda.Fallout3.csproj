@@ -1337,7 +1337,6 @@
     <Compile Include="Enum\CaravanValue.cs" />
     <Compile Include="Enum\ChallengeFlag.cs" />
     <Compile Include="Enum\ChallengeType.cs" />
-    <Compile Include="Enum\LoadScreenTypeEnum.cs" />
     <Compile Include="Enum\MediaSetType.cs" />
     <Compile Include="Enum\RecipeCategoryFlag.cs" />
     <Compile Include="Enum\AttackAnimation.cs" />

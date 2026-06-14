@@ -1572,9 +1572,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LoadScreenType</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter> LoadScreenType(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter> LoadScreenType(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILoadScreenTypeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1584,9 +1584,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on LoadScreenType</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter> LoadScreenType(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter> LoadScreenType(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ILoadScreenTypeGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ILoadScreenType, ILoadScreenTypeGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
