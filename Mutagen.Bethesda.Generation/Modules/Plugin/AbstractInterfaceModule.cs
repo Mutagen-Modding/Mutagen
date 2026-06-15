@@ -63,6 +63,7 @@ public class AbstractInterfaceModule : GenerationModule
         }
 
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
+        mappingGen.AppendLine("#nullable enable");
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
@@ -153,6 +154,7 @@ public class AbstractInterfaceModule : GenerationModule
         }
 
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
+        mappingGen.AppendLine("#nullable enable");
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");

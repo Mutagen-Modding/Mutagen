@@ -1,3 +1,4 @@
+#nullable enable
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins.Cache;

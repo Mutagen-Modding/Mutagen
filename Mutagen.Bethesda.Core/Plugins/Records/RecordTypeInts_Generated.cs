@@ -1,3 +1,4 @@
+#nullable enable
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public partial class RecordTypeInts

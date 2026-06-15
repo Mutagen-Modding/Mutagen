@@ -172,6 +172,7 @@ public class AspectInterfaceModule : GenerationModule
     {
         // Generate interface to major record mapping registry
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
+        mappingGen.AppendLine("#nullable enable");
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");

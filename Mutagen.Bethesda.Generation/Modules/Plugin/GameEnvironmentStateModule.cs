@@ -23,6 +23,7 @@ public class GameEnvironmentStateModule : GenerationModule
         var modObj = proto.ObjectGenerationsByName.Values.FirstOrDefault(x => x.GetObjectType() == ObjectType.Mod);
         if (modObj == null) return;
 
+        sb.AppendLine("#nullable enable");
         sb.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
         sb.AppendLine($"using Mutagen.Bethesda.Environments;");
         sb.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");

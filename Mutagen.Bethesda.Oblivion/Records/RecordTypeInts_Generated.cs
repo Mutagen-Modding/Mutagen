@@ -1,3 +1,4 @@
+#nullable enable
 namespace Mutagen.Bethesda.Oblivion.Internals;
 
 public partial class RecordTypeInts

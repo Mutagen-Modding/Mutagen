@@ -42,6 +42,7 @@ public class LinkInterfaceModule : GenerationModule
         foreach (var interf in mappings.OrderBy(x => x.Key))
         {
             StructuredStringBuilder sb = new StructuredStringBuilder();
+            sb.AppendLine("#nullable enable");
             ObjectGeneration.AddAutogenerationComment(sb);
 
             sb.AppendLine("using Mutagen.Bethesda;");
@@ -114,6 +115,7 @@ public class LinkInterfaceModule : GenerationModule
     {
         // Generate interface to major record mapping registry
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
+        mappingGen.AppendLine("#nullable enable");
         ObjectGeneration.AddAutogenerationComment(mappingGen);
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
