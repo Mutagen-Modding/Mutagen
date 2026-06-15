@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -53,7 +54,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region FirstParameter
-        public ActorValue FirstParameter { get; set; } = default(ActorValue);
+        private readonly IFormLink<IActorValueInformationGetter> _FirstParameter = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> FirstParameter
+        {
+            get => _FirstParameter;
+            set => _FirstParameter.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IActorValueInformationGetter> IGetPermanentValueConditionDataGetter.FirstParameter => this.FirstParameter;
         #endregion
         #region FirstUnusedStringParameter
         public String? FirstUnusedStringParameter { get; set; }
@@ -455,10 +463,12 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => GetPermanentValueConditionDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetPermanentValueConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         object? IConditionParameters.Parameter1
         {
             get => FirstParameter;
-            set => FirstParameter = (value is ActorValue v ? v : throw new ArgumentException());
+            set => FirstParameter = (value is IFormLink<IActorValueInformationGetter> v ? v : throw new ArgumentException());
         }
         object? IConditionParametersGetter.Parameter1
         {
@@ -466,7 +476,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         Type? IConditionParametersGetter.Parameter1Type
         {
-            get => typeof(ActorValue);
+            get => typeof(IFormLinkGetter<IActorValueInformationGetter>);
         }
         object? IConditionParameters.Parameter2
         {
@@ -541,10 +551,11 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IGetPermanentValueConditionData :
         IConditionData,
+        IFormLinkContainer,
         IGetPermanentValueConditionDataGetter,
         ILoquiObjectSetter<IGetPermanentValueConditionData>
     {
-        new ActorValue FirstParameter { get; set; }
+        new IFormLink<IActorValueInformationGetter> FirstParameter { get; set; }
         new String? FirstUnusedStringParameter { get; set; }
         new Int32 SecondParameter { get; set; }
         new String? SecondUnusedStringParameter { get; set; }
@@ -553,10 +564,11 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IGetPermanentValueConditionDataGetter :
         IConditionDataGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IGetPermanentValueConditionDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => GetPermanentValueConditionData_Registration.Instance;
-        ActorValue FirstParameter { get; }
+        IFormLinkGetter<IActorValueInformationGetter> FirstParameter { get; }
         String? FirstUnusedStringParameter { get; }
         Int32 SecondParameter { get; }
         String? SecondUnusedStringParameter { get; }
@@ -791,7 +803,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGetPermanentValueConditionData item)
         {
             ClearPartial();
-            item.FirstParameter = default(ActorValue);
+            item.FirstParameter.Clear();
             item.FirstUnusedStringParameter = default;
             item.SecondParameter = default(Int32);
             item.SecondUnusedStringParameter = default;
@@ -807,6 +819,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IGetPermanentValueConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.FirstParameter.Relink(mapping);
         }
         
         #endregion
@@ -862,7 +875,7 @@ namespace Mutagen.Bethesda.Starfield
             GetPermanentValueConditionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FirstParameter = item.FirstParameter == rhs.FirstParameter;
+            ret.FirstParameter = item.FirstParameter.Equals(rhs.FirstParameter);
             ret.FirstUnusedStringParameter = string.Equals(item.FirstUnusedStringParameter, rhs.FirstUnusedStringParameter);
             ret.SecondParameter = item.SecondParameter == rhs.SecondParameter;
             ret.SecondUnusedStringParameter = string.Equals(item.SecondUnusedStringParameter, rhs.SecondUnusedStringParameter);
@@ -917,7 +930,7 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
             if (printMask?.FirstParameter ?? true)
             {
-                sb.AppendItem(item.FirstParameter, "FirstParameter");
+                sb.AppendItem(item.FirstParameter.FormKey, "FirstParameter");
             }
             if ((printMask?.FirstUnusedStringParameter ?? true)
                 && item.FirstUnusedStringParameter is {} FirstUnusedStringParameterItem)
@@ -964,7 +977,7 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)GetPermanentValueConditionData_FieldIndex.FirstParameter) ?? true))
             {
-                if (lhs.FirstParameter != rhs.FirstParameter) return false;
+                if (!lhs.FirstParameter.Equals(rhs.FirstParameter)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GetPermanentValueConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1029,6 +1042,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            yield return FormLinkInformation.Factory(obj.FirstParameter);
             yield break;
         }
         
@@ -1055,7 +1069,7 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GetPermanentValueConditionData_FieldIndex.FirstParameter) ?? true))
             {
-                item.FirstParameter = rhs.FirstParameter;
+                item.FirstParameter.SetTo(rhs.FirstParameter.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetPermanentValueConditionData_FieldIndex.FirstUnusedStringParameter) ?? true))
             {
@@ -1192,10 +1206,9 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.FirstParameter,
-                length: 4);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FirstParameter);
             writer.Write(item.SecondParameter);
         }
 
@@ -1244,9 +1257,7 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FirstParameter = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                length: 4);
+            item.FirstParameter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.SecondParameter = frame.ReadInt32();
         }
 
