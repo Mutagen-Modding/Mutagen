@@ -24,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -57,16 +58,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMediaLocationControllerGetter.Name => this.Name;
+        ITranslatedStringGetter? IMediaLocationControllerGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -74,24 +93,19 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region NAM1
-        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _NAM1 = new FormLinkNullable<IFallout3MajorRecordGetter>();
-        public IFormLinkNullable<IFallout3MajorRecordGetter> NAM1
-        {
-            get => _NAM1;
-            set => _NAM1.SetTo(value);
-        }
+        public UInt32? NAM1 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IMediaLocationControllerGetter.NAM1 => this.NAM1;
+        UInt32? IMediaLocationControllerGetter.NAM1 => this.NAM1;
         #endregion
-        #region Unknown
-        public UInt32? Unknown { get; set; }
+        #region NAM2
+        public UInt32? NAM2 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IMediaLocationControllerGetter.Unknown => this.Unknown;
+        UInt32? IMediaLocationControllerGetter.NAM2 => this.NAM2;
         #endregion
-        #region Unknown2
-        public UInt32? Unknown2 { get; set; }
+        #region NAM3
+        public UInt32? NAM3 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IMediaLocationControllerGetter.Unknown2 => this.Unknown2;
+        UInt32? IMediaLocationControllerGetter.NAM3 => this.NAM3;
         #endregion
         #region LocationDelay
         public Single? LocationDelay { get; set; }
@@ -115,85 +129,85 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region NeutralSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MediaLocationControllerMediaSet>? _NeutralSets;
-        public ExtendedList<MediaLocationControllerMediaSet>? NeutralSets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _NeutralSets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> NeutralSets
         {
             get => this._NeutralSets;
-            set => this._NeutralSets = value;
+            init => this._NeutralSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMediaLocationControllerMediaSetGetter>? IMediaLocationControllerGetter.NeutralSets => _NeutralSets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IMediaLocationControllerGetter.NeutralSets => _NeutralSets;
         #endregion
 
         #endregion
         #region AllySets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MediaLocationControllerAllySet>? _AllySets;
-        public ExtendedList<MediaLocationControllerAllySet>? AllySets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _AllySets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> AllySets
         {
             get => this._AllySets;
-            set => this._AllySets = value;
+            init => this._AllySets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMediaLocationControllerAllySetGetter>? IMediaLocationControllerGetter.AllySets => _AllySets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IMediaLocationControllerGetter.AllySets => _AllySets;
         #endregion
 
         #endregion
         #region FriendSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MediaLocationControllerFriendSet>? _FriendSets;
-        public ExtendedList<MediaLocationControllerFriendSet>? FriendSets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _FriendSets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> FriendSets
         {
             get => this._FriendSets;
-            set => this._FriendSets = value;
+            init => this._FriendSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMediaLocationControllerFriendSetGetter>? IMediaLocationControllerGetter.FriendSets => _FriendSets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IMediaLocationControllerGetter.FriendSets => _FriendSets;
         #endregion
 
         #endregion
         #region EnemySets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MediaLocationControllerEnemySet>? _EnemySets;
-        public ExtendedList<MediaLocationControllerEnemySet>? EnemySets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _EnemySets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> EnemySets
         {
             get => this._EnemySets;
-            set => this._EnemySets = value;
+            init => this._EnemySets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMediaLocationControllerEnemySetGetter>? IMediaLocationControllerGetter.EnemySets => _EnemySets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IMediaLocationControllerGetter.EnemySets => _EnemySets;
         #endregion
 
         #endregion
         #region LocationSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MediaLocationControllerLocationSet>? _LocationSets;
-        public ExtendedList<MediaLocationControllerLocationSet>? LocationSets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _LocationSets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> LocationSets
         {
             get => this._LocationSets;
-            set => this._LocationSets = value;
+            init => this._LocationSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMediaLocationControllerLocationSetGetter>? IMediaLocationControllerGetter.LocationSets => _LocationSets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IMediaLocationControllerGetter.LocationSets => _LocationSets;
         #endregion
 
         #endregion
         #region BattleSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MediaLocationControllerBattleSet>? _BattleSets;
-        public ExtendedList<MediaLocationControllerBattleSet>? BattleSets
+        private ExtendedList<IFormLinkGetter<IMediaSetGetter>> _BattleSets = new ExtendedList<IFormLinkGetter<IMediaSetGetter>>();
+        public ExtendedList<IFormLinkGetter<IMediaSetGetter>> BattleSets
         {
             get => this._BattleSets;
-            set => this._BattleSets = value;
+            init => this._BattleSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMediaLocationControllerBattleSetGetter>? IMediaLocationControllerGetter.BattleSets => _BattleSets;
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> IMediaLocationControllerGetter.BattleSets => _BattleSets;
         #endregion
 
         #endregion
@@ -239,18 +253,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = initialValue;
                 this.NAM1 = initialValue;
-                this.Unknown = initialValue;
-                this.Unknown2 = initialValue;
+                this.NAM2 = initialValue;
+                this.NAM3 = initialValue;
                 this.LocationDelay = initialValue;
                 this.DayStart = initialValue;
                 this.NightStart = initialValue;
                 this.RetriggerDelay = initialValue;
-                this.NeutralSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerMediaSet.Mask<TItem>?>>?>(initialValue, []);
-                this.AllySets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerAllySet.Mask<TItem>?>>?>(initialValue, []);
-                this.FriendSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerFriendSet.Mask<TItem>?>>?>(initialValue, []);
-                this.EnemySets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerEnemySet.Mask<TItem>?>>?>(initialValue, []);
-                this.LocationSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerLocationSet.Mask<TItem>?>>?>(initialValue, []);
-                this.BattleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerBattleSet.Mask<TItem>?>>?>(initialValue, []);
+                this.NeutralSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.AllySets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.FriendSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.EnemySets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.LocationSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
+                this.BattleSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.ConditionalFaction = initialValue;
                 this.FNAM = initialValue;
             }
@@ -265,8 +279,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Fallout3MajorRecordFlags,
                 TItem Name,
                 TItem NAM1,
-                TItem Unknown,
-                TItem Unknown2,
+                TItem NAM2,
+                TItem NAM3,
                 TItem LocationDelay,
                 TItem DayStart,
                 TItem NightStart,
@@ -290,18 +304,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = Name;
                 this.NAM1 = NAM1;
-                this.Unknown = Unknown;
-                this.Unknown2 = Unknown2;
+                this.NAM2 = NAM2;
+                this.NAM3 = NAM3;
                 this.LocationDelay = LocationDelay;
                 this.DayStart = DayStart;
                 this.NightStart = NightStart;
                 this.RetriggerDelay = RetriggerDelay;
-                this.NeutralSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerMediaSet.Mask<TItem>?>>?>(NeutralSets, []);
-                this.AllySets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerAllySet.Mask<TItem>?>>?>(AllySets, []);
-                this.FriendSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerFriendSet.Mask<TItem>?>>?>(FriendSets, []);
-                this.EnemySets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerEnemySet.Mask<TItem>?>>?>(EnemySets, []);
-                this.LocationSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerLocationSet.Mask<TItem>?>>?>(LocationSets, []);
-                this.BattleSets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerBattleSet.Mask<TItem>?>>?>(BattleSets, []);
+                this.NeutralSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(NeutralSets, []);
+                this.AllySets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AllySets, []);
+                this.FriendSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(FriendSets, []);
+                this.EnemySets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(EnemySets, []);
+                this.LocationSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationSets, []);
+                this.BattleSets = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(BattleSets, []);
                 this.ConditionalFaction = ConditionalFaction;
                 this.FNAM = FNAM;
             }
@@ -317,18 +331,18 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Name;
             public TItem NAM1;
-            public TItem Unknown;
-            public TItem Unknown2;
+            public TItem NAM2;
+            public TItem NAM3;
             public TItem LocationDelay;
             public TItem DayStart;
             public TItem NightStart;
             public TItem RetriggerDelay;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerMediaSet.Mask<TItem>?>>?>? NeutralSets;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerAllySet.Mask<TItem>?>>?>? AllySets;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerFriendSet.Mask<TItem>?>>?>? FriendSets;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerEnemySet.Mask<TItem>?>>?>? EnemySets;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerLocationSet.Mask<TItem>?>>?>? LocationSets;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MediaLocationControllerBattleSet.Mask<TItem>?>>?>? BattleSets;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? NeutralSets;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AllySets;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? FriendSets;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? EnemySets;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationSets;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? BattleSets;
             public TItem ConditionalFaction;
             public TItem FNAM;
             #endregion
@@ -346,8 +360,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.NAM1, rhs.NAM1)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
+                if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
                 if (!object.Equals(this.LocationDelay, rhs.LocationDelay)) return false;
                 if (!object.Equals(this.DayStart, rhs.DayStart)) return false;
                 if (!object.Equals(this.NightStart, rhs.NightStart)) return false;
@@ -367,8 +381,8 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.Name);
                 hash.Add(this.NAM1);
-                hash.Add(this.Unknown);
-                hash.Add(this.Unknown2);
+                hash.Add(this.NAM2);
+                hash.Add(this.NAM3);
                 hash.Add(this.LocationDelay);
                 hash.Add(this.DayStart);
                 hash.Add(this.NightStart);
@@ -393,8 +407,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.NAM1)) return false;
-                if (!eval(this.Unknown)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.NAM2)) return false;
+                if (!eval(this.NAM3)) return false;
                 if (!eval(this.LocationDelay)) return false;
                 if (!eval(this.DayStart)) return false;
                 if (!eval(this.NightStart)) return false;
@@ -406,8 +420,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.NeutralSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -418,8 +431,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.AllySets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -430,8 +442,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.FriendSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -442,8 +453,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.EnemySets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -454,8 +464,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.LocationSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -466,8 +475,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.BattleSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -483,8 +491,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.NAM1)) return true;
-                if (eval(this.Unknown)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.NAM2)) return true;
+                if (eval(this.NAM3)) return true;
                 if (eval(this.LocationDelay)) return true;
                 if (eval(this.DayStart)) return true;
                 if (eval(this.NightStart)) return true;
@@ -496,8 +504,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.NeutralSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -508,8 +515,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.AllySets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -520,8 +526,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.FriendSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -532,8 +537,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.EnemySets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -544,8 +548,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.LocationSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -556,8 +559,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.BattleSets.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -580,99 +582,93 @@ namespace Mutagen.Bethesda.Fallout3
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
                 obj.NAM1 = eval(this.NAM1);
-                obj.Unknown = eval(this.Unknown);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.NAM2 = eval(this.NAM2);
+                obj.NAM3 = eval(this.NAM3);
                 obj.LocationDelay = eval(this.LocationDelay);
                 obj.DayStart = eval(this.DayStart);
                 obj.NightStart = eval(this.NightStart);
                 obj.RetriggerDelay = eval(this.RetriggerDelay);
                 if (NeutralSets != null)
                 {
-                    obj.NeutralSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MediaLocationControllerMediaSet.Mask<R>?>>?>(eval(this.NeutralSets.Overall), []);
+                    obj.NeutralSets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.NeutralSets.Overall), []);
                     if (NeutralSets.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, MediaLocationControllerMediaSet.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.NeutralSets.Specific = l;
                         foreach (var item in NeutralSets.Specific)
                         {
-                            MaskItemIndexed<R, MediaLocationControllerMediaSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MediaLocationControllerMediaSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
                 if (AllySets != null)
                 {
-                    obj.AllySets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MediaLocationControllerAllySet.Mask<R>?>>?>(eval(this.AllySets.Overall), []);
+                    obj.AllySets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AllySets.Overall), []);
                     if (AllySets.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, MediaLocationControllerAllySet.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.AllySets.Specific = l;
                         foreach (var item in AllySets.Specific)
                         {
-                            MaskItemIndexed<R, MediaLocationControllerAllySet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MediaLocationControllerAllySet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
                 if (FriendSets != null)
                 {
-                    obj.FriendSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MediaLocationControllerFriendSet.Mask<R>?>>?>(eval(this.FriendSets.Overall), []);
+                    obj.FriendSets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.FriendSets.Overall), []);
                     if (FriendSets.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, MediaLocationControllerFriendSet.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.FriendSets.Specific = l;
                         foreach (var item in FriendSets.Specific)
                         {
-                            MaskItemIndexed<R, MediaLocationControllerFriendSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MediaLocationControllerFriendSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
                 if (EnemySets != null)
                 {
-                    obj.EnemySets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MediaLocationControllerEnemySet.Mask<R>?>>?>(eval(this.EnemySets.Overall), []);
+                    obj.EnemySets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.EnemySets.Overall), []);
                     if (EnemySets.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, MediaLocationControllerEnemySet.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.EnemySets.Specific = l;
                         foreach (var item in EnemySets.Specific)
                         {
-                            MaskItemIndexed<R, MediaLocationControllerEnemySet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MediaLocationControllerEnemySet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
                 if (LocationSets != null)
                 {
-                    obj.LocationSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MediaLocationControllerLocationSet.Mask<R>?>>?>(eval(this.LocationSets.Overall), []);
+                    obj.LocationSets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationSets.Overall), []);
                     if (LocationSets.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, MediaLocationControllerLocationSet.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.LocationSets.Specific = l;
                         foreach (var item in LocationSets.Specific)
                         {
-                            MaskItemIndexed<R, MediaLocationControllerLocationSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MediaLocationControllerLocationSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
                 if (BattleSets != null)
                 {
-                    obj.BattleSets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MediaLocationControllerBattleSet.Mask<R>?>>?>(eval(this.BattleSets.Overall), []);
+                    obj.BattleSets = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.BattleSets.Overall), []);
                     if (BattleSets.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, MediaLocationControllerBattleSet.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.BattleSets.Specific = l;
                         foreach (var item in BattleSets.Specific)
                         {
-                            MaskItemIndexed<R, MediaLocationControllerBattleSet.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MediaLocationControllerBattleSet.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
@@ -704,13 +700,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(NAM1, "NAM1");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.NAM2 ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(NAM2, "NAM2");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.NAM3 ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(NAM3, "NAM3");
                     }
                     if (printMask?.LocationDelay ?? true)
                     {
@@ -741,7 +737,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -760,7 +758,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -779,7 +779,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -798,7 +800,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -817,7 +821,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -836,7 +842,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -863,18 +871,18 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public Exception? Name;
             public Exception? NAM1;
-            public Exception? Unknown;
-            public Exception? Unknown2;
+            public Exception? NAM2;
+            public Exception? NAM3;
             public Exception? LocationDelay;
             public Exception? DayStart;
             public Exception? NightStart;
             public Exception? RetriggerDelay;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerMediaSet.ErrorMask?>>?>? NeutralSets;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerAllySet.ErrorMask?>>?>? AllySets;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerFriendSet.ErrorMask?>>?>? FriendSets;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerEnemySet.ErrorMask?>>?>? EnemySets;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerLocationSet.ErrorMask?>>?>? LocationSets;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerBattleSet.ErrorMask?>>?>? BattleSets;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? NeutralSets;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AllySets;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? FriendSets;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? EnemySets;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationSets;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? BattleSets;
             public Exception? ConditionalFaction;
             public Exception? FNAM;
             #endregion
@@ -889,10 +897,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return Name;
                     case MediaLocationController_FieldIndex.NAM1:
                         return NAM1;
-                    case MediaLocationController_FieldIndex.Unknown:
-                        return Unknown;
-                    case MediaLocationController_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case MediaLocationController_FieldIndex.NAM2:
+                        return NAM2;
+                    case MediaLocationController_FieldIndex.NAM3:
+                        return NAM3;
                     case MediaLocationController_FieldIndex.LocationDelay:
                         return LocationDelay;
                     case MediaLocationController_FieldIndex.DayStart:
@@ -933,11 +941,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case MediaLocationController_FieldIndex.NAM1:
                         this.NAM1 = ex;
                         break;
-                    case MediaLocationController_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case MediaLocationController_FieldIndex.NAM2:
+                        this.NAM2 = ex;
                         break;
-                    case MediaLocationController_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case MediaLocationController_FieldIndex.NAM3:
+                        this.NAM3 = ex;
                         break;
                     case MediaLocationController_FieldIndex.LocationDelay:
                         this.LocationDelay = ex;
@@ -952,22 +960,22 @@ namespace Mutagen.Bethesda.Fallout3
                         this.RetriggerDelay = ex;
                         break;
                     case MediaLocationController_FieldIndex.NeutralSets:
-                        this.NeutralSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerMediaSet.ErrorMask?>>?>(ex, null);
+                        this.NeutralSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MediaLocationController_FieldIndex.AllySets:
-                        this.AllySets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerAllySet.ErrorMask?>>?>(ex, null);
+                        this.AllySets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MediaLocationController_FieldIndex.FriendSets:
-                        this.FriendSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerFriendSet.ErrorMask?>>?>(ex, null);
+                        this.FriendSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MediaLocationController_FieldIndex.EnemySets:
-                        this.EnemySets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerEnemySet.ErrorMask?>>?>(ex, null);
+                        this.EnemySets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MediaLocationController_FieldIndex.LocationSets:
-                        this.LocationSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerLocationSet.ErrorMask?>>?>(ex, null);
+                        this.LocationSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MediaLocationController_FieldIndex.BattleSets:
-                        this.BattleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerBattleSet.ErrorMask?>>?>(ex, null);
+                        this.BattleSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MediaLocationController_FieldIndex.ConditionalFaction:
                         this.ConditionalFaction = ex;
@@ -992,11 +1000,11 @@ namespace Mutagen.Bethesda.Fallout3
                     case MediaLocationController_FieldIndex.NAM1:
                         this.NAM1 = (Exception?)obj;
                         break;
-                    case MediaLocationController_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case MediaLocationController_FieldIndex.NAM2:
+                        this.NAM2 = (Exception?)obj;
                         break;
-                    case MediaLocationController_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case MediaLocationController_FieldIndex.NAM3:
+                        this.NAM3 = (Exception?)obj;
                         break;
                     case MediaLocationController_FieldIndex.LocationDelay:
                         this.LocationDelay = (Exception?)obj;
@@ -1011,22 +1019,22 @@ namespace Mutagen.Bethesda.Fallout3
                         this.RetriggerDelay = (Exception?)obj;
                         break;
                     case MediaLocationController_FieldIndex.NeutralSets:
-                        this.NeutralSets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerMediaSet.ErrorMask?>>?>)obj;
+                        this.NeutralSets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MediaLocationController_FieldIndex.AllySets:
-                        this.AllySets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerAllySet.ErrorMask?>>?>)obj;
+                        this.AllySets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MediaLocationController_FieldIndex.FriendSets:
-                        this.FriendSets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerFriendSet.ErrorMask?>>?>)obj;
+                        this.FriendSets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MediaLocationController_FieldIndex.EnemySets:
-                        this.EnemySets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerEnemySet.ErrorMask?>>?>)obj;
+                        this.EnemySets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MediaLocationController_FieldIndex.LocationSets:
-                        this.LocationSets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerLocationSet.ErrorMask?>>?>)obj;
+                        this.LocationSets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MediaLocationController_FieldIndex.BattleSets:
-                        this.BattleSets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerBattleSet.ErrorMask?>>?>)obj;
+                        this.BattleSets = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MediaLocationController_FieldIndex.ConditionalFaction:
                         this.ConditionalFaction = (Exception?)obj;
@@ -1045,8 +1053,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (Name != null) return true;
                 if (NAM1 != null) return true;
-                if (Unknown != null) return true;
-                if (Unknown2 != null) return true;
+                if (NAM2 != null) return true;
+                if (NAM3 != null) return true;
                 if (LocationDelay != null) return true;
                 if (DayStart != null) return true;
                 if (NightStart != null) return true;
@@ -1092,10 +1100,10 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(NAM1, "NAM1");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(NAM2, "NAM2");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(NAM3, "NAM3");
                 }
                 {
                     sb.AppendItem(LocationDelay, "LocationDelay");
@@ -1121,7 +1129,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -1139,7 +1149,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -1157,7 +1169,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -1175,7 +1189,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -1193,7 +1209,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -1211,7 +1229,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -1233,18 +1253,18 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.NAM1 = this.NAM1.Combine(rhs.NAM1);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
+                ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
                 ret.LocationDelay = this.LocationDelay.Combine(rhs.LocationDelay);
                 ret.DayStart = this.DayStart.Combine(rhs.DayStart);
                 ret.NightStart = this.NightStart.Combine(rhs.NightStart);
                 ret.RetriggerDelay = this.RetriggerDelay.Combine(rhs.RetriggerDelay);
-                ret.NeutralSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerMediaSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.NeutralSets?.Overall, rhs.NeutralSets?.Overall), Noggog.ExceptionExt.Combine(this.NeutralSets?.Specific, rhs.NeutralSets?.Specific));
-                ret.AllySets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerAllySet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AllySets?.Overall, rhs.AllySets?.Overall), Noggog.ExceptionExt.Combine(this.AllySets?.Specific, rhs.AllySets?.Specific));
-                ret.FriendSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerFriendSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FriendSets?.Overall, rhs.FriendSets?.Overall), Noggog.ExceptionExt.Combine(this.FriendSets?.Specific, rhs.FriendSets?.Specific));
-                ret.EnemySets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerEnemySet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EnemySets?.Overall, rhs.EnemySets?.Overall), Noggog.ExceptionExt.Combine(this.EnemySets?.Specific, rhs.EnemySets?.Specific));
-                ret.LocationSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerLocationSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationSets?.Overall, rhs.LocationSets?.Overall), Noggog.ExceptionExt.Combine(this.LocationSets?.Specific, rhs.LocationSets?.Specific));
-                ret.BattleSets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MediaLocationControllerBattleSet.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BattleSets?.Overall, rhs.BattleSets?.Overall), Noggog.ExceptionExt.Combine(this.BattleSets?.Specific, rhs.BattleSets?.Specific));
+                ret.NeutralSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.NeutralSets?.Overall, rhs.NeutralSets?.Overall), Noggog.ExceptionExt.Combine(this.NeutralSets?.Specific, rhs.NeutralSets?.Specific));
+                ret.AllySets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AllySets?.Overall, rhs.AllySets?.Overall), Noggog.ExceptionExt.Combine(this.AllySets?.Specific, rhs.AllySets?.Specific));
+                ret.FriendSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.FriendSets?.Overall, rhs.FriendSets?.Overall), Noggog.ExceptionExt.Combine(this.FriendSets?.Specific, rhs.FriendSets?.Specific));
+                ret.EnemySets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.EnemySets?.Overall, rhs.EnemySets?.Overall), Noggog.ExceptionExt.Combine(this.EnemySets?.Specific, rhs.EnemySets?.Specific));
+                ret.LocationSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationSets?.Overall, rhs.LocationSets?.Overall), Noggog.ExceptionExt.Combine(this.LocationSets?.Specific, rhs.LocationSets?.Specific));
+                ret.BattleSets = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.BattleSets?.Overall, rhs.BattleSets?.Overall), Noggog.ExceptionExt.Combine(this.BattleSets?.Specific, rhs.BattleSets?.Specific));
                 ret.ConditionalFaction = this.ConditionalFaction.Combine(rhs.ConditionalFaction);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
                 return ret;
@@ -1271,18 +1291,18 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public bool Name;
             public bool NAM1;
-            public bool Unknown;
-            public bool Unknown2;
+            public bool NAM2;
+            public bool NAM3;
             public bool LocationDelay;
             public bool DayStart;
             public bool NightStart;
             public bool RetriggerDelay;
-            public MediaLocationControllerMediaSet.TranslationMask? NeutralSets;
-            public MediaLocationControllerAllySet.TranslationMask? AllySets;
-            public MediaLocationControllerFriendSet.TranslationMask? FriendSets;
-            public MediaLocationControllerEnemySet.TranslationMask? EnemySets;
-            public MediaLocationControllerLocationSet.TranslationMask? LocationSets;
-            public MediaLocationControllerBattleSet.TranslationMask? BattleSets;
+            public bool NeutralSets;
+            public bool AllySets;
+            public bool FriendSets;
+            public bool EnemySets;
+            public bool LocationSets;
+            public bool BattleSets;
             public bool ConditionalFaction;
             public bool FNAM;
             #endregion
@@ -1295,12 +1315,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = defaultOn;
                 this.NAM1 = defaultOn;
-                this.Unknown = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.NAM2 = defaultOn;
+                this.NAM3 = defaultOn;
                 this.LocationDelay = defaultOn;
                 this.DayStart = defaultOn;
                 this.NightStart = defaultOn;
                 this.RetriggerDelay = defaultOn;
+                this.NeutralSets = defaultOn;
+                this.AllySets = defaultOn;
+                this.FriendSets = defaultOn;
+                this.EnemySets = defaultOn;
+                this.LocationSets = defaultOn;
+                this.BattleSets = defaultOn;
                 this.ConditionalFaction = defaultOn;
                 this.FNAM = defaultOn;
             }
@@ -1312,18 +1338,18 @@ namespace Mutagen.Bethesda.Fallout3
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((NAM1, null));
-                ret.Add((Unknown, null));
-                ret.Add((Unknown2, null));
+                ret.Add((NAM2, null));
+                ret.Add((NAM3, null));
                 ret.Add((LocationDelay, null));
                 ret.Add((DayStart, null));
                 ret.Add((NightStart, null));
                 ret.Add((RetriggerDelay, null));
-                ret.Add((NeutralSets == null ? DefaultOn : !NeutralSets.GetCrystal().CopyNothing, NeutralSets?.GetCrystal()));
-                ret.Add((AllySets == null ? DefaultOn : !AllySets.GetCrystal().CopyNothing, AllySets?.GetCrystal()));
-                ret.Add((FriendSets == null ? DefaultOn : !FriendSets.GetCrystal().CopyNothing, FriendSets?.GetCrystal()));
-                ret.Add((EnemySets == null ? DefaultOn : !EnemySets.GetCrystal().CopyNothing, EnemySets?.GetCrystal()));
-                ret.Add((LocationSets == null ? DefaultOn : !LocationSets.GetCrystal().CopyNothing, LocationSets?.GetCrystal()));
-                ret.Add((BattleSets == null ? DefaultOn : !BattleSets.GetCrystal().CopyNothing, BattleSets?.GetCrystal()));
+                ret.Add((NeutralSets, null));
+                ret.Add((AllySets, null));
+                ret.Add((FriendSets, null));
+                ret.Add((EnemySets, null));
+                ret.Add((LocationSets, null));
+                ret.Add((BattleSets, null));
                 ret.Add((ConditionalFaction, null));
                 ret.Add((FNAM, null));
             }
@@ -1462,25 +1488,27 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IMediaLocationControllerInternal>,
         IMediaLocationControllerGetter,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
-        new IFormLinkNullable<IFallout3MajorRecordGetter> NAM1 { get; set; }
-        new UInt32? Unknown { get; set; }
-        new UInt32? Unknown2 { get; set; }
+        new TranslatedString? Name { get; set; }
+        new UInt32? NAM1 { get; set; }
+        new UInt32? NAM2 { get; set; }
+        new UInt32? NAM3 { get; set; }
         new Single? LocationDelay { get; set; }
         new UInt32? DayStart { get; set; }
         new UInt32? NightStart { get; set; }
         new Single? RetriggerDelay { get; set; }
-        new ExtendedList<MediaLocationControllerMediaSet>? NeutralSets { get; set; }
-        new ExtendedList<MediaLocationControllerAllySet>? AllySets { get; set; }
-        new ExtendedList<MediaLocationControllerFriendSet>? FriendSets { get; set; }
-        new ExtendedList<MediaLocationControllerEnemySet>? EnemySets { get; set; }
-        new ExtendedList<MediaLocationControllerLocationSet>? LocationSets { get; set; }
-        new ExtendedList<MediaLocationControllerBattleSet>? BattleSets { get; set; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> NeutralSets { get; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> AllySets { get; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> FriendSets { get; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> EnemySets { get; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> LocationSets { get; }
+        new ExtendedList<IFormLinkGetter<IMediaSetGetter>> BattleSets { get; }
         new IFormLinkNullable<IFactionGetter> ConditionalFaction { get; set; }
         new UInt32? FNAM { get; set; }
     }
@@ -1500,28 +1528,30 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IMediaLocationControllerGetter>,
         IMapsToGetter<IMediaLocationControllerGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => MediaLocationController_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
-        IFormLinkNullableGetter<IFallout3MajorRecordGetter> NAM1 { get; }
-        UInt32? Unknown { get; }
-        UInt32? Unknown2 { get; }
+        UInt32? NAM1 { get; }
+        UInt32? NAM2 { get; }
+        UInt32? NAM3 { get; }
         Single? LocationDelay { get; }
         UInt32? DayStart { get; }
         UInt32? NightStart { get; }
         Single? RetriggerDelay { get; }
-        IReadOnlyList<IMediaLocationControllerMediaSetGetter>? NeutralSets { get; }
-        IReadOnlyList<IMediaLocationControllerAllySetGetter>? AllySets { get; }
-        IReadOnlyList<IMediaLocationControllerFriendSetGetter>? FriendSets { get; }
-        IReadOnlyList<IMediaLocationControllerEnemySetGetter>? EnemySets { get; }
-        IReadOnlyList<IMediaLocationControllerLocationSetGetter>? LocationSets { get; }
-        IReadOnlyList<IMediaLocationControllerBattleSetGetter>? BattleSets { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> NeutralSets { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> AllySets { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> FriendSets { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> EnemySets { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> LocationSets { get; }
+        IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> BattleSets { get; }
         IFormLinkNullableGetter<IFactionGetter> ConditionalFaction { get; }
         UInt32? FNAM { get; }
 
@@ -1702,8 +1732,8 @@ namespace Mutagen.Bethesda.Fallout3
         Fallout3MajorRecordFlags = 6,
         Name = 7,
         NAM1 = 8,
-        Unknown = 9,
-        Unknown2 = 10,
+        NAM2 = 9,
+        NAM3 = 10,
         LocationDelay = 11,
         DayStart = 12,
         NightStart = 13,
@@ -1822,19 +1852,19 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Name = default;
-            item.NAM1.Clear();
-            item.Unknown = default;
-            item.Unknown2 = default;
+            item.NAM1 = default;
+            item.NAM2 = default;
+            item.NAM3 = default;
             item.LocationDelay = default;
             item.DayStart = default;
             item.NightStart = default;
             item.RetriggerDelay = default;
-            item.NeutralSets = null;
-            item.AllySets = null;
-            item.FriendSets = null;
-            item.EnemySets = null;
-            item.LocationSets = null;
-            item.BattleSets = null;
+            item.NeutralSets.Clear();
+            item.AllySets.Clear();
+            item.FriendSets.Clear();
+            item.EnemySets.Clear();
+            item.LocationSets.Clear();
+            item.BattleSets.Clear();
             item.ConditionalFaction.Clear();
             item.FNAM = default;
             base.Clear(item);
@@ -1854,13 +1884,12 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IMediaLocationController obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.NAM1.Relink(mapping);
-            obj.NeutralSets?.RemapLinks(mapping);
-            obj.AllySets?.RemapLinks(mapping);
-            obj.FriendSets?.RemapLinks(mapping);
-            obj.EnemySets?.RemapLinks(mapping);
-            obj.LocationSets?.RemapLinks(mapping);
-            obj.BattleSets?.RemapLinks(mapping);
+            obj.NeutralSets.RemapLinks(mapping);
+            obj.AllySets.RemapLinks(mapping);
+            obj.FriendSets.RemapLinks(mapping);
+            obj.EnemySets.RemapLinks(mapping);
+            obj.LocationSets.RemapLinks(mapping);
+            obj.BattleSets.RemapLinks(mapping);
             obj.ConditionalFaction.Relink(mapping);
         }
         
@@ -1929,37 +1958,37 @@ namespace Mutagen.Bethesda.Fallout3
             MediaLocationController.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.NAM1 = item.NAM1.Equals(rhs.NAM1);
-            ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.NAM1 = item.NAM1 == rhs.NAM1;
+            ret.NAM2 = item.NAM2 == rhs.NAM2;
+            ret.NAM3 = item.NAM3 == rhs.NAM3;
             ret.LocationDelay = item.LocationDelay.EqualsWithin(rhs.LocationDelay);
             ret.DayStart = item.DayStart == rhs.DayStart;
             ret.NightStart = item.NightStart == rhs.NightStart;
             ret.RetriggerDelay = item.RetriggerDelay.EqualsWithin(rhs.RetriggerDelay);
             ret.NeutralSets = item.NeutralSets.CollectionEqualsHelper(
                 rhs.NeutralSets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.AllySets = item.AllySets.CollectionEqualsHelper(
                 rhs.AllySets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.FriendSets = item.FriendSets.CollectionEqualsHelper(
                 rhs.FriendSets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.EnemySets = item.EnemySets.CollectionEqualsHelper(
                 rhs.EnemySets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.LocationSets = item.LocationSets.CollectionEqualsHelper(
                 rhs.LocationSets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.BattleSets = item.BattleSets.CollectionEqualsHelper(
                 rhs.BattleSets,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.ConditionalFaction = item.ConditionalFaction.Equals(rhs.ConditionalFaction);
             ret.FNAM = item.FNAM == rhs.FNAM;
@@ -2017,19 +2046,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if (printMask?.NAM1 ?? true)
+            if ((printMask?.NAM1 ?? true)
+                && item.NAM1 is {} NAM1Item)
             {
-                sb.AppendItem(item.NAM1.FormKeyNullable, "NAM1");
+                sb.AppendItem(NAM1Item, "NAM1");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown is {} UnknownItem)
+            if ((printMask?.NAM2 ?? true)
+                && item.NAM2 is {} NAM2Item)
             {
-                sb.AppendItem(UnknownItem, "Unknown");
+                sb.AppendItem(NAM2Item, "NAM2");
             }
-            if ((printMask?.Unknown2 ?? true)
-                && item.Unknown2 is {} Unknown2Item)
+            if ((printMask?.NAM3 ?? true)
+                && item.NAM3 is {} NAM3Item)
             {
-                sb.AppendItem(Unknown2Item, "Unknown2");
+                sb.AppendItem(NAM3Item, "NAM3");
             }
             if ((printMask?.LocationDelay ?? true)
                 && item.LocationDelay is {} LocationDelayItem)
@@ -2051,92 +2081,86 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(RetriggerDelayItem, "RetriggerDelay");
             }
-            if ((printMask?.NeutralSets?.Overall ?? true)
-                && item.NeutralSets is {} NeutralSetsItem)
+            if (printMask?.NeutralSets?.Overall ?? true)
             {
                 sb.AppendLine("NeutralSets =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in NeutralSetsItem)
+                    foreach (var subItem in item.NeutralSets)
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
             }
-            if ((printMask?.AllySets?.Overall ?? true)
-                && item.AllySets is {} AllySetsItem)
+            if (printMask?.AllySets?.Overall ?? true)
             {
                 sb.AppendLine("AllySets =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in AllySetsItem)
+                    foreach (var subItem in item.AllySets)
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
             }
-            if ((printMask?.FriendSets?.Overall ?? true)
-                && item.FriendSets is {} FriendSetsItem)
+            if (printMask?.FriendSets?.Overall ?? true)
             {
                 sb.AppendLine("FriendSets =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in FriendSetsItem)
+                    foreach (var subItem in item.FriendSets)
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
             }
-            if ((printMask?.EnemySets?.Overall ?? true)
-                && item.EnemySets is {} EnemySetsItem)
+            if (printMask?.EnemySets?.Overall ?? true)
             {
                 sb.AppendLine("EnemySets =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in EnemySetsItem)
+                    foreach (var subItem in item.EnemySets)
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
             }
-            if ((printMask?.LocationSets?.Overall ?? true)
-                && item.LocationSets is {} LocationSetsItem)
+            if (printMask?.LocationSets?.Overall ?? true)
             {
                 sb.AppendLine("LocationSets =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in LocationSetsItem)
+                    foreach (var subItem in item.LocationSets)
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
             }
-            if ((printMask?.BattleSets?.Overall ?? true)
-                && item.BattleSets is {} BattleSetsItem)
+            if (printMask?.BattleSets?.Overall ?? true)
             {
                 sb.AppendLine("BattleSets =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in BattleSetsItem)
+                    foreach (var subItem in item.BattleSets)
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
@@ -2202,19 +2226,19 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NAM1) ?? true))
             {
-                if (!lhs.NAM1.Equals(rhs.NAM1)) return false;
+                if (lhs.NAM1 != rhs.NAM1) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NAM2) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.NAM2 != rhs.NAM2) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NAM3) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.NAM3 != rhs.NAM3) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.LocationDelay) ?? true))
             {
@@ -2234,27 +2258,27 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NeutralSets) ?? true))
             {
-                if (!lhs.NeutralSets.SequenceEqualNullable(rhs.NeutralSets, (l, r) => ((MediaLocationControllerMediaSetCommon)((IMediaLocationControllerMediaSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MediaLocationController_FieldIndex.NeutralSets)))) return false;
+                if (!lhs.NeutralSets.SequenceEqualNullable(rhs.NeutralSets)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.AllySets) ?? true))
             {
-                if (!lhs.AllySets.SequenceEqualNullable(rhs.AllySets, (l, r) => ((MediaLocationControllerAllySetCommon)((IMediaLocationControllerAllySetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MediaLocationController_FieldIndex.AllySets)))) return false;
+                if (!lhs.AllySets.SequenceEqualNullable(rhs.AllySets)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.FriendSets) ?? true))
             {
-                if (!lhs.FriendSets.SequenceEqualNullable(rhs.FriendSets, (l, r) => ((MediaLocationControllerFriendSetCommon)((IMediaLocationControllerFriendSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MediaLocationController_FieldIndex.FriendSets)))) return false;
+                if (!lhs.FriendSets.SequenceEqualNullable(rhs.FriendSets)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.EnemySets) ?? true))
             {
-                if (!lhs.EnemySets.SequenceEqualNullable(rhs.EnemySets, (l, r) => ((MediaLocationControllerEnemySetCommon)((IMediaLocationControllerEnemySetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MediaLocationController_FieldIndex.EnemySets)))) return false;
+                if (!lhs.EnemySets.SequenceEqualNullable(rhs.EnemySets)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.LocationSets) ?? true))
             {
-                if (!lhs.LocationSets.SequenceEqualNullable(rhs.LocationSets, (l, r) => ((MediaLocationControllerLocationSetCommon)((IMediaLocationControllerLocationSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MediaLocationController_FieldIndex.LocationSets)))) return false;
+                if (!lhs.LocationSets.SequenceEqualNullable(rhs.LocationSets)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.BattleSets) ?? true))
             {
-                if (!lhs.BattleSets.SequenceEqualNullable(rhs.BattleSets, (l, r) => ((MediaLocationControllerBattleSetCommon)((IMediaLocationControllerBattleSetGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)MediaLocationController_FieldIndex.BattleSets)))) return false;
+                if (!lhs.BattleSets.SequenceEqualNullable(rhs.BattleSets)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.ConditionalFaction) ?? true))
             {
@@ -2296,14 +2320,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.NAM1);
-            if (item.Unknown is {} Unknownitem)
+            if (item.NAM1 is {} NAM1item)
             {
-                hash.Add(Unknownitem);
+                hash.Add(NAM1item);
             }
-            if (item.Unknown2 is {} Unknown2item)
+            if (item.NAM2 is {} NAM2item)
             {
-                hash.Add(Unknown2item);
+                hash.Add(NAM2item);
+            }
+            if (item.NAM3 is {} NAM3item)
+            {
+                hash.Add(NAM3item);
             }
             if (item.LocationDelay is {} LocationDelayitem)
             {
@@ -2361,51 +2388,29 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.NAM1, out var NAM1Info))
+            foreach (var item in obj.NeutralSets)
             {
-                yield return NAM1Info;
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.NeutralSets is {} NeutralSetsItem)
+            foreach (var item in obj.AllySets)
             {
-                foreach (var item in NeutralSetsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.AllySets is {} AllySetsItem)
+            foreach (var item in obj.FriendSets)
             {
-                foreach (var item in AllySetsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.FriendSets is {} FriendSetsItem)
+            foreach (var item in obj.EnemySets)
             {
-                foreach (var item in FriendSetsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.EnemySets is {} EnemySetsItem)
+            foreach (var item in obj.LocationSets)
             {
-                foreach (var item in EnemySetsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
-            if (obj.LocationSets is {} LocationSetsItem)
+            foreach (var item in obj.BattleSets)
             {
-                foreach (var item in LocationSetsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
-            }
-            if (obj.BattleSets is {} BattleSetsItem)
-            {
-                foreach (var item in BattleSetsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
-                {
-                    yield return FormLinkInformation.Factory(item);
-                }
+                yield return FormLinkInformation.Factory(item);
             }
             if (FormLinkInformation.TryFactory(obj.ConditionalFaction, out var ConditionalFactionInfo))
             {
@@ -2509,19 +2514,19 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NAM1) ?? true))
             {
-                item.NAM1.SetTo(rhs.NAM1.FormKeyNullable);
+                item.NAM1 = rhs.NAM1;
             }
-            if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NAM2) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.NAM2 = rhs.NAM2;
             }
-            if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.NAM3) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.NAM3 = rhs.NAM3;
             }
             if ((copyMask?.GetShouldTranslate((int)MediaLocationController_FieldIndex.LocationDelay) ?? true))
             {
@@ -2544,22 +2549,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)MediaLocationController_FieldIndex.NeutralSets);
                 try
                 {
-                    if ((rhs.NeutralSets != null))
-                    {
-                        item.NeutralSets = 
-                            rhs.NeutralSets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<MediaLocationControllerMediaSet>();
-                    }
-                    else
-                    {
-                        item.NeutralSets = null;
-                    }
+                    item.NeutralSets.SetTo(
+                        rhs.NeutralSets
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2576,22 +2568,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)MediaLocationController_FieldIndex.AllySets);
                 try
                 {
-                    if ((rhs.AllySets != null))
-                    {
-                        item.AllySets = 
-                            rhs.AllySets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<MediaLocationControllerAllySet>();
-                    }
-                    else
-                    {
-                        item.AllySets = null;
-                    }
+                    item.AllySets.SetTo(
+                        rhs.AllySets
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2608,22 +2587,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)MediaLocationController_FieldIndex.FriendSets);
                 try
                 {
-                    if ((rhs.FriendSets != null))
-                    {
-                        item.FriendSets = 
-                            rhs.FriendSets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<MediaLocationControllerFriendSet>();
-                    }
-                    else
-                    {
-                        item.FriendSets = null;
-                    }
+                    item.FriendSets.SetTo(
+                        rhs.FriendSets
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2640,22 +2606,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)MediaLocationController_FieldIndex.EnemySets);
                 try
                 {
-                    if ((rhs.EnemySets != null))
-                    {
-                        item.EnemySets = 
-                            rhs.EnemySets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<MediaLocationControllerEnemySet>();
-                    }
-                    else
-                    {
-                        item.EnemySets = null;
-                    }
+                    item.EnemySets.SetTo(
+                        rhs.EnemySets
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2672,22 +2625,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)MediaLocationController_FieldIndex.LocationSets);
                 try
                 {
-                    if ((rhs.LocationSets != null))
-                    {
-                        item.LocationSets = 
-                            rhs.LocationSets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<MediaLocationControllerLocationSet>();
-                    }
-                    else
-                    {
-                        item.LocationSets = null;
-                    }
+                    item.LocationSets.SetTo(
+                        rhs.LocationSets
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2704,22 +2644,9 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)MediaLocationController_FieldIndex.BattleSets);
                 try
                 {
-                    if ((rhs.BattleSets != null))
-                    {
-                        item.BattleSets = 
-                            rhs.BattleSets
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<MediaLocationControllerBattleSet>();
-                    }
-                    else
-                    {
-                        item.BattleSets = null;
-                    }
+                    item.BattleSets.SetTo(
+                        rhs.BattleSets
+                            .Select(b => (IFormLinkGetter<IMediaSetGetter>)new FormLink<IMediaSetGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2912,18 +2839,19 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.NAM1,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown,
+                item: item.NAM2,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2));
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.Unknown2,
+                item: item.NAM3,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM3));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -2941,71 +2869,65 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.RetriggerDelay,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM7));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMediaLocationControllerMediaSetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.NeutralSets,
-                transl: (MutagenWriter subWriter, IMediaLocationControllerMediaSetGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((MediaLocationControllerMediaSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.HNAM));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMediaLocationControllerAllySetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AllySets,
-                transl: (MutagenWriter subWriter, IMediaLocationControllerAllySetGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((MediaLocationControllerAllySetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMediaLocationControllerFriendSetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.FriendSets,
-                transl: (MutagenWriter subWriter, IMediaLocationControllerFriendSetGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((MediaLocationControllerFriendSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.XNAM));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMediaLocationControllerEnemySetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.EnemySets,
-                transl: (MutagenWriter subWriter, IMediaLocationControllerEnemySetGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((MediaLocationControllerEnemySetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.YNAM));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMediaLocationControllerLocationSetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LocationSets,
-                transl: (MutagenWriter subWriter, IMediaLocationControllerLocationSetGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((MediaLocationControllerLocationSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.LNAM));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMediaLocationControllerBattleSetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.BattleSets,
-                transl: (MutagenWriter subWriter, IMediaLocationControllerBattleSetGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMediaSetGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((MediaLocationControllerBattleSetBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.GNAM));
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3088,6 +3010,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)MediaLocationController_FieldIndex.Name;
@@ -3095,20 +3019,20 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.NAM1 = frame.ReadUInt32();
                     return (int)MediaLocationController_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = frame.ReadUInt32();
-                    return (int)MediaLocationController_FieldIndex.Unknown;
+                    item.NAM2 = frame.ReadUInt32();
+                    return (int)MediaLocationController_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown2 = frame.ReadUInt32();
-                    return (int)MediaLocationController_FieldIndex.Unknown2;
+                    item.NAM3 = frame.ReadUInt32();
+                    return (int)MediaLocationController_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -3136,68 +3060,56 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    item.NeutralSets = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MediaLocationControllerMediaSet>.Instance.Parse(
+                    item.NeutralSets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MediaLocationControllerMediaSet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: MediaLocationControllerMediaSet.TryCreateFromBinary)
-                        .CastExtendedList<MediaLocationControllerMediaSet>();
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.HNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MediaLocationController_FieldIndex.NeutralSets;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    item.AllySets = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MediaLocationControllerAllySet>.Instance.Parse(
+                    item.AllySets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MediaLocationControllerAllySet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: MediaLocationControllerAllySet.TryCreateFromBinary)
-                        .CastExtendedList<MediaLocationControllerAllySet>();
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ZNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MediaLocationController_FieldIndex.AllySets;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    item.FriendSets = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MediaLocationControllerFriendSet>.Instance.Parse(
+                    item.FriendSets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MediaLocationControllerFriendSet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: MediaLocationControllerFriendSet.TryCreateFromBinary)
-                        .CastExtendedList<MediaLocationControllerFriendSet>();
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.XNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MediaLocationController_FieldIndex.FriendSets;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    item.EnemySets = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MediaLocationControllerEnemySet>.Instance.Parse(
+                    item.EnemySets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MediaLocationControllerEnemySet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: MediaLocationControllerEnemySet.TryCreateFromBinary)
-                        .CastExtendedList<MediaLocationControllerEnemySet>();
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.YNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MediaLocationController_FieldIndex.EnemySets;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    item.LocationSets = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MediaLocationControllerLocationSet>.Instance.Parse(
+                    item.LocationSets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MediaLocationControllerLocationSet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: MediaLocationControllerLocationSet.TryCreateFromBinary)
-                        .CastExtendedList<MediaLocationControllerLocationSet>();
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.LNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MediaLocationController_FieldIndex.LocationSets;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    item.BattleSets = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MediaLocationControllerBattleSet>.Instance.Parse(
+                    item.BattleSets.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMediaSetGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: MediaLocationControllerBattleSet_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: MediaLocationControllerBattleSet.TryCreateFromBinary)
-                        .CastExtendedList<MediaLocationControllerBattleSet>();
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.GNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MediaLocationController_FieldIndex.BattleSets;
                 }
                 case RecordTypeInts.RNAM:
@@ -3273,23 +3185,27 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         #region NAM1
         private int? _NAM1Location;
-        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> NAM1 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _NAM1Location);
+        public UInt32? NAM1 => _NAM1Location.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM1Location.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region Unknown
-        private int? _UnknownLocation;
-        public UInt32? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnknownLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region NAM2
+        private int? _NAM2Location;
+        public UInt32? NAM2 => _NAM2Location.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM2Location.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region Unknown2
-        private int? _Unknown2Location;
-        public UInt32? Unknown2 => _Unknown2Location.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _Unknown2Location.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region NAM3
+        private int? _NAM3Location;
+        public UInt32? NAM3 => _NAM3Location.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM3Location.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         #region LocationDelay
         private int? _LocationDelayLocation;
@@ -3307,12 +3223,12 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _RetriggerDelayLocation;
         public Single? RetriggerDelay => _RetriggerDelayLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RetriggerDelayLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        public IReadOnlyList<IMediaLocationControllerMediaSetGetter>? NeutralSets { get; private set; }
-        public IReadOnlyList<IMediaLocationControllerAllySetGetter>? AllySets { get; private set; }
-        public IReadOnlyList<IMediaLocationControllerFriendSetGetter>? FriendSets { get; private set; }
-        public IReadOnlyList<IMediaLocationControllerEnemySetGetter>? EnemySets { get; private set; }
-        public IReadOnlyList<IMediaLocationControllerLocationSetGetter>? LocationSets { get; private set; }
-        public IReadOnlyList<IMediaLocationControllerBattleSetGetter>? BattleSets { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> NeutralSets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> AllySets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> FriendSets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> EnemySets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> LocationSets { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<IMediaSetGetter>> BattleSets { get; private set; } = [];
         #region ConditionalFaction
         private int? _ConditionalFactionLocation;
         public IFormLinkNullableGetter<IFactionGetter> ConditionalFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _ConditionalFactionLocation);
@@ -3402,13 +3318,13 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _UnknownLocation = (stream.Position - offset);
-                    return (int)MediaLocationController_FieldIndex.Unknown;
+                    _NAM2Location = (stream.Position - offset);
+                    return (int)MediaLocationController_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _Unknown2Location = (stream.Position - offset);
-                    return (int)MediaLocationController_FieldIndex.Unknown2;
+                    _NAM3Location = (stream.Position - offset);
+                    return (int)MediaLocationController_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -3432,92 +3348,86 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this.NeutralSets = BinaryOverlayList.FactoryByArray<IMediaLocationControllerMediaSetGetter>(
+                    this.NeutralSets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => MediaLocationControllerMediaSetBinaryOverlay.MediaLocationControllerMediaSetFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: MediaLocationControllerMediaSet_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.HNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)MediaLocationController_FieldIndex.NeutralSets;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    this.AllySets = BinaryOverlayList.FactoryByArray<IMediaLocationControllerAllySetGetter>(
+                    this.AllySets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => MediaLocationControllerAllySetBinaryOverlay.MediaLocationControllerAllySetFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: MediaLocationControllerAllySet_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.ZNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)MediaLocationController_FieldIndex.AllySets;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.FriendSets = BinaryOverlayList.FactoryByArray<IMediaLocationControllerFriendSetGetter>(
+                    this.FriendSets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => MediaLocationControllerFriendSetBinaryOverlay.MediaLocationControllerFriendSetFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: MediaLocationControllerFriendSet_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.XNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)MediaLocationController_FieldIndex.FriendSets;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    this.EnemySets = BinaryOverlayList.FactoryByArray<IMediaLocationControllerEnemySetGetter>(
+                    this.EnemySets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => MediaLocationControllerEnemySetBinaryOverlay.MediaLocationControllerEnemySetFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: MediaLocationControllerEnemySet_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.YNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)MediaLocationController_FieldIndex.EnemySets;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    this.LocationSets = BinaryOverlayList.FactoryByArray<IMediaLocationControllerLocationSetGetter>(
+                    this.LocationSets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => MediaLocationControllerLocationSetBinaryOverlay.MediaLocationControllerLocationSetFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: MediaLocationControllerLocationSet_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.LNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)MediaLocationController_FieldIndex.LocationSets;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    this.BattleSets = BinaryOverlayList.FactoryByArray<IMediaLocationControllerBattleSetGetter>(
+                    this.BattleSets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMediaSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => MediaLocationControllerBattleSetBinaryOverlay.MediaLocationControllerBattleSetFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMediaSetGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: MediaLocationControllerBattleSet_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.GNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)MediaLocationController_FieldIndex.BattleSets;
                 }
                 case RecordTypeInts.RNAM:

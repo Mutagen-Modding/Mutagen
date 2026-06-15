@@ -99,6 +99,7 @@
       <Group name="Casinos" refName="Casino" />
       <Group name="LoadScreenTypes" refName="LoadScreenType" />
       <Group name="MediaSets" refName="MediaSet" />
+      <Group name="MediaLocationControllers" refName="MediaLocationController" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

@@ -450,7 +450,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("CHIP"),
             new RecordType("CSNO"),
             new RecordType("LSCT"),
-            new RecordType("MSET"));
+            new RecordType("MSET"),
+            new RecordType("ALOC"));
         return ret;
     }
 }

@@ -3,52 +3,34 @@
   <Object name="MediaLocationController" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="ALOC">
     <Fields>
-      <String name="Name" recordType="FULL" />
-      <FormLink name="NAM1" recordType="NAM1" refName="Fallout3MajorRecord" />
-      <UInt32 name="Unknown" recordType="NAM2" />
-      <UInt32 name="Unknown2" recordType="NAM3" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <UInt32 name="NAM2" recordType="NAM2" />
+      <UInt32 name="NAM3" recordType="NAM3" />
       <Float name="LocationDelay" recordType="NAM4" />
       <UInt32 name="DayStart" recordType="NAM5" />
       <UInt32 name="NightStart" recordType="NAM6" />
       <Float name="RetriggerDelay" recordType="NAM7" />
-      <RefList name="NeutralSets" refName="MediaLocationControllerMediaSet" recordType="HNAM" />
-      <RefList name="AllySets" refName="MediaLocationControllerAllySet" recordType="ZNAM" />
-      <RefList name="FriendSets" refName="MediaLocationControllerFriendSet" recordType="XNAM" />
-      <RefList name="EnemySets" refName="MediaLocationControllerEnemySet" recordType="YNAM" />
-      <RefList name="LocationSets" refName="MediaLocationControllerLocationSet" recordType="LNAM" />
-      <RefList name="BattleSets" refName="MediaLocationControllerBattleSet" recordType="GNAM" />
+      <List name="NeutralSets">
+        <FormLink refName="MediaSet" recordType="HNAM" />
+      </List>
+      <List name="AllySets">
+        <FormLink refName="MediaSet" recordType="ZNAM" />
+      </List>
+      <List name="FriendSets">
+        <FormLink refName="MediaSet" recordType="XNAM" />
+      </List>
+      <List name="EnemySets">
+        <FormLink refName="MediaSet" recordType="YNAM" />
+      </List>
+      <List name="LocationSets">
+        <FormLink refName="MediaSet" recordType="LNAM" />
+      </List>
+      <List name="BattleSets">
+        <FormLink refName="MediaSet" recordType="GNAM" />
+      </List>
       <FormLink name="ConditionalFaction" recordType="RNAM" refName="Faction" />
       <UInt32 name="FNAM" recordType="FNAM" />
-    </Fields>
-  </Object>
-  <Object name="MediaLocationControllerMediaSet" objType="Subrecord" recordType="HNAM">
-    <Fields>
-      <FormLink name="MediaSet" refName="MediaSet" />
-    </Fields>
-  </Object>
-  <Object name="MediaLocationControllerAllySet" objType="Subrecord" recordType="ZNAM">
-    <Fields>
-      <FormLink name="MediaSet" refName="MediaSet" />
-    </Fields>
-  </Object>
-  <Object name="MediaLocationControllerFriendSet" objType="Subrecord" recordType="XNAM">
-    <Fields>
-      <FormLink name="MediaSet" refName="MediaSet" />
-    </Fields>
-  </Object>
-  <Object name="MediaLocationControllerEnemySet" objType="Subrecord" recordType="YNAM">
-    <Fields>
-      <FormLink name="MediaSet" refName="MediaSet" />
-    </Fields>
-  </Object>
-  <Object name="MediaLocationControllerLocationSet" objType="Subrecord" recordType="LNAM">
-    <Fields>
-      <FormLink name="MediaSet" refName="MediaSet" />
-    </Fields>
-  </Object>
-  <Object name="MediaLocationControllerBattleSet" objType="Subrecord" recordType="GNAM">
-    <Fields>
-      <FormLink name="MediaSet" refName="MediaSet" />
     </Fields>
   </Object>
 </Loqui>

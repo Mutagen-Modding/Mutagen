@@ -1386,24 +1386,6 @@
     <Compile Include="Records\Major Records\MediaLocationController_Generated.cs">
       <DependentUpon>MediaLocationController.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MediaLocationControllerMediaSet_Generated.cs">
-      <DependentUpon>MediaLocationController.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MediaLocationControllerAllySet_Generated.cs">
-      <DependentUpon>MediaLocationController.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MediaLocationControllerFriendSet_Generated.cs">
-      <DependentUpon>MediaLocationController.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MediaLocationControllerEnemySet_Generated.cs">
-      <DependentUpon>MediaLocationController.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MediaLocationControllerLocationSet_Generated.cs">
-      <DependentUpon>MediaLocationController.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MediaLocationControllerBattleSet_Generated.cs">
-      <DependentUpon>MediaLocationController.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MediaSet_Generated.cs">
       <DependentUpon>MediaSet.xml</DependentUpon>
     </Compile>
