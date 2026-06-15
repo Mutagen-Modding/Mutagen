@@ -151,6 +151,7 @@ namespace Mutagen.Bethesda.Fallout3
             _CasinoChips_Object = new Fallout3Group<CasinoChip>(this);
             _Casinos_Object = new Fallout3Group<Casino>(this);
             _LoadScreenTypes_Object = new Fallout3Group<LoadScreenType>(this);
+            _MediaSets_Object = new Fallout3Group<MediaSet>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -800,6 +801,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ILoadScreenTypeGetter> IFallout3ModGetter.LoadScreenTypes => _LoadScreenTypes_Object;
         #endregion
+        #region MediaSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<MediaSet> _MediaSets_Object;
+        public Fallout3Group<MediaSet> MediaSets => _MediaSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IMediaSetGetter> IFallout3ModGetter.MediaSets => _MediaSets_Object;
+        #endregion
 
         #region To String
 
@@ -931,6 +939,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CasinoChips = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Casinos = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.LoadScreenTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.MediaSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1025,7 +1034,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem RecipeCategories,
                 TItem CasinoChips,
                 TItem Casinos,
-                TItem LoadScreenTypes)
+                TItem LoadScreenTypes,
+                TItem MediaSets)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1119,6 +1129,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CasinoChips = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CasinoChips, new Fallout3Group.Mask<TItem>(CasinoChips));
                 this.Casinos = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Casinos, new Fallout3Group.Mask<TItem>(Casinos));
                 this.LoadScreenTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LoadScreenTypes, new Fallout3Group.Mask<TItem>(LoadScreenTypes));
+                this.MediaSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MediaSets, new Fallout3Group.Mask<TItem>(MediaSets));
             }
 
             #pragma warning disable CS8618
@@ -1222,6 +1233,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CasinoChips { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Casinos { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LoadScreenTypes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MediaSets { get; set; }
             #endregion
 
             #region Equals
@@ -1326,6 +1338,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CasinoChips, rhs.CasinoChips)) return false;
                 if (!object.Equals(this.Casinos, rhs.Casinos)) return false;
                 if (!object.Equals(this.LoadScreenTypes, rhs.LoadScreenTypes)) return false;
+                if (!object.Equals(this.MediaSets, rhs.MediaSets)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1423,6 +1436,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CasinoChips);
                 hash.Add(this.Casinos);
                 hash.Add(this.LoadScreenTypes);
+                hash.Add(this.MediaSets);
                 return hash.ToHashCode();
             }
 
@@ -1891,6 +1905,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.LoadScreenTypes.Overall)) return false;
                     if (this.LoadScreenTypes.Specific != null && !this.LoadScreenTypes.Specific.All(eval)) return false;
                 }
+                if (MediaSets != null)
+                {
+                    if (!eval(this.MediaSets.Overall)) return false;
+                    if (this.MediaSets.Specific != null && !this.MediaSets.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2358,6 +2377,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.LoadScreenTypes.Overall)) return true;
                     if (this.LoadScreenTypes.Specific != null && this.LoadScreenTypes.Specific.Any(eval)) return true;
                 }
+                if (MediaSets != null)
+                {
+                    if (eval(this.MediaSets.Overall)) return true;
+                    if (this.MediaSets.Specific != null && this.MediaSets.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2464,6 +2488,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.CasinoChips = this.CasinoChips == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CasinoChips.Overall), this.CasinoChips.Specific?.Translate(eval));
                 obj.Casinos = this.Casinos == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Casinos.Overall), this.Casinos.Specific?.Translate(eval));
                 obj.LoadScreenTypes = this.LoadScreenTypes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LoadScreenTypes.Overall), this.LoadScreenTypes.Specific?.Translate(eval));
+                obj.MediaSets = this.MediaSets == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MediaSets.Overall), this.MediaSets.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2850,6 +2875,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         LoadScreenTypes?.Print(sb);
                     }
+                    if (printMask?.MediaSets?.Overall ?? true)
+                    {
+                        MediaSets?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -2966,6 +2995,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CasinoChip.ErrorMask>?>? CasinoChips;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Casino.ErrorMask>?>? Casinos;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreenType.ErrorMask>?>? LoadScreenTypes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<MediaSet.ErrorMask>?>? MediaSets;
             #endregion
 
             #region IErrorMask
@@ -3158,6 +3188,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Casinos;
                     case Fallout3Mod_FieldIndex.LoadScreenTypes:
                         return LoadScreenTypes;
+                    case Fallout3Mod_FieldIndex.MediaSets:
+                        return MediaSets;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3443,6 +3475,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.LoadScreenTypes:
                         this.LoadScreenTypes = new MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreenType.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.MediaSets:
+                        this.MediaSets = new MaskItem<Exception?, Fallout3Group.ErrorMask<MediaSet.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3730,6 +3765,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.LoadScreenTypes:
                         this.LoadScreenTypes = (MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreenType.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.MediaSets:
+                        this.MediaSets = (MaskItem<Exception?, Fallout3Group.ErrorMask<MediaSet.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3830,6 +3868,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CasinoChips != null) return true;
                 if (Casinos != null) return true;
                 if (LoadScreenTypes != null) return true;
+                if (MediaSets != null) return true;
                 return false;
             }
             #endregion
@@ -3947,6 +3986,7 @@ namespace Mutagen.Bethesda.Fallout3
                 CasinoChips?.Print(sb);
                 Casinos?.Print(sb);
                 LoadScreenTypes?.Print(sb);
+                MediaSets?.Print(sb);
             }
             #endregion
 
@@ -4047,6 +4087,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CasinoChips = this.CasinoChips.Combine(rhs.CasinoChips, (l, r) => l.Combine(r));
                 ret.Casinos = this.Casinos.Combine(rhs.Casinos, (l, r) => l.Combine(r));
                 ret.LoadScreenTypes = this.LoadScreenTypes.Combine(rhs.LoadScreenTypes, (l, r) => l.Combine(r));
+                ret.MediaSets = this.MediaSets.Combine(rhs.MediaSets, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4162,6 +4203,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<CasinoChip.TranslationMask>? CasinoChips;
             public Fallout3Group.TranslationMask<Casino.TranslationMask>? Casinos;
             public Fallout3Group.TranslationMask<LoadScreenType.TranslationMask>? LoadScreenTypes;
+            public Fallout3Group.TranslationMask<MediaSet.TranslationMask>? MediaSets;
             #endregion
 
             #region Ctors
@@ -4278,6 +4320,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CasinoChips != null ? CasinoChips.OnOverall : DefaultOn, CasinoChips?.GetCrystal()));
                 ret.Add((Casinos != null ? Casinos.OnOverall : DefaultOn, Casinos?.GetCrystal()));
                 ret.Add((LoadScreenTypes != null ? LoadScreenTypes.OnOverall : DefaultOn, LoadScreenTypes?.GetCrystal()));
+                ret.Add((MediaSets != null ? MediaSets.OnOverall : DefaultOn, MediaSets?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4428,6 +4471,7 @@ namespace Mutagen.Bethesda.Fallout3
             _CasinoChips_Object = new Fallout3Group<CasinoChip>(this);
             _Casinos_Object = new Fallout3Group<Casino>(this);
             _LoadScreenTypes_Object = new Fallout3Group<LoadScreenType>(this);
+            _MediaSets_Object = new Fallout3Group<MediaSet>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4801,6 +4845,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.LoadScreenTypes.RecordCache.Set(rhsMod.LoadScreenTypes.RecordCache.Items);
             }
+            if (mask?.MediaSets ?? true)
+            {
+                this.MediaSets.RecordCache.Set(rhsMod.MediaSets.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5155,6 +5203,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<CasinoChip> CasinoChips { get; }
         new Fallout3Group<Casino> Casinos { get; }
         new Fallout3Group<LoadScreenType> LoadScreenTypes { get; }
+        new Fallout3Group<MediaSet> MediaSets { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5266,6 +5315,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ICasinoChipGetter> CasinoChips { get; }
         IFallout3GroupGetter<ICasinoGetter> Casinos { get; }
         IFallout3GroupGetter<ILoadScreenTypeGetter> LoadScreenTypes { get; }
+        IFallout3GroupGetter<IMediaSetGetter> MediaSets { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -5908,6 +5958,7 @@ namespace Mutagen.Bethesda.Fallout3
         CasinoChips = 89,
         Casinos = 90,
         LoadScreenTypes = 91,
+        MediaSets = 92,
     }
     #endregion
 
@@ -5918,9 +5969,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 92;
+        public const ushort AdditionalFieldCount = 93;
 
-        public const ushort FieldCount = 92;
+        public const ushort FieldCount = 93;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6077,6 +6128,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CasinoChips.Clear();
             item.Casinos.Clear();
             item.LoadScreenTypes.Clear();
+            item.MediaSets.Clear();
         }
         
         #region Mutagen
@@ -6157,6 +6209,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Recipes.RemapLinks(mapping);
             obj.CasinoChips.RemapLinks(mapping);
             obj.Casinos.RemapLinks(mapping);
+            obj.MediaSets.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6309,6 +6362,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.CasinoChips.Remove(keys);
             obj.Casinos.Remove(keys);
             obj.LoadScreenTypes.Remove(keys);
+            obj.MediaSets.Remove(keys);
         }
         
         public void Remove(
@@ -7040,6 +7094,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "MediaSet":
+                case "IMediaSetGetter":
+                case "IMediaSet":
+                case "IMediaSetInternal":
+                    obj.MediaSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "MenuIcon":
                 case "IMenuIconGetter":
                 case "IMenuIcon":
@@ -7728,6 +7790,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.CasinoChips = MaskItemExt.Factory(item.CasinoChips.GetEqualsMask(rhs.CasinoChips, include), include);
             ret.Casinos = MaskItemExt.Factory(item.Casinos.GetEqualsMask(rhs.Casinos, include), include);
             ret.LoadScreenTypes = MaskItemExt.Factory(item.LoadScreenTypes.GetEqualsMask(rhs.LoadScreenTypes, include), include);
+            ret.MediaSets = MaskItemExt.Factory(item.MediaSets.GetEqualsMask(rhs.MediaSets, include), include);
         }
         
         public string Print(
@@ -8139,6 +8202,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.LoadScreenTypes?.Overall ?? true)
             {
                 item.LoadScreenTypes?.Print(sb, "LoadScreenTypes");
+            }
+            if (printMask?.MediaSets?.Overall ?? true)
+            {
+                item.MediaSets?.Print(sb, "MediaSets");
             }
         }
         
@@ -8885,6 +8952,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isLoadScreenTypesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MediaSets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MediaSets, rhs.MediaSets, out var lhsMediaSets, out var rhsMediaSets, out var isMediaSetsEqual))
+                {
+                    if (!object.Equals(lhsMediaSets, rhsMediaSets)) return false;
+                }
+                else if (!isMediaSetsEqual) return false;
+            }
             return true;
         }
         
@@ -8983,6 +9058,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.CasinoChips);
             hash.Add(item.Casinos);
             hash.Add(item.LoadScreenTypes);
+            hash.Add(item.MediaSets);
             return hash.ToHashCode();
         }
         
@@ -9483,6 +9559,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ILoadScreenType":
                 case "ILoadScreenTypeInternal":
                     return obj.LoadScreenTypes;
+                case "MediaSet":
+                case "IMediaSetGetter":
+                case "IMediaSet":
+                case "IMediaSetInternal":
+                    return obj.MediaSets;
                 default:
                     return null;
             }
@@ -9500,7 +9581,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[91];
+            Stream[] outputStreams = new Stream[92];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -9593,6 +9674,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.CasinoChips, 88, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Casinos, 89, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.LoadScreenTypes, 90, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MediaSets, 91, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -9729,6 +9811,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.CasinoChips.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Casinos.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.LoadScreenTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MediaSets.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10043,6 +10126,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Casinos.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MediaSets.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -10422,6 +10509,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.LoadScreenTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MediaSets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11002,6 +11093,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
                     foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MediaSet":
+                case "IMediaSetGetter":
+                case "IMediaSet":
+                case "IMediaSetInternal":
+                    foreach (var item in obj.MediaSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11948,6 +12048,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.MagicEffects,
                 groupGetter: (m) => m.MagicEffects))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MediaSet, IMediaSetGetter>(
+                srcGroup: obj.MediaSets,
+                type: typeof(IMediaSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MediaSets,
+                groupGetter: (m) => m.MediaSets))
             {
                 yield return item;
             }
@@ -13154,6 +13263,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.MagicEffects,
                         groupGetter: (m) => m.MagicEffects))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MediaSet":
+                case "IMediaSetGetter":
+                case "IMediaSet":
+                case "IMediaSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MediaSet, IMediaSetGetter>(
+                        srcGroup: obj.MediaSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MediaSets,
+                        groupGetter: (m) => m.MediaSets))
                     {
                         yield return item;
                     }
@@ -15838,6 +15961,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MediaSets) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.MediaSets);
+                try
+                {
+                    item.MediaSets.DeepCopyIn(
+                        rhs: rhs.MediaSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.MediaSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -16032,6 +16175,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool CasinoChips;
         public bool Casinos;
         public bool LoadScreenTypes;
+        public bool MediaSets;
         public GroupMask()
         {
         }
@@ -16128,6 +16272,7 @@ namespace Mutagen.Bethesda.Fallout3
             CasinoChips = defaultValue;
             Casinos = defaultValue;
             LoadScreenTypes = defaultValue;
+            MediaSets = defaultValue;
         }
     }
 
@@ -17187,6 +17332,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)LoadScreenTypesItem).BinaryWriteTranslator).Write<ILoadScreenTypeGetter>(
                         item: LoadScreenTypesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MediaSets ?? true)
+            {
+                var MediaSetsItem = item.MediaSets;
+                if (MediaSetsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MediaSetsItem).BinaryWriteTranslator).Write<IMediaSetGetter>(
+                        item: MediaSetsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18535,6 +18691,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.LoadScreenTypes;
                 }
+                case RecordTypeInts.MSET:
+                {
+                    if (importMask?.MediaSets ?? true)
+                    {
+                        item.MediaSets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.MediaSets;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19155,6 +19325,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<ILoadScreenTypeGetter>? _LoadScreenTypes => _LoadScreenTypesLocations != null ? Fallout3GroupBinaryOverlay<ILoadScreenTypeGetter>.Fallout3GroupFactory(_stream, _LoadScreenTypesLocations, _package) : default;
         public IFallout3GroupGetter<ILoadScreenTypeGetter> LoadScreenTypes => _LoadScreenTypes ?? new Fallout3Group<LoadScreenType>(this);
         #endregion
+        #region MediaSets
+        private List<RangeInt64>? _MediaSetsLocations;
+        private IFallout3GroupGetter<IMediaSetGetter>? _MediaSets => _MediaSetsLocations != null ? Fallout3GroupBinaryOverlay<IMediaSetGetter>.Fallout3GroupFactory(_stream, _MediaSetsLocations, _package) : default;
+        public IFallout3GroupGetter<IMediaSetGetter> MediaSets => _MediaSets ?? new Fallout3Group<MediaSet>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -19774,6 +19949,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _LoadScreenTypesLocations ??= new();
                     _LoadScreenTypesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.LoadScreenTypes;
+                }
+                case RecordTypeInts.MSET:
+                {
+                    _MediaSetsLocations ??= new();
+                    _MediaSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.MediaSets;
                 }
                 default:
                     return default(int?);

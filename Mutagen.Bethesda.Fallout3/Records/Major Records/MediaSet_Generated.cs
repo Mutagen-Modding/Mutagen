@@ -24,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -57,16 +58,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMediaSetGetter.Name => this.Name;
+        ITranslatedStringGetter? IMediaSetGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -169,9 +188,9 @@ namespace Mutagen.Bethesda.Fallout3
         Single? IMediaSetGetter.NightInnerBoundaryPercent => this.NightInnerBoundaryPercent;
         #endregion
         #region EnableFlags
-        public Byte? EnableFlags { get; set; }
+        public MediaSetEnableFlag? EnableFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? IMediaSetGetter.EnableFlags => this.EnableFlags;
+        MediaSetEnableFlag? IMediaSetGetter.EnableFlags => this.EnableFlags;
         #endregion
         #region WaitTimeMinTimeOnDaytimeMin
         public Single? WaitTimeMinTimeOnDaytimeMin { get; set; }
@@ -1444,12 +1463,14 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IMediaSetInternal>,
         IMediaSetGetter,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         new MediaSetType? Type { get; set; }
         new String? LoopBattleDayOuter { get; set; }
         new String? ExploreDayMiddle { get; set; }
@@ -1469,7 +1490,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Single? NightOuterBoundaryPercent { get; set; }
         new Single? NightMiddleBoundaryPercent { get; set; }
         new Single? NightInnerBoundaryPercent { get; set; }
-        new Byte? EnableFlags { get; set; }
+        new MediaSetEnableFlag? EnableFlags { get; set; }
         new Single? WaitTimeMinTimeOnDaytimeMin { get; set; }
         new Single? LoopFadeOutCrossfadeOverlapNighttimeMin { get; set; }
         new Single? RecoveryTimeCrossfadeTimeDaytimeMax { get; set; }
@@ -1494,14 +1515,16 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IMediaSetGetter>,
         IMapsToGetter<IMediaSetGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => MediaSet_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         MediaSetType? Type { get; }
         String? LoopBattleDayOuter { get; }
@@ -1522,7 +1545,7 @@ namespace Mutagen.Bethesda.Fallout3
         Single? NightOuterBoundaryPercent { get; }
         Single? NightMiddleBoundaryPercent { get; }
         Single? NightInnerBoundaryPercent { get; }
-        Byte? EnableFlags { get; }
+        MediaSetEnableFlag? EnableFlags { get; }
         Single? WaitTimeMinTimeOnDaytimeMin { get; }
         Single? LoopFadeOutCrossfadeOverlapNighttimeMin { get; }
         Single? RecoveryTimeCrossfadeTimeDaytimeMax { get; }
@@ -1965,7 +1988,7 @@ namespace Mutagen.Bethesda.Fallout3
             MediaSet.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
             ret.LoopBattleDayOuter = string.Equals(item.LoopBattleDayOuter, rhs.LoopBattleDayOuter);
             ret.ExploreDayMiddle = string.Equals(item.ExploreDayMiddle, rhs.ExploreDayMiddle);
@@ -2232,7 +2255,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)MediaSet_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MediaSet_FieldIndex.Type) ?? true))
             {
@@ -2611,7 +2634,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)MediaSet_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)MediaSet_FieldIndex.Type) ?? true))
             {
@@ -2901,7 +2924,8 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             EnumBinaryTranslation<MediaSetType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
@@ -2985,9 +3009,10 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.NightInnerBoundaryPercent,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.EnableFlags,
+            EnumBinaryTranslation<MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.EnableFlags,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -3090,6 +3115,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)MediaSet_FieldIndex.Name;
@@ -3231,7 +3258,9 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnableFlags = frame.ReadUInt8();
+                    item.EnableFlags = EnumBinaryTranslation<MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)MediaSet_FieldIndex.EnableFlags;
                 }
                 case RecordTypeInts.DNAM:
@@ -3337,10 +3366,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         #region Type
@@ -3421,7 +3454,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region EnableFlags
         private int? _EnableFlagsLocation;
-        public Byte? EnableFlags => _EnableFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnableFlagsLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public MediaSetEnableFlag? EnableFlags => EnumBinaryTranslation<MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EnableFlagsLocation, _recordData, _package, 1);
         #endregion
         #region WaitTimeMinTimeOnDaytimeMin
         private int? _WaitTimeMinTimeOnDaytimeMinLocation;

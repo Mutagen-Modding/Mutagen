@@ -3,7 +3,7 @@
   <Object name="MediaSet" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="MSET">
     <Fields>
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="Type" enumName="MediaSetType" recordType="NAM1" byteLength="4" />
       <String name="LoopBattleDayOuter" recordType="NAM2" />
       <String name="ExploreDayMiddle" recordType="NAM3" />
@@ -23,7 +23,7 @@
       <Float name="NightOuterBoundaryPercent" recordType="MNAM" />
       <Float name="NightMiddleBoundaryPercent" recordType="NNAM" />
       <Float name="NightInnerBoundaryPercent" recordType="ONAM" />
-      <UInt8 name="EnableFlags" recordType="PNAM" />
+      <Enum name="EnableFlags" enumName="MediaSetEnableFlag" recordType="PNAM" byteLength="1" />
       <Float name="WaitTimeMinTimeOnDaytimeMin" recordType="DNAM" />
       <Float name="LoopFadeOutCrossfadeOverlapNighttimeMin" recordType="ENAM" />
       <Float name="RecoveryTimeCrossfadeTimeDaytimeMax" recordType="FNAM" />

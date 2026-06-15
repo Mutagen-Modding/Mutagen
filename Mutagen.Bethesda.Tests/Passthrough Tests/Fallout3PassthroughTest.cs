@@ -449,7 +449,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("RCCT"),
             new RecordType("CHIP"),
             new RecordType("CSNO"),
-            new RecordType("LSCT"));
+            new RecordType("LSCT"),
+            new RecordType("MSET"));
         return ret;
     }
 }
