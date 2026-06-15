@@ -91,7 +91,7 @@
       <String name="FirstUnusedStringParameter" nullable="true" binary="NoGeneration" />
       <Int32 name="SecondParameter" />
       <String name="SecondUnusedStringParameter" nullable="true" binary="NoGeneration" />
-    </Fields>dIt
+    </Fields>
   </Object>
   <Object name="GetValueConditionData" objType="Subrecord" baseClass="ConditionData" binaryOverlay="NoGeneration">
     <Fields>
