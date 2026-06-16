@@ -24,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -57,16 +58,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICaravanDeckGetter.Name => this.Name;
+        ITranslatedStringGetter? ICaravanDeckGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -75,15 +94,15 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Cards
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<CaravanDeckCard> _Cards = new ExtendedList<CaravanDeckCard>();
-        public ExtendedList<CaravanDeckCard> Cards
+        private ExtendedList<IFormLinkGetter<ICaravanCardGetter>> _Cards = new ExtendedList<IFormLinkGetter<ICaravanCardGetter>>();
+        public ExtendedList<IFormLinkGetter<ICaravanCardGetter>> Cards
         {
             get => this._Cards;
             init => this._Cards = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ICaravanDeckCardGetter> ICaravanDeckGetter.Cards => _Cards;
+        IReadOnlyList<IFormLinkGetter<ICaravanCardGetter>> ICaravanDeckGetter.Cards => _Cards;
         #endregion
 
         #endregion
@@ -118,7 +137,7 @@ namespace Mutagen.Bethesda.Fallout3
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Cards = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CaravanDeckCard.Mask<TItem>?>>?>(initialValue, []);
+                this.Cards = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Count = initialValue;
             }
 
@@ -143,7 +162,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Name = Name;
-                this.Cards = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CaravanDeckCard.Mask<TItem>?>>?>(Cards, []);
+                this.Cards = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Cards, []);
                 this.Count = Count;
             }
 
@@ -157,7 +176,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public TItem Name;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CaravanDeckCard.Mask<TItem>?>>?>? Cards;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Cards;
             public TItem Count;
             #endregion
 
@@ -201,8 +220,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.Cards.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -223,8 +241,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         foreach (var item in this.Cards.Specific)
                         {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                            if (!eval(item.Value)) return false;
                         }
                     }
                 }
@@ -247,16 +264,15 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Name = eval(this.Name);
                 if (Cards != null)
                 {
-                    obj.Cards = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CaravanDeckCard.Mask<R>?>>?>(eval(this.Cards.Overall), []);
+                    obj.Cards = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Cards.Overall), []);
                     if (Cards.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, CaravanDeckCard.Mask<R>?>>();
+                        var l = new List<(int Index, R Item)>();
                         obj.Cards.Specific = l;
                         foreach (var item in Cards.Specific)
                         {
-                            MaskItemIndexed<R, CaravanDeckCard.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, CaravanDeckCard.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
                         }
                     }
                 }
@@ -296,7 +312,9 @@ namespace Mutagen.Bethesda.Fallout3
                                 {
                                     using (sb.Brace())
                                     {
-                                        subItem?.Print(sb);
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
                                     }
                                 }
                             }
@@ -318,7 +336,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public Exception? Name;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CaravanDeckCard.ErrorMask?>>?>? Cards;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Cards;
             public Exception? Count;
             #endregion
 
@@ -348,7 +366,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Name = ex;
                         break;
                     case CaravanDeck_FieldIndex.Cards:
-                        this.Cards = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CaravanDeckCard.ErrorMask?>>?>(ex, null);
+                        this.Cards = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case CaravanDeck_FieldIndex.Count:
                         this.Count = ex;
@@ -368,7 +386,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Name = (Exception?)obj;
                         break;
                     case CaravanDeck_FieldIndex.Cards:
-                        this.Cards = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CaravanDeckCard.ErrorMask?>>?>)obj;
+                        this.Cards = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case CaravanDeck_FieldIndex.Count:
                         this.Count = (Exception?)obj;
@@ -426,7 +444,9 @@ namespace Mutagen.Bethesda.Fallout3
                             {
                                 using (sb.Brace())
                                 {
-                                    subItem?.Print(sb);
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
                                 }
                             }
                         }
@@ -444,7 +464,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Cards = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, CaravanDeckCard.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Cards?.Overall, rhs.Cards?.Overall), Noggog.ExceptionExt.Combine(this.Cards?.Specific, rhs.Cards?.Specific));
+                ret.Cards = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Cards?.Overall, rhs.Cards?.Overall), Noggog.ExceptionExt.Combine(this.Cards?.Specific, rhs.Cards?.Specific));
                 ret.Count = this.Count.Combine(rhs.Count);
                 return ret;
             }
@@ -469,7 +489,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             #region Members
             public bool Name;
-            public CaravanDeckCard.TranslationMask? Cards;
+            public bool Cards;
             public bool Count;
             #endregion
 
@@ -480,6 +500,7 @@ namespace Mutagen.Bethesda.Fallout3
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
+                this.Cards = defaultOn;
                 this.Count = defaultOn;
             }
 
@@ -489,7 +510,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Cards == null ? DefaultOn : !Cards.GetCrystal().CopyNothing, Cards?.GetCrystal()));
+                ret.Add((Cards, null));
                 ret.Add((Count, null));
             }
 
@@ -627,13 +648,15 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkContainer,
         ILoquiObjectSetter<ICaravanDeckInternal>,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
-        new ExtendedList<CaravanDeckCard> Cards { get; }
+        new TranslatedString? Name { get; set; }
+        new ExtendedList<IFormLinkGetter<ICaravanCardGetter>> Cards { get; }
         new UInt32? Count { get; set; }
     }
 
@@ -652,16 +675,18 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<ICaravanDeckGetter>,
         IMapsToGetter<ICaravanDeckGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => CaravanDeck_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
-        IReadOnlyList<ICaravanDeckCardGetter> Cards { get; }
+        IReadOnlyList<IFormLinkGetter<ICaravanCardGetter>> Cards { get; }
         UInt32? Count { get; }
 
     }
@@ -1022,10 +1047,10 @@ namespace Mutagen.Bethesda.Fallout3
             CaravanDeck.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Cards = item.Cards.CollectionEqualsHelper(
                 rhs.Cards,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.Count = item.Count == rhs.Count;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1091,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         using (sb.Brace())
                         {
-                            subItem?.Print(sb, "Item");
+                            sb.AppendItem(subItem.FormKey);
                         }
                     }
                 }
@@ -1153,11 +1178,11 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)CaravanDeck_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanDeck_FieldIndex.Cards) ?? true))
             {
-                if (!lhs.Cards.SequenceEqual(rhs.Cards, (l, r) => ((CaravanDeckCardCommon)((ICaravanDeckCardGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CaravanDeck_FieldIndex.Cards)))) return false;
+                if (!lhs.Cards.SequenceEqualNullable(rhs.Cards)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanDeck_FieldIndex.Count) ?? true))
             {
@@ -1229,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
-            foreach (var item in obj.Cards.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            foreach (var item in obj.Cards)
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -1331,7 +1356,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)CaravanDeck_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanDeck_FieldIndex.Cards) ?? true))
             {
@@ -1340,12 +1365,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     item.Cards.SetTo(
                         rhs.Cards
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                            .Select(b => (IFormLinkGetter<ICaravanCardGetter>)new FormLink<ICaravanCardGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1534,17 +1554,17 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ICaravanDeckCardGetter>.Instance.Write(
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICaravanCardGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Cards,
-                transl: (MutagenWriter subWriter, ICaravanDeckCardGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ICaravanCardGetter> subItem, TypedWriteParams conv) =>
                 {
-                    var Item = subItem;
-                    ((CaravanDeckCardBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
-                        translationParams: conv);
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.CARD));
                 });
             UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1623,6 +1643,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)CaravanDeck_FieldIndex.Name;
@@ -1630,11 +1652,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.CARD:
                 {
                     item.Cards.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<CaravanDeckCard>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICaravanCardGetter>>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: CaravanDeckCard_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: CaravanDeckCard.TryCreateFromBinary));
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.CARD),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)CaravanDeck_FieldIndex.Cards;
                 }
                 case RecordTypeInts.DATA:
@@ -1704,13 +1725,17 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<ICaravanDeckCardGetter> Cards { get; private set; } = [];
+        public IReadOnlyList<IFormLinkGetter<ICaravanCardGetter>> Cards { get; private set; } = [];
         #region Count
         private int? _CountLocation;
         public UInt32? Count => _CountLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CountLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
@@ -1791,17 +1816,16 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.CARD:
                 {
-                    this.Cards = BinaryOverlayList.FactoryByArray<ICaravanDeckCardGetter>(
+                    this.Cards = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ICaravanCardGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        translationParams: translationParams,
-                        getter: (s, p, recConv) => CaravanDeckCardBinaryOverlay.CaravanDeckCardFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICaravanCardGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            trigger: CaravanDeckCard_Registration.TriggerSpecs,
-                            triggersAlwaysAreNewRecords: true,
                             constants: _package.MetaData.Constants.SubConstants,
-                            skipHeader: false));
+                            trigger: RecordTypes.CARD,
+                            skipHeader: true,
+                            translationParams: translationParams));
                     return (int)CaravanDeck_FieldIndex.Cards;
                 }
                 case RecordTypeInts.DATA:

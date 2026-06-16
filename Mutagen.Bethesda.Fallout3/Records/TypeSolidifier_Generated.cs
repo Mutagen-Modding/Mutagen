@@ -348,9 +348,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CaravanDeck</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter> CaravanDeck(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter> CaravanDeck(this IEnumerable<IModListingGetter<IFallout3ModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICaravanDeckGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -360,9 +360,9 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on CaravanDeck</returns>
-        public static TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter> CaravanDeck(this IEnumerable<IFallout3ModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter> CaravanDeck(this IEnumerable<IFallout3ModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter>(
+            return new TopLevelTypedLoadOrderAccess<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<ICaravanDeckGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IFallout3Mod, IFallout3ModGetter, ICaravanDeck, ICaravanDeckGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

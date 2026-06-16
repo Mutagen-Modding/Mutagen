@@ -157,6 +157,7 @@ namespace Mutagen.Bethesda.Fallout3
             _AmmoEffects_Object = new Fallout3Group<AmmoEffect>(this);
             _CaravanCards_Object = new Fallout3Group<CaravanCard>(this);
             _CaravanMonies_Object = new Fallout3Group<CaravanMoney>(this);
+            _CaravanDecks_Object = new Fallout3Group<CaravanDeck>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -848,6 +849,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ICaravanMoneyGetter> IFallout3ModGetter.CaravanMonies => _CaravanMonies_Object;
         #endregion
+        #region CaravanDecks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<CaravanDeck> _CaravanDecks_Object;
+        public Fallout3Group<CaravanDeck> CaravanDecks => _CaravanDecks_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICaravanDeckGetter> IFallout3ModGetter.CaravanDecks => _CaravanDecks_Object;
+        #endregion
 
         #region To String
 
@@ -985,6 +993,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AmmoEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.CaravanCards = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.CaravanMonies = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.CaravanDecks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1085,7 +1094,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Challenges,
                 TItem AmmoEffects,
                 TItem CaravanCards,
-                TItem CaravanMonies)
+                TItem CaravanMonies,
+                TItem CaravanDecks)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1185,6 +1195,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.AmmoEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(AmmoEffects, new Fallout3Group.Mask<TItem>(AmmoEffects));
                 this.CaravanCards = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanCards, new Fallout3Group.Mask<TItem>(CaravanCards));
                 this.CaravanMonies = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanMonies, new Fallout3Group.Mask<TItem>(CaravanMonies));
+                this.CaravanDecks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanDecks, new Fallout3Group.Mask<TItem>(CaravanDecks));
             }
 
             #pragma warning disable CS8618
@@ -1294,6 +1305,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? AmmoEffects { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanCards { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanMonies { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanDecks { get; set; }
             #endregion
 
             #region Equals
@@ -1404,6 +1416,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.AmmoEffects, rhs.AmmoEffects)) return false;
                 if (!object.Equals(this.CaravanCards, rhs.CaravanCards)) return false;
                 if (!object.Equals(this.CaravanMonies, rhs.CaravanMonies)) return false;
+                if (!object.Equals(this.CaravanDecks, rhs.CaravanDecks)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1507,6 +1520,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.AmmoEffects);
                 hash.Add(this.CaravanCards);
                 hash.Add(this.CaravanMonies);
+                hash.Add(this.CaravanDecks);
                 return hash.ToHashCode();
             }
 
@@ -2005,6 +2019,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.CaravanMonies.Overall)) return false;
                     if (this.CaravanMonies.Specific != null && !this.CaravanMonies.Specific.All(eval)) return false;
                 }
+                if (CaravanDecks != null)
+                {
+                    if (!eval(this.CaravanDecks.Overall)) return false;
+                    if (this.CaravanDecks.Specific != null && !this.CaravanDecks.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2502,6 +2521,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.CaravanMonies.Overall)) return true;
                     if (this.CaravanMonies.Specific != null && this.CaravanMonies.Specific.Any(eval)) return true;
                 }
+                if (CaravanDecks != null)
+                {
+                    if (eval(this.CaravanDecks.Overall)) return true;
+                    if (this.CaravanDecks.Specific != null && this.CaravanDecks.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2614,6 +2638,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.AmmoEffects = this.AmmoEffects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.AmmoEffects.Overall), this.AmmoEffects.Specific?.Translate(eval));
                 obj.CaravanCards = this.CaravanCards == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanCards.Overall), this.CaravanCards.Specific?.Translate(eval));
                 obj.CaravanMonies = this.CaravanMonies == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanMonies.Overall), this.CaravanMonies.Specific?.Translate(eval));
+                obj.CaravanDecks = this.CaravanDecks == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanDecks.Overall), this.CaravanDecks.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3024,6 +3049,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         CaravanMonies?.Print(sb);
                     }
+                    if (printMask?.CaravanDecks?.Overall ?? true)
+                    {
+                        CaravanDecks?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3146,6 +3175,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>? AmmoEffects;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanCard.ErrorMask>?>? CaravanCards;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanMoney.ErrorMask>?>? CaravanMonies;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>? CaravanDecks;
             #endregion
 
             #region IErrorMask
@@ -3350,6 +3380,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return CaravanCards;
                     case Fallout3Mod_FieldIndex.CaravanMonies:
                         return CaravanMonies;
+                    case Fallout3Mod_FieldIndex.CaravanDecks:
+                        return CaravanDecks;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3653,6 +3685,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.CaravanMonies:
                         this.CaravanMonies = new MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanMoney.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.CaravanDecks:
+                        this.CaravanDecks = new MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3958,6 +3993,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.CaravanMonies:
                         this.CaravanMonies = (MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanMoney.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.CaravanDecks:
+                        this.CaravanDecks = (MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4064,6 +4102,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (AmmoEffects != null) return true;
                 if (CaravanCards != null) return true;
                 if (CaravanMonies != null) return true;
+                if (CaravanDecks != null) return true;
                 return false;
             }
             #endregion
@@ -4187,6 +4226,7 @@ namespace Mutagen.Bethesda.Fallout3
                 AmmoEffects?.Print(sb);
                 CaravanCards?.Print(sb);
                 CaravanMonies?.Print(sb);
+                CaravanDecks?.Print(sb);
             }
             #endregion
 
@@ -4293,6 +4333,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.AmmoEffects = this.AmmoEffects.Combine(rhs.AmmoEffects, (l, r) => l.Combine(r));
                 ret.CaravanCards = this.CaravanCards.Combine(rhs.CaravanCards, (l, r) => l.Combine(r));
                 ret.CaravanMonies = this.CaravanMonies.Combine(rhs.CaravanMonies, (l, r) => l.Combine(r));
+                ret.CaravanDecks = this.CaravanDecks.Combine(rhs.CaravanDecks, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4414,6 +4455,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<AmmoEffect.TranslationMask>? AmmoEffects;
             public Fallout3Group.TranslationMask<CaravanCard.TranslationMask>? CaravanCards;
             public Fallout3Group.TranslationMask<CaravanMoney.TranslationMask>? CaravanMonies;
+            public Fallout3Group.TranslationMask<CaravanDeck.TranslationMask>? CaravanDecks;
             #endregion
 
             #region Ctors
@@ -4536,6 +4578,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((AmmoEffects != null ? AmmoEffects.OnOverall : DefaultOn, AmmoEffects?.GetCrystal()));
                 ret.Add((CaravanCards != null ? CaravanCards.OnOverall : DefaultOn, CaravanCards?.GetCrystal()));
                 ret.Add((CaravanMonies != null ? CaravanMonies.OnOverall : DefaultOn, CaravanMonies?.GetCrystal()));
+                ret.Add((CaravanDecks != null ? CaravanDecks.OnOverall : DefaultOn, CaravanDecks?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4692,6 +4735,7 @@ namespace Mutagen.Bethesda.Fallout3
             _AmmoEffects_Object = new Fallout3Group<AmmoEffect>(this);
             _CaravanCards_Object = new Fallout3Group<CaravanCard>(this);
             _CaravanMonies_Object = new Fallout3Group<CaravanMoney>(this);
+            _CaravanDecks_Object = new Fallout3Group<CaravanDeck>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5089,6 +5133,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.CaravanMonies.RecordCache.Set(rhsMod.CaravanMonies.RecordCache.Items);
             }
+            if (mask?.CaravanDecks ?? true)
+            {
+                this.CaravanDecks.RecordCache.Set(rhsMod.CaravanDecks.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5449,6 +5497,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<AmmoEffect> AmmoEffects { get; }
         new Fallout3Group<CaravanCard> CaravanCards { get; }
         new Fallout3Group<CaravanMoney> CaravanMonies { get; }
+        new Fallout3Group<CaravanDeck> CaravanDecks { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5566,6 +5615,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IAmmoEffectGetter> AmmoEffects { get; }
         IFallout3GroupGetter<ICaravanCardGetter> CaravanCards { get; }
         IFallout3GroupGetter<ICaravanMoneyGetter> CaravanMonies { get; }
+        IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -6214,6 +6264,7 @@ namespace Mutagen.Bethesda.Fallout3
         AmmoEffects = 95,
         CaravanCards = 96,
         CaravanMonies = 97,
+        CaravanDecks = 98,
     }
     #endregion
 
@@ -6224,9 +6275,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 98;
+        public const ushort AdditionalFieldCount = 99;
 
-        public const ushort FieldCount = 98;
+        public const ushort FieldCount = 99;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6389,6 +6440,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.AmmoEffects.Clear();
             item.CaravanCards.Clear();
             item.CaravanMonies.Clear();
+            item.CaravanDecks.Clear();
         }
         
         #region Mutagen
@@ -6474,6 +6526,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Challenges.RemapLinks(mapping);
             obj.CaravanCards.RemapLinks(mapping);
             obj.CaravanMonies.RemapLinks(mapping);
+            obj.CaravanDecks.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6632,6 +6685,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.AmmoEffects.Remove(keys);
             obj.CaravanCards.Remove(keys);
             obj.CaravanMonies.Remove(keys);
+            obj.CaravanDecks.Remove(keys);
         }
         
         public void Remove(
@@ -6760,6 +6814,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICaravanCard":
                 case "ICaravanCardInternal":
                     obj.CaravanCards.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CaravanDeck":
+                case "ICaravanDeckGetter":
+                case "ICaravanDeck":
+                case "ICaravanDeckInternal":
+                    obj.CaravanDecks.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8138,6 +8200,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.AmmoEffects = MaskItemExt.Factory(item.AmmoEffects.GetEqualsMask(rhs.AmmoEffects, include), include);
             ret.CaravanCards = MaskItemExt.Factory(item.CaravanCards.GetEqualsMask(rhs.CaravanCards, include), include);
             ret.CaravanMonies = MaskItemExt.Factory(item.CaravanMonies.GetEqualsMask(rhs.CaravanMonies, include), include);
+            ret.CaravanDecks = MaskItemExt.Factory(item.CaravanDecks.GetEqualsMask(rhs.CaravanDecks, include), include);
         }
         
         public string Print(
@@ -8573,6 +8636,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.CaravanMonies?.Overall ?? true)
             {
                 item.CaravanMonies?.Print(sb, "CaravanMonies");
+            }
+            if (printMask?.CaravanDecks?.Overall ?? true)
+            {
+                item.CaravanDecks?.Print(sb, "CaravanDecks");
             }
         }
         
@@ -9367,6 +9434,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isCaravanMoniesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CaravanDecks) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CaravanDecks, rhs.CaravanDecks, out var lhsCaravanDecks, out var rhsCaravanDecks, out var isCaravanDecksEqual))
+                {
+                    if (!object.Equals(lhsCaravanDecks, rhsCaravanDecks)) return false;
+                }
+                else if (!isCaravanDecksEqual) return false;
+            }
             return true;
         }
         
@@ -9471,6 +9546,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.AmmoEffects);
             hash.Add(item.CaravanCards);
             hash.Add(item.CaravanMonies);
+            hash.Add(item.CaravanDecks);
             return hash.ToHashCode();
         }
         
@@ -10001,6 +10077,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICaravanMoney":
                 case "ICaravanMoneyInternal":
                     return obj.CaravanMonies;
+                case "CaravanDeck":
+                case "ICaravanDeckGetter":
+                case "ICaravanDeck":
+                case "ICaravanDeckInternal":
+                    return obj.CaravanDecks;
                 default:
                     return null;
             }
@@ -10018,7 +10099,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[97];
+            Stream[] outputStreams = new Stream[98];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -10117,6 +10198,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.AmmoEffects, 94, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.CaravanCards, 95, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.CaravanMonies, 96, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CaravanDecks, 97, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -10259,6 +10341,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.AmmoEffects.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.CaravanCards.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.CaravanMonies.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CaravanDecks.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10593,6 +10676,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.CaravanMonies.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CaravanDecks.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -10999,6 +11086,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.CaravanDecks.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -11172,6 +11263,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICaravanCard":
                 case "ICaravanCardInternal":
                     foreach (var item in obj.CaravanCards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CaravanDeck":
+                case "ICaravanDeckGetter":
+                case "ICaravanDeck":
+                case "ICaravanDeckInternal":
+                    foreach (var item in obj.CaravanDecks.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12190,6 +12290,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CaravanDeck, ICaravanDeckGetter>(
+                srcGroup: obj.CaravanDecks,
+                type: typeof(ICaravanDeckGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CaravanDecks,
+                groupGetter: (m) => m.CaravanDecks))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CaravanMoney, ICaravanMoneyGetter>(
                 srcGroup: obj.CaravanMonies,
                 type: typeof(ICaravanMoneyGetter),
@@ -13184,6 +13293,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.CaravanCards,
                         groupGetter: (m) => m.CaravanCards))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CaravanDeck":
+                case "ICaravanDeckGetter":
+                case "ICaravanDeck":
+                case "ICaravanDeckInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CaravanDeck, ICaravanDeckGetter>(
+                        srcGroup: obj.CaravanDecks,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CaravanDecks,
+                        groupGetter: (m) => m.CaravanDecks))
                     {
                         yield return item;
                     }
@@ -16736,6 +16859,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CaravanDecks) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.CaravanDecks);
+                try
+                {
+                    item.CaravanDecks.DeepCopyIn(
+                        rhs: rhs.CaravanDecks,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.CaravanDecks));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -16936,6 +17079,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool AmmoEffects;
         public bool CaravanCards;
         public bool CaravanMonies;
+        public bool CaravanDecks;
         public GroupMask()
         {
         }
@@ -17038,6 +17182,7 @@ namespace Mutagen.Bethesda.Fallout3
             AmmoEffects = defaultValue;
             CaravanCards = defaultValue;
             CaravanMonies = defaultValue;
+            CaravanDecks = defaultValue;
         }
     }
 
@@ -18163,6 +18308,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CaravanMoniesItem).BinaryWriteTranslator).Write<ICaravanMoneyGetter>(
                         item: CaravanMoniesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CaravanDecks ?? true)
+            {
+                var CaravanDecksItem = item.CaravanDecks;
+                if (CaravanDecksItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CaravanDecksItem).BinaryWriteTranslator).Write<ICaravanDeckGetter>(
+                        item: CaravanDecksItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19595,6 +19751,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.CaravanMonies;
                 }
+                case RecordTypeInts.CDCK:
+                {
+                    if (importMask?.CaravanDecks ?? true)
+                    {
+                        item.CaravanDecks.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.CaravanDecks;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -20244,6 +20414,11 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _CaravanMoniesLocations;
         private IFallout3GroupGetter<ICaravanMoneyGetter>? _CaravanMonies => _CaravanMoniesLocations != null ? Fallout3GroupBinaryOverlay<ICaravanMoneyGetter>.Fallout3GroupFactory(_stream, _CaravanMoniesLocations, _package) : default;
         public IFallout3GroupGetter<ICaravanMoneyGetter> CaravanMonies => _CaravanMonies ?? new Fallout3Group<CaravanMoney>(this);
+        #endregion
+        #region CaravanDecks
+        private List<RangeInt64>? _CaravanDecksLocations;
+        private IFallout3GroupGetter<ICaravanDeckGetter>? _CaravanDecks => _CaravanDecksLocations != null ? Fallout3GroupBinaryOverlay<ICaravanDeckGetter>.Fallout3GroupFactory(_stream, _CaravanDecksLocations, _package) : default;
+        public IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks => _CaravanDecks ?? new Fallout3Group<CaravanDeck>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20900,6 +21075,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _CaravanMoniesLocations ??= new();
                     _CaravanMoniesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.CaravanMonies;
+                }
+                case RecordTypeInts.CDCK:
+                {
+                    _CaravanDecksLocations ??= new();
+                    _CaravanDecksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.CaravanDecks;
                 }
                 default:
                     return default(int?);

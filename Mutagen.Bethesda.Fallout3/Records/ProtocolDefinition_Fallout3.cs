@@ -46,7 +46,6 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             CameraShot_Registration.Instance,
             CaravanCard_Registration.Instance,
             CaravanDeck_Registration.Instance,
-            CaravanDeckCard_Registration.Instance,
             CaravanMoney_Registration.Instance,
             Casino_Registration.Instance,
             CasinoChip_Registration.Instance,

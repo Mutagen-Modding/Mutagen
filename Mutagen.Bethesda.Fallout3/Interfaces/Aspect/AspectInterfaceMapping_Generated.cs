@@ -292,6 +292,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     AmmoEffect_Registration.Instance,
                     CaravanCard_Registration.Instance,
+                    CaravanDeck_Registration.Instance,
                     CaravanMoney_Registration.Instance,
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
@@ -319,6 +320,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     AmmoEffect_Registration.Instance,
                     CaravanCard_Registration.Instance,
+                    CaravanDeck_Registration.Instance,
                     CaravanMoney_Registration.Instance,
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,

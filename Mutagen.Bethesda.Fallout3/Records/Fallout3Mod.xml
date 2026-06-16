@@ -104,6 +104,7 @@
       <Group name="AmmoEffects" refName="AmmoEffect" />
       <Group name="CaravanCards" refName="CaravanCard" />
       <Group name="CaravanMonies" refName="CaravanMoney" />
+      <Group name="CaravanDecks" refName="CaravanDeck" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>
