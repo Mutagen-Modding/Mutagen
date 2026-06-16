@@ -155,6 +155,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MediaLocationControllers_Object = new Fallout3Group<MediaLocationController>(this);
             _Challenges_Object = new Fallout3Group<Challenge>(this);
             _AmmoEffects_Object = new Fallout3Group<AmmoEffect>(this);
+            _CaravanCards_Object = new Fallout3Group<CaravanCard>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -832,6 +833,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IAmmoEffectGetter> IFallout3ModGetter.AmmoEffects => _AmmoEffects_Object;
         #endregion
+        #region CaravanCards
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<CaravanCard> _CaravanCards_Object;
+        public Fallout3Group<CaravanCard> CaravanCards => _CaravanCards_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ICaravanCardGetter> IFallout3ModGetter.CaravanCards => _CaravanCards_Object;
+        #endregion
 
         #region To String
 
@@ -967,6 +975,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MediaLocationControllers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Challenges = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.AmmoEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.CaravanCards = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1065,7 +1074,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MediaSets,
                 TItem MediaLocationControllers,
                 TItem Challenges,
-                TItem AmmoEffects)
+                TItem AmmoEffects,
+                TItem CaravanCards)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1163,6 +1173,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MediaLocationControllers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MediaLocationControllers, new Fallout3Group.Mask<TItem>(MediaLocationControllers));
                 this.Challenges = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Challenges, new Fallout3Group.Mask<TItem>(Challenges));
                 this.AmmoEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(AmmoEffects, new Fallout3Group.Mask<TItem>(AmmoEffects));
+                this.CaravanCards = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanCards, new Fallout3Group.Mask<TItem>(CaravanCards));
             }
 
             #pragma warning disable CS8618
@@ -1270,6 +1281,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MediaLocationControllers { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Challenges { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? AmmoEffects { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanCards { get; set; }
             #endregion
 
             #region Equals
@@ -1378,6 +1390,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MediaLocationControllers, rhs.MediaLocationControllers)) return false;
                 if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
                 if (!object.Equals(this.AmmoEffects, rhs.AmmoEffects)) return false;
+                if (!object.Equals(this.CaravanCards, rhs.CaravanCards)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1479,6 +1492,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MediaLocationControllers);
                 hash.Add(this.Challenges);
                 hash.Add(this.AmmoEffects);
+                hash.Add(this.CaravanCards);
                 return hash.ToHashCode();
             }
 
@@ -1967,6 +1981,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.AmmoEffects.Overall)) return false;
                     if (this.AmmoEffects.Specific != null && !this.AmmoEffects.Specific.All(eval)) return false;
                 }
+                if (CaravanCards != null)
+                {
+                    if (!eval(this.CaravanCards.Overall)) return false;
+                    if (this.CaravanCards.Specific != null && !this.CaravanCards.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2454,6 +2473,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.AmmoEffects.Overall)) return true;
                     if (this.AmmoEffects.Specific != null && this.AmmoEffects.Specific.Any(eval)) return true;
                 }
+                if (CaravanCards != null)
+                {
+                    if (eval(this.CaravanCards.Overall)) return true;
+                    if (this.CaravanCards.Specific != null && this.CaravanCards.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2564,6 +2588,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MediaLocationControllers = this.MediaLocationControllers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MediaLocationControllers.Overall), this.MediaLocationControllers.Specific?.Translate(eval));
                 obj.Challenges = this.Challenges == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
                 obj.AmmoEffects = this.AmmoEffects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.AmmoEffects.Overall), this.AmmoEffects.Specific?.Translate(eval));
+                obj.CaravanCards = this.CaravanCards == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanCards.Overall), this.CaravanCards.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2966,6 +2991,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         AmmoEffects?.Print(sb);
                     }
+                    if (printMask?.CaravanCards?.Overall ?? true)
+                    {
+                        CaravanCards?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3086,6 +3115,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MediaLocationController.ErrorMask>?>? MediaLocationControllers;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>? Challenges;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>? AmmoEffects;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanCard.ErrorMask>?>? CaravanCards;
             #endregion
 
             #region IErrorMask
@@ -3286,6 +3316,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Challenges;
                     case Fallout3Mod_FieldIndex.AmmoEffects:
                         return AmmoEffects;
+                    case Fallout3Mod_FieldIndex.CaravanCards:
+                        return CaravanCards;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3583,6 +3615,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.AmmoEffects:
                         this.AmmoEffects = new MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.CaravanCards:
+                        this.CaravanCards = new MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanCard.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3882,6 +3917,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.AmmoEffects:
                         this.AmmoEffects = (MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.CaravanCards:
+                        this.CaravanCards = (MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanCard.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3986,6 +4024,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MediaLocationControllers != null) return true;
                 if (Challenges != null) return true;
                 if (AmmoEffects != null) return true;
+                if (CaravanCards != null) return true;
                 return false;
             }
             #endregion
@@ -4107,6 +4146,7 @@ namespace Mutagen.Bethesda.Fallout3
                 MediaLocationControllers?.Print(sb);
                 Challenges?.Print(sb);
                 AmmoEffects?.Print(sb);
+                CaravanCards?.Print(sb);
             }
             #endregion
 
@@ -4211,6 +4251,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MediaLocationControllers = this.MediaLocationControllers.Combine(rhs.MediaLocationControllers, (l, r) => l.Combine(r));
                 ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
                 ret.AmmoEffects = this.AmmoEffects.Combine(rhs.AmmoEffects, (l, r) => l.Combine(r));
+                ret.CaravanCards = this.CaravanCards.Combine(rhs.CaravanCards, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4330,6 +4371,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<MediaLocationController.TranslationMask>? MediaLocationControllers;
             public Fallout3Group.TranslationMask<Challenge.TranslationMask>? Challenges;
             public Fallout3Group.TranslationMask<AmmoEffect.TranslationMask>? AmmoEffects;
+            public Fallout3Group.TranslationMask<CaravanCard.TranslationMask>? CaravanCards;
             #endregion
 
             #region Ctors
@@ -4450,6 +4492,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MediaLocationControllers != null ? MediaLocationControllers.OnOverall : DefaultOn, MediaLocationControllers?.GetCrystal()));
                 ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
                 ret.Add((AmmoEffects != null ? AmmoEffects.OnOverall : DefaultOn, AmmoEffects?.GetCrystal()));
+                ret.Add((CaravanCards != null ? CaravanCards.OnOverall : DefaultOn, CaravanCards?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4604,6 +4647,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MediaLocationControllers_Object = new Fallout3Group<MediaLocationController>(this);
             _Challenges_Object = new Fallout3Group<Challenge>(this);
             _AmmoEffects_Object = new Fallout3Group<AmmoEffect>(this);
+            _CaravanCards_Object = new Fallout3Group<CaravanCard>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4993,6 +5037,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.AmmoEffects.RecordCache.Set(rhsMod.AmmoEffects.RecordCache.Items);
             }
+            if (mask?.CaravanCards ?? true)
+            {
+                this.CaravanCards.RecordCache.Set(rhsMod.CaravanCards.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5351,6 +5399,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<MediaLocationController> MediaLocationControllers { get; }
         new Fallout3Group<Challenge> Challenges { get; }
         new Fallout3Group<AmmoEffect> AmmoEffects { get; }
+        new Fallout3Group<CaravanCard> CaravanCards { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5466,6 +5515,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IMediaLocationControllerGetter> MediaLocationControllers { get; }
         IFallout3GroupGetter<IChallengeGetter> Challenges { get; }
         IFallout3GroupGetter<IAmmoEffectGetter> AmmoEffects { get; }
+        IFallout3GroupGetter<ICaravanCardGetter> CaravanCards { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -6112,6 +6162,7 @@ namespace Mutagen.Bethesda.Fallout3
         MediaLocationControllers = 93,
         Challenges = 94,
         AmmoEffects = 95,
+        CaravanCards = 96,
     }
     #endregion
 
@@ -6122,9 +6173,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 96;
+        public const ushort AdditionalFieldCount = 97;
 
-        public const ushort FieldCount = 96;
+        public const ushort FieldCount = 97;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6285,6 +6336,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.MediaLocationControllers.Clear();
             item.Challenges.Clear();
             item.AmmoEffects.Clear();
+            item.CaravanCards.Clear();
         }
         
         #region Mutagen
@@ -6368,6 +6420,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.MediaSets.RemapLinks(mapping);
             obj.MediaLocationControllers.RemapLinks(mapping);
             obj.Challenges.RemapLinks(mapping);
+            obj.CaravanCards.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6524,6 +6577,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.MediaLocationControllers.Remove(keys);
             obj.Challenges.Remove(keys);
             obj.AmmoEffects.Remove(keys);
+            obj.CaravanCards.Remove(keys);
         }
         
         public void Remove(
@@ -6644,6 +6698,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     obj.CameraShots.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "CaravanCard":
+                case "ICaravanCardGetter":
+                case "ICaravanCard":
+                case "ICaravanCardInternal":
+                    obj.CaravanCards.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -6955,6 +7017,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorAddonGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ICaravanCardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICasinoChipGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
@@ -6985,6 +7048,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ICaravanCardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICasinoChipGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
@@ -7063,6 +7127,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ICaravanCardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICasinoChipGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown);
@@ -7084,6 +7149,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ICaravanCardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICasinoChipGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICreatureGetter), throwIfUnknown: throwIfUnknown);
@@ -7113,6 +7179,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorAddonGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ICaravanCardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICasinoChipGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IContainerGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IDoorGetter), throwIfUnknown: throwIfUnknown);
@@ -7152,6 +7219,7 @@ namespace Mutagen.Bethesda.Fallout3
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IBookGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(ICaravanCardGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ICasinoChipGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IIngestibleGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IItemModGetter), throwIfUnknown: throwIfUnknown);
@@ -7811,6 +7879,12 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.CaravanCards.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7845,6 +7919,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Reputations.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.CasinoChips.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Challenges.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.CaravanCards.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -7986,6 +8061,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MediaLocationControllers = MaskItemExt.Factory(item.MediaLocationControllers.GetEqualsMask(rhs.MediaLocationControllers, include), include);
             ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
             ret.AmmoEffects = MaskItemExt.Factory(item.AmmoEffects.GetEqualsMask(rhs.AmmoEffects, include), include);
+            ret.CaravanCards = MaskItemExt.Factory(item.CaravanCards.GetEqualsMask(rhs.CaravanCards, include), include);
         }
         
         public string Print(
@@ -8413,6 +8489,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.AmmoEffects?.Overall ?? true)
             {
                 item.AmmoEffects?.Print(sb, "AmmoEffects");
+            }
+            if (printMask?.CaravanCards?.Overall ?? true)
+            {
+                item.CaravanCards?.Print(sb, "CaravanCards");
             }
         }
         
@@ -9191,6 +9271,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isAmmoEffectsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CaravanCards) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CaravanCards, rhs.CaravanCards, out var lhsCaravanCards, out var rhsCaravanCards, out var isCaravanCardsEqual))
+                {
+                    if (!object.Equals(lhsCaravanCards, rhsCaravanCards)) return false;
+                }
+                else if (!isCaravanCardsEqual) return false;
+            }
             return true;
         }
         
@@ -9293,6 +9381,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MediaLocationControllers);
             hash.Add(item.Challenges);
             hash.Add(item.AmmoEffects);
+            hash.Add(item.CaravanCards);
             return hash.ToHashCode();
         }
         
@@ -9813,6 +9902,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IAmmoEffect":
                 case "IAmmoEffectInternal":
                     return obj.AmmoEffects;
+                case "CaravanCard":
+                case "ICaravanCardGetter":
+                case "ICaravanCard":
+                case "ICaravanCardInternal":
+                    return obj.CaravanCards;
                 default:
                     return null;
             }
@@ -9830,7 +9924,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[95];
+            Stream[] outputStreams = new Stream[96];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -9927,6 +10021,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.MediaLocationControllers, 92, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Challenges, 93, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.AmmoEffects, 94, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CaravanCards, 95, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -10067,6 +10162,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.MediaLocationControllers.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Challenges.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.AmmoEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CaravanCards.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10393,6 +10489,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Challenges.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CaravanCards.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -10791,6 +10891,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.CaravanCards.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -10955,6 +11059,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICameraShot":
                 case "ICameraShotInternal":
                     foreach (var item in obj.CameraShots.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CaravanCard":
+                case "ICaravanCardGetter":
+                case "ICaravanCard":
+                case "ICaravanCardInternal":
+                    foreach (var item in obj.CaravanCards.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11955,6 +12068,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CaravanCard, ICaravanCardGetter>(
+                srcGroup: obj.CaravanCards,
+                type: typeof(ICaravanCardGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.CaravanCards,
+                groupGetter: (m) => m.CaravanCards))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Casino, ICasinoGetter>(
                 srcGroup: obj.Casinos,
                 type: typeof(ICasinoGetter),
@@ -12926,6 +13048,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.CameraShots,
                         groupGetter: (m) => m.CameraShots))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CaravanCard":
+                case "ICaravanCardGetter":
+                case "ICaravanCard":
+                case "ICaravanCardInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, CaravanCard, ICaravanCardGetter>(
+                        srcGroup: obj.CaravanCards,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.CaravanCards,
+                        groupGetter: (m) => m.CaravanCards))
                     {
                         yield return item;
                     }
@@ -14475,6 +14611,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Challenges.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CaravanCards.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }
@@ -16416,6 +16556,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.CaravanCards) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.CaravanCards);
+                try
+                {
+                    item.CaravanCards.DeepCopyIn(
+                        rhs: rhs.CaravanCards,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.CaravanCards));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -16614,6 +16774,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool MediaLocationControllers;
         public bool Challenges;
         public bool AmmoEffects;
+        public bool CaravanCards;
         public GroupMask()
         {
         }
@@ -16714,6 +16875,7 @@ namespace Mutagen.Bethesda.Fallout3
             MediaLocationControllers = defaultValue;
             Challenges = defaultValue;
             AmmoEffects = defaultValue;
+            CaravanCards = defaultValue;
         }
     }
 
@@ -17817,6 +17979,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)AmmoEffectsItem).BinaryWriteTranslator).Write<IAmmoEffectGetter>(
                         item: AmmoEffectsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.CaravanCards ?? true)
+            {
+                var CaravanCardsItem = item.CaravanCards;
+                if (CaravanCardsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CaravanCardsItem).BinaryWriteTranslator).Write<ICaravanCardGetter>(
+                        item: CaravanCardsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19221,6 +19394,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.AmmoEffects;
                 }
+                case RecordTypeInts.CCRD:
+                {
+                    if (importMask?.CaravanCards ?? true)
+                    {
+                        item.CaravanCards.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.CaravanCards;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19860,6 +20047,11 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _AmmoEffectsLocations;
         private IFallout3GroupGetter<IAmmoEffectGetter>? _AmmoEffects => _AmmoEffectsLocations != null ? Fallout3GroupBinaryOverlay<IAmmoEffectGetter>.Fallout3GroupFactory(_stream, _AmmoEffectsLocations, _package) : default;
         public IFallout3GroupGetter<IAmmoEffectGetter> AmmoEffects => _AmmoEffects ?? new Fallout3Group<AmmoEffect>(this);
+        #endregion
+        #region CaravanCards
+        private List<RangeInt64>? _CaravanCardsLocations;
+        private IFallout3GroupGetter<ICaravanCardGetter>? _CaravanCards => _CaravanCardsLocations != null ? Fallout3GroupBinaryOverlay<ICaravanCardGetter>.Fallout3GroupFactory(_stream, _CaravanCardsLocations, _package) : default;
+        public IFallout3GroupGetter<ICaravanCardGetter> CaravanCards => _CaravanCards ?? new Fallout3Group<CaravanCard>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20504,6 +20696,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _AmmoEffectsLocations ??= new();
                     _AmmoEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.AmmoEffects;
+                }
+                case RecordTypeInts.CCRD:
+                {
+                    _CaravanCardsLocations ??= new();
+                    _CaravanCardsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.CaravanCards;
                 }
                 default:
                     return default(int?);

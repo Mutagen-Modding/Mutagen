@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -58,35 +59,55 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region ObjectBounds
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds? _ObjectBounds;
         /// <summary>
-        /// Aspects: IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
-        public ObjectBounds? ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ICaravanCardGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
         {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value;
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter? ICaravanCardGetter.ObjectBounds => this.ObjectBounds;
-        #region Aspects
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICaravanCardGetter.Name => this.Name;
+        ITranslatedStringGetter? ICaravanCardGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -139,9 +160,6 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ICaravanCardGetter.Script => this.Script;
         #endregion
-        #region Description
-        public String Description { get; set; } = string.Empty;
-        #endregion
         #region PickUpSound
         private readonly IFormLinkNullable<ISoundGetter> _PickUpSound = new FormLinkNullable<ISoundGetter>();
         public IFormLinkNullable<ISoundGetter> PickUpSound
@@ -162,20 +180,15 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ICaravanCardGetter.DropSound => this.DropSound;
         #endregion
-        #region Value
-        public UInt32? Value { get; set; }
+        #region HighResFaceImage
+        public String? HighResFaceImage { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? ICaravanCardGetter.Value => this.Value;
+        String? ICaravanCardGetter.HighResFaceImage => this.HighResFaceImage;
         #endregion
-        #region FaceTexture
-        public String? FaceTexture { get; set; }
+        #region HighResBackImage
+        public String? HighResBackImage { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICaravanCardGetter.FaceTexture => this.FaceTexture;
-        #endregion
-        #region BackTexture
-        public String? BackTexture { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICaravanCardGetter.BackTexture => this.BackTexture;
+        String? ICaravanCardGetter.HighResBackImage => this.HighResBackImage;
         #endregion
         #region CardSuit
         public CaravanCard.CaravanSuit? CardSuit { get; set; }
@@ -186,6 +199,11 @@ namespace Mutagen.Bethesda.Fallout3
         public CaravanCard.CaravanValue? CardValue { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         CaravanCard.CaravanValue? ICaravanCardGetter.CardValue => this.CardValue;
+        #endregion
+        #region Value
+        public UInt32? Value { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? ICaravanCardGetter.Value => this.Value;
         #endregion
 
         #region To String
@@ -217,14 +235,13 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Script = initialValue;
-                this.Description = initialValue;
                 this.PickUpSound = initialValue;
                 this.DropSound = initialValue;
-                this.Value = initialValue;
-                this.FaceTexture = initialValue;
-                this.BackTexture = initialValue;
+                this.HighResFaceImage = initialValue;
+                this.HighResBackImage = initialValue;
                 this.CardSuit = initialValue;
                 this.CardValue = initialValue;
+                this.Value = initialValue;
             }
 
             public Mask(
@@ -240,14 +257,13 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Model,
                 TItem Icons,
                 TItem Script,
-                TItem Description,
                 TItem PickUpSound,
                 TItem DropSound,
-                TItem Value,
-                TItem FaceTexture,
-                TItem BackTexture,
+                TItem HighResFaceImage,
+                TItem HighResBackImage,
                 TItem CardSuit,
-                TItem CardValue)
+                TItem CardValue,
+                TItem Value)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -262,14 +278,13 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Script = Script;
-                this.Description = Description;
                 this.PickUpSound = PickUpSound;
                 this.DropSound = DropSound;
-                this.Value = Value;
-                this.FaceTexture = FaceTexture;
-                this.BackTexture = BackTexture;
+                this.HighResFaceImage = HighResFaceImage;
+                this.HighResBackImage = HighResBackImage;
                 this.CardSuit = CardSuit;
                 this.CardValue = CardValue;
+                this.Value = Value;
             }
 
             #pragma warning disable CS8618
@@ -286,14 +301,13 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public TItem Script;
-            public TItem Description;
             public TItem PickUpSound;
             public TItem DropSound;
-            public TItem Value;
-            public TItem FaceTexture;
-            public TItem BackTexture;
+            public TItem HighResFaceImage;
+            public TItem HighResBackImage;
             public TItem CardSuit;
             public TItem CardValue;
+            public TItem Value;
             #endregion
 
             #region Equals
@@ -312,14 +326,13 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
-                if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
                 if (!object.Equals(this.DropSound, rhs.DropSound)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.FaceTexture, rhs.FaceTexture)) return false;
-                if (!object.Equals(this.BackTexture, rhs.BackTexture)) return false;
+                if (!object.Equals(this.HighResFaceImage, rhs.HighResFaceImage)) return false;
+                if (!object.Equals(this.HighResBackImage, rhs.HighResBackImage)) return false;
                 if (!object.Equals(this.CardSuit, rhs.CardSuit)) return false;
                 if (!object.Equals(this.CardValue, rhs.CardValue)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -330,14 +343,13 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Model);
                 hash.Add(this.Icons);
                 hash.Add(this.Script);
-                hash.Add(this.Description);
                 hash.Add(this.PickUpSound);
                 hash.Add(this.DropSound);
-                hash.Add(this.Value);
-                hash.Add(this.FaceTexture);
-                hash.Add(this.BackTexture);
+                hash.Add(this.HighResFaceImage);
+                hash.Add(this.HighResBackImage);
                 hash.Add(this.CardSuit);
                 hash.Add(this.CardValue);
+                hash.Add(this.Value);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -365,14 +377,13 @@ namespace Mutagen.Bethesda.Fallout3
                     if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Script)) return false;
-                if (!eval(this.Description)) return false;
                 if (!eval(this.PickUpSound)) return false;
                 if (!eval(this.DropSound)) return false;
-                if (!eval(this.Value)) return false;
-                if (!eval(this.FaceTexture)) return false;
-                if (!eval(this.BackTexture)) return false;
+                if (!eval(this.HighResFaceImage)) return false;
+                if (!eval(this.HighResBackImage)) return false;
                 if (!eval(this.CardSuit)) return false;
                 if (!eval(this.CardValue)) return false;
+                if (!eval(this.Value)) return false;
                 return true;
             }
             #endregion
@@ -398,14 +409,13 @@ namespace Mutagen.Bethesda.Fallout3
                     if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Script)) return true;
-                if (eval(this.Description)) return true;
                 if (eval(this.PickUpSound)) return true;
                 if (eval(this.DropSound)) return true;
-                if (eval(this.Value)) return true;
-                if (eval(this.FaceTexture)) return true;
-                if (eval(this.BackTexture)) return true;
+                if (eval(this.HighResFaceImage)) return true;
+                if (eval(this.HighResBackImage)) return true;
                 if (eval(this.CardSuit)) return true;
                 if (eval(this.CardValue)) return true;
+                if (eval(this.Value)) return true;
                 return false;
             }
             #endregion
@@ -426,14 +436,13 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.Script = eval(this.Script);
-                obj.Description = eval(this.Description);
                 obj.PickUpSound = eval(this.PickUpSound);
                 obj.DropSound = eval(this.DropSound);
-                obj.Value = eval(this.Value);
-                obj.FaceTexture = eval(this.FaceTexture);
-                obj.BackTexture = eval(this.BackTexture);
+                obj.HighResFaceImage = eval(this.HighResFaceImage);
+                obj.HighResBackImage = eval(this.HighResBackImage);
                 obj.CardSuit = eval(this.CardSuit);
                 obj.CardValue = eval(this.CardValue);
+                obj.Value = eval(this.Value);
             }
             #endregion
 
@@ -472,10 +481,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Script, "Script");
                     }
-                    if (printMask?.Description ?? true)
-                    {
-                        sb.AppendItem(Description, "Description");
-                    }
                     if (printMask?.PickUpSound ?? true)
                     {
                         sb.AppendItem(PickUpSound, "PickUpSound");
@@ -484,17 +489,13 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(DropSound, "DropSound");
                     }
-                    if (printMask?.Value ?? true)
+                    if (printMask?.HighResFaceImage ?? true)
                     {
-                        sb.AppendItem(Value, "Value");
+                        sb.AppendItem(HighResFaceImage, "HighResFaceImage");
                     }
-                    if (printMask?.FaceTexture ?? true)
+                    if (printMask?.HighResBackImage ?? true)
                     {
-                        sb.AppendItem(FaceTexture, "FaceTexture");
-                    }
-                    if (printMask?.BackTexture ?? true)
-                    {
-                        sb.AppendItem(BackTexture, "BackTexture");
+                        sb.AppendItem(HighResBackImage, "HighResBackImage");
                     }
                     if (printMask?.CardSuit ?? true)
                     {
@@ -503,6 +504,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.CardValue ?? true)
                     {
                         sb.AppendItem(CardValue, "CardValue");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        sb.AppendItem(Value, "Value");
                     }
                 }
             }
@@ -520,14 +525,13 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public Exception? Script;
-            public Exception? Description;
             public Exception? PickUpSound;
             public Exception? DropSound;
-            public Exception? Value;
-            public Exception? FaceTexture;
-            public Exception? BackTexture;
+            public Exception? HighResFaceImage;
+            public Exception? HighResBackImage;
             public Exception? CardSuit;
             public Exception? CardValue;
+            public Exception? Value;
             #endregion
 
             #region IErrorMask
@@ -546,22 +550,20 @@ namespace Mutagen.Bethesda.Fallout3
                         return Icons;
                     case CaravanCard_FieldIndex.Script:
                         return Script;
-                    case CaravanCard_FieldIndex.Description:
-                        return Description;
                     case CaravanCard_FieldIndex.PickUpSound:
                         return PickUpSound;
                     case CaravanCard_FieldIndex.DropSound:
                         return DropSound;
-                    case CaravanCard_FieldIndex.Value:
-                        return Value;
-                    case CaravanCard_FieldIndex.FaceTexture:
-                        return FaceTexture;
-                    case CaravanCard_FieldIndex.BackTexture:
-                        return BackTexture;
+                    case CaravanCard_FieldIndex.HighResFaceImage:
+                        return HighResFaceImage;
+                    case CaravanCard_FieldIndex.HighResBackImage:
+                        return HighResBackImage;
                     case CaravanCard_FieldIndex.CardSuit:
                         return CardSuit;
                     case CaravanCard_FieldIndex.CardValue:
                         return CardValue;
+                    case CaravanCard_FieldIndex.Value:
+                        return Value;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -587,29 +589,26 @@ namespace Mutagen.Bethesda.Fallout3
                     case CaravanCard_FieldIndex.Script:
                         this.Script = ex;
                         break;
-                    case CaravanCard_FieldIndex.Description:
-                        this.Description = ex;
-                        break;
                     case CaravanCard_FieldIndex.PickUpSound:
                         this.PickUpSound = ex;
                         break;
                     case CaravanCard_FieldIndex.DropSound:
                         this.DropSound = ex;
                         break;
-                    case CaravanCard_FieldIndex.Value:
-                        this.Value = ex;
+                    case CaravanCard_FieldIndex.HighResFaceImage:
+                        this.HighResFaceImage = ex;
                         break;
-                    case CaravanCard_FieldIndex.FaceTexture:
-                        this.FaceTexture = ex;
-                        break;
-                    case CaravanCard_FieldIndex.BackTexture:
-                        this.BackTexture = ex;
+                    case CaravanCard_FieldIndex.HighResBackImage:
+                        this.HighResBackImage = ex;
                         break;
                     case CaravanCard_FieldIndex.CardSuit:
                         this.CardSuit = ex;
                         break;
                     case CaravanCard_FieldIndex.CardValue:
                         this.CardValue = ex;
+                        break;
+                    case CaravanCard_FieldIndex.Value:
+                        this.Value = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -637,29 +636,26 @@ namespace Mutagen.Bethesda.Fallout3
                     case CaravanCard_FieldIndex.Script:
                         this.Script = (Exception?)obj;
                         break;
-                    case CaravanCard_FieldIndex.Description:
-                        this.Description = (Exception?)obj;
-                        break;
                     case CaravanCard_FieldIndex.PickUpSound:
                         this.PickUpSound = (Exception?)obj;
                         break;
                     case CaravanCard_FieldIndex.DropSound:
                         this.DropSound = (Exception?)obj;
                         break;
-                    case CaravanCard_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
+                    case CaravanCard_FieldIndex.HighResFaceImage:
+                        this.HighResFaceImage = (Exception?)obj;
                         break;
-                    case CaravanCard_FieldIndex.FaceTexture:
-                        this.FaceTexture = (Exception?)obj;
-                        break;
-                    case CaravanCard_FieldIndex.BackTexture:
-                        this.BackTexture = (Exception?)obj;
+                    case CaravanCard_FieldIndex.HighResBackImage:
+                        this.HighResBackImage = (Exception?)obj;
                         break;
                     case CaravanCard_FieldIndex.CardSuit:
                         this.CardSuit = (Exception?)obj;
                         break;
                     case CaravanCard_FieldIndex.CardValue:
                         this.CardValue = (Exception?)obj;
+                        break;
+                    case CaravanCard_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -675,14 +671,13 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Model != null) return true;
                 if (Icons != null) return true;
                 if (Script != null) return true;
-                if (Description != null) return true;
                 if (PickUpSound != null) return true;
                 if (DropSound != null) return true;
-                if (Value != null) return true;
-                if (FaceTexture != null) return true;
-                if (BackTexture != null) return true;
+                if (HighResFaceImage != null) return true;
+                if (HighResBackImage != null) return true;
                 if (CardSuit != null) return true;
                 if (CardValue != null) return true;
+                if (Value != null) return true;
                 return false;
             }
             #endregion
@@ -719,28 +714,25 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Script, "Script");
                 }
                 {
-                    sb.AppendItem(Description, "Description");
-                }
-                {
                     sb.AppendItem(PickUpSound, "PickUpSound");
                 }
                 {
                     sb.AppendItem(DropSound, "DropSound");
                 }
                 {
-                    sb.AppendItem(Value, "Value");
+                    sb.AppendItem(HighResFaceImage, "HighResFaceImage");
                 }
                 {
-                    sb.AppendItem(FaceTexture, "FaceTexture");
-                }
-                {
-                    sb.AppendItem(BackTexture, "BackTexture");
+                    sb.AppendItem(HighResBackImage, "HighResBackImage");
                 }
                 {
                     sb.AppendItem(CardSuit, "CardSuit");
                 }
                 {
                     sb.AppendItem(CardValue, "CardValue");
+                }
+                {
+                    sb.AppendItem(Value, "Value");
                 }
             }
             #endregion
@@ -755,14 +747,13 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Script = this.Script.Combine(rhs.Script);
-                ret.Description = this.Description.Combine(rhs.Description);
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.DropSound = this.DropSound.Combine(rhs.DropSound);
-                ret.Value = this.Value.Combine(rhs.Value);
-                ret.FaceTexture = this.FaceTexture.Combine(rhs.FaceTexture);
-                ret.BackTexture = this.BackTexture.Combine(rhs.BackTexture);
+                ret.HighResFaceImage = this.HighResFaceImage.Combine(rhs.HighResFaceImage);
+                ret.HighResBackImage = this.HighResBackImage.Combine(rhs.HighResBackImage);
                 ret.CardSuit = this.CardSuit.Combine(rhs.CardSuit);
                 ret.CardValue = this.CardValue.Combine(rhs.CardValue);
+                ret.Value = this.Value.Combine(rhs.Value);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -790,14 +781,13 @@ namespace Mutagen.Bethesda.Fallout3
             public Model.TranslationMask? Model;
             public Icons.TranslationMask? Icons;
             public bool Script;
-            public bool Description;
             public bool PickUpSound;
             public bool DropSound;
-            public bool Value;
-            public bool FaceTexture;
-            public bool BackTexture;
+            public bool HighResFaceImage;
+            public bool HighResBackImage;
             public bool CardSuit;
             public bool CardValue;
+            public bool Value;
             #endregion
 
             #region Ctors
@@ -808,14 +798,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Name = defaultOn;
                 this.Script = defaultOn;
-                this.Description = defaultOn;
                 this.PickUpSound = defaultOn;
                 this.DropSound = defaultOn;
-                this.Value = defaultOn;
-                this.FaceTexture = defaultOn;
-                this.BackTexture = defaultOn;
+                this.HighResFaceImage = defaultOn;
+                this.HighResBackImage = defaultOn;
                 this.CardSuit = defaultOn;
                 this.CardValue = defaultOn;
+                this.Value = defaultOn;
             }
 
             #endregion
@@ -828,14 +817,13 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
                 ret.Add((Script, null));
-                ret.Add((Description, null));
                 ret.Add((PickUpSound, null));
                 ret.Add((DropSound, null));
-                ret.Add((Value, null));
-                ret.Add((FaceTexture, null));
-                ret.Add((BackTexture, null));
+                ret.Add((HighResFaceImage, null));
+                ret.Add((HighResBackImage, null));
                 ret.Add((CardSuit, null));
                 ret.Add((CardValue, null));
+                ret.Add((Value, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -982,20 +970,22 @@ namespace Mutagen.Bethesda.Fallout3
         IModeled,
         INamed,
         INamedRequired,
-        IObjectBoundedOptional,
+        IObjectBounded,
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
-        IRecipeItem
+        IRecipeItem,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
-        new ObjectBounds? ObjectBounds { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -1005,14 +995,13 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         new Icons? Icons { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
-        new String Description { get; set; }
         new IFormLinkNullable<ISoundGetter> PickUpSound { get; set; }
         new IFormLinkNullable<ISoundGetter> DropSound { get; set; }
-        new UInt32? Value { get; set; }
-        new String? FaceTexture { get; set; }
-        new String? BackTexture { get; set; }
+        new String? HighResFaceImage { get; set; }
+        new String? HighResBackImage { get; set; }
         new CaravanCard.CaravanSuit? CardSuit { get; set; }
         new CaravanCard.CaravanValue? CardValue { get; set; }
+        new UInt32? Value { get; set; }
     }
 
     public partial interface ICaravanCardInternal :
@@ -1036,24 +1025,26 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter,
+        IObjectBoundedGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
         IPlaceableObjectGetter,
-        IRecipeItemGetter
+        IRecipeItemGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => CaravanCard_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
-        IObjectBoundsGetter? ObjectBounds { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         #region Model
         /// <summary>
@@ -1068,14 +1059,13 @@ namespace Mutagen.Bethesda.Fallout3
         IIconsGetter? Icons { get; }
         #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        String Description { get; }
         IFormLinkNullableGetter<ISoundGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundGetter> DropSound { get; }
-        UInt32? Value { get; }
-        String? FaceTexture { get; }
-        String? BackTexture { get; }
+        String? HighResFaceImage { get; }
+        String? HighResBackImage { get; }
         CaravanCard.CaravanSuit? CardSuit { get; }
         CaravanCard.CaravanValue? CardValue { get; }
+        UInt32? Value { get; }
 
     }
 
@@ -1257,14 +1247,13 @@ namespace Mutagen.Bethesda.Fallout3
         Model = 9,
         Icons = 10,
         Script = 11,
-        Description = 12,
-        PickUpSound = 13,
-        DropSound = 14,
-        Value = 15,
-        FaceTexture = 16,
-        BackTexture = 17,
-        CardSuit = 18,
-        CardValue = 19,
+        PickUpSound = 12,
+        DropSound = 13,
+        HighResFaceImage = 14,
+        HighResBackImage = 15,
+        CardSuit = 16,
+        CardValue = 17,
+        Value = 18,
     }
     #endregion
 
@@ -1275,9 +1264,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(CaravanCard.Mask<>);
 
@@ -1319,13 +1308,12 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.MODD,
                 RecordTypes.ICON,
                 RecordTypes.SCRI,
-                RecordTypes.DESC,
                 RecordTypes.YNAM,
                 RecordTypes.ZNAM,
-                RecordTypes.DATA,
                 RecordTypes.TX00,
                 RecordTypes.TX01,
-                RecordTypes.INTV);
+                RecordTypes.INTV,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1370,19 +1358,18 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICaravanCardInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = null;
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
             item.Icons = null;
             item.Script.Clear();
-            item.Description = string.Empty;
             item.PickUpSound.Clear();
             item.DropSound.Clear();
-            item.Value = default;
-            item.FaceTexture = default;
-            item.BackTexture = default;
+            item.HighResFaceImage = default;
+            item.HighResBackImage = default;
             item.CardSuit = default;
             item.CardValue = default;
+            item.Value = default;
             base.Clear(item);
         }
         
@@ -1497,12 +1484,8 @@ namespace Mutagen.Bethesda.Fallout3
             CaravanCard.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds,
-                rhs.ObjectBounds,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1514,14 +1497,13 @@ namespace Mutagen.Bethesda.Fallout3
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = item.Script.Equals(rhs.Script);
-            ret.Description = string.Equals(item.Description, rhs.Description);
             ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
             ret.DropSound = item.DropSound.Equals(rhs.DropSound);
-            ret.Value = item.Value == rhs.Value;
-            ret.FaceTexture = string.Equals(item.FaceTexture, rhs.FaceTexture);
-            ret.BackTexture = string.Equals(item.BackTexture, rhs.BackTexture);
+            ret.HighResFaceImage = string.Equals(item.HighResFaceImage, rhs.HighResFaceImage);
+            ret.HighResBackImage = string.Equals(item.HighResBackImage, rhs.HighResBackImage);
             ret.CardSuit = item.CardSuit == rhs.CardSuit;
             ret.CardValue = item.CardValue == rhs.CardValue;
+            ret.Value = item.Value == rhs.Value;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1571,10 +1553,9 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds is {} ObjectBoundsItem)
+            if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -1595,10 +1576,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Script.FormKeyNullable, "Script");
             }
-            if (printMask?.Description ?? true)
-            {
-                sb.AppendItem(item.Description, "Description");
-            }
             if (printMask?.PickUpSound ?? true)
             {
                 sb.AppendItem(item.PickUpSound.FormKeyNullable, "PickUpSound");
@@ -1607,20 +1584,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.DropSound.FormKeyNullable, "DropSound");
             }
-            if ((printMask?.Value ?? true)
-                && item.Value is {} ValueItem)
+            if ((printMask?.HighResFaceImage ?? true)
+                && item.HighResFaceImage is {} HighResFaceImageItem)
             {
-                sb.AppendItem(ValueItem, "Value");
+                sb.AppendItem(HighResFaceImageItem, "HighResFaceImage");
             }
-            if ((printMask?.FaceTexture ?? true)
-                && item.FaceTexture is {} FaceTextureItem)
+            if ((printMask?.HighResBackImage ?? true)
+                && item.HighResBackImage is {} HighResBackImageItem)
             {
-                sb.AppendItem(FaceTextureItem, "FaceTexture");
-            }
-            if ((printMask?.BackTexture ?? true)
-                && item.BackTexture is {} BackTextureItem)
-            {
-                sb.AppendItem(BackTextureItem, "BackTexture");
+                sb.AppendItem(HighResBackImageItem, "HighResBackImage");
             }
             if ((printMask?.CardSuit ?? true)
                 && item.CardSuit is {} CardSuitItem)
@@ -1631,6 +1603,11 @@ namespace Mutagen.Bethesda.Fallout3
                 && item.CardValue is {} CardValueItem)
             {
                 sb.AppendItem(CardValueItem, "CardValue");
+            }
+            if ((printMask?.Value ?? true)
+                && item.Value is {} ValueItem)
+            {
+                sb.AppendItem(ValueItem, "Value");
             }
         }
         
@@ -1692,7 +1669,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Model) ?? true))
             {
@@ -1714,10 +1691,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.Script.Equals(rhs.Script)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Description) ?? true))
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.PickUpSound) ?? true))
             {
                 if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
@@ -1726,17 +1699,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!lhs.DropSound.Equals(rhs.DropSound)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.HighResFaceImage) ?? true))
             {
-                if (lhs.Value != rhs.Value) return false;
+                if (!string.Equals(lhs.HighResFaceImage, rhs.HighResFaceImage)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.FaceTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.HighResBackImage) ?? true))
             {
-                if (!string.Equals(lhs.FaceTexture, rhs.FaceTexture)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.BackTexture) ?? true))
-            {
-                if (!string.Equals(lhs.BackTexture, rhs.BackTexture)) return false;
+                if (!string.Equals(lhs.HighResBackImage, rhs.HighResBackImage)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.CardSuit) ?? true))
             {
@@ -1745,6 +1714,10 @@ namespace Mutagen.Bethesda.Fallout3
             if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.CardValue) ?? true))
             {
                 if (lhs.CardValue != rhs.CardValue) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
             }
             return true;
         }
@@ -1774,10 +1747,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ICaravanCardGetter item)
         {
             var hash = new HashCode();
-            if (item.ObjectBounds is {} ObjectBoundsitem)
-            {
-                hash.Add(ObjectBoundsitem);
-            }
+            hash.Add(item.ObjectBounds);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -1791,20 +1761,15 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(Iconsitem);
             }
             hash.Add(item.Script);
-            hash.Add(item.Description);
             hash.Add(item.PickUpSound);
             hash.Add(item.DropSound);
-            if (item.Value is {} Valueitem)
+            if (item.HighResFaceImage is {} HighResFaceImageitem)
             {
-                hash.Add(Valueitem);
+                hash.Add(HighResFaceImageitem);
             }
-            if (item.FaceTexture is {} FaceTextureitem)
+            if (item.HighResBackImage is {} HighResBackImageitem)
             {
-                hash.Add(FaceTextureitem);
-            }
-            if (item.BackTexture is {} BackTextureitem)
-            {
-                hash.Add(BackTextureitem);
+                hash.Add(HighResBackImageitem);
             }
             if (item.CardSuit is {} CardSuititem)
             {
@@ -1813,6 +1778,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (item.CardValue is {} CardValueitem)
             {
                 hash.Add(CardValueitem);
+            }
+            if (item.Value is {} Valueitem)
+            {
+                hash.Add(Valueitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1979,15 +1948,11 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)CaravanCard_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.ObjectBounds) ?? true))
                     {
-                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)CaravanCard_FieldIndex.ObjectBounds));
-                    }
-                    else
-                    {
-                        item.ObjectBounds = default;
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CaravanCard_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2002,7 +1967,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Model) ?? true))
             {
@@ -2060,10 +2025,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Description) ?? true))
-            {
-                item.Description = rhs.Description;
-            }
             if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.PickUpSound) ?? true))
             {
                 item.PickUpSound.SetTo(rhs.PickUpSound.FormKeyNullable);
@@ -2072,17 +2033,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.DropSound.SetTo(rhs.DropSound.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Value) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.HighResFaceImage) ?? true))
             {
-                item.Value = rhs.Value;
+                item.HighResFaceImage = rhs.HighResFaceImage;
             }
-            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.FaceTexture) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.HighResBackImage) ?? true))
             {
-                item.FaceTexture = rhs.FaceTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.BackTexture) ?? true))
-            {
-                item.BackTexture = rhs.BackTexture;
+                item.HighResBackImage = rhs.HighResBackImage;
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.CardSuit) ?? true))
             {
@@ -2091,6 +2048,10 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.CardValue) ?? true))
             {
                 item.CardValue = rhs.CardValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CaravanCard_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2261,18 +2222,17 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            if (item.ObjectBounds is {} ObjectBoundsItem)
-            {
-                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -2291,11 +2251,6 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Script,
                 header: translationParams.ConvertToCustom(RecordTypes.SCRI));
-            StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Description,
-                header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PickUpSound,
@@ -2304,18 +2259,14 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.DropSound,
                 header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.Value,
-                header: translationParams.ConvertToCustom(RecordTypes.DATA));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FaceTexture,
+                item: item.HighResFaceImage,
                 header: translationParams.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BackTexture,
+                item: item.HighResBackImage,
                 header: translationParams.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<CaravanCard.CaravanSuit, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -2328,6 +2279,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item.CardValue,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.INTV));
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.Value,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -2406,6 +2361,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)CaravanCard_FieldIndex.Name;
@@ -2434,15 +2391,6 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)CaravanCard_FieldIndex.Script;
                 }
-                case RecordTypeInts.DESC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)CaravanCard_FieldIndex.Description;
-                }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2455,34 +2403,28 @@ namespace Mutagen.Bethesda.Fallout3
                     item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)CaravanCard_FieldIndex.DropSound;
                 }
-                case RecordTypeInts.DATA:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value = frame.ReadUInt32();
-                    return (int)CaravanCard_FieldIndex.Value;
-                }
                 case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FaceTexture = StringBinaryTranslation.Instance.Parse(
+                    item.HighResFaceImage = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)CaravanCard_FieldIndex.FaceTexture;
+                    return (int)CaravanCard_FieldIndex.HighResFaceImage;
                 }
                 case RecordTypeInts.TX01:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BackTexture = StringBinaryTranslation.Instance.Parse(
+                    item.HighResBackImage = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)CaravanCard_FieldIndex.BackTexture;
+                    return (int)CaravanCard_FieldIndex.HighResBackImage;
                 }
                 case RecordTypeInts.INTV:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)CaravanCard_FieldIndex.BackTexture)
+                        || lastParsed.ParsedIndex.Value <= (int)CaravanCard_FieldIndex.HighResBackImage)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.CardSuit = EnumBinaryTranslation<CaravanCard.CaravanSuit, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -2518,6 +2460,12 @@ namespace Mutagen.Bethesda.Fallout3
                                 throw new NotImplementedException();
                         }
                     }
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Value = frame.ReadUInt32();
+                    return (int)CaravanCard_FieldIndex.Value;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2581,14 +2529,19 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
@@ -2596,10 +2549,6 @@ namespace Mutagen.Bethesda.Fallout3
         #region Script
         private int? _ScriptLocation;
         public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
-        #endregion
-        #region Description
-        private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
@@ -2609,17 +2558,13 @@ namespace Mutagen.Bethesda.Fallout3
         private int? _DropSoundLocation;
         public IFormLinkNullableGetter<ISoundGetter> DropSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _DropSoundLocation);
         #endregion
-        #region Value
-        private int? _ValueLocation;
-        public UInt32? Value => _ValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region HighResFaceImage
+        private int? _HighResFaceImageLocation;
+        public String? HighResFaceImage => _HighResFaceImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HighResFaceImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region FaceTexture
-        private int? _FaceTextureLocation;
-        public String? FaceTexture => _FaceTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FaceTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region BackTexture
-        private int? _BackTextureLocation;
-        public String? BackTexture => _BackTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BackTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region HighResBackImage
+        private int? _HighResBackImageLocation;
+        public String? HighResBackImage => _HighResBackImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HighResBackImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region CardSuit
         private int? _CardSuitLocation;
@@ -2628,6 +2573,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region CardValue
         private int? _CardValueLocation;
         public CaravanCard.CaravanValue? CardValue => EnumBinaryTranslation<CaravanCard.CaravanValue, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_CardValueLocation, _recordData, _package, 4);
+        #endregion
+        #region Value
+        private int? _ValueLocation;
+        public UInt32? Value => _ValueLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2733,11 +2682,6 @@ namespace Mutagen.Bethesda.Fallout3
                     _ScriptLocation = (stream.Position - offset);
                     return (int)CaravanCard_FieldIndex.Script;
                 }
-                case RecordTypeInts.DESC:
-                {
-                    _DescriptionLocation = (stream.Position - offset);
-                    return (int)CaravanCard_FieldIndex.Description;
-                }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
@@ -2748,25 +2692,20 @@ namespace Mutagen.Bethesda.Fallout3
                     _DropSoundLocation = (stream.Position - offset);
                     return (int)CaravanCard_FieldIndex.DropSound;
                 }
-                case RecordTypeInts.DATA:
-                {
-                    _ValueLocation = (stream.Position - offset);
-                    return (int)CaravanCard_FieldIndex.Value;
-                }
                 case RecordTypeInts.TX00:
                 {
-                    _FaceTextureLocation = (stream.Position - offset);
-                    return (int)CaravanCard_FieldIndex.FaceTexture;
+                    _HighResFaceImageLocation = (stream.Position - offset);
+                    return (int)CaravanCard_FieldIndex.HighResFaceImage;
                 }
                 case RecordTypeInts.TX01:
                 {
-                    _BackTextureLocation = (stream.Position - offset);
-                    return (int)CaravanCard_FieldIndex.BackTexture;
+                    _HighResBackImageLocation = (stream.Position - offset);
+                    return (int)CaravanCard_FieldIndex.HighResBackImage;
                 }
                 case RecordTypeInts.INTV:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)CaravanCard_FieldIndex.BackTexture)
+                        || lastParsed.ParsedIndex.Value <= (int)CaravanCard_FieldIndex.HighResBackImage)
                     {
                         _CardSuitLocation = (stream.Position - offset);
                         return new ParseResult((int)CaravanCard_FieldIndex.CardSuit, type);
@@ -2794,6 +2733,11 @@ namespace Mutagen.Bethesda.Fallout3
                                 throw new NotImplementedException();
                         }
                     }
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _ValueLocation = (stream.Position - offset);
+                    return (int)CaravanCard_FieldIndex.Value;
                 }
                 default:
                     return base.FillRecordType(

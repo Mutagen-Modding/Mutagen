@@ -2,7 +2,7 @@ namespace Mutagen.Bethesda.Fallout3;
 
 public partial class CaravanCard
 {
-    public enum CaravanSuit : uint
+    public enum CaravanSuit
     {
         None = 0,
         Hearts = 1,
@@ -12,7 +12,7 @@ public partial class CaravanCard
         Joker = 5,
     }
 
-    public enum CaravanValue : uint
+    public enum CaravanValue
     {
         None = 0,
         Ace = 1,
