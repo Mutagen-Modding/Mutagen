@@ -292,6 +292,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     AmmoEffect_Registration.Instance,
                     CaravanCard_Registration.Instance,
+                    CaravanMoney_Registration.Instance,
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Challenge_Registration.Instance,
@@ -318,6 +319,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     AmmoEffect_Registration.Instance,
                     CaravanCard_Registration.Instance,
+                    CaravanMoney_Registration.Instance,
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Challenge_Registration.Instance,
@@ -351,6 +353,7 @@ namespace Mutagen.Bethesda.Fallout3
                     ArmorAddon_Registration.Instance,
                     Book_Registration.Instance,
                     CaravanCard_Registration.Instance,
+                    CaravanMoney_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Container_Registration.Instance,
                     Creature_Registration.Instance,
@@ -376,7 +379,6 @@ namespace Mutagen.Bethesda.Fallout3
                 new ILoquiRegistration[]
                 {
                     Activator_Registration.Instance,
-                    CaravanMoney_Registration.Instance,
                     ConstructibleObject_Registration.Instance,
                     Door_Registration.Instance,
                     Furniture_Registration.Instance,

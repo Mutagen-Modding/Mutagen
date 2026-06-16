@@ -454,7 +454,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("ALOC"),
             new RecordType("CHAL"),
             new RecordType("AMEF"),
-            new RecordType("CCRD"));
+            new RecordType("CCRD"),
+            new RecordType("CMNY"));
         return ret;
     }
 }

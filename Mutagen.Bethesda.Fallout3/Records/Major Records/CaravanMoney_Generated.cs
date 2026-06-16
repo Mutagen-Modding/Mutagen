@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -58,35 +59,55 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region ObjectBounds
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds? _ObjectBounds;
         /// <summary>
-        /// Aspects: IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
-        public ObjectBounds? ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ICaravanMoneyGetter.ObjectBounds => ObjectBounds;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ObjectBounds? IObjectBoundedOptional.ObjectBounds
         {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value;
+            get => this.ObjectBounds;
+            set => this.ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter? ICaravanMoneyGetter.ObjectBounds => this.ObjectBounds;
-        #region Aspects
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICaravanMoneyGetter.Name => this.Name;
+        ITranslatedStringGetter? ICaravanMoneyGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -128,19 +149,6 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
-        #endregion
-        #region Script
-        private readonly IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
-        public IFormLinkNullable<IScriptGetter> Script
-        {
-            get => _Script;
-            set => _Script.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IScriptGetter> ICaravanMoneyGetter.Script => this.Script;
-        #endregion
-        #region Description
-        public String Description { get; set; } = string.Empty;
         #endregion
         #region PickUpSound
         private readonly IFormLinkNullable<ISoundGetter> _PickUpSound = new FormLinkNullable<ISoundGetter>();
@@ -196,8 +204,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
-                this.Script = initialValue;
-                this.Description = initialValue;
                 this.PickUpSound = initialValue;
                 this.DropSound = initialValue;
                 this.AbsoluteValue = initialValue;
@@ -215,8 +221,6 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Name,
                 TItem Model,
                 TItem Icons,
-                TItem Script,
-                TItem Description,
                 TItem PickUpSound,
                 TItem DropSound,
                 TItem AbsoluteValue)
@@ -233,8 +237,6 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
-                this.Script = Script;
-                this.Description = Description;
                 this.PickUpSound = PickUpSound;
                 this.DropSound = DropSound;
                 this.AbsoluteValue = AbsoluteValue;
@@ -253,8 +255,6 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
-            public TItem Script;
-            public TItem Description;
             public TItem PickUpSound;
             public TItem DropSound;
             public TItem AbsoluteValue;
@@ -275,8 +275,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Icons, rhs.Icons)) return false;
-                if (!object.Equals(this.Script, rhs.Script)) return false;
-                if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
                 if (!object.Equals(this.DropSound, rhs.DropSound)) return false;
                 if (!object.Equals(this.AbsoluteValue, rhs.AbsoluteValue)) return false;
@@ -289,8 +287,6 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Name);
                 hash.Add(this.Model);
                 hash.Add(this.Icons);
-                hash.Add(this.Script);
-                hash.Add(this.Description);
                 hash.Add(this.PickUpSound);
                 hash.Add(this.DropSound);
                 hash.Add(this.AbsoluteValue);
@@ -320,8 +316,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Icons.Overall)) return false;
                     if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Script)) return false;
-                if (!eval(this.Description)) return false;
                 if (!eval(this.PickUpSound)) return false;
                 if (!eval(this.DropSound)) return false;
                 if (!eval(this.AbsoluteValue)) return false;
@@ -349,8 +343,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Icons.Overall)) return true;
                     if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Script)) return true;
-                if (eval(this.Description)) return true;
                 if (eval(this.PickUpSound)) return true;
                 if (eval(this.DropSound)) return true;
                 if (eval(this.AbsoluteValue)) return true;
@@ -373,8 +365,6 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
-                obj.Script = eval(this.Script);
-                obj.Description = eval(this.Description);
                 obj.PickUpSound = eval(this.PickUpSound);
                 obj.DropSound = eval(this.DropSound);
                 obj.AbsoluteValue = eval(this.AbsoluteValue);
@@ -412,14 +402,6 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Icons?.Print(sb);
                     }
-                    if (printMask?.Script ?? true)
-                    {
-                        sb.AppendItem(Script, "Script");
-                    }
-                    if (printMask?.Description ?? true)
-                    {
-                        sb.AppendItem(Description, "Description");
-                    }
                     if (printMask?.PickUpSound ?? true)
                     {
                         sb.AppendItem(PickUpSound, "PickUpSound");
@@ -447,8 +429,6 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
-            public Exception? Script;
-            public Exception? Description;
             public Exception? PickUpSound;
             public Exception? DropSound;
             public Exception? AbsoluteValue;
@@ -468,10 +448,6 @@ namespace Mutagen.Bethesda.Fallout3
                         return Model;
                     case CaravanMoney_FieldIndex.Icons:
                         return Icons;
-                    case CaravanMoney_FieldIndex.Script:
-                        return Script;
-                    case CaravanMoney_FieldIndex.Description:
-                        return Description;
                     case CaravanMoney_FieldIndex.PickUpSound:
                         return PickUpSound;
                     case CaravanMoney_FieldIndex.DropSound:
@@ -499,12 +475,6 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case CaravanMoney_FieldIndex.Icons:
                         this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
-                        break;
-                    case CaravanMoney_FieldIndex.Script:
-                        this.Script = ex;
-                        break;
-                    case CaravanMoney_FieldIndex.Description:
-                        this.Description = ex;
                         break;
                     case CaravanMoney_FieldIndex.PickUpSound:
                         this.PickUpSound = ex;
@@ -538,12 +508,6 @@ namespace Mutagen.Bethesda.Fallout3
                     case CaravanMoney_FieldIndex.Icons:
                         this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
-                    case CaravanMoney_FieldIndex.Script:
-                        this.Script = (Exception?)obj;
-                        break;
-                    case CaravanMoney_FieldIndex.Description:
-                        this.Description = (Exception?)obj;
-                        break;
                     case CaravanMoney_FieldIndex.PickUpSound:
                         this.PickUpSound = (Exception?)obj;
                         break;
@@ -566,8 +530,6 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Name != null) return true;
                 if (Model != null) return true;
                 if (Icons != null) return true;
-                if (Script != null) return true;
-                if (Description != null) return true;
                 if (PickUpSound != null) return true;
                 if (DropSound != null) return true;
                 if (AbsoluteValue != null) return true;
@@ -604,12 +566,6 @@ namespace Mutagen.Bethesda.Fallout3
                 Model?.Print(sb);
                 Icons?.Print(sb);
                 {
-                    sb.AppendItem(Script, "Script");
-                }
-                {
-                    sb.AppendItem(Description, "Description");
-                }
-                {
                     sb.AppendItem(PickUpSound, "PickUpSound");
                 }
                 {
@@ -630,8 +586,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
-                ret.Script = this.Script.Combine(rhs.Script);
-                ret.Description = this.Description.Combine(rhs.Description);
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.DropSound = this.DropSound.Combine(rhs.DropSound);
                 ret.AbsoluteValue = this.AbsoluteValue.Combine(rhs.AbsoluteValue);
@@ -661,8 +615,6 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Name;
             public Model.TranslationMask? Model;
             public Icons.TranslationMask? Icons;
-            public bool Script;
-            public bool Description;
             public bool PickUpSound;
             public bool DropSound;
             public bool AbsoluteValue;
@@ -675,8 +627,6 @@ namespace Mutagen.Bethesda.Fallout3
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
-                this.Script = defaultOn;
-                this.Description = defaultOn;
                 this.PickUpSound = defaultOn;
                 this.DropSound = defaultOn;
                 this.AbsoluteValue = defaultOn;
@@ -691,8 +641,6 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
-                ret.Add((Script, null));
-                ret.Add((Description, null));
                 ret.Add((PickUpSound, null));
                 ret.Add((DropSound, null));
                 ret.Add((AbsoluteValue, null));
@@ -842,20 +790,22 @@ namespace Mutagen.Bethesda.Fallout3
         IModeled,
         INamed,
         INamedRequired,
-        IObjectBoundedOptional,
+        IObjectBounded,
         IPackageLocationObject,
         IPackageTargetObject,
         IPlaceableObject,
-        IRecipeItem
+        IRecipeItem,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IObjectBoundedOptional
+        /// Aspects: IObjectBounded
         /// </summary>
-        new ObjectBounds? ObjectBounds { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -864,8 +814,6 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
-        new IFormLinkNullable<IScriptGetter> Script { get; set; }
-        new String Description { get; set; }
         new IFormLinkNullable<ISoundGetter> PickUpSound { get; set; }
         new IFormLinkNullable<ISoundGetter> DropSound { get; set; }
         new UInt32? AbsoluteValue { get; set; }
@@ -892,24 +840,26 @@ namespace Mutagen.Bethesda.Fallout3
         IModeledGetter,
         INamedGetter,
         INamedRequiredGetter,
-        IObjectBoundedOptionalGetter,
+        IObjectBoundedGetter,
         IPackageLocationObjectGetter,
         IPackageTargetObjectGetter,
         IPlaceableObjectGetter,
-        IRecipeItemGetter
+        IRecipeItemGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => CaravanMoney_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBoundedOptionalGetter
+        /// Aspects: IObjectBoundedGetter
         /// </summary>
-        IObjectBoundsGetter? ObjectBounds { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         #region Model
         /// <summary>
@@ -923,8 +873,6 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion
-        IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        String Description { get; }
         IFormLinkNullableGetter<ISoundGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundGetter> DropSound { get; }
         UInt32? AbsoluteValue { get; }
@@ -1108,11 +1056,9 @@ namespace Mutagen.Bethesda.Fallout3
         Name = 8,
         Model = 9,
         Icons = 10,
-        Script = 11,
-        Description = 12,
-        PickUpSound = 13,
-        DropSound = 14,
-        AbsoluteValue = 15,
+        PickUpSound = 11,
+        DropSound = 12,
+        AbsoluteValue = 13,
     }
     #endregion
 
@@ -1123,9 +1069,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(CaravanMoney.Mask<>);
 
@@ -1166,8 +1112,6 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.MODS,
                 RecordTypes.MODD,
                 RecordTypes.ICON,
-                RecordTypes.SCRI,
-                RecordTypes.DESC,
                 RecordTypes.YNAM,
                 RecordTypes.ZNAM,
                 RecordTypes.DATA);
@@ -1215,12 +1159,10 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICaravanMoneyInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = null;
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
             item.Icons = null;
-            item.Script.Clear();
-            item.Description = string.Empty;
             item.PickUpSound.Clear();
             item.DropSound.Clear();
             item.AbsoluteValue = default;
@@ -1242,7 +1184,6 @@ namespace Mutagen.Bethesda.Fallout3
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Script.Relink(mapping);
             obj.PickUpSound.Relink(mapping);
             obj.DropSound.Relink(mapping);
         }
@@ -1338,12 +1279,8 @@ namespace Mutagen.Bethesda.Fallout3
             CaravanMoney.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds,
-                rhs.ObjectBounds,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1354,8 +1291,6 @@ namespace Mutagen.Bethesda.Fallout3
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Script = item.Script.Equals(rhs.Script);
-            ret.Description = string.Equals(item.Description, rhs.Description);
             ret.PickUpSound = item.PickUpSound.Equals(rhs.PickUpSound);
             ret.DropSound = item.DropSound.Equals(rhs.DropSound);
             ret.AbsoluteValue = item.AbsoluteValue == rhs.AbsoluteValue;
@@ -1408,10 +1343,9 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds is {} ObjectBoundsItem)
+            if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                ObjectBoundsItem?.Print(sb, "ObjectBounds");
+                item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
@@ -1427,14 +1361,6 @@ namespace Mutagen.Bethesda.Fallout3
                 && item.Icons is {} IconsItem)
             {
                 IconsItem?.Print(sb, "Icons");
-            }
-            if (printMask?.Script ?? true)
-            {
-                sb.AppendItem(item.Script.FormKeyNullable, "Script");
-            }
-            if (printMask?.Description ?? true)
-            {
-                sb.AppendItem(item.Description, "Description");
             }
             if (printMask?.PickUpSound ?? true)
             {
@@ -1509,7 +1435,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Model) ?? true))
             {
@@ -1526,14 +1452,6 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)CaravanMoney_FieldIndex.Icons))) return false;
                 }
                 else if (!isIconsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Script) ?? true))
-            {
-                if (!lhs.Script.Equals(rhs.Script)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Description) ?? true))
-            {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.PickUpSound) ?? true))
             {
@@ -1575,10 +1493,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ICaravanMoneyGetter item)
         {
             var hash = new HashCode();
-            if (item.ObjectBounds is {} ObjectBoundsitem)
-            {
-                hash.Add(ObjectBoundsitem);
-            }
+            hash.Add(item.ObjectBounds);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -1591,8 +1506,6 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(Iconsitem);
             }
-            hash.Add(item.Script);
-            hash.Add(item.Description);
             hash.Add(item.PickUpSound);
             hash.Add(item.DropSound);
             if (item.AbsoluteValue is {} AbsoluteValueitem)
@@ -1634,10 +1547,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     yield return item;
                 }
-            }
-            if (FormLinkInformation.TryFactory(obj.Script, out var ScriptInfo))
-            {
-                yield return ScriptInfo;
             }
             if (FormLinkInformation.TryFactory(obj.PickUpSound, out var PickUpSoundInfo))
             {
@@ -1764,15 +1673,11 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask?.PushIndex((int)CaravanMoney_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds is {} rhsObjectBounds)
+                    if ((copyMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.ObjectBounds) ?? true))
                     {
-                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)CaravanMoney_FieldIndex.ObjectBounds));
-                    }
-                    else
-                    {
-                        item.ObjectBounds = default;
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CaravanMoney_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1787,7 +1692,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Model) ?? true))
             {
@@ -1840,14 +1745,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Script) ?? true))
-            {
-                item.Script.SetTo(rhs.Script.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.Description) ?? true))
-            {
-                item.Description = rhs.Description;
             }
             if ((copyMask?.GetShouldTranslate((int)CaravanMoney_FieldIndex.PickUpSound) ?? true))
             {
@@ -2030,18 +1927,17 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            if (item.ObjectBounds is {} ObjectBoundsItem)
-            {
-                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -2056,15 +1952,6 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Script,
-                header: translationParams.ConvertToCustom(RecordTypes.SCRI));
-            StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Description,
-                header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PickUpSound,
@@ -2155,6 +2042,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)CaravanMoney_FieldIndex.Name;
@@ -2176,21 +2065,6 @@ namespace Mutagen.Bethesda.Fallout3
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)CaravanMoney_FieldIndex.Icons;
-                }
-                case RecordTypeInts.SCRI:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)CaravanMoney_FieldIndex.Script;
-                }
-                case RecordTypeInts.DESC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)CaravanMoney_FieldIndex.Description;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -2272,26 +2146,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
         public IIconsGetter? Icons { get; private set; }
-        #region Script
-        private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
-        #endregion
-        #region Description
-        private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
-        #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public IFormLinkNullableGetter<ISoundGetter> PickUpSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundGetter>(_package, _recordData, _PickUpSoundLocation);
@@ -2402,16 +2273,6 @@ namespace Mutagen.Bethesda.Fallout3
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)CaravanMoney_FieldIndex.Icons;
-                }
-                case RecordTypeInts.SCRI:
-                {
-                    _ScriptLocation = (stream.Position - offset);
-                    return (int)CaravanMoney_FieldIndex.Script;
-                }
-                case RecordTypeInts.DESC:
-                {
-                    _DescriptionLocation = (stream.Position - offset);
-                    return (int)CaravanMoney_FieldIndex.Description;
                 }
                 case RecordTypeInts.YNAM:
                 {
