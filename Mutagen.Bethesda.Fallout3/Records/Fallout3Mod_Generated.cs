@@ -158,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout3
             _CaravanCards_Object = new Fallout3Group<CaravanCard>(this);
             _CaravanMonies_Object = new Fallout3Group<CaravanMoney>(this);
             _CaravanDecks_Object = new Fallout3Group<CaravanDeck>(this);
+            _DehydrationStages_Object = new Fallout3Group<DehydrationStage>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -856,6 +857,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<ICaravanDeckGetter> IFallout3ModGetter.CaravanDecks => _CaravanDecks_Object;
         #endregion
+        #region DehydrationStages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<DehydrationStage> _DehydrationStages_Object;
+        public Fallout3Group<DehydrationStage> DehydrationStages => _DehydrationStages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IDehydrationStageGetter> IFallout3ModGetter.DehydrationStages => _DehydrationStages_Object;
+        #endregion
 
         #region To String
 
@@ -994,6 +1002,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CaravanCards = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.CaravanMonies = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.CaravanDecks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.DehydrationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1095,7 +1104,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem AmmoEffects,
                 TItem CaravanCards,
                 TItem CaravanMonies,
-                TItem CaravanDecks)
+                TItem CaravanDecks,
+                TItem DehydrationStages)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1196,6 +1206,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CaravanCards = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanCards, new Fallout3Group.Mask<TItem>(CaravanCards));
                 this.CaravanMonies = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanMonies, new Fallout3Group.Mask<TItem>(CaravanMonies));
                 this.CaravanDecks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanDecks, new Fallout3Group.Mask<TItem>(CaravanDecks));
+                this.DehydrationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(DehydrationStages, new Fallout3Group.Mask<TItem>(DehydrationStages));
             }
 
             #pragma warning disable CS8618
@@ -1306,6 +1317,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanCards { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanMonies { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanDecks { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? DehydrationStages { get; set; }
             #endregion
 
             #region Equals
@@ -1417,6 +1429,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CaravanCards, rhs.CaravanCards)) return false;
                 if (!object.Equals(this.CaravanMonies, rhs.CaravanMonies)) return false;
                 if (!object.Equals(this.CaravanDecks, rhs.CaravanDecks)) return false;
+                if (!object.Equals(this.DehydrationStages, rhs.DehydrationStages)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1521,6 +1534,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CaravanCards);
                 hash.Add(this.CaravanMonies);
                 hash.Add(this.CaravanDecks);
+                hash.Add(this.DehydrationStages);
                 return hash.ToHashCode();
             }
 
@@ -2024,6 +2038,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.CaravanDecks.Overall)) return false;
                     if (this.CaravanDecks.Specific != null && !this.CaravanDecks.Specific.All(eval)) return false;
                 }
+                if (DehydrationStages != null)
+                {
+                    if (!eval(this.DehydrationStages.Overall)) return false;
+                    if (this.DehydrationStages.Specific != null && !this.DehydrationStages.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2526,6 +2545,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.CaravanDecks.Overall)) return true;
                     if (this.CaravanDecks.Specific != null && this.CaravanDecks.Specific.Any(eval)) return true;
                 }
+                if (DehydrationStages != null)
+                {
+                    if (eval(this.DehydrationStages.Overall)) return true;
+                    if (this.DehydrationStages.Specific != null && this.DehydrationStages.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2639,6 +2663,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.CaravanCards = this.CaravanCards == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanCards.Overall), this.CaravanCards.Specific?.Translate(eval));
                 obj.CaravanMonies = this.CaravanMonies == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanMonies.Overall), this.CaravanMonies.Specific?.Translate(eval));
                 obj.CaravanDecks = this.CaravanDecks == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanDecks.Overall), this.CaravanDecks.Specific?.Translate(eval));
+                obj.DehydrationStages = this.DehydrationStages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.DehydrationStages.Overall), this.DehydrationStages.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3053,6 +3078,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         CaravanDecks?.Print(sb);
                     }
+                    if (printMask?.DehydrationStages?.Overall ?? true)
+                    {
+                        DehydrationStages?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3176,6 +3205,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanCard.ErrorMask>?>? CaravanCards;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanMoney.ErrorMask>?>? CaravanMonies;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>? CaravanDecks;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<DehydrationStage.ErrorMask>?>? DehydrationStages;
             #endregion
 
             #region IErrorMask
@@ -3382,6 +3412,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return CaravanMonies;
                     case Fallout3Mod_FieldIndex.CaravanDecks:
                         return CaravanDecks;
+                    case Fallout3Mod_FieldIndex.DehydrationStages:
+                        return DehydrationStages;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3688,6 +3720,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.CaravanDecks:
                         this.CaravanDecks = new MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.DehydrationStages:
+                        this.DehydrationStages = new MaskItem<Exception?, Fallout3Group.ErrorMask<DehydrationStage.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3996,6 +4031,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.CaravanDecks:
                         this.CaravanDecks = (MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.DehydrationStages:
+                        this.DehydrationStages = (MaskItem<Exception?, Fallout3Group.ErrorMask<DehydrationStage.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4103,6 +4141,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CaravanCards != null) return true;
                 if (CaravanMonies != null) return true;
                 if (CaravanDecks != null) return true;
+                if (DehydrationStages != null) return true;
                 return false;
             }
             #endregion
@@ -4227,6 +4266,7 @@ namespace Mutagen.Bethesda.Fallout3
                 CaravanCards?.Print(sb);
                 CaravanMonies?.Print(sb);
                 CaravanDecks?.Print(sb);
+                DehydrationStages?.Print(sb);
             }
             #endregion
 
@@ -4334,6 +4374,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CaravanCards = this.CaravanCards.Combine(rhs.CaravanCards, (l, r) => l.Combine(r));
                 ret.CaravanMonies = this.CaravanMonies.Combine(rhs.CaravanMonies, (l, r) => l.Combine(r));
                 ret.CaravanDecks = this.CaravanDecks.Combine(rhs.CaravanDecks, (l, r) => l.Combine(r));
+                ret.DehydrationStages = this.DehydrationStages.Combine(rhs.DehydrationStages, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4456,6 +4497,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<CaravanCard.TranslationMask>? CaravanCards;
             public Fallout3Group.TranslationMask<CaravanMoney.TranslationMask>? CaravanMonies;
             public Fallout3Group.TranslationMask<CaravanDeck.TranslationMask>? CaravanDecks;
+            public Fallout3Group.TranslationMask<DehydrationStage.TranslationMask>? DehydrationStages;
             #endregion
 
             #region Ctors
@@ -4579,6 +4621,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CaravanCards != null ? CaravanCards.OnOverall : DefaultOn, CaravanCards?.GetCrystal()));
                 ret.Add((CaravanMonies != null ? CaravanMonies.OnOverall : DefaultOn, CaravanMonies?.GetCrystal()));
                 ret.Add((CaravanDecks != null ? CaravanDecks.OnOverall : DefaultOn, CaravanDecks?.GetCrystal()));
+                ret.Add((DehydrationStages != null ? DehydrationStages.OnOverall : DefaultOn, DehydrationStages?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4736,6 +4779,7 @@ namespace Mutagen.Bethesda.Fallout3
             _CaravanCards_Object = new Fallout3Group<CaravanCard>(this);
             _CaravanMonies_Object = new Fallout3Group<CaravanMoney>(this);
             _CaravanDecks_Object = new Fallout3Group<CaravanDeck>(this);
+            _DehydrationStages_Object = new Fallout3Group<DehydrationStage>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5137,6 +5181,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.CaravanDecks.RecordCache.Set(rhsMod.CaravanDecks.RecordCache.Items);
             }
+            if (mask?.DehydrationStages ?? true)
+            {
+                this.DehydrationStages.RecordCache.Set(rhsMod.DehydrationStages.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5498,6 +5546,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<CaravanCard> CaravanCards { get; }
         new Fallout3Group<CaravanMoney> CaravanMonies { get; }
         new Fallout3Group<CaravanDeck> CaravanDecks { get; }
+        new Fallout3Group<DehydrationStage> DehydrationStages { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5616,6 +5665,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ICaravanCardGetter> CaravanCards { get; }
         IFallout3GroupGetter<ICaravanMoneyGetter> CaravanMonies { get; }
         IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks { get; }
+        IFallout3GroupGetter<IDehydrationStageGetter> DehydrationStages { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -6265,6 +6315,7 @@ namespace Mutagen.Bethesda.Fallout3
         CaravanCards = 96,
         CaravanMonies = 97,
         CaravanDecks = 98,
+        DehydrationStages = 99,
     }
     #endregion
 
@@ -6275,9 +6326,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 99;
+        public const ushort AdditionalFieldCount = 100;
 
-        public const ushort FieldCount = 99;
+        public const ushort FieldCount = 100;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6441,6 +6492,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CaravanCards.Clear();
             item.CaravanMonies.Clear();
             item.CaravanDecks.Clear();
+            item.DehydrationStages.Clear();
         }
         
         #region Mutagen
@@ -6527,6 +6579,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.CaravanCards.RemapLinks(mapping);
             obj.CaravanMonies.RemapLinks(mapping);
             obj.CaravanDecks.RemapLinks(mapping);
+            obj.DehydrationStages.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6686,6 +6739,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.CaravanCards.Remove(keys);
             obj.CaravanMonies.Remove(keys);
             obj.CaravanDecks.Remove(keys);
+            obj.DehydrationStages.Remove(keys);
         }
         
         public void Remove(
@@ -6929,6 +6983,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
                     obj.DefaultObjectManagers.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "DehydrationStage":
+                case "IDehydrationStageGetter":
+                case "IDehydrationStage":
+                case "IDehydrationStageInternal":
+                    obj.DehydrationStages.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -8201,6 +8263,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.CaravanCards = MaskItemExt.Factory(item.CaravanCards.GetEqualsMask(rhs.CaravanCards, include), include);
             ret.CaravanMonies = MaskItemExt.Factory(item.CaravanMonies.GetEqualsMask(rhs.CaravanMonies, include), include);
             ret.CaravanDecks = MaskItemExt.Factory(item.CaravanDecks.GetEqualsMask(rhs.CaravanDecks, include), include);
+            ret.DehydrationStages = MaskItemExt.Factory(item.DehydrationStages.GetEqualsMask(rhs.DehydrationStages, include), include);
         }
         
         public string Print(
@@ -8640,6 +8703,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.CaravanDecks?.Overall ?? true)
             {
                 item.CaravanDecks?.Print(sb, "CaravanDecks");
+            }
+            if (printMask?.DehydrationStages?.Overall ?? true)
+            {
+                item.DehydrationStages?.Print(sb, "DehydrationStages");
             }
         }
         
@@ -9442,6 +9509,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isCaravanDecksEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.DehydrationStages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DehydrationStages, rhs.DehydrationStages, out var lhsDehydrationStages, out var rhsDehydrationStages, out var isDehydrationStagesEqual))
+                {
+                    if (!object.Equals(lhsDehydrationStages, rhsDehydrationStages)) return false;
+                }
+                else if (!isDehydrationStagesEqual) return false;
+            }
             return true;
         }
         
@@ -9547,6 +9622,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.CaravanCards);
             hash.Add(item.CaravanMonies);
             hash.Add(item.CaravanDecks);
+            hash.Add(item.DehydrationStages);
             return hash.ToHashCode();
         }
         
@@ -10082,6 +10158,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "ICaravanDeck":
                 case "ICaravanDeckInternal":
                     return obj.CaravanDecks;
+                case "DehydrationStage":
+                case "IDehydrationStageGetter":
+                case "IDehydrationStage":
+                case "IDehydrationStageInternal":
+                    return obj.DehydrationStages;
                 default:
                     return null;
             }
@@ -10099,7 +10180,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[98];
+            Stream[] outputStreams = new Stream[99];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -10199,6 +10280,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.CaravanCards, 95, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.CaravanMonies, 96, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.CaravanDecks, 97, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DehydrationStages, 98, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -10342,6 +10424,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.CaravanCards.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.CaravanMonies.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.CaravanDecks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DehydrationStages.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10680,6 +10763,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.CaravanDecks.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DehydrationStages.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -11090,6 +11177,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.DehydrationStages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -11393,6 +11484,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
                     foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DehydrationStage":
+                case "IDehydrationStageGetter":
+                case "IDehydrationStage":
+                case "IDehydrationStageInternal":
+                    foreach (var item in obj.DehydrationStages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -12411,6 +12511,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.DefaultObjectManagers,
                 groupGetter: (m) => m.DefaultObjectManagers))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DehydrationStage, IDehydrationStageGetter>(
+                srcGroup: obj.DehydrationStages,
+                type: typeof(IDehydrationStageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.DehydrationStages,
+                groupGetter: (m) => m.DehydrationStages))
             {
                 yield return item;
             }
@@ -13504,6 +13613,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.DefaultObjectManagers,
                         groupGetter: (m) => m.DefaultObjectManagers))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DehydrationStage":
+                case "IDehydrationStageGetter":
+                case "IDehydrationStage":
+                case "IDehydrationStageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, DehydrationStage, IDehydrationStageGetter>(
+                        srcGroup: obj.DehydrationStages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.DehydrationStages,
+                        groupGetter: (m) => m.DehydrationStages))
                     {
                         yield return item;
                     }
@@ -16879,6 +17002,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.DehydrationStages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.DehydrationStages);
+                try
+                {
+                    item.DehydrationStages.DeepCopyIn(
+                        rhs: rhs.DehydrationStages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.DehydrationStages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -17080,6 +17223,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool CaravanCards;
         public bool CaravanMonies;
         public bool CaravanDecks;
+        public bool DehydrationStages;
         public GroupMask()
         {
         }
@@ -17183,6 +17327,7 @@ namespace Mutagen.Bethesda.Fallout3
             CaravanCards = defaultValue;
             CaravanMonies = defaultValue;
             CaravanDecks = defaultValue;
+            DehydrationStages = defaultValue;
         }
     }
 
@@ -18319,6 +18464,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)CaravanDecksItem).BinaryWriteTranslator).Write<ICaravanDeckGetter>(
                         item: CaravanDecksItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.DehydrationStages ?? true)
+            {
+                var DehydrationStagesItem = item.DehydrationStages;
+                if (DehydrationStagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)DehydrationStagesItem).BinaryWriteTranslator).Write<IDehydrationStageGetter>(
+                        item: DehydrationStagesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19765,6 +19921,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.CaravanDecks;
                 }
+                case RecordTypeInts.DEHY:
+                {
+                    if (importMask?.DehydrationStages ?? true)
+                    {
+                        item.DehydrationStages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.DehydrationStages;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -20419,6 +20589,11 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _CaravanDecksLocations;
         private IFallout3GroupGetter<ICaravanDeckGetter>? _CaravanDecks => _CaravanDecksLocations != null ? Fallout3GroupBinaryOverlay<ICaravanDeckGetter>.Fallout3GroupFactory(_stream, _CaravanDecksLocations, _package) : default;
         public IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks => _CaravanDecks ?? new Fallout3Group<CaravanDeck>(this);
+        #endregion
+        #region DehydrationStages
+        private List<RangeInt64>? _DehydrationStagesLocations;
+        private IFallout3GroupGetter<IDehydrationStageGetter>? _DehydrationStages => _DehydrationStagesLocations != null ? Fallout3GroupBinaryOverlay<IDehydrationStageGetter>.Fallout3GroupFactory(_stream, _DehydrationStagesLocations, _package) : default;
+        public IFallout3GroupGetter<IDehydrationStageGetter> DehydrationStages => _DehydrationStages ?? new Fallout3Group<DehydrationStage>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -21081,6 +21256,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _CaravanDecksLocations ??= new();
                     _CaravanDecksLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.CaravanDecks;
+                }
+                case RecordTypeInts.DEHY:
+                {
+                    _DehydrationStagesLocations ??= new();
+                    _DehydrationStagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.DehydrationStages;
                 }
                 default:
                     return default(int?);

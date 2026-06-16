@@ -128,6 +128,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<ICaravanCardGetter>? _caravanCards;
     private MergedGroup<ICaravanMoneyGetter>? _caravanMonies;
     private MergedGroup<ICaravanDeckGetter>? _caravanDecks;
+    private MergedGroup<IDehydrationStageGetter>? _dehydrationStages;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -459,6 +460,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks =>
         _caravanDecks ??= new MergedGroup<ICaravanDeckGetter>(
             _sourceMods.Select(m => m.CaravanDecks));
+    public IFallout3GroupGetter<IDehydrationStageGetter> DehydrationStages =>
+        _dehydrationStages ??= new MergedGroup<IDehydrationStageGetter>(
+            _sourceMods.Select(m => m.DehydrationStages));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);
