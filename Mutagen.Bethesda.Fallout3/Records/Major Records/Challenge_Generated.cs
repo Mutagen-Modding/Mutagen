@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -59,16 +60,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IChallengeGetter.Name => this.Name;
+        ITranslatedStringGetter? IChallengeGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -104,9 +123,9 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkNullableGetter<IScriptGetter> IChallengeGetter.Script => this.Script;
         #endregion
         #region Description
-        public String? Description { get; set; }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IChallengeGetter.Description => this.Description;
+        ITranslatedStringGetter? IChallengeGetter.Description => this.Description;
         #endregion
         #region Type
         public ChallengeType Type { get; set; } = default(ChallengeType);
@@ -120,16 +139,14 @@ namespace Mutagen.Bethesda.Fallout3
         #region Interval
         public UInt32 Interval { get; set; } = default(UInt32);
         #endregion
-        #region TypeData
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _TypeData = new byte[8];
-        public MemorySlice<Byte> TypeData
-        {
-            get => _TypeData;
-            set => this._TypeData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IChallengeGetter.TypeData => this.TypeData;
+        #region Value1
+        public UInt16 Value1 { get; set; } = default(UInt16);
+        #endregion
+        #region Value2
+        public UInt16 Value2 { get; set; } = default(UInt16);
+        #endregion
+        #region Value3
+        public UInt32 Value3 { get; set; } = default(UInt32);
         #endregion
         #region SNAM
         private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _SNAM = new FormLinkNullable<IFallout3MajorRecordGetter>();
@@ -184,7 +201,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Threshold = initialValue;
                 this.Flags = initialValue;
                 this.Interval = initialValue;
-                this.TypeData = initialValue;
+                this.Value1 = initialValue;
+                this.Value2 = initialValue;
+                this.Value3 = initialValue;
                 this.SNAM = initialValue;
                 this.XNAM = initialValue;
             }
@@ -205,7 +224,9 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Threshold,
                 TItem Flags,
                 TItem Interval,
-                TItem TypeData,
+                TItem Value1,
+                TItem Value2,
+                TItem Value3,
                 TItem SNAM,
                 TItem XNAM)
             : base(
@@ -225,7 +246,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Threshold = Threshold;
                 this.Flags = Flags;
                 this.Interval = Interval;
-                this.TypeData = TypeData;
+                this.Value1 = Value1;
+                this.Value2 = Value2;
+                this.Value3 = Value3;
                 this.SNAM = SNAM;
                 this.XNAM = XNAM;
             }
@@ -247,7 +270,9 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Threshold;
             public TItem Flags;
             public TItem Interval;
-            public TItem TypeData;
+            public TItem Value1;
+            public TItem Value2;
+            public TItem Value3;
             public TItem SNAM;
             public TItem XNAM;
             #endregion
@@ -271,7 +296,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Threshold, rhs.Threshold)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Interval, rhs.Interval)) return false;
-                if (!object.Equals(this.TypeData, rhs.TypeData)) return false;
+                if (!object.Equals(this.Value1, rhs.Value1)) return false;
+                if (!object.Equals(this.Value2, rhs.Value2)) return false;
+                if (!object.Equals(this.Value3, rhs.Value3)) return false;
                 if (!object.Equals(this.SNAM, rhs.SNAM)) return false;
                 if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
                 return true;
@@ -287,7 +314,9 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Threshold);
                 hash.Add(this.Flags);
                 hash.Add(this.Interval);
-                hash.Add(this.TypeData);
+                hash.Add(this.Value1);
+                hash.Add(this.Value2);
+                hash.Add(this.Value3);
                 hash.Add(this.SNAM);
                 hash.Add(this.XNAM);
                 hash.Add(base.GetHashCode());
@@ -312,7 +341,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Threshold)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Interval)) return false;
-                if (!eval(this.TypeData)) return false;
+                if (!eval(this.Value1)) return false;
+                if (!eval(this.Value2)) return false;
+                if (!eval(this.Value3)) return false;
                 if (!eval(this.SNAM)) return false;
                 if (!eval(this.XNAM)) return false;
                 return true;
@@ -335,7 +366,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Threshold)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.Interval)) return true;
-                if (eval(this.TypeData)) return true;
+                if (eval(this.Value1)) return true;
+                if (eval(this.Value2)) return true;
+                if (eval(this.Value3)) return true;
                 if (eval(this.SNAM)) return true;
                 if (eval(this.XNAM)) return true;
                 return false;
@@ -361,7 +394,9 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Threshold = eval(this.Threshold);
                 obj.Flags = eval(this.Flags);
                 obj.Interval = eval(this.Interval);
-                obj.TypeData = eval(this.TypeData);
+                obj.Value1 = eval(this.Value1);
+                obj.Value2 = eval(this.Value2);
+                obj.Value3 = eval(this.Value3);
                 obj.SNAM = eval(this.SNAM);
                 obj.XNAM = eval(this.XNAM);
             }
@@ -414,9 +449,17 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         sb.AppendItem(Interval, "Interval");
                     }
-                    if (printMask?.TypeData ?? true)
+                    if (printMask?.Value1 ?? true)
                     {
-                        sb.AppendItem(TypeData, "TypeData");
+                        sb.AppendItem(Value1, "Value1");
+                    }
+                    if (printMask?.Value2 ?? true)
+                    {
+                        sb.AppendItem(Value2, "Value2");
+                    }
+                    if (printMask?.Value3 ?? true)
+                    {
+                        sb.AppendItem(Value3, "Value3");
                     }
                     if (printMask?.SNAM ?? true)
                     {
@@ -445,7 +488,9 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Threshold;
             public Exception? Flags;
             public Exception? Interval;
-            public Exception? TypeData;
+            public Exception? Value1;
+            public Exception? Value2;
+            public Exception? Value3;
             public Exception? SNAM;
             public Exception? XNAM;
             #endregion
@@ -472,8 +517,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return Flags;
                     case Challenge_FieldIndex.Interval:
                         return Interval;
-                    case Challenge_FieldIndex.TypeData:
-                        return TypeData;
+                    case Challenge_FieldIndex.Value1:
+                        return Value1;
+                    case Challenge_FieldIndex.Value2:
+                        return Value2;
+                    case Challenge_FieldIndex.Value3:
+                        return Value3;
                     case Challenge_FieldIndex.SNAM:
                         return SNAM;
                     case Challenge_FieldIndex.XNAM:
@@ -512,8 +561,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case Challenge_FieldIndex.Interval:
                         this.Interval = ex;
                         break;
-                    case Challenge_FieldIndex.TypeData:
-                        this.TypeData = ex;
+                    case Challenge_FieldIndex.Value1:
+                        this.Value1 = ex;
+                        break;
+                    case Challenge_FieldIndex.Value2:
+                        this.Value2 = ex;
+                        break;
+                    case Challenge_FieldIndex.Value3:
+                        this.Value3 = ex;
                         break;
                     case Challenge_FieldIndex.SNAM:
                         this.SNAM = ex;
@@ -556,8 +611,14 @@ namespace Mutagen.Bethesda.Fallout3
                     case Challenge_FieldIndex.Interval:
                         this.Interval = (Exception?)obj;
                         break;
-                    case Challenge_FieldIndex.TypeData:
-                        this.TypeData = (Exception?)obj;
+                    case Challenge_FieldIndex.Value1:
+                        this.Value1 = (Exception?)obj;
+                        break;
+                    case Challenge_FieldIndex.Value2:
+                        this.Value2 = (Exception?)obj;
+                        break;
+                    case Challenge_FieldIndex.Value3:
+                        this.Value3 = (Exception?)obj;
                         break;
                     case Challenge_FieldIndex.SNAM:
                         this.SNAM = (Exception?)obj;
@@ -582,7 +643,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Threshold != null) return true;
                 if (Flags != null) return true;
                 if (Interval != null) return true;
-                if (TypeData != null) return true;
+                if (Value1 != null) return true;
+                if (Value2 != null) return true;
+                if (Value3 != null) return true;
                 if (SNAM != null) return true;
                 if (XNAM != null) return true;
                 return false;
@@ -634,7 +697,13 @@ namespace Mutagen.Bethesda.Fallout3
                     sb.AppendItem(Interval, "Interval");
                 }
                 {
-                    sb.AppendItem(TypeData, "TypeData");
+                    sb.AppendItem(Value1, "Value1");
+                }
+                {
+                    sb.AppendItem(Value2, "Value2");
+                }
+                {
+                    sb.AppendItem(Value3, "Value3");
                 }
                 {
                     sb.AppendItem(SNAM, "SNAM");
@@ -658,7 +727,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Threshold = this.Threshold.Combine(rhs.Threshold);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Interval = this.Interval.Combine(rhs.Interval);
-                ret.TypeData = this.TypeData.Combine(rhs.TypeData);
+                ret.Value1 = this.Value1.Combine(rhs.Value1);
+                ret.Value2 = this.Value2.Combine(rhs.Value2);
+                ret.Value3 = this.Value3.Combine(rhs.Value3);
                 ret.SNAM = this.SNAM.Combine(rhs.SNAM);
                 ret.XNAM = this.XNAM.Combine(rhs.XNAM);
                 return ret;
@@ -691,7 +762,9 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Threshold;
             public bool Flags;
             public bool Interval;
-            public bool TypeData;
+            public bool Value1;
+            public bool Value2;
+            public bool Value3;
             public bool SNAM;
             public bool XNAM;
             #endregion
@@ -709,7 +782,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Threshold = defaultOn;
                 this.Flags = defaultOn;
                 this.Interval = defaultOn;
-                this.TypeData = defaultOn;
+                this.Value1 = defaultOn;
+                this.Value2 = defaultOn;
+                this.Value3 = defaultOn;
                 this.SNAM = defaultOn;
                 this.XNAM = defaultOn;
             }
@@ -727,7 +802,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Threshold, null));
                 ret.Add((Flags, null));
                 ret.Add((Interval, null));
-                ret.Add((TypeData, null));
+                ret.Add((Value1, null));
+                ret.Add((Value2, null));
+                ret.Add((Value3, null));
                 ret.Add((SNAM, null));
                 ret.Add((XNAM, null));
             }
@@ -872,23 +949,27 @@ namespace Mutagen.Bethesda.Fallout3
         IHasIcons,
         ILoquiObjectSetter<IChallengeInternal>,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
         /// <summary>
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new ChallengeType Type { get; set; }
         new UInt32 Threshold { get; set; }
         new ChallengeFlag Flags { get; set; }
         new UInt32 Interval { get; set; }
-        new MemorySlice<Byte> TypeData { get; set; }
+        new UInt16 Value1 { get; set; }
+        new UInt16 Value2 { get; set; }
+        new UInt32 Value3 { get; set; }
         new IFormLinkNullable<IFallout3MajorRecordGetter> SNAM { get; set; }
         new IFormLinkNullable<IFallout3MajorRecordGetter> XNAM { get; set; }
     }
@@ -910,14 +991,16 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IChallengeGetter>,
         IMapsToGetter<IChallengeGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Challenge_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
         #region Icons
         /// <summary>
@@ -926,12 +1009,14 @@ namespace Mutagen.Bethesda.Fallout3
         IIconsGetter? Icons { get; }
         #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        String? Description { get; }
+        ITranslatedStringGetter? Description { get; }
         ChallengeType Type { get; }
         UInt32 Threshold { get; }
         ChallengeFlag Flags { get; }
         UInt32 Interval { get; }
-        ReadOnlyMemorySlice<Byte> TypeData { get; }
+        UInt16 Value1 { get; }
+        UInt16 Value2 { get; }
+        UInt32 Value3 { get; }
         IFormLinkNullableGetter<IFallout3MajorRecordGetter> SNAM { get; }
         IFormLinkNullableGetter<IFallout3MajorRecordGetter> XNAM { get; }
 
@@ -1118,9 +1203,11 @@ namespace Mutagen.Bethesda.Fallout3
         Threshold = 12,
         Flags = 13,
         Interval = 14,
-        TypeData = 15,
-        SNAM = 16,
-        XNAM = 17,
+        Value1 = 15,
+        Value2 = 16,
+        Value3 = 17,
+        SNAM = 18,
+        XNAM = 19,
     }
     #endregion
 
@@ -1131,9 +1218,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Challenge.Mask<>);
 
@@ -1225,7 +1312,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.Threshold = default(UInt32);
             item.Flags = default(ChallengeFlag);
             item.Interval = default(UInt32);
-            item.TypeData = new byte[8];
+            item.Value1 = default(UInt16);
+            item.Value2 = default(UInt16);
+            item.Value3 = default(UInt32);
             item.SNAM.Clear();
             item.XNAM.Clear();
             base.Clear(item);
@@ -1341,19 +1430,21 @@ namespace Mutagen.Bethesda.Fallout3
             Challenge.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Icons = EqualsMaskHelper.EqualsHelper(
                 item.Icons,
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = item.Script.Equals(rhs.Script);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Type = item.Type == rhs.Type;
             ret.Threshold = item.Threshold == rhs.Threshold;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Interval = item.Interval == rhs.Interval;
-            ret.TypeData = MemoryExtensions.SequenceEqual(item.TypeData.Span, rhs.TypeData.Span);
+            ret.Value1 = item.Value1 == rhs.Value1;
+            ret.Value2 = item.Value2 == rhs.Value2;
+            ret.Value3 = item.Value3 == rhs.Value3;
             ret.SNAM = item.SNAM.Equals(rhs.SNAM);
             ret.XNAM = item.XNAM.Equals(rhs.XNAM);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1440,9 +1531,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Interval, "Interval");
             }
-            if (printMask?.TypeData ?? true)
+            if (printMask?.Value1 ?? true)
             {
-                sb.AppendLine($"TypeData => {SpanExt.ToHexString(item.TypeData)}");
+                sb.AppendItem(item.Value1, "Value1");
+            }
+            if (printMask?.Value2 ?? true)
+            {
+                sb.AppendItem(item.Value2, "Value2");
+            }
+            if (printMask?.Value3 ?? true)
+            {
+                sb.AppendItem(item.Value3, "Value3");
             }
             if (printMask?.SNAM ?? true)
             {
@@ -1504,7 +1603,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Icons) ?? true))
             {
@@ -1520,7 +1619,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Description) ?? true))
             {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Type) ?? true))
             {
@@ -1538,9 +1637,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Interval != rhs.Interval) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.TypeData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Value1) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.TypeData.Span, rhs.TypeData.Span)) return false;
+                if (lhs.Value1 != rhs.Value1) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Value2) ?? true))
+            {
+                if (lhs.Value2 != rhs.Value2) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.Value3) ?? true))
+            {
+                if (lhs.Value3 != rhs.Value3) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Challenge_FieldIndex.SNAM) ?? true))
             {
@@ -1595,7 +1702,9 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Threshold);
             hash.Add(item.Flags);
             hash.Add(item.Interval);
-            hash.Add(item.TypeData);
+            hash.Add(item.Value1);
+            hash.Add(item.Value2);
+            hash.Add(item.Value3);
             hash.Add(item.SNAM);
             hash.Add(item.XNAM);
             hash.Add(base.GetHashCode());
@@ -1753,7 +1862,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Icons) ?? true))
             {
@@ -1787,7 +1896,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Type) ?? true))
             {
@@ -1805,9 +1914,17 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Interval = rhs.Interval;
             }
-            if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.TypeData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Value1) ?? true))
             {
-                item.TypeData = rhs.TypeData.ToArray();
+                item.Value1 = rhs.Value1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Value2) ?? true))
+            {
+                item.Value2 = rhs.Value2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.Value3) ?? true))
+            {
+                item.Value3 = rhs.Value3;
             }
             if ((copyMask?.GetShouldTranslate((int)Challenge_FieldIndex.SNAM) ?? true))
             {
@@ -1990,7 +2107,8 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             if (item.Icons is {} IconsItem)
             {
                 ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
@@ -2006,7 +2124,8 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 EnumBinaryTranslation<ChallengeType, MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2019,9 +2138,9 @@ namespace Mutagen.Bethesda.Fallout3
                     item.Flags,
                     length: 4);
                 writer.Write(item.Interval);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.TypeData);
+                writer.Write(item.Value1);
+                writer.Write(item.Value2);
+                writer.Write(item.Value3);
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2104,6 +2223,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Challenge_FieldIndex.Name;
@@ -2126,6 +2247,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Challenge_FieldIndex.Description;
@@ -2146,8 +2269,13 @@ namespace Mutagen.Bethesda.Fallout3
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
                     item.Interval = dataFrame.ReadUInt32();
-                    item.TypeData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(8));
-                    return (int)Challenge_FieldIndex.TypeData;
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Value1 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Value2 = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Value3 = dataFrame.ReadUInt32();
+                    return (int)Challenge_FieldIndex.Value3;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2223,10 +2351,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         public IIconsGetter? Icons { get; private set; }
@@ -2236,7 +2368,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         private RangeInt32? _DATALocation;
         #region Type
@@ -2259,10 +2391,20 @@ namespace Mutagen.Bethesda.Fallout3
         private bool _Interval_IsSet => _DATALocation.HasValue;
         public UInt32 Interval => _Interval_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_IntervalLocation, 4)) : default(UInt32);
         #endregion
-        #region TypeData
-        private int _TypeDataLocation => _DATALocation!.Value.Min + 0x10;
-        private bool _TypeData_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> TypeData => _TypeData_IsSet ? _recordData.Span.Slice(_TypeDataLocation, 8).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region Value1
+        private int _Value1Location => _DATALocation!.Value.Min + 0x10;
+        private bool _Value1_IsSet => _DATALocation.HasValue;
+        public UInt16 Value1 => _Value1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Value1Location, 2)) : default(UInt16);
+        #endregion
+        #region Value2
+        private int _Value2Location => _DATALocation!.Value.Min + 0x12;
+        private bool _Value2_IsSet => _DATALocation.HasValue;
+        public UInt16 Value2 => _Value2_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_Value2Location, 2)) : default(UInt16);
+        #endregion
+        #region Value3
+        private int _Value3Location => _DATALocation!.Value.Min + 0x14;
+        private bool _Value3_IsSet => _DATALocation.HasValue;
+        public UInt32 Value3 => _Value3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_Value3Location, 4)) : default(UInt32);
         #endregion
         #region SNAM
         private int? _SNAMLocation;
@@ -2367,7 +2509,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Challenge_FieldIndex.TypeData;
+                    return (int)Challenge_FieldIndex.Value3;
                 }
                 case RecordTypeInts.SNAM:
                 {

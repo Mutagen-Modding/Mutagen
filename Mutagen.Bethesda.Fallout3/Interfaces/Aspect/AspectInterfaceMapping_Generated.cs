@@ -292,6 +292,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
+                    Challenge_Registration.Instance,
                     Class_Registration.Instance,
                     HeadPart_Registration.Instance,
                     ItemMod_Registration.Instance,
@@ -315,6 +316,7 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
+                    Challenge_Registration.Instance,
                     Class_Registration.Instance,
                     Eyes_Registration.Instance,
                     HeadPart_Registration.Instance,

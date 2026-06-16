@@ -100,6 +100,7 @@
       <Group name="LoadScreenTypes" refName="LoadScreenType" />
       <Group name="MediaSets" refName="MediaSet" />
       <Group name="MediaLocationControllers" refName="MediaLocationController" />
+      <Group name="Challenges" refName="Challenge" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LoadScreenTypes_Object = new Fallout3Group<LoadScreenType>(this);
             _MediaSets_Object = new Fallout3Group<MediaSet>(this);
             _MediaLocationControllers_Object = new Fallout3Group<MediaLocationController>(this);
+            _Challenges_Object = new Fallout3Group<Challenge>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -816,6 +817,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IMediaLocationControllerGetter> IFallout3ModGetter.MediaLocationControllers => _MediaLocationControllers_Object;
         #endregion
+        #region Challenges
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Challenge> _Challenges_Object;
+        public Fallout3Group<Challenge> Challenges => _Challenges_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IChallengeGetter> IFallout3ModGetter.Challenges => _Challenges_Object;
+        #endregion
 
         #region To String
 
@@ -949,6 +957,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LoadScreenTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MediaSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MediaLocationControllers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Challenges = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1045,7 +1054,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Casinos,
                 TItem LoadScreenTypes,
                 TItem MediaSets,
-                TItem MediaLocationControllers)
+                TItem MediaLocationControllers,
+                TItem Challenges)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1141,6 +1151,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.LoadScreenTypes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(LoadScreenTypes, new Fallout3Group.Mask<TItem>(LoadScreenTypes));
                 this.MediaSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MediaSets, new Fallout3Group.Mask<TItem>(MediaSets));
                 this.MediaLocationControllers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MediaLocationControllers, new Fallout3Group.Mask<TItem>(MediaLocationControllers));
+                this.Challenges = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Challenges, new Fallout3Group.Mask<TItem>(Challenges));
             }
 
             #pragma warning disable CS8618
@@ -1246,6 +1257,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? LoadScreenTypes { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MediaSets { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MediaLocationControllers { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Challenges { get; set; }
             #endregion
 
             #region Equals
@@ -1352,6 +1364,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.LoadScreenTypes, rhs.LoadScreenTypes)) return false;
                 if (!object.Equals(this.MediaSets, rhs.MediaSets)) return false;
                 if (!object.Equals(this.MediaLocationControllers, rhs.MediaLocationControllers)) return false;
+                if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1451,6 +1464,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.LoadScreenTypes);
                 hash.Add(this.MediaSets);
                 hash.Add(this.MediaLocationControllers);
+                hash.Add(this.Challenges);
                 return hash.ToHashCode();
             }
 
@@ -1929,6 +1943,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.MediaLocationControllers.Overall)) return false;
                     if (this.MediaLocationControllers.Specific != null && !this.MediaLocationControllers.Specific.All(eval)) return false;
                 }
+                if (Challenges != null)
+                {
+                    if (!eval(this.Challenges.Overall)) return false;
+                    if (this.Challenges.Specific != null && !this.Challenges.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2406,6 +2425,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.MediaLocationControllers.Overall)) return true;
                     if (this.MediaLocationControllers.Specific != null && this.MediaLocationControllers.Specific.Any(eval)) return true;
                 }
+                if (Challenges != null)
+                {
+                    if (eval(this.Challenges.Overall)) return true;
+                    if (this.Challenges.Specific != null && this.Challenges.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2514,6 +2538,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.LoadScreenTypes = this.LoadScreenTypes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.LoadScreenTypes.Overall), this.LoadScreenTypes.Specific?.Translate(eval));
                 obj.MediaSets = this.MediaSets == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MediaSets.Overall), this.MediaSets.Specific?.Translate(eval));
                 obj.MediaLocationControllers = this.MediaLocationControllers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MediaLocationControllers.Overall), this.MediaLocationControllers.Specific?.Translate(eval));
+                obj.Challenges = this.Challenges == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2908,6 +2933,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         MediaLocationControllers?.Print(sb);
                     }
+                    if (printMask?.Challenges?.Overall ?? true)
+                    {
+                        Challenges?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3026,6 +3055,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<LoadScreenType.ErrorMask>?>? LoadScreenTypes;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MediaSet.ErrorMask>?>? MediaSets;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MediaLocationController.ErrorMask>?>? MediaLocationControllers;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>? Challenges;
             #endregion
 
             #region IErrorMask
@@ -3222,6 +3252,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MediaSets;
                     case Fallout3Mod_FieldIndex.MediaLocationControllers:
                         return MediaLocationControllers;
+                    case Fallout3Mod_FieldIndex.Challenges:
+                        return Challenges;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3513,6 +3545,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.MediaLocationControllers:
                         this.MediaLocationControllers = new MaskItem<Exception?, Fallout3Group.ErrorMask<MediaLocationController.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Challenges:
+                        this.Challenges = new MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3806,6 +3841,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.MediaLocationControllers:
                         this.MediaLocationControllers = (MaskItem<Exception?, Fallout3Group.ErrorMask<MediaLocationController.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Challenges:
+                        this.Challenges = (MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3908,6 +3946,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (LoadScreenTypes != null) return true;
                 if (MediaSets != null) return true;
                 if (MediaLocationControllers != null) return true;
+                if (Challenges != null) return true;
                 return false;
             }
             #endregion
@@ -4027,6 +4066,7 @@ namespace Mutagen.Bethesda.Fallout3
                 LoadScreenTypes?.Print(sb);
                 MediaSets?.Print(sb);
                 MediaLocationControllers?.Print(sb);
+                Challenges?.Print(sb);
             }
             #endregion
 
@@ -4129,6 +4169,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.LoadScreenTypes = this.LoadScreenTypes.Combine(rhs.LoadScreenTypes, (l, r) => l.Combine(r));
                 ret.MediaSets = this.MediaSets.Combine(rhs.MediaSets, (l, r) => l.Combine(r));
                 ret.MediaLocationControllers = this.MediaLocationControllers.Combine(rhs.MediaLocationControllers, (l, r) => l.Combine(r));
+                ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4246,6 +4287,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<LoadScreenType.TranslationMask>? LoadScreenTypes;
             public Fallout3Group.TranslationMask<MediaSet.TranslationMask>? MediaSets;
             public Fallout3Group.TranslationMask<MediaLocationController.TranslationMask>? MediaLocationControllers;
+            public Fallout3Group.TranslationMask<Challenge.TranslationMask>? Challenges;
             #endregion
 
             #region Ctors
@@ -4364,6 +4406,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((LoadScreenTypes != null ? LoadScreenTypes.OnOverall : DefaultOn, LoadScreenTypes?.GetCrystal()));
                 ret.Add((MediaSets != null ? MediaSets.OnOverall : DefaultOn, MediaSets?.GetCrystal()));
                 ret.Add((MediaLocationControllers != null ? MediaLocationControllers.OnOverall : DefaultOn, MediaLocationControllers?.GetCrystal()));
+                ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4516,6 +4559,7 @@ namespace Mutagen.Bethesda.Fallout3
             _LoadScreenTypes_Object = new Fallout3Group<LoadScreenType>(this);
             _MediaSets_Object = new Fallout3Group<MediaSet>(this);
             _MediaLocationControllers_Object = new Fallout3Group<MediaLocationController>(this);
+            _Challenges_Object = new Fallout3Group<Challenge>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4897,6 +4941,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.MediaLocationControllers.RecordCache.Set(rhsMod.MediaLocationControllers.RecordCache.Items);
             }
+            if (mask?.Challenges ?? true)
+            {
+                this.Challenges.RecordCache.Set(rhsMod.Challenges.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5253,6 +5301,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<LoadScreenType> LoadScreenTypes { get; }
         new Fallout3Group<MediaSet> MediaSets { get; }
         new Fallout3Group<MediaLocationController> MediaLocationControllers { get; }
+        new Fallout3Group<Challenge> Challenges { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5366,6 +5415,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ILoadScreenTypeGetter> LoadScreenTypes { get; }
         IFallout3GroupGetter<IMediaSetGetter> MediaSets { get; }
         IFallout3GroupGetter<IMediaLocationControllerGetter> MediaLocationControllers { get; }
+        IFallout3GroupGetter<IChallengeGetter> Challenges { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -6010,6 +6060,7 @@ namespace Mutagen.Bethesda.Fallout3
         LoadScreenTypes = 91,
         MediaSets = 92,
         MediaLocationControllers = 93,
+        Challenges = 94,
     }
     #endregion
 
@@ -6020,9 +6071,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 94;
+        public const ushort AdditionalFieldCount = 95;
 
-        public const ushort FieldCount = 94;
+        public const ushort FieldCount = 95;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6181,6 +6232,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.LoadScreenTypes.Clear();
             item.MediaSets.Clear();
             item.MediaLocationControllers.Clear();
+            item.Challenges.Clear();
         }
         
         #region Mutagen
@@ -6263,6 +6315,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Casinos.RemapLinks(mapping);
             obj.MediaSets.RemapLinks(mapping);
             obj.MediaLocationControllers.RemapLinks(mapping);
+            obj.Challenges.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6417,6 +6470,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.LoadScreenTypes.Remove(keys);
             obj.MediaSets.Remove(keys);
             obj.MediaLocationControllers.Remove(keys);
+            obj.Challenges.Remove(keys);
         }
         
         public void Remove(
@@ -6556,6 +6610,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     obj.Worldspaces.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    obj.Challenges.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -7682,6 +7744,12 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.Challenges.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -7715,6 +7783,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.ItemMods.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Reputations.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.CasinoChips.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Challenges.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -7854,6 +7923,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.LoadScreenTypes = MaskItemExt.Factory(item.LoadScreenTypes.GetEqualsMask(rhs.LoadScreenTypes, include), include);
             ret.MediaSets = MaskItemExt.Factory(item.MediaSets.GetEqualsMask(rhs.MediaSets, include), include);
             ret.MediaLocationControllers = MaskItemExt.Factory(item.MediaLocationControllers.GetEqualsMask(rhs.MediaLocationControllers, include), include);
+            ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
         }
         
         public string Print(
@@ -8273,6 +8343,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.MediaLocationControllers?.Overall ?? true)
             {
                 item.MediaLocationControllers?.Print(sb, "MediaLocationControllers");
+            }
+            if (printMask?.Challenges?.Overall ?? true)
+            {
+                item.Challenges?.Print(sb, "Challenges");
             }
         }
         
@@ -9035,6 +9109,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isMediaLocationControllersEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Challenges) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Challenges, rhs.Challenges, out var lhsChallenges, out var rhsChallenges, out var isChallengesEqual))
+                {
+                    if (!object.Equals(lhsChallenges, rhsChallenges)) return false;
+                }
+                else if (!isChallengesEqual) return false;
+            }
             return true;
         }
         
@@ -9135,6 +9217,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.LoadScreenTypes);
             hash.Add(item.MediaSets);
             hash.Add(item.MediaLocationControllers);
+            hash.Add(item.Challenges);
             return hash.ToHashCode();
         }
         
@@ -9645,6 +9728,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IMediaLocationController":
                 case "IMediaLocationControllerInternal":
                     return obj.MediaLocationControllers;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    return obj.Challenges;
                 default:
                     return null;
             }
@@ -9662,7 +9750,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[93];
+            Stream[] outputStreams = new Stream[94];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -9757,6 +9845,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.LoadScreenTypes, 90, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MediaSets, 91, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MediaLocationControllers, 92, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Challenges, 93, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -9895,6 +9984,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.LoadScreenTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MediaSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MediaLocationControllers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Challenges.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10217,6 +10307,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.MediaLocationControllers.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Challenges.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -10607,6 +10701,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.Challenges.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -10793,6 +10891,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    foreach (var item in obj.Challenges.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11766,6 +11873,15 @@ namespace Mutagen.Bethesda.Fallout3
                 linkCache: linkCache,
                 modKey: obj.ModKey,
                 parent: null))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Challenge, IChallengeGetter>(
+                srcGroup: obj.Challenges,
+                type: typeof(IChallengeGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Challenges,
+                groupGetter: (m) => m.Challenges))
             {
                 yield return item;
             }
@@ -12751,6 +12867,20 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             yield return item;
                         }
+                    }
+                    yield break;
+                case "Challenge":
+                case "IChallengeGetter":
+                case "IChallenge":
+                case "IChallengeInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Challenge, IChallengeGetter>(
+                        srcGroup: obj.Challenges,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Challenges,
+                        groupGetter: (m) => m.Challenges))
+                    {
+                        yield return item;
                     }
                     yield break;
                 case "Class":
@@ -14223,6 +14353,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.CasinoChips.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Challenges.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }
@@ -16124,6 +16258,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Challenges) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Challenges);
+                try
+                {
+                    item.Challenges.DeepCopyIn(
+                        rhs: rhs.Challenges,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Challenges));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -16320,6 +16474,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool LoadScreenTypes;
         public bool MediaSets;
         public bool MediaLocationControllers;
+        public bool Challenges;
         public GroupMask()
         {
         }
@@ -16418,6 +16573,7 @@ namespace Mutagen.Bethesda.Fallout3
             LoadScreenTypes = defaultValue;
             MediaSets = defaultValue;
             MediaLocationControllers = defaultValue;
+            Challenges = defaultValue;
         }
     }
 
@@ -17499,6 +17655,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MediaLocationControllersItem).BinaryWriteTranslator).Write<IMediaLocationControllerGetter>(
                         item: MediaLocationControllersItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Challenges ?? true)
+            {
+                var ChallengesItem = item.Challenges;
+                if (ChallengesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ChallengesItem).BinaryWriteTranslator).Write<IChallengeGetter>(
+                        item: ChallengesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -18875,6 +19042,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.MediaLocationControllers;
                 }
+                case RecordTypeInts.CHAL:
+                {
+                    if (importMask?.Challenges ?? true)
+                    {
+                        item.Challenges.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Challenges;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19504,6 +19685,11 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _MediaLocationControllersLocations;
         private IFallout3GroupGetter<IMediaLocationControllerGetter>? _MediaLocationControllers => _MediaLocationControllersLocations != null ? Fallout3GroupBinaryOverlay<IMediaLocationControllerGetter>.Fallout3GroupFactory(_stream, _MediaLocationControllersLocations, _package) : default;
         public IFallout3GroupGetter<IMediaLocationControllerGetter> MediaLocationControllers => _MediaLocationControllers ?? new Fallout3Group<MediaLocationController>(this);
+        #endregion
+        #region Challenges
+        private List<RangeInt64>? _ChallengesLocations;
+        private IFallout3GroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? Fallout3GroupBinaryOverlay<IChallengeGetter>.Fallout3GroupFactory(_stream, _ChallengesLocations, _package) : default;
+        public IFallout3GroupGetter<IChallengeGetter> Challenges => _Challenges ?? new Fallout3Group<Challenge>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20136,6 +20322,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _MediaLocationControllersLocations ??= new();
                     _MediaLocationControllersLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.MediaLocationControllers;
+                }
+                case RecordTypeInts.CHAL:
+                {
+                    _ChallengesLocations ??= new();
+                    _ChallengesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Challenges;
                 }
                 default:
                     return default(int?);

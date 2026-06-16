@@ -123,6 +123,7 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     private MergedGroup<ILoadScreenTypeGetter>? _loadScreenTypes;
     private MergedGroup<IMediaSetGetter>? _mediaSets;
     private MergedGroup<IMediaLocationControllerGetter>? _mediaLocationControllers;
+    private MergedGroup<IChallengeGetter>? _challenges;
 
     /// <summary>
     /// Creates a new Fallout3MultiModOverlay from multiple source mod files.
@@ -439,6 +440,9 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     public IFallout3GroupGetter<IMediaLocationControllerGetter> MediaLocationControllers =>
         _mediaLocationControllers ??= new MergedGroup<IMediaLocationControllerGetter>(
             _sourceMods.Select(m => m.MediaLocationControllers));
+    public IFallout3GroupGetter<IChallengeGetter> Challenges =>
+        _challenges ??= new MergedGroup<IChallengeGetter>(
+            _sourceMods.Select(m => m.Challenges));
 
     BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter> IFallout3ModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);

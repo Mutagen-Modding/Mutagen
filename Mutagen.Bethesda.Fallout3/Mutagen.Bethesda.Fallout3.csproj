@@ -1338,8 +1338,6 @@
     <Compile Include="Enum\AmmoEffectType.cs" />
     <Compile Include="Enum\CaravanSuit.cs" />
     <Compile Include="Enum\CaravanValue.cs" />
-    <Compile Include="Enum\ChallengeFlag.cs" />
-    <Compile Include="Enum\ChallengeType.cs" />
     <Compile Include="Enum\RecipeCategoryFlag.cs" />
     <Compile Include="Enum\AttackAnimation.cs" />
     <Compile Include="Enum\LeveledFlag.cs" />
@@ -1370,6 +1368,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Casino_Generated.cs">
       <DependentUpon>Casino.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Challenge.cs">
+      <DependentUpon>Challenge.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Challenge_Generated.cs">
       <DependentUpon>Challenge.xml</DependentUpon>
