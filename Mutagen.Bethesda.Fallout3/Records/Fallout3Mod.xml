@@ -107,6 +107,7 @@
       <Group name="CaravanDecks" refName="CaravanDeck" />
       <Group name="DehydrationStages" refName="DehydrationStage" />
       <Group name="HungerStages" refName="HungerStage" />
+      <Group name="SleepDeprivationStages" refName="SleepDeprivationStage" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

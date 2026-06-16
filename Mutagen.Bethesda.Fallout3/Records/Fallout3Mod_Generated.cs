@@ -160,6 +160,7 @@ namespace Mutagen.Bethesda.Fallout3
             _CaravanDecks_Object = new Fallout3Group<CaravanDeck>(this);
             _DehydrationStages_Object = new Fallout3Group<DehydrationStage>(this);
             _HungerStages_Object = new Fallout3Group<HungerStage>(this);
+            _SleepDeprivationStages_Object = new Fallout3Group<SleepDeprivationStage>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -872,6 +873,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IHungerStageGetter> IFallout3ModGetter.HungerStages => _HungerStages_Object;
         #endregion
+        #region SleepDeprivationStages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<SleepDeprivationStage> _SleepDeprivationStages_Object;
+        public Fallout3Group<SleepDeprivationStage> SleepDeprivationStages => _SleepDeprivationStages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ISleepDeprivationStageGetter> IFallout3ModGetter.SleepDeprivationStages => _SleepDeprivationStages_Object;
+        #endregion
 
         #region To String
 
@@ -1012,6 +1020,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CaravanDecks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.DehydrationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.HungerStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.SleepDeprivationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1115,7 +1124,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem CaravanMonies,
                 TItem CaravanDecks,
                 TItem DehydrationStages,
-                TItem HungerStages)
+                TItem HungerStages,
+                TItem SleepDeprivationStages)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1218,6 +1228,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.CaravanDecks = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(CaravanDecks, new Fallout3Group.Mask<TItem>(CaravanDecks));
                 this.DehydrationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(DehydrationStages, new Fallout3Group.Mask<TItem>(DehydrationStages));
                 this.HungerStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(HungerStages, new Fallout3Group.Mask<TItem>(HungerStages));
+                this.SleepDeprivationStages = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(SleepDeprivationStages, new Fallout3Group.Mask<TItem>(SleepDeprivationStages));
             }
 
             #pragma warning disable CS8618
@@ -1330,6 +1341,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? CaravanDecks { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? DehydrationStages { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? HungerStages { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? SleepDeprivationStages { get; set; }
             #endregion
 
             #region Equals
@@ -1443,6 +1455,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.CaravanDecks, rhs.CaravanDecks)) return false;
                 if (!object.Equals(this.DehydrationStages, rhs.DehydrationStages)) return false;
                 if (!object.Equals(this.HungerStages, rhs.HungerStages)) return false;
+                if (!object.Equals(this.SleepDeprivationStages, rhs.SleepDeprivationStages)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1549,6 +1562,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.CaravanDecks);
                 hash.Add(this.DehydrationStages);
                 hash.Add(this.HungerStages);
+                hash.Add(this.SleepDeprivationStages);
                 return hash.ToHashCode();
             }
 
@@ -2062,6 +2076,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.HungerStages.Overall)) return false;
                     if (this.HungerStages.Specific != null && !this.HungerStages.Specific.All(eval)) return false;
                 }
+                if (SleepDeprivationStages != null)
+                {
+                    if (!eval(this.SleepDeprivationStages.Overall)) return false;
+                    if (this.SleepDeprivationStages.Specific != null && !this.SleepDeprivationStages.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2574,6 +2593,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.HungerStages.Overall)) return true;
                     if (this.HungerStages.Specific != null && this.HungerStages.Specific.Any(eval)) return true;
                 }
+                if (SleepDeprivationStages != null)
+                {
+                    if (eval(this.SleepDeprivationStages.Overall)) return true;
+                    if (this.SleepDeprivationStages.Specific != null && this.SleepDeprivationStages.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2689,6 +2713,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.CaravanDecks = this.CaravanDecks == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.CaravanDecks.Overall), this.CaravanDecks.Specific?.Translate(eval));
                 obj.DehydrationStages = this.DehydrationStages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.DehydrationStages.Overall), this.DehydrationStages.Specific?.Translate(eval));
                 obj.HungerStages = this.HungerStages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.HungerStages.Overall), this.HungerStages.Specific?.Translate(eval));
+                obj.SleepDeprivationStages = this.SleepDeprivationStages == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.SleepDeprivationStages.Overall), this.SleepDeprivationStages.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3111,6 +3136,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         HungerStages?.Print(sb);
                     }
+                    if (printMask?.SleepDeprivationStages?.Overall ?? true)
+                    {
+                        SleepDeprivationStages?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3236,6 +3265,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<CaravanDeck.ErrorMask>?>? CaravanDecks;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<DehydrationStage.ErrorMask>?>? DehydrationStages;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<HungerStage.ErrorMask>?>? HungerStages;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<SleepDeprivationStage.ErrorMask>?>? SleepDeprivationStages;
             #endregion
 
             #region IErrorMask
@@ -3446,6 +3476,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return DehydrationStages;
                     case Fallout3Mod_FieldIndex.HungerStages:
                         return HungerStages;
+                    case Fallout3Mod_FieldIndex.SleepDeprivationStages:
+                        return SleepDeprivationStages;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3758,6 +3790,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.HungerStages:
                         this.HungerStages = new MaskItem<Exception?, Fallout3Group.ErrorMask<HungerStage.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.SleepDeprivationStages:
+                        this.SleepDeprivationStages = new MaskItem<Exception?, Fallout3Group.ErrorMask<SleepDeprivationStage.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4072,6 +4107,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.HungerStages:
                         this.HungerStages = (MaskItem<Exception?, Fallout3Group.ErrorMask<HungerStage.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.SleepDeprivationStages:
+                        this.SleepDeprivationStages = (MaskItem<Exception?, Fallout3Group.ErrorMask<SleepDeprivationStage.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4181,6 +4219,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (CaravanDecks != null) return true;
                 if (DehydrationStages != null) return true;
                 if (HungerStages != null) return true;
+                if (SleepDeprivationStages != null) return true;
                 return false;
             }
             #endregion
@@ -4307,6 +4346,7 @@ namespace Mutagen.Bethesda.Fallout3
                 CaravanDecks?.Print(sb);
                 DehydrationStages?.Print(sb);
                 HungerStages?.Print(sb);
+                SleepDeprivationStages?.Print(sb);
             }
             #endregion
 
@@ -4416,6 +4456,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.CaravanDecks = this.CaravanDecks.Combine(rhs.CaravanDecks, (l, r) => l.Combine(r));
                 ret.DehydrationStages = this.DehydrationStages.Combine(rhs.DehydrationStages, (l, r) => l.Combine(r));
                 ret.HungerStages = this.HungerStages.Combine(rhs.HungerStages, (l, r) => l.Combine(r));
+                ret.SleepDeprivationStages = this.SleepDeprivationStages.Combine(rhs.SleepDeprivationStages, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4540,6 +4581,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<CaravanDeck.TranslationMask>? CaravanDecks;
             public Fallout3Group.TranslationMask<DehydrationStage.TranslationMask>? DehydrationStages;
             public Fallout3Group.TranslationMask<HungerStage.TranslationMask>? HungerStages;
+            public Fallout3Group.TranslationMask<SleepDeprivationStage.TranslationMask>? SleepDeprivationStages;
             #endregion
 
             #region Ctors
@@ -4665,6 +4707,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((CaravanDecks != null ? CaravanDecks.OnOverall : DefaultOn, CaravanDecks?.GetCrystal()));
                 ret.Add((DehydrationStages != null ? DehydrationStages.OnOverall : DefaultOn, DehydrationStages?.GetCrystal()));
                 ret.Add((HungerStages != null ? HungerStages.OnOverall : DefaultOn, HungerStages?.GetCrystal()));
+                ret.Add((SleepDeprivationStages != null ? SleepDeprivationStages.OnOverall : DefaultOn, SleepDeprivationStages?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4824,6 +4867,7 @@ namespace Mutagen.Bethesda.Fallout3
             _CaravanDecks_Object = new Fallout3Group<CaravanDeck>(this);
             _DehydrationStages_Object = new Fallout3Group<DehydrationStage>(this);
             _HungerStages_Object = new Fallout3Group<HungerStage>(this);
+            _SleepDeprivationStages_Object = new Fallout3Group<SleepDeprivationStage>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -5233,6 +5277,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.HungerStages.RecordCache.Set(rhsMod.HungerStages.RecordCache.Items);
             }
+            if (mask?.SleepDeprivationStages ?? true)
+            {
+                this.SleepDeprivationStages.RecordCache.Set(rhsMod.SleepDeprivationStages.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5596,6 +5644,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<CaravanDeck> CaravanDecks { get; }
         new Fallout3Group<DehydrationStage> DehydrationStages { get; }
         new Fallout3Group<HungerStage> HungerStages { get; }
+        new Fallout3Group<SleepDeprivationStage> SleepDeprivationStages { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5716,6 +5765,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks { get; }
         IFallout3GroupGetter<IDehydrationStageGetter> DehydrationStages { get; }
         IFallout3GroupGetter<IHungerStageGetter> HungerStages { get; }
+        IFallout3GroupGetter<ISleepDeprivationStageGetter> SleepDeprivationStages { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -6367,6 +6417,7 @@ namespace Mutagen.Bethesda.Fallout3
         CaravanDecks = 98,
         DehydrationStages = 99,
         HungerStages = 100,
+        SleepDeprivationStages = 101,
     }
     #endregion
 
@@ -6377,9 +6428,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 101;
+        public const ushort AdditionalFieldCount = 102;
 
-        public const ushort FieldCount = 101;
+        public const ushort FieldCount = 102;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6545,6 +6596,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.CaravanDecks.Clear();
             item.DehydrationStages.Clear();
             item.HungerStages.Clear();
+            item.SleepDeprivationStages.Clear();
         }
         
         #region Mutagen
@@ -6633,6 +6685,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.CaravanDecks.RemapLinks(mapping);
             obj.DehydrationStages.RemapLinks(mapping);
             obj.HungerStages.RemapLinks(mapping);
+            obj.SleepDeprivationStages.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -6794,6 +6847,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.CaravanDecks.Remove(keys);
             obj.DehydrationStages.Remove(keys);
             obj.HungerStages.Remove(keys);
+            obj.SleepDeprivationStages.Remove(keys);
         }
         
         public void Remove(
@@ -7862,6 +7916,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "SleepDeprivationStage":
+                case "ISleepDeprivationStageGetter":
+                case "ISleepDeprivationStage":
+                case "ISleepDeprivationStageInternal":
+                    obj.SleepDeprivationStages.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
@@ -8327,6 +8389,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.CaravanDecks = MaskItemExt.Factory(item.CaravanDecks.GetEqualsMask(rhs.CaravanDecks, include), include);
             ret.DehydrationStages = MaskItemExt.Factory(item.DehydrationStages.GetEqualsMask(rhs.DehydrationStages, include), include);
             ret.HungerStages = MaskItemExt.Factory(item.HungerStages.GetEqualsMask(rhs.HungerStages, include), include);
+            ret.SleepDeprivationStages = MaskItemExt.Factory(item.SleepDeprivationStages.GetEqualsMask(rhs.SleepDeprivationStages, include), include);
         }
         
         public string Print(
@@ -8774,6 +8837,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.HungerStages?.Overall ?? true)
             {
                 item.HungerStages?.Print(sb, "HungerStages");
+            }
+            if (printMask?.SleepDeprivationStages?.Overall ?? true)
+            {
+                item.SleepDeprivationStages?.Print(sb, "SleepDeprivationStages");
             }
         }
         
@@ -9592,6 +9659,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isHungerStagesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.SleepDeprivationStages) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SleepDeprivationStages, rhs.SleepDeprivationStages, out var lhsSleepDeprivationStages, out var rhsSleepDeprivationStages, out var isSleepDeprivationStagesEqual))
+                {
+                    if (!object.Equals(lhsSleepDeprivationStages, rhsSleepDeprivationStages)) return false;
+                }
+                else if (!isSleepDeprivationStagesEqual) return false;
+            }
             return true;
         }
         
@@ -9699,6 +9774,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.CaravanDecks);
             hash.Add(item.DehydrationStages);
             hash.Add(item.HungerStages);
+            hash.Add(item.SleepDeprivationStages);
             return hash.ToHashCode();
         }
         
@@ -10244,6 +10320,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IHungerStage":
                 case "IHungerStageInternal":
                     return obj.HungerStages;
+                case "SleepDeprivationStage":
+                case "ISleepDeprivationStageGetter":
+                case "ISleepDeprivationStage":
+                case "ISleepDeprivationStageInternal":
+                    return obj.SleepDeprivationStages;
                 default:
                     return null;
             }
@@ -10261,7 +10342,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[100];
+            Stream[] outputStreams = new Stream[101];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -10363,6 +10444,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.CaravanDecks, 97, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.DehydrationStages, 98, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.HungerStages, 99, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SleepDeprivationStages, 100, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -10508,6 +10590,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.CaravanDecks.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.DehydrationStages.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.HungerStages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SleepDeprivationStages.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10854,6 +10937,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.HungerStages.EnumerateFormLinks(iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SleepDeprivationStages.EnumerateFormLinks(iterateNestedRecords))
             {
                 yield return item;
             }
@@ -11269,6 +11356,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.HungerStages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SleepDeprivationStages.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12223,6 +12314,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "SleepDeprivationStage":
+                case "ISleepDeprivationStageGetter":
+                case "ISleepDeprivationStage":
+                case "ISleepDeprivationStageInternal":
+                    foreach (var item in obj.SleepDeprivationStages.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
@@ -13155,6 +13255,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Scripts,
                 groupGetter: (m) => m.Scripts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, SleepDeprivationStage, ISleepDeprivationStageGetter>(
+                srcGroup: obj.SleepDeprivationStages,
+                type: typeof(ISleepDeprivationStageGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.SleepDeprivationStages,
+                groupGetter: (m) => m.SleepDeprivationStages))
             {
                 yield return item;
             }
@@ -14800,6 +14909,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Scripts,
                         groupGetter: (m) => m.Scripts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SleepDeprivationStage":
+                case "ISleepDeprivationStageGetter":
+                case "ISleepDeprivationStage":
+                case "ISleepDeprivationStageInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, SleepDeprivationStage, ISleepDeprivationStageGetter>(
+                        srcGroup: obj.SleepDeprivationStages,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.SleepDeprivationStages,
+                        groupGetter: (m) => m.SleepDeprivationStages))
                     {
                         yield return item;
                     }
@@ -17165,6 +17288,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.SleepDeprivationStages) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.SleepDeprivationStages);
+                try
+                {
+                    item.SleepDeprivationStages.DeepCopyIn(
+                        rhs: rhs.SleepDeprivationStages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.SleepDeprivationStages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -17368,6 +17511,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool CaravanDecks;
         public bool DehydrationStages;
         public bool HungerStages;
+        public bool SleepDeprivationStages;
         public GroupMask()
         {
         }
@@ -17473,6 +17617,7 @@ namespace Mutagen.Bethesda.Fallout3
             CaravanDecks = defaultValue;
             DehydrationStages = defaultValue;
             HungerStages = defaultValue;
+            SleepDeprivationStages = defaultValue;
         }
     }
 
@@ -18631,6 +18776,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)HungerStagesItem).BinaryWriteTranslator).Write<IHungerStageGetter>(
                         item: HungerStagesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.SleepDeprivationStages ?? true)
+            {
+                var SleepDeprivationStagesItem = item.SleepDeprivationStages;
+                if (SleepDeprivationStagesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)SleepDeprivationStagesItem).BinaryWriteTranslator).Write<ISleepDeprivationStageGetter>(
+                        item: SleepDeprivationStagesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -20105,6 +20261,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.HungerStages;
                 }
+                case RecordTypeInts.SLPD:
+                {
+                    if (importMask?.SleepDeprivationStages ?? true)
+                    {
+                        item.SleepDeprivationStages.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.SleepDeprivationStages;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -20769,6 +20939,11 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _HungerStagesLocations;
         private IFallout3GroupGetter<IHungerStageGetter>? _HungerStages => _HungerStagesLocations != null ? Fallout3GroupBinaryOverlay<IHungerStageGetter>.Fallout3GroupFactory(_stream, _HungerStagesLocations, _package) : default;
         public IFallout3GroupGetter<IHungerStageGetter> HungerStages => _HungerStages ?? new Fallout3Group<HungerStage>(this);
+        #endregion
+        #region SleepDeprivationStages
+        private List<RangeInt64>? _SleepDeprivationStagesLocations;
+        private IFallout3GroupGetter<ISleepDeprivationStageGetter>? _SleepDeprivationStages => _SleepDeprivationStagesLocations != null ? Fallout3GroupBinaryOverlay<ISleepDeprivationStageGetter>.Fallout3GroupFactory(_stream, _SleepDeprivationStagesLocations, _package) : default;
+        public IFallout3GroupGetter<ISleepDeprivationStageGetter> SleepDeprivationStages => _SleepDeprivationStages ?? new Fallout3Group<SleepDeprivationStage>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -21443,6 +21618,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _HungerStagesLocations ??= new();
                     _HungerStagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.HungerStages;
+                }
+                case RecordTypeInts.SLPD:
+                {
+                    _SleepDeprivationStagesLocations ??= new();
+                    _SleepDeprivationStagesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.SleepDeprivationStages;
                 }
                 default:
                     return default(int?);
