@@ -231,9 +231,9 @@ namespace Mutagen.Bethesda.Fallout3
         IFormLinkNullableGetter<IActorValueOrPerkGetter> IDialogResponsesGetter.ActorValuePerk => this.ActorValuePerk;
         #endregion
         #region SpeechChallenge
-        public SpeechChallenge? SpeechChallenge { get; set; }
+        public DialogResponses.SpeechChallengeEnum? SpeechChallenge { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        SpeechChallenge? IDialogResponsesGetter.SpeechChallenge => this.SpeechChallenge;
+        DialogResponses.SpeechChallengeEnum? IDialogResponsesGetter.SpeechChallenge => this.SpeechChallenge;
         #endregion
 
         #region To String
@@ -1554,7 +1554,7 @@ namespace Mutagen.Bethesda.Fallout3
         new String? Prompt { get; set; }
         new IFormLinkNullable<INpcSpawnGetter> Speaker { get; set; }
         new IFormLinkNullable<IActorValueOrPerkGetter> ActorValuePerk { get; set; }
-        new SpeechChallenge? SpeechChallenge { get; set; }
+        new DialogResponses.SpeechChallengeEnum? SpeechChallenge { get; set; }
     }
 
     public partial interface IDialogResponsesInternal :
@@ -1589,7 +1589,7 @@ namespace Mutagen.Bethesda.Fallout3
         String? Prompt { get; }
         IFormLinkNullableGetter<INpcSpawnGetter> Speaker { get; }
         IFormLinkNullableGetter<IActorValueOrPerkGetter> ActorValuePerk { get; }
-        SpeechChallenge? SpeechChallenge { get; }
+        DialogResponses.SpeechChallengeEnum? SpeechChallenge { get; }
 
     }
 
@@ -3117,7 +3117,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.ActorValuePerk,
                 header: translationParams.ConvertToCustom(RecordTypes.KNAM));
-            EnumBinaryTranslation<SpeechChallenge, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<DialogResponses.SpeechChallengeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.SpeechChallenge,
                 length: 4,
@@ -3317,7 +3317,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeechChallenge = EnumBinaryTranslation<SpeechChallenge, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.SpeechChallenge = EnumBinaryTranslation<DialogResponses.SpeechChallengeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)DialogResponses_FieldIndex.SpeechChallenge;
@@ -3424,7 +3424,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region SpeechChallenge
         private int? _SpeechChallengeLocation;
-        public SpeechChallenge? SpeechChallenge => EnumBinaryTranslation<SpeechChallenge, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SpeechChallengeLocation, _recordData, _package, 4);
+        public DialogResponses.SpeechChallengeEnum? SpeechChallenge => EnumBinaryTranslation<DialogResponses.SpeechChallengeEnum, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_SpeechChallengeLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

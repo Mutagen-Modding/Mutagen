@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Int32 Modifier { get; set; } = default(Int32);
         #endregion
         #region Reaction
-        public CombatReaction Reaction { get; set; } = default(CombatReaction);
+        public Relation.CombatReaction Reaction { get; set; } = default(Relation.CombatReaction);
         #endregion
 
         #region To String
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new IFormLink<IRelatableGetter> Target { get; set; }
         new Int32 Modifier { get; set; }
-        new CombatReaction Reaction { get; set; }
+        new Relation.CombatReaction Reaction { get; set; }
     }
 
     public partial interface IRelationGetter :
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Fallout3
         static ILoquiRegistration StaticRegistration => Relation_Registration.Instance;
         IFormLinkGetter<IRelatableGetter> Target { get; }
         Int32 Modifier { get; }
-        CombatReaction Reaction { get; }
+        Relation.CombatReaction Reaction { get; }
 
     }
 
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Target.Clear();
             item.Modifier = default(Int32);
-            item.Reaction = default(CombatReaction);
+            item.Reaction = default(Relation.CombatReaction);
         }
         
         #region Mutagen
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.Target);
             writer.Write(item.Modifier);
-            EnumBinaryTranslation<CombatReaction, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Relation.CombatReaction, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Reaction,
                 length: 4);
@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Modifier = frame.ReadInt32();
-            item.Reaction = EnumBinaryTranslation<CombatReaction, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.Reaction = EnumBinaryTranslation<Relation.CombatReaction, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
         }
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public IFormLinkGetter<IRelatableGetter> Target => FormLinkBinaryTranslation.Instance.OverlayFactory<IRelatableGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public CombatReaction Reaction => (CombatReaction)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public Relation.CombatReaction Reaction => (Relation.CombatReaction)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

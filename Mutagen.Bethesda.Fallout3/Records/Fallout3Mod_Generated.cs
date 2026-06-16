@@ -154,6 +154,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MediaSets_Object = new Fallout3Group<MediaSet>(this);
             _MediaLocationControllers_Object = new Fallout3Group<MediaLocationController>(this);
             _Challenges_Object = new Fallout3Group<Challenge>(this);
+            _AmmoEffects_Object = new Fallout3Group<AmmoEffect>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -824,6 +825,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IChallengeGetter> IFallout3ModGetter.Challenges => _Challenges_Object;
         #endregion
+        #region AmmoEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<AmmoEffect> _AmmoEffects_Object;
+        public Fallout3Group<AmmoEffect> AmmoEffects => _AmmoEffects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IAmmoEffectGetter> IFallout3ModGetter.AmmoEffects => _AmmoEffects_Object;
+        #endregion
 
         #region To String
 
@@ -958,6 +966,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MediaSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MediaLocationControllers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Challenges = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.AmmoEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1055,7 +1064,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem LoadScreenTypes,
                 TItem MediaSets,
                 TItem MediaLocationControllers,
-                TItem Challenges)
+                TItem Challenges,
+                TItem AmmoEffects)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -1152,6 +1162,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MediaSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MediaSets, new Fallout3Group.Mask<TItem>(MediaSets));
                 this.MediaLocationControllers = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MediaLocationControllers, new Fallout3Group.Mask<TItem>(MediaLocationControllers));
                 this.Challenges = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Challenges, new Fallout3Group.Mask<TItem>(Challenges));
+                this.AmmoEffects = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(AmmoEffects, new Fallout3Group.Mask<TItem>(AmmoEffects));
             }
 
             #pragma warning disable CS8618
@@ -1258,6 +1269,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MediaSets { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MediaLocationControllers { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Challenges { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? AmmoEffects { get; set; }
             #endregion
 
             #region Equals
@@ -1365,6 +1377,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MediaSets, rhs.MediaSets)) return false;
                 if (!object.Equals(this.MediaLocationControllers, rhs.MediaLocationControllers)) return false;
                 if (!object.Equals(this.Challenges, rhs.Challenges)) return false;
+                if (!object.Equals(this.AmmoEffects, rhs.AmmoEffects)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1465,6 +1478,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MediaSets);
                 hash.Add(this.MediaLocationControllers);
                 hash.Add(this.Challenges);
+                hash.Add(this.AmmoEffects);
                 return hash.ToHashCode();
             }
 
@@ -1948,6 +1962,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Challenges.Overall)) return false;
                     if (this.Challenges.Specific != null && !this.Challenges.Specific.All(eval)) return false;
                 }
+                if (AmmoEffects != null)
+                {
+                    if (!eval(this.AmmoEffects.Overall)) return false;
+                    if (this.AmmoEffects.Specific != null && !this.AmmoEffects.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2430,6 +2449,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Challenges.Overall)) return true;
                     if (this.Challenges.Specific != null && this.Challenges.Specific.Any(eval)) return true;
                 }
+                if (AmmoEffects != null)
+                {
+                    if (eval(this.AmmoEffects.Overall)) return true;
+                    if (this.AmmoEffects.Specific != null && this.AmmoEffects.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2539,6 +2563,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MediaSets = this.MediaSets == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MediaSets.Overall), this.MediaSets.Specific?.Translate(eval));
                 obj.MediaLocationControllers = this.MediaLocationControllers == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MediaLocationControllers.Overall), this.MediaLocationControllers.Specific?.Translate(eval));
                 obj.Challenges = this.Challenges == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Challenges.Overall), this.Challenges.Specific?.Translate(eval));
+                obj.AmmoEffects = this.AmmoEffects == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.AmmoEffects.Overall), this.AmmoEffects.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2937,6 +2962,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Challenges?.Print(sb);
                     }
+                    if (printMask?.AmmoEffects?.Overall ?? true)
+                    {
+                        AmmoEffects?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -3056,6 +3085,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MediaSet.ErrorMask>?>? MediaSets;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MediaLocationController.ErrorMask>?>? MediaLocationControllers;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>? Challenges;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>? AmmoEffects;
             #endregion
 
             #region IErrorMask
@@ -3254,6 +3284,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MediaLocationControllers;
                     case Fallout3Mod_FieldIndex.Challenges:
                         return Challenges;
+                    case Fallout3Mod_FieldIndex.AmmoEffects:
+                        return AmmoEffects;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3548,6 +3580,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Challenges:
                         this.Challenges = new MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.AmmoEffects:
+                        this.AmmoEffects = new MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3844,6 +3879,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Challenges:
                         this.Challenges = (MaskItem<Exception?, Fallout3Group.ErrorMask<Challenge.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.AmmoEffects:
+                        this.AmmoEffects = (MaskItem<Exception?, Fallout3Group.ErrorMask<AmmoEffect.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3947,6 +3985,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MediaSets != null) return true;
                 if (MediaLocationControllers != null) return true;
                 if (Challenges != null) return true;
+                if (AmmoEffects != null) return true;
                 return false;
             }
             #endregion
@@ -4067,6 +4106,7 @@ namespace Mutagen.Bethesda.Fallout3
                 MediaSets?.Print(sb);
                 MediaLocationControllers?.Print(sb);
                 Challenges?.Print(sb);
+                AmmoEffects?.Print(sb);
             }
             #endregion
 
@@ -4170,6 +4210,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MediaSets = this.MediaSets.Combine(rhs.MediaSets, (l, r) => l.Combine(r));
                 ret.MediaLocationControllers = this.MediaLocationControllers.Combine(rhs.MediaLocationControllers, (l, r) => l.Combine(r));
                 ret.Challenges = this.Challenges.Combine(rhs.Challenges, (l, r) => l.Combine(r));
+                ret.AmmoEffects = this.AmmoEffects.Combine(rhs.AmmoEffects, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4288,6 +4329,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<MediaSet.TranslationMask>? MediaSets;
             public Fallout3Group.TranslationMask<MediaLocationController.TranslationMask>? MediaLocationControllers;
             public Fallout3Group.TranslationMask<Challenge.TranslationMask>? Challenges;
+            public Fallout3Group.TranslationMask<AmmoEffect.TranslationMask>? AmmoEffects;
             #endregion
 
             #region Ctors
@@ -4407,6 +4449,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MediaSets != null ? MediaSets.OnOverall : DefaultOn, MediaSets?.GetCrystal()));
                 ret.Add((MediaLocationControllers != null ? MediaLocationControllers.OnOverall : DefaultOn, MediaLocationControllers?.GetCrystal()));
                 ret.Add((Challenges != null ? Challenges.OnOverall : DefaultOn, Challenges?.GetCrystal()));
+                ret.Add((AmmoEffects != null ? AmmoEffects.OnOverall : DefaultOn, AmmoEffects?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -4560,6 +4603,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MediaSets_Object = new Fallout3Group<MediaSet>(this);
             _MediaLocationControllers_Object = new Fallout3Group<MediaLocationController>(this);
             _Challenges_Object = new Fallout3Group<Challenge>(this);
+            _AmmoEffects_Object = new Fallout3Group<AmmoEffect>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -4945,6 +4989,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Challenges.RecordCache.Set(rhsMod.Challenges.RecordCache.Items);
             }
+            if (mask?.AmmoEffects ?? true)
+            {
+                this.AmmoEffects.RecordCache.Set(rhsMod.AmmoEffects.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
@@ -5302,6 +5350,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<MediaSet> MediaSets { get; }
         new Fallout3Group<MediaLocationController> MediaLocationControllers { get; }
         new Fallout3Group<Challenge> Challenges { get; }
+        new Fallout3Group<AmmoEffect> AmmoEffects { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -5416,6 +5465,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IMediaSetGetter> MediaSets { get; }
         IFallout3GroupGetter<IMediaLocationControllerGetter> MediaLocationControllers { get; }
         IFallout3GroupGetter<IChallengeGetter> Challenges { get; }
+        IFallout3GroupGetter<IAmmoEffectGetter> AmmoEffects { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -6061,6 +6111,7 @@ namespace Mutagen.Bethesda.Fallout3
         MediaSets = 92,
         MediaLocationControllers = 93,
         Challenges = 94,
+        AmmoEffects = 95,
     }
     #endregion
 
@@ -6071,9 +6122,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 95;
+        public const ushort AdditionalFieldCount = 96;
 
-        public const ushort FieldCount = 95;
+        public const ushort FieldCount = 96;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -6233,6 +6284,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.MediaSets.Clear();
             item.MediaLocationControllers.Clear();
             item.Challenges.Clear();
+            item.AmmoEffects.Clear();
         }
         
         #region Mutagen
@@ -6471,6 +6523,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.MediaSets.Remove(keys);
             obj.MediaLocationControllers.Remove(keys);
             obj.Challenges.Remove(keys);
+            obj.AmmoEffects.Remove(keys);
         }
         
         public void Remove(
@@ -6519,6 +6572,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IAddonNode":
                 case "IAddonNodeInternal":
                     obj.AddonNodes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "AmmoEffect":
+                case "IAmmoEffectGetter":
+                case "IAmmoEffect":
+                case "IAmmoEffectInternal":
+                    obj.AmmoEffects.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -7924,6 +7985,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MediaSets = MaskItemExt.Factory(item.MediaSets.GetEqualsMask(rhs.MediaSets, include), include);
             ret.MediaLocationControllers = MaskItemExt.Factory(item.MediaLocationControllers.GetEqualsMask(rhs.MediaLocationControllers, include), include);
             ret.Challenges = MaskItemExt.Factory(item.Challenges.GetEqualsMask(rhs.Challenges, include), include);
+            ret.AmmoEffects = MaskItemExt.Factory(item.AmmoEffects.GetEqualsMask(rhs.AmmoEffects, include), include);
         }
         
         public string Print(
@@ -8347,6 +8409,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Challenges?.Overall ?? true)
             {
                 item.Challenges?.Print(sb, "Challenges");
+            }
+            if (printMask?.AmmoEffects?.Overall ?? true)
+            {
+                item.AmmoEffects?.Print(sb, "AmmoEffects");
             }
         }
         
@@ -9117,6 +9183,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isChallengesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.AmmoEffects) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.AmmoEffects, rhs.AmmoEffects, out var lhsAmmoEffects, out var rhsAmmoEffects, out var isAmmoEffectsEqual))
+                {
+                    if (!object.Equals(lhsAmmoEffects, rhsAmmoEffects)) return false;
+                }
+                else if (!isAmmoEffectsEqual) return false;
+            }
             return true;
         }
         
@@ -9218,6 +9292,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MediaSets);
             hash.Add(item.MediaLocationControllers);
             hash.Add(item.Challenges);
+            hash.Add(item.AmmoEffects);
             return hash.ToHashCode();
         }
         
@@ -9733,6 +9808,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IChallenge":
                 case "IChallengeInternal":
                     return obj.Challenges;
+                case "AmmoEffect":
+                case "IAmmoEffectGetter":
+                case "IAmmoEffect":
+                case "IAmmoEffectInternal":
+                    return obj.AmmoEffects;
                 default:
                     return null;
             }
@@ -9750,7 +9830,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[94];
+            Stream[] outputStreams = new Stream[95];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -9846,6 +9926,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.MediaSets, 91, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MediaLocationControllers, 92, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Challenges, 93, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AmmoEffects, 94, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -9985,6 +10066,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.MediaSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MediaLocationControllers.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Challenges.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AmmoEffects.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -10705,6 +10787,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.AmmoEffects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
         }
         
         public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
@@ -10788,6 +10874,15 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IAddonNode":
                 case "IAddonNodeInternal":
                     foreach (var item in obj.AddonNodes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AmmoEffect":
+                case "IAmmoEffectGetter":
+                case "IAmmoEffect":
+                case "IAmmoEffectInternal":
+                    foreach (var item in obj.AmmoEffects.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -11779,6 +11874,15 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AmmoEffect, IAmmoEffectGetter>(
+                srcGroup: obj.AmmoEffects,
+                type: typeof(IAmmoEffectGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.AmmoEffects,
+                groupGetter: (m) => m.AmmoEffects))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Ammunition, IAmmunitionGetter>(
                 srcGroup: obj.Ammunitions,
                 type: typeof(IAmmunitionGetter),
@@ -12696,6 +12800,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.AddonNodes,
                         groupGetter: (m) => m.AddonNodes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AmmoEffect":
+                case "IAmmoEffectGetter":
+                case "IAmmoEffect":
+                case "IAmmoEffectInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, AmmoEffect, IAmmoEffectGetter>(
+                        srcGroup: obj.AmmoEffects,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.AmmoEffects,
+                        groupGetter: (m) => m.AmmoEffects))
                     {
                         yield return item;
                     }
@@ -16278,6 +16396,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.AmmoEffects) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.AmmoEffects);
+                try
+                {
+                    item.AmmoEffects.DeepCopyIn(
+                        rhs: rhs.AmmoEffects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.AmmoEffects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -16475,6 +16613,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool MediaSets;
         public bool MediaLocationControllers;
         public bool Challenges;
+        public bool AmmoEffects;
         public GroupMask()
         {
         }
@@ -16574,6 +16713,7 @@ namespace Mutagen.Bethesda.Fallout3
             MediaSets = defaultValue;
             MediaLocationControllers = defaultValue;
             Challenges = defaultValue;
+            AmmoEffects = defaultValue;
         }
     }
 
@@ -17666,6 +17806,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ChallengesItem).BinaryWriteTranslator).Write<IChallengeGetter>(
                         item: ChallengesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.AmmoEffects ?? true)
+            {
+                var AmmoEffectsItem = item.AmmoEffects;
+                if (AmmoEffectsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)AmmoEffectsItem).BinaryWriteTranslator).Write<IAmmoEffectGetter>(
+                        item: AmmoEffectsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -19056,6 +19207,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Challenges;
                 }
+                case RecordTypeInts.AMEF:
+                {
+                    if (importMask?.AmmoEffects ?? true)
+                    {
+                        item.AmmoEffects.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.AmmoEffects;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -19690,6 +19855,11 @@ namespace Mutagen.Bethesda.Fallout3
         private List<RangeInt64>? _ChallengesLocations;
         private IFallout3GroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? Fallout3GroupBinaryOverlay<IChallengeGetter>.Fallout3GroupFactory(_stream, _ChallengesLocations, _package) : default;
         public IFallout3GroupGetter<IChallengeGetter> Challenges => _Challenges ?? new Fallout3Group<Challenge>(this);
+        #endregion
+        #region AmmoEffects
+        private List<RangeInt64>? _AmmoEffectsLocations;
+        private IFallout3GroupGetter<IAmmoEffectGetter>? _AmmoEffects => _AmmoEffectsLocations != null ? Fallout3GroupBinaryOverlay<IAmmoEffectGetter>.Fallout3GroupFactory(_stream, _AmmoEffectsLocations, _package) : default;
+        public IFallout3GroupGetter<IAmmoEffectGetter> AmmoEffects => _AmmoEffects ?? new Fallout3Group<AmmoEffect>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -20328,6 +20498,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _ChallengesLocations ??= new();
                     _ChallengesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Challenges;
+                }
+                case RecordTypeInts.AMEF:
+                {
+                    _AmmoEffectsLocations ??= new();
+                    _AmmoEffectsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.AmmoEffects;
                 }
                 default:
                     return default(int?);

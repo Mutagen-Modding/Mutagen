@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region MaterialType
-        public WorldImpactMaterialType MaterialType { get; set; } = default(WorldImpactMaterialType);
+        public Worldspace.WorldImpactMaterialType MaterialType { get; set; } = default(Worldspace.WorldImpactMaterialType);
         #endregion
         #region OldImpact
         private readonly IFormLink<IImpactGetter> _OldImpact = new FormLink<IImpactGetter>();
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IWorldspaceImpactSwap>,
         IWorldspaceImpactSwapGetter
     {
-        new WorldImpactMaterialType MaterialType { get; set; }
+        new Worldspace.WorldImpactMaterialType MaterialType { get; set; }
         new IFormLink<IImpactGetter> OldImpact { get; set; }
         new IFormLink<IImpactGetter> NewImpact { get; set; }
     }
@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => WorldspaceImpactSwap_Registration.Instance;
-        WorldImpactMaterialType MaterialType { get; }
+        Worldspace.WorldImpactMaterialType MaterialType { get; }
         IFormLinkGetter<IImpactGetter> OldImpact { get; }
         IFormLinkGetter<IImpactGetter> NewImpact { get; }
 
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IWorldspaceImpactSwap item)
         {
             ClearPartial();
-            item.MaterialType = default(WorldImpactMaterialType);
+            item.MaterialType = default(Worldspace.WorldImpactMaterialType);
             item.OldImpact.Clear();
             item.NewImpact.Clear();
         }
@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout3
             IWorldspaceImpactSwapGetter item,
             MutagenWriter writer)
         {
-            EnumBinaryTranslation<WorldImpactMaterialType, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Worldspace.WorldImpactMaterialType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MaterialType,
                 length: 4);
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Fallout3
             IWorldspaceImpactSwap item,
             MutagenFrame frame)
         {
-            item.MaterialType = EnumBinaryTranslation<WorldImpactMaterialType, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.MaterialType = EnumBinaryTranslation<Worldspace.WorldImpactMaterialType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
             item.OldImpact.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public WorldImpactMaterialType MaterialType => (WorldImpactMaterialType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public Worldspace.WorldImpactMaterialType MaterialType => (Worldspace.WorldImpactMaterialType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         public IFormLinkGetter<IImpactGetter> OldImpact => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public IFormLinkGetter<IImpactGetter> NewImpact => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(

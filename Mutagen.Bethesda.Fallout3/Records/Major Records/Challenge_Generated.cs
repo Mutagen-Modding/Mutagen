@@ -128,13 +128,13 @@ namespace Mutagen.Bethesda.Fallout3
         ITranslatedStringGetter? IChallengeGetter.Description => this.Description;
         #endregion
         #region Type
-        public ChallengeType Type { get; set; } = default(ChallengeType);
+        public Challenge.ChallengeType Type { get; set; } = default(Challenge.ChallengeType);
         #endregion
         #region Threshold
         public UInt32 Threshold { get; set; } = default(UInt32);
         #endregion
         #region Flags
-        public ChallengeFlag Flags { get; set; } = default(ChallengeFlag);
+        public Challenge.ChallengeFlag Flags { get; set; } = default(Challenge.ChallengeFlag);
         #endregion
         #region Interval
         public UInt32 Interval { get; set; } = default(UInt32);
@@ -963,9 +963,9 @@ namespace Mutagen.Bethesda.Fallout3
         new Icons? Icons { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
         new TranslatedString? Description { get; set; }
-        new ChallengeType Type { get; set; }
+        new Challenge.ChallengeType Type { get; set; }
         new UInt32 Threshold { get; set; }
-        new ChallengeFlag Flags { get; set; }
+        new Challenge.ChallengeFlag Flags { get; set; }
         new UInt32 Interval { get; set; }
         new UInt16 Value1 { get; set; }
         new UInt16 Value2 { get; set; }
@@ -1010,9 +1010,9 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         ITranslatedStringGetter? Description { get; }
-        ChallengeType Type { get; }
+        Challenge.ChallengeType Type { get; }
         UInt32 Threshold { get; }
-        ChallengeFlag Flags { get; }
+        Challenge.ChallengeFlag Flags { get; }
         UInt32 Interval { get; }
         UInt16 Value1 { get; }
         UInt16 Value2 { get; }
@@ -1308,9 +1308,9 @@ namespace Mutagen.Bethesda.Fallout3
             item.Icons = null;
             item.Script.Clear();
             item.Description = default;
-            item.Type = default(ChallengeType);
+            item.Type = default(Challenge.ChallengeType);
             item.Threshold = default(UInt32);
-            item.Flags = default(ChallengeFlag);
+            item.Flags = default(Challenge.ChallengeFlag);
             item.Interval = default(UInt32);
             item.Value1 = default(UInt16);
             item.Value2 = default(UInt16);
@@ -2128,12 +2128,12 @@ namespace Mutagen.Bethesda.Fallout3
                 source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
-                EnumBinaryTranslation<ChallengeType, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<Challenge.ChallengeType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);
                 writer.Write(item.Threshold);
-                EnumBinaryTranslation<ChallengeFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<Challenge.ChallengeFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -2258,13 +2258,13 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Type = EnumBinaryTranslation<ChallengeType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Type = EnumBinaryTranslation<Challenge.ChallengeType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
                     item.Threshold = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;
-                    item.Flags = EnumBinaryTranslation<ChallengeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<Challenge.ChallengeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
@@ -2374,7 +2374,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public ChallengeType Type => _Type_IsSet ? (ChallengeType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public Challenge.ChallengeType Type => _Type_IsSet ? (Challenge.ChallengeType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
         #region Threshold
         private int _ThresholdLocation => _DATALocation!.Value.Min + 0x4;
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public ChallengeFlag Flags => _Flags_IsSet ? (ChallengeFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Challenge.ChallengeFlag Flags => _Flags_IsSet ? (Challenge.ChallengeFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         #region Interval
         private int _IntervalLocation => _DATALocation!.Value.Min + 0xC;

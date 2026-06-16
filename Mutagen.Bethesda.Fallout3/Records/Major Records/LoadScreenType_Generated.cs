@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Type
-        public LoadScreenTypeEnum Type { get; set; } = default(LoadScreenTypeEnum);
+        public LoadScreenType.LoadScreenTypeEnum Type { get; set; } = default(LoadScreenType.LoadScreenTypeEnum);
         #endregion
         #region X
         public UInt32 X { get; set; } = default(UInt32);
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Single Orientation { get; set; } = default(Single);
         #endregion
         #region Font
-        public LoadScreenItemEnum Font { get; set; } = default(LoadScreenItemEnum);
+        public LoadScreenType.LoadScreenItemEnum Font { get; set; } = default(LoadScreenType.LoadScreenItemEnum);
         #endregion
         #region FontColorR
         public Single FontColorR { get; set; } = default(Single);
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Single FontColorB { get; set; } = default(Single);
         #endregion
         #region Alignment
-        public LoadScreenAlignment Alignment { get; set; } = default(LoadScreenAlignment);
+        public LoadScreenType.LoadScreenAlignment Alignment { get; set; } = default(LoadScreenType.LoadScreenAlignment);
         #endregion
         #region Unknown1
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Fallout3
         ReadOnlyMemorySlice<Byte> ILoadScreenTypeGetter.Unknown1 => this.Unknown1;
         #endregion
         #region Font2
-        public LoadScreenItemEnum Font2 { get; set; } = default(LoadScreenItemEnum);
+        public LoadScreenType.LoadScreenItemEnum Font2 { get; set; } = default(LoadScreenType.LoadScreenItemEnum);
         #endregion
         #region Font2ColorR
         public Single Font2ColorR { get; set; } = default(Single);
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Int32 Unknown2 { get; set; } = default(Int32);
         #endregion
         #region Stats
-        public LoadScreenItemEnum Stats { get; set; } = default(LoadScreenItemEnum);
+        public LoadScreenType.LoadScreenItemEnum Stats { get; set; } = default(LoadScreenType.LoadScreenItemEnum);
         #endregion
 
         #region To String
@@ -1032,24 +1032,24 @@ namespace Mutagen.Bethesda.Fallout3
         ILoadScreenTypeGetter,
         ILoquiObjectSetter<ILoadScreenTypeInternal>
     {
-        new LoadScreenTypeEnum Type { get; set; }
+        new LoadScreenType.LoadScreenTypeEnum Type { get; set; }
         new UInt32 X { get; set; }
         new UInt32 Y { get; set; }
         new UInt32 Width { get; set; }
         new UInt32 Height { get; set; }
         new Single Orientation { get; set; }
-        new LoadScreenItemEnum Font { get; set; }
+        new LoadScreenType.LoadScreenItemEnum Font { get; set; }
         new Single FontColorR { get; set; }
         new Single FontColorG { get; set; }
         new Single FontColorB { get; set; }
-        new LoadScreenAlignment Alignment { get; set; }
+        new LoadScreenType.LoadScreenAlignment Alignment { get; set; }
         new MemorySlice<Byte> Unknown1 { get; set; }
-        new LoadScreenItemEnum Font2 { get; set; }
+        new LoadScreenType.LoadScreenItemEnum Font2 { get; set; }
         new Single Font2ColorR { get; set; }
         new Single Font2ColorG { get; set; }
         new Single Font2ColorB { get; set; }
         new Int32 Unknown2 { get; set; }
-        new LoadScreenItemEnum Stats { get; set; }
+        new LoadScreenType.LoadScreenItemEnum Stats { get; set; }
     }
 
     public partial interface ILoadScreenTypeInternal :
@@ -1067,24 +1067,24 @@ namespace Mutagen.Bethesda.Fallout3
         IMapsToGetter<ILoadScreenTypeGetter>
     {
         static new ILoquiRegistration StaticRegistration => LoadScreenType_Registration.Instance;
-        LoadScreenTypeEnum Type { get; }
+        LoadScreenType.LoadScreenTypeEnum Type { get; }
         UInt32 X { get; }
         UInt32 Y { get; }
         UInt32 Width { get; }
         UInt32 Height { get; }
         Single Orientation { get; }
-        LoadScreenItemEnum Font { get; }
+        LoadScreenType.LoadScreenItemEnum Font { get; }
         Single FontColorR { get; }
         Single FontColorG { get; }
         Single FontColorB { get; }
-        LoadScreenAlignment Alignment { get; }
+        LoadScreenType.LoadScreenAlignment Alignment { get; }
         ReadOnlyMemorySlice<Byte> Unknown1 { get; }
-        LoadScreenItemEnum Font2 { get; }
+        LoadScreenType.LoadScreenItemEnum Font2 { get; }
         Single Font2ColorR { get; }
         Single Font2ColorG { get; }
         Single Font2ColorB { get; }
         Int32 Unknown2 { get; }
-        LoadScreenItemEnum Stats { get; }
+        LoadScreenType.LoadScreenItemEnum Stats { get; }
 
     }
 
@@ -1369,24 +1369,24 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ILoadScreenTypeInternal item)
         {
             ClearPartial();
-            item.Type = default(LoadScreenTypeEnum);
+            item.Type = default(LoadScreenType.LoadScreenTypeEnum);
             item.X = default(UInt32);
             item.Y = default(UInt32);
             item.Width = default(UInt32);
             item.Height = default(UInt32);
             item.Orientation = default(Single);
-            item.Font = default(LoadScreenItemEnum);
+            item.Font = default(LoadScreenType.LoadScreenItemEnum);
             item.FontColorR = default(Single);
             item.FontColorG = default(Single);
             item.FontColorB = default(Single);
-            item.Alignment = default(LoadScreenAlignment);
+            item.Alignment = default(LoadScreenType.LoadScreenAlignment);
             item.Unknown1 = new byte[20];
-            item.Font2 = default(LoadScreenItemEnum);
+            item.Font2 = default(LoadScreenType.LoadScreenItemEnum);
             item.Font2ColorR = default(Single);
             item.Font2ColorG = default(Single);
             item.Font2ColorB = default(Single);
             item.Unknown2 = default(Int32);
-            item.Stats = default(LoadScreenItemEnum);
+            item.Stats = default(LoadScreenType.LoadScreenItemEnum);
             base.Clear(item);
         }
         
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
-                EnumBinaryTranslation<LoadScreenTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<LoadScreenType.LoadScreenTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);
@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Fallout3
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Orientation);
-                EnumBinaryTranslation<LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<LoadScreenType.LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Font,
                     length: 4);
@@ -2170,14 +2170,14 @@ namespace Mutagen.Bethesda.Fallout3
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FontColorB);
-                EnumBinaryTranslation<LoadScreenAlignment, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<LoadScreenType.LoadScreenAlignment, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Alignment,
                     length: 4);
                 ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown1);
-                EnumBinaryTranslation<LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<LoadScreenType.LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Font2,
                     length: 4);
@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Fallout3
                     writer: writer,
                     item: item.Font2ColorB);
                 writer.Write(item.Unknown2);
-                EnumBinaryTranslation<LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<LoadScreenType.LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Stats,
                     length: 4);
@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Type = EnumBinaryTranslation<LoadScreenTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Type = EnumBinaryTranslation<LoadScreenType.LoadScreenTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
@@ -2283,7 +2283,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 4) return null;
                     item.Orientation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Font = EnumBinaryTranslation<LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Font = EnumBinaryTranslation<LoadScreenType.LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
@@ -2293,12 +2293,12 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 4) return null;
                     item.FontColorB = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Alignment = EnumBinaryTranslation<LoadScreenAlignment, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Alignment = EnumBinaryTranslation<LoadScreenType.LoadScreenAlignment, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     item.Unknown1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(20));
                     if (dataFrame.Remaining < 4) return null;
-                    item.Font2 = EnumBinaryTranslation<LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Font2 = EnumBinaryTranslation<LoadScreenType.LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Fallout3
                     if (dataFrame.Remaining < 4) return null;
                     item.Unknown2 = dataFrame.ReadInt32();
                     if (dataFrame.Remaining < 4) return null;
-                    item.Stats = EnumBinaryTranslation<LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Stats = EnumBinaryTranslation<LoadScreenType.LoadScreenItemEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     return (int)LoadScreenType_FieldIndex.Stats;
@@ -2377,7 +2377,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public LoadScreenTypeEnum Type => _Type_IsSet ? (LoadScreenTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenTypeEnum Type => _Type_IsSet ? (LoadScreenType.LoadScreenTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
         #region X
         private int _XLocation => _DATALocation!.Value.Min + 0x4;
@@ -2407,7 +2407,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Font
         private int _FontLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Font_IsSet => _DATALocation.HasValue;
-        public LoadScreenItemEnum Font => _Font_IsSet ? (LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FontLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenItemEnum Font => _Font_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FontLocation, 0x4)) : default;
         #endregion
         #region FontColorR
         private int _FontColorRLocation => _DATALocation!.Value.Min + 0x1C;
@@ -2427,7 +2427,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Alignment
         private int _AlignmentLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Alignment_IsSet => _DATALocation.HasValue;
-        public LoadScreenAlignment Alignment => _Alignment_IsSet ? (LoadScreenAlignment)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_AlignmentLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenAlignment Alignment => _Alignment_IsSet ? (LoadScreenType.LoadScreenAlignment)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_AlignmentLocation, 0x4)) : default;
         #endregion
         #region Unknown1
         private int _Unknown1Location => _DATALocation!.Value.Min + 0x2C;
@@ -2437,7 +2437,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Font2
         private int _Font2Location => _DATALocation!.Value.Min + 0x40;
         private bool _Font2_IsSet => _DATALocation.HasValue;
-        public LoadScreenItemEnum Font2 => _Font2_IsSet ? (LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_Font2Location, 0x4)) : default;
+        public LoadScreenType.LoadScreenItemEnum Font2 => _Font2_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_Font2Location, 0x4)) : default;
         #endregion
         #region Font2ColorR
         private int _Font2ColorRLocation => _DATALocation!.Value.Min + 0x44;
@@ -2462,7 +2462,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Stats
         private int _StatsLocation => _DATALocation!.Value.Min + 0x54;
         private bool _Stats_IsSet => _DATALocation.HasValue;
-        public LoadScreenItemEnum Stats => _Stats_IsSet ? (LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StatsLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenItemEnum Stats => _Stats_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StatsLocation, 0x4)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

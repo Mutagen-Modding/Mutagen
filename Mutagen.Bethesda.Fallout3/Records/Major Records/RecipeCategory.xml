@@ -4,7 +4,7 @@
           recordType="RCCT">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Enum name="Flags" enumName="RecipeCategoryFlag" recordType="DATA" byteLength="1" />
+      <Enum name="Flags" enumName="RecipeCategory.RecipeCategoryFlag" recordType="DATA" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

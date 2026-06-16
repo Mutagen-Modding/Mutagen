@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region BipedFlags
-        public BipedFlag BipedFlags { get; set; } = default(BipedFlag);
+        public BipedData.BipedFlag BipedFlags { get; set; } = default(BipedData.BipedFlag);
         #endregion
         #region GeneralFlags
         public BipedData.GeneralFlag GeneralFlags { get; set; } = default(BipedData.GeneralFlag);
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Fallout3
         IBipedDataGetter,
         ILoquiObjectSetter<IBipedData>
     {
-        new BipedFlag BipedFlags { get; set; }
+        new BipedData.BipedFlag BipedFlags { get; set; }
         new BipedData.GeneralFlag GeneralFlags { get; set; }
     }
 
@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Fallout3
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BipedData_Registration.Instance;
-        BipedFlag BipedFlags { get; }
+        BipedData.BipedFlag BipedFlags { get; }
         BipedData.GeneralFlag GeneralFlags { get; }
 
     }
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IBipedData item)
         {
             ClearPartial();
-            item.BipedFlags = default(BipedFlag);
+            item.BipedFlags = default(BipedData.BipedFlag);
             item.GeneralFlags = default(BipedData.GeneralFlag);
         }
         
@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Fallout3
             IBipedDataGetter item,
             MutagenWriter writer)
         {
-            EnumBinaryTranslation<BipedFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<BipedData.BipedFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BipedFlags,
                 length: 4);
@@ -1050,7 +1050,7 @@ namespace Mutagen.Bethesda.Fallout3
             IBipedData item,
             MutagenFrame frame)
         {
-            item.BipedFlags = EnumBinaryTranslation<BipedFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.BipedFlags = EnumBinaryTranslation<BipedData.BipedFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
             item.GeneralFlags = EnumBinaryTranslation<BipedData.GeneralFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
-        public BipedFlag BipedFlags => (BipedFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public BipedData.BipedFlag BipedFlags => (BipedData.BipedFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         public BipedData.GeneralFlag GeneralFlags => (BipedData.GeneralFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

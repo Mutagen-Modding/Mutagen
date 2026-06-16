@@ -48,7 +48,7 @@
   </Object>
   <Object name="WorldspaceImpactSwap" objType="Subrecord" recordType="IMPS">
     <Fields>
-      <Enum name="MaterialType" enumName="WorldImpactMaterialType" byteLength="4" />
+      <Enum name="MaterialType" enumName="Worldspace.WorldImpactMaterialType" byteLength="4" />
       <FormLink name="OldImpact" refName="Impact" />
       <FormLink name="NewImpact" refName="Impact" />
     </Fields>

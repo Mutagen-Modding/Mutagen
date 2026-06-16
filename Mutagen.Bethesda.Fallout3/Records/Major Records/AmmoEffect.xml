@@ -3,14 +3,11 @@
   <Object name="AmmoEffect" objType="Record" baseClass="Fallout3MajorRecord"
           recordType="AMEF">
     <Fields>
-      <String name="Name" recordType="FULL">
-        <ModHeaderVersioning version="1.32" />
-      </String>
-      <Data recordType="DATA" nullable="False">
-        <ModHeaderVersioning version="1.32" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Data recordType="DATA">
         <Fields>
-          <Enum name="Type" enumName="AmmoEffectType" byteLength="4" />
-          <Enum name="Operation" enumName="AmmoEffectOperation" byteLength="4" />
+          <Enum name="Type" enumName="AmmoEffect.AmmoEffectType" byteLength="4" />
+          <Enum name="Operation" enumName="AmmoEffect.AmmoEffectOperation" byteLength="4" />
           <Float name="Value" />
         </Fields>
       </Data>

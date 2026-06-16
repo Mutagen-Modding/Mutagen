@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Class.Flag Flags { get; set; } = default(Class.Flag);
         #endregion
         #region Services
-        public ClassService Services { get; set; } = default(ClassService);
+        public Class.ClassService Services { get; set; } = default(Class.ClassService);
         #endregion
         #region Teaches
         public Skill? Teaches { get; set; }
@@ -132,11 +132,11 @@ namespace Mutagen.Bethesda.Fallout3
         public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
         #region Attributes
-        private readonly Dictionary<Attribute, Byte> _Attributes = new Dictionary<Attribute, Byte>();
-        public IDictionary<Attribute, Byte> Attributes => _Attributes;
+        private readonly Dictionary<Class.Attribute, Byte> _Attributes = new Dictionary<Class.Attribute, Byte>();
+        public IDictionary<Class.Attribute, Byte> Attributes => _Attributes;
         #region Interface Members
-        IDictionary<Attribute, Byte> IClass.Attributes => _Attributes;
-        IReadOnlyDictionary<Attribute, Byte> IClassGetter.Attributes => _Attributes;
+        IDictionary<Class.Attribute, Byte> IClass.Attributes => _Attributes;
+        IReadOnlyDictionary<Class.Attribute, Byte> IClassGetter.Attributes => _Attributes;
         #endregion
 
         #endregion
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Teaches = initialValue;
                 this.MaxTrainingLevel = initialValue;
                 this.Unknown = initialValue;
-                this.Attributes = new MaskItem<TItem, IEnumerable<KeyValuePair<Attribute, TItem>>?>(initialValue, null);
+                this.Attributes = new MaskItem<TItem, IEnumerable<KeyValuePair<Class.Attribute, TItem>>?>(initialValue, null);
             }
 
             public Mask(
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Teaches = Teaches;
                 this.MaxTrainingLevel = MaxTrainingLevel;
                 this.Unknown = Unknown;
-                this.Attributes = new MaskItem<TItem, IEnumerable<KeyValuePair<Attribute, TItem>>?>(Attributes, null);
+                this.Attributes = new MaskItem<TItem, IEnumerable<KeyValuePair<Class.Attribute, TItem>>?>(Attributes, null);
             }
 
             #pragma warning disable CS8618
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Teaches;
             public TItem MaxTrainingLevel;
             public TItem Unknown;
-            public MaskItem<TItem, IEnumerable<KeyValuePair<Attribute, TItem>>?>? Attributes;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<Class.Attribute, TItem>>?>? Attributes;
             #endregion
 
             #region Equals
@@ -390,10 +390,10 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Unknown = eval(this.Unknown);
                 if (Attributes != null)
                 {
-                    obj.Attributes = new MaskItem<R, IEnumerable<KeyValuePair<Attribute, R>>?>(eval(this.Attributes.Overall), default);
+                    obj.Attributes = new MaskItem<R, IEnumerable<KeyValuePair<Class.Attribute, R>>?>(eval(this.Attributes.Overall), default);
                     if (Attributes.Specific != null)
                     {
-                        List<KeyValuePair<Attribute, R>> l = new List<KeyValuePair<Attribute, R>>();
+                        List<KeyValuePair<Class.Attribute, R>> l = new List<KeyValuePair<Class.Attribute, R>>();
                         obj.Attributes.Specific = l;
                         foreach (var item in Attributes.Specific)
                         {
@@ -531,7 +531,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Teaches;
             public Exception? MaxTrainingLevel;
             public Exception? Unknown;
-            public MaskItem<Exception?, IEnumerable<KeyValuePair<Attribute, Exception?>>?>? Attributes;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Class.Attribute, Exception?>>?>? Attributes;
             #endregion
 
             #region IErrorMask
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Unknown = ex;
                         break;
                     case Class_FieldIndex.Attributes:
-                        this.Attributes = new MaskItem<Exception?, IEnumerable<KeyValuePair<Attribute, Exception?>>?>(ex, null);
+                        this.Attributes = new MaskItem<Exception?, IEnumerable<KeyValuePair<Class.Attribute, Exception?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Fallout3
                         this.Unknown = (Exception?)obj;
                         break;
                     case Class_FieldIndex.Attributes:
-                        this.Attributes = (MaskItem<Exception?, IEnumerable<KeyValuePair<Attribute, Exception?>>?>)obj;
+                        this.Attributes = (MaskItem<Exception?, IEnumerable<KeyValuePair<Class.Attribute, Exception?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches);
                 ret.MaxTrainingLevel = this.MaxTrainingLevel.Combine(rhs.MaxTrainingLevel);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Attributes = new MaskItem<Exception?, IEnumerable<KeyValuePair<Attribute, Exception?>>?>(Noggog.ExceptionExt.Combine(this.Attributes?.Overall, rhs.Attributes?.Overall), Noggog.ExceptionExt.Combine(this.Attributes?.Specific, rhs.Attributes?.Specific));
+                ret.Attributes = new MaskItem<Exception?, IEnumerable<KeyValuePair<Class.Attribute, Exception?>>?>(Noggog.ExceptionExt.Combine(this.Attributes?.Overall, rhs.Attributes?.Overall), Noggog.ExceptionExt.Combine(this.Attributes?.Specific, rhs.Attributes?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -998,11 +998,11 @@ namespace Mutagen.Bethesda.Fallout3
         new String? Icon { get; set; }
         new ActorValue[] TagSkills { get; }
         new Class.Flag Flags { get; set; }
-        new ClassService Services { get; set; }
+        new Class.ClassService Services { get; set; }
         new Skill? Teaches { get; set; }
         new Byte MaxTrainingLevel { get; set; }
         new UInt16 Unknown { get; set; }
-        new IDictionary<Attribute, Byte> Attributes { get; }
+        new IDictionary<Class.Attribute, Byte> Attributes { get; }
     }
 
     public partial interface IClassInternal :
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout3
         IClass,
         IClassGetter
     {
-        new IDictionary<Attribute, Byte> Attributes { get; }
+        new IDictionary<Class.Attribute, Byte> Attributes { get; }
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.CLAS)]
@@ -1035,11 +1035,11 @@ namespace Mutagen.Bethesda.Fallout3
         String? Icon { get; }
         ReadOnlyMemorySlice<ActorValue> TagSkills { get; }
         Class.Flag Flags { get; }
-        ClassService Services { get; }
+        Class.ClassService Services { get; }
         Skill? Teaches { get; }
         Byte MaxTrainingLevel { get; }
         UInt16 Unknown { get; }
-        IReadOnlyDictionary<Attribute, Byte> Attributes { get; }
+        IReadOnlyDictionary<Class.Attribute, Byte> Attributes { get; }
 
     }
 
@@ -1325,7 +1325,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Icon = default;
             item.TagSkills.Reset();
             item.Flags = default(Class.Flag);
-            item.Services = default(ClassService);
+            item.Services = default(Class.ClassService);
             item.Teaches = default;
             item.MaxTrainingLevel = default(Byte);
             item.Unknown = default(UInt16);
@@ -2048,7 +2048,7 @@ namespace Mutagen.Bethesda.Fallout3
                     writer,
                     item.Flags,
                     length: 4);
-                EnumBinaryTranslation<ClassService, MutagenFrame, MutagenWriter>.Instance.Write(
+                EnumBinaryTranslation<Class.ClassService, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Services,
                     length: 4);
@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Fallout3
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Services = EnumBinaryTranslation<ClassService, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Services = EnumBinaryTranslation<Class.ClassService, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 1) return null;
@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 7) return null;
-                    Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Attribute>(
+                    Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Class.Attribute>(
                         reader: frame,
                         item: item.Attributes,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
@@ -2297,7 +2297,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Services
         private int _ServicesLocation => _DATALocation!.Value.Min + 0x14;
         private bool _Services_IsSet => _DATALocation.HasValue;
-        public ClassService Services => _Services_IsSet ? (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ServicesLocation, 0x4)) : default;
+        public Class.ClassService Services => _Services_IsSet ? (Class.ClassService)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ServicesLocation, 0x4)) : default;
         #endregion
         #region Teaches
         private int _TeachesLocation => _DATALocation!.Value.Min + 0x18;
@@ -2326,9 +2326,9 @@ namespace Mutagen.Bethesda.Fallout3
         #region Attributes
         private int _AttributesLocation => _ATTRLocation!.Value.Min;
         private bool _Attributes_IsSet => _ATTRLocation.HasValue;
-        public IReadOnlyDictionary<Attribute, Byte> Attributes => DictBinaryTranslation<Byte>.Instance.Parse<Attribute>(
+        public IReadOnlyDictionary<Class.Attribute, Byte> Attributes => DictBinaryTranslation<Byte>.Instance.Parse<Class.Attribute>(
             new MutagenFrame(new MutagenMemoryReadStream(_recordData.Slice(_AttributesLocation), _package.MetaData)),
-            new Dictionary<Attribute, Byte>(),
+            new Dictionary<Class.Attribute, Byte>(),
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         partial void CustomFactoryEnd(

@@ -39,4 +39,26 @@ public partial class DialogResponses
         LowIntelligence = 0x1000,
         HighIntelligence = 0x2000,
     }
+
+    public enum EmotionType
+    {
+        Neutral = 0,
+        Anger = 1,
+        Disgust = 2,
+        Fear = 3,
+        Sad = 4,
+        Happy = 5,
+        Surprise = 6,
+        Pained = 7,
+    }
+
+    public enum SpeechChallengeEnum
+    {
+        None = 0,
+        VeryEasy = 1,
+        Easy = 2,
+        Average = 3,
+        Hard = 4,
+        VeryHard = 5,
+    }
 }

@@ -6,7 +6,7 @@
         <Interface>IRelatable</Interface>
       </FormLink>
       <Int32 name="Modifier" />
-      <Enum name="Reaction" enumName="CombatReaction" byteLength="4" />
+      <Enum name="Reaction" enumName="Relation.CombatReaction" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

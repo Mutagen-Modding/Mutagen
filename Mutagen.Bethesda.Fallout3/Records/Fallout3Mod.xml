@@ -101,6 +101,7 @@
       <Group name="MediaSets" refName="MediaSet" />
       <Group name="MediaLocationControllers" refName="MediaLocationController" />
       <Group name="Challenges" refName="Challenge" />
+      <Group name="AmmoEffects" refName="AmmoEffect" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

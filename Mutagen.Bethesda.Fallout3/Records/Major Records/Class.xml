@@ -11,7 +11,7 @@
             <Enum enumName="ActorValue" byteLength="4" />
           </Array>
           <Enum name="Flags" enumName="Class.Flag" byteLength="4" />
-          <Enum name="Services" enumName="ClassService" byteLength="4" />
+          <Enum name="Services" enumName="Class.ClassService" byteLength="4" />
           <Enum name="Teaches" byteLength="1" enumName="Skill" nullable="True" nullableBinaryFallback="-1" />
           <UInt8 name="MaxTrainingLevel" />
           <UInt16 name="Unknown" />
@@ -21,7 +21,7 @@
         <Fields>
           <Dict name="Attributes" numEnumKeys="7" >
             <Key>
-              <Enum enumName="Attribute" />
+              <Enum enumName="Class.Attribute" />
             </Key>
             <Value>
               <UInt8 />

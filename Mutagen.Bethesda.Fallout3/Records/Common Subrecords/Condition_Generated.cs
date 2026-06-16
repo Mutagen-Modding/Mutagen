@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Condition.VersioningBreaks Versioning { get; set; } = default(Condition.VersioningBreaks);
         #endregion
         #region CompareOperator
-        public CompareOperator CompareOperator { get; set; } = default(CompareOperator);
+        public Condition.CompareOperatorEnum CompareOperator { get; set; } = default(Condition.CompareOperatorEnum);
         #endregion
         #region Flags
         public Condition.Flag Flags { get; set; } = default(Condition.Flag);
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Single ComparisonValue { get; set; } = default(Single);
         #endregion
         #region Function
-        public Function Function { get; set; } = default(Function);
+        public Condition.FunctionEnum Function { get; set; } = default(Condition.FunctionEnum);
         #endregion
         #region FirstParameter
         public Int32 FirstParameter { get; set; } = default(Int32);
@@ -739,11 +739,11 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ICondition>
     {
         new Condition.VersioningBreaks Versioning { get; set; }
-        new CompareOperator CompareOperator { get; set; }
+        new Condition.CompareOperatorEnum CompareOperator { get; set; }
         new Condition.Flag Flags { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
         new Single ComparisonValue { get; set; }
-        new Function Function { get; set; }
+        new Condition.FunctionEnum Function { get; set; }
         new Int32 FirstParameter { get; set; }
         new Int32 SecondParameter { get; set; }
         new Condition.RunOn RunOnType { get; set; }
@@ -764,11 +764,11 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Condition_Registration.Instance;
         Condition.VersioningBreaks Versioning { get; }
-        CompareOperator CompareOperator { get; }
+        Condition.CompareOperatorEnum CompareOperator { get; }
         Condition.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
         Single ComparisonValue { get; }
-        Function Function { get; }
+        Condition.FunctionEnum Function { get; }
         Int32 FirstParameter { get; }
         Int32 SecondParameter { get; }
         Condition.RunOn RunOnType { get; }
@@ -1038,11 +1038,11 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Versioning = default(Condition.VersioningBreaks);
-            item.CompareOperator = default(CompareOperator);
+            item.CompareOperator = default(Condition.CompareOperatorEnum);
             item.Flags = default(Condition.Flag);
             item.Fluff = new byte[3];
             item.ComparisonValue = default(Single);
-            item.Function = default(Function);
+            item.Function = default(Condition.FunctionEnum);
             item.FirstParameter = default(Int32);
             item.SecondParameter = default(Int32);
             item.RunOnType = default(Condition.RunOn);
@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
-            EnumBinaryTranslation<Function, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<Condition.FunctionEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Function,
                 length: 4);
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item);
             item.Fluff = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             item.ComparisonValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Function = EnumBinaryTranslation<Function, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.Function = EnumBinaryTranslation<Condition.FunctionEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
             item.FirstParameter = frame.ReadInt32();
@@ -1626,7 +1626,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         public ReadOnlyMemorySlice<Byte> Fluff => _structData.Span.Slice(0x1, 0x3).ToArray();
         public Single ComparisonValue => _structData.Slice(0x4, 0x4).Float();
-        public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
+        public Condition.FunctionEnum Function => (Condition.FunctionEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
         public Condition.RunOn RunOnType => _structData.Span.Length <= 0x14 ? default : (Condition.RunOn)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x14, 0x4));

@@ -92,9 +92,9 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region Flags
-        public RecipeCategoryFlag? Flags { get; set; }
+        public RecipeCategory.RecipeCategoryFlag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RecipeCategoryFlag? IRecipeCategoryGetter.Flags => this.Flags;
+        RecipeCategory.RecipeCategoryFlag? IRecipeCategoryGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new RecipeCategoryFlag? Flags { get; set; }
+        new RecipeCategory.RecipeCategoryFlag? Flags { get; set; }
     }
 
     public partial interface IRecipeCategoryInternal :
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        RecipeCategoryFlag? Flags { get; }
+        RecipeCategory.RecipeCategoryFlag? Flags { get; }
 
     }
 
@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Fallout3
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            EnumBinaryTranslation<RecipeCategoryFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<RecipeCategory.RecipeCategoryFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<RecipeCategoryFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Flags = EnumBinaryTranslation<RecipeCategory.RecipeCategoryFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)RecipeCategory_FieldIndex.Flags;
@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public RecipeCategoryFlag? Flags => EnumBinaryTranslation<RecipeCategoryFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
+        public RecipeCategory.RecipeCategoryFlag? Flags => EnumBinaryTranslation<RecipeCategory.RecipeCategoryFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 1);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -452,7 +452,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("LSCT"),
             new RecordType("MSET"),
             new RecordType("ALOC"),
-            new RecordType("CHAL"));
+            new RecordType("CHAL"),
+            new RecordType("AMEF"));
         return ret;
     }
 }

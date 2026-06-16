@@ -93,9 +93,9 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region Type
-        public MediaSetType? Type { get; set; }
+        public MediaSet.MediaSetType? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        MediaSetType? IMediaSetGetter.Type => this.Type;
+        MediaSet.MediaSetType? IMediaSetGetter.Type => this.Type;
         #endregion
         #region LoopBattleDayOuter
         public String? LoopBattleDayOuter { get; set; }
@@ -188,9 +188,9 @@ namespace Mutagen.Bethesda.Fallout3
         Single? IMediaSetGetter.NightInnerBoundaryPercent => this.NightInnerBoundaryPercent;
         #endregion
         #region EnableFlags
-        public MediaSetEnableFlag? EnableFlags { get; set; }
+        public MediaSet.MediaSetEnableFlag? EnableFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        MediaSetEnableFlag? IMediaSetGetter.EnableFlags => this.EnableFlags;
+        MediaSet.MediaSetEnableFlag? IMediaSetGetter.EnableFlags => this.EnableFlags;
         #endregion
         #region WaitTimeMinTimeOnDaytimeMin
         public Single? WaitTimeMinTimeOnDaytimeMin { get; set; }
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new MediaSetType? Type { get; set; }
+        new MediaSet.MediaSetType? Type { get; set; }
         new String? LoopBattleDayOuter { get; set; }
         new String? ExploreDayMiddle { get; set; }
         new String? SuspenseDayInner { get; set; }
@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Single? NightOuterBoundaryPercent { get; set; }
         new Single? NightMiddleBoundaryPercent { get; set; }
         new Single? NightInnerBoundaryPercent { get; set; }
-        new MediaSetEnableFlag? EnableFlags { get; set; }
+        new MediaSet.MediaSetEnableFlag? EnableFlags { get; set; }
         new Single? WaitTimeMinTimeOnDaytimeMin { get; set; }
         new Single? LoopFadeOutCrossfadeOverlapNighttimeMin { get; set; }
         new Single? RecoveryTimeCrossfadeTimeDaytimeMax { get; set; }
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Fallout3
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        MediaSetType? Type { get; }
+        MediaSet.MediaSetType? Type { get; }
         String? LoopBattleDayOuter { get; }
         String? ExploreDayMiddle { get; }
         String? SuspenseDayInner { get; }
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Fallout3
         Single? NightOuterBoundaryPercent { get; }
         Single? NightMiddleBoundaryPercent { get; }
         Single? NightInnerBoundaryPercent { get; }
-        MediaSetEnableFlag? EnableFlags { get; }
+        MediaSet.MediaSetEnableFlag? EnableFlags { get; }
         Single? WaitTimeMinTimeOnDaytimeMin { get; }
         Single? LoopFadeOutCrossfadeOverlapNighttimeMin { get; }
         Single? RecoveryTimeCrossfadeTimeDaytimeMax { get; }
@@ -2926,7 +2926,7 @@ namespace Mutagen.Bethesda.Fallout3
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            EnumBinaryTranslation<MediaSetType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<MediaSet.MediaSetType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
@@ -3009,7 +3009,7 @@ namespace Mutagen.Bethesda.Fallout3
                 writer: writer,
                 item: item.NightInnerBoundaryPercent,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));
-            EnumBinaryTranslation<MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<MediaSet.MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.EnableFlags,
                 length: 1,
@@ -3124,7 +3124,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<MediaSetType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Type = EnumBinaryTranslation<MediaSet.MediaSetType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)MediaSet_FieldIndex.Type;
@@ -3258,7 +3258,7 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnableFlags = EnumBinaryTranslation<MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.EnableFlags = EnumBinaryTranslation<MediaSet.MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)MediaSet_FieldIndex.EnableFlags;
@@ -3378,7 +3378,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Type
         private int? _TypeLocation;
-        public MediaSetType? Type => EnumBinaryTranslation<MediaSetType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
+        public MediaSet.MediaSetType? Type => EnumBinaryTranslation<MediaSet.MediaSetType, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_TypeLocation, _recordData, _package, 4);
         #endregion
         #region LoopBattleDayOuter
         private int? _LoopBattleDayOuterLocation;
@@ -3454,7 +3454,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region EnableFlags
         private int? _EnableFlagsLocation;
-        public MediaSetEnableFlag? EnableFlags => EnumBinaryTranslation<MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EnableFlagsLocation, _recordData, _package, 1);
+        public MediaSet.MediaSetEnableFlag? EnableFlags => EnumBinaryTranslation<MediaSet.MediaSetEnableFlag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_EnableFlagsLocation, _recordData, _package, 1);
         #endregion
         #region WaitTimeMinTimeOnDaytimeMin
         private int? _WaitTimeMinTimeOnDaytimeMinLocation;

@@ -14,8 +14,8 @@
       <UInt32 name="Value" recordType="DATA" />
       <String name="FaceTexture" recordType="TX00" />
       <String name="BackTexture" recordType="TX01" />
-      <Enum name="CardSuit" enumName="CaravanSuit" recordType="INTV" byteLength="4" />
-      <Enum name="CardValue" enumName="CaravanValue" recordType="INTV" byteLength="4" />
+      <Enum name="CardSuit" enumName="CaravanCard.CaravanSuit" recordType="INTV" byteLength="4" />
+      <Enum name="CardValue" enumName="CaravanCard.CaravanValue" recordType="INTV" byteLength="4" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IRecipeItem</LinkInterface>

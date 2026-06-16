@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Fallout3
         public DialogResponseData.VersioningBreaks Versioning { get; set; } = default(DialogResponseData.VersioningBreaks);
         #endregion
         #region EmotionType
-        public EmotionType EmotionType { get; set; } = default(EmotionType);
+        public DialogResponses.EmotionType EmotionType { get; set; } = default(DialogResponses.EmotionType);
         #endregion
         #region EmotionValue
         public Int32 EmotionValue { get; set; } = default(Int32);
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<IDialogResponseData>
     {
         new DialogResponseData.VersioningBreaks Versioning { get; set; }
-        new EmotionType EmotionType { get; set; }
+        new DialogResponses.EmotionType EmotionType { get; set; }
         new Int32 EmotionValue { get; set; }
         new UInt32 Unused1 { get; set; }
         new Byte ResponseNumber { get; set; }
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DialogResponseData_Registration.Instance;
         DialogResponseData.VersioningBreaks Versioning { get; }
-        EmotionType EmotionType { get; }
+        DialogResponses.EmotionType EmotionType { get; }
         Int32 EmotionValue { get; }
         UInt32 Unused1 { get; }
         Byte ResponseNumber { get; }
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Versioning = default(DialogResponseData.VersioningBreaks);
-            item.EmotionType = default(EmotionType);
+            item.EmotionType = default(DialogResponses.EmotionType);
             item.EmotionValue = default(Int32);
             item.Unused1 = default(UInt32);
             item.ResponseNumber = default(Byte);
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Fallout3
             IDialogResponseDataGetter item,
             MutagenWriter writer)
         {
-            EnumBinaryTranslation<EmotionType, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<DialogResponses.EmotionType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.EmotionType,
                 length: 4);
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Fallout3
             IDialogResponseData item,
             MutagenFrame frame)
         {
-            item.EmotionType = EnumBinaryTranslation<EmotionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.EmotionType = EnumBinaryTranslation<DialogResponses.EmotionType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
             item.EmotionValue = frame.ReadInt32();
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public DialogResponseData.VersioningBreaks Versioning { get; private set; }
-        public EmotionType EmotionType => (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
+        public DialogResponses.EmotionType EmotionType => (DialogResponses.EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         public Int32 EmotionValue => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         public UInt32 Unused1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public Byte ResponseNumber => _structData.Span[0xC];

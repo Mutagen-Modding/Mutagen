@@ -9,9 +9,9 @@
       <String name="Description" recordType="DESC" translated="Normal" />
       <Data recordType="DATA">
         <Fields>
-          <Enum name="Type" enumName="ChallengeType" byteLength="4" />
+          <Enum name="Type" enumName="Challenge.ChallengeType" byteLength="4" />
           <UInt32 name="Threshold" />
-          <Enum name="Flags" enumName="ChallengeFlag" byteLength="4" />
+          <Enum name="Flags" enumName="Challenge.ChallengeFlag" byteLength="4" />
           <UInt32 name="Interval" />
           <UInt16 name="Value1" />
           <UInt16 name="Value2" />

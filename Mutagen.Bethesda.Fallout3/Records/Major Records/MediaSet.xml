@@ -4,7 +4,7 @@
           recordType="MSET">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <Enum name="Type" enumName="MediaSetType" recordType="NAM1" byteLength="4" />
+      <Enum name="Type" enumName="MediaSet.MediaSetType" recordType="NAM1" byteLength="4" />
       <String name="LoopBattleDayOuter" recordType="NAM2" />
       <String name="ExploreDayMiddle" recordType="NAM3" />
       <String name="SuspenseDayInner" recordType="NAM4" />
@@ -23,7 +23,7 @@
       <Float name="NightOuterBoundaryPercent" recordType="MNAM" />
       <Float name="NightMiddleBoundaryPercent" recordType="NNAM" />
       <Float name="NightInnerBoundaryPercent" recordType="ONAM" />
-      <Enum name="EnableFlags" enumName="MediaSetEnableFlag" recordType="PNAM" byteLength="1" />
+      <Enum name="EnableFlags" enumName="MediaSet.MediaSetEnableFlag" recordType="PNAM" byteLength="1" />
       <Float name="WaitTimeMinTimeOnDaytimeMin" recordType="DNAM" />
       <Float name="LoopFadeOutCrossfadeOverlapNighttimeMin" recordType="ENAM" />
       <Float name="RecoveryTimeCrossfadeTimeDaytimeMax" recordType="FNAM" />

@@ -23,6 +23,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -56,16 +57,34 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAmmoEffectGetter.Name => this.Name;
+        ITranslatedStringGetter? IAmmoEffectGetter.Name => this.Name;
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
         {
             get => this.Name ?? string.Empty;
             set => this.Name = value;
@@ -73,10 +92,10 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #endregion
         #region Type
-        public AmmoEffectType Type { get; set; } = default(AmmoEffectType);
+        public AmmoEffect.AmmoEffectType Type { get; set; } = default(AmmoEffect.AmmoEffectType);
         #endregion
         #region Operation
-        public AmmoEffectOperation Operation { get; set; } = default(AmmoEffectOperation);
+        public AmmoEffect.AmmoEffectOperation Operation { get; set; } = default(AmmoEffect.AmmoEffectOperation);
         #endregion
         #region Value
         public Single Value { get; set; } = default(Single);
@@ -578,14 +597,16 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<IAmmoEffectInternal>,
         INamed,
-        INamedRequired
+        INamedRequired,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
-        new String? Name { get; set; }
-        new AmmoEffectType Type { get; set; }
-        new AmmoEffectOperation Operation { get; set; }
+        new TranslatedString? Name { get; set; }
+        new AmmoEffect.AmmoEffectType Type { get; set; }
+        new AmmoEffect.AmmoEffectOperation Operation { get; set; }
         new Single Value { get; set; }
     }
 
@@ -603,17 +624,19 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject<IAmmoEffectGetter>,
         IMapsToGetter<IAmmoEffectGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => AmmoEffect_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        ITranslatedStringGetter? Name { get; }
         #endregion
-        AmmoEffectType Type { get; }
-        AmmoEffectOperation Operation { get; }
+        AmmoEffect.AmmoEffectType Type { get; }
+        AmmoEffect.AmmoEffectOperation Operation { get; }
         Single Value { get; }
 
     }
@@ -887,8 +910,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Name = default;
-            item.Type = default(AmmoEffectType);
-            item.Operation = default(AmmoEffectOperation);
+            item.Type = default(AmmoEffect.AmmoEffectType);
+            item.Operation = default(AmmoEffect.AmmoEffectOperation);
             item.Value = default(Single);
             base.Clear(item);
         }
@@ -974,7 +997,7 @@ namespace Mutagen.Bethesda.Fallout3
             AmmoEffect.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Type = item.Type == rhs.Type;
             ret.Operation = item.Operation == rhs.Operation;
             ret.Value = item.Value.EqualsWithin(rhs.Value);
@@ -1096,7 +1119,7 @@ namespace Mutagen.Bethesda.Fallout3
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Type) ?? true))
             {
@@ -1272,7 +1295,7 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Name) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)AmmoEffect_FieldIndex.Type) ?? true))
             {
@@ -1455,30 +1478,25 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
-                StringBinaryTranslation.Instance.WriteNullable(
+                EnumBinaryTranslation<AmmoEffect.AmmoEffectType, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 4);
+                EnumBinaryTranslation<AmmoEffect.AmmoEffectOperation, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Operation,
+                    length: 4);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Name,
-                    header: translationParams.ConvertToCustom(RecordTypes.FULL),
-                    binaryType: StringBinaryType.NullTerminate);
-            }
-            if (writer.MetaData.ModHeaderVersion!.Value >= 1.32f)
-            {
-                using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
-                {
-                    EnumBinaryTranslation<AmmoEffectType, MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer,
-                        item.Type,
-                        length: 4);
-                    EnumBinaryTranslation<AmmoEffectOperation, MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer,
-                        item.Operation,
-                        length: 4);
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.Value);
-                }
+                    item: item.Value);
             }
         }
 
@@ -1550,14 +1568,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.FULL:
                 {
-                    if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
-                    {
-                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.Name = StringBinaryTranslation.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            stringBinaryType: StringBinaryType.NullTerminate,
-                            parseWhole: true);
-                    }
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)AmmoEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
@@ -1565,11 +1582,11 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Type = EnumBinaryTranslation<AmmoEffectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Type = EnumBinaryTranslation<AmmoEffect.AmmoEffectType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Operation = EnumBinaryTranslation<AmmoEffectOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Operation = EnumBinaryTranslation<AmmoEffect.AmmoEffectOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 4);
                     if (dataFrame.Remaining < 4) return null;
@@ -1636,22 +1653,26 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
         private RangeInt32? _DATALocation;
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public AmmoEffectType Type => _Type_IsSet ? (AmmoEffectType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public AmmoEffect.AmmoEffectType Type => _Type_IsSet ? (AmmoEffect.AmmoEffectType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
         #endregion
         #region Operation
         private int _OperationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Operation_IsSet => _DATALocation.HasValue;
-        public AmmoEffectOperation Operation => _Operation_IsSet ? (AmmoEffectOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OperationLocation, 0x4)) : default;
+        public AmmoEffect.AmmoEffectOperation Operation => _Operation_IsSet ? (AmmoEffect.AmmoEffectOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OperationLocation, 0x4)) : default;
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min + 0x8;

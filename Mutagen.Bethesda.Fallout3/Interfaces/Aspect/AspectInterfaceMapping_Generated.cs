@@ -290,6 +290,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    AmmoEffect_Registration.Instance,
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Challenge_Registration.Instance,
@@ -314,6 +315,7 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    AmmoEffect_Registration.Instance,
                     Casino_Registration.Instance,
                     CasinoChip_Registration.Instance,
                     Challenge_Registration.Instance,

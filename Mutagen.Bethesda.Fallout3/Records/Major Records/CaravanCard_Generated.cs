@@ -178,14 +178,14 @@ namespace Mutagen.Bethesda.Fallout3
         String? ICaravanCardGetter.BackTexture => this.BackTexture;
         #endregion
         #region CardSuit
-        public CaravanSuit? CardSuit { get; set; }
+        public CaravanCard.CaravanSuit? CardSuit { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        CaravanSuit? ICaravanCardGetter.CardSuit => this.CardSuit;
+        CaravanCard.CaravanSuit? ICaravanCardGetter.CardSuit => this.CardSuit;
         #endregion
         #region CardValue
-        public CaravanValue? CardValue { get; set; }
+        public CaravanCard.CaravanValue? CardValue { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        CaravanValue? ICaravanCardGetter.CardValue => this.CardValue;
+        CaravanCard.CaravanValue? ICaravanCardGetter.CardValue => this.CardValue;
         #endregion
 
         #region To String
@@ -1011,8 +1011,8 @@ namespace Mutagen.Bethesda.Fallout3
         new UInt32? Value { get; set; }
         new String? FaceTexture { get; set; }
         new String? BackTexture { get; set; }
-        new CaravanSuit? CardSuit { get; set; }
-        new CaravanValue? CardValue { get; set; }
+        new CaravanCard.CaravanSuit? CardSuit { get; set; }
+        new CaravanCard.CaravanValue? CardValue { get; set; }
     }
 
     public partial interface ICaravanCardInternal :
@@ -1074,8 +1074,8 @@ namespace Mutagen.Bethesda.Fallout3
         UInt32? Value { get; }
         String? FaceTexture { get; }
         String? BackTexture { get; }
-        CaravanSuit? CardSuit { get; }
-        CaravanValue? CardValue { get; }
+        CaravanCard.CaravanSuit? CardSuit { get; }
+        CaravanCard.CaravanValue? CardValue { get; }
 
     }
 
@@ -2318,12 +2318,12 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item.BackTexture,
                 header: translationParams.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
-            EnumBinaryTranslation<CaravanSuit, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<CaravanCard.CaravanSuit, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.CardSuit,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.INTV));
-            EnumBinaryTranslation<CaravanValue, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<CaravanCard.CaravanValue, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.CardValue,
                 length: 4,
@@ -2485,7 +2485,7 @@ namespace Mutagen.Bethesda.Fallout3
                         || lastParsed.ParsedIndex.Value <= (int)CaravanCard_FieldIndex.BackTexture)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.CardSuit = EnumBinaryTranslation<CaravanSuit, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        item.CardSuit = EnumBinaryTranslation<CaravanCard.CaravanSuit, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: frame,
                             length: contentLength);
                         return new ParseResult((int)CaravanCard_FieldIndex.CardSuit, nextRecordType);
@@ -2493,7 +2493,7 @@ namespace Mutagen.Bethesda.Fallout3
                     else if (lastParsed.ParsedIndex.Value <= (int)CaravanCard_FieldIndex.CardSuit)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.CardValue = EnumBinaryTranslation<CaravanValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        item.CardValue = EnumBinaryTranslation<CaravanCard.CaravanValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: frame,
                             length: contentLength);
                         return new ParseResult((int)CaravanCard_FieldIndex.CardValue, nextRecordType);
@@ -2504,13 +2504,13 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.CardSuit = EnumBinaryTranslation<CaravanSuit, MutagenFrame, MutagenWriter>.Instance.Parse(
+                                item.CardSuit = EnumBinaryTranslation<CaravanCard.CaravanSuit, MutagenFrame, MutagenWriter>.Instance.Parse(
                                     reader: frame,
                                     length: contentLength);
                                 return new ParseResult((int)CaravanCard_FieldIndex.CardSuit, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.CardValue = EnumBinaryTranslation<CaravanValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                                item.CardValue = EnumBinaryTranslation<CaravanCard.CaravanValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                                     reader: frame,
                                     length: contentLength);
                                 return new ParseResult((int)CaravanCard_FieldIndex.CardValue, nextRecordType);
@@ -2623,11 +2623,11 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region CardSuit
         private int? _CardSuitLocation;
-        public CaravanSuit? CardSuit => EnumBinaryTranslation<CaravanSuit, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_CardSuitLocation, _recordData, _package, 4);
+        public CaravanCard.CaravanSuit? CardSuit => EnumBinaryTranslation<CaravanCard.CaravanSuit, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_CardSuitLocation, _recordData, _package, 4);
         #endregion
         #region CardValue
         private int? _CardValueLocation;
-        public CaravanValue? CardValue => EnumBinaryTranslation<CaravanValue, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_CardValueLocation, _recordData, _package, 4);
+        public CaravanCard.CaravanValue? CardValue => EnumBinaryTranslation<CaravanCard.CaravanValue, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_CardValueLocation, _recordData, _package, 4);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

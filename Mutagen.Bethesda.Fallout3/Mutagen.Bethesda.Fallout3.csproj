@@ -19,31 +19,14 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Assets\Fallout3TextureAssetType.cs" />
     <Compile Include="Enum\ActorValue.cs" />
-    <Compile Include="Enum\Attribute.cs" />
-    <Compile Include="Enum\ClassService.cs" />
-    <Compile Include="Enum\CombatReaction.cs" />
     <Compile Include="Enum\GroupTypeEnum.cs" />
-    <Compile Include="Enum\CompareOperator.cs" />
-    <Compile Include="Enum\Function.cs" />
     <Compile Include="Enum\EquipType.cs" />
     <Compile Include="Enum\Skill.cs" />
     <Compile Include="Enum\SoundLevel.cs" />
-    <Compile Include="Enum\EmotionType.cs" />
-    <Compile Include="Enum\SpeechChallenge.cs" />
-    <Compile Include="Enum\HackingDifficulty.cs" />
-    <Compile Include="Enum\Level.cs" />
     <Compile Include="Enum\Aggression.cs" />
     <Compile Include="Enum\Assistance.cs" />
-    <Compile Include="Enum\BlendMode.cs" />
-    <Compile Include="Enum\BlendOp.cs" />
     <Compile Include="Enum\Confidence.cs" />
-    <Compile Include="Enum\CreatureType.cs" />
-    <Compile Include="Enum\ImpactMaterialType.cs" />
-    <Compile Include="Enum\WorldImpactMaterialType.cs" />
     <Compile Include="Enum\Mood.cs" />
-    <Compile Include="Enum\SoundType.cs" />
-    <Compile Include="Enum\WaterType.cs" />
-    <Compile Include="Enum\ZTestFunc.cs" />
     <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -351,6 +334,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Class_Generated.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Relation.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Relation_Generated.cs">
       <DependentUpon>Relation.xml</DependentUpon>
@@ -1334,11 +1320,6 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <!-- FNV-only enums (version-gated to 1.32+) -->
-    <Compile Include="Enum\AmmoEffectOperation.cs" />
-    <Compile Include="Enum\AmmoEffectType.cs" />
-    <Compile Include="Enum\CaravanSuit.cs" />
-    <Compile Include="Enum\CaravanValue.cs" />
-    <Compile Include="Enum\RecipeCategoryFlag.cs" />
     <Compile Include="Enum\AttackAnimation.cs" />
     <Compile Include="Enum\LeveledFlag.cs" />
     <Compile Include="Enum\MoodFnv.cs" />
@@ -1348,8 +1329,14 @@
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
     <!-- FNV-only Major Records (version-gated to 1.32+) -->
+    <Compile Include="Records\Major Records\AmmoEffect.cs">
+      <DependentUpon>AmmoEffect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AmmoEffect_Generated.cs">
       <DependentUpon>AmmoEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CaravanCard.cs">
+      <DependentUpon>CaravanCard.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CaravanCard_Generated.cs">
       <DependentUpon>CaravanCard.xml</DependentUpon>
@@ -1381,6 +1368,9 @@
     <Compile Include="Records\Major Records\HungerStage_Generated.cs">
       <DependentUpon>HungerStage.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LoadScreenType.cs">
+      <DependentUpon>LoadScreenType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LoadScreenType_Generated.cs">
       <DependentUpon>LoadScreenType.xml</DependentUpon>
     </Compile>
@@ -1398,6 +1388,9 @@
     </Compile>
     <Compile Include="Records\Major Records\RecipeOutput_Generated.cs">
       <DependentUpon>Recipe.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RecipeCategory.cs">
+      <DependentUpon>RecipeCategory.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RecipeCategory_Generated.cs">
       <DependentUpon>RecipeCategory.xml</DependentUpon>
