@@ -457,7 +457,8 @@ public class Fallout3PassthroughTest : PassthroughTest
             new RecordType("CCRD"),
             new RecordType("CMNY"),
             new RecordType("CDCK"),
-            new RecordType("DEHY"));
+            new RecordType("DEHY"),
+            new RecordType("HUNG"));
         return ret;
     }
 }
