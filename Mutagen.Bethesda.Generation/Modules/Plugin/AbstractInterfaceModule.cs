@@ -63,8 +63,8 @@ public class AbstractInterfaceModule : GenerationModule
         }
 
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
-        mappingGen.AppendLine("#nullable enable");
         ObjectGeneration.AddAutogenerationComment(mappingGen);
+        mappingGen.AppendLine("#nullable enable");
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
@@ -154,8 +154,8 @@ public class AbstractInterfaceModule : GenerationModule
         }
 
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
-        mappingGen.AppendLine("#nullable enable");
         ObjectGeneration.AddAutogenerationComment(mappingGen);
+        mappingGen.AppendLine("#nullable enable");
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");
