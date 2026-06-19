@@ -58,7 +58,7 @@ public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
             loadOrderFilePath: _pluginListingsPathContext.Path,
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
-            linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
+            linkCache: loadOrder.ToUntypedImmutableLinkCache(_gameReleaseContext.Release.ToCategory(), linkCachePrefs),
             assetProvider: _assetProvider,
             dispose: true);
     }
@@ -100,7 +100,7 @@ public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMo
             loadOrderFilePath: _pluginListingsPathContext.Path,
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
-            linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
+            linkCache: loadOrder.ToUntypedImmutableLinkCache(_gameReleaseContext.Release.ToCategory(), linkCachePrefs),
             assetProvider: _assetProvider,
             dispose: true);
     }
