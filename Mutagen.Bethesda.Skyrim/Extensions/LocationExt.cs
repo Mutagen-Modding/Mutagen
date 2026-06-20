@@ -100,7 +100,7 @@ public static class LocationExt
             .Where(x => !removed.Contains(x.Actor.FormKey));
     }
 
-    public static HashSet<IPersistentActorReferenceGetter> AllPersistentActorReferences(this ILocationGetter location, ILinkCache linkCache)
+    public static IEnumerable<IPersistentActorReferenceGetter> AllPersistentActorReferences(this ILocationGetter location, ILinkCache linkCache)
     {
         var previousOverrides = linkCache
             .ResolveAll(location, ResolveTarget.Origin)
@@ -165,7 +165,7 @@ public static class LocationExt
             .Where(x => !removed.Contains(x.Actor.FormKey));
     }
 
-    public static HashSet<IUniqueActorReferenceGetter> AllUniqueActorReferences(this ILocationGetter location, ILinkCache linkCache)
+    public static IEnumerable<IUniqueActorReferenceGetter> AllUniqueActorReferences(this ILocationGetter location, ILinkCache linkCache)
     {
         var previousOverrides = linkCache
             .ResolveAll(location, ResolveTarget.Origin)
@@ -221,7 +221,7 @@ public static class LocationExt
         }
     }
 
-    public static HashSet<IFormLinkGetter<IPlacedGetter>> AllInitiallyDisabledReferences(this ILocationGetter location, ILinkCache linkCache)
+    public static IEnumerable<IFormLinkGetter<IPlacedGetter>> AllInitiallyDisabledReferences(this ILocationGetter location, ILinkCache linkCache)
     {
         var previousOverrides = linkCache
             .ResolveAll(location, ResolveTarget.Origin)
@@ -267,7 +267,7 @@ public static class LocationExt
         }
     }
 
-    public static HashSet<IEnableParentReferenceGetter> AllEnableParentReferences(this ILocationGetter location, ILinkCache linkCache)
+    public static IEnumerable<IEnableParentReferenceGetter> AllEnableParentReferences(this ILocationGetter location, ILinkCache linkCache)
     {
         var previousOverrides = linkCache
             .ResolveAll(location, ResolveTarget.Origin)
