@@ -729,6 +729,20 @@ public sealed class ImmutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (modKey == _sourceMod.ModKey)
+        {
+            cache = this;
+            return true;
+        }
+
+        cache = null;
+        return false;
+    }
+
+    /// <inheritdoc />
     public IReadOnlyList<IModGetter> ListedOrder
     {
         get
@@ -1658,6 +1672,34 @@ public sealed class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, T
     {
         CheckDisposal();
         return PriorityOrder.Cast<TModGetter>().WinningContextOverrides<TMod, TModGetter>(linkCache, type, includeDeletedRecords: includeDeletedRecords);
+    }
+
+    /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (modKey == _sourceMod.ModKey)
+        {
+            cache = this;
+            return true;
+        }
+
+        cache = null;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public bool TryGetTypedLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache<TMod, TModGetter> cache)
+    {
+        CheckDisposal();
+        if (modKey == _sourceMod.ModKey)
+        {
+            cache = this;
+            return true;
+        }
+
+        cache = null;
+        return false;
     }
 
     public IReadOnlyList<IModGetter> ListedOrder
