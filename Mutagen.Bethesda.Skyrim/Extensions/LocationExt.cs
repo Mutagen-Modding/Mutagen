@@ -47,8 +47,8 @@ public static class LocationExt
         foreach (var previousOverride in previousOverrides)
         {
             refTypes.Add(Added(previousOverride));
-            var removed = Removed(previousOverride);
-            refTypes.RemoveWhere(x => removed.Any(r => r.FormKey == x.Ref.FormKey));
+            var removed = Removed(previousOverride).Select(x => x.FormKey).ToHashSet();
+            refTypes.RemoveWhere(x => removed.Contains(x.Ref.FormKey));
         }
         return refTypes;
 
@@ -112,8 +112,8 @@ public static class LocationExt
         foreach (var previousOverride in previousOverrides)
         {
             actors.Add(Added(previousOverride));
-            var removed = Removed(previousOverride);
-            actors.RemoveWhere(x => removed.Any(r => r.FormKey == x.Actor.FormKey));
+            var removed = Removed(previousOverride).Select(x => x.FormKey).ToHashSet();
+            actors.RemoveWhere(x => removed.Contains(x.Actor.FormKey));
         }
         return actors;
 
@@ -177,8 +177,8 @@ public static class LocationExt
         foreach (var previousOverride in previousOverrides)
         {
             actors.Add(Added(previousOverride));
-            var removed = Removed(previousOverride);
-            actors.RemoveWhere(x => removed.Any(r => r.FormKey == x.Actor.FormKey));
+            var removed = Removed(previousOverride).Select(x => x.FormKey).ToHashSet();
+            actors.RemoveWhere(x => removed.Contains(x.Actor.FormKey));
         }
         return actors;
 
