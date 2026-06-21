@@ -1,3 +1,4 @@
+#nullable enable
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins.Cache;

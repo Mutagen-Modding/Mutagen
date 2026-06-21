@@ -1,3 +1,4 @@
+#nullable enable
 namespace Mutagen.Bethesda.Skyrim.Internals;
 
 public partial class RecordTypeInts

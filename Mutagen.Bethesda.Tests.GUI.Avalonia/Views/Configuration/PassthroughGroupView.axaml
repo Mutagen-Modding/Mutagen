@@ -1,0 +1,45 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Mutagen.Bethesda.Tests.GUI"
+    xmlns:views="using:Mutagen.Bethesda.Tests.GUI.Views"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="100"
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.PassthroughGroupView">
+    <Grid Margin="0,0,0,10" Background="Transparent" RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" x:Name="TopGrid" Background="Transparent"
+              ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto">
+            <Border Grid.Column="0" Grid.ColumnSpan="7"
+                    Margin="5,0,-5,0" CornerRadius="4"
+                    Background="{Binding Do, Converter={StaticResource GroupDoToBrush}}" />
+            <Button Grid.Column="0"
+                    Margin="2,2,-2,2"
+                    Background="{StaticResource ErrorForegroundBrush}"
+                    ToolTip.Tip="Delete Group"
+                    Content="✕"
+                    Command="{Binding DeleteCommand}"
+                    IsVisible="{Binding #TopGrid.IsPointerOver}" />
+            <ComboBox Grid.Column="1" Margin="1" MinWidth="120"
+                      ItemsSource="{x:Static vm:PassthroughGroupVM.GameReleases}"
+                      SelectedItem="{Binding GameRelease}" />
+            <TextBox Grid.Column="2" Margin="5,1" MinWidth="65"
+                     Text="{Binding NicknameSuffix}"
+                     ToolTip.Tip="Nickname suffix to avoid naming collisions with other groups of the same game category" />
+            <Button Grid.Column="3" Margin="5,0" VerticalAlignment="Center" Content="+"
+                    Command="{Binding AddPassthroughCommand}" />
+            <Button Grid.Column="4" Margin="5,0" VerticalAlignment="Center" Content="✓"
+                    Command="{Binding CheckAllCommand}" />
+            <Button Grid.Column="5" Margin="5,0" VerticalAlignment="Center" Content="○"
+                    Command="{Binding UncheckAllCommand}" />
+            <CheckBox Grid.Column="6" Margin="5,0,0,0" IsChecked="{Binding Do}" />
+        </Grid>
+        <ItemsControl Grid.Row="1" Margin="0,3,0,0" ItemsSource="{Binding Passthroughs}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:PassthroughVM">
+                    <views:PassthroughView />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

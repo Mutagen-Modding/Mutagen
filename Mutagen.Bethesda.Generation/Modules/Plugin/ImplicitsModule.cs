@@ -18,6 +18,7 @@ public class ImplicitsModule : GenerationModule
         var relString = objData.HasMultipleReleases ? "release.ToGameRelease()" : $"{nameof(GameRelease)}.{proto.Protocol.Namespace}";
 
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine($"using Mutagen.Bethesda.Plugins;");
         sb.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");

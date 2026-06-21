@@ -1,3 +1,4 @@
+#nullable enable
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Oblivion.Internals;

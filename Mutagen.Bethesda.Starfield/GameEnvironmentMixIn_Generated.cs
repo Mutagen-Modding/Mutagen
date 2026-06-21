@@ -1,3 +1,4 @@
+#nullable enable
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins.Cache;

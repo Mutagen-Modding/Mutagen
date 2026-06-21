@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="Noggog.UI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Noggog.CSharpExt" />
     <PackageReference Include="Noggog.WPF" />
@@ -23,6 +28,7 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Tests.GUI.Core\Mutagen.Bethesda.Tests.GUI.Core.csproj" />
   </ItemGroup>
 
 </Project>

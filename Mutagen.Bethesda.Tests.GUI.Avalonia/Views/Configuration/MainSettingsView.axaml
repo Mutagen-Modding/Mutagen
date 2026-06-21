@@ -1,0 +1,82 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Mutagen.Bethesda.Tests.GUI"
+    xmlns:views="using:Mutagen.Bethesda.Tests.GUI.Views"
+    xmlns:controls="using:Noggog.UI"
+    mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.MainSettingsView">
+    <UserControl.Resources>
+        <x:Double x:Key="HeaderFontSize">20</x:Double>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="4">
+            <TextBlock FontSize="{StaticResource HeaderFontSize}" FontWeight="Bold" Text="Tests" />
+            <WrapPanel Margin="0,4,0,12">
+                <CheckBox Margin="0,0,14,5" Content="Normal" IsChecked="{Binding TestNormal}" />
+                <CheckBox Margin="0,0,14,5" Content="Overlay" IsChecked="{Binding TestOverlay}" />
+                <CheckBox Margin="0,0,14,5" Content="Import" IsChecked="{Binding TestImport}" />
+                <CheckBox Margin="0,0,14,5" Content="CopyIn" IsChecked="{Binding TestCopyIn}" />
+                <CheckBox Margin="0,0,14,5" Content="Equals" IsChecked="{Binding TestEquals}" />
+                <CheckBox Margin="0,0,14,5" Content="Parallel" IsChecked="{Binding TestParallel}" />
+            </WrapPanel>
+
+            <TextBlock FontSize="{StaticResource HeaderFontSize}" FontWeight="Bold" Text="Caches" />
+            <WrapPanel Margin="0,4,0,12">
+                <CheckBox Margin="0,0,14,5" Content="Trimming" IsChecked="{Binding CacheTrimming}" />
+                <CheckBox Margin="0,0,14,5" Content="Decompression" IsChecked="{Binding CacheDecompression}" />
+                <CheckBox Margin="0,0,14,5" Content="Merging" IsChecked="{Binding CacheMerging}" />
+                <CheckBox Margin="0,0,14,5" Content="Alignment" IsChecked="{Binding CacheAlignment}" />
+                <CheckBox Margin="0,0,14,5" Content="Processing" IsChecked="{Binding CacheProcessing}" />
+            </WrapPanel>
+
+            <TextBlock FontSize="{StaticResource HeaderFontSize}" FontWeight="Bold" Text="Temp Folder" />
+            <controls:PathPicker Margin="5,4,0,12" PickerVM="{Binding TempFolder}"
+                                 ToolTip.Tip="Where cache/temp files are written. Leave empty to use the system temp folder." />
+
+            <TextBlock FontSize="{StaticResource HeaderFontSize}" FontWeight="Bold" Text="Filter Groups" />
+            <CheckBox Margin="5" Content="Enable" IsChecked="{Binding TrimmingEnabled}" />
+            <TextBlock FontWeight="Bold" Text="Skipped Groups" />
+            <ListBox MaxHeight="200" Margin="5"
+                     IsEnabled="{Binding TrimmingEnabled}"
+                     ItemsSource="{Binding SkippedRecordTypes}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:RecordTypeVm">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
+                            <Button Content="✕" Command="{Binding DeleteSkippedCommand}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock FontWeight="Bold" Text="Included Groups" />
+            <ListBox MaxHeight="200" Margin="5"
+                     ItemsSource="{Binding InterestingRecordTypes}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:RecordTypeVm">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding RecordType}" Margin="4,4,8,4" />
+                            <Button Content="✕" Command="{Binding DeleteIncludedCommand}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5" Spacing="15">
+                <TextBox Width="80" Text="{Binding SkipInput}" />
+                <Button Content="Add to Skip List" Command="{Binding AddSkipCommand}" />
+                <Button Content="Add to Include List" Command="{Binding AddIncludeCommand}" />
+            </StackPanel>
+
+            <TextBlock FontSize="{StaticResource HeaderFontSize}" FontWeight="Bold" Text="Data Folders" />
+            <ItemsControl Margin="0,5,0,0" ItemsSource="{Binding DataFoldersDisplay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:DataFolderVM">
+                        <views:DataFolderView />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

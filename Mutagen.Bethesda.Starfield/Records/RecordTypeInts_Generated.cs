@@ -1,3 +1,4 @@
+#nullable enable
 namespace Mutagen.Bethesda.Starfield.Internals;
 
 public partial class RecordTypeInts

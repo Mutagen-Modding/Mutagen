@@ -50,6 +50,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Skyrim.Gen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mutagen.Bethesda.Fallout4.Generator", "Mutagen.Bethesda.Fallout4.Generator\Mutagen.Bethesda.Fallout4.Generator.csproj", "{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Starfield", "Mutagen.Bethesda.Starfield\Mutagen.Bethesda.Starfield.csproj", "{284A2137-A874-433F-B5D3-2645D8CD2976}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Starfield.Generator", "Mutagen.Bethesda.Starfield.Generator\Mutagen.Bethesda.Starfield.Generator.csproj", "{00430E92-872F-48C8-8482-C5FF4F495D18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC42D6E2-0B4F-4440-8CD2-EC8FF997E05A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests.GUI.Core", "Mutagen.Bethesda.Tests.GUI.Core\Mutagen.Bethesda.Tests.GUI.Core.csproj", "{D018CC4C-52DE-42BD-9C21-A19B1BC2D4F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests.GUI.Avalonia", "Mutagen.Bethesda.Tests.GUI.Avalonia\Mutagen.Bethesda.Tests.GUI.Avalonia.csproj", "{A5158F12-A6A8-4774-A3DA-358C1CCF6ECA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +153,22 @@ Global
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{284A2137-A874-433F-B5D3-2645D8CD2976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{284A2137-A874-433F-B5D3-2645D8CD2976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{284A2137-A874-433F-B5D3-2645D8CD2976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{284A2137-A874-433F-B5D3-2645D8CD2976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00430E92-872F-48C8-8482-C5FF4F495D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00430E92-872F-48C8-8482-C5FF4F495D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00430E92-872F-48C8-8482-C5FF4F495D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00430E92-872F-48C8-8482-C5FF4F495D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D018CC4C-52DE-42BD-9C21-A19B1BC2D4F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D018CC4C-52DE-42BD-9C21-A19B1BC2D4F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D018CC4C-52DE-42BD-9C21-A19B1BC2D4F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D018CC4C-52DE-42BD-9C21-A19B1BC2D4F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5158F12-A6A8-4774-A3DA-358C1CCF6ECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5158F12-A6A8-4774-A3DA-358C1CCF6ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5158F12-A6A8-4774-A3DA-358C1CCF6ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5158F12-A6A8-4774-A3DA-358C1CCF6ECA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -160,6 +193,10 @@ Global
 		{98A0F179-22B5-45EC-958F-FDEBBB8B4D9A} = {89AC8733-A707-495A-88B1-8F9570CDA329}
 		{0A932985-72CF-4052-837E-0B5920FF2136} = {89AC8733-A707-495A-88B1-8F9570CDA329}
 		{E59AF68B-0F52-44EF-AC9A-9FFB0A765C90} = {89AC8733-A707-495A-88B1-8F9570CDA329}
+		{284A2137-A874-433F-B5D3-2645D8CD2976} = {181455C8-DDBD-40BE-8891-0950A3F62101}
+		{00430E92-872F-48C8-8482-C5FF4F495D18} = {89AC8733-A707-495A-88B1-8F9570CDA329}
+		{D018CC4C-52DE-42BD-9C21-A19B1BC2D4F1} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
+		{A5158F12-A6A8-4774-A3DA-358C1CCF6ECA} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}

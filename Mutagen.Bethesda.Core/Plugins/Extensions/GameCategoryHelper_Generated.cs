@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using Mutagen.Bethesda.Plugins.Records;
 

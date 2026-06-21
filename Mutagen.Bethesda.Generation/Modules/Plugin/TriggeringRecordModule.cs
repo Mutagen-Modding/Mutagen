@@ -901,6 +901,7 @@ public class TriggeringRecordModule : GenerationModule
         recordTypes.Add("XXXX");
         
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
         sb.AppendLine("using Mutagen.Bethesda.Plugins;");
         sb.AppendLine();
 
@@ -923,6 +924,7 @@ public class TriggeringRecordModule : GenerationModule
         exportStringToFile.ExportToFile(path, sb.GetString());
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
         sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
         using (var n = sb.Namespace($"{proto.DefaultNamespace}.Internals"))
         {
             using (var c = sb.Class("RecordTypeInts"))

@@ -1,4 +1,4 @@
-using Noggog.WPF;
+using Noggog.UI;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Reactive;
@@ -7,11 +7,7 @@ namespace Mutagen.Bethesda.Tests.GUI;
 
 public class PassthroughVM : ViewModel
 {
-    public PathPickerVM Path { get; } = new(new SchedulerProvider())
-    {
-        ExistCheckOption = PathPickerVM.CheckOptions.On,
-        PathType = PathPickerVM.PathTypeOptions.File,
-    };
+    public PathPickerVM Path { get; }
 
     [Reactive]
     public bool Do { get; set; } = true;
@@ -26,6 +22,11 @@ public class PassthroughVM : ViewModel
     public PassthroughVM(PassthroughGroupVM group)
     {
         Parent = group;
+        Path = new PathPickerVM(group.Parent.SchedulerProvider, group.Parent.PathPickerDialogProvider)
+        {
+            ExistCheckOption = PathPickerVM.CheckOptions.On,
+            PathType = PathPickerVM.PathTypeOptions.File,
+        };
         this.WhenAnyValue(
                 x => x.Do,
                 x => x.Parent.Do,

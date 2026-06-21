@@ -1,0 +1,54 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Mutagen.Bethesda.Tests.GUI"
+    xmlns:views="using:Mutagen.Bethesda.Tests.GUI.Views"
+    xmlns:controls="using:Noggog.UI"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.ConfigurationView">
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="3*,5*">
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Margin="5" VerticalAlignment="Center" Text="Settings:" />
+            <controls:PathPicker Grid.Column="1" Margin="4,4,4,0"
+                                 PickerVM="{Binding SelectedConfigPath}" />
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0"
+              Margin="0,5,0,0"
+              Background="{StaticResource PaneBackgroundBrush}"
+              RowDefinitions="*,Auto">
+            <ScrollViewer Grid.Row="0"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Groups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:PassthroughGroupVM">
+                            <views:PassthroughGroupView />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Button Grid.Row="1"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Content="+"
+                    Command="{Binding AddPassthroughGroupCommand}"
+                    IsEnabled="{Binding SelectedSettings, Converter={StaticResource NotNull}}" />
+        </Grid>
+        <Rectangle Grid.Row="1" Grid.Column="1" Width="1"
+                   HorizontalAlignment="Left"
+                   Fill="{StaticResource DividerBrush}" />
+        <views:MainSettingsView Grid.Row="1" Grid.Column="1"
+                                Margin="15,6,0,0"
+                                IsEnabled="{Binding SelectedSettings, Converter={StaticResource NotNull}}" />
+        <Button Grid.Row="1" Grid.Column="1"
+                Margin="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Content="Run"
+                FontSize="20"
+                Command="{Binding RunAllCommand}"
+                IsEnabled="{Binding SelectedSettings, Converter={StaticResource NotNull}}" />
+    </Grid>
+</UserControl>

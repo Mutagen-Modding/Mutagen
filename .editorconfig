@@ -1,3 +1,5 @@
+root = true
+
 [*]
 charset = utf-8
 end_of_line = crlf
@@ -86,6 +88,14 @@ dotnet_diagnostic.LindhartAnalyserMissingAwaitWarning.severity = error
 
 dotnet_diagnostic.ASYNC0004.severity = silent
 dotnet_diagnostic.ASYNC0001.severity = silent
+
+# Treat machine-generated files as generated code so Roslyn/ReSharper
+# skip analyzers and inspections on them (major IDE CPU savings).
+[*_Generated.cs]
+generated_code = true
+
+[*.g.cs]
+generated_code = true
 
 [*.{xml,xsd}]
 indent_style = space

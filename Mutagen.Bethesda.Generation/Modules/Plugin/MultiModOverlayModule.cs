@@ -31,6 +31,7 @@ public class MultiModOverlayModule : GenerationModule
         var className = $"{gameName}MultiModOverlay";
 
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
 
         // Using statements
         sb.AppendLine("using System.Collections;");
