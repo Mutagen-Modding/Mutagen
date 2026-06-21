@@ -1,3 +1,4 @@
+#nullable enable
 namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypeInts

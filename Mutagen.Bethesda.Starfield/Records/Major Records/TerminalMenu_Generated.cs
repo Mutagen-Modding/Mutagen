@@ -1235,8 +1235,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ITID,
                 RecordTypes.XLOC,
                 RecordTypes.UNAM,
-                RecordTypes.BNAM,
-                RecordTypes.TNAM);
+                RecordTypes.TNAM,
+                RecordTypes.BNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

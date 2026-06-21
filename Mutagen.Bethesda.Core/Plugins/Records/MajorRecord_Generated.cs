@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Fallout4MajorRecord, OblivionMajorRecord, SkyrimMajorRecord, StarfieldMajorRecord]
+    /// Implemented by: [Fallout3MajorRecord, Fallout4MajorRecord, OblivionMajorRecord, SkyrimMajorRecord, StarfieldMajorRecord]
     /// </summary>
     public abstract partial class MajorRecord :
         IEquatable<IMajorRecordGetter>,
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Plugins.Records
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Fallout4MajorRecord, OblivionMajorRecord, SkyrimMajorRecord, StarfieldMajorRecord]
+    /// Implemented by: [Fallout3MajorRecord, Fallout4MajorRecord, OblivionMajorRecord, SkyrimMajorRecord, StarfieldMajorRecord]
     /// </summary>
     public partial interface IMajorRecord :
         IAssetLinkContainer,
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     }
 
     /// <summary>
-    /// Implemented by: [Fallout4MajorRecord, OblivionMajorRecord, SkyrimMajorRecord, StarfieldMajorRecord]
+    /// Implemented by: [Fallout3MajorRecord, Fallout4MajorRecord, OblivionMajorRecord, SkyrimMajorRecord, StarfieldMajorRecord]
     /// </summary>
     public partial interface IMajorRecordGetter :
         ILoquiObject,

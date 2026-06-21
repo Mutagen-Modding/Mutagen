@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PlacedBeam, PlacedHazard, PlacedMissile, PlacedTrap]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public abstract partial class APlacedTrap :
         StarfieldMajorRecord,
@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PlacedBeam, PlacedHazard, PlacedMissile, PlacedTrap]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrap :
         IAPlacedTrapGetter,
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [PlacedBeam, PlacedHazard, PlacedMissile, PlacedTrap]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrapGetter :
         IStarfieldMajorRecordGetter,
@@ -1754,7 +1754,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XATP,
                 RecordTypes.XSCL,
                 RecordTypes.DATA,
+                RecordTypes.PARW,
                 RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
                 RecordTypes.PGRE,
                 RecordTypes.PHZD,
                 RecordTypes.PMIS);
@@ -1778,7 +1782,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XATP,
                 RecordTypes.XSCL,
                 RecordTypes.DATA,
+                RecordTypes.PARW,
                 RecordTypes.PBEA,
+                RecordTypes.PFLA,
+                RecordTypes.PCON,
+                RecordTypes.PBAR,
                 RecordTypes.PGRE,
                 RecordTypes.PHZD,
                 RecordTypes.PMIS,

@@ -3379,15 +3379,34 @@ namespace Mutagen.Bethesda.Starfield
                 case "AdaptiveTriggerDataComponent":
                 case "IAdaptiveTriggerDataComponentGetter":
                 case "IAdaptiveTriggerDataComponent":
+                case "QualityUpgradeComponent":
+                case "IQualityUpgradeComponentGetter":
+                case "IQualityUpgradeComponent":
                     break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
                 case "PlacedBeam":
                 case "IPlacedBeamGetter":
                 case "IPlacedBeam":
                 case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
                 case "PlacedTrap":
                 case "IPlacedTrapGetter":
                 case "IPlacedTrap":
