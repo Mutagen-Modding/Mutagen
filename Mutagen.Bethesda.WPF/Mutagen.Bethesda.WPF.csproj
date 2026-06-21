@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="Noggog.UI" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Noggog.WPF" />
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="Extended.Wpf.Toolkit" />

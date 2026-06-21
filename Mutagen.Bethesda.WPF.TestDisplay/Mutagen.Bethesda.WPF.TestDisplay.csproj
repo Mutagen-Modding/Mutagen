@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="Noggog.UI" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Noggog.WPF" />
   </ItemGroup>
 

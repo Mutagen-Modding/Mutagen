@@ -2,7 +2,7 @@ using DynamicData;
 using DynamicData.Binding;
 using Newtonsoft.Json;
 using Noggog;
-using Noggog.WPF;
+using Noggog.UI;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.IO;
@@ -11,18 +11,22 @@ using System.Reactive.Linq;
 using System.Windows.Input;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
+using Noggog.Reactive;
 
 namespace Mutagen.Bethesda.Tests.GUI;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class MainVM : ViewModel
 {
+    public ISchedulerProvider SchedulerProvider { get; }
+
+    public IPathPickerDialogProvider PathPickerDialogProvider { get; }
+
     [JsonProperty]
-    public PathPickerVM SelectedConfigPath { get; } = new(new SchedulerProvider())
-    {
-        PathType = PathPickerVM.PathTypeOptions.File,
-        ExistCheckOption = PathPickerVM.CheckOptions.On,
-    };
+    public PathPickerVM SelectedConfigPath { get; }
+
+    // Where passthrough cache/temp files are written.  Empty = system temp folder.
+    public PathPickerVM TempFolder { get; }
 
     private readonly ObservableAsPropertyHelper<TestingSettings?> _selectedSettings;
     public TestingSettings? SelectedSettings => _selectedSettings.Value;
@@ -93,8 +97,22 @@ public class MainVM : ViewModel
     [Reactive]
     public bool TrimmingEnabled { get; set; }
 
-    public MainVM()
+    public MainVM(ISchedulerProvider schedulerProvider, IPathPickerDialogProvider pathPickerDialogProvider)
     {
+        SchedulerProvider = schedulerProvider;
+        PathPickerDialogProvider = pathPickerDialogProvider;
+
+        SelectedConfigPath = new PathPickerVM(schedulerProvider, pathPickerDialogProvider)
+        {
+            PathType = PathPickerVM.PathTypeOptions.File,
+            ExistCheckOption = PathPickerVM.CheckOptions.On,
+        };
+        TempFolder = new PathPickerVM(schedulerProvider, pathPickerDialogProvider)
+        {
+            PathType = PathPickerVM.PathTypeOptions.Folder,
+            ExistCheckOption = PathPickerVM.CheckOptions.IfPathNotEmpty,
+        };
+
         // Set up selected config swapping and loading
         _selectedSettings = this.WhenAnyValue(x => x.SelectedConfigPath.TargetPath)
             .Skip(1)
@@ -145,7 +163,7 @@ public class MainVM : ViewModel
         AddPassthroughGroupCommand = ReactiveCommand.Create(AddPassthroughGroup);
 
         DataFolders.AddOrUpdate(Enums<GameRelease>.Values
-            .Select(r => new DataFolderVM(r)));
+            .Select(r => new DataFolderVM(r, schedulerProvider, pathPickerDialogProvider)));
         DataFolders.Connect()
             .Bind(DataFoldersDisplay)
             .Subscribe()
@@ -306,6 +324,8 @@ public class MainVM : ViewModel
         this.TestEquals = settings.TestEquality;
         this.TestPex = settings.TestPex;
 
+        this.TempFolder.TargetPath = settings.PassthroughSettings.TempFolderOverride ?? string.Empty;
+
         this.CacheTrimming = settings.PassthroughSettings.CacheReuse.ReuseTrimming;
         this.CacheMerging = settings.PassthroughSettings.CacheReuse.ReuseMerge;
         this.CacheAlignment = settings.PassthroughSettings.CacheReuse.ReuseAlignment;
@@ -369,6 +389,8 @@ public class MainVM : ViewModel
         settings.TestEquality = this.TestEquals;
         settings.TestPex = this.TestPex;
 
+        settings.PassthroughSettings.TempFolderOverride = TempFolderOverrideValue;
+
         settings.PassthroughSettings.CacheReuse.ReuseDecompression = this.CacheDecompression;
         settings.PassthroughSettings.CacheReuse.ReuseAlignment = this.CacheAlignment;
         settings.PassthroughSettings.CacheReuse.ReuseProcessing = this.CacheProcessing;
@@ -424,6 +446,7 @@ public class MainVM : ViewModel
             TestImport = TestImport,
             TestNormal = TestNormal,
             ParallelModTranslations = TestParallel,
+            TempFolderOverride = TempFolderOverrideValue,
             Trimming = new TrimmingSettings()
             {
                 TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),
@@ -432,6 +455,10 @@ public class MainVM : ViewModel
             }
         };
     }
+
+    // Null (rather than empty) so the runner falls back to the system temp folder.
+    private string? TempFolderOverrideValue =>
+        TempFolder.TargetPath.IsNullOrWhitespace() ? null : TempFolder.TargetPath;
 
     public async Task Run()
     {

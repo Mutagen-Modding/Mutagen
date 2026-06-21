@@ -1,0 +1,21 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Noggog.UI"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="35"
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.PassthroughView">
+    <Grid Margin="0,1" ColumnDefinitions="Auto,*,Auto">
+        <Border Grid.Column="0" Grid.ColumnSpan="3"
+                Margin="0,3,-3,3" CornerRadius="2"
+                Background="{Binding Doing, Converter={StaticResource DoingToBrush}}" />
+        <Button Grid.Column="0"
+                Margin="2,0"
+                Background="{StaticResource ErrorForegroundBrush}"
+                Content="✕"
+                Command="{Binding DeleteCommand}" />
+        <controls:PathPicker Grid.Column="1" Margin="4,0,0,0" PickerVM="{Binding Path}" />
+        <CheckBox Grid.Column="2" Margin="5,0,-1,0" IsChecked="{Binding Do}" />
+    </Grid>
+</UserControl>

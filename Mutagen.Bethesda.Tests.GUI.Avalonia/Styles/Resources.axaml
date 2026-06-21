@@ -1,0 +1,27 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:Mutagen.Bethesda.Tests.GUI.Converters"
+    xmlns:nui="clr-namespace:Noggog.UI;assembly=Noggog.UI.Avalonia">
+
+    <conv:TestStateToBrushConverter x:Key="TestStateToBrush" />
+    <conv:SelectedToBorderBrushConverter x:Key="SelectedToBorderBrush" />
+    <conv:BoolToBrushConverter x:Key="GroupDoToBrush" True="#1BA1E2" False="#22556A" />
+    <conv:BoolToBrushConverter x:Key="DoingToBrush" True="#2D6E8A" False="Transparent" />
+    <nui:IsNullConverter x:Key="IsNull" />
+    <nui:NotNullConverter x:Key="NotNull" />
+
+    <!-- Accent / state palette (approximating the original MahApps Dark.Teal + Noggog theme) -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#1BA1E2" />
+    <SolidColorBrush x:Key="Accent2Brush" Color="#2D6E8A" />
+    <SolidColorBrush x:Key="Accent4Brush" Color="#22556A" />
+    <SolidColorBrush x:Key="RunningBrush" Color="#2D6E8A" />
+    <SolidColorBrush x:Key="NotStartedBrush" Color="#303030" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#2E7D32" />
+    <SolidColorBrush x:Key="ErrorBackgroundBrush" Color="#7A2E2E" />
+    <SolidColorBrush x:Key="ErrorForegroundBrush" Color="#C62828" />
+    <SolidColorBrush x:Key="WarningForegroundBrush" Color="#F9A825" />
+    <SolidColorBrush x:Key="PaneBackgroundBrush" Color="#303030" />
+    <SolidColorBrush x:Key="DividerBrush" Color="#444444" />
+
+</ResourceDictionary>

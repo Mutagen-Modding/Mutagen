@@ -1,0 +1,25 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="using:Mutagen.Bethesda.Tests.GUI.Views"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="50"
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.PassthroughTestView">
+    <Grid Margin="25,3,-4,0">
+        <Border Background="{StaticResource AccentBrush}"
+                CornerRadius="5" Opacity="0.25"
+                IsVisible="{Binding IsSelected}" />
+        <Border BorderThickness="1.5" CornerRadius="4"
+                Background="{Binding State, Converter={StaticResource TestStateToBrush}}"
+                BorderBrush="{Binding IsSelected, Converter={StaticResource SelectedToBorderBrush}}">
+            <Grid ColumnDefinitions="*,Auto,Auto">
+                <TextBlock Grid.Column="0" Margin="6,3,15,3" Text="{Binding Name}" />
+                <TextBlock Grid.Column="1" Margin="0,3,8,3"
+                           Text="{Binding TimeSpent, Converter={x:Static views:PassthroughTestView.MinutesConverter}}" />
+                <Button Grid.Column="2" Margin="0,3,8,3" Content="↗"
+                        Command="{Binding OpenFileLocationCommand}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
