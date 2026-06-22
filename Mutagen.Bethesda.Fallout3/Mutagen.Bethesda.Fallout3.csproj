@@ -5,6 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Fallout3 mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -97,6 +103,7 @@
       <DependentUpon>Fallout3Mod.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ModContextExt.cs" />
+    <Compile Include="Plugins\Cache\Internals\Fallout3OverrideMaskRegistration.cs" />
     <Compile Include="Records\Fallout3Mod.cs">
       <DependentUpon>Fallout3Mod.xml</DependentUpon>
     </Compile>
