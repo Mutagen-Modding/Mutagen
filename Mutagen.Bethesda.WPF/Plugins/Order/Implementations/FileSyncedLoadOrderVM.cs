@@ -38,16 +38,16 @@ public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
                 loadOrder
                     .AutoRefresh(x => x.Enabled)
                     .Transform(x => x.Enabled, transformOnRefresh: true)
-                    .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                    .BufferInitial(TimeSpan.FromMilliseconds(500), RxSchedulers.MainThreadScheduler)
                     .QueryWhenChanged(x => x)
                     .Unit(),
                 loadOrder
                     .AutoRefresh(x => x.GhostSuffix)
                     .Transform(x => x.GhostSuffix ?? string.Empty, transformOnRefresh: true)
-                    .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                    .BufferInitial(TimeSpan.FromMilliseconds(500), RxSchedulers.MainThreadScheduler)
                     .QueryWhenChanged(x => x)
                     .Unit())
-            .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(500), RxSchedulers.MainThreadScheduler)
             .Select(x => LoadOrder.Select(x => new ModListing(x.ModKey, x.Enabled, x.ModExists, x.GhostSuffix)).ToArray())
             .DistinctUntilChanged(new SequenceEqualityComparer())
             .Subscribe(x =>

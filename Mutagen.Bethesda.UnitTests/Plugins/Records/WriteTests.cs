@@ -6,9 +6,8 @@ using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Testing.AutoData;
-using Noggog.IO;
-using Xunit;
 using Constants = Mutagen.Bethesda.Skyrim.Constants;
+using TempFile = Noggog.IO.TempFile;
 using Weapon = Mutagen.Bethesda.Skyrim.Weapon;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;

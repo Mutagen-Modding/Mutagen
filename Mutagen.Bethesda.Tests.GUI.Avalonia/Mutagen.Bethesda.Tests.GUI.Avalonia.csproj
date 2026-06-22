@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     <RootNamespace>Mutagen.Bethesda.Tests.GUI</RootNamespace>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
@@ -21,6 +21,7 @@
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="ReactiveUI.Avalonia" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Noggog.UI.Avalonia" />
   </ItemGroup>
