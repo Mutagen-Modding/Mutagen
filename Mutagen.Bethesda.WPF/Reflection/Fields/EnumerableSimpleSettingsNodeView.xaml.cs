@@ -1,9 +1,9 @@
 using Noggog.WPF;
 using ReactiveUI;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Noggog;
 using Xceed.Wpf.Toolkit;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;
@@ -50,7 +50,7 @@ public partial class EnumerableSimpleSettingsNodeView : EnumerableSimpleSettings
             this.WhenAnyValue(x => x.ViewModel!.AddCommand)
                 .Select(x => x.EndingExecution())
                 .Switch()
-                .Delay(TimeSpan.FromMilliseconds(50), RxApp.MainThreadScheduler)
+                .Delay(TimeSpan.FromMilliseconds(50), RxSchedulers.MainThreadScheduler)
                 .Subscribe(_ =>
                 {
                     var item = this.ViewModel?.Values.LastOrDefault();

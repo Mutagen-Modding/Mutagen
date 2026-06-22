@@ -1,4 +1,5 @@
 using Avalonia;
+using ReactiveUI.Avalonia;
 
 namespace Mutagen.Bethesda.Tests.GUI;
 
@@ -12,5 +13,6 @@ internal static class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .UseReactiveUI(builder => builder.WithAvalonia());
 }

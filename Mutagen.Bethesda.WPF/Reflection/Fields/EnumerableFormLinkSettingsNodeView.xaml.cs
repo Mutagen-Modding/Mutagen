@@ -1,7 +1,7 @@
 using Noggog.WPF;
 using ReactiveUI;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Fields;
 

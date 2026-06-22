@@ -270,8 +270,8 @@ public class AFormKeyPicker : NoggogControl
                     Processing = true;
                 }
             })
-            .Throttle(TimeSpan.FromMilliseconds(100), RxApp.MainThreadScheduler)
-            .ObserveOn(RxApp.TaskpoolScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(100), RxSchedulers.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
             .Select(x =>
             {
                 try
@@ -300,7 +300,7 @@ public class AFormKeyPicker : NoggogControl
                 }
             })
             .StartWith(new State(StatusIndicatorState.Passive, "FormKey is null.  No lookup required", FormKey.Null, string.Empty, null))
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Do(rec =>
             {
                 if (Processing)
@@ -381,8 +381,8 @@ public class AFormKeyPicker : NoggogControl
                     Processing = true;
                 }
             })
-            .Throttle(TimeSpan.FromMilliseconds(100), RxApp.MainThreadScheduler)
-            .ObserveOn(RxApp.TaskpoolScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(100), RxSchedulers.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
             .Select(x =>
             {
                 try
@@ -410,7 +410,7 @@ public class AFormKeyPicker : NoggogControl
                     return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty, null);
                 }
             })
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Do(rec =>
             {
                 if (Processing)
@@ -487,8 +487,8 @@ public class AFormKeyPicker : NoggogControl
                     Processing = true;
                 }
             })
-            .Throttle(TimeSpan.FromMilliseconds(100), RxApp.MainThreadScheduler)
-            .ObserveOn(RxApp.TaskpoolScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(100), RxSchedulers.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
             .Select(x =>
             {
                 try
@@ -561,7 +561,7 @@ public class AFormKeyPicker : NoggogControl
                     return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty, null);
                 }
             })
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Do(rec =>
             {
                 if (Processing)
@@ -633,8 +633,8 @@ public class AFormKeyPicker : NoggogControl
                 this.WhenAnyValue(x => x.LinkCache),
                 this.WhenAnyValue(x => x.ScopedTypes),
                 (LinkCache, ScopedTypes) => (LinkCache, ScopedTypes))
-            .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-            .ObserveOn(RxApp.TaskpoolScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
             .Select(x =>
             {
                 return Observable.Create<IMajorRecordIdentifierGetter>(async (obs, cancel) =>
@@ -660,7 +660,7 @@ public class AFormKeyPicker : NoggogControl
                 });
             })
             .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifierGetter>())
-            .ObserveOn(RxApp.TaskpoolScheduler)
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
             .Select(x => x.ToObservableChangeSet())
             .Switch()
             .ObserveOnRxAppGui()
@@ -677,8 +677,8 @@ public class AFormKeyPicker : NoggogControl
                             return Observable.Return<Func<IMajorRecordIdentifierGetter, bool>>(x => false);
                         case FormKeyPickerSearchMode.EditorID:
                             return this.WhenAnyValue(x => x.EditorID)
-                                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-                                .ObserveOn(RxApp.TaskpoolScheduler)
+                                .Throttle(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
+                                .ObserveOn(RxSchedulers.TaskpoolScheduler)
                                 .Select<string, Func<IMajorRecordIdentifierGetter, bool>>(term => (ident) =>
                                 {
                                     var edid = ident.EditorID;
@@ -695,8 +695,8 @@ public class AFormKeyPicker : NoggogControl
                             //                  ?? default;
 
                             return this.WhenAnyValue(x => x.FormKeyStr)
-                                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-                                .ObserveOn(RxApp.TaskpoolScheduler)
+                                .Throttle(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
+                                .ObserveOn(RxSchedulers.TaskpoolScheduler)
                                 .Select(RawStr =>
                                 {
                                     return (RawStr: RawStr, FormKey: FormKey.TryFactory(RawStr), FormID: FormID.TryFactory(RawStr, strictLength: false));
@@ -787,7 +787,7 @@ public class AFormKeyPicker : NoggogControl
         this.WhenAnyValue(x => x.IsKeyboardFocusWithin)
             .Merge(this.WhenAnyValue(x => x.IsVisible))
             .Where(x => !x)
-            .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
+            .Delay(TimeSpan.FromMilliseconds(150), RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
             {
                 this.SearchMode = FormKeyPickerSearchMode.None;

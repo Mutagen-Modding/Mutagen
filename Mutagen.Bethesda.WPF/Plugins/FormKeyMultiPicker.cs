@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Noggog;
 using Noggog.WPF;
-using Noggog.WPF.Containers;
+using Noggog.UI.Containers;
 
 namespace Mutagen.Bethesda.WPF.Plugins;
 

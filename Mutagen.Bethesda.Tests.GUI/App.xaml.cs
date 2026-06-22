@@ -1,4 +1,5 @@
-﻿using System.Windows;
+using System.Windows;
+using ReactiveUI.Builder;
 
 namespace Mutagen.Bethesda.Tests.GUI;
 
@@ -7,4 +8,10 @@ namespace Mutagen.Bethesda.Tests.GUI;
 /// </summary>
 public partial class App : Application
 {
+    public App()
+    {
+        RxAppBuilder.CreateReactiveUIBuilder()
+            .WithWpf()
+            .Build();
+    }
 }

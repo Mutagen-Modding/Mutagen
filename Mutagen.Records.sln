@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -72,6 +72,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Starfield", "Mutagen.Bethesda.Starfield\Mutagen.Bethesda.Starfield.csproj", "{470374D2-B508-4A3D-8A87-B0FE31FFA82E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Starfield.Generator", "Mutagen.Bethesda.Starfield.Generator\Mutagen.Bethesda.Starfield.Generator.csproj", "{13571737-2117-4708-9106-A2409678C655}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests.GUI.Core", "Mutagen.Bethesda.Tests.GUI.Core\Mutagen.Bethesda.Tests.GUI.Core.csproj", "{E79BF856-9053-4949-BDB0-08224281AA7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tests.GUI.Avalonia", "Mutagen.Bethesda.Tests.GUI.Avalonia\Mutagen.Bethesda.Tests.GUI.Avalonia.csproj", "{5B134EB9-BDAA-409C-B859-5BA072EB884E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -183,6 +187,14 @@ Global
 		{13571737-2117-4708-9106-A2409678C655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13571737-2117-4708-9106-A2409678C655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13571737-2117-4708-9106-A2409678C655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E79BF856-9053-4949-BDB0-08224281AA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E79BF856-9053-4949-BDB0-08224281AA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E79BF856-9053-4949-BDB0-08224281AA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E79BF856-9053-4949-BDB0-08224281AA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B134EB9-BDAA-409C-B859-5BA072EB884E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B134EB9-BDAA-409C-B859-5BA072EB884E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B134EB9-BDAA-409C-B859-5BA072EB884E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B134EB9-BDAA-409C-B859-5BA072EB884E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -213,6 +225,8 @@ Global
 		{AB5B2624-FAB0-44A5-86C1-680D04A55B59} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 		{470374D2-B508-4A3D-8A87-B0FE31FFA82E} = {181455C8-DDBD-40BE-8891-0950A3F62101}
 		{13571737-2117-4708-9106-A2409678C655} = {89AC8733-A707-495A-88B1-8F9570CDA329}
+		{E79BF856-9053-4949-BDB0-08224281AA7B} = {69A46946-56D0-4EAC-9865-D08C805327CB}
+		{5B134EB9-BDAA-409C-B859-5BA072EB884E} = {69A46946-56D0-4EAC-9865-D08C805327CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C76E1C6-5B27-4005-8051-03C82E3A4849}

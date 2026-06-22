@@ -36,7 +36,7 @@ public partial class ObjectSettingsNodeView : ObjectSettingsNodeViewBase
                 .WithLatestFrom(this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.SelectedSettings),
                     (Scrolled, Selected) => (Scrolled, Selected))
                 .Where(x => x.Selected == this.ViewModel)
-                .Delay(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                .Delay(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
                 .Subscribe(setting =>
                 {
                     if (this.ViewModel == null || this.Nodes.Items == null || this.Nodes.Items.Count == 0) return;
