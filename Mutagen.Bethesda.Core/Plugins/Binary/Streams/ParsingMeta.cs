@@ -58,7 +58,7 @@ public sealed class ParsingMeta
     public ushort? FormVersion { get; set; }
 
     /// <summary>
-    /// Mod header HEDR version (e.g. 0.94 for FO3, 1.34 for FNV)
+    /// Mod header HEDR version
     /// </summary>
     public float? ModHeaderVersion { get; set; }
 
