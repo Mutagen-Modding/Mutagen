@@ -94,6 +94,15 @@ dotnet_diagnostic.ASYNC0001.severity = silent
 [*_Generated.cs]
 generated_code = true
 
+# Our generated code still references members we've marked [Obsolete] for
+# downstream consumers. Those obsolete uses are expected internally, so silence
+# the compiler obsolete warnings within generated files only (callers outside
+# generated code still get warned).
+# CS0612: Member is obsolete (no message)
+dotnet_diagnostic.CS0612.severity = none
+# CS0618: Member is obsolete (with message)
+dotnet_diagnostic.CS0618.severity = none
+
 [*.g.cs]
 generated_code = true
 
