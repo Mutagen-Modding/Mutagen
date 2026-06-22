@@ -680,9 +680,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ALCS,
                 RecordTypes.ALMI);
             var all = RecordCollection.Factory(
+                RecordTypes.ALAM,
                 RecordTypes.ALCS,
                 RecordTypes.ALMI,
-                RecordTypes.ALAM,
                 RecordTypes.ALST);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,

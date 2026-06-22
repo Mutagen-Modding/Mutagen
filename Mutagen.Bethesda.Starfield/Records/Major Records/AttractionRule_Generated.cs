@@ -971,10 +971,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.AORU);
             var all = RecordCollection.Factory(
+                RecordTypes.AOR2,
                 RecordTypes.AORU,
                 RecordTypes.VMAD,
-                RecordTypes.XXXX,
-                RecordTypes.AOR2);
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

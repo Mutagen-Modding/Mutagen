@@ -1392,23 +1392,23 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.GBFM);
             var all = RecordCollection.Factory(
-                RecordTypes.GBFM,
-                RecordTypes.VMAD,
-                RecordTypes.XXXX,
-                RecordTypes.OBND,
-                RecordTypes.ODTY,
-                RecordTypes.OPDS,
+                RecordTypes.ANAM,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.FLTR,
-                RecordTypes.ANAM,
-                RecordTypes.STRV,
-                RecordTypes.OBTF,
                 RecordTypes.FULL,
-                RecordTypes.OBTS,
+                RecordTypes.GBFM,
+                RecordTypes.NVNM,
+                RecordTypes.OBND,
                 RecordTypes.OBTE,
+                RecordTypes.OBTF,
+                RecordTypes.OBTS,
+                RecordTypes.ODTY,
+                RecordTypes.OPDS,
                 RecordTypes.STOP,
-                RecordTypes.NVNM);
+                RecordTypes.STRV,
+                RecordTypes.VMAD,
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

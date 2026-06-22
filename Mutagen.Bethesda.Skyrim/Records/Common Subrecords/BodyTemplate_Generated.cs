@@ -750,8 +750,8 @@ namespace Mutagen.Bethesda.Skyrim
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.BODT,
-                RecordTypes.BOD2);
+                RecordTypes.BOD2,
+                RecordTypes.BODT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static RecordTypeConverter Version44Converter = new RecordTypeConverter(

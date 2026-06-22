@@ -1139,7 +1139,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.VOLI);
             var all = RecordCollection.Factory(
-                RecordTypes.VOLI,
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,
                 RecordTypes.ENAM,
@@ -1151,7 +1150,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.KNAM,
                 RecordTypes.LNAM,
                 RecordTypes.MNAM,
-                RecordTypes.NNAM);
+                RecordTypes.NNAM,
+                RecordTypes.VOLI);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

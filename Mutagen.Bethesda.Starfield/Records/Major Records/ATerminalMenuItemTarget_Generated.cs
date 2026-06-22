@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious]
+    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemSubmenu]
     /// </summary>
     public abstract partial class ATerminalMenuItemTarget :
         IATerminalMenuItemTarget,
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious]
+    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemSubmenu]
     /// </summary>
     public partial interface IATerminalMenuItemTarget :
         IATerminalMenuItemTargetGetter,
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious]
+    /// Implemented by: [TerminalMenuItemDataslate, TerminalMenuItemDisplayText, TerminalMenuItemForceRedraw, TerminalMenuItemReturnToDesktop, TerminalMenuItemReturnToPrevious, TerminalMenuItemSubmenu]
     /// </summary>
     public partial interface IATerminalMenuItemTargetGetter :
         ILoquiObject,
@@ -591,8 +591,9 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.UNAM,
-                RecordTypes.BNAM);
+                RecordTypes.BNAM,
+                RecordTypes.TNAM,
+                RecordTypes.UNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ATerminalMenuItemTargetBinaryWriteTranslation);

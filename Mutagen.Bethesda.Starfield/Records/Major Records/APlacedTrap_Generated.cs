@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [PlacedBeam, PlacedHazard, PlacedMissile, PlacedTrap]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public abstract partial class APlacedTrap :
         StarfieldMajorRecord,
@@ -1402,7 +1402,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [PlacedBeam, PlacedHazard, PlacedMissile, PlacedTrap]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrap :
         IAPlacedTrapGetter,
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [PlacedBeam, PlacedHazard, PlacedMissile, PlacedTrap]
+    /// Implemented by: [PlacedArrow, PlacedBarrier, PlacedBeam, PlacedCone, PlacedFlame, PlacedHazard, PlacedMissile, PlacedTrap]
     /// </summary>
     public partial interface IAPlacedTrapGetter :
         IStarfieldMajorRecordGetter,
@@ -1735,55 +1735,63 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.VMAD,
-                RecordTypes.NAME,
-                RecordTypes.XEMI,
-                RecordTypes.XRGD,
-                RecordTypes.XRFG,
-                RecordTypes.XPCS,
-                RecordTypes.XIS2,
-                RecordTypes.XRNK,
-                RecordTypes.XLKR,
-                RecordTypes.XLKT,
-                RecordTypes.XOWN,
-                RecordTypes.XEZN,
-                RecordTypes.XLYR,
-                RecordTypes.XHTW,
-                RecordTypes.XLRT,
-                RecordTypes.XESP,
-                RecordTypes.XATP,
-                RecordTypes.XSCL,
                 RecordTypes.DATA,
-                RecordTypes.PBEA,
-                RecordTypes.PGRE,
-                RecordTypes.PHZD,
-                RecordTypes.PMIS);
-            var all = RecordCollection.Factory(
-                RecordTypes.VMAD,
                 RecordTypes.NAME,
-                RecordTypes.XEMI,
-                RecordTypes.XRGD,
-                RecordTypes.XRFG,
-                RecordTypes.XPCS,
-                RecordTypes.XIS2,
-                RecordTypes.XRNK,
-                RecordTypes.XLKR,
-                RecordTypes.XLKT,
-                RecordTypes.XOWN,
-                RecordTypes.XEZN,
-                RecordTypes.XLYR,
-                RecordTypes.XHTW,
-                RecordTypes.XLRT,
-                RecordTypes.XESP,
-                RecordTypes.XATP,
-                RecordTypes.XSCL,
-                RecordTypes.DATA,
+                RecordTypes.PARW,
+                RecordTypes.PBAR,
                 RecordTypes.PBEA,
+                RecordTypes.PCON,
+                RecordTypes.PFLA,
                 RecordTypes.PGRE,
                 RecordTypes.PHZD,
                 RecordTypes.PMIS,
-                RecordTypes.XXXX,
-                RecordTypes.MNAM);
+                RecordTypes.VMAD,
+                RecordTypes.XATP,
+                RecordTypes.XEMI,
+                RecordTypes.XESP,
+                RecordTypes.XEZN,
+                RecordTypes.XHTW,
+                RecordTypes.XIS2,
+                RecordTypes.XLKR,
+                RecordTypes.XLKT,
+                RecordTypes.XLRT,
+                RecordTypes.XLYR,
+                RecordTypes.XOWN,
+                RecordTypes.XPCS,
+                RecordTypes.XRFG,
+                RecordTypes.XRGD,
+                RecordTypes.XRNK,
+                RecordTypes.XSCL);
+            var all = RecordCollection.Factory(
+                RecordTypes.DATA,
+                RecordTypes.MNAM,
+                RecordTypes.NAME,
+                RecordTypes.PARW,
+                RecordTypes.PBAR,
+                RecordTypes.PBEA,
+                RecordTypes.PCON,
+                RecordTypes.PFLA,
+                RecordTypes.PGRE,
+                RecordTypes.PHZD,
+                RecordTypes.PMIS,
+                RecordTypes.VMAD,
+                RecordTypes.XATP,
+                RecordTypes.XEMI,
+                RecordTypes.XESP,
+                RecordTypes.XEZN,
+                RecordTypes.XHTW,
+                RecordTypes.XIS2,
+                RecordTypes.XLKR,
+                RecordTypes.XLKT,
+                RecordTypes.XLRT,
+                RecordTypes.XLYR,
+                RecordTypes.XOWN,
+                RecordTypes.XPCS,
+                RecordTypes.XRFG,
+                RecordTypes.XRGD,
+                RecordTypes.XRNK,
+                RecordTypes.XSCL,
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

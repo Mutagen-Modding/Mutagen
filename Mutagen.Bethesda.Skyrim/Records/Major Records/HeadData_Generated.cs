@@ -1348,21 +1348,21 @@ namespace Mutagen.Bethesda.Skyrim
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.INDX,
+                RecordTypes.AHCM,
+                RecordTypes.DFTM,
+                RecordTypes.FTSM,
                 RecordTypes.HEAD,
+                RecordTypes.INDX,
+                RecordTypes.MODL,
                 RecordTypes.MPAI,
                 RecordTypes.RPRM,
-                RecordTypes.AHCM,
-                RecordTypes.FTSM,
-                RecordTypes.DFTM,
-                RecordTypes.TINI,
-                RecordTypes.TINT,
-                RecordTypes.TINP,
-                RecordTypes.TIND,
                 RecordTypes.TINC,
+                RecordTypes.TIND,
+                RecordTypes.TINI,
+                RecordTypes.TINP,
+                RecordTypes.TINT,
                 RecordTypes.TINV,
-                RecordTypes.TIRS,
-                RecordTypes.MODL);
+                RecordTypes.TIRS);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(HeadDataBinaryWriteTranslation);

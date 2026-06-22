@@ -758,8 +758,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.RPLI);
             var all = RecordCollection.Factory(
-                RecordTypes.RPLI,
-                RecordTypes.RPLD);
+                RecordTypes.RPLD,
+                RecordTypes.RPLI);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -630,8 +630,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.PNAM);
             var all = RecordCollection.Factory(
                 RecordTypes.BNAM,
-                RecordTypes.PNAM,
-                RecordTypes.PLVD);
+                RecordTypes.PLVD,
+                RecordTypes.PNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

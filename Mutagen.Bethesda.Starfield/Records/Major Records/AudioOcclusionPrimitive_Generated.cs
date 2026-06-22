@@ -864,9 +864,9 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.AOPF,
                 RecordTypes.OBND,
-                RecordTypes.ODTY,
                 RecordTypes.OBSV,
-                RecordTypes.OCCV);
+                RecordTypes.OCCV,
+                RecordTypes.ODTY);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

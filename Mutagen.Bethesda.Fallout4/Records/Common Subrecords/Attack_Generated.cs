@@ -828,9 +828,9 @@ namespace Mutagen.Bethesda.Fallout4
             var all = RecordCollection.Factory(
                 RecordTypes.ATKD,
                 RecordTypes.ATKE,
-                RecordTypes.ATKW,
                 RecordTypes.ATKS,
-                RecordTypes.ATKT);
+                RecordTypes.ATKT,
+                RecordTypes.ATKW);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AttackBinaryWriteTranslation);

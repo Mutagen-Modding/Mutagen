@@ -721,10 +721,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var all = RecordCollection.Factory(
                 RecordTypes.INDX,
-                RecordTypes.MODL,
                 RecordTypes.MODC,
-                RecordTypes.MODT,
-                RecordTypes.MODS);
+                RecordTypes.MODL,
+                RecordTypes.MODS,
+                RecordTypes.MODT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(BodyDataBinaryWriteTranslation);

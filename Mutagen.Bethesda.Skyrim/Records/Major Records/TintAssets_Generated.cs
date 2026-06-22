@@ -893,11 +893,11 @@ namespace Mutagen.Bethesda.Skyrim
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.TINI,
-                RecordTypes.TINT,
-                RecordTypes.TINP,
-                RecordTypes.TIND,
                 RecordTypes.TINC,
+                RecordTypes.TIND,
+                RecordTypes.TINI,
+                RecordTypes.TINP,
+                RecordTypes.TINT,
                 RecordTypes.TINV,
                 RecordTypes.TIRS);
             return new RecordTriggerSpecs(allRecordTypes: all);

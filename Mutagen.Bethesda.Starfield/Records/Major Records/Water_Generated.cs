@@ -1749,18 +1749,17 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.WATR);
             var all = RecordCollection.Factory(
-                RecordTypes.WATR,
-                RecordTypes.VMAD,
-                RecordTypes.XXXX,
-                RecordTypes.FULL,
                 RecordTypes.ANAM,
-                RecordTypes.FNAM,
-                RecordTypes.WASH,
-                RecordTypes.XNAM,
-                RecordTypes.YNAM,
                 RecordTypes.DATA,
                 RecordTypes.DNAM,
+                RecordTypes.ENAM,
+                RecordTypes.FNAM,
+                RecordTypes.FULL,
                 RecordTypes.GNAM,
+                RecordTypes.HNAM,
+                RecordTypes.JNAM,
+                RecordTypes.LNAM,
+                RecordTypes.MNAM,
                 RecordTypes.NAM0,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2,
@@ -1768,13 +1767,14 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NAM4,
                 RecordTypes.NAM5,
                 RecordTypes.NAM6,
-                RecordTypes.ENAM,
-                RecordTypes.HNAM,
-                RecordTypes.JNAM,
-                RecordTypes.LNAM,
-                RecordTypes.MNAM,
                 RecordTypes.QNAM,
-                RecordTypes.UNAM);
+                RecordTypes.UNAM,
+                RecordTypes.VMAD,
+                RecordTypes.WASH,
+                RecordTypes.WATR,
+                RecordTypes.XNAM,
+                RecordTypes.XXXX,
+                RecordTypes.YNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

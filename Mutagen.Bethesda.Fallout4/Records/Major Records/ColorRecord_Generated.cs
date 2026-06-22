@@ -975,13 +975,13 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.CLFM);
             var all = RecordCollection.Factory(
-                RecordTypes.CLFM,
-                RecordTypes.FULL,
-                RecordTypes.CNAM,
-                RecordTypes.FNAM,
-                RecordTypes.CTDA,
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.CLFM,
+                RecordTypes.CNAM,
+                RecordTypes.CTDA,
+                RecordTypes.FNAM,
+                RecordTypes.FULL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -798,8 +798,8 @@ namespace Mutagen.Bethesda.Skyrim
             var triggers = RecordCollection.Factory(RecordTypes.ANIO);
             var all = RecordCollection.Factory(
                 RecordTypes.ANIO,
-                RecordTypes.MODL,
-                RecordTypes.BNAM);
+                RecordTypes.BNAM,
+                RecordTypes.MODL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

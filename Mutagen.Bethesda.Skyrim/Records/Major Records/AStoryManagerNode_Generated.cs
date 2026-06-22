@@ -858,23 +858,23 @@ namespace Mutagen.Bethesda.Skyrim
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.PNAM,
-                RecordTypes.SNAM,
-                RecordTypes.CTDA,
                 RecordTypes.CITC,
-                RecordTypes.SMBN,
-                RecordTypes.SMQN,
-                RecordTypes.SMEN);
-            var all = RecordCollection.Factory(
-                RecordTypes.PNAM,
-                RecordTypes.SNAM,
                 RecordTypes.CTDA,
-                RecordTypes.CITC,
+                RecordTypes.PNAM,
                 RecordTypes.SMBN,
-                RecordTypes.SMQN,
                 RecordTypes.SMEN,
+                RecordTypes.SMQN,
+                RecordTypes.SNAM);
+            var all = RecordCollection.Factory(
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.CITC,
+                RecordTypes.CTDA,
+                RecordTypes.PNAM,
+                RecordTypes.SMBN,
+                RecordTypes.SMEN,
+                RecordTypes.SMQN,
+                RecordTypes.SNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

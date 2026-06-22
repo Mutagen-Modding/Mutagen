@@ -3232,61 +3232,61 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.CELL);
             var all = RecordCollection.Factory(
-                RecordTypes.CELL,
+                RecordTypes.ACHR,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
-                RecordTypes.FULL,
+                RecordTypes.CELL,
                 RecordTypes.DATA,
-                RecordTypes.XCLC,
-                RecordTypes.XCLL,
-                RecordTypes.MHDT,
+                RecordTypes.FULL,
                 RecordTypes.LTMP,
-                RecordTypes.XCLW,
-                RecordTypes.XILS,
-                RecordTypes.XCLA,
-                RecordTypes.XCLD,
-                RecordTypes.XWCN,
-                RecordTypes.XCCM,
-                RecordTypes.XOWN,
-                RecordTypes.XLCN,
-                RecordTypes.XCWT,
-                RecordTypes.XCWM,
-                RecordTypes.XBPS,
-                RecordTypes.XWCU,
-                RecordTypes.XCAS,
-                RecordTypes.XCIM,
-                RecordTypes.XWEM,
-                RecordTypes.XILL,
-                RecordTypes.XCMO,
-                RecordTypes.XCGD,
-                RecordTypes.XCIB,
-                RecordTypes.TODD,
-                RecordTypes.XLKR,
-                RecordTypes.XLKT,
-                RecordTypes.XEMP,
-                RecordTypes.XTV2,
-                RecordTypes.XXXX,
-                RecordTypes.NAVM,
-                RecordTypes.VMAD,
-                RecordTypes.NVNM,
-                RecordTypes.NNAM,
+                RecordTypes.MHDT,
                 RecordTypes.MNAM,
                 RecordTypes.NAME,
-                RecordTypes.XEMI,
-                RecordTypes.XRGD,
-                RecordTypes.XRFG,
-                RecordTypes.XPCS,
-                RecordTypes.XIS2,
-                RecordTypes.XRNK,
-                RecordTypes.XEZN,
-                RecordTypes.XLYR,
-                RecordTypes.XHTW,
-                RecordTypes.XLRT,
-                RecordTypes.XESP,
-                RecordTypes.XATP,
-                RecordTypes.XSCL,
+                RecordTypes.NAVM,
+                RecordTypes.NNAM,
+                RecordTypes.NVNM,
                 RecordTypes.REFR,
-                RecordTypes.ACHR);
+                RecordTypes.TODD,
+                RecordTypes.VMAD,
+                RecordTypes.XATP,
+                RecordTypes.XBPS,
+                RecordTypes.XCAS,
+                RecordTypes.XCCM,
+                RecordTypes.XCGD,
+                RecordTypes.XCIB,
+                RecordTypes.XCIM,
+                RecordTypes.XCLA,
+                RecordTypes.XCLC,
+                RecordTypes.XCLD,
+                RecordTypes.XCLL,
+                RecordTypes.XCLW,
+                RecordTypes.XCMO,
+                RecordTypes.XCWM,
+                RecordTypes.XCWT,
+                RecordTypes.XEMI,
+                RecordTypes.XEMP,
+                RecordTypes.XESP,
+                RecordTypes.XEZN,
+                RecordTypes.XHTW,
+                RecordTypes.XILL,
+                RecordTypes.XILS,
+                RecordTypes.XIS2,
+                RecordTypes.XLCN,
+                RecordTypes.XLKR,
+                RecordTypes.XLKT,
+                RecordTypes.XLRT,
+                RecordTypes.XLYR,
+                RecordTypes.XOWN,
+                RecordTypes.XPCS,
+                RecordTypes.XRFG,
+                RecordTypes.XRGD,
+                RecordTypes.XRNK,
+                RecordTypes.XSCL,
+                RecordTypes.XTV2,
+                RecordTypes.XWCN,
+                RecordTypes.XWCU,
+                RecordTypes.XWEM,
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -3677,15 +3677,34 @@ namespace Mutagen.Bethesda.Starfield
                 case "AdaptiveTriggerDataComponent":
                 case "IAdaptiveTriggerDataComponentGetter":
                 case "IAdaptiveTriggerDataComponent":
+                case "QualityUpgradeComponent":
+                case "IQualityUpgradeComponentGetter":
+                case "IQualityUpgradeComponent":
                     break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
                 case "IAPlacedTrapInternal":
+                case "PlacedArrow":
+                case "IPlacedArrowGetter":
+                case "IPlacedArrow":
+                case "IPlacedArrowInternal":
                 case "PlacedBeam":
                 case "IPlacedBeamGetter":
                 case "IPlacedBeam":
                 case "IPlacedBeamInternal":
+                case "PlacedFlame":
+                case "IPlacedFlameGetter":
+                case "IPlacedFlame":
+                case "IPlacedFlameInternal":
+                case "PlacedCone":
+                case "IPlacedConeGetter":
+                case "IPlacedCone":
+                case "IPlacedConeInternal":
+                case "PlacedBarrier":
+                case "IPlacedBarrierGetter":
+                case "IPlacedBarrier":
+                case "IPlacedBarrierInternal":
                 case "PlacedTrap":
                 case "IPlacedTrapGetter":
                 case "IPlacedTrap":

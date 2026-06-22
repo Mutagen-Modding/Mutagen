@@ -1384,20 +1384,20 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.IPCT);
             var all = RecordCollection.Factory(
-                RecordTypes.IPCT,
-                RecordTypes.MODL,
-                RecordTypes.MODC,
-                RecordTypes.MODT,
-                RecordTypes.MODS,
                 RecordTypes.DATA,
-                RecordTypes.DODT,
                 RecordTypes.DNAM,
+                RecordTypes.DODT,
                 RecordTypes.ENAM,
-                RecordTypes.SNAM,
+                RecordTypes.FNAM,
+                RecordTypes.IPCT,
+                RecordTypes.MODC,
+                RecordTypes.MODL,
+                RecordTypes.MODS,
+                RecordTypes.MODT,
                 RecordTypes.NAM1,
-                RecordTypes.NAM3,
                 RecordTypes.NAM2,
-                RecordTypes.FNAM);
+                RecordTypes.NAM3,
+                RecordTypes.SNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

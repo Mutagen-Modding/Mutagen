@@ -905,9 +905,9 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FNAM,
                 RecordTypes.FULL,
                 RecordTypes.TNAM,
-                RecordTypes.VNAM,
                 RecordTypes.UNAM,
-                RecordTypes.VISI);
+                RecordTypes.VISI,
+                RecordTypes.VNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

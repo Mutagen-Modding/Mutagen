@@ -759,10 +759,10 @@ namespace Mutagen.Bethesda.Skyrim
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.TINI,
+                RecordTypes.TIAS,
                 RecordTypes.TINC,
-                RecordTypes.TINV,
-                RecordTypes.TIAS);
+                RecordTypes.TINI,
+                RecordTypes.TINV);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(TintLayerBinaryWriteTranslation);

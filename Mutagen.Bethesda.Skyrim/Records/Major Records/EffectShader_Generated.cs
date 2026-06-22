@@ -4807,13 +4807,13 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.EFSH);
             var all = RecordCollection.Factory(
+                RecordTypes.DATA,
                 RecordTypes.EFSH,
-                RecordTypes.ICON,
                 RecordTypes.ICO2,
+                RecordTypes.ICON,
                 RecordTypes.NAM7,
                 RecordTypes.NAM8,
-                RecordTypes.NAM9,
-                RecordTypes.DATA);
+                RecordTypes.NAM9);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

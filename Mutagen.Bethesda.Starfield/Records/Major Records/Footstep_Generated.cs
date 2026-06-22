@@ -834,11 +834,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.FSTP);
             var all = RecordCollection.Factory(
+                RecordTypes.ANAM,
+                RecordTypes.DATA,
                 RecordTypes.FSTP,
                 RecordTypes.VMAD,
-                RecordTypes.XXXX,
-                RecordTypes.DATA,
-                RecordTypes.ANAM);
+                RecordTypes.XXXX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

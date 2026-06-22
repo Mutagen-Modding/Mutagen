@@ -958,14 +958,14 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
             var all = RecordCollection.Factory(
+                RecordTypes.SCDA,
                 RecordTypes.SCHD,
                 RecordTypes.SCHR,
-                RecordTypes.SCDA,
-                RecordTypes.SCTX,
-                RecordTypes.SLSD,
-                RecordTypes.SCVR,
+                RecordTypes.SCRO,
                 RecordTypes.SCRV,
-                RecordTypes.SCRO);
+                RecordTypes.SCTX,
+                RecordTypes.SCVR,
+                RecordTypes.SLSD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -802,7 +802,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.SMEN);
             var all = RecordCollection.Factory(
-                RecordTypes.SMEN,
                 RecordTypes.ADBO,
                 RecordTypes.ADCR,
                 RecordTypes.ADIA,
@@ -820,6 +819,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.CRFT,
                 RecordTypes.CURE,
                 RecordTypes.DEAD,
+                RecordTypes.DNAM,
+                RecordTypes.ENAM,
                 RecordTypes.ESJA,
                 RecordTypes.FLAT,
                 RecordTypes.HACK,
@@ -843,12 +844,11 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.REMP,
                 RecordTypes.SCPT,
                 RecordTypes.SKIL,
+                RecordTypes.SMEN,
                 RecordTypes.STIJ,
                 RecordTypes.TMEE,
                 RecordTypes.TRES,
-                RecordTypes.DNAM,
-                RecordTypes.XNAM,
-                RecordTypes.ENAM);
+                RecordTypes.XNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
