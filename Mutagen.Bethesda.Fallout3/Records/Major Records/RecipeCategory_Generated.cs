@@ -793,9 +793,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.RCCT);
             var all = RecordCollection.Factory(
-                RecordTypes.RCCT,
+                RecordTypes.DATA,
                 RecordTypes.FULL,
-                RecordTypes.DATA);
+                RecordTypes.RCCT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

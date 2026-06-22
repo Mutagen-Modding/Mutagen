@@ -630,8 +630,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PNAM);
             var all = RecordCollection.Factory(
                 RecordTypes.BNAM,
-                RecordTypes.PNAM,
-                RecordTypes.PLDT);
+                RecordTypes.PLDT,
+                RecordTypes.PNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

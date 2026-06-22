@@ -706,8 +706,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.VTYP);
             var all = RecordCollection.Factory(
-                RecordTypes.VTYP,
-                RecordTypes.DNAM);
+                RecordTypes.DNAM,
+                RecordTypes.VTYP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

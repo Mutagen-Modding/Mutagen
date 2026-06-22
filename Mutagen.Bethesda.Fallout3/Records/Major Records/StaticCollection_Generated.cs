@@ -935,15 +935,15 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.SCOL);
             var all = RecordCollection.Factory(
-                RecordTypes.SCOL,
-                RecordTypes.OBND,
-                RecordTypes.MODL,
+                RecordTypes.DATA,
                 RecordTypes.MODB,
-                RecordTypes.MODT,
-                RecordTypes.MODS,
                 RecordTypes.MODD,
+                RecordTypes.MODL,
+                RecordTypes.MODS,
+                RecordTypes.MODT,
+                RecordTypes.OBND,
                 RecordTypes.ONAM,
-                RecordTypes.DATA);
+                RecordTypes.SCOL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

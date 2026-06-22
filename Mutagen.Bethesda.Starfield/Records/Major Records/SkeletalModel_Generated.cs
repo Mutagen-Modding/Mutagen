@@ -806,15 +806,15 @@ namespace Mutagen.Bethesda.Starfield
         {
             var all = RecordCollection.Factory(
                 RecordTypes.ANAM,
-                RecordTypes.MODT,
-                RecordTypes.MOLM,
+                RecordTypes.DNAM,
                 RecordTypes.FLLD,
-                RecordTypes.XFLG,
                 RecordTypes.MODC,
                 RecordTypes.MODF,
+                RecordTypes.MODT,
+                RecordTypes.MOLM,
                 RecordTypes.NAM5,
                 RecordTypes.NAM6,
-                RecordTypes.DNAM);
+                RecordTypes.XFLG);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(

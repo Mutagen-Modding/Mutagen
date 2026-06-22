@@ -1066,11 +1066,11 @@ namespace Mutagen.Bethesda.Fallout4
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.SGNM,
                 RecordTypes.SAKD,
-                RecordTypes.STKD,
                 RecordTypes.SAPT,
-                RecordTypes.SRAF);
+                RecordTypes.SGNM,
+                RecordTypes.SRAF,
+                RecordTypes.STKD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SubgraphBinaryWriteTranslation);

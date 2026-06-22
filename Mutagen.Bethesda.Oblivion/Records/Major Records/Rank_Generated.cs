@@ -726,10 +726,10 @@ namespace Mutagen.Bethesda.Oblivion
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.RNAM,
-                RecordTypes.MNAM,
                 RecordTypes.FNAM,
-                RecordTypes.INAM);
+                RecordTypes.INAM,
+                RecordTypes.MNAM,
+                RecordTypes.RNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);

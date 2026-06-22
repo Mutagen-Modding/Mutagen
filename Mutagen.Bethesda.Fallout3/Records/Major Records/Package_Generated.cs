@@ -1953,27 +1953,27 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.PACK);
             var all = RecordCollection.Factory(
-                RecordTypes.PACK,
-                RecordTypes.PKDT,
-                RecordTypes.PLDT,
-                RecordTypes.PLD2,
-                RecordTypes.PSDT,
-                RecordTypes.PTDT,
+                RecordTypes.CNAM,
                 RecordTypes.CTDA,
                 RecordTypes.IDLF,
-                RecordTypes.CNAM,
-                RecordTypes.PKED,
+                RecordTypes.PACK,
+                RecordTypes.PKAM,
+                RecordTypes.PKDD,
+                RecordTypes.PKDT,
                 RecordTypes.PKE2,
+                RecordTypes.PKED,
                 RecordTypes.PKFD,
                 RecordTypes.PKPT,
                 RecordTypes.PKW3,
-                RecordTypes.PTD2,
-                RecordTypes.PUID,
-                RecordTypes.PKAM,
-                RecordTypes.PKDD,
+                RecordTypes.PLD2,
+                RecordTypes.PLDT,
                 RecordTypes.POBA,
+                RecordTypes.POCA,
                 RecordTypes.POEA,
-                RecordTypes.POCA);
+                RecordTypes.PSDT,
+                RecordTypes.PTD2,
+                RecordTypes.PTDT,
+                RecordTypes.PUID);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

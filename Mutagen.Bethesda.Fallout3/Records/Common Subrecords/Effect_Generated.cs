@@ -816,9 +816,9 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.EFID,
                 RecordTypes.EFIT);
             var all = RecordCollection.Factory(
+                RecordTypes.CTDA,
                 RecordTypes.EFID,
-                RecordTypes.EFIT,
-                RecordTypes.CTDA);
+                RecordTypes.EFIT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

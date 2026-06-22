@@ -3316,10 +3316,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.CSTY);
             var all = RecordCollection.Factory(
-                RecordTypes.CSTY,
-                RecordTypes.CSTD,
                 RecordTypes.CSAD,
-                RecordTypes.CSSD);
+                RecordTypes.CSSD,
+                RecordTypes.CSTD,
+                RecordTypes.CSTY);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

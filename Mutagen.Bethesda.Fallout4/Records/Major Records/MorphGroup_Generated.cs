@@ -880,14 +880,14 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var all = RecordCollection.Factory(
                 RecordTypes.MPGN,
-                RecordTypes.MPPI,
-                RecordTypes.MPPN,
-                RecordTypes.MPPM,
-                RecordTypes.MPPT,
-                RecordTypes.MPPF,
+                RecordTypes.MPGS,
                 RecordTypes.MPPC,
+                RecordTypes.MPPF,
+                RecordTypes.MPPI,
                 RecordTypes.MPPK,
-                RecordTypes.MPGS);
+                RecordTypes.MPPM,
+                RecordTypes.MPPN,
+                RecordTypes.MPPT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MorphGroupBinaryWriteTranslation);

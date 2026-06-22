@@ -847,18 +847,18 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.ITXT,
-                RecordTypes.IBIN,
-                RecordTypes.CTDA,
-                RecordTypes.DODT);
-            var all = RecordCollection.Factory(
-                RecordTypes.ITXT,
-                RecordTypes.IBIN,
                 RecordTypes.CTDA,
                 RecordTypes.DODT,
-                RecordTypes.CITC,
+                RecordTypes.IBIN,
+                RecordTypes.ITXT);
+            var all = RecordCollection.Factory(
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.CITC,
+                RecordTypes.CTDA,
+                RecordTypes.DODT,
+                RecordTypes.IBIN,
+                RecordTypes.ITXT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

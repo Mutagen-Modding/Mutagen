@@ -896,12 +896,12 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.XPRD);
             var all = RecordCollection.Factory(
-                RecordTypes.XPRD,
-                RecordTypes.XPPA,
                 RecordTypes.INAM,
+                RecordTypes.PDTO,
                 RecordTypes.SCHR,
                 RecordTypes.SCTX,
-                RecordTypes.PDTO);
+                RecordTypes.XPPA,
+                RecordTypes.XPRD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

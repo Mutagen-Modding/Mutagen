@@ -1090,21 +1090,21 @@ namespace Mutagen.Bethesda.Fallout4
             var endTriggers = RecordCollection.Factory(RecordTypes.ALED);
             var triggers = RecordCollection.Factory();
             var all = RecordCollection.Factory(
+                RecordTypes.ALCC,
+                RecordTypes.ALEA,
                 RecordTypes.ALED,
-                RecordTypes.ALID,
-                RecordTypes.FNAM,
+                RecordTypes.ALEQ,
+                RecordTypes.ALFA,
+                RecordTypes.ALFD,
+                RecordTypes.ALFE,
                 RecordTypes.ALFI,
                 RecordTypes.ALFL,
-                RecordTypes.ALFA,
-                RecordTypes.KNAM,
-                RecordTypes.ALEQ,
-                RecordTypes.ALEA,
-                RecordTypes.ALFE,
-                RecordTypes.ALFD,
-                RecordTypes.CTDA,
+                RecordTypes.ALID,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
-                RecordTypes.ALCC);
+                RecordTypes.CTDA,
+                RecordTypes.FNAM,
+                RecordTypes.KNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,

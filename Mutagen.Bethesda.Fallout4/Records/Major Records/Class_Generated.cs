@@ -1031,11 +1031,11 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(RecordTypes.CLAS);
             var all = RecordCollection.Factory(
                 RecordTypes.CLAS,
-                RecordTypes.FULL,
+                RecordTypes.DATA,
                 RecordTypes.DESC,
+                RecordTypes.FULL,
                 RecordTypes.ICON,
-                RecordTypes.PRPS,
-                RecordTypes.DATA);
+                RecordTypes.PRPS);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

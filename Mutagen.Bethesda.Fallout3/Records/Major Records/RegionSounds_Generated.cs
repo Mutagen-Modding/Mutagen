@@ -933,9 +933,9 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.RDAT,
                 RecordTypes.RDMD,
                 RecordTypes.RDMO,
-                RecordTypes.RDSI,
                 RecordTypes.RDSB,
-                RecordTypes.RDSD);
+                RecordTypes.RDSD,
+                RecordTypes.RDSI);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

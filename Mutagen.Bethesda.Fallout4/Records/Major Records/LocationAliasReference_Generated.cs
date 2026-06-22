@@ -739,8 +739,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var all = RecordCollection.Factory(
                 RecordTypes.ALFA,
-                RecordTypes.KNAM,
-                RecordTypes.ALRT);
+                RecordTypes.ALRT,
+                RecordTypes.KNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LocationAliasReferenceBinaryWriteTranslation);

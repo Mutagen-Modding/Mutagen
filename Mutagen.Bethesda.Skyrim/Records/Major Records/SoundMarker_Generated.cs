@@ -894,11 +894,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.SOUN);
             var all = RecordCollection.Factory(
-                RecordTypes.SOUN,
-                RecordTypes.OBND,
                 RecordTypes.FNAM,
+                RecordTypes.OBND,
+                RecordTypes.SDSC,
                 RecordTypes.SNDD,
-                RecordTypes.SDSC);
+                RecordTypes.SOUN);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

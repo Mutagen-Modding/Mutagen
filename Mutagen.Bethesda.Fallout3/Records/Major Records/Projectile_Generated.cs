@@ -1908,19 +1908,19 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.PROJ);
             var all = RecordCollection.Factory(
-                RecordTypes.PROJ,
-                RecordTypes.OBND,
-                RecordTypes.FULL,
-                RecordTypes.MODL,
-                RecordTypes.MODB,
-                RecordTypes.MODT,
-                RecordTypes.MODS,
-                RecordTypes.MODD,
+                RecordTypes.DATA,
                 RecordTypes.DEST,
                 RecordTypes.DSTD,
-                RecordTypes.DATA,
+                RecordTypes.FULL,
+                RecordTypes.MODB,
+                RecordTypes.MODD,
+                RecordTypes.MODL,
+                RecordTypes.MODS,
+                RecordTypes.MODT,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2,
+                RecordTypes.OBND,
+                RecordTypes.PROJ,
                 RecordTypes.VNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,

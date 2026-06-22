@@ -1386,15 +1386,15 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.NAVM);
             var all = RecordCollection.Factory(
-                RecordTypes.NAVM,
-                RecordTypes.NVER,
                 RecordTypes.DATA,
-                RecordTypes.NVVX,
-                RecordTypes.NVTR,
+                RecordTypes.NAVM,
                 RecordTypes.NVCA,
                 RecordTypes.NVDP,
+                RecordTypes.NVER,
+                RecordTypes.NVEX,
                 RecordTypes.NVGD,
-                RecordTypes.NVEX);
+                RecordTypes.NVTR,
+                RecordTypes.NVVX);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

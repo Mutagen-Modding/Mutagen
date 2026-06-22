@@ -864,13 +864,13 @@ namespace Mutagen.Bethesda.Starfield
             var endTriggers = RecordCollection.Factory(RecordTypes.XWPK);
             var triggers = RecordCollection.Factory(RecordTypes.XWPK);
             var all = RecordCollection.Factory(
-                RecordTypes.XWPK,
                 RecordTypes.GNAM,
                 RecordTypes.HNAM,
                 RecordTypes.INAM,
                 RecordTypes.JNAM,
                 RecordTypes.LNAM,
-                RecordTypes.XGOM);
+                RecordTypes.XGOM,
+                RecordTypes.XWPK);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,

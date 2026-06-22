@@ -289,7 +289,9 @@ public class TriggeringRecordModule : GenerationModule
         if (obj.GetObjectType() == ObjectType.Group || obj.GetObjectType() == ObjectType.Mod) return;
         if (obj.Name.EndsWith("MajorRecord")) return;
 
-        var all = await GetAllRecordTypes(obj).ToArrayAsync();
+        var all = (await GetAllRecordTypes(obj).ToArrayAsync())
+            .OrderBy(x => x.Type)
+            .ToArray();
         var same = trigRecordTypes.ToHashSet().OrderBy(x => x.TypeInt).SequenceEqual(all.ToHashSet().OrderBy(x => x.TypeInt));
 
         if (trigRecordTypes.Count == 0 && all.Length == 0) return;
@@ -323,7 +325,7 @@ public class TriggeringRecordModule : GenerationModule
                 using (var args = sb.Call(
                            "var triggers = RecordCollection.Factory"))
                 {
-                    foreach (var trigger in trigRecordTypes)
+                    foreach (var trigger in trigRecordTypes.OrderBy(x => x.Type))
                     {
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }

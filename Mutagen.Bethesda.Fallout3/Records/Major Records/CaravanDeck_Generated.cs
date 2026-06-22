@@ -912,10 +912,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.CDCK);
             var all = RecordCollection.Factory(
-                RecordTypes.CDCK,
-                RecordTypes.FULL,
                 RecordTypes.CARD,
-                RecordTypes.DATA);
+                RecordTypes.CDCK,
+                RecordTypes.DATA,
+                RecordTypes.FULL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

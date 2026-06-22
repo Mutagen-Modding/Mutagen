@@ -921,9 +921,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             var all = RecordCollection.Factory(
                 RecordTypes.FMRI,
-                RecordTypes.FMRU,
                 RecordTypes.FMRN,
                 RecordTypes.FMRS,
+                RecordTypes.FMRU,
                 RecordTypes.FMSR);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });

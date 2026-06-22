@@ -770,8 +770,8 @@ namespace Mutagen.Bethesda.Fallout3
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.ONAM,
-                RecordTypes.DATA);
+                RecordTypes.DATA,
+                RecordTypes.ONAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(StaticPartBinaryWriteTranslation);

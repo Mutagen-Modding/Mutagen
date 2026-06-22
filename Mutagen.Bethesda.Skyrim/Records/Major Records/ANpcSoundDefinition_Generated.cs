@@ -592,9 +592,9 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var all = RecordCollection.Factory(
                 RecordTypes.CSCR,
-                RecordTypes.CSDT,
+                RecordTypes.CSDC,
                 RecordTypes.CSDI,
-                RecordTypes.CSDC);
+                RecordTypes.CSDT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ANpcSoundDefinitionBinaryWriteTranslation);

@@ -808,11 +808,11 @@ namespace Mutagen.Bethesda.Fallout4
             var triggers = RecordCollection.Factory(RecordTypes.ASTP);
             var all = RecordCollection.Factory(
                 RecordTypes.ASTP,
-                RecordTypes.MPRT,
+                RecordTypes.DATA,
+                RecordTypes.FCHT,
                 RecordTypes.FPRT,
                 RecordTypes.MCHT,
-                RecordTypes.FCHT,
-                RecordTypes.DATA);
+                RecordTypes.MPRT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

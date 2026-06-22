@@ -835,8 +835,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.ZOOM);
             var all = RecordCollection.Factory(
-                RecordTypes.ZOOM,
-                RecordTypes.GNAM);
+                RecordTypes.GNAM,
+                RecordTypes.ZOOM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
