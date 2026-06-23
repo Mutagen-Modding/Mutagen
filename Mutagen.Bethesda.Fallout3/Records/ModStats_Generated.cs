@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Version
-        public static readonly Single VersionDefault = 1.0f;
+        public static readonly Single VersionDefault = 0.94f;
         public Single Version { get; set; } = VersionDefault;
         #endregion
         #region NumRecords

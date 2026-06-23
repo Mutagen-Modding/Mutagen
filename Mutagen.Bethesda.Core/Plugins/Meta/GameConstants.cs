@@ -252,6 +252,7 @@ public sealed record GameConstants
     public static readonly GameConstants FalloutNV = Fallout3 with
     {
         Release = GameRelease.FalloutNV,
+        DefaultModHeaderVersion = 1.34f,
         MyDocumentsString = "FalloutNV",
         IniName = "FalloutNV",
     };
