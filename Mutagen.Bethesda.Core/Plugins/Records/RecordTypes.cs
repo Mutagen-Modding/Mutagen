@@ -7,4 +7,5 @@ public static partial class RecordTypes
     public static readonly RecordType ATAN = new("ATAN");
     public static readonly RecordType DESC = new("DESC");
     public static readonly RecordType ATAF = new("ATAF");
+    public static readonly RecordType HEDR = new("HEDR");
 }

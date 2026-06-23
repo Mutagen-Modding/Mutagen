@@ -1564,14 +1564,14 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)BiomeTerrain_FieldIndex.Main, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Main = Mutagen.Bethesda.Starfield.BiomeTerrainData.CreateFromBinary(frame: frame);
+                    item.Main = Mutagen.Bethesda.Starfield.BiomeTerrainData.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)BiomeTerrain_FieldIndex.Main;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeTerrain_FieldIndex.Alternate, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Alternate = Mutagen.Bethesda.Starfield.BiomeTerrainData.CreateFromBinary(frame: frame);
+                    item.Alternate = Mutagen.Bethesda.Starfield.BiomeTerrainData.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)BiomeTerrain_FieldIndex.Alternate;
                 }
                 case RecordTypeInts.TX00:

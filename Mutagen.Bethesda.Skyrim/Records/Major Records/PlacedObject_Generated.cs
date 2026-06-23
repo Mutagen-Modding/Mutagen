@@ -6684,7 +6684,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XOCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Bounding.CreateFromBinary(frame: frame);
+                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Bounding.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XPOD:
@@ -6700,7 +6700,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XPTL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Bounding.CreateFromBinary(frame: frame);
+                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Bounding.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XRMR:

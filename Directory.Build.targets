@@ -11,19 +11,19 @@
             <CurrentPackageIdLower>$(CurrentPackageId.ToLowerInvariant())</CurrentPackageIdLower>
         </PropertyGroup>
 
-        <Message Text="Clearing local NuGet package cache for $(CurrentPackageId)..." Importance="high" />
+<!--        <Message Text="Clearing local NuGet package cache for $(CurrentPackageId)..." Importance="high" />-->
 
-        <!-- Windows -->
-        <Exec Condition="'$(OS)' == 'Windows_NT'"
-              Command="if exist &quot;$(NuGetPackagesPath)\$(CurrentPackageIdLower)&quot; ( echo Deleting $(NuGetPackagesPath)\$(CurrentPackageIdLower) &amp;&amp; rd /s /q &quot;$(NuGetPackagesPath)\$(CurrentPackageIdLower)&quot; )"
-              ContinueOnError="true" />
+<!--        &lt;!&ndash; Windows &ndash;&gt;-->
+<!--        <Exec Condition="'$(OS)' == 'Windows_NT'"-->
+<!--              Command="if exist &quot;$(NuGetPackagesPath)\$(CurrentPackageIdLower)&quot; ( echo Deleting $(NuGetPackagesPath)\$(CurrentPackageIdLower) &amp;&amp; rd /s /q &quot;$(NuGetPackagesPath)\$(CurrentPackageIdLower)&quot; )"-->
+<!--              ContinueOnError="true" />-->
 
-        <!-- Linux/Mac -->
-        <Exec Condition="'$(OS)' != 'Windows_NT'"
-              Command="if [ -d &quot;$(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot; ]; then echo &quot;Deleting $(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot;; rm -rf &quot;$(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot;; fi"
-              ContinueOnError="true" />
+<!--        &lt;!&ndash; Linux/Mac &ndash;&gt;-->
+<!--        <Exec Condition="'$(OS)' != 'Windows_NT'"-->
+<!--              Command="if [ -d &quot;$(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot; ]; then echo &quot;Deleting $(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot;; rm -rf &quot;$(NuGetPackagesPath)/$(CurrentPackageIdLower)&quot;; fi"-->
+<!--              ContinueOnError="true" />-->
 
-        <Message Text="Finished clearing local NuGet package cache for $(CurrentPackageId)." Importance="high" />
+<!--        <Message Text="Finished clearing local NuGet package cache for $(CurrentPackageId)." Importance="high" />-->
     </Target>
 
 </Project>

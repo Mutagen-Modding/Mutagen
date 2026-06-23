@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Worldspace" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="WRLD" majorFlag="true" customBinaryEnd="Normal">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <RefDirect name="Parent" refName="WorldspaceParent" />
+      <FormLink name="Climate" recordType="CNAM" refName="Climate" />
+      <FormLink name="Water" recordType="NAM2" refName="Water" />
+      <FormLink name="LodWater" recordType="NAM3" refName="Water" />
+      <Float name="LodWaterHeight" recordType="NAM4" />
+      <RefDirect name="LandData" refName="WorldspaceLandData" />
+      <String name="MapImage" recordType="ICON" />
+      <String name="SmallMapImage" recordType="MICO" />
+      <RefDirect name="MapData" refName="WorldspaceMapData" />
+      <Data recordType="ONAM" >
+        <Fields>
+          <Float name="WorldMapScale" />
+          <Float name="CellXOffset" />
+          <Float name="CellYOffset" />
+        </Fields>
+      </Data>
+      <FormLink name="ImageSpace" recordType="INAM" refName="ImageSpace" />
+      <Enum name="Flags" recordType="DATA" enumName="Worldspace.WorldspaceFlag" byteLength="1" nullable="False" />
+      <P2Float name="ObjectBoundsMin" recordType="NAM0" />
+      <P2Float name="ObjectBoundsMax" recordType="NAM9" />
+      <FormLink name="Music" recordType="ZNAM" refName="MusicType" />
+      <String name="CanopyShadow" recordType="NNAM" />
+      <String name="WaterNoiseTexture" recordType="XNAM" />
+      <RefList name="ImpactSwapData" refName="WorldspaceImpactSwap" />
+      <RefDirect name="FootstepMaterials" refName="FootstepMaterials" />
+      <List name="OffsetData" recordType="OFST" overflowRecordType="XXXX">
+        <UInt32 />
+      </List>
+      <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
+      <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
+      <Int32 name="SubCellsUnknownGroupData" binary="NoGeneration" />
+      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
+    </Fields>
+    <LinkInterface>ICellOrWorldspace</LinkInterface>
+  </Object>
+  <Object name="WorldspaceParent" objType="Subrecord">
+    <Fields>
+      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" nullable="False" />
+      <Enum name="Flags" enumName="WorldspaceParent.ParentWorldspaceFlag" byteLength="2" nullable="False" recordType="PNAM" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceImpactSwap" objType="Subrecord" recordType="IMPS">
+    <Fields>
+      <Enum name="MaterialType" enumName="Worldspace.WorldImpactMaterialType" byteLength="4" />
+      <FormLink name="OldImpact" refName="Impact" />
+      <FormLink name="NewImpact" refName="Impact" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceLandData" objType="Subrecord" recordType="DNAM">
+    <Fields>
+      <Float name="DefaultLandHeight" />
+      <Float name="DefaultWaterHeight" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceMapData" objType="Subrecord" recordType="MNAM">
+    <Fields>
+      <P2Int32 name="UsableDimensions" />
+      <P2Int16 name="NorthwestCellCoords" />
+      <P2Int16 name="SoutheastCellCoords" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceBlock" objType="Group">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceSubBlock" objType="Group">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+</Loqui>

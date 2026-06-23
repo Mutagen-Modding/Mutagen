@@ -169,6 +169,10 @@
     <Compile Include="Records\Fallout4ListGroup.cs">
       <DependentUpon>Fallout4Group.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\CellBlockConsolidator.cs" />
+    <Compile Include="Records\Fallout4ListGroupOverlay.cs">
+      <DependentUpon>Fallout4Group.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>

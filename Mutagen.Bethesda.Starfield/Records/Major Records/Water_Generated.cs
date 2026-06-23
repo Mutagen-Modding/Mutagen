@@ -3092,7 +3092,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WASH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.WASH = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.WASH = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Water_FieldIndex.WASH;
                 }
                 case RecordTypeInts.XNAM:

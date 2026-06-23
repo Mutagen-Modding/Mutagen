@@ -3648,7 +3648,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MSLS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.MSLS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.MSLS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)MoveableStatic_FieldIndex.MSLS;
                 }
                 case RecordTypeInts.MSMO:

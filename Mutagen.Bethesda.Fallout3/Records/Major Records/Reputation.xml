@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Reputation" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="REPU">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Icons" refName="Icons" />
+      <Float name="Value" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -4810,13 +4810,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PUSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Armor_FieldIndex.PickupSound;
                 }
                 case RecordTypeInts.PDSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Armor_FieldIndex.DropdownSound;
                 }
                 case RecordTypeInts.ETYP:
@@ -4949,13 +4949,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.AVSG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Voice = Mutagen.Bethesda.Starfield.ArmorSwitch.CreateFromBinary(frame: frame);
+                    item.Voice = Mutagen.Bethesda.Starfield.ArmorSwitch.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Armor_FieldIndex.Voice;
                 }
                 case RecordTypeInts.AFSG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Foley = Mutagen.Bethesda.Starfield.ArmorSwitch.CreateFromBinary(frame: frame);
+                    item.Foley = Mutagen.Bethesda.Starfield.ArmorSwitch.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Armor_FieldIndex.Foley;
                 }
                 case RecordTypeInts.XXXX:

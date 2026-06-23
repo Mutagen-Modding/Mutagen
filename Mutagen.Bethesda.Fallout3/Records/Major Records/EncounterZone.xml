@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EncounterZone" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="ECZN">
+    <Fields>
+      <Data nullable="False">
+        <Fields>
+          <FormLink name="Owner">
+            <Interface>IOwner</Interface>
+          </FormLink>
+          <Int8 name="Rank" />
+          <Int8 name="MinLevel" />
+          <Enum name="Flags" enumName="EncounterZone.Flag" byteLength="2" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

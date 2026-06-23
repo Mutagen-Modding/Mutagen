@@ -1475,9 +1475,12 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            MaterialSwapBinaryWriteTranslation.WriteBinaryTreeFolder(
-                writer: writer,
-                item: item);
+            if (writer.MetaData.FormVersion!.Value >= 112)
+            {
+                MaterialSwapBinaryWriteTranslation.WriteBinaryTreeFolder(
+                    writer: writer,
+                    item: item);
+            }
             MaterialSwapBinaryWriteTranslation.WriteBinarySubstitutions(
                 writer: writer,
                 item: item);
@@ -1603,10 +1606,13 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FNAM
                     when frame.MetaData.FormVersion >= 112:
                 {
-                    MaterialSwapBinaryCreateTranslation.FillBinaryTreeFolderCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    if (frame.MetaData.FormVersion!.Value >= 112)
+                    {
+                        MaterialSwapBinaryCreateTranslation.FillBinaryTreeFolderCustom(
+                            frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                            item: item,
+                            lastParsed: lastParsed);
+                    }
                     return (int)MaterialSwap_FieldIndex.TreeFolder;
                 }
                 case RecordTypeInts.BNAM:

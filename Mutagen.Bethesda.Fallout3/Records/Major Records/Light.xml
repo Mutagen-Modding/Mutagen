@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Light" baseClass="Fallout3MajorRecord" objType="Record" recordType="LIGH"
+          majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Icons" refName="Icons" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Int32 name="Time" />
+          <UInt32 name="Radius" />
+          <Color name="Color" binaryType="Alpha" />
+          <Enum name="Flags" enumName="Light.LightFlag" byteLength="4" />
+          <Float name="FalloffExponent" />
+          <Float name="FOV" />
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Float name="FadeValue" recordType="FNAM" nullable="False" />
+      <FormLink name="Sound" recordType="SNAM" refName="Sound" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRecipeItem</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+    <LinkInterface>IEmittance</LinkInterface>
+  </Object>
+</Loqui>

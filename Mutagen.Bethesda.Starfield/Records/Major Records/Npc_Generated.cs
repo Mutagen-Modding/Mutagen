@@ -10041,7 +10041,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MRSV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.BodyMorphRegionValues = Mutagen.Bethesda.Starfield.NpcBodyMorphRegionValues.CreateFromBinary(frame: frame);
+                    item.BodyMorphRegionValues = Mutagen.Bethesda.Starfield.NpcBodyMorphRegionValues.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Npc_FieldIndex.BodyMorphRegionValues;
                 }
                 case RecordTypeInts.FMSI:

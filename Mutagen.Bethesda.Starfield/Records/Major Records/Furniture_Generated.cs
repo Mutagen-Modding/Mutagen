@@ -5092,7 +5092,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Furniture_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.WTFM:

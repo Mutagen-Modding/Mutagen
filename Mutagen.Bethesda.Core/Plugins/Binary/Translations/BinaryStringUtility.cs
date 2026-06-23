@@ -241,4 +241,26 @@ public static class BinaryStringUtility
         encoding.GetBytes(str, bytes);
         stream.Write(bytes);
     }
+
+    /// <summary>
+    /// Writes a string into a fixed-width slot of <paramref name="byteLength"/> bytes.
+    /// If the encoded string is shorter, the remaining bytes are zero-padded (the slot acts
+    /// as its own terminator).  Throws if the encoded string is longer than the slot.
+    /// </summary>
+    public static void WriteNullPaddedFixedLength<TStream>(TStream stream, ReadOnlySpan<char> str, int byteLength, IMutagenEncoding encoding)
+        where TStream : IBinaryWriteStream
+    {
+        Span<byte> bytes = byteLength <= 256 ? stackalloc byte[byteLength] : new byte[byteLength];
+        bytes.Clear();
+        var encoded = encoding.GetByteCount(str);
+        if (encoded > byteLength)
+        {
+            throw new ArgumentException($"String '{str.ToString()}' encodes to {encoded} bytes, which does not fit in fixed slot of {byteLength} bytes.");
+        }
+        if (encoded > 0)
+        {
+            encoding.GetBytes(str, bytes.Slice(0, encoded));
+        }
+        stream.Write(bytes);
+    }
 }

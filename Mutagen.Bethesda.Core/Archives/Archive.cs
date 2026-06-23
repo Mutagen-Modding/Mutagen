@@ -70,6 +70,7 @@ public static class Archive
         {
             case GameCategory.Oblivion:
             case GameCategory.Skyrim:
+            case GameCategory.Fallout3:
                 return ".bsa";
             case GameCategory.Fallout4:
             case GameCategory.Starfield:

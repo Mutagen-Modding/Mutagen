@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SnapParentNodeEntry_FieldIndex.OffsetRotation, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.OffsetRotation = Mutagen.Bethesda.Starfield.OffsetRotation.CreateFromBinary(frame: frame);
+                    item.OffsetRotation = Mutagen.Bethesda.Starfield.OffsetRotation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)SnapParentNodeEntry_FieldIndex.OffsetRotation;
                 }
                 default:

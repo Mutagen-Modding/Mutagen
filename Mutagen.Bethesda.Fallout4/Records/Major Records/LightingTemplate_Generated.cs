@@ -3209,7 +3209,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DALC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.DirectionalAmbientColors = Mutagen.Bethesda.Fallout4.AmbientColors.CreateFromBinary(frame: frame);
+                    item.DirectionalAmbientColors = Mutagen.Bethesda.Fallout4.AmbientColors.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
                 }
                 case RecordTypeInts.WGDR:

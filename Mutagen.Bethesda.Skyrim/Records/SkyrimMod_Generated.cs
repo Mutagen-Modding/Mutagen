@@ -22903,7 +22903,8 @@ namespace Mutagen.Bethesda.Skyrim
                 StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride,
-                Header = item
+                Header = item,
+                ModHeaderVersion = item.ModHeader.Stats.Version
             };
             if (param.Encodings != null)
             {
@@ -22939,7 +22940,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.SkyrimRelease.ToGameRelease()),
+                new WritingBundle(item.SkyrimRelease.ToGameRelease()) { ModHeaderVersion = item.ModHeader.Stats.Version },
                 dispose: false))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(
@@ -23290,8 +23291,8 @@ namespace Mutagen.Bethesda.Skyrim
         public ISkyrimGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new SkyrimGroup<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
-        private RangeInt64? _CellsLocation;
-        private ISkyrimListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? SkyrimListGroupBinaryOverlay<ICellBlockGetter>.SkyrimListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
+        private List<RangeInt64>? _CellsLocations;
+        private ISkyrimListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? SkyrimListGroupBinaryOverlay<ICellBlockGetter>.SkyrimListGroupFactory(_stream, _CellsLocations, _package) : default;
         public ISkyrimListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new SkyrimListGroup<CellBlock>();
         #endregion
         #region Worldspaces
@@ -23997,7 +23998,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CellsLocations ??= new();
+                    _CellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)SkyrimMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:

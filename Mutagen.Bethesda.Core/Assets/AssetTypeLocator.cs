@@ -24,6 +24,9 @@ public class AssetTypeLocator
 				case "Skyrim.Assets":
 					gameCategory = GameCategory.Skyrim;
 					break;
+				case "Fallout3.Assets":
+					gameCategory = GameCategory.Fallout3;
+					break;
 				case "Fallout4.Assets":
 					gameCategory = GameCategory.Fallout4;
 					break;

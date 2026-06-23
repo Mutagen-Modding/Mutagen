@@ -3145,19 +3145,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.IDSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.ImpactSoundDefault = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.ImpactSoundDefault = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Impact_FieldIndex.ImpactSoundDefault;
                 }
                 case RecordTypeInts.IDP1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.ImpactSoundPlayerFirstShooter = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.ImpactSoundPlayerFirstShooter = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter;
                 }
                 case RecordTypeInts.IDP3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.ImpactSoundPlayerThirdTarget = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.ImpactSoundPlayerThirdTarget = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget;
                 }
                 case RecordTypeInts.FNAM:

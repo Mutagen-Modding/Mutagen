@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Tree" recordType="TREE" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible">
+        <ModHeaderVersioning version="1.32" />
+      </RefDirect>
+      <List name="SpeedTreeSeeds" recordType="SNAM" nullable="False">
+        <UInt32 name="Seed" />
+      </List>
+      <Data recordType="CNAM" nullable="False">
+        <Fields>
+          <Float name="LeafCurvature" />
+          <Float name="MinimumLeafAngle" />
+          <Float name="MaximumLeafAngle" />
+          <Float name="BranchDimmingValue" />
+          <Float name="LeafDimmingValue" />
+          <Int32 name="ShadowRadius" />
+          <Float name="RockSpeed" />
+          <Float name="RustleSpeed" />
+        </Fields>
+      </Data>
+      <Data recordType="BNAM" nullable="False">
+        <Fields>
+          <Float name="Width" />
+          <Float name="Height" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

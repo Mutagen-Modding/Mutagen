@@ -931,13 +931,51 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
     } 
  
-    public void Write( 
-        MutagenWriter writer, 
-        IReadOnlyList<T>? items, 
-        RecordType recordType, 
-        RecordType overflowRecord, 
-        BinaryMasterWriteDelegate<T> transl, 
-        TypedWriteParams translationParams = default) 
+    public void Write(
+        MutagenWriter writer,
+        IReadOnlyList<T>? items,
+        RecordType recordType,
+        RecordType overflowRecord,
+        BinarySubWriteDelegate<MutagenWriter, T> transl)
+    {
+        if (items == null) return;
+        try
+        {
+            try
+            {
+                using (HeaderExport.Subrecord(
+                           writer,
+                           recordType,
+                           overflowRecord: overflowRecord,
+                           out var writerToUse))
+                {
+                    foreach (var item in items)
+                    {
+                        transl(writerToUse, item);
+                    }
+                }
+            }
+            catch (OverflowException overflow)
+            {
+                throw new OverflowException(
+                    $"{recordType} List<{typeof(T)}> had an overflow with {items?.Count} items.",
+                    overflow);
+            }
+        }
+        catch (Exception ex)
+        {
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
+        }
+    }
+
+    public void Write(
+        MutagenWriter writer,
+        IReadOnlyList<T>? items,
+        RecordType recordType,
+        RecordType overflowRecord,
+        BinaryMasterWriteDelegate<T> transl,
+        TypedWriteParams translationParams = default)
     { 
         if (items == null) return; 
         try 

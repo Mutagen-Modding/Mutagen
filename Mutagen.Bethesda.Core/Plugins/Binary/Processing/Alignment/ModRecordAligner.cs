@@ -66,8 +66,7 @@ public static class ModRecordAligner
             }
             DeleteIfIntermediate(prevPath, originalInput);
         }
-
-        if (meta.Constants.Release is GameRelease.Oblivion or GameRelease.Fallout4 or GameRelease.Starfield)
+        if (meta.Constants.Release is GameRelease.Oblivion or GameRelease.Fallout3 or GameRelease.FalloutNV or GameRelease.Fallout4 or GameRelease.Starfield)
         {
             var prevPath = inputPath;
             var fileLocs = RecordLocator.GetLocations(inputPath, meta.Constants, meta.MasterReferences, interest);
@@ -440,9 +439,9 @@ public static class ModRecordAligner
         }
     }
 
-    private static void AlignCellChildren(
-        IMutagenReadStream mutaReader,
-        MutagenWriter writer)
+    private static void AlignCellChildren( 
+        IMutagenReadStream mutaReader, 
+        MutagenWriter writer) 
     {  
         var storage = new Dictionary<int, ReadOnlyMemorySlice<byte>>(); 
         for (int i = 0; i < 3; i++) 

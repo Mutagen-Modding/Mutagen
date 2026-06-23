@@ -12116,7 +12116,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride,
-                Header = item
+                Header = item,
+                ModHeaderVersion = item.ModHeader.Stats.Version
             };
             if (param.Encodings != null)
             {
@@ -12152,7 +12153,7 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.OblivionRelease.ToGameRelease()),
+                new WritingBundle(item.OblivionRelease.ToGameRelease()) { ModHeaderVersion = item.ModHeader.Stats.Version },
                 dispose: false))
             {
                 OblivionModBinaryWriteTranslation.Instance.Write(
@@ -12458,8 +12459,8 @@ namespace Mutagen.Bethesda.Oblivion
         public IOblivionGroupGetter<IRegionGetter> Regions => _Regions ?? new OblivionGroup<Region>(this);
         #endregion
         #region Cells
-        private RangeInt64? _CellsLocation;
-        private IOblivionListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocation.HasValue ? OblivionListGroupBinaryOverlay<ICellBlockGetter>.OblivionListGroupFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _CellsLocation!.Value.Min, _CellsLocation!.Value.Max), _package) : default;
+        private List<RangeInt64>? _CellsLocations;
+        private IOblivionListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? OblivionListGroupBinaryOverlay<ICellBlockGetter>.OblivionListGroupFactory(_stream, _CellsLocations, _package) : default;
         public IOblivionListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new OblivionListGroup<CellBlock>();
         #endregion
         #region Worldspaces
@@ -12857,7 +12858,8 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.CELL:
                 {
-                    _CellsLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
+                    _CellsLocations ??= new();
+                    _CellsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)OblivionMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:

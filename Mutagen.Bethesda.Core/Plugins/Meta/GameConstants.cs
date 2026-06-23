@@ -187,6 +187,76 @@ public sealed record GameConstants
         DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
     };
 
+    public static readonly GameConstants Fallout3 = new GameConstants(
+        release: GameRelease.Fallout3,
+        modHeaderLength: 24,
+        modHeaderFluffLength: 16,
+        groupConstants: new GroupConstants(
+            ObjectType.Group,
+            headerLength: 24,
+            lengthLength: 4,
+            cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9, 10 }),
+            world: new GroupWorldConstants(
+                TopGroupType: 1,
+                CellGroupTypes: new[] { 2, 4 },
+                CellSubGroupTypes: new[] { 3, 5 }),
+            topic: new GroupTopicConstants(7),
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            hasParentFormId: new int[] { 1, 6, 7, 8, 9, 10 },
+            new GroupNesting[]
+            {
+                new GroupNesting(2,
+                    new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 3,
+                        new GroupNesting(RecordTypes.CELL, 6,
+                            new GroupNesting(8),
+                            new GroupNesting(9),
+                            new GroupNesting(10)))),
+                new GroupNesting(RecordTypes.DIAL, 7),
+                new GroupNesting(RecordTypes.WRLD, HasTopLevelRecordType: true, 1,
+                    new GroupNesting(RecordTypes.CELL, 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9),
+                        new GroupNesting(10)),
+                    new GroupNesting(4,
+                        new GroupNesting(RecordTypes.CELL, HasTopLevelRecordType: true, 5,
+                            new GroupNesting(RecordTypes.CELL, 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9),
+                                new GroupNesting(10))))),
+            }),
+        majorConstants: new MajorRecordConstants(
+            headerLength: 24,
+            lengthLength: 4,
+            flagsLoc: 8,
+            formIDloc: 12,
+            formVersionLoc: 20),
+        subConstants: new RecordHeaderConstants(
+            ObjectType.Subrecord,
+            headerLength: 6,
+            lengthLength: 2),
+        languages: [],
+        languageFormat: null,
+        hasEnabledMarkers: false,
+        defaultFormVersion: 40,
+        defaultModHeaderVersion: 0.94f,
+        defaultHighRangeFormId: 0x800,
+        useLowerRangeFormIdVersion: null,
+        myDocumentsString: "Fallout3",
+        iniName: "Fallout3",
+        separateMasterLoadOrders: false,
+        pluginsFileInGameFolder: false,
+        smallMasterFlag: null,
+        mediumMasterFlag: null,
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
+
+    public static readonly GameConstants FalloutNV = Fallout3 with
+    {
+        Release = GameRelease.FalloutNV,
+        DefaultModHeaderVersion = 1.34f,
+        MyDocumentsString = "FalloutNV",
+        IniName = "FalloutNV",
+    };
+
     /// <summary>
     /// Readonly singleton of Skyrim LE game constants
     /// </summary>
@@ -398,9 +468,9 @@ public sealed record GameConstants
         IniName = "Fallout4",
     };
 
-    /// <summary> 
-    /// Readonly singleton of Starfield game constants 
-    /// </summary> 
+    /// <summary>
+    /// Readonly singleton of Starfield game constants
+    /// </summary>
     public static readonly GameConstants Starfield = new GameConstants(
         release: GameRelease.Starfield,
         modHeaderLength: 24,
@@ -511,6 +581,8 @@ public sealed record GameConstants
             GameRelease.EnderalSE => EnderalSE,
             GameRelease.EnderalSEGog => EnderalSEGog,
             GameRelease.SkyrimVR => SkyrimVR,
+            GameRelease.Fallout3 => Fallout3,
+            GameRelease.FalloutNV => FalloutNV,
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4VR,
             GameRelease.Starfield => Starfield,

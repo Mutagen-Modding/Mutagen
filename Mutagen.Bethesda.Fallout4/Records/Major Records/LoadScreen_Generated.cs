@@ -2005,13 +2005,13 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Rotation = Mutagen.Bethesda.Fallout4.LoadScreenRotation.CreateFromBinary(frame: frame);
+                    item.Rotation = Mutagen.Bethesda.Fallout4.LoadScreenRotation.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.Rotation;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Zoom = Mutagen.Bethesda.Fallout4.LoadScreenZoom.CreateFromBinary(frame: frame);
+                    item.Zoom = Mutagen.Bethesda.Fallout4.LoadScreenZoom.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.MOD2:

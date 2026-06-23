@@ -1107,6 +1107,7 @@ public class MultiModOverlayModule : GenerationModule
         {
             GameCategory.Oblivion => GameConstants.Oblivion,
             GameCategory.Skyrim => GameConstants.SkyrimLE,
+            GameCategory.Fallout3 => GameConstants.Fallout3,
             GameCategory.Fallout4 => GameConstants.Fallout4,
             GameCategory.Starfield => GameConstants.Starfield,
             _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)

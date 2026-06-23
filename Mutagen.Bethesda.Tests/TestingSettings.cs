@@ -22,6 +22,8 @@ public record DataFolderLocations
     public string Skyrim { get; set; } = string.Empty;
     public string SkyrimSpecialEdition { get; set; } = string.Empty;
     public string SkyrimVR { get; set; } = string.Empty;
+    public string Fallout3 { get; set; } = string.Empty;
+    public string FalloutNV { get; set; } = string.Empty;
     public string Fallout4 { get; set; } = string.Empty;
     public string Starfield { get; set; } = string.Empty;
 
@@ -52,6 +54,10 @@ public record DataFolderLocations
                 return Starfield;
             case GameRelease.SkyrimVR:
                 return SkyrimVR;
+            case GameRelease.Fallout3:
+                return Fallout3;
+            case GameRelease.FalloutNV:
+                return FalloutNV;
             default:
                 return string.Empty;
         }
@@ -72,6 +78,15 @@ public record DataFolderLocations
                 break;
             case GameRelease.Fallout4:
                 Fallout4 = path;
+                break;
+            case GameRelease.SkyrimVR:
+                SkyrimVR = path;
+                break;
+            case GameRelease.Fallout3:
+                Fallout3 = path;
+                break;
+            case GameRelease.FalloutNV:
+                FalloutNV = path;
                 break;
             case GameRelease.Starfield:
                 Starfield = path;

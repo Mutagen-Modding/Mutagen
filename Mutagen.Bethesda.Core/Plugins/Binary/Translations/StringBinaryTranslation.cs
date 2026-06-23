@@ -398,6 +398,29 @@ public sealed class StringBinaryTranslation
         writer.Write(item, binaryType: StringBinaryType.NullTerminate, encoding: writer.MetaData.Encodings.NonTranslated);
     }
 
+    /// <summary>
+    /// Parses a fixed-width, zero-padded string from the current position, advancing the reader
+    /// by exactly <paramref name="byteLength"/> bytes.
+    /// </summary>
+    public string ParseNullPaddedFixedLength<TReader>(TReader reader, int byteLength)
+        where TReader : IMutagenReadStream
+    {
+        var bytes = reader.ReadMemory(byteLength);
+        return BinaryStringUtility.ProcessWholeToZString(bytes, reader.MetaData.Encodings.NonTranslated);
+    }
+
+    /// <summary>
+    /// Writes a string into a fixed-width zero-padded slot of <paramref name="byteLength"/> bytes.
+    /// </summary>
+    public void WriteNullPaddedFixedLength(MutagenWriter writer, string? item, int byteLength)
+    {
+        BinaryStringUtility.WriteNullPaddedFixedLength(
+            writer,
+            (item ?? string.Empty).AsSpan(),
+            byteLength,
+            writer.MetaData.Encodings.NonTranslated);
+    }
+
     public int ExtractManyUInt16PrependedStringsLength(int countLength, ReadOnlySpan<byte> data)
     {
         uint amount;

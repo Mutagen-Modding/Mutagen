@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Hair" objType="Record" recordType="HAIR" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" nullable="True" />
+      <Enum name="Flags" recordType="DATA" enumName="Hair.HairFlag" byteLength="1" />
+    </Fields>
+  </Object>
+</Loqui>

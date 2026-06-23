@@ -198,14 +198,17 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             }
             else
             {
-                if (NeedsHeaderProcessing(loqui))
+                var needsHeaderProcessing = NeedsHeaderProcessing(loqui);
+                if (needsHeaderProcessing)
                 {
                     sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                 }
                 using (var args = sb.Call(
                            $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                 {
-                    args.Add($"frame: {frameAccessor}");
+                    args.Add(needsHeaderProcessing
+                        ? $"frame: {frameAccessor}.SpawnWithLength(contentLength)"
+                        : $"frame: {frameAccessor}");
                     var trans = new List<string>();
                         
                     if (data?.RecordTypeConverter != null
@@ -343,7 +346,12 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (loqui.GetFieldData()?.HasTrigger ?? false)
             {
-                if (loqui is GroupType)
+                // A top-level CELL field references *ListGroup (not *Group), so `loqui is GroupType`
+                // is false for it. Detect that case by checking the target object so the overlay
+                // emits a list-of-locations field — multiple top-level CELL GRUPs in a plugin
+                // (e.g. HonestHearts.esm) need every position recorded, not just the last.
+                if (loqui is GroupType
+                    || (loqui.TargetObjectGeneration?.IsTopLevelListGroup() ?? false))
                 {
                     sb.AppendLine($"private List<{GetLocationObjectString(objGen)}>? _{typeGen.Name}Locations;");
                     using (sb.Line())
@@ -611,7 +619,10 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             sb.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
 
-        if (loqui.TargetObjectGeneration.IsTopLevelGroup())
+        // See the matching multi-location field emission above — top-level ListGroup needs the
+        // accumulating Add pattern too, not a single-location assignment.
+        if (loqui.TargetObjectGeneration.IsTopLevelGroup()
+            || loqui.TargetObjectGeneration.IsTopLevelListGroup())
         {
             sb.AppendLine($"_{typeGen.Name}Locations ??= new();");
             sb.AppendLine($"_{typeGen.Name}Locations.Add(new {GetLocationObjectString(objGen)}({locationAccessor}, finalPos - offset));");

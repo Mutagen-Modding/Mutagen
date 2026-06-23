@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CellBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="CellSubBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="Cell" recordType="CELL" baseClass="Fallout3MajorRecord" objType="Record" majorFlag="true" customBinaryEnd="Normal">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <Enum name="Flags" enumName="Cell.Flag" byteLength="1" recordType="DATA" nullable="False" />
+      <RefDirect name="Grid" refName="CellGrid" />
+      <RefDirect name="Lighting" refName="CellLighting" />
+      <RefDirect name="FootstepMaterials" refName="FootstepMaterials" />
+      <FormLink name="LightTemplate" recordType="LTMP" refName="LightingTemplate" />
+      <Enum name="LightInheritFlags" enumName="Cell.LightingInheritFlag" byteLength="4" recordType="LNAM" />
+      <Float name="WaterHeight" recordType="XCLW" />
+      <String name="WaterNoiseTexture" recordType="XNAM" />
+      <List name="Regions" recordType="XCLR">
+        <FormLink refName="Region" />
+      </List>
+      <FormLink name="ImageSpace" recordType="XCIM" refName="ImageSpace" />
+      <ByteArray name="XCET" recordType="XCET" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <FormLink name="Climate" recordType="XCCM" refName="Climate" />
+      <FormLink name="Water" recordType="XCWT" refName="Water" />
+      <FormLink name="Owner" recordType="XOWN">
+        <Interface>IOwner</Interface>
+      </FormLink>
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormLink name="AcousticSpace" recordType="XCAS" refName="AcousticSpace" />
+      <ByteArray name="XCMT" recordType="XCMT" />
+      <FormLink name="MusicType" recordType="XCMO" refName="MusicType" />
+      <RefDirect name="Landscape" refName="Landscape" binary="NoGeneration" />
+      <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="UnknownGroupData" binary="NoGeneration" />
+      <Int32 name="PersistentTimestamp" binary="NoGeneration" />
+      <Int32 name="PersistentUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
+      <Int32 name="TemporaryUnknownGroupData" binary="NoGeneration" />
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="VisibleWhenDistantTimestamp" binary="NoGeneration" />
+      <Int32 name="VisibleWhenDistantUnknownGroupData" binary="NoGeneration" />
+      <RefList name="VisibleWhenDistant" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+    </Fields>
+    <LinkInterface>ICellOrWorldspace</LinkInterface>
+  </Object>
+  <Object name="CellGrid" objType="Subrecord" recordType="XCLC">
+    <Fields>
+      <Int32 name="GridX" nullable="False" />
+      <Int32 name="GridY" nullable="False" />
+      <Break />
+      <Enum name="LandFlags" enumName="Cell.LandFlag" byteLength="4" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="FootstepMaterials" recordType="IMPF" objType="Subrecord">
+    <Fields>
+      <String name="ConcreteSolid"  nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="ConcreteBroken" nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="MetalSolid"     nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="MetalHollow"    nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="MetalSheet"     nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="Wood"           nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="Sand"           nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="Dirt"           nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="Grass"          nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+      <String name="Water"          nullable="False" binaryType="NullPaddedFixedLength" byteLength="30" />
+    </Fields>
+  </Object>
+  <Object name="CellLighting" recordType="XCLL" objType="Subrecord">
+    <Fields>
+      <Color name="AmbientColor" nullable="False" binaryType="Alpha" />
+      <Color name="DirectionalColor" nullable="False" binaryType="Alpha" />
+      <Color name="FogColor" nullable="False" binaryType="Alpha" />
+      <Float name="FogNear" nullable="False" />
+      <Float name="FogFar" nullable="False" />
+      <Int32 name="DirectionalRotationXY" nullable="False" />
+      <Int32 name="DirectionalRotationZ" nullable="False" />
+      <Break />
+      <Float name="DirectionalFade" />
+      <Break />
+      <Float name="FogClipDistance" />
+      <Break />
+      <Float name="FogPower" />
+    </Fields>
+  </Object>
+</Loqui>

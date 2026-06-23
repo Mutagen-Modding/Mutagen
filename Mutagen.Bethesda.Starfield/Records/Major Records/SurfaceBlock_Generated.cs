@@ -2681,13 +2681,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.DNAM = Mutagen.Bethesda.Starfield.SurfaceBlockIntItem.CreateFromBinary(frame: frame);
+                    item.DNAM = Mutagen.Bethesda.Starfield.SurfaceBlockIntItem.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)SurfaceBlock_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.ENAM = Mutagen.Bethesda.Starfield.SurfaceBlockFloatItem.CreateFromBinary(frame: frame);
+                    item.ENAM = Mutagen.Bethesda.Starfield.SurfaceBlockFloatItem.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)SurfaceBlock_FieldIndex.ENAM;
                 }
                 case RecordTypeInts.FNAM:
@@ -2759,13 +2759,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.NAM3 = Mutagen.Bethesda.Starfield.SurfaceBlockIntItem.CreateFromBinary(frame: frame);
+                    item.NAM3 = Mutagen.Bethesda.Starfield.SurfaceBlockIntItem.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)SurfaceBlock_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.NAM4 = Mutagen.Bethesda.Starfield.SurfaceBlockFloatItem.CreateFromBinary(frame: frame);
+                    item.NAM4 = Mutagen.Bethesda.Starfield.SurfaceBlockFloatItem.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)SurfaceBlock_FieldIndex.NAM4;
                 }
                 case RecordTypeInts.NAM5:

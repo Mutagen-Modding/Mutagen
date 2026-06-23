@@ -1318,6 +1318,21 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
     public void WrapSet(StructuredStringBuilder sb, Accessor accessor, ListType list, Action<StructuredStringBuilder> a)
     {
         var additive = (bool)list.CustomData[Additive];
+
+        if (list.ObjectGen != null
+            && list.ObjectGen.IsTopLevelListGroup()
+            && additive
+            && !list.Nullable)
+        {
+            using (var args = sb.Call(
+                       $"CellBlockConsolidator.MergeInto"))
+            {
+                args.Add($"{accessor}");
+                args.Add(subFg => a(subFg));
+            }
+            return;
+        }
+
         if (list.Nullable)
         {
             if (additive)
@@ -1333,7 +1348,11 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                 using (sb.IncreaseDepth())
                 {
                     a(sb);
-                    if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
+                    if (list is ArrayType)
+                    {
+                        sb.AppendLine(".ToArray();");
+                    }
+                    else if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
                         && (bool)val)
                     {
 

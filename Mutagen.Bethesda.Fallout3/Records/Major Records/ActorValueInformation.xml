@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ActorValueInformation" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="AVIF">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="Description" recordType="DESC" nullable="False" />
+      <RefDirect name="Icons" refName="Icons" />
+      <String name="ShortName" recordType="ANAM" />
+    </Fields>
+    <LinkInterface>IActorValueOrPerk</LinkInterface>
+  </Object>
+</Loqui>

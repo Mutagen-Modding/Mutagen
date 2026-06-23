@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FormList" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="FLST">
+    <Fields>
+      <List name="Items">
+        <FormLink refName="Fallout3MajorRecord" recordType="LNAM" />
+      </List>
+    </Fields>
+    <LinkInterface>IAmmoOrList</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
+  </Object>
+</Loqui>

@@ -7,17 +7,18 @@ namespace Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 /// <summary> 
 /// For use when a previously encountered record is seen again 
 /// </summary> 
-public sealed class AlignmentSubRule : AlignmentRule 
-{ 
-    public List<RecordType> SubTypes; 
- 
-    public AlignmentSubRule( 
-        params RecordType[] types) 
-    { 
-        SubTypes = types.ToList(); 
-    } 
- 
-    public override IEnumerable<RecordType> RecordTypes => SubTypes; 
+public sealed class AlignmentSubRule : AlignmentRule
+{
+    public List<RecordType> SubTypes;
+    public List<RecordType>? TriggerTypes;
+
+    public AlignmentSubRule(
+        params RecordType[] types)
+    {
+        SubTypes = types.ToList();
+    }
+
+    public override IEnumerable<RecordType> RecordTypes => TriggerTypes ?? SubTypes;
  
     public override ReadOnlyMemorySlice<byte> ReadBytes(IMutagenReadStream inputStream, int? lengthOverride) 
     {

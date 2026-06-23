@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Water" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="WATR">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="NoiseMap" recordType="NNAM" nullable="False" />
+      <UInt8 name="Opacity" recordType="ANAM" nullable="False" default="75" />
+      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" nullable="False" />
+      <String name="MaterialId" recordType="MNAM" nullable="False" />
+      <FormLink name="Sound" recordType="SNAM" refName="Sound" />
+      <FormLink name="ActorEffect" recordType="XNAM" refName="Spell" />
+      <CustomLogic name="DataParse">
+        <RecordType>DATA</RecordType>
+        <RecordType>DNAM</RecordType>
+      </CustomLogic>
+      <RefDirect name="Data" refName="WaterData" nullable="False" binary="NoGeneration" />
+      <RefDirect name="RelatedWaters" refName="RelatedWaters" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="WaterData" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Unused1" />
+      <UInt32 name="Unused2" />
+      <UInt32 name="Unused3" />
+      <UInt32 name="Unused4" />
+      <Float name="SunPower" default="50" />
+      <Float name="ReflectivityAmount" default="0.5f" />
+      <Float name="FresnelAmount" default="0.025f" />
+      <UInt32 name="Unused5" />
+      <Float name="FogAboveWaterDistanceNearPlane" />
+      <Float name="FogAboveWaterDistanceFarPlane" />
+      <Color name="ShallowColor" binaryType="Alpha" />
+      <Color name="DeepColor" binaryType="Alpha" />
+      <Color name="ReflectionColor" binaryType="Alpha" />
+      <UInt32 name="Unused6" />
+      <Float name="RainSimulatorForce" default="0.1f" />
+      <Float name="RainSimulatorVelocity" default="0.6f" />
+      <Float name="RainSimulatorFalloff" default="0.985f" />
+      <Float name="RainSimulatorDampner" default="2" />
+      <Float name="DisplacementSimulatorStartingSize" default="0.01f" />
+      <Float name="DisplacementSimulatorForce" default="0.4f" />
+      <Float name="DisplacementSimulatorVelocity" default="0.6f" />
+      <Float name="DisplacementSimulatorFalloff" default="0.985f" />
+      <Float name="DisplacementSimulatorDampner" default="10" />
+      <Float name="RainSimulatorStartingSize" default="0.05f" />
+      <Float name="NormalsNoiseScale" default="1" />
+      <Float name="NoiseLayerOneWindDirection" />
+      <Float name="NoiseLayerTwoWindDirection" />
+      <Float name="NoiseLayerThreeWindDirection" />
+      <Float name="NoiseLayerOneWindSpeed" />
+      <Float name="NoiseLayerTwoWindSpeed" />
+      <Float name="NoiseLayerThreeWindSpeed" />
+      <Float name="NormalsDepthFalloffStart" />
+      <Float name="NormalsDepthFalloffEnd" />
+      <Float name="FogAboveWaterAmount" default="1" />
+      <Float name="NormalsUVScale" default="500" />
+      <Float name="FogUnderWaterAmount" default="1" />
+      <Float name="FogUnderWaterDistanceNearPlane" />
+      <Float name="FogUnderWaterDistanceFarPlane" default="1000" />
+      <Float name="DistortionAmount" default="250" />
+      <Float name="Shininess" default="100" />
+      <Float name="ReflectionHDRMultiplier" default="1" />
+      <Float name="LightRadius" default="10000" />
+      <Float name="LightBrightness" default="1" />
+      <Float name="NoiseLayerOneUVScale" default="100" />
+      <Float name="NoiseLayerTwoUVScale" default="100" />
+      <Float name="NoiseLayerThreeUVScale" default="100" />
+      <Break />
+      <Float name="NoiseLayerOneAmplitudeScale" />
+      <Float name="NoiseLayerTwoAmplitudeScale" />
+      <Float name="NoiseLayerThreeAmplitudeScale" />
+      <UInt16 name="Damage" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="RelatedWaters" objType="Subrecord" recordType="GNAM">
+    <Fields>
+      <FormLink name="RelatedWaterDaytime" refName="Water" />
+      <FormLink name="RelatedWaterNighttime" refName="Water" />
+      <FormLink name="RelatedWaterUnderwater" refName="Water" />
+    </Fields>
+  </Object>
+</Loqui>

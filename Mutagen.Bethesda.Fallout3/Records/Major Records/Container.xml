@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Container" recordType="CONT" objType="Record"
+          majorFlag="true" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <RefList name="Items" refName="ContainerEntry" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Enum name="Flags" enumName="Container.ContainerFlag" byteLength="1" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <FormLink name="OpenSound" recordType="SNAM" refName="Sound" />
+      <FormLink name="CloseSound" recordType="QNAM" refName="Sound" />
+      <FormLink name="RandomLoopingSound" recordType="RNAM" refName="Sound">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+    </Fields>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

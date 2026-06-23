@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Static" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="STAT" majorFlag="true">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <RefDirect name="Model" refName="Model" />
+      <Enum name="PassthroughSound" recordType="BRUS" enumName="Static.PassthroughSoundType" byteLength="1">
+        <ModHeaderVersioning version="1.32" />
+      </Enum>
+      <FormLink name="LoopingSound" recordType="RNAM" refName="Sound">
+        <ModHeaderVersioning version="1.32" />
+      </FormLink>
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRegionTarget</LinkInterface>
+    <LinkInterface>IPackageLocationObject</LinkInterface>
+    <LinkInterface>IPackageTargetObject</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+</Loqui>

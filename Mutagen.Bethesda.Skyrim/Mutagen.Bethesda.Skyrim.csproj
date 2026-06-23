@@ -1547,6 +1547,10 @@
     <Compile Include="Records\ListGroup.cs">
       <DependentUpon>SkyrimGroup.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\CellBlockConsolidator.cs" />
+    <Compile Include="Records\SkyrimListGroupOverlay.cs">
+      <DependentUpon>SkyrimGroup.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>

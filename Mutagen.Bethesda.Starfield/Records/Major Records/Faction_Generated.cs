@@ -3526,7 +3526,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PLVD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.VendorLocation = Mutagen.Bethesda.Starfield.LocationTargetRadius.CreateFromBinary(frame: frame);
+                    item.VendorLocation = Mutagen.Bethesda.Starfield.LocationTargetRadius.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)Faction_FieldIndex.VendorLocation;
                 }
                 case RecordTypeInts.CTDA:

@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.STAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame.SpawnWithLength(contentLength));
                     return (int)AnimationSoundTag_FieldIndex.Sound;
                 }
                 default:
