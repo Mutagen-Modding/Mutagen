@@ -141,6 +141,18 @@ public sealed class ParsingMeta
         LinkCache = readParameters.LinkCache;
     }
 
+    private void ReadModHeaderVersion(ModHeaderFrame header)
+    {
+        foreach (var sub in header)
+        {
+            if (sub.RecordType == RecordTypes.HEDR)
+            {
+                ModHeaderVersion = System.Buffers.Binary.BinaryPrimitives.ReadSingleLittleEndian(sub.Content.Slice(0, 4));
+                return;
+            }
+        }
+    }
+
     public static ParsingMeta Factory(
         BinaryReadParameters param,
         GameRelease release,
@@ -151,8 +163,7 @@ public sealed class ParsingMeta
             ?? MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
         var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
-        var hedr = header.First(s => s.RecordType == RecordTypes.HEDR);
-        meta.ModHeaderVersion = System.Buffers.Binary.BinaryPrimitives.ReadSingleLittleEndian(hedr.Content.Slice(0, 4));
+        meta.ReadModHeaderVersion(header);
         meta.Absorb(param);
         return meta;
     }
@@ -169,8 +180,7 @@ public sealed class ParsingMeta
         stream.Position = 0;
         var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
-        var hedr = header.First(s => s.RecordType == RecordTypes.HEDR);
-        meta.ModHeaderVersion = System.Buffers.Binary.BinaryPrimitives.ReadSingleLittleEndian(hedr.Content.Slice(0, 4));
+        meta.ReadModHeaderVersion(header);
         meta.Absorb(param);
         return meta;
     }
