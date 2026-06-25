@@ -730,4 +730,319 @@ public static class LinkCacheFromModMixIn
     }
 
     #endregion
+
+    #region TryResolveIdentifierFromMod (Generic)
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+    public static bool TryResolveIdentifierFromMod<TMajor>(this ILinkCache cache, FormKey formKey, ModKey modKey, [MaybeNullWhen(false)] out string? editorId)
+        where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            editorId = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier<TMajor>(formKey, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+    public static bool TryResolveIdentifierFromMod<TMajor>(this ILinkCache cache, string editorId, ModKey modKey, [MaybeNullWhen(false)] out FormKey formKey)
+        where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            formKey = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier<TMajor>(editorId, out formKey);
+    }
+
+    #endregion
+
+    #region TryResolveIdentifierFromMod (Type)
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey and Type within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="type">Type of record to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, FormKey formKey, Type type, ModKey modKey, [MaybeNullWhen(false)] out string? editorId)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            editorId = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(formKey, type, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormLink within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, IFormLinkIdentifier formLink, ModKey modKey, [MaybeNullWhen(false)] out string? editorId)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            editorId = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(formLink, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID and Type within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="type">Type of record to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, string editorId, Type type, ModKey modKey, [MaybeNullWhen(false)] out FormKey formKey)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            formKey = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(editorId, type, out formKey);
+    }
+
+    #endregion
+
+    #region TryResolveIdentifierFromMod (Types)
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey and Types within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="types">Types of records to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, FormKey formKey, IEnumerable<Type> types, ModKey modKey, [MaybeNullWhen(false)] out string? editorId)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            editorId = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(formKey, types, out editorId);
+    }
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey and Types within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="types">Types of records to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+    /// <param name="matchedType">Out parameter containing the type matched to, if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, FormKey formKey, IEnumerable<Type> types, ModKey modKey, [MaybeNullWhen(false)] out string? editorId, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            editorId = default;
+            matchedType = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(formKey, types, out editorId, out matchedType);
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID and Types within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="types">Types of records to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, string editorId, IEnumerable<Type> types, ModKey modKey, [MaybeNullWhen(false)] out FormKey formKey)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            formKey = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(editorId, types, out formKey);
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID and Types within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="types">Types of records to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+    /// <param name="matchedType">Out parameter containing the type matched to, if successful</param>
+    /// <returns>True if the mod was found and contained a matching record</returns>
+    public static bool TryResolveIdentifierFromMod(this ILinkCache cache, string editorId, IEnumerable<Type> types, ModKey modKey, [MaybeNullWhen(false)] out FormKey formKey, [MaybeNullWhen(false)] out Type matchedType)
+    {
+        if (!cache.TryGetLinkCacheForMod(modKey, out var modCache))
+        {
+            formKey = default;
+            matchedType = default;
+            return false;
+        }
+
+        return modCache.TryResolveIdentifier(editorId, types, out formKey, out matchedType);
+    }
+
+    #endregion
+
+    #region ResolveIdentifierFromMod (Generic)
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The EditorID</returns>
+    /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static string? ResolveIdentifierFromMod<TMajor>(this ILinkCache cache, FormKey formKey, ModKey modKey)
+        where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifierFromMod<TMajor>(cache, formKey, modKey, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, typeof(TMajor));
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The FormKey</returns>
+    /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static FormKey ResolveIdentifierFromMod<TMajor>(this ILinkCache cache, string editorId, ModKey modKey)
+        where TMajor : class, IMajorRecordQueryableGetter
+    {
+        if (TryResolveIdentifierFromMod<TMajor>(cache, editorId, modKey, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, typeof(TMajor));
+    }
+
+    #endregion
+
+    #region ResolveIdentifierFromMod (Type)
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey and Type within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="type">Type of record to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The EditorID</returns>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static string? ResolveIdentifierFromMod(this ILinkCache cache, FormKey formKey, Type type, ModKey modKey)
+    {
+        if (TryResolveIdentifierFromMod(cache, formKey, type, modKey, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, type);
+    }
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormLink within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formLink">FormLink to look for</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The EditorID</returns>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static string? ResolveIdentifierFromMod(this ILinkCache cache, IFormLinkIdentifier formLink, ModKey modKey)
+    {
+        if (TryResolveIdentifierFromMod(cache, formLink, modKey, out var editorId)) return editorId;
+        throw new MissingRecordException(formLink);
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID and Type within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="type">Type of record to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The FormKey</returns>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static FormKey ResolveIdentifierFromMod(this ILinkCache cache, string editorId, Type type, ModKey modKey)
+    {
+        if (TryResolveIdentifierFromMod(cache, editorId, type, modKey, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, type);
+    }
+
+    #endregion
+
+    #region ResolveIdentifierFromMod (Types)
+
+    /// <summary>
+    /// Retrieves the EditorID that matches the FormKey and Types within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="formKey">FormKey to look for</param>
+    /// <param name="types">Types of records to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The EditorID</returns>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static string? ResolveIdentifierFromMod(this ILinkCache cache, FormKey formKey, IEnumerable<Type> types, ModKey modKey)
+    {
+        if (TryResolveIdentifierFromMod(cache, formKey, types, modKey, out var editorId)) return editorId;
+        throw new MissingRecordException(formKey, types.ToArray());
+    }
+
+    /// <summary>
+    /// Retrieves the FormKey that matches the EditorID and Types within the contribution of the mod matching the given ModKey.
+    /// </summary>
+    /// <param name="cache">LinkCache to resolve against</param>
+    /// <param name="editorId">EditorID to look for</param>
+    /// <param name="types">Types of records to look up</param>
+    /// <param name="modKey">ModKey of the mod to scope resolution to</param>
+    /// <returns>The FormKey</returns>
+    /// <exception cref="MissingRecordException">If the mod was not found, or did not contain a matching record</exception>
+    public static FormKey ResolveIdentifierFromMod(this ILinkCache cache, string editorId, IEnumerable<Type> types, ModKey modKey)
+    {
+        if (TryResolveIdentifierFromMod(cache, editorId, types, modKey, out var formKey)) return formKey;
+        throw new MissingRecordException(editorId, types.ToArray());
+    }
+
+    #endregion
 }

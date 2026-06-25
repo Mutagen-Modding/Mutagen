@@ -133,6 +133,49 @@ public class LinkCacheFromModTests
     }
 
     [Fact]
+    public void LoadOrder_ResolvesIdentifierScopedToRequestedMod()
+    {
+        var setup = BuildLoadOrder();
+
+        setup.Cache.TryResolveIdentifierFromMod<INpcGetter>(setup.MasterNpc.FormKey, TestConstants.MasterModKey, out var fromMaster)
+            .ShouldBeTrue();
+        fromMaster.ShouldBe("SharedNpc");
+
+        // Both the master and the plugin contribute this record's identifier
+        setup.Cache.TryResolveIdentifierFromMod<INpcGetter>(setup.MasterNpc.FormKey, TestConstants.PluginModKey, out _)
+            .ShouldBeTrue();
+
+        // The plugin does not contribute the master-only record
+        setup.Cache.TryResolveIdentifierFromMod<INpcGetter>(setup.MasterOnlyNpc.FormKey, TestConstants.PluginModKey, out _)
+            .ShouldBeFalse();
+    }
+
+    [Fact]
+    public void LoadOrder_ResolvesIdentifierByEditorId()
+    {
+        var setup = BuildLoadOrder();
+
+        setup.Cache.TryResolveIdentifierFromMod<INpcGetter>("SharedNpc", TestConstants.MasterModKey, out var fromMaster)
+            .ShouldBeTrue();
+        fromMaster.ShouldBe(setup.MasterNpc.FormKey);
+
+        setup.Cache.TryResolveIdentifierFromMod<INpcGetter>("MasterOnlyNpc", TestConstants.PluginModKey, out _)
+            .ShouldBeFalse();
+    }
+
+    [Fact]
+    public void LoadOrder_ResolveIdentifierThrowsWhenMissing()
+    {
+        var setup = BuildLoadOrder();
+
+        setup.Cache.ResolveIdentifierFromMod<INpcGetter>(setup.MasterNpc.FormKey, TestConstants.MasterModKey)
+            .ShouldBe("SharedNpc");
+
+        Should.Throw<MissingRecordException>(() =>
+            setup.Cache.ResolveIdentifierFromMod<INpcGetter>(setup.MasterNpc.FormKey, TestConstants.PluginModKey2));
+    }
+
+    [Fact]
     public void TryGetLinkCacheForMod_ReturnsScopedCache()
     {
         var setup = BuildLoadOrder();
