@@ -42,7 +42,7 @@
     <Fields>
       <Float name="Offset" />
       <Array2d name="HeightMap" fixedWidth="33" fixedHeight="33">
-        <UInt8 />
+        <Int8 />
       </Array2d>
       <P3UInt8 name="Unknown" />
     </Fields>

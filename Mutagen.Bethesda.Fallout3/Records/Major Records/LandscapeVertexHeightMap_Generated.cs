@@ -57,15 +57,15 @@ namespace Mutagen.Bethesda.Fallout3
         #region HeightMap
         public static readonly P2Int HeightMapFixedSize = new P2Int(33, 33);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IArray2d<Byte> _HeightMap = new Array2d<Byte>(33, 33, default(Byte));
-        public IArray2d<Byte> HeightMap
+        private IArray2d<SByte> _HeightMap = new Array2d<SByte>(33, 33, default(SByte));
+        public IArray2d<SByte> HeightMap
         {
             get => this._HeightMap;
             init => this._HeightMap = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyArray2d<Byte> ILandscapeVertexHeightMapGetter.HeightMap => _HeightMap;
+        IReadOnlyArray2d<SByte> ILandscapeVertexHeightMapGetter.HeightMap => _HeightMap;
         #endregion
 
         #endregion
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObjectSetter<ILandscapeVertexHeightMap>
     {
         new Single Offset { get; set; }
-        new IArray2d<Byte> HeightMap { get; }
+        new IArray2d<SByte> HeightMap { get; }
         new P3UInt8 Unknown { get; set; }
     }
 
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LandscapeVertexHeightMap_Registration.Instance;
         Single Offset { get; }
-        IReadOnlyArray2d<Byte> HeightMap { get; }
+        IReadOnlyArray2d<SByte> HeightMap { get; }
         P3UInt8 Unknown { get; }
 
     }
@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ClearPartial();
             item.Offset = default(Single);
-            item.HeightMap.SetAllTo(default(Byte));
+            item.HeightMap.SetAllTo(default(SByte));
             item.Unknown = default(P3UInt8);
         }
         
@@ -1163,10 +1163,10 @@ namespace Mutagen.Bethesda.Fallout3
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Offset);
-            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<SByte>.Instance.Write(
                 writer: writer,
                 items: item.HeightMap,
-                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                transl: SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
@@ -1212,10 +1212,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             item.Offset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.HeightMap.SetTo(
-                Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<Byte>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<SByte>.Instance.Parse(
                     reader: frame,
                     size: LandscapeVertexHeightMap.HeightMapFixedSize,
-                    transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                    transl: SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Unknown = P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
@@ -1284,12 +1284,12 @@ namespace Mutagen.Bethesda.Fallout3
 
         public Single Offset => _structData.Slice(0x0, 0x4).Float();
         #region HeightMap
-        public IReadOnlyArray2d<Byte> HeightMap => BinaryOverlayArray2d.Factory<Byte>(
+        public IReadOnlyArray2d<SByte> HeightMap => BinaryOverlayArray2d.Factory<SByte>(
             mem: _structData.Slice(4),
             package: _package,
             itemLength: 1,
             size: LandscapeVertexHeightMap.HeightMapFixedSize,
-            getter: (s, p) => s[0]);
+            getter: (s, p) => (sbyte)s[0]);
         #endregion
         public P3UInt8 Unknown => P3UInt8BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x445, 0x3));
         partial void CustomFactoryEnd(
