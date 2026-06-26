@@ -10,6 +10,7 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
 {
     public ImmutableLoadOrderLinkCache? WrappedImmutableCache { get; }
     private readonly List<MutableModLinkCache> _mutableMods;
+    private readonly Dictionary<ModKey, MutableModLinkCache> _mutableModsByKey;
     private bool _disposed;
 
     /// <summary>
@@ -22,6 +23,7 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
     {
         WrappedImmutableCache = immutableBaseCache;
         _mutableMods = mutableMods.Select(m => m.ToUntypedMutableLinkCache()).ToList();
+        _mutableModsByKey = MakeModsByKey(_mutableMods);
         ListedOrder = WrappedImmutableCache.ListedOrder.Concat(_mutableMods.Select(x => x.SourceMod)).ToArray();
         PriorityOrder = ListedOrder.Reverse().ToArray();
     }
@@ -34,8 +36,20 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
     public MutableLoadOrderLinkCache(params IMod[] mutableMods)
     {
         _mutableMods = mutableMods.Select(m => m.ToUntypedMutableLinkCache()).ToList();
+        _mutableModsByKey = MakeModsByKey(_mutableMods);
         ListedOrder = _mutableMods.Select(x => x.SourceMod).ToArray();
         PriorityOrder = ListedOrder.Reverse().ToArray();
+    }
+
+    private static Dictionary<ModKey, MutableModLinkCache> MakeModsByKey(List<MutableModLinkCache> mutableMods)
+    {
+        var ret = new Dictionary<ModKey, MutableModLinkCache>();
+        foreach (var mod in mutableMods)
+        {
+            ret.TryAdd(mod.SourceMod.ModKey, mod);
+        }
+
+        return ret;
     }
 
     /// <inheritdoc />
@@ -50,6 +64,25 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
         {
             throw new ObjectDisposedException($"MutableLoadOrderLinkCache");
         }
+    }
+
+    /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (_mutableModsByKey.TryGetValue(modKey, out var mod))
+        {
+            cache = mod;
+            return true;
+        }
+
+        if (WrappedImmutableCache != null)
+        {
+            return WrappedImmutableCache.TryGetLinkCacheForMod(modKey, out cache);
+        }
+
+        cache = null;
+        return false;
     }
 
     /// <inheritdoc />
@@ -242,7 +275,9 @@ public sealed class MutableLoadOrderLinkCache : ILinkCache
     public void Add(IMod mod)
     {
         CheckDisposal();
-        _mutableMods.Add(mod.ToUntypedMutableLinkCache());
+        var mutableCache = mod.ToUntypedMutableLinkCache();
+        _mutableMods.Add(mutableCache);
+        _mutableModsByKey.TryAdd(mutableCache.SourceMod.ModKey, mutableCache);
     }
     
     /// <inheritdoc />
@@ -1084,6 +1119,7 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
 {
     public ImmutableLoadOrderLinkCache<TMod, TModGetter> WrappedImmutableCache { get; }
     private readonly List<MutableModLinkCache<TMod, TModGetter>> _mutableMods;
+    private readonly Dictionary<ModKey, MutableModLinkCache<TMod, TModGetter>> _mutableModsByKey;
     private bool _disposed;
 
     /// <summary>
@@ -1096,6 +1132,7 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
     {
         WrappedImmutableCache = immutableBaseCache;
         _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
+        _mutableModsByKey = MakeModsByKey(_mutableMods);
         ListedOrder = WrappedImmutableCache.ListedOrder.Concat(_mutableMods.Select(x => x.SourceMod)).ToArray();
         PriorityOrder = ListedOrder.Reverse().ToArray();
     }
@@ -1109,8 +1146,20 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
     {
         WrappedImmutableCache = ImmutableLoadOrderLinkCache<TMod, TModGetter>.Empty;
         _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
+        _mutableModsByKey = MakeModsByKey(_mutableMods);
         ListedOrder = _mutableMods.Select(x => x.SourceMod).ToArray();
         PriorityOrder = ListedOrder.Reverse().ToArray();
+    }
+
+    private static Dictionary<ModKey, MutableModLinkCache<TMod, TModGetter>> MakeModsByKey(List<MutableModLinkCache<TMod, TModGetter>> mutableMods)
+    {
+        var ret = new Dictionary<ModKey, MutableModLinkCache<TMod, TModGetter>>();
+        foreach (var mod in mutableMods)
+        {
+            ret.TryAdd(mod.SourceMod.ModKey, mod);
+        }
+
+        return ret;
     }
 
     /// <inheritdoc />
@@ -1125,6 +1174,32 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
         {
             throw new ObjectDisposedException($"MutableLoadOrderLinkCache<{typeof(TMod)}, {typeof(TModGetter)}>");
         }
+    }
+
+    /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (_mutableModsByKey.TryGetValue(modKey, out var mod))
+        {
+            cache = mod;
+            return true;
+        }
+
+        return WrappedImmutableCache.TryGetLinkCacheForMod(modKey, out cache);
+    }
+
+    /// <inheritdoc />
+    public bool TryGetTypedLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache<TMod, TModGetter> cache)
+    {
+        CheckDisposal();
+        if (_mutableModsByKey.TryGetValue(modKey, out var mod))
+        {
+            cache = mod;
+            return true;
+        }
+
+        return WrappedImmutableCache.TryGetTypedLinkCacheForMod(modKey, out cache);
     }
 
     /// <inheritdoc />
@@ -1310,7 +1385,9 @@ public sealed class MutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<TMo
     public void Add(TMod mod)
     {
         CheckDisposal();
-        _mutableMods.Add(mod.ToMutableLinkCache<TMod, TModGetter>());
+        var mutableCache = mod.ToMutableLinkCache<TMod, TModGetter>();
+        _mutableMods.Add(mutableCache);
+        _mutableModsByKey.TryAdd(mutableCache.SourceMod.ModKey, mutableCache);
     }
 
     /// <inheritdoc />

@@ -653,6 +653,7 @@
         <Compile Include="Plugins\FormLinkNullable.cs" />
         <Compile Include="Plugins\IFormLink.cs" />
         <Compile Include="Plugins\Cache\ILinkCache.cs" />
+        <Compile Include="Plugins\Cache\LinkCacheFromModMixIn.cs" />
         <Compile Include="Plugins\Cache\LinkCachePreferences.cs" />
         <Compile Include="Plugins\FormLinkTypelessComparer.cs" />
         <Compile Include="Plugins\Order\LoadOrder.cs" />
