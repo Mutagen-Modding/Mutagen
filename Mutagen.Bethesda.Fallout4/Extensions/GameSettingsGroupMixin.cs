@@ -18,6 +18,7 @@ public static class GameSettingGroupMixIn
         var ret = new GameSettingBool(
             gameSettings.SourceMod.GetNextFormKey(editorId),
             gameSettings.SourceMod.GameRelease.ToFallout4Release());
+        ret.EditorID = editorId;
         gameSettings.Add(ret);
         return ret;
     }
@@ -36,6 +37,7 @@ public static class GameSettingGroupMixIn
         var ret = new GameSettingFloat(
             gameSettings.SourceMod.GetNextFormKey(editorId),
             gameSettings.SourceMod.GameRelease.ToFallout4Release());
+        ret.EditorID = editorId;
         gameSettings.Add(ret);
         return ret;
     }
@@ -54,6 +56,7 @@ public static class GameSettingGroupMixIn
         var ret = new GameSettingInt(
             gameSettings.SourceMod.GetNextFormKey(editorId),
             gameSettings.SourceMod.GameRelease.ToFallout4Release());
+        ret.EditorID = editorId;
         gameSettings.Add(ret);
         return ret;
     }
@@ -72,6 +75,7 @@ public static class GameSettingGroupMixIn
         var ret = new GameSettingString(
             gameSettings.SourceMod.GetNextFormKey(editorId),
             gameSettings.SourceMod.GameRelease.ToFallout4Release());
+        ret.EditorID = editorId;
         gameSettings.Add(ret);
         return ret;
     }

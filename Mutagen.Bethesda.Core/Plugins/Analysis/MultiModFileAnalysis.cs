@@ -33,14 +33,7 @@ public static class MultiModFileAnalysis
         if (splitFiles.Count == 1)
         {
             throw new SplitModException(
-                $"Found only one split file for {modKey}. Expected at least 2 split files (_1 and _2).");
-        }
-
-        // Check if original unsplit mod exists - this is an error condition
-        if (fileSystem.File.Exists(modPath.Path))
-        {
-            throw new SplitModException(
-                $"Found both split files and original mod file for {modKey}. This is an invalid state.");
+                $"Found only one split file for {modKey}. Expected at least 2 split files (base and _2).");
         }
 
         return true;
@@ -71,21 +64,48 @@ public static class MultiModFileAnalysis
         if (splitFiles.Count == 1)
         {
             throw new SplitModException(
-                $"Found only one split file for {modKey}. Expected at least 2 split files (_1 and _2).");
-        }
-
-        // Check if original unsplit mod exists - this is an error condition
-        if (fileSystem.File.Exists(modPath.Path))
-        {
-            throw new SplitModException(
-                $"Found both split files and original mod file for {modKey}. This is an invalid state.");
+                $"Found only one split file for {modKey}. Expected at least 2 split files (base and _2).");
         }
 
         return splitFiles;
     }
 
     /// <summary>
-    /// Detects split files matching the pattern ModKey_1.ext, ModKey_2.ext, etc.
+    /// Pure string-level check: is candidateNameWithoutExt a split sibling of baseNameWithoutExt?
+    /// e.g. ("MyMod_2", "MyMod") → true, ("MyMod_Patch", "MyMod") → false
+    /// </summary>
+    public static bool IsSplitFileName(string candidateNameWithoutExt, string baseNameWithoutExt)
+    {
+        return IsSplitFileName(candidateNameWithoutExt, baseNameWithoutExt, out _);
+    }
+
+    /// <summary>
+    /// Pure string-level check with the parsed split index.
+    /// e.g. ("MyMod_3", "MyMod") → true, splitIndex=3
+    /// </summary>
+    public static bool IsSplitFileName(string candidateNameWithoutExt, string baseNameWithoutExt, out int splitIndex)
+    {
+        splitIndex = 0;
+        var prefix = baseNameWithoutExt + "_";
+        if (!candidateNameWithoutExt.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return false;
+        var suffix = candidateNameWithoutExt.Substring(prefix.Length);
+        return int.TryParse(suffix, out splitIndex);
+    }
+
+    /// <summary>
+    /// ModKey-level check: same mod type + filename is a split sibling.
+    /// e.g. ("MyMod_2.esp", "MyMod.esp") → true, ("MyMod_2.esm", "MyMod.esp") → false
+    /// </summary>
+    public static bool IsSplitModSibling(ModKey candidate, ModKey baseModKey)
+    {
+        if (candidate.Type != baseModKey.Type) return false;
+        return IsSplitFileName(candidate.Name, baseModKey.Name);
+    }
+
+    /// <summary>
+    /// Detects split files matching the pattern ModKey.ext, ModKey_2.ext, ModKey_3.ext, etc.
+    /// First file is the base (no suffix), subsequent files have _2, _3, etc.
     /// </summary>
     internal static List<FilePath> DetectSplitFiles(DirectoryPath folder, ModKey modKey, IFileSystem fileSystem)
     {
@@ -93,16 +113,30 @@ public static class MultiModFileAnalysis
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(modKey.FileName);
         var extension = Path.GetExtension(modKey.FileName);
 
-        int index = 1;
+        // Check for _2 to determine if this is a split set
+        var secondFile = Path.Combine(folder.Path, $"{fileNameWithoutExtension}_2{extension}");
+        if (!fileSystem.File.Exists(secondFile))
+        {
+            return splitFiles;  // No split files (or just a normal single file)
+        }
+
+        // First file is the base (no suffix)
+        var baseFile = Path.Combine(folder.Path, modKey.FileName);
+        if (!fileSystem.File.Exists(baseFile))
+        {
+            return splitFiles;  // Missing base file - invalid state
+        }
+
+        // It's a split set - add base file and find all numbered files
+        splitFiles.Add(baseFile);
+
+        int index = 2;
         while (true)
         {
             var splitFileName = $"{fileNameWithoutExtension}_{index}{extension}";
             var splitPath = Path.Combine(folder.Path, splitFileName);
 
-            if (!fileSystem.File.Exists(splitPath))
-            {
-                break;
-            }
+            if (!fileSystem.File.Exists(splitPath)) break;
 
             splitFiles.Add(splitPath);
             index++;

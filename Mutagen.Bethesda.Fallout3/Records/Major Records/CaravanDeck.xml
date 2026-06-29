@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CaravanDeck" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="CDCK">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Cards">
+        <FormLink refName="CaravanCard" recordType="CARD" />
+      </List>
+      <UInt32 name="Count" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

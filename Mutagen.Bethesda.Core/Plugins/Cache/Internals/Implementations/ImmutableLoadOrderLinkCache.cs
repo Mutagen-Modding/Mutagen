@@ -807,6 +807,13 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        return _modsByKey.TryGetValue(modKey, out cache);
+    }
+
+    /// <inheritdoc />
     public IReadOnlyList<IModGetter> ListedOrder
     {
         get
@@ -1595,6 +1602,27 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
     {
         CheckDisposal();
         _cache.Warmup(types);
+    }
+
+    /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (_modsByKey.TryGetValue(modKey, out var typed))
+        {
+            cache = typed;
+            return true;
+        }
+
+        cache = null;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public bool TryGetTypedLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache<TMod, TModGetter> cache)
+    {
+        CheckDisposal();
+        return _modsByKey.TryGetValue(modKey, out cache);
     }
 
     /// <inheritdoc />

@@ -173,6 +173,7 @@ public class AspectInterfaceModule : GenerationModule
         // Generate interface to major record mapping registry
         StructuredStringBuilder mappingGen = new StructuredStringBuilder();
         ObjectGeneration.AddAutogenerationComment(mappingGen);
+        mappingGen.AppendLine("#nullable enable");
         mappingGen.AppendLine($"using System;");
         mappingGen.AppendLine($"using System.Collections.Generic;");
         mappingGen.AppendLine($"using Mutagen.Bethesda.Plugins.Records.Mapping;");

@@ -128,7 +128,7 @@ internal abstract class AListGroupBinaryOverlay<TObject> : PluginBinaryOverlay, 
 
     IEnumerable<TObject> IListGroupGetter<TObject>.GetEnumerator() => Records;
 
-    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true);
 
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null);
 

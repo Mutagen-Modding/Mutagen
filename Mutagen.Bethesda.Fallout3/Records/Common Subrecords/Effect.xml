@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Effect" objType="Subrecord">
+    <Fields>
+      <FormLink name="BaseEffect" refName="MagicEffect" recordType="EFID" />
+      <RefDirect name="Data" refName="EffectData" nullable="False" />
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="EffectData" objType="Subrecord" recordType="EFIT">
+    <Fields>
+      <UInt32 name="Magnitude" />
+      <UInt32 name="Area" />
+      <UInt32 name="Duration" />
+      <Enum name="Type" enumName="Effect.EffectType" byteLength="4" />
+      <Enum name="ActorValue" enumName="ActorValue" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

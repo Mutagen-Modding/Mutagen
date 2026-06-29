@@ -30,6 +30,7 @@ public class PassthroughTestParams
     public GameRelease GameRelease { get; set; }
     public Target Target { get; set; } = new();
     public required IWorkDropoff WorkDropoff { get; set; }
+    public string? DataFolder { get; set; }
 }
 
 public abstract class PassthroughTest
@@ -41,7 +42,7 @@ public abstract class PassthroughTest
     public Target Target { get; }
     public ModPath ExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_NormalExport"));
     public ModPath ObservableExportFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_ObservableExport"));
-    public ModPath TrimmedFileName(DirectoryPath path) => Settings.Trimming.Enabled ? new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed")) : FilePath;
+    public ModPath TrimmedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Trimmed"));
     public ModPath MergedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Merged"));
     public ModPath UncompressedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Uncompressed"));
     public ModPath AlignedFileName(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Aligned"));
@@ -51,6 +52,7 @@ public abstract class PassthroughTest
     public DirectoryPath SourceDataFolder => FilePath.Path.Directory!.Value;
     public GameRelease GameRelease { get; }
     public ILoadOrderGetter<IModMasterStyledGetter> MasterFlagsLookup { get; }
+    public string? DataFolder { get; }
     public readonly GameConstants Meta;
 
     public StringsReadParameters StringsParams => new StringsReadParameters()
@@ -60,7 +62,11 @@ public abstract class PassthroughTest
     };
     protected abstract Processor ProcessorFactory();
     
-    public static DirectoryPath GetTestFolderPath(string nickname, GameRelease release) => Path.Combine(Path.GetTempPath(), "Mutagen_Binary_Tests", release.ToString(), nickname);
+    public static DirectoryPath GetTestFolderPath(string nickname, GameRelease release, string? tempFolderOverride = null)
+    {
+        var root = string.IsNullOrWhiteSpace(tempFolderOverride) ? Path.GetTempPath() : tempFolderOverride;
+        return Path.Combine(root, "Mutagen_Binary_Tests", release.ToString(), nickname);
+    }
 
     public PassthroughTest(PassthroughTestParams param, GameRelease release)
     {
@@ -71,16 +77,37 @@ public abstract class PassthroughTest
         Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
         Settings = param.PassthroughSettings;
         Target = param.Target;
+        DataFolder = param.DataFolder;
         Meta = GameConstants.Get(GameRelease);
-        using var env = GameEnvironment.Typical.Construct(GameRelease);
-        MasterFlagsLookup = env.LoadOrder.ResolveExistingMods().Transform(KeyedMasterStyle.FromMod);
+        if (!string.IsNullOrEmpty(param.DataFolder))
+        {
+            MasterFlagsLookup = BuildMasterFlagsFromDataFolder(param.DataFolder, release);
+        }
+        else
+        {
+            using var env = GameEnvironment.Typical.Construct(GameRelease);
+            MasterFlagsLookup = env.LoadOrder.ResolveExistingMods().Transform(KeyedMasterStyle.FromMod);
+        }
+    }
+
+    private static ILoadOrderGetter<IModMasterStyledGetter> BuildMasterFlagsFromDataFolder(string dataFolder, GameRelease release)
+    {
+        var modFiles = Directory.EnumerateFiles(dataFolder, "*.esm")
+            .Concat(Directory.EnumerateFiles(dataFolder, "*.esp"))
+            .Select(f =>
+            {
+                var modPath = new ModPath(ModKey.FromFileName(Path.GetFileName(f)), f);
+                return KeyedMasterStyle.FromPath(modPath, release);
+            })
+            .ToList();
+        return new LoadOrder<IModMasterStyledGetter>(modFiles);
     }
 
     public abstract AlignmentRules GetAlignmentRules();
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {
-        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname, GameRelease), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
+        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname, GameRelease, Settings.TempFolderOverride), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
 
         var test = new Test(
             $"Setup Processed Files",
@@ -201,56 +228,54 @@ public abstract class PassthroughTest
     private async Task<ModPath> ExecuteTrimming(DirectoryPath tempFolder)
     {
         var trimmedPath = TrimmedFileName(tempFolder);
-        if (!Settings.CacheReuse.ReuseTrimming
-            || !File.Exists(trimmedPath))
+
+        if (Settings.CacheReuse.ReuseTrimming && File.Exists(trimmedPath))
         {
+            return trimmedPath;
+        }
+
+        try
+        {
+            ModPath source = FilePath;
+
             if (Settings.Trimming.Enabled)
             {
-                try
+                var trimmedGroups = new ModPath(ModKey, trimmedPath.Path + "Groups");
+                using (var outStream = new FileStream(trimmedGroups, FileMode.Create, FileAccess.Write))
                 {
-                    var processor = ProcessorFactory();
-                    Dictionary<RecordType, HashSet<FormKey>> trimRecords = processor.TrimmedRecords
-                        .GroupBy(x => x.Key)
-                        .ToDictionary(x => x.Key, x => x.Select(x => x.Value).ToHashSet());
-                    var trimmedGroups = trimmedPath + "Groups";
-                    using (var outStream = new FileStream(trimmedGroups, FileMode.Create, FileAccess.Write))
-                    {
-                        ModTrimmer.TrimGroups(
-                            streamCreator: () =>
-                            {
-                                return new MutagenBinaryReadStream(FilePath, GameRelease, MasterFlagsLookup);
-                            },
-                            outputStream: outStream,
-                            interest: new RecordInterest(
-                                interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
-                                uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
-                    }
-
-                    using (var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write))
-                    {
-                        var modPath = new ModPath(ModKey, trimmedGroups);
-                        TrimRecords(
-                            modPath: modPath,
-                            streamCreator: () => new MutagenBinaryReadStream(modPath, GameRelease, MasterFlagsLookup),
-                            outStream,
-                            trimRecords);
-                    }
-                    
+                    ModTrimmer.TrimGroups(
+                        streamCreator: () => new MutagenBinaryReadStream(FilePath, GameRelease, MasterFlagsLookup),
+                        outputStream: outStream,
+                        interest: new RecordInterest(
+                            interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
+                            uninterestingTypes: Settings.Trimming.TypesToTrim.Select(x => new RecordType(x))));
                 }
-                catch (Exception)
-                {
-                    if (File.Exists(trimmedPath))
-                    {
-                        File.Delete(trimmedPath);
-                    }
 
-                    throw;
-                }
+                source = trimmedGroups;
             }
-            else
+
+            var processor = ProcessorFactory();
+            var trimRecords = processor.TrimmedRecords
+                .GroupBy(x => x.Key)
+                .ToDictionary(x => x.Key, x => x.Select(x => x.Value).ToHashSet());
+
+            using (var outStream = new FileStream(trimmedPath, FileMode.Create, FileAccess.Write))
             {
-                trimmedPath = FilePath;
+                TrimRecords(
+                    modPath: source,
+                    streamCreator: () => new MutagenBinaryReadStream(source, GameRelease, MasterFlagsLookup),
+                    outStream,
+                    trimRecords);
             }
+        }
+        catch (Exception)
+        {
+            if (File.Exists(trimmedPath))
+            {
+                File.Delete(trimmedPath);
+            }
+
+            throw;
         }
 
         return trimmedPath;
@@ -615,6 +640,7 @@ public abstract class PassthroughTest
         Target target,
         IWorkDropoff workDropoff)
     {
+        var dataFolder = settings.DataFolderLocations.Get(group.GameRelease);
         return Factory(new PassthroughTestParams()
         {
             WorkDropoff = workDropoff,
@@ -622,6 +648,7 @@ public abstract class PassthroughTest
             PassthroughSettings = settings.PassthroughSettings,
             Target = target,
             GameRelease = group.GameRelease,
+            DataFolder = string.IsNullOrEmpty(dataFolder) ? null : dataFolder,
         });
     }
 
@@ -629,9 +656,12 @@ public abstract class PassthroughTest
         IBinaryModdedWriteBuilderLoadOrderChoice builder,
         StringsWriter stringsWriter)
     {
-        return builder
-            .WithLoadOrderFromHeaderMasters()
-            .WithDefaultDataFolder()
+        var withLoadOrder = builder.WithLoadOrderFromHeaderMasters();
+        var withDataFolder = !string.IsNullOrEmpty(DataFolder)
+            ? withLoadOrder.WithDataFolder(DataFolder)
+            : withLoadOrder.WithDefaultDataFolder();
+        return withDataFolder
+            .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
             .WithStringsWriter(stringsWriter)
             .NoModKeySync()
             .WithMastersListContent(MastersListContentOption.NoCheck)
@@ -646,13 +676,15 @@ public abstract class PassthroughTest
     {
         return passthroughSettings.GameRelease switch
         {
-            GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings, GameRelease.Oblivion),
-            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings, GameRelease.OblivionRE),
-            GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimLE),
-            GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
-            GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimVR),
-            GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings, GameRelease.Fallout4),
-            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings, GameRelease.Starfield),
+            GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.Fallout3 => new Fallout3PassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.FalloutNV => new Fallout3PassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
             _ => throw new NotImplementedException(),
         };
     }

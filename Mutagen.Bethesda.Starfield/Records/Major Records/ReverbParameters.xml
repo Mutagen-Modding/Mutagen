@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ReverbParameters" recordType="REVB" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <Guid name="AudioBus" recordType="RABG" />
       <Enum name="ReverbClass" enumName="ReverbParameters.Class" recordType="ANAM" nullable="False" />
     </Fields>

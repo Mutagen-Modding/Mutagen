@@ -1,13 +1,12 @@
 using System.Reactive.Disposables;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
-using Noggog.IO;
+using TempFile = Noggog.IO.TempFile;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Implementations;
 

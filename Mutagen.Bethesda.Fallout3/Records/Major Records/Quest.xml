@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Quest" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="QUST">
+    <Fields>
+      <FormLink name="Script" recordType="SCRI" refName="Script" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="QuestData" refName="QuestData" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefList name="Stages" refName="QuestStage" />
+      <RefList name="Objectives" refName="QuestObjective" />
+    </Fields>
+  </Object>
+  <Object name="QuestStage" objType="Subrecord">
+    <Fields>
+      <Int16 name="Index" recordType="INDX" nullable="False" />
+      <RefList name="LogEntries" refName="QuestLogEntry" />
+    </Fields>
+  </Object>
+  <Object name="QuestLogEntry" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="QuestLogEntry.Flag" byteLength="1" recordType="QSDT" />
+      <RefList name="Conditions" refName="Condition" />
+      <String name="Entry" recordType="CNAM" />
+      <RefDirect name="EmbeddedScript" refName="ScriptFields" singleton="true" nullable="False" />
+      <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
+    </Fields>
+  </Object>
+  <Object name="QuestObjective" objType="Subrecord">
+    <Fields>
+      <Int32 name="Index" recordType="QOBJ" nullable="False" />
+      <String name="Description" recordType="NNAM" />
+      <RefList name="Targets" refName="QuestObjectiveTarget" />
+    </Fields>
+  </Object>
+  <Object name="QuestObjectiveTarget" objType="Subrecord">
+    <Fields>
+      <Data recordType="QSTA">
+        <Fields>
+          <FormLink name="Target">
+            <Interface>IPlaced</Interface>
+          </FormLink>
+          <Bool name="CompassMarkerIgnoresLocks" byteLength="1" />
+          <ByteArray name="Unused" byteLength="3" nullable="False" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="Condition" />
+    </Fields>
+  </Object>
+  <Object name="QuestData" objType="Subrecord" recordType="DATA">
+    <Fields>
+      <Enum name="Flags" enumName="Quest.Flag" byteLength="1" />
+      <UInt8 name="Priority" />
+      <Break />
+      <UInt16 name="Unused" />
+      <Break />
+      <Float name="QuestDelay" />
+    </Fields>
+  </Object>
+</Loqui>

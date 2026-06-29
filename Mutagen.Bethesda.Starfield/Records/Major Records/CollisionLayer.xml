@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="CollisionLayer" recordType="COLL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <String name="Description" recordType="DESC" />
       <String name="ContextNotes" recordType="NLDT" />
       <UInt32 name="Index" recordType="BNAM" nullable="False" />

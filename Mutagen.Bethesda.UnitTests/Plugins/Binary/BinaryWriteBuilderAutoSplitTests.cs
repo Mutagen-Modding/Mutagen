@@ -64,9 +64,10 @@ public class BinaryWriteBuilderAutoSplitTests
             .Write();
 
         // Verify split files were created
+        // First file is the base path (no suffix), subsequent files have _2, _3, etc.
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(mod.ModKey.FileName);
         var extension = Path.GetExtension(mod.ModKey.FileName);
-        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        var splitFile1Path = outputPath;  // First file is the base path
         var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         fileSystem.File.Exists(splitFile1Path).ShouldBeTrue();
@@ -181,9 +182,10 @@ public class BinaryWriteBuilderAutoSplitTests
             .Write();
 
         // Verify split files were created
+        // First file is the base path (no suffix), subsequent files have _2, _3, etc.
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(mod.ModKey.FileName);
         var extension = Path.GetExtension(mod.ModKey.FileName);
-        var splitFile1Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        var splitFile1Path = outputPath;  // First file is the base path
         var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         fileSystem.File.Exists(splitFile1Path).ShouldBeTrue();

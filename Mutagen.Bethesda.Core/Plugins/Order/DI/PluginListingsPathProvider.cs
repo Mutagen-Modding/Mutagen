@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
@@ -12,13 +13,17 @@ public interface IPluginListingsPathProvider
 public class PluginListingsPathProvider : IPluginListingsPathProvider
 {
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private readonly IProtonPrefixProvider _protonPrefixProvider;
     private const string FileName = "Plugins.txt";
-    
-    public PluginListingsPathProvider(IDataDirectoryProvider dataDirectoryProvider)
+
+    public PluginListingsPathProvider(
+        IDataDirectoryProvider dataDirectoryProvider,
+        IProtonPrefixProvider protonPrefixProvider)
     {
         _dataDirectoryProvider = dataDirectoryProvider;
+        _protonPrefixProvider = protonPrefixProvider;
     }
-    
+
     internal string GetGameFolder(GameRelease release)
     {
         return release switch
@@ -29,14 +34,17 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             GameRelease.SkyrimSE => "Skyrim Special Edition",
             GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
             GameRelease.EnderalSE => "Enderal Special Edition",
+            GameRelease.EnderalSEGog => "Enderal Special Edition GOG",
             GameRelease.SkyrimVR => "Skyrim VR",
+            GameRelease.Fallout3 => "Fallout3",
+            GameRelease.FalloutNV => "FalloutNV",
             GameRelease.Fallout4 => "Fallout4",
             GameRelease.Fallout4VR => "Fallout4VR",
             GameRelease.Starfield => "Starfield",
             _ => throw new NotImplementedException()
         };
     }
-    
+
     private string GetRelativePluginsPath(GameRelease release)
     {
         var gameFolder = GetGameFolder(release);
@@ -56,6 +64,10 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
         else
         {
             var localAppData = Environment.GetEnvironmentVariable("LocalAppData");
+            if (localAppData == null)
+            {
+                localAppData = _protonPrefixProvider.TryGetProtonLocalAppData(release);
+            }
             if (localAppData == null)
             {
                 return null;

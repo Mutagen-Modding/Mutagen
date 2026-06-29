@@ -34,11 +34,11 @@ public static class StreamHeaderMixIn
         {
             return new ModHeader(constants, stream.GetMemory(constants.ModHeaderLength, readSafe: readSafe));
         }
-        catch (ArgumentException e)
+        catch (ArgumentException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
-        catch (EndOfStreamException e)
+        catch (EndOfStreamException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
@@ -64,11 +64,11 @@ public static class StreamHeaderMixIn
         {
             return new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
         }
-        catch (ArgumentException e)
+        catch (ArgumentException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
-        catch (EndOfStreamException e)
+        catch (EndOfStreamException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header from stream.  Position: {initialPos}.  {remaining} remaining < {constants.ModHeaderLength} expected.");
         }
@@ -143,11 +143,11 @@ public static class StreamHeaderMixIn
             var meta = GetModHeader(stream, constants, readSafe: readSafe);
             return new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
         }
-        catch (ArgumentException e)
+        catch (ArgumentException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
-        catch (EndOfStreamException e)
+        catch (EndOfStreamException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
@@ -176,11 +176,11 @@ public static class StreamHeaderMixIn
             expected = checked((int)meta.TotalLength);
             return new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
         }
-        catch (ArgumentException e)
+        catch (ArgumentException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }
-        catch (EndOfStreamException e)
+        catch (EndOfStreamException)
         {
             throw new MalformedDataException($"Could not read enough data to parse a Mod Header Frame from stream.  Position: {initialPos}.  {remaining} remaining < {expected ?? constants.ModHeaderLength} expected.");
         }

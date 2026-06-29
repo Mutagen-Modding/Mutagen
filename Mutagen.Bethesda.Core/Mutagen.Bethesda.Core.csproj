@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
         <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -25,7 +25,6 @@
         <PackageReference Include="SharpZipLib" />
         <PackageReference Include="StrongInject" />
         <PackageReference Include="System.Collections.Immutable" />
-        <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
         <PackageReference Include="GameFinder.StoreHandlers.GOG" />
         <PackageReference Include="GameFinder.StoreHandlers.Steam" />
@@ -147,6 +146,8 @@
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
         <Compile Include="Inis\DI\IniModule.cs" />
         <Compile Include="Installs\DI\GameLocatorLookupCache.cs" />
+        <Compile Include="Installs\DI\IProtonPrefixProvider.cs" />
+        <Compile Include="Installs\DI\ProtonPrefixProvider.cs" />
         <Compile Include="Installs\DI\InstallsModule.cs" />
         <Compile Include="Installs\GameLocator.cs" />
         <Compile Include="Installs\GameSource.cs" />
@@ -343,7 +344,6 @@
         <Compile Include="Plugins\IO\AssociatedModFileCategory.cs" />
         <Compile Include="Plugins\IO\PluginUtilityIO.cs" />
         <Compile Include="Plugins\IWinningOverrideProvider.cs" />
-        <Compile Include="Plugins\Masters\DI\FormIDTranslator.cs" />
         <Compile Include="Plugins\Masters\DI\IKeyedMasterStyleReader.cs" />
         <Compile Include="Plugins\Masters\DI\MasterFlagsLookupCompiler.cs" />
         <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
@@ -653,6 +653,7 @@
         <Compile Include="Plugins\FormLinkNullable.cs" />
         <Compile Include="Plugins\IFormLink.cs" />
         <Compile Include="Plugins\Cache\ILinkCache.cs" />
+        <Compile Include="Plugins\Cache\LinkCacheFromModMixIn.cs" />
         <Compile Include="Plugins\Cache\LinkCachePreferences.cs" />
         <Compile Include="Plugins\FormLinkTypelessComparer.cs" />
         <Compile Include="Plugins\Order\LoadOrder.cs" />

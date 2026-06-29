@@ -213,14 +213,10 @@ public class OblivionMultiModOverlayTests
     }
 
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
-    public void GetRecordCount_SumsAllMods(
+    public void GetRecordCount_DeduplicatesAcrossMods(
         OblivionMod mod1,
         OblivionMod mod2)
     {
-        // Get initial counts
-        var initialCount1 = mod1.GetRecordCount();
-        var initialCount2 = mod2.GetRecordCount();
-
         // Add records to both mods
         mod1.Spells.AddNew();
         mod1.Spells.AddNew();
@@ -235,9 +231,7 @@ public class OblivionMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // Should sum all records from all mods (initial + newly added)
-        var expectedCount = mod1.GetRecordCount() + mod2.GetRecordCount();
-        overlay.GetRecordCount().ShouldBe(expectedCount);
+        overlay.GetRecordCount().ShouldBe(8u);
     }
 
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
@@ -259,13 +253,14 @@ public class OblivionMultiModOverlayTests
     }
 
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
-    public void ModHeader_TakenFromFirstMod(
+    public void ModHeader_MatchingFieldsExposed(
         OblivionMod mod1,
         OblivionMod mod2)
     {
-        // Set distinct properties on mod1's header
         mod1.ModHeader.Author = "TestAuthor";
         mod1.ModHeader.Description = "TestDescription";
+        mod2.ModHeader.Author = "TestAuthor";
+        mod2.ModHeader.Description = "TestDescription";
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new OblivionMultiModOverlay(
@@ -273,8 +268,22 @@ public class OblivionMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // ModHeader should come from first mod
         overlay.ModHeader.Author.ShouldBe("TestAuthor");
         overlay.ModHeader.Description.ShouldBe("TestDescription");
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.Oblivion)]
+    public void ModHeader_MismatchingFieldsThrow(
+        OblivionMod mod1,
+        OblivionMod mod2)
+    {
+        mod1.ModHeader.Author = "AuthorA";
+        mod2.ModHeader.Author = "AuthorB";
+
+        var targetModKey = new ModKey("TestMerged", ModType.Plugin);
+        Should.Throw<System.IO.InvalidDataException>(() => new OblivionMultiModOverlay(
+            targetModKey,
+            new[] { mod1, mod2 },
+            Array.Empty<IMasterReferenceGetter>()));
     }
 }

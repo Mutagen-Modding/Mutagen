@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace Mutagen.Bethesda;
 
@@ -15,6 +15,8 @@ public enum GameCategory
     Fallout4,
     [Description("Starfield")]
     Starfield,
+    [Description("Fallout3")]
+    Fallout3,
 }
 
 public static class GameReleaseKernelExt
@@ -31,9 +33,12 @@ public static class GameReleaseKernelExt
             GameRelease.SkyrimVR => GameCategory.Skyrim,
             GameRelease.EnderalLE => GameCategory.Skyrim,
             GameRelease.EnderalSE => GameCategory.Skyrim,
+            GameRelease.EnderalSEGog => GameCategory.Skyrim,
             GameRelease.Fallout4 => GameCategory.Fallout4,
             GameRelease.Fallout4VR => GameCategory.Fallout4,
             GameRelease.Starfield => GameCategory.Starfield,
+            GameRelease.Fallout3 => GameCategory.Fallout3,
+            GameRelease.FalloutNV => GameCategory.Fallout3,
             _ => throw new NotImplementedException(),
         };
     }

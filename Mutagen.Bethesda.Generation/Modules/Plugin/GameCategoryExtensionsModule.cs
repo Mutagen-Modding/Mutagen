@@ -15,6 +15,7 @@ public class GameCategoryExtensionsModule : GenerationModule
         if (proto.Protocol.Namespace != "Bethesda") return;
 
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
         sb.AppendLine("using System;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Records;");
         sb.AppendLine();

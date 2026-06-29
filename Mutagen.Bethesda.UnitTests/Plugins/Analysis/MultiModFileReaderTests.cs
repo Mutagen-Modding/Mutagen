@@ -2,13 +2,11 @@ using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
 
@@ -47,20 +45,20 @@ public class MultiModFileReaderTests
             outputPath,
             BinaryWriteParameters.Default with { FileSystem = fileSystem });
 
-        // Verify split files were created
+        // Verify split files were created (base file + _2)
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(mod.ModKey.FileName);
         var extension = Path.GetExtension(mod.ModKey.FileName);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_1{extension}");
+        var splitFile1 = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);  // Base file (no suffix)
         var splitFile2 = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
 
         fileSystem.File.Exists(splitFile1).ShouldBeTrue();
         fileSystem.File.Exists(splitFile2).ShouldBeTrue();
 
         // Create a simple load order with all the masters
-        var loadOrder = new List<IModMasterStyledGetter>();
+        var loadOrder = new List<ModKey>();
         foreach (var master in mod.ModHeader.MasterReferences)
         {
-            loadOrder.Add(new KeyedMasterStyle(master.Master, MasterStyle.Full));
+            loadOrder.Add(master.Master);
         }
 
         // Read back using MultiModFileReader (returns read-only overlay)
@@ -99,7 +97,7 @@ public class MultiModFileReaderTests
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("NonExistent", ModType.Plugin);
-        var loadOrder = new List<IModMasterStyledGetter>();
+        var loadOrder = new List<ModKey>();
 
         var reader = new MultiModFileReader();
 
@@ -120,12 +118,19 @@ public class MultiModFileReaderTests
         IFileSystem fileSystem)
     {
         var modKey = new ModKey("TestMod", ModType.Plugin);
-        var splitFile1 = Path.Combine(existingOutputDirectory.Path, "TestMod_1.esp");
+        // With new naming: base file exists but _2 doesn't = single file, not split
+        // To trigger "only one split file" error, we need base file + _2 missing but base exists
+        // Actually, since DetectSplitFiles returns empty if _2 doesn't exist, we need a different test
+        // The error occurs if base exists AND _2 exists but we somehow detect only 1 file (edge case)
+        // For new naming scheme, this test needs adjustment - create base file only
+        var baseFile = Path.Combine(existingOutputDirectory.Path, "TestMod.esp");
 
-        // Create just one split file
-        fileSystem.File.WriteAllText(splitFile1, "dummy content");
+        // Create just the base file - this means no split (not an error, returns empty)
+        // To test error, we actually don't have this edge case anymore with new detection
+        // Keep this test but expect "No split files found" since detection returns empty
+        fileSystem.File.WriteAllText(baseFile, "dummy content");
 
-        var loadOrder = new List<IModMasterStyledGetter>();
+        var loadOrder = new List<ModKey>();
         var reader = new MultiModFileReader();
 
         Should.Throw<SplitModException>(() =>
@@ -136,6 +141,6 @@ public class MultiModFileReaderTests
                 GameRelease.SkyrimSE,
                 loadOrder,
                 BinaryReadParameters.Default with { FileSystem = fileSystem });
-        }).Message.ShouldContain("Found only one split file");
+        }).Message.ShouldContain("No split files found");
     }
 }

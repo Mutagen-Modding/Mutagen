@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Implicit;

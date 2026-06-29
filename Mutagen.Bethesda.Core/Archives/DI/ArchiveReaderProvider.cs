@@ -36,12 +36,15 @@ public sealed class ArchiveReaderProvider : IArchiveReaderProvider
         {
             case GameRelease.Oblivion:
             case GameRelease.OblivionRE:
+            case GameRelease.Fallout3:
+            case GameRelease.FalloutNV:
             case GameRelease.SkyrimLE:
             case GameRelease.SkyrimSE:
             case GameRelease.SkyrimSEGog:
             case GameRelease.SkyrimVR:
             case GameRelease.EnderalLE:
             case GameRelease.EnderalSE:
+            case GameRelease.EnderalSEGog:
                 return new BsaReader(path, _fileSystem);
             case GameRelease.Starfield:
             case GameRelease.Fallout4:

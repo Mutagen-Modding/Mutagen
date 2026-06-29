@@ -18,7 +18,7 @@
       <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
-  <Object name="Cell" objType="Record" baseClass="SkyrimMajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal">
+  <Object name="Cell" objType="Record" baseClass="SkyrimMajorRecord" recordType="CELL" majorFlag="true" customBinaryEnd="Normal" resolvedAssets="true">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Enum name="Flags" enumName="Cell.Flag" byteLength="2" nullable="False" recordType="DATA" binaryOverlay="Custom" />

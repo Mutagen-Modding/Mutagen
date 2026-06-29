@@ -23,6 +23,7 @@ public class TypeOptionSolidifier : GenerationModule
         if (proto.Protocol.Namespace.Equals("Bethesda")) return;
         bool generate = false;
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
 
         var modObj = proto.ObjectGenerationsByName.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
@@ -107,7 +108,7 @@ public class TypeOptionSolidifier : GenerationModule
                 {
                     if (LinkInterfaceModule.ObjectMappings.TryGetValue(proto.Protocol, out var interfs))
                     {
-                        foreach (var interf in interfs)
+                        foreach (var interf in interfs.OrderBy(x => x.Key))
                         {
                             var getter = $"{interf.Key}Getter";
                             using (var comment = sb.Comment())

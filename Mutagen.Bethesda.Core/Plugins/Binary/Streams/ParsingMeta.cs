@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -55,6 +56,11 @@ public sealed class ParsingMeta
     /// Tracker of current major record version
     /// </summary>
     public ushort? FormVersion { get; set; }
+
+    /// <summary>
+    /// Mod header HEDR version
+    /// </summary>
+    public float? ModHeaderVersion { get; set; }
 
     /// <summary>
     /// ModKey of the mod being parsed
@@ -135,15 +141,29 @@ public sealed class ParsingMeta
         LinkCache = readParameters.LinkCache;
     }
 
+    private void ReadModHeaderVersion(ModHeaderFrame header)
+    {
+        foreach (var sub in header)
+        {
+            if (sub.RecordType == RecordTypes.HEDR)
+            {
+                ModHeaderVersion = System.Buffers.Binary.BinaryPrimitives.ReadSingleLittleEndian(sub.Content.Slice(0, 4));
+                return;
+            }
+        }
+    }
+
     public static ParsingMeta Factory(
         BinaryReadParameters param,
         GameRelease release,
         ModPath modPath)
     {
         var header = ModHeaderFrame.FromPath(modPath, release, fileSystem: param.FileSystem);
-        var rawMasters = MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
+        var rawMasters = param.MasterOverrides
+            ?? MasterReferenceCollection.FromModHeader(modPath.ModKey, header);
         var masters = SeparatedMasterPackage.Factory(release, modPath, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modPath.ModKey, masters);
+        meta.ReadModHeaderVersion(header);
         meta.Absorb(param);
         return meta;
     }
@@ -155,10 +175,12 @@ public sealed class ParsingMeta
         Stream stream)
     {
         var header = ModHeaderFrame.FromStream(stream, modKey, release);
-        var rawMasters = MasterReferenceCollection.FromModHeader(modKey, header);
+        var rawMasters = param.MasterOverrides
+            ?? MasterReferenceCollection.FromModHeader(modKey, header);
         stream.Position = 0;
         var masters = SeparatedMasterPackage.Factory(release, modKey, header.MasterStyle, rawMasters, param.MasterFlagsLookup);
         var meta = new ParsingMeta(GameConstants.Get(release), modKey, masters);
+        meta.ReadModHeaderVersion(header);
         meta.Absorb(param);
         return meta;
     }

@@ -29,8 +29,10 @@ public class MajorRecordRemovalModule : GenerationModule
         {
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey) => this.Remove(formKey);");
+            sb.AppendLine("#pragma warning disable CS0618 // Type or member is obsolete");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
+            sb.AppendLine("#pragma warning restore CS0618");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
             sb.AppendLine("[DebuggerStepThrough]");
@@ -344,6 +346,7 @@ public class MajorRecordRemovalModule : GenerationModule
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
         var overrideStr = await obj.FunctionOverride(async c => await MajorRecordModule.HasMajorRecords(c, includeBaseClass: false, includeSelf: true) != Case.No);
 
+        sb.AppendLine("#pragma warning disable CS0618 // Type or member is obsolete");
         using (var args = sb.Function(
                    $"public{overrideStr}void Remove"))
         {
@@ -629,12 +632,12 @@ public class MajorRecordRemovalModule : GenerationModule
                     }
 
                     // Generate for major record marker interfaces 
-                    foreach (var interf in interfs.EmptyIfNull())
+                    foreach (var interf in interfs.EmptyIfNull().OrderBy(x => x.Key))
                     {
                         StructuredStringBuilder subFg = new StructuredStringBuilder();
                         HashSet<ObjectGeneration> passedObjects = new HashSet<ObjectGeneration>();
                         HashSet<TypeGeneration> deepObjects = new HashSet<TypeGeneration>();
-                        foreach (var subObj in interf.Value)
+                        foreach (var subObj in interf.Value.OrderBy(x => x.Name))
                         {
                             var grup = obj.Fields
                                 .WhereCastable<TypeGeneration, GroupType>()
@@ -680,7 +683,15 @@ public class MajorRecordRemovalModule : GenerationModule
                         }
                     }
 
-                    foreach (var kv in generationDict)
+                    foreach (var kv in generationDict
+                                 .OrderBy(x => x.Key switch
+                                 {
+                                     LoquiType l => l.Interface(getter: true),
+                                     ObjectGeneration o => o.Name,
+                                     InterfInstr i => i.Interf,
+                                     string s => s,
+                                     _ => x.Key.ToString()
+                                 }))
                     {
                         switch (kv.Key)
                         {
@@ -787,6 +798,7 @@ public class MajorRecordRemovalModule : GenerationModule
                 sb.AppendLine();
             }
         }
+        sb.AppendLine("#pragma warning restore CS0618");
     }
 
     async Task ApplyRemovalLines(

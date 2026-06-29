@@ -120,7 +120,7 @@
       <CustomLogic name="ExtraNAM2" />
       <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" nullable="False">
         <Fields>
-          <RefDirect refName="Model" />
+          <RefDirect refName="ModelBehavior" />
         </Fields>
       </Gendered>
       <FormLink name="MaterialType" recordType="NAM4" refName="MaterialType" />
@@ -176,7 +176,7 @@
   <Object name="BodyData" objType="Subrecord">
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
-      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Model" refName="ModelBodyTexture" />
     </Fields>
   </Object>
   <Object name="RaceMovementType" objType="Subrecord">

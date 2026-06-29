@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Impact" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="IPCT">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <Data nullable="False">
+        <Fields>
+          <Float name="Duration" />
+          <Enum name="Orientation" enumName="Impact.OrientationType" byteLength="4" />
+          <Float name="AngleThreshold" />
+          <Float name="PlacementRadius" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Bool name="NoDecalData" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefDirect name="Decal" refName="Decal" />
+      <FormLink name="TextureSet" refName="TextureSet" recordType="DNAM" />
+      <FormLink name="Sound1" recordType="SNAM" refName="Sound" />
+      <FormLink name="Sound2" recordType="NAM1" refName="Sound" />
+    </Fields>
+  </Object>
+</Loqui>

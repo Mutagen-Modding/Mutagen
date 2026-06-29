@@ -13,6 +13,7 @@ public class LinkCacheExtensionsModule : GenerationModule
         if (proto.Protocol.Namespace.Equals("All")
             || proto.Protocol.Namespace.Equals("Bethesda")) return;
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
 
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");

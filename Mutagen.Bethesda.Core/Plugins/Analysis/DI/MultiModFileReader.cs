@@ -28,7 +28,7 @@ public interface IMultiModFileReader
         DirectoryPath folder,
         ModKey modKey,
         GameRelease gameRelease,
-        IEnumerable<IModMasterStyledGetter> loadOrder,
+        IEnumerable<ModKey> loadOrder,
         BinaryReadParameters readParams)
         where TModGetter : class, IModDisposeGetter;
 }
@@ -44,7 +44,7 @@ public class MultiModFileReader : IMultiModFileReader
         DirectoryPath folder,
         ModKey modKey,
         GameRelease gameRelease,
-        IEnumerable<IModMasterStyledGetter> loadOrder,
+        IEnumerable<ModKey> loadOrder,
         BinaryReadParameters readParams)
         where TModGetter : class, IModDisposeGetter
     {

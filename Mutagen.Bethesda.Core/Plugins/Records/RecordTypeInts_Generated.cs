@@ -1,3 +1,4 @@
+#nullable enable
 namespace Mutagen.Bethesda.Plugins.Records.Internals;
 
 public partial class RecordTypeInts
@@ -12,8 +13,10 @@ public partial class RecordTypeInts
     public const int AECH = 0x48434541;
     public const int AFFE = 0x45464641;
     public const int ALCH = 0x48434C41;
+    public const int ALOC = 0x434F4C41;
     public const int AMBS = 0x53424D41;
     public const int AMDL = 0x4C444D41;
+    public const int AMEF = 0x46454D41;
     public const int AMMO = 0x4F4D4D41;
     public const int ANIO = 0x4F494E41;
     public const int AOPF = 0x46504F41;
@@ -36,14 +39,18 @@ public partial class RecordTypeInts
     public const int BPTD = 0x44545042;
     public const int BSGN = 0x4E475342;
     public const int CAMS = 0x534D4143;
+    public const int CCRD = 0x44524343;
+    public const int CDCK = 0x4B434443;
     public const int CELL = 0x4C4C4543;
     public const int CHAL = 0x4C414843;
+    public const int CHIP = 0x50494843;
     public const int CITC = 0x43544943;
     public const int CLAS = 0x53414C43;
     public const int CLDF = 0x46444C43;
     public const int CLFM = 0x4D464C43;
     public const int CLMT = 0x544D4C43;
     public const int CLOT = 0x544F4C43;
+    public const int CMNY = 0x594E4D43;
     public const int CMPO = 0x4F504D43;
     public const int CNDF = 0x46444E43;
     public const int COBJ = 0x4A424F43;
@@ -51,12 +58,14 @@ public partial class RecordTypeInts
     public const int CONT = 0x544E4F43;
     public const int CPTH = 0x48545043;
     public const int CREA = 0x41455243;
+    public const int CSNO = 0x4F4E5343;
     public const int CSTY = 0x59545343;
     public const int CTDA = 0x41445443;
     public const int CUR3 = 0x33525543;
     public const int CURV = 0x56525543;
     public const int DATA = 0x41544144;
     public const int DEBR = 0x52424544;
+    public const int DEHY = 0x59484544;
     public const int DFOB = 0x424F4644;
     public const int DIAL = 0x4C414944;
     public const int DLBR = 0x52424C44;
@@ -93,13 +102,16 @@ public partial class RecordTypeInts
     public const int GPOG = 0x474F5047;
     public const int GRAS = 0x53415247;
     public const int GRUP = 0x50555247;
+    public const int GWED = 0x44455747;
     public const int HAIR = 0x52494148;
     public const int HAZD = 0x445A4148;
     public const int HDPT = 0x54504448;
+    public const int HUNG = 0x474E5548;
     public const int IDLE = 0x454C4449;
     public const int IDLM = 0x4D4C4449;
     public const int IMAD = 0x44414D49;
     public const int IMGS = 0x53474D49;
+    public const int IMOD = 0x444F4D49;
     public const int INFO = 0x4F464E49;
     public const int INGR = 0x52474E49;
     public const int INNR = 0x524E4E49;
@@ -119,6 +131,7 @@ public partial class RecordTypeInts
     public const int LIGH = 0x4847494C;
     public const int LMSW = 0x57534D4C;
     public const int LSCR = 0x5243534C;
+    public const int LSCT = 0x5443534C;
     public const int LTEX = 0x5845544C;
     public const int LVLB = 0x424C564C;
     public const int LVLC = 0x434C564C;
@@ -133,9 +146,11 @@ public partial class RecordTypeInts
     public const int MATT = 0x5454414D;
     public const int MESG = 0x4753454D;
     public const int MGEF = 0x4645474D;
+    public const int MICN = 0x4E43494D;
     public const int MISC = 0x4353494D;
     public const int MOVT = 0x54564F4D;
     public const int MRPH = 0x4850524D;
+    public const int MSET = 0x5445534D;
     public const int MSTT = 0x5454534D;
     public const int MSWP = 0x5057534D;
     public const int MTPT = 0x5450544D;
@@ -174,14 +189,20 @@ public partial class RecordTypeInts
     public const int PROJ = 0x4A4F5250;
     public const int PSDC = 0x43445350;
     public const int PTST = 0x54535450;
+    public const int PWAT = 0x54415750;
     public const int QUST = 0x54535551;
     public const int RACE = 0x45434152;
+    public const int RADS = 0x53444152;
+    public const int RCCT = 0x54434352;
+    public const int RCPE = 0x45504352;
     public const int REFR = 0x52464552;
     public const int REGN = 0x4E474552;
     public const int RELA = 0x414C4552;
+    public const int REPU = 0x55504552;
     public const int REVB = 0x42564552;
     public const int RFCT = 0x54434652;
     public const int RFGP = 0x50474652;
+    public const int RGDL = 0x4C444752;
     public const int ROAD = 0x44414F52;
     public const int RSGD = 0x44475352;
     public const int RSPJ = 0x4A505352;
@@ -202,6 +223,7 @@ public partial class RecordTypeInts
     public const int SHOU = 0x554F4853;
     public const int SKIL = 0x4C494B53;
     public const int SLGM = 0x4D474C53;
+    public const int SLPD = 0x44504C53;
     public const int SMBN = 0x4E424D53;
     public const int SMEN = 0x4E454D53;
     public const int SMQN = 0x4E514D53;

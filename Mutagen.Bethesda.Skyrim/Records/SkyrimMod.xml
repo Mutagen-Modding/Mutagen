@@ -128,5 +128,6 @@
     <GameReleaseOptions>SkyrimVR</GameReleaseOptions>
     <GameReleaseOptions>EnderalLE</GameReleaseOptions>
     <GameReleaseOptions>EnderalSE</GameReleaseOptions>
+    <GameReleaseOptions>EnderalSEGog</GameReleaseOptions>
   </Object>
 </Loqui>

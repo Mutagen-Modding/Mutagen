@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Note" recordType="NOTE" objType="Record" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="PickUpSound" recordType="YNAM" refName="Sound" />
+      <FormLink name="DropSound" recordType="ZNAM" refName="Sound" />
+      <CustomLogic name="TypeParse" recordType="DATA" />
+      <List name="Quests">
+        <FormLink recordType="ONAM" refName="Quest" />
+      </List>
+      <String name="Texture" recordType="XNAM" />
+      <CustomLogic name="DataParse">
+        <RecordType>TNAM</RecordType>
+        <RecordType>SNAM</RecordType>
+      </CustomLogic>
+      <RefDirect name="Data" refName="ANoteData" binary="NoGeneration" />
+    </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IRecipeItem</LinkInterface>
+    <LinkInterface>IPlaceableObject</LinkInterface>
+    <LinkInterface>IExplodeSpawn</LinkInterface>
+  </Object>
+  <Object name="ANoteData" objType="Subrecord" abstract="true" />
+  <Object name="NoteStandard" objType="Subrecord" baseClass="ANoteData">
+    <Fields>
+      <Enum name="Type" enumName="Note.NoteType" byteLength="1" binary="NoGeneration" />
+      <String name="Text" nullable="True" />
+      <FormLink name="Sound" refName="Sound" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="NoteVoice" objType="Subrecord" baseClass="ANoteData">
+    <Fields>
+      <FormLink name="Topic" refName="DialogTopic" nullable="True" />
+      <FormLink name="Speaker" nullable="True">
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+</Loqui>

@@ -32,7 +32,7 @@ public sealed class FormKeyJsonConverter : JsonConverter
             }
             if (!objectType.Name.Contains("FormLink"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException($"Object type name did not contain FormLink: {objectType.Name}");
             }
 
             if (IsNullableLink(objectType))
@@ -76,7 +76,7 @@ public sealed class FormKeyJsonConverter : JsonConverter
 
             if (!objectType.Name.Contains("FormLink"))
             {
-                throw new ArgumentException();
+                throw new ArgumentException($"Object type name did not contain FormLink: {objectType.Name}");
             }
 
             if (objectType.IsGenericType)
@@ -94,24 +94,18 @@ public sealed class FormKeyJsonConverter : JsonConverter
                         return GetFormLink(objectType.GenericTypeArguments[0], key);
                     }
                 }
+                
+                if (objectType.GenericTypeArguments.Length > 0 && !str.Contains('<'))
+                {
+                    key = FormKey.Factory(str);
+                    return GetFormLink(objectType.GenericTypeArguments[0], key);
+                }
 
-                Type type;
-                if (objectType.GenericTypeArguments.Length > 0)
-                {
-                    // Type is known from the generic argument, type annotation in string is optional
-                    type = objectType.GenericTypeArguments[0];
-                    var angleBracketIndex = str.IndexOf('<');
-                    key = angleBracketIndex == -1
-                        ? FormKey.Factory(str)
-                        : FormKey.Factory(str.AsSpan()[..angleBracketIndex]);
-                }
-                else
-                {
-                    // Type must be parsed from the string
-                    ILoquiRegistration regis;
-                    (key, regis) = ParseFormKeyAndType(str);
-                    type = regis.GetterType;
-                }
+                (key, var regis) = ParseFormKeyAndType(str);
+
+                var type = objectType.GenericTypeArguments.Length == 0
+                    ? regis.GetterType
+                    : objectType.GenericTypeArguments[0];
 
                 return GetFormLink(type, key);
             }

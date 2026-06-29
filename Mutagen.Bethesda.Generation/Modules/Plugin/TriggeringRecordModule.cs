@@ -289,7 +289,9 @@ public class TriggeringRecordModule : GenerationModule
         if (obj.GetObjectType() == ObjectType.Group || obj.GetObjectType() == ObjectType.Mod) return;
         if (obj.Name.EndsWith("MajorRecord")) return;
 
-        var all = await GetAllRecordTypes(obj).ToArrayAsync();
+        var all = (await GetAllRecordTypes(obj).ToArrayAsync())
+            .OrderBy(x => x.Type)
+            .ToArray();
         var same = trigRecordTypes.ToHashSet().OrderBy(x => x.TypeInt).SequenceEqual(all.ToHashSet().OrderBy(x => x.TypeInt));
 
         if (trigRecordTypes.Count == 0 && all.Length == 0) return;
@@ -323,7 +325,7 @@ public class TriggeringRecordModule : GenerationModule
                 using (var args = sb.Call(
                            "var triggers = RecordCollection.Factory"))
                 {
-                    foreach (var trigger in trigRecordTypes)
+                    foreach (var trigger in trigRecordTypes.OrderBy(x => x.Type))
                     {
                         args.Add($"{obj.RecordTypeHeaderName(trigger)}");
                     }
@@ -901,6 +903,7 @@ public class TriggeringRecordModule : GenerationModule
         recordTypes.Add("XXXX");
         
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
         sb.AppendLine("using Mutagen.Bethesda.Plugins;");
         sb.AppendLine();
 
@@ -923,6 +926,7 @@ public class TriggeringRecordModule : GenerationModule
         exportStringToFile.ExportToFile(path, sb.GetString());
         proto.GeneratedFiles.Add(path, ProjItemType.Compile);
         sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
         using (var n = sb.Namespace($"{proto.DefaultNamespace}.Internals"))
         {
             using (var c = sb.Class("RecordTypeInts"))

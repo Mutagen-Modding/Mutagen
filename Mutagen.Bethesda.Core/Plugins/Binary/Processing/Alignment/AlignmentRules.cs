@@ -8,6 +8,7 @@ public sealed class AlignmentRules
     public Dictionary<RecordType, IEnumerable<RecordType>> StartMarkers = new();
     public Dictionary<RecordType, IEnumerable<RecordType>> StopMarkers = new();
     public Dictionary<int, List<RecordType>> GroupAlignment = new();
+    public List<RecordType>? TopLevelGroupOrder { get; private set; }
 
     public void AddAlignments(RecordType type, params RecordType[] recTypes)
     {
@@ -37,5 +38,10 @@ public sealed class AlignmentRules
     public void SetGroupAlignment(int group, params RecordType[] recTypes)
     {
         GroupAlignment.GetOrAdd(group).SetTo(recTypes);
+    }
+
+    public void SetTopLevelGroupOrder(params RecordType[] recTypes)
+    {
+        TopLevelGroupOrder = new List<RecordType>(recTypes);
     }
 }

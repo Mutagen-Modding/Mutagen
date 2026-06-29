@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DamageType" recordType="DMGT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefList name="DamageTypes" refName="DamageTypeItem" />
     </Fields>

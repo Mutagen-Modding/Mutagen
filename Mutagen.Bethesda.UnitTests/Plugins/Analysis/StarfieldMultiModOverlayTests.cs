@@ -213,14 +213,10 @@ public class StarfieldMultiModOverlayTests
     }
 
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
-    public void GetRecordCount_SumsAllMods(
+    public void GetRecordCount_DeduplicatesAcrossMods(
         StarfieldMod mod1,
         StarfieldMod mod2)
     {
-        // Get initial counts
-        var initialCount1 = mod1.GetRecordCount();
-        var initialCount2 = mod2.GetRecordCount();
-
         // Add records to both mods
         mod1.FormLists.AddNew();
         mod1.FormLists.AddNew();
@@ -235,9 +231,7 @@ public class StarfieldMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // Should sum all records from all mods (initial + newly added)
-        var expectedCount = mod1.GetRecordCount() + mod2.GetRecordCount();
-        overlay.GetRecordCount().ShouldBe(expectedCount);
+        overlay.GetRecordCount().ShouldBe(8u);
     }
 
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -259,13 +253,14 @@ public class StarfieldMultiModOverlayTests
     }
 
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
-    public void ModHeader_TakenFromFirstMod(
+    public void ModHeader_MatchingFieldsExposed(
         StarfieldMod mod1,
         StarfieldMod mod2)
     {
-        // Set distinct properties on mod1's header
         mod1.ModHeader.Author = "TestAuthor";
         mod1.ModHeader.Description = "TestDescription";
+        mod2.ModHeader.Author = "TestAuthor";
+        mod2.ModHeader.Description = "TestDescription";
 
         var targetModKey = new ModKey("TestMerged", ModType.Plugin);
         var overlay = new StarfieldMultiModOverlay(
@@ -273,8 +268,22 @@ public class StarfieldMultiModOverlayTests
             new[] { mod1, mod2 },
             Array.Empty<IMasterReferenceGetter>());
 
-        // ModHeader should come from first mod
         overlay.ModHeader.Author.ShouldBe("TestAuthor");
         overlay.ModHeader.Description.ShouldBe("TestDescription");
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.Starfield)]
+    public void ModHeader_MismatchingFieldsThrow(
+        StarfieldMod mod1,
+        StarfieldMod mod2)
+    {
+        mod1.ModHeader.Author = "AuthorA";
+        mod2.ModHeader.Author = "AuthorB";
+
+        var targetModKey = new ModKey("TestMerged", ModType.Plugin);
+        Should.Throw<System.IO.InvalidDataException>(() => new StarfieldMultiModOverlay(
+            targetModKey,
+            new[] { mod1, mod2 },
+            Array.Empty<IMasterReferenceGetter>()));
     }
 }

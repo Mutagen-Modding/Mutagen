@@ -1,6 +1,5 @@
-using Noggog.WPF;
 using ReactiveUI;
-using System.Reactive.Disposables;
+using Noggog;
 
 namespace Mutagen.Bethesda.Tests.GUI.Views;
 

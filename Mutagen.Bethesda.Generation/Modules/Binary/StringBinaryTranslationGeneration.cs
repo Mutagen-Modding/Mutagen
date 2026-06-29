@@ -42,65 +42,88 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
     {  
     }  
   
-    public override async Task GenerateWrite(  
-        StructuredStringBuilder sb,  
-        ObjectGeneration objGen,  
-        TypeGeneration typeGen,  
-        Accessor writerAccessor,  
-        Accessor itemAccessor,  
-        Accessor errorMaskAccessor,  
-        Accessor translationMaskAccessor,  
-        Accessor converterAccessor)  
-    {  
-        var stringType = typeGen as StringType;  
-        var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;  
-        using (var args = sb.Call(  
-                   $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))  
-        {  
-            args.Add($"writer: {writerAccessor}");  
-            args.Add($"item: {AccessorTransform(typeGen, itemAccessor)}");  
-            if (this.DoErrorMasks)  
-            {  
-                if (typeGen.HasIndex)  
-                {  
-                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");  
-                }  
-                args.Add($"errorMask: {errorMaskAccessor}");  
-            }  
-            if (data.RecordType.HasValue)  
-            {  
-                args.Add($"header: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");  
-            }  
-            else if (data.Length.HasValue)  
-            {  
-                args.Add($"length: {data.Length.Value}");   
-            }  
-            args.Add($"binaryType: {nameof(StringBinaryType)}.{stringType.BinaryType}");  
-            if (stringType.Translated.HasValue) 
-            { 
-                args.Add($"source: {nameof(StringsSource)}.{stringType.Translated.Value}"); 
-            } 
-        } 
-    } 
+    public override async Task GenerateWrite(
+        StructuredStringBuilder sb,
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        Accessor writerAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor,
+        Accessor converterAccessor)
+    {
+        var stringType = typeGen as StringType;
+        var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+        if (stringType.BinaryType == StringBinaryType.NullPaddedFixedLength)
+        {
+            if (!data.Length.HasValue)
+            {
+                throw new ArgumentException($"StringBinaryType.NullPaddedFixedLength requires a byteLength attribute on field {typeGen.Name}.");
+            }
+            using (var args = sb.Call($"{this.NamespacePrefix}StringBinaryTranslation.Instance.WriteNullPaddedFixedLength"))
+            {
+                args.Add($"writer: {writerAccessor}");
+                args.Add($"item: {AccessorTransform(typeGen, itemAccessor)}");
+                args.Add($"byteLength: {data.Length.Value}");
+            }
+            return;
+        }
+        using (var args = sb.Call(
+                   $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+        {
+            args.Add($"writer: {writerAccessor}");
+            args.Add($"item: {AccessorTransform(typeGen, itemAccessor)}");
+            if (this.DoErrorMasks)
+            {
+                if (typeGen.HasIndex)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                }
+                args.Add($"errorMask: {errorMaskAccessor}");
+            }
+            if (data.RecordType.HasValue)
+            {
+                args.Add($"header: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+            }
+            else if (data.Length.HasValue)
+            {
+                args.Add($"length: {data.Length.Value}");
+            }
+            args.Add($"binaryType: {nameof(StringBinaryType)}.{stringType.BinaryType}");
+            if (stringType.Translated.HasValue)
+            {
+                args.Add($"source: {nameof(StringsSource)}.{stringType.Translated.Value}");
+            }
+        }
+    }
   
-    public override async Task GenerateCopyIn(  
-        StructuredStringBuilder sb,  
-        ObjectGeneration objGen,  
-        TypeGeneration typeGen,  
-        Accessor frameAccessor,  
-        Accessor itemAccessor,  
-        Accessor errorMaskAccessor,  
-        Accessor translationMaskAccessor)  
-    {  
-        var str = typeGen as StringType;  
-        var data = typeGen.GetFieldData();  
-        if (data.HasTrigger)  
-        {  
-            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");  
-        }  
-  
-        List<string> extraArgs = new List<string>();  
-        extraArgs.Add($"reader: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");  
+    public override async Task GenerateCopyIn(
+        StructuredStringBuilder sb,
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        Accessor frameAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor,
+        Accessor translationMaskAccessor)
+    {
+        var str = typeGen as StringType;
+        var data = typeGen.GetFieldData();
+        if (str.BinaryType == StringBinaryType.NullPaddedFixedLength)
+        {
+            if (!data.Length.HasValue)
+            {
+                throw new ArgumentException($"StringBinaryType.NullPaddedFixedLength requires a byteLength attribute on field {typeGen.Name}.");
+            }
+            sb.AppendLine($"{itemAccessor} = {this.NamespacePrefix}StringBinaryTranslation.Instance.ParseNullPaddedFixedLength({frameAccessor}, byteLength: {data.Length.Value});");
+            return;
+        }
+        if (data.HasTrigger)
+        {
+            sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+        }
+
+        List<string> extraArgs = new List<string>();
+        extraArgs.Add($"reader: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
         if (str.Translated.HasValue) 
         { 
             extraArgs.Add($"eager: true");
@@ -251,10 +274,12 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 4, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
                 case StringBinaryType.PrependLengthUShort:  
                     return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 2, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
-                case StringBinaryType.PrependLengthUInt8:  
-                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 1, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";  
-                default:  
-                    throw new NotImplementedException();  
+                case StringBinaryType.PrependLengthUInt8:
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ParsePrependedString)}({dataAccessor}, lengthLength: 1, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";
+                case StringBinaryType.NullPaddedFixedLength:
+                    return $"{nameof(BinaryStringUtility)}.{nameof(BinaryStringUtility.ProcessWholeToZString)}({dataAccessor}, encoding: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Encodings)}.{nameof(EncodingBundle.NonTranslated)})";
+                default:
+                    throw new NotImplementedException();
             }  
         }  
     }  

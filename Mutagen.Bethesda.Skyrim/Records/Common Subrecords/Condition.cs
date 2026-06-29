@@ -777,13 +777,11 @@ public static class ParameterTypeMixIn
             case ParameterType.Float:
             case ParameterType.VariableName:
             case ParameterType.Sex:
-            case ParameterType.ActorValue:
             case ParameterType.CrimeType:
             case ParameterType.Axis:
             case ParameterType.QuestStage:
             case ParameterType.MiscStat:
             case ParameterType.Alignment:
-            case ParameterType.EquipType:
             case ParameterType.FormType:
             case ParameterType.CriticalStage:
             case ParameterType.VATSValueFunction:
@@ -829,6 +827,8 @@ public static class ParameterTypeMixIn
             case ParameterType.Scene:
             case ParameterType.EventData:
             case ParameterType.Knowable:
+            case ParameterType.ActorValue:
+            case ParameterType.EquipType:
                 return ParameterCategory.Form;
             default:
                 throw new NotImplementedException();
@@ -928,6 +928,7 @@ partial class ConditionBinaryCreateTranslation
         item.RunOnTypeIndex = frame.ReadInt32();
     }
     
+#pragma warning disable CS0618 // Type or member is obsolete
     public static ConditionData? CreateDataFromBinaryInternal(MutagenFrame frame, ushort functionIndex)
     {
         switch (functionIndex)
@@ -1740,6 +1741,7 @@ partial class ConditionBinaryCreateTranslation
                 return null;
         }
     }
+#pragma warning restore CS0618
 
     public ushort GetFunctionIndex(IConditionDataGetter data)
     {

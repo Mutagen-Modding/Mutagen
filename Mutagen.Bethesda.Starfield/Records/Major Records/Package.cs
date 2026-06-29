@@ -245,10 +245,7 @@ partial class PackageBinaryCreateTranslation
             stream.Position += subRecord.TotalLength;
         }
     done_indexes:
-        if (expectedCount != data.Count)
-        {
-            throw new ArgumentException("Unexpected data count mismatch");
-        }
+        var actualCount = packages.Count;
 
         // Mark end for later
         var end = stream.Position;
@@ -257,7 +254,7 @@ partial class PackageBinaryCreateTranslation
         stream.Position = valuesPosition;
         itemIndex = -1;
         lastPackage = null;
-        while (itemIndex < expectedCount)
+        while (itemIndex < actualCount)
         {
             if (!stream.TryGetSubrecord(out var subRecord)) break;
             switch (subRecord.RecordTypeInt)

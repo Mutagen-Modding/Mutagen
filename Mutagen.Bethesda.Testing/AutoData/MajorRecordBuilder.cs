@@ -55,7 +55,9 @@ public class MajorRecordBuilder : ISpecimenBuilder
             && MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(_release.ToCategory(), t, out var regis)
             && regis.Registrations.Count > 0)
         {
-            ret = MajorRecordInstantiator.Activator(formKey, _release, regis.Registrations.First().ClassType) as IMajorRecordInternal;
+            var concreteRegis = regis.Registrations.FirstOrDefault(r => !r.ClassType.IsAbstract);
+            if (concreteRegis == null) return null;
+            ret = MajorRecordInstantiator.Activator(formKey, _release, concreteRegis.ClassType) as IMajorRecordInternal;
         }
         else if (!t.IsAbstract)
         {

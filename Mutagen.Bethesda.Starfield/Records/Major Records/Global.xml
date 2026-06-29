@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Global" recordType="GLOB" baseClass="StarfieldMajorRecord" majorFlag="true" objType="Record">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefList name="Components" refName="AComponent" />
       <Float name="Data" recordType="FLTV" />
     </Fields>

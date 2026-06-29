@@ -159,8 +159,8 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     public ILoquiRegistration ContainedRecordRegistration => _registration;
 
     /// <inheritdoc />
-    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
-        
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true);
+
     /// <inheritdoc />
     public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
 
@@ -374,7 +374,7 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     public ILoquiRegistration ContainedRecordRegistration => _registration;
     public Type ContainedRecordType => typeof(TMajor);
 
-    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks();
+    public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true);
 
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,

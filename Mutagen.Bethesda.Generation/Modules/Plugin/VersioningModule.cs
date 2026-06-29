@@ -104,8 +104,23 @@ public class VersioningModule : GenerationModule
         {
             data.RecordTypeVersioning ??= new();
             data.RecordTypeVersioning.Add((
-                vers.GetAttribute<ushort>("formVersion", throwException: true), 
+                vers.GetAttribute<ushort>("formVersion", throwException: true),
                 vers.GetAttribute("recordType", throwException: true)!));
+        }
+        data.ModHeaderVersioning.AddRange(node.Elements(XName.Get("ModHeaderVersioning", LoquiGenerator.Namespace))
+            .Select(v => (Version: v.GetAttribute<float>("version", throwException: true),
+                Action: v.GetAttribute("action", VersionAction.Add)))
+            .OrderBy(v => v.Version));
+        if (data.ModHeaderVersioning.Count > 2)
+        {
+            throw new NotImplementedException();
+        }
+        else if (data.ModHeaderVersioning.Count == 2)
+        {
+            if (data.ModHeaderVersioning[0].Action == data.ModHeaderVersioning[1].Action)
+            {
+                throw new ArgumentException("ModHeaderVersioning has non-sensical instructions.");
+            }
         }
     }
 
@@ -158,5 +173,56 @@ public class VersioningModule : GenerationModule
             throw new NotImplementedException();
         }
         sb.AppendLine($"int {field.Name}VersioningOffset => {(lastVersionedField == null ? null : $"{lastVersionedField.Name}VersioningOffset + (")}{offsetStr}{(lastVersionedField == null ? null : ")")};");
+    }
+
+    private static string FloatStr(float val) => $"{val}f";
+
+    public static string GetModHeaderVersionIfCheck(MutagenFieldData data, Accessor versionAccessor)
+    {
+        if (!data.HasModHeaderVersioning)
+        {
+            throw new ArgumentException();
+        }
+        if (data.ModHeaderVersioning.Count <= 2)
+        {
+            return string.Join(" && ", data.ModHeaderVersioning.Select(v => $"{versionAccessor} {(v.Action == VersionAction.Add ? ">=" : "<")} {FloatStr(v.Version)}"));
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public static void AddModHeaderVersionOffset(StructuredStringBuilder sb, TypeGeneration field, int expectedLen, TypeGeneration lastVersionedField, Accessor versionAccessor)
+    {
+        var data = field.GetFieldData();
+        string offsetStr;
+        if (data.ModHeaderVersioning.Count == 1)
+        {
+            if (data.ModHeaderVersioning[0].Action == VersionAction.Add)
+            {
+                offsetStr = $"{versionAccessor} < {FloatStr(data.ModHeaderVersioning[0].Version)} ? -{expectedLen} : 0";
+            }
+            else
+            {
+                offsetStr = $"{versionAccessor} >= {FloatStr(data.ModHeaderVersioning[0].Version)} ? -{expectedLen} : 0";
+            }
+        }
+        else if (data.ModHeaderVersioning.Count == 2)
+        {
+            if (data.ModHeaderVersioning[0].Action == VersionAction.Add)
+            {
+                offsetStr = $"{versionAccessor} < {FloatStr(data.ModHeaderVersioning[0].Version)} || {versionAccessor} >= {FloatStr(data.ModHeaderVersioning[1].Version)} ? -{expectedLen} : 0";
+            }
+            else
+            {
+                offsetStr = $"{versionAccessor} >= {FloatStr(data.ModHeaderVersioning[0].Version)} || {versionAccessor} < {FloatStr(data.ModHeaderVersioning[1].Version)} ? -{expectedLen} : 0";
+            }
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+        sb.AppendLine($"int {field.Name}ModHeaderVersioningOffset => {(lastVersionedField == null ? null : $"{lastVersionedField.Name}ModHeaderVersioningOffset + (")}{offsetStr}{(lastVersionedField == null ? null : ")")};");
     }
 }

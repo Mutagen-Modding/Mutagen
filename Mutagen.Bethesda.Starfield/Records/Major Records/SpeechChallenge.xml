@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SpeechChallenge" recordType="SPCH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <Int16 name="QuestStageOnWin" recordType="SPWI" />
       <Int16 name="QuestStageOnLoss" recordType="SPLO" />
       <Bool name="SRAN" recordType="SRAN" boolAsMarker="True" />

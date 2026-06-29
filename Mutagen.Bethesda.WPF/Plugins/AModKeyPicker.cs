@@ -89,7 +89,7 @@ public class AModKeyPicker : NoggogControl
     {
         base.OnLoaded();
         ApplicableMods = this.WhenAnyValue(x => x.SearchableMods)
-            .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
             .Select(lo =>
             {
                 switch (lo)
@@ -112,8 +112,8 @@ public class AModKeyPicker : NoggogControl
             .Switch()
             .ObserveOnRxAppGui()
             .Filter(this.WhenAnyValue(x => x.FileName)
-                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-                .ObserveOn(RxApp.TaskpoolScheduler)
+                .Throttle(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
+                .ObserveOn(RxSchedulers.TaskpoolScheduler)
                 .Select<string, Func<ModKey, bool>>(term => (modKey) =>
                 {
                     return term.IsNullOrWhitespace() || modKey.ToString().Contains(term, StringComparison.OrdinalIgnoreCase);
@@ -152,7 +152,7 @@ public class AModKeyPicker : NoggogControl
                 .DisposeWith(_templateDisposable);
             this.Events().IsKeyboardFocusWithinChanged
                 .Where(x => !((bool)x.NewValue))
-                .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
+                .Delay(TimeSpan.FromMilliseconds(150), RxSchedulers.MainThreadScheduler)
                 .Subscribe(_ =>
                 {
                     this.InSearchMode = false;

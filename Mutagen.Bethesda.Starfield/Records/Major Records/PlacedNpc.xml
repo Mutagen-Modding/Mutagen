@@ -23,6 +23,7 @@
       <RefDirect name="ExternalEmittance" refName="ExternalEmittance" />
       <RefDirect name="Ownership" refName="Ownership"/>
       <FormLink name="EncounterLocation" refName="Location" recordType="XEZN" />
+      <Float name="GeometryDirtinessScale" recordType="XGDS" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
       <FormLink name="Location" refName="Location" recordType="XLRL" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />

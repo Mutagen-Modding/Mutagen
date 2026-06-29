@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -60,7 +60,7 @@ internal sealed class InternalImmutableLoadOrderLinkCache
             {
                 modsByKey.Add(modGetter.ModKey, modGetter.ToUntypedImmutableLinkCache(prefs));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ArgumentException(
                     $"Mods with duplicate ModKeys were passed into the Link Cache: {modGetter.ModKey}");
@@ -325,7 +325,9 @@ internal sealed class InternalImmutableLoadOrderLinkCache
                 return false;
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             return origMod.TryResolveIdentifier(formKey, out editorId);
+#pragma warning restore CS0618
         }
 
         if (_formKeyCache.TryResolve(formKey, formKey.ModKey, typeof(IMajorRecordGetter), out var rec))

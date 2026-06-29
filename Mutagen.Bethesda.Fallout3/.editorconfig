@@ -1,0 +1,10 @@
+[*.cs]
+
+# CS0108: // Member hides inherited member; missing new keyword
+dotnet_diagnostic.CS0108.severity = silent
+
+# CS0109: // Member does not hide an inherited member; new keyword is not required
+dotnet_diagnostic.CS0109.severity = silent
+
+# CS0162: // Unreachable code detected
+dotnet_diagnostic.CS0162.severity = silent

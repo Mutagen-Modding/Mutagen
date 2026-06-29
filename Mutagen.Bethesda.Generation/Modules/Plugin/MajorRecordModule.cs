@@ -1,5 +1,6 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
@@ -43,10 +44,6 @@ public class MajorRecordModule : GenerationModule
             if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
             {
                 sb.AppendLine("this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;");
-            }
-            else if (obj.Name != "MajorRecord" && obj.GetObjectData().GameCategory != GameCategory.Oblivion)
-            {
-                sb.AppendLine($"this.FormVersion = GameConstants.{obj.GetObjectData().GameCategory}.DefaultFormVersion!.Value;");
             }
             sb.AppendLine("CustomCtor();");
         }
@@ -338,6 +335,47 @@ public class MajorRecordModule : GenerationModule
         {
             yield return "Mutagen.Bethesda.Plugins.Utility";
             yield return "Mutagen.Bethesda.Plugins.Records.Mapping";
+            yield return "Mutagen.Bethesda.Plugins.Exceptions";
+        }
+    }
+
+    public override IDisposable? WrapDeepCopyIn(ObjectGeneration obj, StructuredStringBuilder sb, string sourceAccessor)
+    {
+        // Loqui calls this synchronously during generation, when all base classes are fully loaded,
+        // so we mirror IsMajorRecord without the async base-class wait.
+        if (obj.GetObjectType() != Mutagen.Bethesda.Plugins.Meta.ObjectType.Record) return null;
+        if (obj.Name != "MajorRecord"
+            && !obj.BaseClassTrail().Any(bo => bo.Name == "MajorRecord"))
+        {
+            return null;
+        }
+        return new DeepCopyInExceptionWrapper(sb, sourceAccessor);
+    }
+
+    // Wraps a major record's DeepCopyIn body in a try/catch that enriches any exception with the
+    // record being copied, so failures report which record had the issue rather than a bare throw.
+    private class DeepCopyInExceptionWrapper : IDisposable
+    {
+        private readonly StructuredStringBuilder _sb;
+        private readonly string _sourceAccessor;
+        private readonly IDisposable _braces;
+
+        public DeepCopyInExceptionWrapper(StructuredStringBuilder sb, string sourceAccessor)
+        {
+            _sb = sb;
+            _sourceAccessor = sourceAccessor;
+            sb.AppendLine("try");
+            _braces = sb.CurlyBrace();
+        }
+
+        public void Dispose()
+        {
+            _braces.Dispose();
+            _sb.AppendLine("catch (Exception ex)");
+            using (_sb.CurlyBrace())
+            {
+                _sb.AppendLine($"throw {nameof(RecordException)}.{nameof(RecordException.Enrich)}(ex, {_sourceAccessor});");
+            }
         }
     }
 }

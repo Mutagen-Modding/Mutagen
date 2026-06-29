@@ -33,4 +33,8 @@ public enum StringBinaryType
     /// Length prepended as a byte
     /// </summary>
     PrependLengthUInt8,
+    /// <summary>
+    /// Fixed-width slot of a known byte count, zero-padded.  Requires byteLength on the XML field.
+    /// </summary>
+    NullPaddedFixedLength,
 }

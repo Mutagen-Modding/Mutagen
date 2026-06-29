@@ -178,6 +178,45 @@ public sealed class GameLocator
         return false;
     }
 
+    private string? TryGetProtonPrefixPath(GameRelease release, params string[] subPath)
+    {
+        if (!OperatingSystem.IsLinux()) return null;
+        if (_steam.Value == null) return null;
+
+        var meta = Games[release];
+        foreach (var source in meta.GameSources)
+        {
+            if (source is SteamGameSource steam)
+            {
+                var find = _steam.Value.FindOneGameById(AppId.From(steam.Id), out var err);
+                if (find != null)
+                {
+                    var prefix = find.GetProtonPrefix();
+                    if (prefix == null) continue;
+                    var configDir = prefix.ConfigurationDirectory;
+                    if (configDir == default) continue;
+                    var parts = new[] { configDir.GetFullPath(), "drive_c", "users", "steamuser" };
+                    var fullPath = Path.Combine(Path.Combine(parts), Path.Combine(subPath));
+                    if (Directory.Exists(fullPath))
+                    {
+                        return fullPath;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public string? TryGetProtonLocalAppData(GameRelease release)
+    {
+        return TryGetProtonPrefixPath(release, "AppData", "Local");
+    }
+
+    public string? TryGetProtonMyDocuments(GameRelease release)
+    {
+        return TryGetProtonPrefixPath(release, "Documents");
+    }
+
     private bool TryGetGameDirectoryFromRegistry(
         RegistryGameSource registryGameSource,
         [MaybeNullWhen(false)] out DirectoryPath path)
@@ -251,6 +290,54 @@ public sealed class GameLocator
                     RequiredFiles: new string[]
                     {
                         "OblivionRemastered.exe"
+                    })
+            },
+            {
+                GameRelease.Fallout3, new GameMetaData(
+                    GameRelease.Fallout3,
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout3",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource()
+                        {
+                            Id = 22370
+                        },
+                        new GogGameSource()
+                        {
+                            Id = 1454315831
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "Fallout3.exe"
+                    })
+            },
+            {
+                GameRelease.FalloutNV, new GameMetaData(
+                    GameRelease.FalloutNV,
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\FalloutNV",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource()
+                        {
+                            Id = 22380
+                        },
+                        new GogGameSource()
+                        {
+                            Id = 1454587428
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "FalloutNV.exe"
                     })
             },
             {
@@ -410,6 +497,16 @@ public sealed class GameLocator
                 new GogGameSource()
                 {
                     Id = 1711230643
+                },
+            },
+        };
+        games[GameRelease.EnderalSEGog] = games[GameRelease.SkyrimSE] with
+        {
+            GameSources = new IGameSource[]
+            {
+                new GogGameSource()
+                {
+                    Id = 1708684988
                 },
             },
         };

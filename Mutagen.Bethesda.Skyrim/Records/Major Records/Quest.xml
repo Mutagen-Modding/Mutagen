@@ -177,7 +177,7 @@
   <Object name="FindMatchingRefFromEvent" objType="Subrecord">
     <Fields>
       <RecordType name="FromEvent" recordType="ALFE" />
-      <ByteArray name="EventData" recordType="ALFD" />
+      <Enum enumName="GetEventDataConditionData.EventMember" name="EventData" byteLength="4" recordType="ALFD" />
     </Fields>
   </Object>
   <Object name="QuestTarget" objType="Subrecord">

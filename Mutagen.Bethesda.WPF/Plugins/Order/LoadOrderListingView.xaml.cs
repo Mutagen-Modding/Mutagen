@@ -1,8 +1,8 @@
 ﻿using Noggog.WPF;
 using ReactiveUI;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Plugins.Order;
+using Noggog;
 
 namespace Mutagen.Bethesda.WPF.Plugins.Order;
 

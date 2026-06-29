@@ -72,7 +72,7 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
                 {
                     a();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     a();
                     throw;
@@ -80,7 +80,7 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
                 break;
         }
     }
-    
+
     protected void WrapPotentialThrow(LinkCachePreferences.RetentionType cacheType, LinkCacheDepthStyle depthStyle, Action a)
     {
         switch (cacheType)
@@ -94,7 +94,7 @@ public abstract partial class ALinkingTests : IClassFixture<LinkingTestInit>, IC
                 {
                     a();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     a();
                     throw;

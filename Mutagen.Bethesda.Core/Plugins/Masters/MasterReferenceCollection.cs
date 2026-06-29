@@ -119,6 +119,33 @@ public sealed class MasterReferenceCollection : IMasterReferenceCollection
         return _masterIndices.TryGetValue(modKey, out index);
     }
 
+    /// <summary>
+    /// Creates a MasterReferenceCollection that allows self-references and duplicates.
+    /// Used for split mod imports where split file ModKeys are remapped to the base ModKey.
+    /// </summary>
+    internal static MasterReferenceCollection CreateUnsafe(
+        ModKey modKey,
+        IEnumerable<IMasterReferenceGetter> masters)
+    {
+        var result = new MasterReferenceCollection(modKey);
+        result.Masters = masters.ToList();
+        result._masterIndices.Clear();
+
+        uint index = 0;
+        foreach (var master in result.Masters)
+        {
+            if (!result._masterIndices.ContainsKey(master.Master))
+            {
+                result._masterIndices[master.Master] = index;
+            }
+            index++;
+        }
+
+        // Add current mod
+        result._masterIndices[modKey] = index;
+        return result;
+    }
+
     public static MasterReferenceCollection FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
     {
         var header = ModHeaderFrame.FromPath(path: path, release: release,

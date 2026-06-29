@@ -7,6 +7,7 @@ public partial class Scene
     {
         BeginOnQuestStart = 0x001,
         StopQuestOnEnd = 0x002,
+        ShowAllText = 0x004,
         RepeatConditionsWhileTrue = 0x008,
         Interruptable = 0x010,
     }

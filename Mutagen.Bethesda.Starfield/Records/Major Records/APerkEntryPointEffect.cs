@@ -284,6 +284,7 @@ partial class APerkEntryPointEffect
         MultiplyOnePlusActorValueMult = 14,
         SetText = 15,
         LegendaryMagicEffectEvent = 16,
+        LegendaryGravitational = 17,
     }
 
     public enum ParameterType

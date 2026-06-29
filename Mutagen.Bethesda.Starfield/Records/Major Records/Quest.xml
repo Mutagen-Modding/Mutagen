@@ -220,8 +220,8 @@
       <RefList name="Conditions" refName="Condition" />
       <RefDirect name="ALPS" refName="QuestLocationAliasALPS" nullable="true" />
       <Int32 name="ClosestToAlias" recordType="ALCC" />
-      <Int32 name="ParentSystemLocationAliasID" recordType="ALPN" />
       <Int32 name="SystemLocationAliasID" recordType="ALSY" />
+      <Int32 name="ParentSystemLocationAliasID" recordType="ALPN" />
       <FormLink name="LocationTypeKeyword" refName="Keyword" recordType="ALKF" />
       <FormLink name="DisplayName" refName="Message" recordType="ALDN" />
     </Fields>
@@ -260,7 +260,7 @@
   <Object name="FindMatchingRefFromEvent" objType="Subrecord">
     <Fields>
       <RecordType name="FromEvent" recordType="ALFE" />
-      <ByteArray name="EventData" recordType="ALFD" />
+      <Enum enumName="GetEventDataConditionData.EventMember" name="EventData" byteLength="4" recordType="ALFD" />
     </Fields>
   </Object>
   <Object name="LocationAliasReference" objType="Subrecord">

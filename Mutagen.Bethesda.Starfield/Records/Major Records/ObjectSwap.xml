@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ObjectSwap" recordType="OSWP" objType="Record" baseClass="StarfieldMajorRecord" />
+  <Object name="ObjectSwap" recordType="OSWP" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+    </Fields>
+  </Object>
 </Loqui>

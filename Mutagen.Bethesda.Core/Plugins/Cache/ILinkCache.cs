@@ -131,8 +131,7 @@ public interface ILinkCache : IIdentifierLinkCache, IWinningOverrideProvider
     /// </exception>
     /// <returns>True if a matching record was found</returns>
     bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
-
-
+    
     /// <summary>
     /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
     /// <br/>
@@ -1065,6 +1064,17 @@ public interface ILinkCache : IIdentifierLinkCache, IWinningOverrideProvider
     void Warmup(IEnumerable<Type> types);
 
     /// <summary>
+    /// Retrieves the link cache scoped to a single mod within this cache, located by its ModKey.<br/>
+    /// <br/>
+    /// This allows resolution to be done against the contribution of one specific mod, rather than the
+    /// winning override or the origin definition.
+    /// </summary>
+    /// <param name="modKey">ModKey of the mod to retrieve the scoped link cache for</param>
+    /// <param name="cache">Out parameter containing the single-mod link cache if successful</param>
+    /// <returns>True if the cache contains a mod matching the given ModKey</returns>
+    bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache);
+
+    /// <summary>
     /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.
     /// </summary>
     IReadOnlyList<IModGetter> ListedOrder { get; }
@@ -1531,4 +1541,15 @@ public interface ILinkCache<TMod, TModGetter> : ILinkCache, IWinningOverrideProv
     /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
     [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
     IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
+
+    /// <summary>
+    /// Retrieves the typed link cache scoped to a single mod within this cache, located by its ModKey.<br/>
+    /// <br/>
+    /// This allows resolution to be done against the contribution of one specific mod, rather than the
+    /// winning override or the origin definition.
+    /// </summary>
+    /// <param name="modKey">ModKey of the mod to retrieve the scoped link cache for</param>
+    /// <param name="cache">Out parameter containing the single-mod link cache if successful</param>
+    /// <returns>True if the cache contains a mod matching the given ModKey</returns>
+    bool TryGetTypedLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache<TMod, TModGetter> cache);
 }

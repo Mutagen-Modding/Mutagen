@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedNpc" baseClass="Fallout3MajorRecord" objType="Record"
+          recordType="ACHR">
+    <Fields>
+      <FormLink name="Base" refName="Npc" recordType="NAME" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <RefList name="RagdollData" refName="RagdollData" recordType="XRGD" />
+      <P3Float name="RagdollBipedRotation" recordType="XRGB" />
+      <RefDirect name="Patrol" refName="PatrolData" />
+      <Int32 name="LevelModifier" recordType="XLCM" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <Int32 name="Count" recordType="XCNT" />
+      <Float name="Radius" recordType="XRDS" />
+      <Float name="Health" recordType="XHLP" />
+      <RefList name="LinkedDecals" refName="LinkedDecal" />
+      <FormLink name="LinkedReference" recordType="XLKR">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <String name="ActivationPrompt" recordType="XATO">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <FormLink name="Emittance" recordType="XEMI" refName="Light" />
+      <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
+      <Bool name="IsIgnoredBySandbox" boolAsMarker="XIBS" />
+      <Float name="Scale" recordType="XSCL" />
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+  </Object>
+</Loqui>

@@ -130,9 +130,10 @@ public class ModFilesMover : IModFilesMover
         foreach (var oldTargetFile in associatedTargetFiles)
         {
             _fileSystem.File.Delete(oldTargetFile);
-            if (oldTargetFile.Directory?.EnumerateFiles(recursive: true, fileSystem: _fileSystem).Any() ?? false)
+            var dir = oldTargetFile.Directory;
+            if (dir != null && !dir.Value.EnumerateFiles(recursive: true, fileSystem: _fileSystem).Any())
             {
-                _fileSystem.Directory.Delete(oldTargetFile.Directory);
+                _fileSystem.Directory.Delete(dir);
             }
         }
     }

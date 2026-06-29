@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ImageSpace" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="IMGS">
+    <Fields>
+      <Data recordType="DNAM">
+        <Fields>
+          <Float name="HdrEyeAdaptSpeed" />
+          <Float name="HdrBlurRadius" />
+          <Float name="HdrBlurPasses" />
+          <Float name="HdrEmissiveMult" />
+          <Float name="HdrTargetLum" />
+          <Float name="HdrUpperLumClamp" />
+          <Float name="HdrBrightScale" />
+          <Float name="HdrBrightClamp" />
+          <Float name="HdrLumRampNoTex" />
+          <Float name="HdrLumRampMin" />
+          <Float name="HdrLumRampMax" />
+          <Float name="HdrSunlightDimmer" />
+          <Float name="HdrGrassDimmer" />
+          <Float name="HdrTreeDimmer" />
+          <Float name="HdrSkinDimmer">
+            <Versioning formVersion="10" action="Add" />
+          </Float>
+          <Float name="BloomBlurRadius" />
+          <Float name="BloomAlphaMultInterior" />
+          <Float name="BloomAlphaMultExterior" />
+          <Float name="GetHitBlurRadius" />
+          <Float name="GetHitBlurDampingConstant" />
+          <Float name="GetHitDampingConstant" />
+          <Float name="NightEyeTintRed" />
+          <Float name="NightEyeTintGreen" />
+          <Float name="NightEyeTintBlue" />
+          <Float name="NightEyeBrightness" />
+          <Float name="CinematicSaturation" />
+          <Float name="CinematicContrastAvgLumValue" />
+          <Float name="CinematicContrastValue" />
+          <Float name="CinematicBrightnessValue" />
+          <Float name="CinematicTintRed" />
+          <Float name="CinematicTintGreen" />
+          <Float name="CinematicTintBlue" />
+          <Float name="CinematicTintValue" />
+          <Int32 name="Unknown" />
+          <Break />
+          <UInt32 name="Unused1" />
+          <UInt32 name="Unused2" />
+          <UInt32 name="Unused3" />
+          <Break />
+          <Enum name="Flags" enumName="ImageSpace.Flag" byteLength="4" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

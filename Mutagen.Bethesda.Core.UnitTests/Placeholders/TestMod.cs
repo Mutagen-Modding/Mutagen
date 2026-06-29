@@ -21,7 +21,7 @@ public class TestMod : ITestMod, IDisposable
 {
     #region Interface
 
-    public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => throw new NotImplementedException();
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => throw new NotImplementedException();
     public ModKey ModKey { get; set; }
     public GameRelease GameRelease { get; }
 

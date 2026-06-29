@@ -3,7 +3,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using DynamicData;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Analysis;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records.Loqui;
 
 namespace Mutagen.Bethesda.Plugins.Records
@@ -19,9 +22,9 @@ namespace Mutagen.Bethesda.Plugins.Records
     {
         public delegate TMod ActivatorDelegate(ModKey modKey, GameRelease release, float? headerVersion = null, bool? forceUseLowerFormIDRanges = false);
         public delegate TMod ImporterDelegate(ModPath modKey, GameRelease release, BinaryReadParameters? param = null);
-        public delegate TMod ImportMultiFileGetterDelegate(ModKey targetModKey, IEnumerable<ModPath> splitFiles, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
-        public delegate TMod ImportGetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
-        public delegate TMod ImportSetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<IModMasterStyledGetter> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportMultiFileGetterDelegate(ModKey targetModKey, IEnumerable<ModPath> splitFiles, IEnumerable<ModKey> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportGetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<ModKey> loadOrder, GameRelease release, BinaryReadParameters? param = null);
+        public delegate TMod ImportSetterWithMultiFileDetectionDelegate(ModPath modPath, IEnumerable<ModKey> loadOrder, GameRelease release, BinaryReadParameters? param = null);
 
         /// <summary>
         /// Function to call to retrieve a new Mod of type T
@@ -189,7 +192,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <returns>Mod getter, either single file overlay or multi-file overlay depending on detection</returns>
         public static IModDisposeGetter ImportGetterWithMultiFileDetection(
             ModPath modPath,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease release,
             BinaryReadParameters? param = null)
         {
@@ -204,7 +207,7 @@ namespace Mutagen.Bethesda.Plugins.Records
                 // Import as multi-file
                 return ImportMultiFileGetter(
                     modPath.ModKey,
-                    splitFiles.Select(f => new ModPath(modPath.ModKey, f.Path)),
+                    splitFiles.Select(f => (ModPath)f.Path),
                     loadOrder,
                     release,
                     param);
@@ -227,7 +230,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// <returns>Mutable mod, deep copied from overlay</returns>
         public static IMod ImportSetterWithMultiFileDetection(
             ModPath modPath,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease release,
             BinaryReadParameters? param = null)
         {
@@ -250,23 +253,53 @@ namespace Mutagen.Bethesda.Plugins.Records
         public static IModDisposeGetter ImportMultiFileGetter(
             ModKey targetModKey,
             IEnumerable<ModPath> splitFiles,
-            IEnumerable<IModMasterStyledGetter> loadOrder,
+            IEnumerable<ModKey> loadOrder,
             GameRelease release,
             BinaryReadParameters? param = null)
         {
-            // Import all split files as overlays
-            var overlays = new List<IModDisposeGetter>();
+            param ??= BinaryReadParameters.Default;
+
+            // Standardize all split file ModPaths to use targetModKey, and collect
+            // the original ModKeys so we know which masters are split siblings.
+            var splitModKeys = new HashSet<ModKey> { targetModKey };
+            var splitFilesList = new List<ModPath>();
             foreach (var splitFile in splitFiles)
             {
-                var overlay = ImportGetter(splitFile, release, param);
+                var actualModKey = ModKey.FromFileName(Path.GetFileName(splitFile.Path));
+                splitModKeys.Add(actualModKey);
+                splitFilesList.Add(new ModPath(targetModKey, splitFile.Path));
+            }
+
+            // Import all split files as overlays, remapping split sibling masters to targetModKey
+            var overlays = new List<IModDisposeGetter>();
+            foreach (var splitFile in splitFilesList)
+            {
+                // Read header to get original masters
+                var header = ModHeaderFrame.FromPath(splitFile, release, fileSystem: param.FileSystem);
+
+                // Remap masters: replace any split sibling ModKey with targetModKey
+                var remappedMasters = header.Masters(splitFile.ModKey)
+                    .Select(m => splitModKeys.Contains(m.Master)
+                        ? (IMasterReferenceGetter)new MasterReference { Master = targetModKey }
+                        : m)
+                    .ToList();
+
+                var splitParam = param with
+                {
+                    MasterOverrides = MasterReferenceCollection.CreateUnsafe(targetModKey, remappedMasters)
+                };
+
+                var overlay = ImportGetter(splitFile, release, splitParam);
                 overlays.Add(overlay);
             }
 
             // Validate no duplicate FormIDs across split files
-            ValidateNoDuplicates(overlays, targetModKey);
+            ValidateNoDuplicates(overlays, targetModKey, release);
 
             // Merge masters from all overlays according to load order
-            var mergedMasters = MergeMasters(overlays, loadOrder);
+            // Filter out targetModKey and all split file ModKeys, since split files may
+            // cross-reference each other as masters (e.g. Mod_3.esp mastering Mod_2.esp)
+            var mergedMasters = MergeMasters(overlays, loadOrder, splitModKeys);
 
             // Create multi-file overlay that presents all the split files as one unified mod
             return CreateMultiFileOverlay(targetModKey, release, overlays, mergedMasters);
@@ -274,22 +307,28 @@ namespace Mutagen.Bethesda.Plugins.Records
 
         private static IReadOnlyList<IMasterReferenceGetter> MergeMasters(
             List<IModDisposeGetter> overlays,
-            IEnumerable<IModMasterStyledGetter> loadOrder)
+            IEnumerable<ModKey> loadOrder,
+            HashSet<ModKey> excludedModKeys)
         {
             // Collect all unique masters from all overlays
+            // Exclude the target mod and all split file ModKeys, since split files may
+            // cross-reference each other as masters (e.g. Mod_3.esp mastering Mod_2.esp)
             var allMasters = new HashSet<ModKey>();
             foreach (var overlay in overlays)
             {
                 foreach (var master in overlay.MasterReferences)
                 {
-                    allMasters.Add(master.Master);
+                    if (!excludedModKeys.Contains(master.Master))
+                    {
+                        allMasters.Add(master.Master);
+                    }
                 }
             }
 
             // Create a dictionary for quick load order lookup
             var loadOrderList = loadOrder.ToList();
             var loadOrderDict = loadOrderList
-                .Select((m, i) => new { ModKey = m.ModKey, Index = i })
+                .Select((m, i) => new { ModKey = m, Index = i })
                 .ToDictionary(x => x.ModKey, x => x.Index);
 
             // Order masters according to the provided load order
@@ -315,13 +354,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             IReadOnlyList<IMasterReferenceGetter> mergedMasters)
         {
             // Determine which multi-file overlay class to instantiate based on game release
-            var (typeName, assemblyName) = gameRelease.ToCategory() switch
-            {
-                GameCategory.Skyrim => ("Mutagen.Bethesda.Skyrim.SkyrimMultiModOverlay", "Mutagen.Bethesda.Skyrim"),
-                _ => throw new NotImplementedException(
-                    $"Multi-mod overlay is not yet implemented for {gameRelease}. " +
-                    "Only Skyrim is currently supported.")
-            };
+            var (typeName, assemblyName) = gameRelease.ToCategory().GetMultiFileOverlayTypeInfo();
 
             // Load the overlay type with assembly-qualified name
             var assemblyQualifiedName = $"{typeName}, {assemblyName}";
@@ -383,8 +416,9 @@ namespace Mutagen.Bethesda.Plugins.Records
             return (IModDisposeGetter)overlay;
         }
 
-        private static void ValidateNoDuplicates(List<IModDisposeGetter> overlays, ModKey modKey)
+        private static void ValidateNoDuplicates(List<IModDisposeGetter> overlays, ModKey modKey, GameRelease release)
         {
+            var parentRecordTypes = Meta.GameConstants.Get(release).GroupConstants.ParentRecordTypes;
             var seenFormKeys = new Dictionary<FormKey, string>();
 
             for (int i = 0; i < overlays.Count; i++)
@@ -396,6 +430,16 @@ namespace Mutagen.Bethesda.Plugins.Records
                 {
                     if (seenFormKeys.TryGetValue(record.FormKey, out var previousFile))
                     {
+                        if (parentRecordTypes.Contains(Mapping.RecordTypeLookup.GetRecordType(record.GetType())))
+                        {
+                            // Known parent record types (Cell, Worldspace, DialogTopic) can be
+                            // legitimately duplicated across split files because GetOrAddAsOverride
+                            // on child records implicitly adds parent containers.
+                            // Accept the later copy following override rules.
+                            seenFormKeys[record.FormKey] = fileName;
+                            continue;
+                        }
+
                         throw new InvalidOperationException(
                             $"Duplicate FormKey {record.FormKey} found in both {previousFile} and {fileName}. " +
                             "This indicates corruption in the split files.");

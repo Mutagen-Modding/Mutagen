@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NavigationMeshInfoMap" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="NAVI">
+    <Fields>
+      <UInt32 name="Version" recordType="NVER" />
+      <RefList name="Infos" refName="NavigationMeshInfo" />
+      <RefList name="Connections" refName="NavigationConnectionInfo" />
+    </Fields>
+  </Object>
+  <Object name="NavigationMeshInfo" objType="Subrecord" recordType="NVMI">
+    <Fields>
+      <Enum name="Flags" enumName="NavigationMeshInfo.Flag" byteLength="4" />
+      <FormLink name="NavigationMesh" refName="NavigationMesh" />
+      <FormLink name="Location">
+        <Interface>ICellOrWorldspace</Interface>
+      </FormLink>
+      <P2Int16 name="Coordinates" />
+      <P3Float name="ApproxLocation" />
+      <RefDirect name="Island" refName="IslandData" nullable="True" binary="Custom" />
+      <Float name="PreferredPercent" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="IslandData" objType="Subrecord">
+    <Fields>
+      <P3Float name="Min" />
+      <P3Float name="Max" />
+      <List name="Vertices" counterLength="2">
+        <P3Float />
+      </List>
+      <List name="Triangles" counterLength="2">
+        <P3Int16 />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="NavigationConnectionInfo" objType="Subrecord" recordType="NVCI">
+    <Fields>
+      <FormLink name="NavigationMesh" refName="NavigationMesh" />
+      <List name="StandardLinks" counterLength="4">
+        <FormLink refName="NavigationMesh" />
+      </List>
+      <List name="PreferredLinks" counterLength="4">
+        <FormLink refName="NavigationMesh" />
+      </List>
+      <List name="DoorLinks" counterLength="4">
+        <FormLink refName="PlacedObject" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

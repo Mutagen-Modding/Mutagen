@@ -326,7 +326,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                    semiColon: false))
         {
             args.AddPassArg("stream");
-            args.Add($"new {nameof(WritingBundle)}({gameReleaseStr})");
+            args.Add($"new {nameof(WritingBundle)}({gameReleaseStr}) {{ {nameof(WritingBundle.ModHeaderVersion)} = item.ModHeader.Stats.Version }}");
             args.Add("dispose: false");
         }
         using (sb.CurlyBrace())
@@ -401,6 +401,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             prop.Add($"{nameof(WritingBundle.TargetLanguageOverride)} = param.{nameof(BinaryWriteParameters.TargetLanguageOverride)}");
             prop.Add($"Header = item");
+            prop.Add($"{nameof(WritingBundle.ModHeaderVersion)} = item.ModHeader.Stats.Version");
         }
         sb.AppendLine($"if (param.{nameof(BinaryWriteParameters.Encodings)} != null)");
         using (sb.CurlyBrace())
@@ -696,7 +697,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             var doIt = () =>
             {
                 var fieldData = field.Field.GetFieldData();
-                foreach (var gen in fieldData.GenerationTypes.Where(f => !f.Value.GetFieldData().HasVersioning))
+                foreach (var gen in fieldData.GenerationTypes.Where(f => !f.Value.GetFieldData().HasVersioning && !f.Value.GetFieldData().HasModHeaderVersioning))
                 {
                     LoquiType loqui = gen.Value as LoquiType;
                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
@@ -937,7 +938,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            if (gen.Value.GetFieldData().HasVersioning
+                            if ((gen.Value.GetFieldData().HasVersioning || gen.Value.GetFieldData().HasModHeaderVersioning)
                                 && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
                                 foreach (var trigger in gen.Key)
@@ -945,8 +946,17 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}");
                                     using (sb.IncreaseDepth())
                                     {
+                                        var whenChecks = new List<string>();
+                                        if (valFieldData.HasVersioning)
+                                        {
+                                            whenChecks.Add(VersioningModule.GetVersionIfCheck(valFieldData, "frame.MetaData.FormVersion"));
+                                        }
+                                        if (valFieldData.HasModHeaderVersioning)
+                                        {
+                                            whenChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(valFieldData, "frame.MetaData.ModHeaderVersion"));
+                                        }
                                         sb.AppendLine(
-                                            $"when {VersioningModule.GetVersionIfCheck(valFieldData, "frame.MetaData.FormVersion")}:");
+                                            $"when {string.Join(" && ", whenChecks)}:");
                                     }
                                 }
                             }
@@ -1461,14 +1471,33 @@ public class PluginTranslationModule : BinaryTranslationModule
             case BinaryGenerationType.CustomWrite:
                 return;
             case BinaryGenerationType.Custom:
-                CustomLogic.GenerateFill(
-                    sb,
-                    obj,
-                    field,
-                    frameAccessor,
-                    isAsync: false,
-                    useReturnValue: false);
+            {
+                var hasAnyCustomVersioning = data.HasVersioning || data.HasModHeaderVersioning;
+                if (hasAnyCustomVersioning)
+                {
+                    var customChecks = new List<string>();
+                    if (data.HasVersioning)
+                    {
+                        customChecks.Add(VersioningModule.GetVersionIfCheck(data, $"{frameAccessor}.MetaData.FormVersion!.Value"));
+                    }
+                    if (data.HasModHeaderVersioning)
+                    {
+                        customChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(data, $"{frameAccessor}.MetaData.ModHeaderVersion!.Value"));
+                    }
+                    sb.AppendLine($"if ({string.Join(" && ", customChecks)})");
+                }
+                using (sb.CurlyBrace(doIt: hasAnyCustomVersioning))
+                {
+                    CustomLogic.GenerateFill(
+                        sb,
+                        obj,
+                        field,
+                        frameAccessor,
+                        isAsync: false,
+                        useReturnValue: false);
+                }
                 return;
+            }
             default:
                 throw new NotImplementedException();
         }
@@ -1513,11 +1542,21 @@ public class PluginTranslationModule : BinaryTranslationModule
             sb.AppendLine("contentLength = nextRec.ContentLength;");
         }
 
-        if (data.HasVersioning)
+        var hasAnyVersioning = data.HasVersioning || data.HasModHeaderVersioning;
+        if (hasAnyVersioning)
         {
-            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(data, $"{ReaderMemberName}.MetaData.FormVersion!.Value")})");
+            var checks = new List<string>();
+            if (data.HasVersioning)
+            {
+                checks.Add(VersioningModule.GetVersionIfCheck(data, $"{ReaderMemberName}.MetaData.FormVersion!.Value"));
+            }
+            if (data.HasModHeaderVersioning)
+            {
+                checks.Add(VersioningModule.GetModHeaderVersionIfCheck(data, $"{ReaderMemberName}.MetaData.ModHeaderVersion!.Value"));
+            }
+            sb.AppendLine($"if ({string.Join(" && ", checks)})");
         }
-        using (sb.CurlyBrace(doIt: data.HasVersioning))
+        using (sb.CurlyBrace(doIt: hasAnyVersioning))
         {
             await generator.GenerateCopyIn(
                 sb: sb,
@@ -1701,7 +1740,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
                             
-                            if (gen.Value.GetFieldData().HasVersioning
+                            if ((gen.Value.GetFieldData().HasVersioning || gen.Value.GetFieldData().HasModHeaderVersioning)
                                 && gen.Key.Any(x => duplicateTriggers.Contains(x)))
                             {
                                 foreach (var trigger in gen.Key)
@@ -1709,8 +1748,17 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}");
                                     using (sb.IncreaseDepth())
                                     {
+                                        var overlayWhenChecks = new List<string>();
+                                        if (gen.Value.GetFieldData().HasVersioning)
+                                        {
+                                            overlayWhenChecks.Add(VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "stream.MetaData.FormVersion"));
+                                        }
+                                        if (gen.Value.GetFieldData().HasModHeaderVersioning)
+                                        {
+                                            overlayWhenChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(gen.Value.GetFieldData(), "stream.MetaData.ModHeaderVersion"));
+                                        }
                                         sb.AppendLine(
-                                            $"when {VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "stream.MetaData.FormVersion")}:");
+                                            $"when {string.Join(" && ", overlayWhenChecks)}:");
                                     }
                                 }
                             }
@@ -2022,6 +2070,11 @@ public class PluginTranslationModule : BinaryTranslationModule
 
     private bool NeedsClear(ObjectGeneration obj)
     {
+        // Top-level list groups (e.g. Fallout3ListGroup for Cells) may have CopyInFromBinary
+        // called multiple times when a file contains multiple top-level GRUPs of the same record
+        // type — the additive list field is intentionally accumulating across those calls, so we
+        // must NOT clear on entry.
+        if (obj.IsTopLevelListGroup()) return false;
         foreach (var item in obj.IterateFields(includeBaseClass: true))
         {
             if (item is ListType l
@@ -2420,6 +2473,7 @@ public class PluginTranslationModule : BinaryTranslationModule
             }
 
             TypeGeneration lastVersionedField = null;
+            TypeGeneration lastModHeaderVersionedField = null;
             await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true))
             {
                 if (!TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen))
@@ -2448,10 +2502,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                         lengths.PassedAccessor);
                     if (data.HasVersioning
                         && !lengths.Field.Nullable
+                        && !data.HasTrigger
+                        && lengths.FieldLength.HasValue
                         && lengths.Field is not DataType)
                     {
                         VersioningModule.AddVersionOffset(sb, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                         lastVersionedField = lengths.Field;
+                    }
+                    if (data.HasModHeaderVersioning
+                        && !lengths.Field.Nullable
+                        && !data.HasTrigger
+                        && lengths.FieldLength.HasValue
+                        && lengths.Field is not DataType)
+                    {
+                        VersioningModule.AddModHeaderVersionOffset(sb, lengths.Field, lengths.FieldLength.Value, lastModHeaderVersionedField, $"_package.MetaData.ModHeaderVersion!.Value");
+                        lastModHeaderVersionedField = lengths.Field;
                     }
                     if (!data.HasTrigger)
                     {
@@ -2666,6 +2731,49 @@ public class PluginTranslationModule : BinaryTranslationModule
                         {
                             args.Add($"new GroupMergeGetter<I{obj.ProtoGen.Protocol.Namespace}GroupGetter<T>, T>(subGroups)");
                         }
+                    }
+                    sb.AppendLine();
+                }
+
+                if (obj.IsTopLevelListGroup())
+                {
+                    // Multi-location factory used by the Mod overlay when a plugin contains more
+                    // than one top-level CELL GRUP (HonestHearts.esm is the canonical case).
+                    // Each location is materialized as its own sub-overlay; the wrapper exposes
+                    // their Records concatenated. Duplicate-numbered blocks/sub-blocks are
+                    // collapsed at write time by the per-game CellBlockConsolidator.
+                    var concreteInterface = $"I{obj.ProtoGen.Protocol.Namespace}ListGroupGetter<ICellBlockGetter>";
+                    using (var args = sb.Function(
+                               $"public static {concreteInterface} {obj.Name}Factory"))
+                    {
+                        args.Add($"{nameof(IBinaryReadStream)} stream");
+                        args.Add("IReadOnlyList<RangeInt64> locs");
+                        args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                    }
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (locs.Count == 1)");
+                        using (sb.CurlyBrace())
+                        {
+                            using (var args = sb.Call(
+                                       $"return {obj.Name}Factory"))
+                            {
+                                args.Add("new OverlayStream(LockExtractMemory(stream, locs[0].Min, locs[0].Max), package)");
+                                args.Add("package");
+                            }
+                        }
+                        sb.AppendLine($"var subs = new {concreteInterface}[locs.Count];");
+                        sb.AppendLine("for (int i = 0; i < locs.Count; i++)");
+                        using (sb.CurlyBrace())
+                        {
+                            using (var args = sb.Call(
+                                       $"subs[i] = {obj.Name}Factory"))
+                            {
+                                args.Add("new OverlayStream(LockExtractMemory(stream, locs[i].Min, locs[i].Max), package)");
+                                args.Add("package");
+                            }
+                        }
+                        sb.AppendLine($"return new {obj.Name}MergedOverlay(subs);");
                     }
                     sb.AppendLine();
                 }
@@ -3483,11 +3591,28 @@ public class PluginTranslationModule : BinaryTranslationModule
                         var maskType = Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (fieldData.Binary == BinaryGenerationType.Custom)
                         {
-                            CustomLogic.GenerateWrite(
-                                sb: sb,
-                                obj: obj,
-                                field: field,
-                                writerAccessor: WriterMemberName);
+                            var hasAnyCustomVersioning = fieldData.HasVersioning || fieldData.HasModHeaderVersioning;
+                            if (hasAnyCustomVersioning)
+                            {
+                                var customChecks = new List<string>();
+                                if (fieldData.HasVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value"));
+                                }
+                                if (fieldData.HasModHeaderVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.ModHeaderVersion!.Value"));
+                                }
+                                sb.AppendLine($"if ({string.Join(" && ", customChecks)})");
+                            }
+                            using (sb.CurlyBrace(doIt: hasAnyCustomVersioning))
+                            {
+                                CustomLogic.GenerateWrite(
+                                    sb: sb,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: WriterMemberName);
+                            }
                             continue;
                         }
                         if (!TryGetTypeGeneration(field.GetType(), out var generator))
@@ -3495,11 +3620,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                             if (!field.IntegrateField) continue;
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        if (fieldData.HasVersioning)
+                        var hasAnyWriteVersioning = fieldData.HasVersioning || fieldData.HasModHeaderVersioning;
+                        if (hasAnyWriteVersioning)
                         {
-                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value")})");
+                            var checks = new List<string>();
+                            if (fieldData.HasVersioning)
+                            {
+                                checks.Add(VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value"));
+                            }
+                            if (fieldData.HasModHeaderVersioning)
+                            {
+                                checks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, "writer.MetaData.ModHeaderVersion!.Value"));
+                            }
+                            sb.AppendLine($"if ({string.Join(" && ", checks)})");
                         }
-                        using (sb.CurlyBrace(doIt: fieldData.HasVersioning))
+                        using (sb.CurlyBrace(doIt: hasAnyWriteVersioning))
                         {
                             await generator.GenerateWrite(
                                 sb: sb,
@@ -3582,12 +3717,31 @@ public class PluginTranslationModule : BinaryTranslationModule
                             continue;
                         case BinaryGenerationType.Custom:
                         case BinaryGenerationType.CustomWrite:
-                            CustomLogic.GenerateWrite(
-                                sb: sb,
-                                obj: obj,
-                                field: field,
-                                writerAccessor: WriterMemberName);
+                        {
+                            var hasAnyCustomVersioning = fieldData.HasVersioning || fieldData.HasModHeaderVersioning;
+                            if (hasAnyCustomVersioning)
+                            {
+                                var customChecks = new List<string>();
+                                if (fieldData.HasVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value"));
+                                }
+                                if (fieldData.HasModHeaderVersioning)
+                                {
+                                    customChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.ModHeaderVersion!.Value"));
+                                }
+                                sb.AppendLine($"if ({string.Join(" && ", customChecks)})");
+                            }
+                            using (sb.CurlyBrace(doIt: hasAnyCustomVersioning))
+                            {
+                                CustomLogic.GenerateWrite(
+                                    sb: sb,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: WriterMemberName);
+                            }
                             continue;
+                        }
                         default:
                             throw new NotImplementedException();
                     }
@@ -3688,11 +3842,21 @@ public class PluginTranslationModule : BinaryTranslationModule
                                             sb.Depth--;
                                             sb.AppendLine("}");
                                         }
-                                        if (subData.HasVersioning)
+                                        var hasAnySubVersioning = subData.HasVersioning || subData.HasModHeaderVersioning;
+                                        if (hasAnySubVersioning)
                                         {
-                                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, $"{writerAccess}.MetaData.FormVersion!.Value")})");
+                                            var subChecks = new List<string>();
+                                            if (subData.HasVersioning)
+                                            {
+                                                subChecks.Add(VersioningModule.GetVersionIfCheck(subData, $"{writerAccess}.MetaData.FormVersion!.Value"));
+                                            }
+                                            if (subData.HasModHeaderVersioning)
+                                            {
+                                                subChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(subData, $"{writerAccess}.MetaData.ModHeaderVersion!.Value"));
+                                            }
+                                            sb.AppendLine($"if ({string.Join(" && ", subChecks)})");
                                         }
-                                        using (sb.CurlyBrace(doIt: subData.HasVersioning))
+                                        using (sb.CurlyBrace(doIt: hasAnySubVersioning))
                                         {
                                             await subGenerator.GenerateWrite(
                                                 sb: sb,
@@ -3755,11 +3919,21 @@ public class PluginTranslationModule : BinaryTranslationModule
 
                     if (fieldData.CustomVersion == null)
                     {
-                        if (fieldData.HasVersioning)
+                        var hasAnyRecVersioning = fieldData.HasVersioning || fieldData.HasModHeaderVersioning;
+                        if (hasAnyRecVersioning)
                         {
-                            sb.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
+                            var recChecks = new List<string>();
+                            if (fieldData.HasVersioning)
+                            {
+                                recChecks.Add(VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value"));
+                            }
+                            if (fieldData.HasModHeaderVersioning)
+                            {
+                                recChecks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.ModHeaderVersion!.Value"));
+                            }
+                            sb.AppendLine($"if ({string.Join(" && ", recChecks)})");
                         }
-                        using (sb.CurlyBrace(doIt: fieldData.HasVersioning))
+                        using (sb.CurlyBrace(doIt: hasAnyRecVersioning))
                         {
                             await generate();
                         }

@@ -1,3 +1,4 @@
+#nullable enable
 using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Fallout4.Internals;

@@ -2,6 +2,7 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
@@ -114,14 +115,14 @@ public class LinkModule : GenerationModule
     {
         if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
         {
-            sb.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> EnumerateFormLinks({obj.Interface(getter: true)} obj)");
+            sb.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> EnumerateFormLinks({obj.Interface(getter: true)} obj, bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 foreach (var baseClass in obj.BaseClassTrail())
                 {
                     if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                     {
-                        sb.AppendLine("foreach (var item in base.EnumerateFormLinks(obj))");
+                        sb.AppendLine("foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return item;");
@@ -175,6 +176,7 @@ public class LinkModule : GenerationModule
                             subLinkCase = Case.Maybe;
                         }
                         if (subLinkCase == Case.No) continue;
+                        var isMajorRecord = await loqui.IsMajorRecord();
                         var doBrace = true;
                         var access = $"obj.{field.Name}";
                         if (subLinkCase == Case.Maybe)
@@ -191,9 +193,14 @@ public class LinkModule : GenerationModule
                         {
                             doBrace = false;
                         }
+                        if (isMajorRecord)
+                        {
+                            sb.AppendLine("if (iterateNestedRecords)");
+                            doBrace = true;
+                        }
                         using (sb.CurlyBrace(doIt: doBrace))
                         {
-                            sb.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}())");
+                            sb.AppendLine($"foreach (var item in {access}.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}(iterateNestedRecords))");
                             using (sb.CurlyBrace())
                             {
                                 sb.AppendLine($"yield return item;");
@@ -208,10 +215,12 @@ public class LinkModule : GenerationModule
                             access = $"{field.Name}Item";
                         }
 
+                        var isContLoquiMajor = false;
                         StructuredStringBuilder subFg = new StructuredStringBuilder();
                         if (cont.SubTypeGeneration is LoquiType contLoqui
                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                         {
+                            isContLoquiMajor = await contLoqui.IsMajorRecord();
                             string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                             var linktype = await HasLinks(contLoqui, includeBaseClass: true);
                             if (linktype != Case.No)
@@ -219,13 +228,13 @@ public class LinkModule : GenerationModule
                                 switch (linktype)
                                 {
                                     case Case.Yes:
-                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
+                                        subFg.AppendLine($"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}(iterateNestedRecords)))");
                                         break;
                                     case Case.Maybe:
                                         subFg.AppendLine($"foreach (var item in {access}{filterNulls}.WhereCastable<{contLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                         using (subFg.IncreaseDepth())
                                         {
-                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
+                                            subFg.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}(iterateNestedRecords)))");
                                         }
                                         break;
                                     default:
@@ -244,11 +253,17 @@ public class LinkModule : GenerationModule
                             continue;
                         }
 
+                        var doWrapperBrace = field.Nullable;
                         if (field.Nullable)
                         {
                             sb.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
                         }
-                        using (sb.CurlyBrace(doIt: field.Nullable))
+                        if (isContLoquiMajor)
+                        {
+                            sb.AppendLine("if (iterateNestedRecords)");
+                            doWrapperBrace = true;
+                        }
+                        using (sb.CurlyBrace(doIt: doWrapperBrace))
                         {
                             sb.AppendLines(subFg);
                             using (sb.CurlyBrace())
@@ -267,13 +282,13 @@ public class LinkModule : GenerationModule
                             switch (linktype)
                             {
                                 case Case.Yes:
-                                    sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
+                                    sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.SelectMany(f => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}(iterateNestedRecords)))");
                                     break;
                                 case Case.Maybe:
                                     sb.AppendLine($"foreach (var item in obj.{field.Name}.{valuesAccessor}.WhereCastable<{dictLoqui.TypeName(getter: true)}, {nameof(IFormLinkContainerGetter)}>()");
                                     using (sb.IncreaseDepth())
                                     {
-                                        sb.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}()))");
+                                        sb.AppendLine($".SelectMany((f) => f.{nameof(IFormLinkContainerGetter.EnumerateFormLinks)}(iterateNestedRecords)))");
                                     }
                                     break;
                                 default:
@@ -420,7 +435,7 @@ public class LinkModule : GenerationModule
     public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder sb, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup() || obj.IsTopLevelListGroup();
-        sb.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.EnumerateFormLinks)}() => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateFormLinks(this);");
+        sb.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: true) != Case.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.EnumerateFormLinks)}(bool iterateNestedRecords = true) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
 
         if (!getter)
         {

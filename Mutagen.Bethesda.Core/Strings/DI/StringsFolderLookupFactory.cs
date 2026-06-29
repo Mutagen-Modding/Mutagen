@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using Noggog;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Archives.Exceptions;
@@ -52,7 +53,7 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
         }
 
         var dataPath = _dataDirectoryProvider.Path;
-        
+
         return new StringsFolderLookupOverlay(new Lazy<StringsFolderLookupOverlay.DictionaryBundle>(
                 isThreadSafe: true,
                 valueFactory: () =>
@@ -65,9 +66,9 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
                                     languageFormat,
-                                    file.Name.String, 
+                                    file.Name.String,
                                     out var type,
-                                    out var lang, 
+                                    out var lang,
                                     out var modName)
                                 || !modKey.Name.AsSpan().Equals(modName, StringComparison.OrdinalIgnoreCase))
                             {
@@ -93,10 +94,11 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                             {
                                 foreach (var item in stringsFolder.Files)
                                 {
+                                    var itemFileName = Path.GetFileName(IFileSystemExt.CleanDirectorySeparators(item.Path));
                                     if (!StringsUtility.TryRetrieveInfoFromString(
-                                            languageFormat, 
-                                            Path.GetFileName(item.Path), 
-                                            out var type, 
+                                            languageFormat,
+                                            itemFileName,
+                                            out var type,
                                             out var lang,
                                             out var modName))
                                     {

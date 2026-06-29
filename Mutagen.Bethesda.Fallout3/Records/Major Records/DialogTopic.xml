@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DialogTopic" objType="Record" baseClass="Fallout3MajorRecord" recordType="DIAL" customBinaryEnd="Normal">
+    <Fields>
+      <RefList name="AssociatedQuests" refName="DialogTopicAssociatedQuest" />
+      <List name="RemovedQuests">
+        <FormLink recordType="QSTR" refName="Quest" />
+      </List>
+      <String name="Name" recordType="FULL" />
+      <Float name="Priority" recordType="PNAM" />
+      <String name="DumbResponse" recordType="TDUM">
+        <ModHeaderVersioning version="1.32" />
+      </String>
+      <Data recordType="DATA" nullable="False">
+        <Fields>
+          <Enum name="Type" enumName="DialogTopic.TopicType" byteLength="1" />
+          <Break />
+          <Enum name="Flags" enumName="DialogTopic.TopicFlag" byteLength="1" />
+        </Fields>
+      </Data>
+      <List name="InfoOrderMastersOnly" recordType="INOM">
+        <FormLink refName="DialogResponses" />
+      </List>
+      <List name="InfoOrderAllPreviousModules" recordType="INOA">
+        <FormLink refName="DialogResponses" />
+      </List>
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="Unknown" binary="NoGeneration" />
+      <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
+    </Fields>
+  </Object>
+
+  <Object name="DialogTopicAssociatedQuest" objType="Subrecord">
+    <Fields>
+      <!-- Quest is nullable: FNV GECK-error DIALs (e.g. FalloutNV.esm 000E9083/000E9084/001287C6)
+           carry orphan INFC/INFX shared infos with no QSTI, parsed as an entry with a null Quest. -->
+      <FormLink name="Quest" recordType="QSTI" refName="Quest" />
+      <RefList name="SharedInfos" refName="DialogTopicSharedInfo">
+        <ModHeaderVersioning version="1.32" />
+      </RefList>
+    </Fields>
+  </Object>
+
+  <Object name="DialogTopicSharedInfo" objType="Subrecord">
+    <Fields>
+      <FormLink name="InfoConnection" recordType="INFC" refName="DialogResponses" nullable="False" />
+      <Int32 name="InfoIndex" recordType="INFX" />
+    </Fields>
+  </Object>
+</Loqui>

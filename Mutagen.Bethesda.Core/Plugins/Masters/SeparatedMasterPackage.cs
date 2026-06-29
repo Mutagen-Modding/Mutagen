@@ -14,6 +14,7 @@ public interface IReadOnlySeparatedMasterPackage
     IReadOnlyMasterReferenceCollection Raw { get; }
     bool TryLookupModKey(ModKey modKey, bool reference, out MasterStyle style, out uint index);
     FormKey GetFormKey(FormID formId, bool reference);
+    FormID GetFormID(FormKey formKey);
 }
 
 public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
@@ -38,9 +39,12 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         "Constellation.esm", 
         "SFBGS003.esm", 
         "SFBGS004.esm", 
-        "SFBGS006.esm", 
-        "SFBGS007.esm", 
-        "SFBGS008.esm"
+        "SFBGS006.esm",
+        "SFBGS007.esm",
+        "SFBGS008.esm",
+        "SFBGS00D.esm",
+        "SFBGS047.esm",
+        "SFBGS050.esm"
     };
 
     internal SeparatedMasterPackage()
@@ -107,6 +111,20 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
             style = default;
             index = default;
             return false;
+        }
+
+        public FormID GetFormID(FormKey formKey)
+        {
+            if (formKey == FormKey.Null) return FormID.Null;
+
+            if (!TryLookupModKey(formKey.ModKey, reference: true, out var style, out var index))
+            {
+                throw new UnmappableFormIDException(
+                    new FormLinkInformation(formKey, typeof(IMajorRecordGetter)),
+                    this);
+            }
+
+            return FormID.Factory(style, index, formKey.ID);
         }
 
         public FormKey GetFormKey(FormID formId, bool reference)
@@ -308,6 +326,20 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                 break;
             }
         }
+    }
+
+    public FormID GetFormID(FormKey formKey)
+    {
+        if (formKey == FormKey.Null) return FormID.Null;
+
+        if (!TryLookupModKey(formKey.ModKey, reference: true, out var style, out var index))
+        {
+            throw new UnmappableFormIDException(
+                new FormLinkInformation(formKey, typeof(IMajorRecordGetter)),
+                this);
+        }
+
+        return FormID.Factory(style, index, formKey.ID);
     }
 
     public FormKey GetFormKey(FormID formId, bool reference)

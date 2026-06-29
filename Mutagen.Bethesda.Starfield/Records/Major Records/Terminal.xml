@@ -6,6 +6,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <RefList name="Components" refName="AComponent" />
       <FormLink name="Menu" refName="TerminalMenu" recordType="DNAM" />
       <Enum name="Background" recordType="NAM1" enumName="Terminal.BackgroundType" byteLength="1" />

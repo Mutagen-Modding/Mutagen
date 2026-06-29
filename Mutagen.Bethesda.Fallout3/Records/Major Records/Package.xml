@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Package" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="PACK">
+    <Fields>
+      <Enum name="GeneralFlags" enumName="Package.Flag" byteLength="4" binary="NoGeneration" />
+      <UInt8 name="Unused" binary="NoGeneration" />
+      <Enum name="BehaviorFlags" enumName="Package.BehaviorFlag" byteLength="2" binary="NoGeneration" />
+      <RefDirect name="Flags" refName="APackageFlags" recordType="PKDT" binary="Custom" generateClassMembers="false" />
+      <UInt16 name="Unused2" binary="NoGeneration" nullable="True" />
+      <RefDirect name="Location" refName="PackageLocation" recordType="PLDT" />
+      <RefDirect name="Location2" refName="PackageLocation" recordType="PLD2" />
+      <Data recordType="PSDT">
+        <Fields>
+          <Int8 name="ScheduleMonth" />
+          <Enum name="ScheduleDayOfWeek" enumName="Package.DayOfWeek" byteLength="1" />
+          <UInt8 name="ScheduleDate" />
+          <Int8 name="ScheduleTime" />
+          <Int32 name="Duration" />
+        </Fields>
+      </Data>
+      <RefDirect name="Target" refName="PackageTarget" recordType="PTDT" />
+      <RefList name="Conditions" refName="Condition" />
+      <RefDirect name="IdleAnimations" refName="PackageIdles" />
+      <FormLink name="CombatStyle" recordType="CNAM" refName="CombatStyle" />
+      <Bool name="IsEatMarker" boolAsMarker="PKED" />
+      <UInt32 name="EscortDistance" recordType="PKE2" />
+      <Float name="FollowStartLocationTriggerRadius" recordType="PKFD" />
+      <Bool name="IsRepeatable" recordType="PKPT" binary="Custom" />
+      <RefDirect name="WeaponData" refName="PackageWeaponData" />
+      <RefDirect name="Target2" refName="PackageTarget" recordType="PTD2" />
+      <Bool name="IsUseItem" boolAsMarker="PUID" />
+      <Bool name="IsAmbush" boolAsMarker="PKAM" />
+      <RefDirect name="DialogueData" refName="PackageDialogueData" />
+      <RefDirect name="DialogueLocation" refName="PackageLocation" recordType="PLD2" />
+      <RefDirect name="OnBegin" refName="PackageEvent" markerType="POBA" />
+      <RefDirect name="OnEnd" refName="PackageEvent" markerType="POEA" />
+      <RefDirect name="OnChange" refName="PackageEvent" markerType="POCA" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocation" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Location" refName="APackageLocation" byteLength="8" generateClassMembers="false" binary="Custom" />
+      <Int32 name="Radius" />
+    </Fields>
+  </Object>
+  <Object name="APackageLocation" abstract="true" objType="Subrecord" />
+  <Object name="PackageLocationReference" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="PackageLocationCell" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <FormLink name="Cell" refName="Cell" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocationObjectId" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IPackageLocationObject</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="PackageLocationObjectType" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <Enum name="ObjectType" enumName="Package.ObjectType" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocationNearCurrentLocation" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocationNearEditorLocation" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocationNearLinkedReference" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocationAtPackageLocation" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PackageLocationFallback" baseClass="APackageLocation" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="Package.LocationType" byteLength="4" />
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="PackageTarget" objType="Subrecord">
+    <Fields>
+      <RefDirect name="Target" refName="APackageTarget" byteLength="8" generateClassMembers="false" binary="Custom" />
+      <Int32 name="CountOrDistance" />
+      <Break />
+      <Float name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="APackageTarget" abstract="true" objType="Subrecord" />
+  <Object name="PackageTargetReference" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="PackageTargetObjectId" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>IPackageTargetObject</Interface>
+      </FormLink>
+    </Fields>
+  </Object>
+  <Object name="PackageTargetObjectType" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Enum name="ObjectType" enumName="Package.ObjectType" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetLinkedReference" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PackageTargetFallback" baseClass="APackageTarget" objType="Subrecord">
+    <Fields>
+      <Enum name="Type" enumName="Package.TargetType" byteLength="4" />
+      <Int32 name="Data" />
+    </Fields>
+  </Object>
+  <Object name="PackageWeaponData" objType="Subrecord" recordType="PKW3">
+    <Fields>
+      <Enum name="WeaponFlags" enumName="Package.WeaponFlag" byteLength="4" />
+      <Enum name="FireRate" enumName="Package.FireRate" byteLength="1" />
+      <Enum name="FireCount" enumName="Package.FireCount" byteLength="1" />
+      <UInt16 name="NumberOfBursts" />
+      <UInt16 name="ShootsPerVolleyMin" />
+      <UInt16 name="ShootsPerVolleyMax" />
+      <Float name="PauseBetweenVolleysMin" />
+      <Float name="PauseBetweenVolleysMax" />
+      <Int32 name="Unused" />
+    </Fields>
+  </Object>
+  <Object name="PackageDialogueData" objType="Subrecord" recordType="PKDD">
+    <Fields>
+      <Float name="DialogueFOV" />
+      <FormLink name="DialogueTopic" refName="DialogTopic" />
+      <Enum name="DialogueFlags" enumName="Package.DialogueFlag" byteLength="4" />
+      <Break />
+      <UInt32 name="Unused" />
+      <Break />
+      <Enum name="DialogueType" enumName="Package.DialogueType" byteLength="4" />
+      <Break />
+      <UInt32 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="PackageIdles" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="PackageIdles.Flag" byteLength="1" nullable="False" recordType="IDLF" />
+      <ByteArray name="AnimationCount" recordType="IDLC" />
+      <Float name="TimerSetting" recordType="IDLT" nullable="False" />
+      <List name="Animations" recordType="IDLA" binary="Custom" nullable="False">
+        <FormLink refName="IdleAnimation" />
+      </List>
+      <ByteArray name="Unknown" recordType="IDLB" />
+    </Fields>
+  </Object>
+  <Object name="PackageEvent" objType="Subrecord">
+    <Fields>
+      <FormLink name="Idle" refName="IdleAnimation" recordType="INAM" nullable="False" />
+      <RefDirect name="EmbeddedScript" refName="ScriptFields" singleton="true" nullable="False" />
+      <FormLink name="Topic" recordType="TNAM" refName="DialogTopic" />
+    </Fields>
+  </Object>
+  <Object name="APackageFlags" abstract="true" objType="Subrecord" />
+  <Object name="PackageFind" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.ServiceFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageFollow" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageEscort" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.ServiceFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageEat" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.ServiceFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageSleep" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageWander" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.WanderFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageTravel" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageAccompany" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageUseItemAt" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.UseItemAtFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageAmbush" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.AmbushFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageFleeNotCombat" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageSandbox" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.WanderFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackagePatrol" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageGuard" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <Enum name="Flags" enumName="Package.GuardFlag" byteLength="2" />
+    </Fields>
+  </Object>
+  <Object name="PackageDialogue" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+  <Object name="PackageUseWeapon" baseClass="APackageFlags" objType="Subrecord">
+    <Fields>
+      <UInt16 name="UnusedFlags" />
+    </Fields>
+  </Object>
+</Loqui>

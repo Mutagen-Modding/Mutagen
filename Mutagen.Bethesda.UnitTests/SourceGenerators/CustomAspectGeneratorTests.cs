@@ -2,7 +2,6 @@
 using Autofac.Features.OwnedInstances;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Testing;
 using Mutagen.Bethesda.SourceGenerators.CustomAspectInterface;
 using Noggog;
 using Xunit;

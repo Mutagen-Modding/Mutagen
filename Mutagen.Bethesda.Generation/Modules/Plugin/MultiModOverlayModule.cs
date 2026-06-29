@@ -1,5 +1,6 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using Noggog.IO;
 using Noggog.StructuredStrings;
@@ -30,6 +31,7 @@ public class MultiModOverlayModule : GenerationModule
         var className = $"{gameName}MultiModOverlay";
 
         StructuredStringBuilder sb = new StructuredStringBuilder();
+        sb.AppendLine("#nullable enable");
 
         // Using statements
         sb.AppendLine("using System.Collections;");
@@ -46,6 +48,13 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("using Noggog;");
         sb.AppendLine("using Noggog.StructuredStrings;");
         sb.AppendLine("using Loqui.Internal;");
+        sb.AppendLine("using Mutagen.Bethesda.Strings;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Aspects;");
+        var assetsDir = new DirectoryInfo(Path.Combine(proto.GenerationFolder.FullName, "../Assets"));
+        if (assetsDir.Exists)
+        {
+            sb.AppendLine($"using {obj.Namespace}.Assets;");
+        }
         sb.AppendLine();
 
         using (sb.Namespace(obj.Namespace, fileScoped: true))
@@ -54,8 +63,7 @@ public class MultiModOverlayModule : GenerationModule
             using (var comment = sb.Comment())
             {
                 comment.Summary.AppendLine($"Multi-mod overlay that presents multiple {gameName} mods as a single unified mod.");
-                comment.Summary.AppendLine("Typically used for reading split mods that were written due to exceeding master limits,");
-                comment.Summary.AppendLine("but can be used with any collection of mods.");
+                comment.Summary.AppendLine("Typically used for reading split mods that were written due to exceeding master limits");
             }
 
             // Class declaration - implement IModDisposeGetter for proper resource cleanup
@@ -68,11 +76,15 @@ public class MultiModOverlayModule : GenerationModule
                 sb.AppendLine();
                 GenerateProperties(sb, obj, gameName);
                 sb.AppendLine();
-                GenerateGroupProperties(sb, obj, gameName);
+                GenerateGroupProperties(sb, obj, gameName, proto);
                 sb.AppendLine();
                 GenerateInterfaceMembers(sb, obj, gameName);
             }
             
+            // Generate merged ModHeader/ModStats wrappers
+            GenerateMergedModHeader(sb, obj, gameName);
+            sb.AppendLine();
+
             // Generate game-specific MergedGroup wrapper FIRST
             GenerateMergedGroupWrapper(sb, gameName);
             sb.AppendLine();
@@ -83,6 +95,10 @@ public class MultiModOverlayModule : GenerationModule
 
             // Generate MergedCellBlock class
             GenerateMergedCellBlockWrapper(sb, gameName);
+            sb.AppendLine();
+
+            // Generate merged worldspace wrapper classes
+            GenerateMergedWorldspaceWrappers(sb, obj, gameName, proto);
             sb.AppendLine();
         }
 
@@ -105,8 +121,7 @@ public class MultiModOverlayModule : GenerationModule
         {
             // Fields
             sb.AppendLine($"private readonly IEnumerable<I{gameName}ListGroupGetter<ICellBlockGetter>> _sourceGroups;");
-            sb.AppendLine("private List<ICellBlockGetter>? _cache;");
-            sb.AppendLine("private readonly object _cacheLock = new object();");
+            sb.AppendLine("private readonly Lazy<List<ICellBlockGetter>> _cache;");
             sb.AppendLine();
 
             // Constructor
@@ -114,65 +129,37 @@ public class MultiModOverlayModule : GenerationModule
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("_sourceGroups = sourceGroups;");
+                sb.AppendLine("_cache = new Lazy<List<ICellBlockGetter>>(MergeBlocks);");
             }
             sb.AppendLine();
 
-            // Cache property with block merging logic
-            sb.AppendLine("private List<ICellBlockGetter> Cache");
+            // Merge method
+            sb.AppendLine("private List<ICellBlockGetter> MergeBlocks()");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("get");
+                sb.AppendLine("var blocksByNumber = new Dictionary<int, List<ICellBlockGetter>>();");
+                sb.AppendLine("foreach (var group in _sourceGroups)");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("if (_cache != null) return _cache;");
-                    sb.AppendLine();
-                    sb.AppendLine("lock (_cacheLock)");
+                    sb.AppendLine("foreach (var block in group.Records)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("if (_cache != null) return _cache;");
-                        sb.AppendLine();
-                        sb.AppendLine("// Merge CellBlocks by BlockNumber");
-                        sb.AppendLine("var blocksByNumber = new Dictionary<int, List<ICellBlockGetter>>();");
-                        sb.AppendLine();
-                        sb.AppendLine("foreach (var group in _sourceGroups)");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("foreach (var block in group.Records)");
-                            using (sb.CurlyBrace())
-                            {
-                                sb.AppendLine("if (!blocksByNumber.ContainsKey(block.BlockNumber))");
-                                using (sb.CurlyBrace())
-                                {
-                                    sb.AppendLine("blocksByNumber[block.BlockNumber] = new List<ICellBlockGetter>();");
-                                }
-                                sb.AppendLine("blocksByNumber[block.BlockNumber].Add(block);");
-                            }
-                        }
-                        sb.AppendLine();
-                        sb.AppendLine("// Create merged blocks");
-                        sb.AppendLine("var result = new List<ICellBlockGetter>();");
-                        sb.AppendLine("foreach (var blockNumber in blocksByNumber.Keys.OrderBy(k => k))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("var blocksForNumber = blocksByNumber[blockNumber];");
-                            sb.AppendLine("if (blocksForNumber.Count == 1)");
-                            using (sb.CurlyBrace())
-                            {
-                                sb.AppendLine("result.Add(blocksForNumber[0]);");
-                            }
-                            sb.AppendLine("else");
-                            using (sb.CurlyBrace())
-                            {
-                                sb.AppendLine("// Multiple blocks with same number - merge them");
-                                sb.AppendLine("result.Add(new MergedCellBlock(blockNumber, blocksForNumber));");
-                            }
-                        }
-                        sb.AppendLine();
-                        sb.AppendLine("_cache = result;");
-                        sb.AppendLine("return _cache;");
+                        sb.AppendLine("blocksByNumber.GetOrAdd(block.BlockNumber).Add(block);");
                     }
                 }
+                sb.AppendLine("var result = new List<ICellBlockGetter>();");
+                sb.AppendLine("foreach (var blockNumber in blocksByNumber.Keys.OrderBy(k => k))");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("var blocksForNumber = blocksByNumber[blockNumber];");
+                    sb.AppendLine("result.Add(blocksForNumber.Count == 1 ? blocksForNumber[0] : new MergedCellBlock(blockNumber, blocksForNumber));");
+                }
+                sb.AppendLine("return result;");
             }
+            sb.AppendLine();
+
+            // Cache property
+            sb.AppendLine("private List<ICellBlockGetter> Cache => _cache.Value;");
             sb.AppendLine();
 
             // IEnumerable implementation
@@ -213,111 +200,47 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine($"public object CommonSetterTranslationInstance() => {gameName}ListGroupSetterTranslationCommon.Instance;");
             sb.AppendLine();
 
-            // IAssetLinkContainerGetter
             sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var block in Cache)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (block is IAssetLinkContainerGetter assetContainer)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return link;");
-                        }
-                    }
-                }
+                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
             }
             sb.AppendLine();
 
             // IBinaryItem
+            sb.AppendLine($"object IBinaryItem.BinaryWriteTranslator => {gameName}ListGroupBinaryWriteTranslation.Instance;");
             sb.AppendLine("void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("throw new NotSupportedException(\"Merged groups cannot be written to binary. Write the source mods individually.\");");
-            }
-            sb.AppendLine();
-            sb.AppendLine("object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException(\"Merged groups do not support binary writing.\");");
-            sb.AppendLine();
-
-            // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("foreach (var block in Cache)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (block is IFormLinkContainerGetter formLinkContainer)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return link;");
-                        }
-                    }
-                }
+                sb.AppendLine($"=> {gameName}ListGroupBinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);");
             }
             sb.AppendLine();
 
-            // IMajorRecordGetterEnumerable
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
+            }
+            sb.AppendLine();
+
             sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var block in Cache)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (block is IMajorRecordGetterEnumerable enumerable)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords())");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return record;");
-                        }
-                    }
-                }
+                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateMajorRecords(this);");
             }
             sb.AppendLine();
 
             sb.AppendLine("IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var block in Cache)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (block is IMajorRecordGetterEnumerable enumerable)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords<T>(throwIfUnknown))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return record;");
-                        }
-                    }
-                }
+                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);");
             }
             sb.AppendLine();
 
             sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var block in Cache)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (block is IMajorRecordGetterEnumerable enumerable)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords(type, throwIfUnknown))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return record;");
-                        }
-                    }
-                }
+                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
             }
         }
     }
@@ -334,8 +257,7 @@ public class MultiModOverlayModule : GenerationModule
             // Fields
             sb.AppendLine("private readonly int _blockNumber;");
             sb.AppendLine("private readonly List<ICellBlockGetter> _sourceBlocks;");
-            sb.AppendLine("private List<ICellSubBlockGetter>? _mergedSubBlocks;");
-            sb.AppendLine("private readonly object _mergeLock = new object();");
+            sb.AppendLine("private readonly Lazy<List<ICellSubBlockGetter>> _mergedSubBlocks;");
             sb.AppendLine();
 
             // Constructor
@@ -344,53 +266,22 @@ public class MultiModOverlayModule : GenerationModule
             {
                 sb.AppendLine("_blockNumber = blockNumber;");
                 sb.AppendLine("_sourceBlocks = sourceBlocks;");
+                sb.AppendLine("_mergedSubBlocks = new Lazy<List<ICellSubBlockGetter>>(() => _sourceBlocks.SelectMany(b => b.SubBlocks).ToList());");
             }
             sb.AppendLine();
 
-            // BlockNumber property
+            // Properties
             sb.AppendLine("public int BlockNumber => _blockNumber;");
             sb.AppendLine("public GroupTypeEnum GroupType => _sourceBlocks.FirstOrDefault()?.GroupType ?? GroupTypeEnum.InteriorCellBlock;");
             sb.AppendLine("public int LastModified => _sourceBlocks.Max(b => b.LastModified);");
             sb.AppendLine("public int Unknown => 0;");
-            sb.AppendLine();
-
-            // SubBlocks property
-            sb.AppendLine("public IReadOnlyList<ICellSubBlockGetter> SubBlocks");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("get");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (_mergedSubBlocks != null) return _mergedSubBlocks;");
-                    sb.AppendLine();
-                    sb.AppendLine("lock (_mergeLock)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("if (_mergedSubBlocks != null) return _mergedSubBlocks;");
-                        sb.AppendLine();
-                        sb.AppendLine("// Merge SubBlocks from all source blocks");
-                        sb.AppendLine("var allSubBlocks = new List<ICellSubBlockGetter>();");
-                        sb.AppendLine("foreach (var block in _sourceBlocks)");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("allSubBlocks.AddRange(block.SubBlocks);");
-                        }
-                        sb.AppendLine();
-                        sb.AppendLine("_mergedSubBlocks = allSubBlocks;");
-                        sb.AppendLine("return _mergedSubBlocks;");
-                    }
-                }
-            }
+            sb.AppendLine("public IReadOnlyList<ICellSubBlockGetter> SubBlocks => _mergedSubBlocks.Value;");
             sb.AppendLine();
 
             // ILoquiObject
             sb.AppendLine("ILoquiRegistration ILoquiObject.Registration => null!;");
             sb.AppendLine();
-            sb.AppendLine("public void Print(StructuredStringBuilder sb, string? name = null)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("sb.AppendLine($\"Merged Cell Block {BlockNumber} ({SubBlocks.Count} sub-blocks from {_sourceBlocks.Count} source blocks)\");");
-            }
+            sb.AppendLine("public void Print(StructuredStringBuilder sb, string? name = null) => CellBlockCommon.Instance.Print(this, sb, name);");
             sb.AppendLine();
 
             sb.AppendLine($"public object CommonInstance() => CellBlockCommon.Instance;");
@@ -399,110 +290,46 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine();
 
             // IBinaryItem
+            sb.AppendLine("object IBinaryItem.BinaryWriteTranslator => CellBlockBinaryWriteTranslation.Instance;");
             sb.AppendLine("void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("throw new NotSupportedException(\"Merged cell blocks cannot be written to binary.\");");
+                sb.AppendLine("=> CellBlockBinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);");
             }
             sb.AppendLine();
-            sb.AppendLine("object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException(\"Merged cell blocks do not support binary writing.\");");
-            sb.AppendLine();
 
-            // IAssetLinkContainerGetter
             sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var subBlock in SubBlocks)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (subBlock is IAssetLinkContainerGetter assetContainer)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return link;");
-                        }
-                    }
-                }
+                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
             }
             sb.AppendLine();
 
-            // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
-            using (sb.CurlyBrace())
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var subBlock in SubBlocks)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (subBlock is IFormLinkContainerGetter formLinkContainer)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return link;");
-                        }
-                    }
-                }
+                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
             }
             sb.AppendLine();
 
-            // IMajorRecordGetterEnumerable
             sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var subBlock in SubBlocks)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (subBlock is IMajorRecordGetterEnumerable enumerable)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords())");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return record;");
-                        }
-                    }
-                }
+                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateMajorRecords(this);");
             }
             sb.AppendLine();
 
             sb.AppendLine("public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var subBlock in SubBlocks)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (subBlock is IMajorRecordGetterEnumerable enumerable)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords<T>(throwIfUnknown))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return record;");
-                        }
-                    }
-                }
+                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);");
             }
             sb.AppendLine();
 
             sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("foreach (var subBlock in SubBlocks)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (subBlock is IMajorRecordGetterEnumerable enumerable)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords(type, throwIfUnknown))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return record;");
-                        }
-                    }
-                }
+                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
             }
         }
     }
@@ -513,6 +340,7 @@ public class MultiModOverlayModule : GenerationModule
         {
             comment.Summary.AppendLine("Merged group that combines multiple groups into a single unified view.");
             comment.Summary.AppendLine("Validates no duplicate FormKeys exist and caches results.");
+            comment.Summary.AppendLine("When allowDuplicateOverrides is true, duplicate FormKeys are allowed and the later copy wins.");
         }
         sb.AppendLine($"internal class MergedGroup<TGetter> : I{gameName}GroupGetter<TGetter>, IReadOnlyCache<TGetter, FormKey>");
         using (sb.IncreaseDepth())
@@ -523,57 +351,69 @@ public class MultiModOverlayModule : GenerationModule
         {
             // Fields
             sb.AppendLine("private readonly IEnumerable<IGroupGetter<TGetter>> _sourceGroups;");
-            sb.AppendLine("private Dictionary<FormKey, TGetter>? _cache;");
-            sb.AppendLine("private readonly object _cacheLock = new object();");
+            sb.AppendLine("private readonly bool _allowDuplicateOverrides;");
+            sb.AppendLine("private readonly Func<TGetter, TGetter, TGetter>? _duplicateMerger;");
+            sb.AppendLine("private readonly Lazy<Dictionary<FormKey, TGetter>> _cache;");
             sb.AppendLine();
 
             // Constructor
-            sb.AppendLine("public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups)");
+            sb.AppendLine("public MergedGroup(IEnumerable<IGroupGetter<TGetter>> sourceGroups, bool allowDuplicateOverrides = false, Func<TGetter, TGetter, TGetter>? duplicateMerger = null)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("_sourceGroups = sourceGroups;");
+                sb.AppendLine("_allowDuplicateOverrides = allowDuplicateOverrides;");
+                sb.AppendLine("_duplicateMerger = duplicateMerger;");
+                sb.AppendLine("_cache = new Lazy<Dictionary<FormKey, TGetter>>(BuildCache);");
+            }
+            sb.AppendLine();
+
+            // BuildCache method
+            sb.AppendLine("private Dictionary<FormKey, TGetter> BuildCache()");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("var cache = new Dictionary<FormKey, TGetter>();");
+                sb.AppendLine("foreach (var group in _sourceGroups)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("foreach (var record in group)");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (!cache.TryAdd(record.FormKey, record))");
+                        using (sb.CurlyBrace())
+                        {
+                            sb.AppendLine("if (_allowDuplicateOverrides)");
+                            using (sb.CurlyBrace())
+                            {
+                                sb.AppendLine("if (_duplicateMerger != null)");
+                                using (sb.CurlyBrace())
+                                {
+                                    sb.AppendLine("cache[record.FormKey] = _duplicateMerger(cache[record.FormKey], record);");
+                                }
+                                sb.AppendLine("else");
+                                using (sb.CurlyBrace())
+                                {
+                                    sb.AppendLine("cache[record.FormKey] = record;");
+                                }
+                            }
+                            sb.AppendLine("else");
+                            using (sb.CurlyBrace())
+                            {
+                                sb.AppendLine("throw new SplitModException(");
+                                using (sb.IncreaseDepth())
+                                {
+                                    sb.AppendLine("$\"Duplicate FormKey {record.FormKey} found in split mods. \" +");
+                                    sb.AppendLine("\"This indicates corruption or an error in the splitting logic.\");");
+                                }
+                            }
+                        }
+                    }
+                }
+                sb.AppendLine("return cache;");
             }
             sb.AppendLine();
 
             // Cache property
-            sb.AppendLine("private Dictionary<FormKey, TGetter> Cache");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("get");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("if (_cache != null) return _cache;");
-                    sb.AppendLine();
-                    sb.AppendLine("lock (_cacheLock)");
-                    using (sb.CurlyBrace())
-                    {
-                        sb.AppendLine("if (_cache != null) return _cache;");
-                        sb.AppendLine();
-                        sb.AppendLine("var cache = new Dictionary<FormKey, TGetter>();");
-                        sb.AppendLine("foreach (var group in _sourceGroups)");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("foreach (var record in group)");
-                            using (sb.CurlyBrace())
-                            {
-                                sb.AppendLine("if (!cache.TryAdd(record.FormKey, record))");
-                                using (sb.CurlyBrace())
-                                {
-                                    sb.AppendLine("throw new SplitModException(");
-                                    using (sb.IncreaseDepth())
-                                    {
-                                        sb.AppendLine("$\"Duplicate FormKey {record.FormKey} found in split mods. \" +");
-                                        sb.AppendLine("\"This indicates corruption or an error in the splitting logic.\");");
-                                    }
-                                }
-                            }
-                        }
-                        sb.AppendLine();
-                        sb.AppendLine("_cache = cache;");
-                        sb.AppendLine("return _cache;");
-                    }
-                }
-            }
+            sb.AppendLine("private Dictionary<FormKey, TGetter> Cache => _cache.Value;");
             sb.AppendLine();
 
             // Enumeration methods
@@ -612,38 +452,35 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine("public Type ContainedRecordType => typeof(TGetter);");
             sb.AppendLine();
 
-            // IAssetLinkContainerGetter
+            // IAssetLinkContainerGetter - walk EnumerateMajorRecords (dedup across sources at
+            // the leaf FormKey) so nested records under shared-FormKey parents are preserved.
             sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var record in Cache.Values)");
+                sb.AppendLine("foreach (var record in EnumerateMajorRecords())");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("if (record is IAssetLinkContainerGetter assetContainer)");
+                    sb.AppendLine("if (record is not IAssetLinkContainerGetter assetContainer) continue;");
+                    sb.AppendLine("foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))");
-                        using (sb.CurlyBrace())
-                        {
-                            sb.AppendLine("yield return link;");
-                        }
+                        sb.AppendLine("yield return link;");
                     }
                 }
             }
             sb.AppendLine();
 
             // IBinaryItem
+            sb.AppendLine($"object IBinaryItem.BinaryWriteTranslator => {gameName}GroupBinaryWriteTranslation.Instance;");
             sb.AppendLine("void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
-            using (sb.CurlyBrace())
+            using (sb.IncreaseDepth())
             {
-                sb.AppendLine("throw new NotSupportedException(\"Merged groups cannot be written to binary. Write the source mods individually.\");");
+                sb.AppendLine($"=> {gameName}GroupBinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);");
             }
-            sb.AppendLine();
-            sb.AppendLine("object IBinaryItem.BinaryWriteTranslator => throw new NotSupportedException(\"Merged groups do not support binary writing.\");");
             sb.AppendLine();
 
             // IFormLinkContainerGetter
-            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
+            sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var record in Cache.Values)");
@@ -652,7 +489,7 @@ public class MultiModOverlayModule : GenerationModule
                     sb.AppendLine("if (record is IFormLinkContainerGetter formLinkContainer)");
                     using (sb.CurlyBrace())
                     {
-                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks())");
+                        sb.AppendLine("foreach (var link in formLinkContainer.EnumerateFormLinks(iterateNestedRecords))");
                         using (sb.CurlyBrace())
                         {
                             sb.AppendLine("yield return link;");
@@ -662,23 +499,61 @@ public class MultiModOverlayModule : GenerationModule
             }
             sb.AppendLine();
 
-            // IMajorRecordGetterEnumerable
+            // IMajorRecordGetterEnumerable - walk each source group (including nested majors)
+            // and dedup at the leaf level. Iterate in reverse so override semantics apply
+            // (later sources win on shared FormKeys). This preserves records that differ
+            // between source mods even when their parent records share a FormKey (e.g. two
+            // source mods each contributing a different DialogResponse under the same
+            // DialogTopic FormKey).
             sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("return Cache.Values;");
+                sb.AppendLine("var seen = new HashSet<FormKey>();");
+                sb.AppendLine("var sources = _sourceGroups.Reverse();");
+                sb.AppendLine("foreach (var group in sources)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("if (group is not IMajorRecordGetterEnumerable enumerable) continue;");
+                    sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords())");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (seen.Add(record.FormKey)) yield return record;");
+                    }
+                }
             }
             sb.AppendLine();
             sb.AppendLine("IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("return Cache.Values.WhereCastable<TGetter, T>();");
+                sb.AppendLine("var seen = new HashSet<FormKey>();");
+                sb.AppendLine("var sources = _sourceGroups.Reverse();");
+                sb.AppendLine("foreach (var group in sources)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("if (group is not IMajorRecordGetterEnumerable enumerable) continue;");
+                    sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords<T>(throwIfUnknown))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (record is IMajorRecordGetter major && seen.Add(major.FormKey)) yield return record;");
+                    }
+                }
             }
             sb.AppendLine();
             sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("return Cache.Values.Where(r => type.IsAssignableFrom(r.GetType()));");
+                sb.AppendLine("var seen = new HashSet<FormKey>();");
+                sb.AppendLine("var sources = _sourceGroups.Reverse();");
+                sb.AppendLine("foreach (var group in sources)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("if (group is not IMajorRecordGetterEnumerable enumerable) continue;");
+                    sb.AppendLine("foreach (var record in enumerable.EnumerateMajorRecords(type, throwIfUnknown))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (seen.Add(record.FormKey)) yield return record;");
+                    }
+                }
             }
             sb.AppendLine();
 
@@ -770,6 +645,9 @@ public class MultiModOverlayModule : GenerationModule
         // ModKey and masters
         sb.AppendLine("private readonly ModKey _modKey;");
         sb.AppendLine("private readonly IReadOnlyList<IMasterReferenceGetter> _masters;");
+
+        // Merged ModHeader
+        sb.AppendLine($"private readonly Merged{GetModHeaderObject(obj).Name} _modHeader;");
         sb.AppendLine();
 
         // Cached fields for each group
@@ -779,7 +657,6 @@ public class MultiModOverlayModule : GenerationModule
             if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) continue;
 
             var fieldName = $"_{char.ToLower(loqui.Name[0])}{loqui.Name.Substring(1)}";
-            var recordType = GetGroupRecordType(loqui);
 
             // Use the game-specific non-generic wrapper classes
             if (IsListGroup(loqui))
@@ -790,7 +667,8 @@ public class MultiModOverlayModule : GenerationModule
             else
             {
                 // Use the game-specific MergedGroup with interface forms
-                sb.AppendLine($"private MergedGroup<I{recordType}Getter>? {fieldName};");
+                var recordObj = GetGroupContainedRecord(loqui);
+                sb.AppendLine($"private MergedGroup<{recordObj.Interface(getter: true)}>? {fieldName};");
             }
         }
     }
@@ -824,6 +702,9 @@ public class MultiModOverlayModule : GenerationModule
             {
                 sb.AppendLine("throw new ArgumentException(\"Must provide at least one source mod\", nameof(sourceMods));");
             }
+
+            sb.AppendLine();
+            sb.AppendLine($"_modHeader = new Merged{GetModHeaderObject(obj).Name}(sourceList.Select(s => s.ModHeader).ToList(), mergedMasters);");
         }
     }
 
@@ -831,7 +712,7 @@ public class MultiModOverlayModule : GenerationModule
     {
         // Basic properties
         sb.AppendLine("public ModKey ModKey => _modKey;");
-        sb.AppendLine($"public I{gameName}ModHeaderGetter ModHeader => _sourceMods[0].ModHeader;");
+        sb.AppendLine($"public {GetModHeaderObject(obj).Interface(getter: true)} ModHeader => _modHeader;");
         sb.AppendLine("public IReadOnlyList<IMasterReferenceGetter> MasterReferences => _masters;");
 
         var objData = obj.GetObjectData();
@@ -853,7 +734,7 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine();
     }
     
-    private void GenerateGroupProperties(StructuredStringBuilder sb, ObjectGeneration obj, string gameName)
+    private void GenerateGroupProperties(StructuredStringBuilder sb, ObjectGeneration obj, string gameName, ProtocolGeneration proto)
     {
         foreach (var field in obj.IterateFields())
         {
@@ -861,9 +742,6 @@ public class MultiModOverlayModule : GenerationModule
             if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) continue;
 
             var fieldName = $"_{char.ToLower(loqui.Name[0])}{loqui.Name.Substring(1)}";
-
-            // Determine the record type for the group (as interface form)
-            var recordType = GetGroupRecordType(loqui);
 
             // Get the game-specific group getter interface
             var groupGetter = loqui.TypeName(getter: true);
@@ -880,10 +758,25 @@ public class MultiModOverlayModule : GenerationModule
                 else
                 {
                     // For regular groups, use the game-specific MergedGroup wrapper
-                    sb.AppendLine($"{fieldName} ??= new MergedGroup<I{recordType}Getter>(");
+                    var recordObj = GetGroupContainedRecord(loqui);
+                    var isParentType = IsKnownParentRecordType(recordObj, obj);
+                    var isWorldspace = IsWorldspaceRecordType(recordObj);
+                    sb.AppendLine($"{fieldName} ??= new MergedGroup<{recordObj.Interface(getter: true)}>(");
                     using (sb.IncreaseDepth())
                     {
-                        sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}));");
+                        if (isWorldspace)
+                        {
+                            sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}), allowDuplicateOverrides: true,");
+                            sb.AppendLine($"duplicateMerger: MergedWorldspace.Merge);");
+                        }
+                        else if (isParentType)
+                        {
+                            sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}), allowDuplicateOverrides: true);");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"_sourceMods.Select(m => m.{loqui.Name}));");
+                        }
                     }
                 }
             }
@@ -907,81 +800,43 @@ public class MultiModOverlayModule : GenerationModule
         }
         sb.AppendLine();
 
-        // EnumerateAssetLinks
+        // EnumerateAssetLinks - delegate to Common; it handles the mod-level Inferred
+        // branch and iterates each group, which reaches MergedGroup.EnumerateAssetLinks
+        // (which itself walks EnumerateMajorRecords for correct cross-source coverage).
         sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("foreach (var link in mod.EnumerateAssetLinks(queryCategories, linkCache, assetType))");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("yield return link;");
-                }
-            }
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
         }
         sb.AppendLine();
 
-        // EnumerateFormLinks
-        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks()");
-        using (sb.CurlyBrace())
+        // EnumerateFormLinks - delegate to Common
+        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("foreach (var link in mod.EnumerateFormLinks())");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("yield return link;");
-                }
-            }
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
         }
         sb.AppendLine();
 
-        // EnumerateMajorRecords
+        // EnumerateMajorRecords - delegate to Common (merged groups already deduplicate by FormKey)
         sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("foreach (var record in mod.EnumerateMajorRecords())");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("yield return record;");
-                }
-            }
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateMajorRecords(this);");
         }
         sb.AppendLine();
 
         sb.AppendLine("public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("foreach (var record in mod.EnumerateMajorRecords<T>(throwIfUnknown))");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("yield return record;");
-                }
-            }
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);");
         }
         sb.AppendLine();
 
         sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
-            using (sb.CurlyBrace())
-            {
-                sb.AppendLine("foreach (var record in mod.EnumerateMajorRecords(type, throwIfUnknown))");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("yield return record;");
-                }
-            }
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
         }
         sb.AppendLine();
 
@@ -1014,13 +869,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine($"IEnumerable<IModContext<I{gameName}Mod, I{gameName}ModGetter, TSetter, TGetter>> IMajorRecordContextEnumerable<I{gameName}Mod, I{gameName}ModGetter>.EnumerateMajorRecordContexts<TSetter, TGetter>(ILinkCache linkCache, bool throwIfUnknown)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (context.Record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1029,13 +889,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine($"IEnumerable<IModContext<I{gameName}Mod, I{gameName}ModGetter, IMajorRecord, IMajorRecordGetter>> IMajorRecordContextEnumerable<I{gameName}Mod, I{gameName}ModGetter>.EnumerateMajorRecordContexts(ILinkCache linkCache, Type type, bool throwIfUnknown)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordContexts(linkCache, type, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (seen.Add(context.Record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1045,13 +910,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts()");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordSimpleContexts())");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts())");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (seen.Add(context.Record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1060,13 +930,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IModContext<TGetter>> EnumerateMajorRecordSimpleContexts<TGetter>(bool throwIfUnknown = true) where TGetter : class, IMajorRecordQueryableGetter");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordSimpleContexts<TGetter>(throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts<TGetter>(throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (context.Record is IMajorRecordGetter majorRecord && seen.Add(majorRecord.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1075,13 +950,18 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine("public IEnumerable<IModContext<IMajorRecordGetter>> EnumerateMajorRecordSimpleContexts(Type type, bool throwIfUnknown = true)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("foreach (var mod in _sourceMods)");
+            sb.AppendLine("var seen = new HashSet<FormKey>();");
+            sb.AppendLine("for (int i = _sourceMods.Count - 1; i >= 0; i--)");
             using (sb.CurlyBrace())
             {
-                sb.AppendLine("foreach (var context in mod.EnumerateMajorRecordSimpleContexts(type, throwIfUnknown))");
+                sb.AppendLine("foreach (var context in _sourceMods[i].EnumerateMajorRecordSimpleContexts(type, throwIfUnknown))");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("yield return context;");
+                    sb.AppendLine("if (seen.Add(context.Record.FormKey))");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("yield return context;");
+                    }
                 }
             }
         }
@@ -1101,11 +981,11 @@ public class MultiModOverlayModule : GenerationModule
         }
         sb.AppendLine();
 
-        // GetRecordCount
+        // GetRecordCount - delegate to Common so overridden records aren't double-counted
         sb.AppendLine("public uint GetRecordCount()");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("return (uint)_sourceMods.Sum(m => m.GetRecordCount());");
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.GetRecordCount(this);");
         }
         sb.AppendLine();
 
@@ -1123,14 +1003,15 @@ public class MultiModOverlayModule : GenerationModule
         }
         sb.AppendLine();
 
-        // OverriddenForms
-        sb.AppendLine("#pragma warning disable CS8603 // Possible null reference return");
-        sb.AppendLine("IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>> IModGetter.OverriddenForms");
-        using (sb.CurlyBrace())
+        // OverriddenForms - aggregate across source mods with Distinct dedup
+        sb.AppendLine("IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? IModGetter.OverriddenForms =>");
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("get => _sourceMods.SelectMany(m => m.OverriddenForms).ToList();");
+            sb.AppendLine("_sourceMods.Where(m => m.OverriddenForms != null)");
+            sb.AppendLine("    .SelectMany(m => m.OverriddenForms!)");
+            sb.AppendLine("    .Distinct()");
+            sb.AppendLine("    .ToList();");
         }
-        sb.AppendLine("#pragma warning restore CS8603");
         sb.AppendLine();
 
         // NextFormID - return max across all mods to avoid collisions
@@ -1141,19 +1022,19 @@ public class MultiModOverlayModule : GenerationModule
         sb.AppendLine($"public ILoquiRegistration Registration => {gameName}Mod_Registration.Instance;");
         sb.AppendLine();
 
-        // IPrintable.Print
+        // IPrintable.Print - delegate to Common
         sb.AppendLine("public void Print(StructuredStringBuilder sb, string? name = null)");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("throw new NotSupportedException(\"Multi-mod overlay does not support printing.\");");
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.Print(this, sb, name);");
         }
         sb.AppendLine();
 
-        // IEqualsMask.GetEqualsMask
+        // IEqualsMask.GetEqualsMask - delegate to Common
         sb.AppendLine("public IMask<bool> GetEqualsMask(object rhs, EqualsMaskHelper.Include include)");
-        using (sb.CurlyBrace())
+        using (sb.IncreaseDepth())
         {
-            sb.AppendLine("throw new NotSupportedException(\"Multi-mod overlay does not support equality masking.\");");
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.GetEqualsMask(this, (I{gameName}ModGetter)rhs, include);");
         }
         sb.AppendLine();
 
@@ -1189,36 +1070,13 @@ public class MultiModOverlayModule : GenerationModule
         }
     }
 
-    private string GetGroupRecordType(LoquiType loqui)
+    private ObjectGeneration GetGroupContainedRecord(LoquiType loqui)
     {
-        // Get the contained record type from the group's generic parameter
-        if (loqui.GenericSpecification?.Specifications.TryGetValue("T", out var getterType) == true)
+        if (!loqui.TryGetSpecificationAsObject("T", out var recordObj))
         {
-            // The getterType might be fully qualified (e.g., "ISkyrim.GameSettingGetter") or simple (e.g., "IGameSettingGetter")
-            // We need to return just the class name without namespace, I prefix, and Getter suffix
-            // E.g., "ISkyrim.GameSettingGetter" -> "GameSetting" or "IGameSettingGetter" -> "GameSetting"
-            var typeName = getterType;
-
-            // Remove namespace qualifier if present (e.g., "ISkyrim.GameSettingGetter" -> "GameSettingGetter")
-            if (typeName.Contains("."))
-            {
-                typeName = typeName.Substring(typeName.LastIndexOf('.') + 1);
-            }
-
-            // Remove "Getter" suffix first (e.g., "IGameSettingGetter" -> "IGameSetting")
-            typeName = typeName.TrimStringFromEnd("Getter");
-
-            // Remove "I" prefix if it's an interface prefix (e.g., "IGameSetting" -> "GameSetting")
-            // Only remove if it's followed by an uppercase letter (to avoid removing "I" from types like "Ingredient")
-            if (typeName.StartsWith("I") && typeName.Length > 1 && char.IsUpper(typeName[1]))
-            {
-                typeName = typeName.Substring(1);
-            }
-
-            return typeName;
+            throw new ArgumentException($"Could not determine record type for group {loqui.Name}");
         }
-
-        throw new ArgumentException($"Could not determine record type for group {loqui.Name}");
+        return recordObj;
     }
 
     private bool IsListGroup(LoquiType loqui)
@@ -1226,5 +1084,716 @@ public class MultiModOverlayModule : GenerationModule
         // Check if this is a list group (like Cells) by looking at the type
         // List groups implement IListGroupGetter
         return loqui.TypeName(getter: true).Contains("ListGroup");
+    }
+
+    /// <summary>
+    /// Checks whether a group's inner record type is a known parent/container type
+    /// by looking up the record type in the game's GroupConstants.ParentRecordTypes metadata.
+    /// </summary>
+    private static bool IsKnownParentRecordType(ObjectGeneration recordObjGen, ObjectGeneration modObj)
+    {
+        if (!recordObjGen.TryGetRecordType(out var recType)) return false;
+
+        var gameCategory = modObj.GetObjectData().GameCategory;
+        if (gameCategory == null) return false;
+
+        var gameConstants = GetGameConstantsForCategory(gameCategory.Value);
+        return gameConstants.GroupConstants.ParentRecordTypes.Contains(recType);
+    }
+
+    private static GameConstants GetGameConstantsForCategory(GameCategory category)
+    {
+        return category switch
+        {
+            GameCategory.Oblivion => GameConstants.Oblivion,
+            GameCategory.Skyrim => GameConstants.SkyrimLE,
+            GameCategory.Fallout3 => GameConstants.Fallout3,
+            GameCategory.Fallout4 => GameConstants.Fallout4,
+            GameCategory.Starfield => GameConstants.Starfield,
+            _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
+        };
+    }
+
+    private static bool IsWorldspaceRecordType(ObjectGeneration recordObjGen)
+    {
+        if (!recordObjGen.TryGetRecordType(out var recType)) return false;
+        return recType == RecordTypes.WRLD;
+    }
+
+    private void GenerateMergedWorldspaceWrappers(StructuredStringBuilder sb, ObjectGeneration modObj, string gameName, ProtocolGeneration proto)
+    {
+        // Find the Worldspace and Cell ObjectGenerations
+        ObjectGeneration? worldspaceObj = null;
+        ObjectGeneration? cellObj = null;
+        foreach (var objGen in proto.ObjectGenerationsByName.Values)
+        {
+            if (objGen.TryGetRecordType(out var recType))
+            {
+                if (recType == RecordTypes.WRLD) worldspaceObj = objGen;
+                else if (recType == RecordTypes.CELL) cellObj = objGen;
+            }
+        }
+
+        if (worldspaceObj == null || cellObj == null) return;
+
+        var hasFormVersion = modObj.GetObjectData().GameCategory != GameCategory.Oblivion;
+
+        GenerateMergedWorldspace(sb, worldspaceObj, gameName, hasFormVersion);
+        sb.AppendLine();
+        GenerateMergedWorldspaceBlock(sb, gameName, hasFormVersion);
+        sb.AppendLine();
+        GenerateMergedWorldspaceSubBlock(sb, gameName);
+        sb.AppendLine();
+        GenerateMergedWorldspaceCell(sb, cellObj, gameName, hasFormVersion);
+    }
+
+    private void GenerateMergedWorldspace(StructuredStringBuilder sb, ObjectGeneration worldspaceObj, string gameName, bool hasFormVersion)
+    {
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine("Merged worldspace that combines SubCells from multiple worldspace copies with the same FormKey.");
+        }
+        sb.AppendLine("internal class MergedWorldspace : IWorldspaceGetter");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("private readonly IWorldspaceGetter _primary;");
+            sb.AppendLine("private readonly List<IWorldspaceGetter> _allCopies;");
+            sb.AppendLine("private readonly Lazy<IReadOnlyList<IWorldspaceBlockGetter>> _mergedSubCells;");
+            sb.AppendLine();
+
+            sb.AppendLine("public MergedWorldspace(IWorldspaceGetter primary, List<IWorldspaceGetter> allCopies)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_primary = primary;");
+                sb.AppendLine("_allCopies = allCopies;");
+                sb.AppendLine("_mergedSubCells = new Lazy<IReadOnlyList<IWorldspaceBlockGetter>>(MergeSubCells);");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("public static IWorldspaceGetter Merge(IWorldspaceGetter existing, IWorldspaceGetter newer)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("List<IWorldspaceGetter> allCopies;");
+                sb.AppendLine("if (existing is MergedWorldspace merged)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("allCopies = merged._allCopies;");
+                    sb.AppendLine("allCopies.Add(newer);");
+                }
+                sb.AppendLine("else");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("allCopies = new List<IWorldspaceGetter> { existing, newer };");
+                }
+                sb.AppendLine("return new MergedWorldspace(newer, allCopies);");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("private IReadOnlyList<IWorldspaceBlockGetter> MergeSubCells()");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("var blocksByKey = new Dictionary<(short X, short Y), List<IWorldspaceBlockGetter>>();");
+                sb.AppendLine("foreach (var ws in _allCopies)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("foreach (var block in ws.SubCells)");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("var key = (block.BlockNumberX, block.BlockNumberY);");
+                        sb.AppendLine("blocksByKey.GetOrAdd(key).Add(block);");
+                    }
+                }
+                sb.AppendLine("var result = new List<IWorldspaceBlockGetter>();");
+                sb.AppendLine("foreach (var (_, blocks) in blocksByKey)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("result.Add(blocks.Count == 1 ? blocks[0] : new MergedWorldspaceBlock(blocks));");
+                }
+                sb.AppendLine("return result;");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("public IReadOnlyList<IWorldspaceBlockGetter> SubCells => _mergedSubCells.Value;");
+            sb.AppendLine();
+
+            // Delegate all other fields to _primary
+            GenerateMajorRecordDelegation(sb, worldspaceObj, gameName, hasFormVersion, "Worldspace",
+                skipFields: new HashSet<string> { "SubCells" });
+
+            sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine("=> WorldspaceCommon.Instance.EnumerateMajorRecords(this);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine("=> WorldspaceCommon.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine("=> WorldspaceCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
+            }
+        }
+    }
+
+    private void GenerateMergedWorldspaceBlock(StructuredStringBuilder sb, string gameName, bool hasUnknown)
+    {
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine("Merged worldspace block that combines multiple blocks with the same (BlockNumberX, BlockNumberY).");
+        }
+        sb.AppendLine("internal class MergedWorldspaceBlock : IWorldspaceBlockGetter");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("private readonly List<IWorldspaceBlockGetter> _sourceBlocks;");
+            sb.AppendLine("private readonly Lazy<IReadOnlyList<IWorldspaceSubBlockGetter>> _mergedItems;");
+            sb.AppendLine();
+            sb.AppendLine("public MergedWorldspaceBlock(List<IWorldspaceBlockGetter> sourceBlocks)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_sourceBlocks = sourceBlocks;");
+                sb.AppendLine("_mergedItems = new Lazy<IReadOnlyList<IWorldspaceSubBlockGetter>>(MergeItems);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public short BlockNumberY => _sourceBlocks[0].BlockNumberY;");
+            sb.AppendLine("public short BlockNumberX => _sourceBlocks[0].BlockNumberX;");
+            sb.AppendLine("public GroupTypeEnum GroupType => _sourceBlocks[0].GroupType;");
+            sb.AppendLine("public int LastModified => _sourceBlocks.Max(b => b.LastModified);");
+            if (hasUnknown)
+                sb.AppendLine("public int Unknown => 0;");
+            sb.AppendLine();
+
+            // Merge method
+            sb.AppendLine("private IReadOnlyList<IWorldspaceSubBlockGetter> MergeItems()");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("var subBlocksByKey = new Dictionary<(short X, short Y), List<IWorldspaceSubBlockGetter>>();");
+                sb.AppendLine("foreach (var block in _sourceBlocks)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("foreach (var subBlock in block.Items)");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("var key = (subBlock.BlockNumberX, subBlock.BlockNumberY);");
+                        sb.AppendLine("subBlocksByKey.GetOrAdd(key).Add(subBlock);");
+                    }
+                }
+                sb.AppendLine("var result = new List<IWorldspaceSubBlockGetter>();");
+                sb.AppendLine("foreach (var (_, subBlocks) in subBlocksByKey)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("result.Add(subBlocks.Count == 1 ? subBlocks[0] : new MergedWorldspaceSubBlock(subBlocks));");
+                }
+                sb.AppendLine("return result;");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("public IReadOnlyList<IWorldspaceSubBlockGetter> Items => _mergedItems.Value;");
+            sb.AppendLine();
+
+            GenerateNonMajorRecordInterfaceMembers(sb, "WorldspaceBlock");
+        }
+    }
+
+    private void GenerateMergedWorldspaceSubBlock(StructuredStringBuilder sb, string gameName)
+    {
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine("Merged worldspace sub-block that deduplicates cells by FormKey and merges their placed objects.");
+        }
+        sb.AppendLine("internal class MergedWorldspaceSubBlock : IWorldspaceSubBlockGetter");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("private readonly List<IWorldspaceSubBlockGetter> _sourceSubBlocks;");
+            sb.AppendLine("private readonly Lazy<IReadOnlyList<ICellGetter>> _mergedItems;");
+            sb.AppendLine();
+            sb.AppendLine("public MergedWorldspaceSubBlock(List<IWorldspaceSubBlockGetter> sourceSubBlocks)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_sourceSubBlocks = sourceSubBlocks;");
+                sb.AppendLine("_mergedItems = new Lazy<IReadOnlyList<ICellGetter>>(MergeItems);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public short BlockNumberY => _sourceSubBlocks[0].BlockNumberY;");
+            sb.AppendLine("public short BlockNumberX => _sourceSubBlocks[0].BlockNumberX;");
+            sb.AppendLine("public GroupTypeEnum GroupType => _sourceSubBlocks[0].GroupType;");
+            sb.AppendLine("public int LastModified => _sourceSubBlocks.Max(sb => sb.LastModified);");
+            sb.AppendLine("public int Unknown => 0;");
+            sb.AppendLine();
+
+            // Merge method
+            sb.AppendLine("private IReadOnlyList<ICellGetter> MergeItems()");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("var cellsByFormKey = new Dictionary<FormKey, List<ICellGetter>>();");
+                sb.AppendLine("foreach (var subBlock in _sourceSubBlocks)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("foreach (var cell in subBlock.Items)");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("cellsByFormKey.GetOrAdd(cell.FormKey).Add(cell);");
+                    }
+                }
+                sb.AppendLine("var result = new List<ICellGetter>();");
+                sb.AppendLine("foreach (var (_, cells) in cellsByFormKey)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("result.Add(cells.Count == 1 ? cells[0] : new MergedWorldspaceCell(cells));");
+                }
+                sb.AppendLine("return result;");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("public IReadOnlyList<ICellGetter> Items => _mergedItems.Value;");
+            sb.AppendLine();
+
+            GenerateNonMajorRecordInterfaceMembers(sb, "WorldspaceSubBlock", itemsAreMajorRecords: true);
+        }
+    }
+
+    private void GenerateMergedWorldspaceCell(StructuredStringBuilder sb, ObjectGeneration cellObj, string gameName, bool hasFormVersion)
+    {
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine("Merged cell that combines Persistent and Temporary placed objects from multiple cells with the same FormKey.");
+        }
+        sb.AppendLine("internal class MergedWorldspaceCell : ICellGetter");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("private readonly ICellGetter _primary;");
+            sb.AppendLine("private readonly List<ICellGetter> _allCopies;");
+            sb.AppendLine();
+            sb.AppendLine("public MergedWorldspaceCell(List<ICellGetter> allCopies)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_primary = allCopies[^1];");
+                sb.AppendLine("_allCopies = allCopies;");
+            }
+            sb.AppendLine();
+
+            // Merged Persistent and Temporary
+            sb.AppendLine("public IReadOnlyList<IPlacedGetter> Persistent => _allCopies.SelectMany(c => c.Persistent).ToList();");
+            sb.AppendLine("public IReadOnlyList<IPlacedGetter> Temporary => _allCopies.SelectMany(c => c.Temporary).ToList();");
+            sb.AppendLine();
+
+            // Delegate all other fields
+            GenerateMajorRecordDelegation(sb, cellObj, gameName, hasFormVersion, "Cell",
+                skipFields: new HashSet<string> { "Persistent", "Temporary" });
+
+            sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine("=> CellCommon.Instance.EnumerateMajorRecords(this);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine("=> CellCommon.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine("=> CellCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Generates property delegation for a major record wrapper, delegating all properties to _primary.
+    /// Handles FormKey, EditorID, FormVersion, and game-specific record fields.
+    /// </summary>
+    private void GenerateMajorRecordDelegation(StructuredStringBuilder sb, ObjectGeneration recordObj, string gameName, bool hasFormVersion, string recordTypeName, HashSet<string> skipFields)
+    {
+        var interfaceName = $"I{recordTypeName}Getter";
+
+        // Base major record properties
+        sb.AppendLine($"public FormKey FormKey => _primary.FormKey;");
+        sb.AppendLine($"public string? EditorID => _primary.EditorID;");
+        sb.AppendLine($"public int MajorRecordFlagsRaw => _primary.MajorRecordFlagsRaw;");
+        sb.AppendLine($"public uint VersionControl => _primary.VersionControl;");
+        if (hasFormVersion)
+        {
+            sb.AppendLine($"ushort I{gameName}MajorRecordGetter.FormVersion => _primary.FormVersion;");
+            sb.AppendLine($"ushort? IMajorRecordGetter.FormVersion => _primary.FormVersion;");
+            sb.AppendLine($"ushort? IFormVersionGetter.FormVersion => _primary.FormVersion;");
+            sb.AppendLine($"public ushort Version2 => _primary.Version2;");
+        }
+        else
+        {
+            sb.AppendLine($"ushort? IMajorRecordGetter.FormVersion => null;");
+            sb.AppendLine($"ushort? IFormVersionGetter.FormVersion => null;");
+        }
+        sb.AppendLine($"public {gameName}MajorRecord.{gameName}MajorRecordFlag {gameName}MajorRecordFlags => _primary.{gameName}MajorRecordFlags;");
+        // MajorFlags is defined in partial classes for non-Oblivion games
+        if (hasFormVersion)
+        {
+            sb.AppendLine($"public {recordTypeName}.MajorFlag MajorFlags => _primary.MajorFlags;");
+        }
+        sb.AppendLine($"public bool IsCompressed => (MajorRecordFlagsRaw & Mutagen.Bethesda.Plugins.Internals.Constants.CompressedFlag) != 0;");
+        sb.AppendLine($"public bool IsDeleted => (MajorRecordFlagsRaw & Mutagen.Bethesda.Plugins.Internals.Constants.DeletedFlag) != 0;");
+        sb.AppendLine($"Type ILinkIdentifier.Type => typeof({interfaceName});");
+        sb.AppendLine($"public bool Equals(IFormLinkGetter? other) => other != null && other.FormKey == FormKey && typeof({interfaceName}).IsAssignableFrom(other.Type);");
+        sb.AppendLine();
+
+        // Iterate record-specific fields (base class fields are excluded by IterateFields default)
+        foreach (var field in recordObj.IterateFields(nonIntegrated: true))
+        {
+            if (!field.IntegrateField) continue;
+            if (skipFields.Contains(field.Name)) continue;
+
+            sb.AppendLine($"public {field.TypeName(getter: true)}{field.NullChar} {field.Name} => _primary.{field.Name};");
+        }
+        sb.AppendLine();
+
+        // Name interface implementations (check if record has translated name)
+        var hasTranslatedName = recordObj.Fields.Any(f => f.Name == "Name" && f.TypeName(getter: true).Contains("ITranslatedString"));
+        var hasName = recordObj.Fields.Any(f => f.Name == "Name");
+        if (hasName)
+        {
+            if (hasTranslatedName)
+            {
+                sb.AppendLine($"ITranslatedStringGetter? ITranslatedNamedGetter.Name => _primary.Name;");
+                sb.AppendLine($"ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => _primary.Name ?? TranslatedString.Empty;");
+                sb.AppendLine($"string? INamedGetter.Name => _primary.Name?.String;");
+                sb.AppendLine($"string INamedRequiredGetter.Name => _primary.Name?.String ?? string.Empty;");
+            }
+            else
+            {
+                sb.AppendLine($"string? INamedGetter.Name => _primary.Name;");
+                sb.AppendLine($"string INamedRequiredGetter.Name => _primary.Name ?? string.Empty;");
+            }
+        }
+        sb.AppendLine();
+
+        // Common interface members
+        sb.AppendLine($"ILoquiRegistration ILoquiObject.Registration => {recordTypeName}_Registration.Instance;");
+        sb.AppendLine($"public object CommonInstance() => {recordTypeName}Common.Instance;");
+        sb.AppendLine($"public object? CommonSetterInstance() => null;");
+        sb.AppendLine($"public object CommonSetterTranslationInstance() => {recordTypeName}SetterTranslationCommon.Instance;");
+        sb.AppendLine();
+        sb.AppendLine($"public void Print(StructuredStringBuilder sb, string? name) => {recordTypeName}Common.Instance.Print(this, sb, name);");
+        sb.AppendLine();
+
+        // Binary items
+        sb.AppendLine($"object IBinaryItem.BinaryWriteTranslator => {recordTypeName}BinaryWriteTranslation.Instance;");
+        sb.AppendLine($"void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
+        sb.AppendLine($"    => {recordTypeName}BinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);");
+        sb.AppendLine();
+
+        // Form links and asset links
+        sb.AppendLine($"public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
+        sb.AppendLine($"    => {recordTypeName}Common.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
+        sb.AppendLine($"public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+        sb.AppendLine($"    => {recordTypeName}Common.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+        sb.AppendLine();
+    }
+
+    /// <summary>
+    /// Generates common interface members for non-major-record merged types (blocks, sub-blocks).
+    /// When <paramref name="itemsAreMajorRecords"/> is true, each item in Items is yielded
+    /// (e.g. WorldspaceSubBlock holds Cells); otherwise we only recurse into each item.
+    /// </summary>
+    private void GenerateNonMajorRecordInterfaceMembers(StructuredStringBuilder sb, string typeName, bool itemsAreMajorRecords = false)
+    {
+        sb.AppendLine($"ILoquiRegistration ILoquiObject.Registration => null!;");
+        sb.AppendLine($"public void Print(StructuredStringBuilder sb, string? name) => {typeName}Common.Instance.Print(this, sb, name);");
+        sb.AppendLine($"public object CommonInstance() => {typeName}Common.Instance;");
+        sb.AppendLine($"public object? CommonSetterInstance() => null;");
+        sb.AppendLine($"public object CommonSetterTranslationInstance() => {typeName}SetterTranslationCommon.Instance;");
+        sb.AppendLine();
+        sb.AppendLine($"object IBinaryItem.BinaryWriteTranslator => {typeName}BinaryWriteTranslation.Instance;");
+        sb.AppendLine("void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> {typeName}BinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);");
+        }
+        sb.AppendLine();
+
+        sb.AppendLine("public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
+        }
+        sb.AppendLine();
+        sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+        }
+        sb.AppendLine();
+
+        sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateMajorRecords(this);");
+        }
+        sb.AppendLine();
+        sb.AppendLine("public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);");
+        }
+        sb.AppendLine();
+        sb.AppendLine("public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
+        }
+    }
+
+    private static readonly HashSet<string> AggregateHeaderFieldNames = new()
+    {
+        "MasterReferences",
+        "OverriddenForms",
+        "TransientTypes",
+    };
+
+    private static ObjectGeneration GetModHeaderObject(ObjectGeneration modObj)
+    {
+        return modObj.IterateFields()
+            .OfType<LoquiType>()
+            .First(f => f.Name == "ModHeader")
+            .TargetObjectGeneration!;
+    }
+
+    private void GenerateMergedModHeader(StructuredStringBuilder sb, ObjectGeneration obj, string gameName)
+    {
+        var modHeaderObj = GetModHeaderObject(obj);
+        var headerName = modHeaderObj.Name;
+        var headerInterfaceName = $"I{headerName}Getter";
+        var headerClassName = $"Merged{headerName}";
+
+        var statsField = modHeaderObj.IterateFields().OfType<LoquiType>()
+            .FirstOrDefault(f => f.Name == "Stats");
+        var statsObj = statsField?.TargetObjectGeneration;
+        string? statsInterfaceName = null;
+        string? statsClassName = null;
+        if (statsObj != null)
+        {
+            statsInterfaceName = $"I{statsObj.Name}Getter";
+            statsClassName = $"Merged{statsObj.Name}";
+            GenerateMergedStatsWrapper(sb, statsObj, statsClassName, statsInterfaceName);
+            sb.AppendLine();
+        }
+
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine($"Merged ModHeader that projects aggregate state (masters, overridden forms) across all source mods.");
+            comment.Summary.AppendLine("Throws InvalidDataException if must-match fields (Version, Flags, Author, etc.) disagree between sources.");
+        }
+        sb.AppendLine($"internal class {headerClassName} : {headerInterfaceName}");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine($"private readonly IReadOnlyList<{headerInterfaceName}> _sources;");
+            sb.AppendLine("private readonly IReadOnlyList<IMasterReferenceGetter> _masters;");
+            if (statsClassName != null)
+            {
+                sb.AppendLine($"private readonly {statsClassName} _stats;");
+            }
+            sb.AppendLine();
+
+            WriteHeaderMustMatchMask(sb, modHeaderObj, headerName, statsObj);
+            sb.AppendLine();
+
+            sb.AppendLine($"public {headerClassName}(IReadOnlyList<{headerInterfaceName}> sources, IReadOnlyList<IMasterReferenceGetter> masters)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_sources = sources;");
+                sb.AppendLine("_masters = masters;");
+                if (statsClassName != null)
+                {
+                    sb.AppendLine($"_stats = new {statsClassName}(sources.Select(s => s.Stats).ToList());");
+                }
+                sb.AppendLine("ValidateConsistency();");
+            }
+            sb.AppendLine();
+
+            WriteMaskedValidation(sb, headerClassName);
+            sb.AppendLine();
+
+            foreach (var f in modHeaderObj.IterateFields())
+            {
+                WriteHeaderPropertyAccessor(sb, f, statsInterfaceName);
+            }
+            sb.AppendLine();
+
+            GenerateHeaderInterfacePlumbing(sb, headerName);
+        }
+    }
+
+    private void GenerateMergedStatsWrapper(StructuredStringBuilder sb, ObjectGeneration statsObj, string className, string interfaceName)
+    {
+        var maskTypeName = $"{statsObj.Name}.TranslationMask";
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine("Merged ModStats. NextFormID is the max across sources; NumRecords is zeroed.");
+            comment.Summary.AppendLine("Throws InvalidDataException if must-match fields disagree between sources.");
+        }
+        sb.AppendLine($"internal class {className} : {interfaceName}");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine($"private readonly IReadOnlyList<{interfaceName}> _sources;");
+            sb.AppendLine();
+
+            sb.AppendLine($"private static readonly {maskTypeName} _mustMatchMask = new {maskTypeName}(defaultOn: true)");
+            using (sb.CurlyBrace(appendSemiColon: true))
+            {
+                sb.AppendLine("NumRecords = false,");
+                sb.AppendLine("NextFormID = false,");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine($"public {className}(IReadOnlyList<{interfaceName}> sources)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_sources = sources;");
+                sb.AppendLine("ValidateConsistency();");
+            }
+            sb.AppendLine();
+
+            WriteMaskedValidation(sb, className);
+            sb.AppendLine();
+
+            foreach (var f in statsObj.IterateFields())
+            {
+                var typeName = f.TypeName(getter: true);
+                if (f.Name == "NumRecords")
+                {
+                    sb.AppendLine($"public {typeName} NumRecords => 0;");
+                }
+                else if (f.Name == "NextFormID")
+                {
+                    sb.AppendLine($"public {typeName} NextFormID => _sources.Max(s => s.NextFormID);");
+                }
+                else
+                {
+                    sb.AppendLine($"public {typeName}{f.NullChar} {f.Name} => _sources[0].{f.Name};");
+                }
+            }
+            sb.AppendLine();
+
+            sb.AppendLine($"public ILoquiRegistration Registration => {interfaceName}.StaticRegistration;");
+            sb.AppendLine("public object CommonInstance() => _sources[0].CommonInstance();");
+            sb.AppendLine("public object? CommonSetterInstance() => null;");
+            sb.AppendLine("public object CommonSetterTranslationInstance() => _sources[0].CommonSetterTranslationInstance();");
+            sb.AppendLine("public void Print(StructuredStringBuilder sb, string? name = null) => _sources[0].Print(sb, name);");
+            sb.AppendLine($"object IBinaryItem.BinaryWriteTranslator => {statsObj.Name}BinaryWriteTranslation.Instance;");
+            sb.AppendLine("void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
+            using (sb.IncreaseDepth())
+            {
+                sb.AppendLine($"=> (({statsObj.Name}BinaryWriteTranslation)((IBinaryItem)this).BinaryWriteTranslator).Write(item: this, writer: writer, translationParams: translationParams);");
+            }
+        }
+    }
+
+    private void WriteHeaderMustMatchMask(StructuredStringBuilder sb, ObjectGeneration modHeaderObj, string headerName, ObjectGeneration? statsObj)
+    {
+        var maskTypeName = $"{headerName}.TranslationMask";
+        sb.AppendLine($"private static readonly {maskTypeName} _mustMatchMask = new {maskTypeName}(defaultOn: true)");
+        using (sb.CurlyBrace(appendSemiColon: true))
+        {
+            foreach (var f in modHeaderObj.IterateFields())
+            {
+                if (!AggregateHeaderFieldNames.Contains(f.Name)) continue;
+                sb.AppendLine($"{f.Name} = false,");
+            }
+            if (statsObj != null)
+            {
+                sb.AppendLine($"Stats = new {statsObj.Name}.TranslationMask(defaultOn: true)");
+                using (sb.CurlyBrace(appendComma: true))
+                {
+                    sb.AppendLine("NumRecords = false,");
+                    sb.AppendLine("NextFormID = false,");
+                }
+            }
+        }
+    }
+
+    private void WriteMaskedValidation(StructuredStringBuilder sb, string className)
+    {
+        sb.AppendLine("private void ValidateConsistency()");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("if (_sources.Count <= 1) return;");
+            sb.AppendLine("var first = _sources[0];");
+            sb.AppendLine("for (int i = 1; i < _sources.Count; i++)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("if (!first.Equals(_sources[i], _mustMatchMask))");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine($"throw new System.IO.InvalidDataException($\"{className}: source mod {{i}} disagrees with source mod 0 on must-match fields.\");");
+                }
+            }
+        }
+    }
+
+    private void WriteHeaderPropertyAccessor(StructuredStringBuilder sb, TypeGeneration field, string? statsInterfaceName)
+    {
+        var name = field.Name;
+        var typeName = field.TypeName(getter: true);
+
+        if (field is LoquiType && name == "Stats" && statsInterfaceName != null)
+        {
+            sb.AppendLine($"public {statsInterfaceName} Stats => _stats;");
+            return;
+        }
+
+        if (name == "MasterReferences")
+        {
+            sb.AppendLine("public IReadOnlyList<IMasterReferenceGetter> MasterReferences => _masters;");
+            return;
+        }
+
+        if (name == "OverriddenForms")
+        {
+            sb.AppendLine($"public {typeName}{field.NullChar} OverriddenForms");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("get");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("var merged = _sources.Where(s => s.OverriddenForms != null)");
+                    sb.AppendLine("    .SelectMany(s => s.OverriddenForms!)");
+                    sb.AppendLine("    .Distinct()");
+                    sb.AppendLine("    .ToList();");
+                    sb.AppendLine("return merged.Count == 0 ? null : merged;");
+                }
+            }
+            return;
+        }
+
+        if (name == "TransientTypes")
+        {
+            sb.AppendLine($"public {typeName}{field.NullChar} TransientTypes => _sources.SelectMany(s => s.TransientTypes).ToList();");
+            return;
+        }
+
+        sb.AppendLine($"public {typeName}{field.NullChar} {name} => _sources[0].{name};");
+    }
+
+    private void GenerateHeaderInterfacePlumbing(StructuredStringBuilder sb, string headerName)
+    {
+        var interfaceName = $"I{headerName}Getter";
+        var commonName = $"{headerName}Common";
+        sb.AppendLine($"public ILoquiRegistration Registration => {interfaceName}.StaticRegistration;");
+        sb.AppendLine($"public object CommonInstance() => {commonName}.Instance;");
+        sb.AppendLine("public object? CommonSetterInstance() => null;");
+        sb.AppendLine("public object CommonSetterTranslationInstance() => _sources[0].CommonSetterTranslationInstance();");
+        sb.AppendLine("public void Print(StructuredStringBuilder sb, string? name = null) => _sources[0].Print(sb, name);");
+        sb.AppendLine($"object IBinaryItem.BinaryWriteTranslator => {headerName}BinaryWriteTranslation.Instance;");
+        sb.AppendLine("void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)");
+        using (sb.IncreaseDepth())
+        {
+            sb.AppendLine($"=> (({headerName}BinaryWriteTranslation)((IBinaryItem)this).BinaryWriteTranslator).Write(item: this, writer: writer, translationParams: translationParams);");
+        }
+        sb.AppendLine($"public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => {commonName}.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
     }
 }

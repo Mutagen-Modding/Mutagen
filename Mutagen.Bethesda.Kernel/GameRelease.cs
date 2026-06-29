@@ -29,4 +29,10 @@ public enum GameRelease
     Fallout4VR = 9,
     [Description("Oblivion Remastered")]
     OblivionRE = 10,
+    [Description("Enderal SE GOG")]
+    EnderalSEGog = 11,
+    [Description("Fallout 3")]
+    Fallout3 = 12,
+    [Description("Fallout New Vegas")]
+    FalloutNV = 13,
 }

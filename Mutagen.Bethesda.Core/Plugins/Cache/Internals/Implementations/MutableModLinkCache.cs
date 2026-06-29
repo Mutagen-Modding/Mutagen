@@ -49,11 +49,25 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (modKey == _sourceMod.ModKey)
+        {
+            cache = this;
+            return true;
+        }
+
+        cache = null;
+        return false;
+    }
+
+    /// <inheritdoc />
     [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
     public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
     {
         CheckDisposal();
-            
+
         if (formKey.IsNull)
         {
             majorRec = default;
@@ -765,7 +779,9 @@ public sealed class MutableModLinkCache : ILinkCache
     /// <inheritdoc />
     public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         if (TryResolve(formKey, out var rec, target))
+#pragma warning restore CS0618
         {
             editorId = rec.EditorID;
             return true;
@@ -777,7 +793,9 @@ public sealed class MutableModLinkCache : ILinkCache
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         if (TryResolve(editorId, out var rec))
+#pragma warning restore CS0618
         {
             formKey = rec.FormKey;
             return true;
@@ -1132,11 +1150,39 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     }
 
     /// <inheritdoc />
+    public bool TryGetLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache cache)
+    {
+        CheckDisposal();
+        if (modKey == _sourceMod.ModKey)
+        {
+            cache = this;
+            return true;
+        }
+
+        cache = null;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public bool TryGetTypedLinkCacheForMod(ModKey modKey, [MaybeNullWhen(false)] out ILinkCache<TMod, TModGetter> cache)
+    {
+        CheckDisposal();
+        if (modKey == _sourceMod.ModKey)
+        {
+            cache = this;
+            return true;
+        }
+
+        cache = null;
+        return false;
+    }
+
+    /// <inheritdoc />
     [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
     public bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordGetter majorRec, ResolveTarget target = ResolveTarget.Winner)
     {
         CheckDisposal();
-            
+
         if (formKey.IsNull)
         {
             majorRec = default;
@@ -2077,7 +2123,9 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     /// <inheritdoc />
     public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         if (TryResolve(formKey, out var rec, target))
+#pragma warning restore CS0618
         {
             editorId = rec.EditorID;
             return true;
@@ -2089,7 +2137,9 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     /// <inheritdoc />
     public bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         if (TryResolve(editorId, out var rec))
+#pragma warning restore CS0618
         {
             formKey = rec.FormKey;
             return true;

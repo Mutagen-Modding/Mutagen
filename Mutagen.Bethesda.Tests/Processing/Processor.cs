@@ -13,7 +13,6 @@ using System.Runtime.InteropServices;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
@@ -907,7 +906,7 @@ public abstract class Processor
             .ThenBy(x => x.ID)
             .Select(fk =>
             {
-                return FormIDTranslator.GetFormID(separatedMasters, fk.ToLink<IMajorRecordGetter>(), reference: true);
+                return separatedMasters.GetFormID(fk);
             })
             .Select(x => x.Raw)
             .ToArray();
@@ -1056,6 +1055,14 @@ public abstract class Processor
         public StringsSource Source { get; set; }
     }
 
+    private class EmptyStringsLookup : IStringsLookup
+    {
+        public static readonly EmptyStringsLookup Instance = new();
+        public bool TryLookup(uint key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out string str) { str = null; return false; }
+        public IEnumerator<KeyValuePair<uint, string>> GetEnumerator() => Enumerable.Empty<KeyValuePair<uint, string>>().GetEnumerator();
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
     public async Task RealignStrings(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
@@ -1120,6 +1127,40 @@ public abstract class Processor
                 }
             }
 
+            // String not found in the primary language (English).
+            // Check if it exists in any other language — if so, register it
+            // to keep the string index counter in sync with Mutagen's export,
+            // which resolves and registers strings across all languages.
+            if (entry.OrigIndex != 0 && !entry.IsInDeletedRecord)
+            {
+                var otherLangPairs = new List<KeyValuePair<Language, string>>();
+                foreach (var (lang, langOverlayEntry) in dict.Item1)
+                {
+                    if (lang == language) continue;
+                    if (langOverlayEntry.Value.StringsLookup.TryLookup(entry.OrigIndex, out var otherStr))
+                    {
+                        otherLangPairs.Add(new KeyValuePair<Language, string>(lang, otherStr));
+                    }
+                }
+
+                if (otherLangPairs.Count > 0)
+                {
+                    var bytes = new byte[4];
+                    var regis = writer.Register(entry.Source, otherLangPairs);
+                    BinaryPrimitives.WriteUInt32LittleEndian(bytes, regis);
+                    Instructions.SetSubstitution(entry.FileLocation, bytes);
+                    // Also remove from other language tracking dicts
+                    foreach (var (lang, _) in otherLangPairs)
+                    {
+                        if (dict.Item2.TryGetValue(lang, out var otherLangDict))
+                        {
+                            otherLangDict.Remove(entry.OrigIndex);
+                        }
+                    }
+                    continue;
+                }
+            }
+
             Instructions.SetSubstitution(entry.FileLocation, new byte[4]);
         }
 
@@ -1128,7 +1169,7 @@ public abstract class Processor
             foreach (var source in Enums<StringsSource>.Values)
             {
                 var dict = overlays[source];
-                var langDict = dict.Item2[language];
+                if (!dict.Item2.TryGetValue(language, out var langDict)) continue;
                 if (langDict.Count > 0)
                 {
                     foreach (var overlayStr in langDict.First(100))
@@ -1150,7 +1191,7 @@ public abstract class Processor
     {
         var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
         var sourceDict = folderOverlay.Get(source);
-        if (!sourceDict.TryGetValue(language, out var overlay)) return [];
+        sourceDict.TryGetValue(language, out var overlay);
         var ret = new List<StringEntry>();
         var stringAlignmentLookup = new Dictionary<RecordType, AStringsAlignment>();
         var stringAlignmentsForAll = new List<AStringsAlignment>();
@@ -1175,17 +1216,19 @@ public abstract class Processor
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(stream);
 
+        IStringsLookup stringsLookup = overlay?.Value.StringsLookup ?? EmptyStringsLookup.Instance;
+
         foreach (var rec in locs.ListedRecords)
         {
             stream.Position = rec.Key;
             var major = stream.GetMajorRecord();
             foreach (var alignment in stringAlignmentsForAll)
             {
-                alignment.Handler(stream.Position, major, ret, overlay.Value.StringsLookup);
+                alignment.Handler(stream.Position, major, ret, stringsLookup);
             }
             if (stringAlignmentLookup.TryGetValue(major.RecordType, out var instructions))
             {
-                instructions.Handler(stream.Position, major, ret, overlay.Value.StringsLookup);
+                instructions.Handler(stream.Position, major, ret, stringsLookup);
             }
         }
 

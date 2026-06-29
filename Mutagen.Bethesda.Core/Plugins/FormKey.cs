@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins;
@@ -77,7 +76,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IComparable<FormKey>, IFor
     /// <returns>Converted FormKey</returns>
     internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool reference)
     {
-        return FormIDTranslator.GetFormKey(masterReferences, formId, reference: reference);
+        return masterReferences.GetFormKey(formId, reference: reference);
     }
 
     /// <summary>
@@ -94,7 +93,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IComparable<FormKey>, IFor
         {
             return FormKey.None;
         }
-        return FormIDTranslator.GetFormKey(masterReferences, formId, reference: true);
+        return masterReferences.GetFormKey(formId, reference: true);
     }
 
     private static bool IsDelim(char c) => c is ':' or '_';

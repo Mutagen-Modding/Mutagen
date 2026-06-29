@@ -4,24 +4,25 @@ on:
   schedule:
     - cron: '40 9 * * *'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Optional: Release tag to re-publish (e.g. 0.54.0). Moves the tag to current commit and re-uploads. Leave empty for nightly.'
+        required: false
+        type: string
   release:
     types: [published]
-    inputs:
-      is_release_event:
-        description: Should this be a release or a preview package
-        required: true
-        default: 'false'
 
 jobs:
   activity-short-circuit:
     runs-on: ubuntu-latest
+    if: github.repository == 'Mutagen-Modding/Mutagen'
     outputs:
       same_sha: ${{ steps.check.outputs.same_sha }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: Get Activity Short Circuit
         id: check
         run: |
@@ -30,7 +31,7 @@ jobs:
           git fetch origin nightly:nightly
           head_sha=$(git rev-parse --verify HEAD)
           nightly_sha=$(git rev-parse --verify nightly)
-          if [[ "$head_sha" == "$nightly_sha" && ${{ github.event_name }} != "release" ]]; then
+          if [[ "$head_sha" == "$nightly_sha" && "${{ github.event_name }}" != "release" && -z "${{ inputs.tag }}" ]]; then
               same_sha=true;
           else
               same_sha=false;
@@ -39,7 +40,7 @@ jobs:
           echo "nightly_sha=$nightly_sha"
           echo "same_sha=${same_sha}"
           echo "same_sha=${same_sha}" >> $GITHUB_OUTPUT
-        
+
   build-test:
     needs: activity-short-circuit
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
@@ -79,6 +80,8 @@ jobs:
     needs: [build-test, activity-short-circuit]
     if: needs.activity-short-circuit.outputs.same_sha == 'false'
     runs-on: windows-latest
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
     steps:
     - name: Get timestamp
       uses: 1466587594/get-current-time@v1
@@ -88,6 +91,11 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    - name: Update tag to current commit
+      if: inputs.tag != ''
+      run: |
+        git tag -f ${{ env.RELEASE_TAG }}
+        git push origin ${{ env.RELEASE_TAG }} --force
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -103,18 +111,19 @@ jobs:
         dotnet pack Mutagen.Records.sln -c Release --no-build --no-restore -o out --include-symbols -p:SymbolPackageFormat=snupkg
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
-      if: ${{ success() && !github.event.release.prerelease && github.event_name == 'release' }}
+      if: env.RELEASE_TAG != ''
       with:
         file: "out/*.nupkg"
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.event.release.tag_name }}
+        tag: ${{ env.RELEASE_TAG }}
         file_glob: "true"
+        overwrite: true
     - name: Publish to Nuget.org
       run: |
         Get-ChildItem "out/*.nupkg" | ForEach-Object {
           Write-Host "Pushing $($_.Name)"
           dotnet nuget push $_.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-        }  
+        }
   update-nightly:
     needs: [build-test-push, activity-short-circuit]
     if: needs.activity-short-circuit.outputs.same_sha == 'false'

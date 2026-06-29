@@ -1,0 +1,53 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Mutagen.Bethesda.Tests.GUI"
+    xmlns:views="using:Mutagen.Bethesda.Tests.GUI.Views"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="Mutagen.Bethesda.Tests.GUI.Views.TestResultsView">
+    <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*">
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                      MinWidth="180"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Groups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:GroupTestVM">
+                        <views:GroupTestView Margin="0,5,0,0" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Width="1"
+                   HorizontalAlignment="Left"
+                   Fill="{StaticResource DividerBrush}" />
+        <ItemsControl Grid.Row="0" Grid.Column="1"
+                      ItemsSource="{Binding SelectedPassthrough.TestsDisplay}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:TestVM">
+                    <views:TestBubbleView />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ListBox Grid.Row="1" Grid.Column="1"
+                 Background="Black"
+                 FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                 FontSize="12"
+                 BorderBrush="{StaticResource AccentBrush}"
+                 BorderThickness="1"
+                 ItemsSource="{Binding SelectedTest.Output}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" TextWrapping="NoWrap" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

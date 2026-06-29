@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MediaLocationController" objType="Record" baseClass="Fallout3MajorRecord"
+          recordType="ALOC">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <UInt32 name="NAM1" recordType="NAM1" />
+      <UInt32 name="NAM2" recordType="NAM2" />
+      <UInt32 name="NAM3" recordType="NAM3" />
+      <Float name="LocationDelay" recordType="NAM4" />
+      <UInt32 name="DayStart" recordType="NAM5" />
+      <UInt32 name="NightStart" recordType="NAM6" />
+      <Float name="RetriggerDelay" recordType="NAM7" />
+      <List name="NeutralSets">
+        <FormLink refName="MediaSet" recordType="HNAM" />
+      </List>
+      <List name="AllySets">
+        <FormLink refName="MediaSet" recordType="ZNAM" />
+      </List>
+      <List name="FriendSets">
+        <FormLink refName="MediaSet" recordType="XNAM" />
+      </List>
+      <List name="EnemySets">
+        <FormLink refName="MediaSet" recordType="YNAM" />
+      </List>
+      <List name="LocationSets">
+        <FormLink refName="MediaSet" recordType="LNAM" />
+      </List>
+      <List name="BattleSets">
+        <FormLink refName="MediaSet" recordType="GNAM" />
+      </List>
+      <FormLink name="ConditionalFaction" recordType="RNAM" refName="Faction" />
+      <UInt32 name="FNAM" recordType="FNAM" />
+    </Fields>
+  </Object>
+</Loqui>

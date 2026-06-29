@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO.Abstractions;
 using System.Reflection;
 using AutoFixture;
 using AutoFixture.Kernel;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Assets;
 using Noggog;
 using Noggog.Testing.IO;
@@ -38,13 +39,15 @@ public class AssetLinkBuilder : ISpecimenBuilder
         var existing = name != null && name.ContainsInsensitive("existing");
         var fileName =
             $"{name}{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{link.Type.FileExtensions.First()}";
-        
-        link.GivenPath = Path.Combine($"{PathingUtil.DrivePrefix}Data", link.Type.BaseFolder, fileName);
+
+        link.GivenPath = fileName;
         if (existing)
         {
+            var dataDir = context.Create<IDataDirectoryProvider>();
             var fs = context.Create<IFileSystem>();
-            fs.Directory.CreateDirectory(Path.GetDirectoryName(link.GivenPath));
-            fs.File.WriteAllText(link.GivenPath, string.Empty);
+            var fullPath = Path.Combine(dataDir.Path, link.Type.BaseFolder, fileName);
+            fs.Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            fs.File.WriteAllText(fullPath, string.Empty);
         }
         return link;
     }

@@ -9,9 +9,9 @@ When writing a program that is going to interact with Bethesda mods, often you w
 - Creation Club load order file path (Skyrim.ccc)
 
 !!! tip "Synthesis"
-    If you're coding within a [Synthesis](https://github.com/Mutagen-Modding/Synthesis) Patcher, you should not make your own environment as described here.  Synthesis provides its own environment-like `IPatcherState` object in its Run function.
+    If you're coding within a [Synthesis](https://mutagen-modding.github.io/Synthesis/) Patcher, you should not make your own environment as described here.  Synthesis provides its own environment-like `IPatcherState` object in its Run function.
     
-    [:octicons-arrow-right-24: Synthesis State Object](https://github.com/Mutagen-Modding/Synthesis/wiki/Coding-a-Patcher#synthesis-state-object)
+    [:octicons-arrow-right-24: Synthesis State Object](https://mutagen-modding.github.io/Synthesis/devs/Coding-a-Patcher/#synthesis-state-object)
 
 ## Simple Usage
 ```cs
