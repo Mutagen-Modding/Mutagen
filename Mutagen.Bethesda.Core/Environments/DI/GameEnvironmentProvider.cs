@@ -55,7 +55,7 @@ public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
         return new GameEnvironmentState<IModGetter>(
             gameRelease: _gameReleaseContext.Release,
             dataFolderPath: _dataDirectoryProvider.Path,
-            loadOrderFilePath: _pluginListingsPathContext.Path,
+            loadOrderFilePath: _pluginListingsPathContext.TryGetPath(),
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToUntypedImmutableLinkCache(_gameReleaseContext.Release.ToCategory(), linkCachePrefs),
@@ -97,7 +97,7 @@ public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMo
         return new GameEnvironmentState<TMod>(
             gameRelease: _gameReleaseContext.Release,
             dataFolderPath: _dataDirectoryProvider.Path,
-            loadOrderFilePath: _pluginListingsPathContext.Path,
+            loadOrderFilePath: _pluginListingsPathContext.TryGetPath(),
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToUntypedImmutableLinkCache(_gameReleaseContext.Release.ToCategory(), linkCachePrefs),
