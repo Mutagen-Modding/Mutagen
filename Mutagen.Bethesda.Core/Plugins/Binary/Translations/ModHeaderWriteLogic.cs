@@ -68,6 +68,7 @@ internal sealed class ModHeaderWriteLogic
         IModGetter mod, 
         IModHeaderCommon modHeader)
     {
+        AddNullFormKeyCheck();
         AddMasterCollectionActions(mod);
         AddRecordCount();
         AddNextFormIDActions();
@@ -238,6 +239,30 @@ internal sealed class ModHeaderWriteLogic
                 break;
             case RecordCountOption.Iterate:
                 _recordIterationActions.Add(maj => _numRecords++);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+    #endregion
+
+    #region Null FormKey Logic
+    private void AddNullFormKeyCheck()
+    {
+        switch (_params.NullFormKey)
+        {
+            case NullFormKeyOption.NoCheck:
+                break;
+            case NullFormKeyOption.Iterate:
+                _recordIterationActions.Add(maj =>
+                {
+                    if (maj.FormKey.IsNull)
+                    {
+                        throw RecordException.Create(
+                            "Record had a null FormKey, which is not allowed",
+                            maj);
+                    }
+                });
                 break;
             default:
                 throw new NotImplementedException();

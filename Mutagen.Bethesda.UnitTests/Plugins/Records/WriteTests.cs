@@ -185,6 +185,42 @@ public class WriteTests
     }
 
     [Fact]
+    public async Task Write_NullFormKey_Throw()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+        mod.Weapons.RecordCache.Set(
+            new Weapon(FormKey.Null, SkyrimRelease.SkyrimLE));
+        await Assert.ThrowsAsync<RecordException>(async () =>
+        {
+            await mod.BeginWrite
+                .ToPath(tmp.File.Path)
+                .WithNoLoadOrder()
+                .NoModKeySync()
+                .NoMastersListContentCheck()
+                .SingleThread()
+                .WriteAsync();
+        });
+    }
+
+    [Fact]
+    public async Task Write_NullFormKey_NoCheck()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+        mod.Weapons.RecordCache.Set(
+            new Weapon(FormKey.Null, SkyrimRelease.SkyrimLE));
+        await mod.BeginWrite
+            .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .NoMastersListContentCheck()
+            .NoNullFormKeyCheck()
+            .SingleThread()
+            .WriteAsync();
+    }
+
+    [Fact]
     public async Task WriteWithCounterLists()
     {
         using var tmp = GetFile();

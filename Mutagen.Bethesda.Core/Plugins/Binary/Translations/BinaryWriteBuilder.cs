@@ -1113,6 +1113,12 @@ public interface IBinaryModdedWriteBuilder
     IBinaryModdedWriteBuilder NoFormIDUniquenessCheck();
 
     /// <summary>
+    /// Turns off logic to check that no record has a null FormKey of its own.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    IBinaryModdedWriteBuilder NoNullFormKeyCheck();
+
+    /// <summary>
     /// Turns off logic to check that FormID are compacted according to the flags set in the mod's header.
     /// </summary>
     /// <returns>Builder object to continue customization</returns>
@@ -1601,6 +1607,25 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
         };
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoFormIDUniquenessCheck() => NoFormIDUniquenessCheck();
+
+    /// <summary>
+    /// Turns off logic to check that no record has a null FormKey of its own.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilder<TModGetter> NoNullFormKeyCheck()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    NullFormKey = NullFormKeyOption.NoCheck
+                }
+            }
+        };
+    }
+    IBinaryModdedWriteBuilder IBinaryModdedWriteBuilder.NoNullFormKeyCheck() => NoNullFormKeyCheck();
 
     /// <summary>
     /// Turns off logic to check that FormID are compacted according to the flags set in the mod's header.
@@ -2377,6 +2402,24 @@ public record BinaryWriteBuilder<TModGetter>
                 _param = _params._param with
                 {
                     FormIDUniqueness = FormIDUniquenessOption.NoCheck
+                }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Turns off logic to check that no record has a null FormKey of its own.
+    /// </summary>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryWriteBuilder<TModGetter> NoNullFormKeyCheck()
+    {
+        return this with
+        {
+            _params = _params with
+            {
+                _param = _params._param with
+                {
+                    NullFormKey = NullFormKeyOption.NoCheck
                 }
             }
         };
