@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -7,13 +7,30 @@ namespace Mutagen.Bethesda.Starfield;
 public partial class MagicEffect
 {
     [Flags]
-    public enum Flag : ulong
+    public enum MajorFlag
+    {
+        NonPlayable = 0x0000_0004,
+        GroundPiece = 0x0000_0010,
+        HiddenFromLocalMap = 0x0000_0200,
+        UsedAsPlatform = 0x0000_0800,
+        HasCurrents = 0x0008_0000,
+        NavmeshFilter = 0x0400_0000,
+        NavmeshBoundingBox = 0x0800_0000,
+        NavmeshOnlyCut = 0x1000_0000,
+        NavmeshIgnoreErosion = 0x2000_0000,
+        NavmeshGround = 0x4000_0000,
+    }
+
+    [Flags]
+    public enum Flag
     {
         Hostile = 0x0000_0001,
         Recover = 0x0000_0002,
         Detrimental = 0x0000_0004,
         SnapToNavmesh = 0x0000_0008,
         NoHitEvent = 0x0000_0010,
+        DynamicRestart = 0x0000_0020,
+        AnimateStartStopReaction = 0x0000_0040,
         DispelWithKeywords = 0x0000_0100,
         NoDuration = 0x0000_0200,
         NoMagnitude = 0x0000_0400,
@@ -22,6 +39,8 @@ public partial class MagicEffect
         GoryVisuals = 0x0000_4000,
         HideInUI = 0x0000_8000,
         NoRecast = 0x0002_0000,
+        DifficultyAffectsMagnitude = 0x0008_0000,
+        DifficultyAffectsDuration = 0x0010_0000,
         PowerAffectsMagnitude = 0x0020_0000,
         PowerAffectsDuration = 0x0040_0000,
         Painless = 0x0400_0000,
@@ -31,8 +50,11 @@ public partial class MagicEffect
 
     public enum SoundType
     {
+        DrawSheathe = 0,
         Charge = 1,
+        Ready = 2,
         Release = 3,
+        CastLoopConc = 4,
         OnHit = 5,
     }
 }

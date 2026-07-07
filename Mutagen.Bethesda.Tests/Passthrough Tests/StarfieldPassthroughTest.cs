@@ -21,6 +21,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
+            .WithDataFolder(DataFolder ?? SourceDataFolder)
             .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
@@ -33,6 +34,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .WithDefaultLoadOrder()
+            .WithDataFolder(DataFolder ?? SourceDataFolder)
             .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()

@@ -603,6 +603,7 @@ public partial class RecordTypeInts
     public const int MATT = 0x5454414D;
     public const int MCO2 = 0x324F434D;
     public const int MCQP = 0x5051434D;
+    public const int MDOB = 0x424F444D;
     public const int MESG = 0x4753454D;
     public const int MGEF = 0x4645474D;
     public const int MHDT = 0x5444484D;

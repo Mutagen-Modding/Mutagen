@@ -605,6 +605,7 @@ public partial class RecordTypes
     public static readonly RecordType MATT = new(0x5454414D);
     public static readonly RecordType MCO2 = new(0x324F434D);
     public static readonly RecordType MCQP = new(0x5051434D);
+    public static readonly RecordType MDOB = new(0x424F444D);
     public static readonly RecordType MESG = new(0x4753454D);
     public static readonly RecordType MGEF = new(0x4645474D);
     public static readonly RecordType MHDT = new(0x5444484D);
