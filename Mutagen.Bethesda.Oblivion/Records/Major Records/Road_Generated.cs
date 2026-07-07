@@ -774,8 +774,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var triggers = RecordCollection.Factory(RecordTypes.ROAD);
             var all = RecordCollection.Factory(
-                RecordTypes.PGRP,
-                RecordTypes.ROAD);
+                RecordTypes.ROAD,
+                RecordTypes.PGRP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

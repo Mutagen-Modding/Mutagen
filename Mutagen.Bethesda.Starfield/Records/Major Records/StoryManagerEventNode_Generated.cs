@@ -802,6 +802,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.SMEN);
             var all = RecordCollection.Factory(
+                RecordTypes.SMEN,
                 RecordTypes.ADBO,
                 RecordTypes.ADCR,
                 RecordTypes.ADIA,
@@ -819,9 +820,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CRFT,
                 RecordTypes.CURE,
                 RecordTypes.DEAD,
-                RecordTypes.DNAM,
-                RecordTypes.DOCK,
-                RecordTypes.ENAM,
                 RecordTypes.ESJA,
                 RecordTypes.FLAT,
                 RecordTypes.HACK,
@@ -831,7 +829,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.IRON,
                 RecordTypes.JAIL,
                 RecordTypes.KILL,
-                RecordTypes.LAND,
                 RecordTypes.LCLD,
                 RecordTypes.LCPG,
                 RecordTypes.LEVL,
@@ -846,12 +843,15 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.REMP,
                 RecordTypes.SCPT,
                 RecordTypes.SKIL,
-                RecordTypes.SMEN,
                 RecordTypes.STIJ,
                 RecordTypes.TMEE,
                 RecordTypes.TRES,
+                RecordTypes.LAND,
+                RecordTypes.DOCK,
+                RecordTypes.XPLL,
+                RecordTypes.DNAM,
                 RecordTypes.XNAM,
-                RecordTypes.XPLL);
+                RecordTypes.ENAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

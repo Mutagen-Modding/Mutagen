@@ -852,10 +852,10 @@ namespace Mutagen.Bethesda.Oblivion
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.CNAM,
+                RecordTypes.QSDT,
                 RecordTypes.CTDA,
                 RecordTypes.CTDT,
-                RecordTypes.QSDT,
+                RecordTypes.CNAM,
                 RecordTypes.SCHD,
                 RecordTypes.SCHR);
             return new RecordTriggerSpecs(allRecordTypes: all);

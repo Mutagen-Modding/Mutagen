@@ -712,8 +712,8 @@ namespace Mutagen.Bethesda.Oblivion
             var all = RecordCollection.Factory(
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
-                RecordTypes.FULL,
-                RecordTypes.SCIT);
+                RecordTypes.SCIT,
+                RecordTypes.FULL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

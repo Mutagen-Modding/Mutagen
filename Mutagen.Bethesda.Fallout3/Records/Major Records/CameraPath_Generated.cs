@@ -1021,9 +1021,9 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.CPTH);
             var all = RecordCollection.Factory(
-                RecordTypes.ANAM,
                 RecordTypes.CPTH,
                 RecordTypes.CTDA,
+                RecordTypes.ANAM,
                 RecordTypes.DATA,
                 RecordTypes.SNAM);
             return new RecordTriggerSpecs(

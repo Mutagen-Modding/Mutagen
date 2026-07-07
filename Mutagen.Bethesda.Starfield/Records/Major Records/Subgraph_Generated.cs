@@ -1111,10 +1111,10 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.SADD,
                 RecordTypes.SAKD,
-                RecordTypes.SAPT,
                 RecordTypes.SGNM,
-                RecordTypes.SRAF,
-                RecordTypes.STKD);
+                RecordTypes.SAPT,
+                RecordTypes.STKD,
+                RecordTypes.SRAF);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(SubgraphBinaryWriteTranslation);

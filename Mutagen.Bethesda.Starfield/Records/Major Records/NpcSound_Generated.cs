@@ -708,8 +708,8 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.CS3F,
-                RecordTypes.CS3S);
+                RecordTypes.CS3S,
+                RecordTypes.CS3F);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcSoundBinaryWriteTranslation);

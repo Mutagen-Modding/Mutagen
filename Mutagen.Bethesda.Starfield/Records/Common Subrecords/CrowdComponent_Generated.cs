@@ -771,13 +771,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.CDND,
                 RecordTypes.CDNS,
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
-                RecordTypes.CITC,
-                RecordTypes.CTDA,
-                RecordTypes.FLTV,
                 RecordTypes.PRPS,
-                RecordTypes.STRV);
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.STRV,
+                RecordTypes.FLTV,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

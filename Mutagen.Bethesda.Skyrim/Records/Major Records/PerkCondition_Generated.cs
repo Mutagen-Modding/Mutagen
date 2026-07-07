@@ -765,10 +765,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.PRKC);
             var all = RecordCollection.Factory(
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
+                RecordTypes.PRKC,
                 RecordTypes.CTDA,
-                RecordTypes.PRKC);
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

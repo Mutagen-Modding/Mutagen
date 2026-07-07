@@ -1015,8 +1015,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.ZOOM);
             var all = RecordCollection.Factory(
-                RecordTypes.ZNAM,
-                RecordTypes.ZOOM);
+                RecordTypes.ZOOM,
+                RecordTypes.ZNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

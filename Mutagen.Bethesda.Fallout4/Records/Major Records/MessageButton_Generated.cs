@@ -766,13 +766,13 @@ namespace Mutagen.Bethesda.Fallout4
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.CTDA,
-                RecordTypes.ITXT);
+                RecordTypes.ITXT,
+                RecordTypes.CTDA);
             var all = RecordCollection.Factory(
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
+                RecordTypes.ITXT,
                 RecordTypes.CTDA,
-                RecordTypes.ITXT);
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

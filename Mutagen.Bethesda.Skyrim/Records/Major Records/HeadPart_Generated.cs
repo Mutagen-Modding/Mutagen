@@ -1287,17 +1287,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.HDPT);
             var all = RecordCollection.Factory(
-                RecordTypes.CNAM,
-                RecordTypes.DATA,
-                RecordTypes.FULL,
                 RecordTypes.HDPT,
-                RecordTypes.HNAM,
+                RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.PNAM,
+                RecordTypes.HNAM,
                 RecordTypes.NAM0,
                 RecordTypes.NAM1,
-                RecordTypes.PNAM,
-                RecordTypes.RNAM,
-                RecordTypes.TNAM);
+                RecordTypes.TNAM,
+                RecordTypes.CNAM,
+                RecordTypes.RNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

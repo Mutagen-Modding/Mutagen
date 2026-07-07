@@ -1443,13 +1443,13 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.CSTY);
             var all = RecordCollection.Factory(
-                RecordTypes.CSCR,
-                RecordTypes.CSFL,
+                RecordTypes.CSTY,
                 RecordTypes.CSGD,
-                RecordTypes.CSLR,
                 RecordTypes.CSMD,
                 RecordTypes.CSME,
-                RecordTypes.CSTY,
+                RecordTypes.CSCR,
+                RecordTypes.CSLR,
+                RecordTypes.CSFL,
                 RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,

@@ -2620,15 +2620,15 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.CSTY);
             var all = RecordCollection.Factory(
-                RecordTypes.CSCR,
-                RecordTypes.CSCV,
-                RecordTypes.CSFL,
+                RecordTypes.CSTY,
                 RecordTypes.CSGD,
-                RecordTypes.CSLR,
                 RecordTypes.CSMD,
                 RecordTypes.CSME,
                 RecordTypes.CSRA,
-                RecordTypes.CSTY,
+                RecordTypes.CSCR,
+                RecordTypes.CSLR,
+                RecordTypes.CSCV,
+                RecordTypes.CSFL,
                 RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,

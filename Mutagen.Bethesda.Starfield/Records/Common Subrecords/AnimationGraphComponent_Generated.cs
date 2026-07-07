@@ -756,8 +756,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
-                RecordTypes.ANAM,
                 RecordTypes.BFCB,
+                RecordTypes.ANAM,
                 RecordTypes.BNAM,
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,

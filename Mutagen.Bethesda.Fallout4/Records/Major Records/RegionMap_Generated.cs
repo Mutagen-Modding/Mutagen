@@ -740,10 +740,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.RDAT);
             var all = RecordCollection.Factory(
-                RecordTypes.ANAM,
                 RecordTypes.RDAT,
                 RecordTypes.RDMP,
-                RecordTypes.RLDM);
+                RecordTypes.RLDM,
+                RecordTypes.ANAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

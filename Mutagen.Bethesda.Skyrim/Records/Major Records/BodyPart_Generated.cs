@@ -1856,15 +1856,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.BPTN);
             var all = RecordCollection.Factory(
-                RecordTypes.BPND,
-                RecordTypes.BPNI,
+                RecordTypes.BPTN,
+                RecordTypes.PNAM,
                 RecordTypes.BPNN,
                 RecordTypes.BPNT,
-                RecordTypes.BPTN,
+                RecordTypes.BPNI,
+                RecordTypes.BPND,
                 RecordTypes.NAM1,
                 RecordTypes.NAM4,
-                RecordTypes.NAM5,
-                RecordTypes.PNAM);
+                RecordTypes.NAM5);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

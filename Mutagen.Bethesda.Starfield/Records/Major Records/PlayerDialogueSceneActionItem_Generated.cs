@@ -906,12 +906,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             var all = RecordCollection.Factory(
                 RecordTypes.ESCE,
-                RecordTypes.ESCS,
+                RecordTypes.PPST,
+                RecordTypes.PNST,
+                RecordTypes.PASP,
                 RecordTypes.PAPI,
                 RecordTypes.PAPN,
-                RecordTypes.PASP,
-                RecordTypes.PNST,
-                RecordTypes.PPST);
+                RecordTypes.ESCS);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PlayerDialogueSceneActionItemBinaryWriteTranslation);

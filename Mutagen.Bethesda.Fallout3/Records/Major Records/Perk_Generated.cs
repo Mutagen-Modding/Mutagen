@@ -1116,16 +1116,16 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.PERK);
             var all = RecordCollection.Factory(
+                RecordTypes.PERK,
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.ICON,
                 RecordTypes.CTDA,
                 RecordTypes.DATA,
-                RecordTypes.DESC,
-                RecordTypes.EPFT,
-                RecordTypes.FULL,
-                RecordTypes.ICON,
-                RecordTypes.PERK,
-                RecordTypes.PRKC,
                 RecordTypes.PRKE,
-                RecordTypes.PRKF);
+                RecordTypes.PRKF,
+                RecordTypes.PRKC,
+                RecordTypes.EPFT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

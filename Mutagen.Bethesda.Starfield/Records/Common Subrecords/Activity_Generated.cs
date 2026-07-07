@@ -962,17 +962,17 @@ namespace Mutagen.Bethesda.Starfield
             var endTriggers = RecordCollection.Factory(RecordTypes.ATAF);
             var triggers = RecordCollection.Factory(RecordTypes.ATAN);
             var all = RecordCollection.Factory(
-                RecordTypes.ANAM,
-                RecordTypes.ATAF,
                 RecordTypes.ATAN,
-                RecordTypes.ATAV,
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
-                RecordTypes.CITC,
-                RecordTypes.CTDA,
+                RecordTypes.ATAF,
+                RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.DNAM,
-                RecordTypes.FULL);
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
+                RecordTypes.ANAM,
+                RecordTypes.ATAV);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,

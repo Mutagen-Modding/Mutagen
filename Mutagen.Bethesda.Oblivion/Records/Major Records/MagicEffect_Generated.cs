@@ -1036,13 +1036,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var triggers = RecordCollection.Factory(RecordTypes.MGEF);
             var all = RecordCollection.Factory(
-                RecordTypes.DATA,
-                RecordTypes.DESC,
-                RecordTypes.ESCE,
-                RecordTypes.FULL,
-                RecordTypes.ICON,
                 RecordTypes.MGEF,
-                RecordTypes.MODL);
+                RecordTypes.FULL,
+                RecordTypes.DESC,
+                RecordTypes.ICON,
+                RecordTypes.MODL,
+                RecordTypes.DATA,
+                RecordTypes.ESCE);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

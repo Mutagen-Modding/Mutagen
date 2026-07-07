@@ -802,6 +802,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.SMEN);
             var all = RecordCollection.Factory(
+                RecordTypes.SMEN,
                 RecordTypes.ADBO,
                 RecordTypes.ADCR,
                 RecordTypes.ADIA,
@@ -819,8 +820,6 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.CRFT,
                 RecordTypes.CURE,
                 RecordTypes.DEAD,
-                RecordTypes.DNAM,
-                RecordTypes.ENAM,
                 RecordTypes.ESJA,
                 RecordTypes.FLAT,
                 RecordTypes.HACK,
@@ -844,11 +843,12 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.REMP,
                 RecordTypes.SCPT,
                 RecordTypes.SKIL,
-                RecordTypes.SMEN,
                 RecordTypes.STIJ,
                 RecordTypes.TMEE,
                 RecordTypes.TRES,
-                RecordTypes.XNAM);
+                RecordTypes.DNAM,
+                RecordTypes.XNAM,
+                RecordTypes.ENAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

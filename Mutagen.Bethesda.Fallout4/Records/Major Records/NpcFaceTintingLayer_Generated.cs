@@ -853,8 +853,8 @@ namespace Mutagen.Bethesda.Fallout4
         {
             var triggers = RecordCollection.Factory(RecordTypes.TETI);
             var all = RecordCollection.Factory(
-                RecordTypes.TEND,
-                RecordTypes.TETI);
+                RecordTypes.TETI,
+                RecordTypes.TEND);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

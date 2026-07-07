@@ -930,11 +930,11 @@ namespace Mutagen.Bethesda.Oblivion
             var triggers = RecordCollection.Factory(RecordTypes.APPA);
             var all = RecordCollection.Factory(
                 RecordTypes.APPA,
-                RecordTypes.DATA,
                 RecordTypes.FULL,
-                RecordTypes.ICON,
                 RecordTypes.MODL,
-                RecordTypes.SCRI);
+                RecordTypes.ICON,
+                RecordTypes.SCRI,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
