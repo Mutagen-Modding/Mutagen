@@ -129,6 +129,16 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
+        #region MenuDisplayObject
+        private readonly IFormLinkNullable<IStaticGetter> _MenuDisplayObject = new FormLinkNullable<IStaticGetter>();
+        public IFormLinkNullable<IStaticGetter> MenuDisplayObject
+        {
+            get => _MenuDisplayObject;
+            set => _MenuDisplayObject.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStaticGetter> IMagicEffectGetter.MenuDisplayObject => this.MenuDisplayObject;
+        #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
@@ -150,15 +160,15 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
-        #region ActorValue1
-        private readonly IFormLink<IActorValueInformationGetter> _ActorValue1 = new FormLink<IActorValueInformationGetter>();
-        public IFormLink<IActorValueInformationGetter> ActorValue1
+        #region MagicSkill
+        private readonly IFormLink<IActorValueInformationGetter> _MagicSkill = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> MagicSkill
         {
-            get => _ActorValue1;
-            set => _ActorValue1.SetTo(value);
+            get => _MagicSkill;
+            set => _MagicSkill.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ActorValue1 => this.ActorValue1;
+        IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.MagicSkill => this.MagicSkill;
         #endregion
         #region CastingArt
         private readonly IFormLink<IArtObjectGetter> _CastingArt = new FormLink<IArtObjectGetter>();
@@ -280,15 +290,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply;
         #endregion
-        #region ActorValue2
-        private readonly IFormLink<IActorValueInformationGetter> _ActorValue2 = new FormLink<IActorValueInformationGetter>();
-        public IFormLink<IActorValueInformationGetter> ActorValue2
+        #region SecondActorValue
+        private readonly IFormLink<IActorValueInformationGetter> _SecondActorValue = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> SecondActorValue
         {
-            get => _ActorValue2;
-            set => _ActorValue2.SetTo(value);
+            get => _SecondActorValue;
+            set => _SecondActorValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ActorValue2 => this.ActorValue2;
+        IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.SecondActorValue => this.SecondActorValue;
         #endregion
         #region Projectile
         private readonly IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
@@ -310,38 +320,38 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ResistValue => this.ResistValue;
         #endregion
-        #region ActorValue3
-        private readonly IFormLink<IActorValueInformationGetter> _ActorValue3 = new FormLink<IActorValueInformationGetter>();
-        public IFormLink<IActorValueInformationGetter> ActorValue3
+        #region ThirdActorValue
+        private readonly IFormLink<IActorValueInformationGetter> _ThirdActorValue = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> ThirdActorValue
         {
-            get => _ActorValue3;
-            set => _ActorValue3.SetTo(value);
+            get => _ThirdActorValue;
+            set => _ThirdActorValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ActorValue3 => this.ActorValue3;
+        IFormLinkGetter<IActorValueInformationGetter> IMagicEffectGetter.ThirdActorValue => this.ThirdActorValue;
         #endregion
-        #region UnknownFloat1
-        public Single UnknownFloat1 { get; set; } = default(Single);
+        #region ScriptEffectAIDelayTime
+        public Single ScriptEffectAIDelayTime { get; set; } = default(Single);
         #endregion
-        #region UnknownFloat2
-        public Single UnknownFloat2 { get; set; } = default(Single);
+        #region ScriptEffectAIScore
+        public Single ScriptEffectAIScore { get; set; } = default(Single);
         #endregion
         #region Archetype
         public AMagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IAMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
         #endregion
-        #region UnknownFloat3
-        public Single UnknownFloat3 { get; set; } = default(Single);
+        #region SpellmakingArea
+        public Single SpellmakingArea { get; set; } = default(Single);
         #endregion
-        #region UnknownInt1
-        public UInt32 UnknownInt1 { get; set; } = default(UInt32);
+        #region SpellmakingCastingTime
+        public Single SpellmakingCastingTime { get; set; } = default(Single);
         #endregion
-        #region UnknownFloat4
-        public Single UnknownFloat4 { get; set; } = default(Single);
+        #region BaseCost
+        public Single BaseCost { get; set; } = default(Single);
         #endregion
-        #region UnknownInt2
-        public UInt32 UnknownInt2 { get; set; } = default(UInt32);
+        #region CastingSoundLevel
+        public SoundLevel CastingSoundLevel { get; set; } = default(SoundLevel);
         #endregion
         #region CastType
         public CastType CastType { get; set; } = default(CastType);
@@ -349,22 +359,32 @@ namespace Mutagen.Bethesda.Starfield
         #region TargetType
         public TargetType TargetType { get; set; } = default(TargetType);
         #endregion
-        #region UnknownInt3
-        public UInt32 UnknownInt3 { get; set; } = default(UInt32);
+        #region DualCastingScale
+        public Single DualCastingScale { get; set; } = default(Single);
         #endregion
         #region Flags
         public MagicEffect.Flag Flags { get; set; } = default(MagicEffect.Flag);
         #endregion
-        #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[22];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IMagicEffectGetter.Unknown => this.Unknown;
+        #region MinimumSkillLevel
+        public UInt32 MinimumSkillLevel { get; set; } = default(UInt32);
+        #endregion
+        #region UnknownCounterEffectCount
+        public UInt16 UnknownCounterEffectCount { get; set; } = default(UInt16);
+        #endregion
+        #region SecondActorValueWeight
+        public Single SecondActorValueWeight { get; set; } = default(Single);
+        #endregion
+        #region SkillUsageMultiplier
+        public Single SkillUsageMultiplier { get; set; } = default(Single);
+        #endregion
+        #region TaperCurve
+        public Single TaperCurve { get; set; } = default(Single);
+        #endregion
+        #region TaperDuration
+        public Single TaperDuration { get; set; } = default(Single);
+        #endregion
+        #region TaperWeight
+        public Single TaperWeight { get; set; } = default(Single);
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -376,6 +396,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IMagicEffectGetter.Unknown2 => this.Unknown2;
+        #endregion
+        #region CounterEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IMagicEffectGetter>> _CounterEffects = new ExtendedList<IFormLinkGetter<IMagicEffectGetter>>();
+        public ExtendedList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects
+        {
+            get => this._CounterEffects;
+            init => this._CounterEffects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        #endregion
+
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -441,8 +475,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.Name = initialValue;
+                this.MenuDisplayObject = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
-                this.ActorValue1 = initialValue;
+                this.MagicSkill = initialValue;
                 this.CastingArt = initialValue;
                 this.MovementType = initialValue;
                 this.HitShader = initialValue;
@@ -455,23 +490,30 @@ namespace Mutagen.Bethesda.Starfield
                 this.ImpactData = initialValue;
                 this.CastingLight = initialValue;
                 this.PerkToApply = initialValue;
-                this.ActorValue2 = initialValue;
+                this.SecondActorValue = initialValue;
                 this.Projectile = initialValue;
                 this.ResistValue = initialValue;
-                this.ActorValue3 = initialValue;
-                this.UnknownFloat1 = initialValue;
-                this.UnknownFloat2 = initialValue;
+                this.ThirdActorValue = initialValue;
+                this.ScriptEffectAIDelayTime = initialValue;
+                this.ScriptEffectAIScore = initialValue;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(initialValue, new AMagicEffectArchetype.Mask<TItem>(initialValue));
-                this.UnknownFloat3 = initialValue;
-                this.UnknownInt1 = initialValue;
-                this.UnknownFloat4 = initialValue;
-                this.UnknownInt2 = initialValue;
+                this.SpellmakingArea = initialValue;
+                this.SpellmakingCastingTime = initialValue;
+                this.BaseCost = initialValue;
+                this.CastingSoundLevel = initialValue;
                 this.CastType = initialValue;
                 this.TargetType = initialValue;
-                this.UnknownInt3 = initialValue;
+                this.DualCastingScale = initialValue;
                 this.Flags = initialValue;
-                this.Unknown = initialValue;
+                this.MinimumSkillLevel = initialValue;
+                this.UnknownCounterEffectCount = initialValue;
+                this.SecondActorValueWeight = initialValue;
+                this.SkillUsageMultiplier = initialValue;
+                this.TaperCurve = initialValue;
+                this.TaperDuration = initialValue;
+                this.TaperWeight = initialValue;
                 this.Unknown2 = initialValue;
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(initialValue, []);
                 this.Description = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
@@ -489,8 +531,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem Components,
                 TItem Name,
+                TItem MenuDisplayObject,
                 TItem Keywords,
-                TItem ActorValue1,
+                TItem MagicSkill,
                 TItem CastingArt,
                 TItem MovementType,
                 TItem HitShader,
@@ -503,23 +546,30 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ImpactData,
                 TItem CastingLight,
                 TItem PerkToApply,
-                TItem ActorValue2,
+                TItem SecondActorValue,
                 TItem Projectile,
                 TItem ResistValue,
-                TItem ActorValue3,
-                TItem UnknownFloat1,
-                TItem UnknownFloat2,
+                TItem ThirdActorValue,
+                TItem ScriptEffectAIDelayTime,
+                TItem ScriptEffectAIScore,
                 TItem Archetype,
-                TItem UnknownFloat3,
-                TItem UnknownInt1,
-                TItem UnknownFloat4,
-                TItem UnknownInt2,
+                TItem SpellmakingArea,
+                TItem SpellmakingCastingTime,
+                TItem BaseCost,
+                TItem CastingSoundLevel,
                 TItem CastType,
                 TItem TargetType,
-                TItem UnknownInt3,
+                TItem DualCastingScale,
                 TItem Flags,
-                TItem Unknown,
+                TItem MinimumSkillLevel,
+                TItem UnknownCounterEffectCount,
+                TItem SecondActorValueWeight,
+                TItem SkillUsageMultiplier,
+                TItem TaperCurve,
+                TItem TaperDuration,
+                TItem TaperWeight,
                 TItem Unknown2,
+                TItem CounterEffects,
                 TItem Sounds,
                 TItem Description,
                 TItem Conditions,
@@ -536,8 +586,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.Name = Name;
+                this.MenuDisplayObject = MenuDisplayObject;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, []);
-                this.ActorValue1 = ActorValue1;
+                this.MagicSkill = MagicSkill;
                 this.CastingArt = CastingArt;
                 this.MovementType = MovementType;
                 this.HitShader = HitShader;
@@ -550,23 +601,30 @@ namespace Mutagen.Bethesda.Starfield
                 this.ImpactData = ImpactData;
                 this.CastingLight = CastingLight;
                 this.PerkToApply = PerkToApply;
-                this.ActorValue2 = ActorValue2;
+                this.SecondActorValue = SecondActorValue;
                 this.Projectile = Projectile;
                 this.ResistValue = ResistValue;
-                this.ActorValue3 = ActorValue3;
-                this.UnknownFloat1 = UnknownFloat1;
-                this.UnknownFloat2 = UnknownFloat2;
+                this.ThirdActorValue = ThirdActorValue;
+                this.ScriptEffectAIDelayTime = ScriptEffectAIDelayTime;
+                this.ScriptEffectAIScore = ScriptEffectAIScore;
                 this.Archetype = new MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>(Archetype, new AMagicEffectArchetype.Mask<TItem>(Archetype));
-                this.UnknownFloat3 = UnknownFloat3;
-                this.UnknownInt1 = UnknownInt1;
-                this.UnknownFloat4 = UnknownFloat4;
-                this.UnknownInt2 = UnknownInt2;
+                this.SpellmakingArea = SpellmakingArea;
+                this.SpellmakingCastingTime = SpellmakingCastingTime;
+                this.BaseCost = BaseCost;
+                this.CastingSoundLevel = CastingSoundLevel;
                 this.CastType = CastType;
                 this.TargetType = TargetType;
-                this.UnknownInt3 = UnknownInt3;
+                this.DualCastingScale = DualCastingScale;
                 this.Flags = Flags;
-                this.Unknown = Unknown;
+                this.MinimumSkillLevel = MinimumSkillLevel;
+                this.UnknownCounterEffectCount = UnknownCounterEffectCount;
+                this.SecondActorValueWeight = SecondActorValueWeight;
+                this.SkillUsageMultiplier = SkillUsageMultiplier;
+                this.TaperCurve = TaperCurve;
+                this.TaperDuration = TaperDuration;
+                this.TaperWeight = TaperWeight;
                 this.Unknown2 = Unknown2;
+                this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, []);
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(Sounds, []);
                 this.Description = Description;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
@@ -585,8 +643,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
+            public TItem MenuDisplayObject;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public TItem ActorValue1;
+            public TItem MagicSkill;
             public TItem CastingArt;
             public TItem MovementType;
             public TItem HitShader;
@@ -599,23 +658,30 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ImpactData;
             public TItem CastingLight;
             public TItem PerkToApply;
-            public TItem ActorValue2;
+            public TItem SecondActorValue;
             public TItem Projectile;
             public TItem ResistValue;
-            public TItem ActorValue3;
-            public TItem UnknownFloat1;
-            public TItem UnknownFloat2;
+            public TItem ThirdActorValue;
+            public TItem ScriptEffectAIDelayTime;
+            public TItem ScriptEffectAIScore;
             public MaskItem<TItem, AMagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
-            public TItem UnknownFloat3;
-            public TItem UnknownInt1;
-            public TItem UnknownFloat4;
-            public TItem UnknownInt2;
+            public TItem SpellmakingArea;
+            public TItem SpellmakingCastingTime;
+            public TItem BaseCost;
+            public TItem CastingSoundLevel;
             public TItem CastType;
             public TItem TargetType;
-            public TItem UnknownInt3;
+            public TItem DualCastingScale;
             public TItem Flags;
-            public TItem Unknown;
+            public TItem MinimumSkillLevel;
+            public TItem UnknownCounterEffectCount;
+            public TItem SecondActorValueWeight;
+            public TItem SkillUsageMultiplier;
+            public TItem TaperCurve;
+            public TItem TaperDuration;
+            public TItem TaperWeight;
             public TItem Unknown2;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CounterEffects;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>? Sounds;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
@@ -636,8 +702,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.MenuDisplayObject, rhs.MenuDisplayObject)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.ActorValue1, rhs.ActorValue1)) return false;
+                if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
                 if (!object.Equals(this.CastingArt, rhs.CastingArt)) return false;
                 if (!object.Equals(this.MovementType, rhs.MovementType)) return false;
                 if (!object.Equals(this.HitShader, rhs.HitShader)) return false;
@@ -650,23 +717,30 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ImpactData, rhs.ImpactData)) return false;
                 if (!object.Equals(this.CastingLight, rhs.CastingLight)) return false;
                 if (!object.Equals(this.PerkToApply, rhs.PerkToApply)) return false;
-                if (!object.Equals(this.ActorValue2, rhs.ActorValue2)) return false;
+                if (!object.Equals(this.SecondActorValue, rhs.SecondActorValue)) return false;
                 if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
                 if (!object.Equals(this.ResistValue, rhs.ResistValue)) return false;
-                if (!object.Equals(this.ActorValue3, rhs.ActorValue3)) return false;
-                if (!object.Equals(this.UnknownFloat1, rhs.UnknownFloat1)) return false;
-                if (!object.Equals(this.UnknownFloat2, rhs.UnknownFloat2)) return false;
+                if (!object.Equals(this.ThirdActorValue, rhs.ThirdActorValue)) return false;
+                if (!object.Equals(this.ScriptEffectAIDelayTime, rhs.ScriptEffectAIDelayTime)) return false;
+                if (!object.Equals(this.ScriptEffectAIScore, rhs.ScriptEffectAIScore)) return false;
                 if (!object.Equals(this.Archetype, rhs.Archetype)) return false;
-                if (!object.Equals(this.UnknownFloat3, rhs.UnknownFloat3)) return false;
-                if (!object.Equals(this.UnknownInt1, rhs.UnknownInt1)) return false;
-                if (!object.Equals(this.UnknownFloat4, rhs.UnknownFloat4)) return false;
-                if (!object.Equals(this.UnknownInt2, rhs.UnknownInt2)) return false;
+                if (!object.Equals(this.SpellmakingArea, rhs.SpellmakingArea)) return false;
+                if (!object.Equals(this.SpellmakingCastingTime, rhs.SpellmakingCastingTime)) return false;
+                if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
+                if (!object.Equals(this.CastingSoundLevel, rhs.CastingSoundLevel)) return false;
                 if (!object.Equals(this.CastType, rhs.CastType)) return false;
                 if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
-                if (!object.Equals(this.UnknownInt3, rhs.UnknownInt3)) return false;
+                if (!object.Equals(this.DualCastingScale, rhs.DualCastingScale)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.MinimumSkillLevel, rhs.MinimumSkillLevel)) return false;
+                if (!object.Equals(this.UnknownCounterEffectCount, rhs.UnknownCounterEffectCount)) return false;
+                if (!object.Equals(this.SecondActorValueWeight, rhs.SecondActorValueWeight)) return false;
+                if (!object.Equals(this.SkillUsageMultiplier, rhs.SkillUsageMultiplier)) return false;
+                if (!object.Equals(this.TaperCurve, rhs.TaperCurve)) return false;
+                if (!object.Equals(this.TaperDuration, rhs.TaperDuration)) return false;
+                if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
@@ -679,8 +753,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Components);
                 hash.Add(this.Name);
+                hash.Add(this.MenuDisplayObject);
                 hash.Add(this.Keywords);
-                hash.Add(this.ActorValue1);
+                hash.Add(this.MagicSkill);
                 hash.Add(this.CastingArt);
                 hash.Add(this.MovementType);
                 hash.Add(this.HitShader);
@@ -693,23 +768,30 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ImpactData);
                 hash.Add(this.CastingLight);
                 hash.Add(this.PerkToApply);
-                hash.Add(this.ActorValue2);
+                hash.Add(this.SecondActorValue);
                 hash.Add(this.Projectile);
                 hash.Add(this.ResistValue);
-                hash.Add(this.ActorValue3);
-                hash.Add(this.UnknownFloat1);
-                hash.Add(this.UnknownFloat2);
+                hash.Add(this.ThirdActorValue);
+                hash.Add(this.ScriptEffectAIDelayTime);
+                hash.Add(this.ScriptEffectAIScore);
                 hash.Add(this.Archetype);
-                hash.Add(this.UnknownFloat3);
-                hash.Add(this.UnknownInt1);
-                hash.Add(this.UnknownFloat4);
-                hash.Add(this.UnknownInt2);
+                hash.Add(this.SpellmakingArea);
+                hash.Add(this.SpellmakingCastingTime);
+                hash.Add(this.BaseCost);
+                hash.Add(this.CastingSoundLevel);
                 hash.Add(this.CastType);
                 hash.Add(this.TargetType);
-                hash.Add(this.UnknownInt3);
+                hash.Add(this.DualCastingScale);
                 hash.Add(this.Flags);
-                hash.Add(this.Unknown);
+                hash.Add(this.MinimumSkillLevel);
+                hash.Add(this.UnknownCounterEffectCount);
+                hash.Add(this.SecondActorValueWeight);
+                hash.Add(this.SkillUsageMultiplier);
+                hash.Add(this.TaperCurve);
+                hash.Add(this.TaperDuration);
+                hash.Add(this.TaperWeight);
                 hash.Add(this.Unknown2);
+                hash.Add(this.CounterEffects);
                 hash.Add(this.Sounds);
                 hash.Add(this.Description);
                 hash.Add(this.Conditions);
@@ -742,6 +824,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Name)) return false;
+                if (!eval(this.MenuDisplayObject)) return false;
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -753,7 +836,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.ActorValue1)) return false;
+                if (!eval(this.MagicSkill)) return false;
                 if (!eval(this.CastingArt)) return false;
                 if (!eval(this.MovementType)) return false;
                 if (!eval(this.HitShader)) return false;
@@ -766,27 +849,44 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.ImpactData)) return false;
                 if (!eval(this.CastingLight)) return false;
                 if (!eval(this.PerkToApply)) return false;
-                if (!eval(this.ActorValue2)) return false;
+                if (!eval(this.SecondActorValue)) return false;
                 if (!eval(this.Projectile)) return false;
                 if (!eval(this.ResistValue)) return false;
-                if (!eval(this.ActorValue3)) return false;
-                if (!eval(this.UnknownFloat1)) return false;
-                if (!eval(this.UnknownFloat2)) return false;
+                if (!eval(this.ThirdActorValue)) return false;
+                if (!eval(this.ScriptEffectAIDelayTime)) return false;
+                if (!eval(this.ScriptEffectAIScore)) return false;
                 if (Archetype != null)
                 {
                     if (!eval(this.Archetype.Overall)) return false;
                     if (this.Archetype.Specific != null && !this.Archetype.Specific.All(eval)) return false;
                 }
-                if (!eval(this.UnknownFloat3)) return false;
-                if (!eval(this.UnknownInt1)) return false;
-                if (!eval(this.UnknownFloat4)) return false;
-                if (!eval(this.UnknownInt2)) return false;
+                if (!eval(this.SpellmakingArea)) return false;
+                if (!eval(this.SpellmakingCastingTime)) return false;
+                if (!eval(this.BaseCost)) return false;
+                if (!eval(this.CastingSoundLevel)) return false;
                 if (!eval(this.CastType)) return false;
                 if (!eval(this.TargetType)) return false;
-                if (!eval(this.UnknownInt3)) return false;
+                if (!eval(this.DualCastingScale)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.MinimumSkillLevel)) return false;
+                if (!eval(this.UnknownCounterEffectCount)) return false;
+                if (!eval(this.SecondActorValueWeight)) return false;
+                if (!eval(this.SkillUsageMultiplier)) return false;
+                if (!eval(this.TaperCurve)) return false;
+                if (!eval(this.TaperDuration)) return false;
+                if (!eval(this.TaperWeight)) return false;
                 if (!eval(this.Unknown2)) return false;
+                if (this.CounterEffects != null)
+                {
+                    if (!eval(this.CounterEffects.Overall)) return false;
+                    if (this.CounterEffects.Specific != null)
+                    {
+                        foreach (var item in this.CounterEffects.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Sounds != null)
                 {
                     if (!eval(this.Sounds.Overall)) return false;
@@ -839,6 +939,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Name)) return true;
+                if (eval(this.MenuDisplayObject)) return true;
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -850,7 +951,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.ActorValue1)) return true;
+                if (eval(this.MagicSkill)) return true;
                 if (eval(this.CastingArt)) return true;
                 if (eval(this.MovementType)) return true;
                 if (eval(this.HitShader)) return true;
@@ -863,27 +964,44 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.ImpactData)) return true;
                 if (eval(this.CastingLight)) return true;
                 if (eval(this.PerkToApply)) return true;
-                if (eval(this.ActorValue2)) return true;
+                if (eval(this.SecondActorValue)) return true;
                 if (eval(this.Projectile)) return true;
                 if (eval(this.ResistValue)) return true;
-                if (eval(this.ActorValue3)) return true;
-                if (eval(this.UnknownFloat1)) return true;
-                if (eval(this.UnknownFloat2)) return true;
+                if (eval(this.ThirdActorValue)) return true;
+                if (eval(this.ScriptEffectAIDelayTime)) return true;
+                if (eval(this.ScriptEffectAIScore)) return true;
                 if (Archetype != null)
                 {
                     if (eval(this.Archetype.Overall)) return true;
                     if (this.Archetype.Specific != null && this.Archetype.Specific.Any(eval)) return true;
                 }
-                if (eval(this.UnknownFloat3)) return true;
-                if (eval(this.UnknownInt1)) return true;
-                if (eval(this.UnknownFloat4)) return true;
-                if (eval(this.UnknownInt2)) return true;
+                if (eval(this.SpellmakingArea)) return true;
+                if (eval(this.SpellmakingCastingTime)) return true;
+                if (eval(this.BaseCost)) return true;
+                if (eval(this.CastingSoundLevel)) return true;
                 if (eval(this.CastType)) return true;
                 if (eval(this.TargetType)) return true;
-                if (eval(this.UnknownInt3)) return true;
+                if (eval(this.DualCastingScale)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.MinimumSkillLevel)) return true;
+                if (eval(this.UnknownCounterEffectCount)) return true;
+                if (eval(this.SecondActorValueWeight)) return true;
+                if (eval(this.SkillUsageMultiplier)) return true;
+                if (eval(this.TaperCurve)) return true;
+                if (eval(this.TaperDuration)) return true;
+                if (eval(this.TaperWeight)) return true;
                 if (eval(this.Unknown2)) return true;
+                if (this.CounterEffects != null)
+                {
+                    if (eval(this.CounterEffects.Overall)) return true;
+                    if (this.CounterEffects.Specific != null)
+                    {
+                        foreach (var item in this.CounterEffects.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Sounds != null)
                 {
                     if (eval(this.Sounds.Overall)) return true;
@@ -942,6 +1060,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Name = eval(this.Name);
+                obj.MenuDisplayObject = eval(this.MenuDisplayObject);
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), []);
@@ -956,7 +1075,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.ActorValue1 = eval(this.ActorValue1);
+                obj.MagicSkill = eval(this.MagicSkill);
                 obj.CastingArt = eval(this.CastingArt);
                 obj.MovementType = eval(this.MovementType);
                 obj.HitShader = eval(this.HitShader);
@@ -969,23 +1088,43 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ImpactData = eval(this.ImpactData);
                 obj.CastingLight = eval(this.CastingLight);
                 obj.PerkToApply = eval(this.PerkToApply);
-                obj.ActorValue2 = eval(this.ActorValue2);
+                obj.SecondActorValue = eval(this.SecondActorValue);
                 obj.Projectile = eval(this.Projectile);
                 obj.ResistValue = eval(this.ResistValue);
-                obj.ActorValue3 = eval(this.ActorValue3);
-                obj.UnknownFloat1 = eval(this.UnknownFloat1);
-                obj.UnknownFloat2 = eval(this.UnknownFloat2);
+                obj.ThirdActorValue = eval(this.ThirdActorValue);
+                obj.ScriptEffectAIDelayTime = eval(this.ScriptEffectAIDelayTime);
+                obj.ScriptEffectAIScore = eval(this.ScriptEffectAIScore);
                 obj.Archetype = this.Archetype == null ? null : new MaskItem<R, AMagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
-                obj.UnknownFloat3 = eval(this.UnknownFloat3);
-                obj.UnknownInt1 = eval(this.UnknownInt1);
-                obj.UnknownFloat4 = eval(this.UnknownFloat4);
-                obj.UnknownInt2 = eval(this.UnknownInt2);
+                obj.SpellmakingArea = eval(this.SpellmakingArea);
+                obj.SpellmakingCastingTime = eval(this.SpellmakingCastingTime);
+                obj.BaseCost = eval(this.BaseCost);
+                obj.CastingSoundLevel = eval(this.CastingSoundLevel);
                 obj.CastType = eval(this.CastType);
                 obj.TargetType = eval(this.TargetType);
-                obj.UnknownInt3 = eval(this.UnknownInt3);
+                obj.DualCastingScale = eval(this.DualCastingScale);
                 obj.Flags = eval(this.Flags);
-                obj.Unknown = eval(this.Unknown);
+                obj.MinimumSkillLevel = eval(this.MinimumSkillLevel);
+                obj.UnknownCounterEffectCount = eval(this.UnknownCounterEffectCount);
+                obj.SecondActorValueWeight = eval(this.SecondActorValueWeight);
+                obj.SkillUsageMultiplier = eval(this.SkillUsageMultiplier);
+                obj.TaperCurve = eval(this.TaperCurve);
+                obj.TaperDuration = eval(this.TaperDuration);
+                obj.TaperWeight = eval(this.TaperWeight);
                 obj.Unknown2 = eval(this.Unknown2);
+                if (CounterEffects != null)
+                {
+                    obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), []);
+                    if (CounterEffects.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CounterEffects.Specific = l;
+                        foreach (var item in CounterEffects.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 if (Sounds != null)
                 {
                     obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MagicEffectSound.Mask<R>?>>?>(eval(this.Sounds.Overall), []);
@@ -1063,6 +1202,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Name, "Name");
                     }
+                    if (printMask?.MenuDisplayObject ?? true)
+                    {
+                        sb.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                    }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
@@ -1084,9 +1227,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.ActorValue1 ?? true)
+                    if (printMask?.MagicSkill ?? true)
                     {
-                        sb.AppendItem(ActorValue1, "ActorValue1");
+                        sb.AppendItem(MagicSkill, "MagicSkill");
                     }
                     if (printMask?.CastingArt ?? true)
                     {
@@ -1136,9 +1279,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(PerkToApply, "PerkToApply");
                     }
-                    if (printMask?.ActorValue2 ?? true)
+                    if (printMask?.SecondActorValue ?? true)
                     {
-                        sb.AppendItem(ActorValue2, "ActorValue2");
+                        sb.AppendItem(SecondActorValue, "SecondActorValue");
                     }
                     if (printMask?.Projectile ?? true)
                     {
@@ -1148,37 +1291,37 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ResistValue, "ResistValue");
                     }
-                    if (printMask?.ActorValue3 ?? true)
+                    if (printMask?.ThirdActorValue ?? true)
                     {
-                        sb.AppendItem(ActorValue3, "ActorValue3");
+                        sb.AppendItem(ThirdActorValue, "ThirdActorValue");
                     }
-                    if (printMask?.UnknownFloat1 ?? true)
+                    if (printMask?.ScriptEffectAIDelayTime ?? true)
                     {
-                        sb.AppendItem(UnknownFloat1, "UnknownFloat1");
+                        sb.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                     }
-                    if (printMask?.UnknownFloat2 ?? true)
+                    if (printMask?.ScriptEffectAIScore ?? true)
                     {
-                        sb.AppendItem(UnknownFloat2, "UnknownFloat2");
+                        sb.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
                     }
                     if (printMask?.Archetype?.Overall ?? true)
                     {
                         Archetype?.Print(sb);
                     }
-                    if (printMask?.UnknownFloat3 ?? true)
+                    if (printMask?.SpellmakingArea ?? true)
                     {
-                        sb.AppendItem(UnknownFloat3, "UnknownFloat3");
+                        sb.AppendItem(SpellmakingArea, "SpellmakingArea");
                     }
-                    if (printMask?.UnknownInt1 ?? true)
+                    if (printMask?.SpellmakingCastingTime ?? true)
                     {
-                        sb.AppendItem(UnknownInt1, "UnknownInt1");
+                        sb.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
                     }
-                    if (printMask?.UnknownFloat4 ?? true)
+                    if (printMask?.BaseCost ?? true)
                     {
-                        sb.AppendItem(UnknownFloat4, "UnknownFloat4");
+                        sb.AppendItem(BaseCost, "BaseCost");
                     }
-                    if (printMask?.UnknownInt2 ?? true)
+                    if (printMask?.CastingSoundLevel ?? true)
                     {
-                        sb.AppendItem(UnknownInt2, "UnknownInt2");
+                        sb.AppendItem(CastingSoundLevel, "CastingSoundLevel");
                     }
                     if (printMask?.CastType ?? true)
                     {
@@ -1188,21 +1331,66 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(TargetType, "TargetType");
                     }
-                    if (printMask?.UnknownInt3 ?? true)
+                    if (printMask?.DualCastingScale ?? true)
                     {
-                        sb.AppendItem(UnknownInt3, "UnknownInt3");
+                        sb.AppendItem(DualCastingScale, "DualCastingScale");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.MinimumSkillLevel ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                    }
+                    if (printMask?.UnknownCounterEffectCount ?? true)
+                    {
+                        sb.AppendItem(UnknownCounterEffectCount, "UnknownCounterEffectCount");
+                    }
+                    if (printMask?.SecondActorValueWeight ?? true)
+                    {
+                        sb.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                    }
+                    if (printMask?.SkillUsageMultiplier ?? true)
+                    {
+                        sb.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                    }
+                    if (printMask?.TaperCurve ?? true)
+                    {
+                        sb.AppendItem(TaperCurve, "TaperCurve");
+                    }
+                    if (printMask?.TaperDuration ?? true)
+                    {
+                        sb.AppendItem(TaperDuration, "TaperDuration");
+                    }
+                    if (printMask?.TaperWeight ?? true)
+                    {
+                        sb.AppendItem(TaperWeight, "TaperWeight");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if ((printMask?.CounterEffects?.Overall ?? true)
+                        && CounterEffects is {} CounterEffectsItem)
+                    {
+                        sb.AppendLine("CounterEffects =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(CounterEffectsItem.Overall);
+                            if (CounterEffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in CounterEffectsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds is {} SoundsItem)
@@ -1264,8 +1452,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
+            public Exception? MenuDisplayObject;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public Exception? ActorValue1;
+            public Exception? MagicSkill;
             public Exception? CastingArt;
             public Exception? MovementType;
             public Exception? HitShader;
@@ -1278,23 +1467,30 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ImpactData;
             public Exception? CastingLight;
             public Exception? PerkToApply;
-            public Exception? ActorValue2;
+            public Exception? SecondActorValue;
             public Exception? Projectile;
             public Exception? ResistValue;
-            public Exception? ActorValue3;
-            public Exception? UnknownFloat1;
-            public Exception? UnknownFloat2;
+            public Exception? ThirdActorValue;
+            public Exception? ScriptEffectAIDelayTime;
+            public Exception? ScriptEffectAIScore;
             public MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>? Archetype;
-            public Exception? UnknownFloat3;
-            public Exception? UnknownInt1;
-            public Exception? UnknownFloat4;
-            public Exception? UnknownInt2;
+            public Exception? SpellmakingArea;
+            public Exception? SpellmakingCastingTime;
+            public Exception? BaseCost;
+            public Exception? CastingSoundLevel;
             public Exception? CastType;
             public Exception? TargetType;
-            public Exception? UnknownInt3;
+            public Exception? DualCastingScale;
             public Exception? Flags;
-            public Exception? Unknown;
+            public Exception? MinimumSkillLevel;
+            public Exception? UnknownCounterEffectCount;
+            public Exception? SecondActorValueWeight;
+            public Exception? SkillUsageMultiplier;
+            public Exception? TaperCurve;
+            public Exception? TaperDuration;
+            public Exception? TaperWeight;
             public Exception? Unknown2;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>? Sounds;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
@@ -1313,10 +1509,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case MagicEffect_FieldIndex.Name:
                         return Name;
+                    case MagicEffect_FieldIndex.MenuDisplayObject:
+                        return MenuDisplayObject;
                     case MagicEffect_FieldIndex.Keywords:
                         return Keywords;
-                    case MagicEffect_FieldIndex.ActorValue1:
-                        return ActorValue1;
+                    case MagicEffect_FieldIndex.MagicSkill:
+                        return MagicSkill;
                     case MagicEffect_FieldIndex.CastingArt:
                         return CastingArt;
                     case MagicEffect_FieldIndex.MovementType:
@@ -1341,40 +1539,54 @@ namespace Mutagen.Bethesda.Starfield
                         return CastingLight;
                     case MagicEffect_FieldIndex.PerkToApply:
                         return PerkToApply;
-                    case MagicEffect_FieldIndex.ActorValue2:
-                        return ActorValue2;
+                    case MagicEffect_FieldIndex.SecondActorValue:
+                        return SecondActorValue;
                     case MagicEffect_FieldIndex.Projectile:
                         return Projectile;
                     case MagicEffect_FieldIndex.ResistValue:
                         return ResistValue;
-                    case MagicEffect_FieldIndex.ActorValue3:
-                        return ActorValue3;
-                    case MagicEffect_FieldIndex.UnknownFloat1:
-                        return UnknownFloat1;
-                    case MagicEffect_FieldIndex.UnknownFloat2:
-                        return UnknownFloat2;
+                    case MagicEffect_FieldIndex.ThirdActorValue:
+                        return ThirdActorValue;
+                    case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                        return ScriptEffectAIDelayTime;
+                    case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                        return ScriptEffectAIScore;
                     case MagicEffect_FieldIndex.Archetype:
                         return Archetype;
-                    case MagicEffect_FieldIndex.UnknownFloat3:
-                        return UnknownFloat3;
-                    case MagicEffect_FieldIndex.UnknownInt1:
-                        return UnknownInt1;
-                    case MagicEffect_FieldIndex.UnknownFloat4:
-                        return UnknownFloat4;
-                    case MagicEffect_FieldIndex.UnknownInt2:
-                        return UnknownInt2;
+                    case MagicEffect_FieldIndex.SpellmakingArea:
+                        return SpellmakingArea;
+                    case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                        return SpellmakingCastingTime;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        return BaseCost;
+                    case MagicEffect_FieldIndex.CastingSoundLevel:
+                        return CastingSoundLevel;
                     case MagicEffect_FieldIndex.CastType:
                         return CastType;
                     case MagicEffect_FieldIndex.TargetType:
                         return TargetType;
-                    case MagicEffect_FieldIndex.UnknownInt3:
-                        return UnknownInt3;
+                    case MagicEffect_FieldIndex.DualCastingScale:
+                        return DualCastingScale;
                     case MagicEffect_FieldIndex.Flags:
                         return Flags;
-                    case MagicEffect_FieldIndex.Unknown:
-                        return Unknown;
+                    case MagicEffect_FieldIndex.MinimumSkillLevel:
+                        return MinimumSkillLevel;
+                    case MagicEffect_FieldIndex.UnknownCounterEffectCount:
+                        return UnknownCounterEffectCount;
+                    case MagicEffect_FieldIndex.SecondActorValueWeight:
+                        return SecondActorValueWeight;
+                    case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                        return SkillUsageMultiplier;
+                    case MagicEffect_FieldIndex.TaperCurve:
+                        return TaperCurve;
+                    case MagicEffect_FieldIndex.TaperDuration:
+                        return TaperDuration;
+                    case MagicEffect_FieldIndex.TaperWeight:
+                        return TaperWeight;
                     case MagicEffect_FieldIndex.Unknown2:
                         return Unknown2;
+                    case MagicEffect_FieldIndex.CounterEffects:
+                        return CounterEffects;
                     case MagicEffect_FieldIndex.Sounds:
                         return Sounds;
                     case MagicEffect_FieldIndex.Description:
@@ -1402,11 +1614,14 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.Name:
                         this.Name = ex;
                         break;
+                    case MagicEffect_FieldIndex.MenuDisplayObject:
+                        this.MenuDisplayObject = ex;
+                        break;
                     case MagicEffect_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case MagicEffect_FieldIndex.ActorValue1:
-                        this.ActorValue1 = ex;
+                    case MagicEffect_FieldIndex.MagicSkill:
+                        this.MagicSkill = ex;
                         break;
                     case MagicEffect_FieldIndex.CastingArt:
                         this.CastingArt = ex;
@@ -1444,8 +1659,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.PerkToApply:
                         this.PerkToApply = ex;
                         break;
-                    case MagicEffect_FieldIndex.ActorValue2:
-                        this.ActorValue2 = ex;
+                    case MagicEffect_FieldIndex.SecondActorValue:
+                        this.SecondActorValue = ex;
                         break;
                     case MagicEffect_FieldIndex.Projectile:
                         this.Projectile = ex;
@@ -1453,29 +1668,29 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = ex;
                         break;
-                    case MagicEffect_FieldIndex.ActorValue3:
-                        this.ActorValue3 = ex;
+                    case MagicEffect_FieldIndex.ThirdActorValue:
+                        this.ThirdActorValue = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat1:
-                        this.UnknownFloat1 = ex;
+                    case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                        this.ScriptEffectAIDelayTime = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat2:
-                        this.UnknownFloat2 = ex;
+                    case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                        this.ScriptEffectAIScore = ex;
                         break;
                     case MagicEffect_FieldIndex.Archetype:
                         this.Archetype = new MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>(ex, null);
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat3:
-                        this.UnknownFloat3 = ex;
+                    case MagicEffect_FieldIndex.SpellmakingArea:
+                        this.SpellmakingArea = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnknownInt1:
-                        this.UnknownInt1 = ex;
+                    case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                        this.SpellmakingCastingTime = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat4:
-                        this.UnknownFloat4 = ex;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnknownInt2:
-                        this.UnknownInt2 = ex;
+                    case MagicEffect_FieldIndex.CastingSoundLevel:
+                        this.CastingSoundLevel = ex;
                         break;
                     case MagicEffect_FieldIndex.CastType:
                         this.CastType = ex;
@@ -1483,17 +1698,38 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.TargetType:
                         this.TargetType = ex;
                         break;
-                    case MagicEffect_FieldIndex.UnknownInt3:
-                        this.UnknownInt3 = ex;
+                    case MagicEffect_FieldIndex.DualCastingScale:
+                        this.DualCastingScale = ex;
                         break;
                     case MagicEffect_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case MagicEffect_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case MagicEffect_FieldIndex.MinimumSkillLevel:
+                        this.MinimumSkillLevel = ex;
+                        break;
+                    case MagicEffect_FieldIndex.UnknownCounterEffectCount:
+                        this.UnknownCounterEffectCount = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SecondActorValueWeight:
+                        this.SecondActorValueWeight = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                        this.SkillUsageMultiplier = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TaperCurve:
+                        this.TaperCurve = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TaperDuration:
+                        this.TaperDuration = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TaperWeight:
+                        this.TaperWeight = ex;
                         break;
                     case MagicEffect_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffects:
+                        this.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case MagicEffect_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ex, null);
@@ -1527,11 +1763,14 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
+                    case MagicEffect_FieldIndex.MenuDisplayObject:
+                        this.MenuDisplayObject = (Exception?)obj;
+                        break;
                     case MagicEffect_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case MagicEffect_FieldIndex.ActorValue1:
-                        this.ActorValue1 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.MagicSkill:
+                        this.MagicSkill = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.CastingArt:
                         this.CastingArt = (Exception?)obj;
@@ -1569,8 +1808,8 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.PerkToApply:
                         this.PerkToApply = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.ActorValue2:
-                        this.ActorValue2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.SecondActorValue:
+                        this.SecondActorValue = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Projectile:
                         this.Projectile = (Exception?)obj;
@@ -1578,29 +1817,29 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.ResistValue:
                         this.ResistValue = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.ActorValue3:
-                        this.ActorValue3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.ThirdActorValue:
+                        this.ThirdActorValue = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat1:
-                        this.UnknownFloat1 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                        this.ScriptEffectAIDelayTime = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat2:
-                        this.UnknownFloat2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                        this.ScriptEffectAIScore = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Archetype:
                         this.Archetype = (MaskItem<Exception?, AMagicEffectArchetype.ErrorMask?>?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat3:
-                        this.UnknownFloat3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.SpellmakingArea:
+                        this.SpellmakingArea = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownInt1:
-                        this.UnknownInt1 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                        this.SpellmakingCastingTime = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownFloat4:
-                        this.UnknownFloat4 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownInt2:
-                        this.UnknownInt2 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.CastingSoundLevel:
+                        this.CastingSoundLevel = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.CastType:
                         this.CastType = (Exception?)obj;
@@ -1608,17 +1847,38 @@ namespace Mutagen.Bethesda.Starfield
                     case MagicEffect_FieldIndex.TargetType:
                         this.TargetType = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.UnknownInt3:
-                        this.UnknownInt3 = (Exception?)obj;
+                    case MagicEffect_FieldIndex.DualCastingScale:
+                        this.DualCastingScale = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case MagicEffect_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case MagicEffect_FieldIndex.MinimumSkillLevel:
+                        this.MinimumSkillLevel = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.UnknownCounterEffectCount:
+                        this.UnknownCounterEffectCount = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SecondActorValueWeight:
+                        this.SecondActorValueWeight = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                        this.SkillUsageMultiplier = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TaperCurve:
+                        this.TaperCurve = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TaperDuration:
+                        this.TaperDuration = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TaperWeight:
+                        this.TaperWeight = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffects:
+                        this.CounterEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case MagicEffect_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>)obj;
@@ -1644,8 +1904,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (Components != null) return true;
                 if (Name != null) return true;
+                if (MenuDisplayObject != null) return true;
                 if (Keywords != null) return true;
-                if (ActorValue1 != null) return true;
+                if (MagicSkill != null) return true;
                 if (CastingArt != null) return true;
                 if (MovementType != null) return true;
                 if (HitShader != null) return true;
@@ -1658,23 +1919,30 @@ namespace Mutagen.Bethesda.Starfield
                 if (ImpactData != null) return true;
                 if (CastingLight != null) return true;
                 if (PerkToApply != null) return true;
-                if (ActorValue2 != null) return true;
+                if (SecondActorValue != null) return true;
                 if (Projectile != null) return true;
                 if (ResistValue != null) return true;
-                if (ActorValue3 != null) return true;
-                if (UnknownFloat1 != null) return true;
-                if (UnknownFloat2 != null) return true;
+                if (ThirdActorValue != null) return true;
+                if (ScriptEffectAIDelayTime != null) return true;
+                if (ScriptEffectAIScore != null) return true;
                 if (Archetype != null) return true;
-                if (UnknownFloat3 != null) return true;
-                if (UnknownInt1 != null) return true;
-                if (UnknownFloat4 != null) return true;
-                if (UnknownInt2 != null) return true;
+                if (SpellmakingArea != null) return true;
+                if (SpellmakingCastingTime != null) return true;
+                if (BaseCost != null) return true;
+                if (CastingSoundLevel != null) return true;
                 if (CastType != null) return true;
                 if (TargetType != null) return true;
-                if (UnknownInt3 != null) return true;
+                if (DualCastingScale != null) return true;
                 if (Flags != null) return true;
-                if (Unknown != null) return true;
+                if (MinimumSkillLevel != null) return true;
+                if (UnknownCounterEffectCount != null) return true;
+                if (SecondActorValueWeight != null) return true;
+                if (SkillUsageMultiplier != null) return true;
+                if (TaperCurve != null) return true;
+                if (TaperDuration != null) return true;
+                if (TaperWeight != null) return true;
                 if (Unknown2 != null) return true;
+                if (CounterEffects != null) return true;
                 if (Sounds != null) return true;
                 if (Description != null) return true;
                 if (Conditions != null) return true;
@@ -1727,6 +1995,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Name, "Name");
                 }
+                {
+                    sb.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                }
                 if (Keywords is {} KeywordsItem)
                 {
                     sb.AppendLine("Keywords =>");
@@ -1748,7 +2019,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(ActorValue1, "ActorValue1");
+                    sb.AppendItem(MagicSkill, "MagicSkill");
                 }
                 {
                     sb.AppendItem(CastingArt, "CastingArt");
@@ -1787,7 +2058,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(PerkToApply, "PerkToApply");
                 }
                 {
-                    sb.AppendItem(ActorValue2, "ActorValue2");
+                    sb.AppendItem(SecondActorValue, "SecondActorValue");
                 }
                 {
                     sb.AppendItem(Projectile, "Projectile");
@@ -1796,26 +2067,26 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ResistValue, "ResistValue");
                 }
                 {
-                    sb.AppendItem(ActorValue3, "ActorValue3");
+                    sb.AppendItem(ThirdActorValue, "ThirdActorValue");
                 }
                 {
-                    sb.AppendItem(UnknownFloat1, "UnknownFloat1");
+                    sb.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                 }
                 {
-                    sb.AppendItem(UnknownFloat2, "UnknownFloat2");
+                    sb.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
                 }
                 Archetype?.Print(sb);
                 {
-                    sb.AppendItem(UnknownFloat3, "UnknownFloat3");
+                    sb.AppendItem(SpellmakingArea, "SpellmakingArea");
                 }
                 {
-                    sb.AppendItem(UnknownInt1, "UnknownInt1");
+                    sb.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
                 }
                 {
-                    sb.AppendItem(UnknownFloat4, "UnknownFloat4");
+                    sb.AppendItem(BaseCost, "BaseCost");
                 }
                 {
-                    sb.AppendItem(UnknownInt2, "UnknownInt2");
+                    sb.AppendItem(CastingSoundLevel, "CastingSoundLevel");
                 }
                 {
                     sb.AppendItem(CastType, "CastType");
@@ -1824,16 +2095,54 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(TargetType, "TargetType");
                 }
                 {
-                    sb.AppendItem(UnknownInt3, "UnknownInt3");
+                    sb.AppendItem(DualCastingScale, "DualCastingScale");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                }
+                {
+                    sb.AppendItem(UnknownCounterEffectCount, "UnknownCounterEffectCount");
+                }
+                {
+                    sb.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                }
+                {
+                    sb.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                }
+                {
+                    sb.AppendItem(TaperCurve, "TaperCurve");
+                }
+                {
+                    sb.AppendItem(TaperDuration, "TaperDuration");
+                }
+                {
+                    sb.AppendItem(TaperWeight, "TaperWeight");
                 }
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
+                }
+                if (CounterEffects is {} CounterEffectsItem)
+                {
+                    sb.AppendLine("CounterEffects =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(CounterEffectsItem.Overall);
+                        if (CounterEffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in CounterEffectsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (Sounds is {} SoundsItem)
                 {
@@ -1888,8 +2197,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
+                ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.ActorValue1 = this.ActorValue1.Combine(rhs.ActorValue1);
+                ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
                 ret.CastingArt = this.CastingArt.Combine(rhs.CastingArt);
                 ret.MovementType = this.MovementType.Combine(rhs.MovementType);
                 ret.HitShader = this.HitShader.Combine(rhs.HitShader);
@@ -1902,23 +2212,30 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ImpactData = this.ImpactData.Combine(rhs.ImpactData);
                 ret.CastingLight = this.CastingLight.Combine(rhs.CastingLight);
                 ret.PerkToApply = this.PerkToApply.Combine(rhs.PerkToApply);
-                ret.ActorValue2 = this.ActorValue2.Combine(rhs.ActorValue2);
+                ret.SecondActorValue = this.SecondActorValue.Combine(rhs.SecondActorValue);
                 ret.Projectile = this.Projectile.Combine(rhs.Projectile);
                 ret.ResistValue = this.ResistValue.Combine(rhs.ResistValue);
-                ret.ActorValue3 = this.ActorValue3.Combine(rhs.ActorValue3);
-                ret.UnknownFloat1 = this.UnknownFloat1.Combine(rhs.UnknownFloat1);
-                ret.UnknownFloat2 = this.UnknownFloat2.Combine(rhs.UnknownFloat2);
+                ret.ThirdActorValue = this.ThirdActorValue.Combine(rhs.ThirdActorValue);
+                ret.ScriptEffectAIDelayTime = this.ScriptEffectAIDelayTime.Combine(rhs.ScriptEffectAIDelayTime);
+                ret.ScriptEffectAIScore = this.ScriptEffectAIScore.Combine(rhs.ScriptEffectAIScore);
                 ret.Archetype = this.Archetype.Combine(rhs.Archetype, (l, r) => l.Combine(r));
-                ret.UnknownFloat3 = this.UnknownFloat3.Combine(rhs.UnknownFloat3);
-                ret.UnknownInt1 = this.UnknownInt1.Combine(rhs.UnknownInt1);
-                ret.UnknownFloat4 = this.UnknownFloat4.Combine(rhs.UnknownFloat4);
-                ret.UnknownInt2 = this.UnknownInt2.Combine(rhs.UnknownInt2);
+                ret.SpellmakingArea = this.SpellmakingArea.Combine(rhs.SpellmakingArea);
+                ret.SpellmakingCastingTime = this.SpellmakingCastingTime.Combine(rhs.SpellmakingCastingTime);
+                ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
+                ret.CastingSoundLevel = this.CastingSoundLevel.Combine(rhs.CastingSoundLevel);
                 ret.CastType = this.CastType.Combine(rhs.CastType);
                 ret.TargetType = this.TargetType.Combine(rhs.TargetType);
-                ret.UnknownInt3 = this.UnknownInt3.Combine(rhs.UnknownInt3);
+                ret.DualCastingScale = this.DualCastingScale.Combine(rhs.DualCastingScale);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.MinimumSkillLevel = this.MinimumSkillLevel.Combine(rhs.MinimumSkillLevel);
+                ret.UnknownCounterEffectCount = this.UnknownCounterEffectCount.Combine(rhs.UnknownCounterEffectCount);
+                ret.SecondActorValueWeight = this.SecondActorValueWeight.Combine(rhs.SecondActorValueWeight);
+                ret.SkillUsageMultiplier = this.SkillUsageMultiplier.Combine(rhs.SkillUsageMultiplier);
+                ret.TaperCurve = this.TaperCurve.Combine(rhs.TaperCurve);
+                ret.TaperDuration = this.TaperDuration.Combine(rhs.TaperDuration);
+                ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), Noggog.ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
@@ -1948,8 +2265,9 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public AComponent.TranslationMask? Components;
             public bool Name;
+            public bool MenuDisplayObject;
             public bool Keywords;
-            public bool ActorValue1;
+            public bool MagicSkill;
             public bool CastingArt;
             public bool MovementType;
             public bool HitShader;
@@ -1962,23 +2280,30 @@ namespace Mutagen.Bethesda.Starfield
             public bool ImpactData;
             public bool CastingLight;
             public bool PerkToApply;
-            public bool ActorValue2;
+            public bool SecondActorValue;
             public bool Projectile;
             public bool ResistValue;
-            public bool ActorValue3;
-            public bool UnknownFloat1;
-            public bool UnknownFloat2;
+            public bool ThirdActorValue;
+            public bool ScriptEffectAIDelayTime;
+            public bool ScriptEffectAIScore;
             public AMagicEffectArchetype.TranslationMask? Archetype;
-            public bool UnknownFloat3;
-            public bool UnknownInt1;
-            public bool UnknownFloat4;
-            public bool UnknownInt2;
+            public bool SpellmakingArea;
+            public bool SpellmakingCastingTime;
+            public bool BaseCost;
+            public bool CastingSoundLevel;
             public bool CastType;
             public bool TargetType;
-            public bool UnknownInt3;
+            public bool DualCastingScale;
             public bool Flags;
-            public bool Unknown;
+            public bool MinimumSkillLevel;
+            public bool UnknownCounterEffectCount;
+            public bool SecondActorValueWeight;
+            public bool SkillUsageMultiplier;
+            public bool TaperCurve;
+            public bool TaperDuration;
+            public bool TaperWeight;
             public bool Unknown2;
+            public bool CounterEffects;
             public MagicEffectSound.TranslationMask? Sounds;
             public bool Description;
             public Condition.TranslationMask? Conditions;
@@ -1992,8 +2317,9 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Name = defaultOn;
+                this.MenuDisplayObject = defaultOn;
                 this.Keywords = defaultOn;
-                this.ActorValue1 = defaultOn;
+                this.MagicSkill = defaultOn;
                 this.CastingArt = defaultOn;
                 this.MovementType = defaultOn;
                 this.HitShader = defaultOn;
@@ -2006,22 +2332,29 @@ namespace Mutagen.Bethesda.Starfield
                 this.ImpactData = defaultOn;
                 this.CastingLight = defaultOn;
                 this.PerkToApply = defaultOn;
-                this.ActorValue2 = defaultOn;
+                this.SecondActorValue = defaultOn;
                 this.Projectile = defaultOn;
                 this.ResistValue = defaultOn;
-                this.ActorValue3 = defaultOn;
-                this.UnknownFloat1 = defaultOn;
-                this.UnknownFloat2 = defaultOn;
-                this.UnknownFloat3 = defaultOn;
-                this.UnknownInt1 = defaultOn;
-                this.UnknownFloat4 = defaultOn;
-                this.UnknownInt2 = defaultOn;
+                this.ThirdActorValue = defaultOn;
+                this.ScriptEffectAIDelayTime = defaultOn;
+                this.ScriptEffectAIScore = defaultOn;
+                this.SpellmakingArea = defaultOn;
+                this.SpellmakingCastingTime = defaultOn;
+                this.BaseCost = defaultOn;
+                this.CastingSoundLevel = defaultOn;
                 this.CastType = defaultOn;
                 this.TargetType = defaultOn;
-                this.UnknownInt3 = defaultOn;
+                this.DualCastingScale = defaultOn;
                 this.Flags = defaultOn;
-                this.Unknown = defaultOn;
+                this.MinimumSkillLevel = defaultOn;
+                this.UnknownCounterEffectCount = defaultOn;
+                this.SecondActorValueWeight = defaultOn;
+                this.SkillUsageMultiplier = defaultOn;
+                this.TaperCurve = defaultOn;
+                this.TaperDuration = defaultOn;
+                this.TaperWeight = defaultOn;
                 this.Unknown2 = defaultOn;
+                this.CounterEffects = defaultOn;
                 this.Description = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
@@ -2034,8 +2367,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
+                ret.Add((MenuDisplayObject, null));
                 ret.Add((Keywords, null));
-                ret.Add((ActorValue1, null));
+                ret.Add((MagicSkill, null));
                 ret.Add((CastingArt, null));
                 ret.Add((MovementType, null));
                 ret.Add((HitShader, null));
@@ -2048,23 +2382,30 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ImpactData, null));
                 ret.Add((CastingLight, null));
                 ret.Add((PerkToApply, null));
-                ret.Add((ActorValue2, null));
+                ret.Add((SecondActorValue, null));
                 ret.Add((Projectile, null));
                 ret.Add((ResistValue, null));
-                ret.Add((ActorValue3, null));
-                ret.Add((UnknownFloat1, null));
-                ret.Add((UnknownFloat2, null));
+                ret.Add((ThirdActorValue, null));
+                ret.Add((ScriptEffectAIDelayTime, null));
+                ret.Add((ScriptEffectAIScore, null));
                 ret.Add((Archetype != null ? Archetype.OnOverall : DefaultOn, Archetype?.GetCrystal()));
-                ret.Add((UnknownFloat3, null));
-                ret.Add((UnknownInt1, null));
-                ret.Add((UnknownFloat4, null));
-                ret.Add((UnknownInt2, null));
+                ret.Add((SpellmakingArea, null));
+                ret.Add((SpellmakingCastingTime, null));
+                ret.Add((BaseCost, null));
+                ret.Add((CastingSoundLevel, null));
                 ret.Add((CastType, null));
                 ret.Add((TargetType, null));
-                ret.Add((UnknownInt3, null));
+                ret.Add((DualCastingScale, null));
                 ret.Add((Flags, null));
-                ret.Add((Unknown, null));
+                ret.Add((MinimumSkillLevel, null));
+                ret.Add((UnknownCounterEffectCount, null));
+                ret.Add((SecondActorValueWeight, null));
+                ret.Add((SkillUsageMultiplier, null));
+                ret.Add((TaperCurve, null));
+                ret.Add((TaperDuration, null));
+                ret.Add((TaperWeight, null));
                 ret.Add((Unknown2, null));
+                ret.Add((CounterEffects, null));
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
@@ -2132,6 +2473,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IMagicEffect);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         [Flags]
         public enum DATADataType
         {
@@ -2242,11 +2588,12 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
+        new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new IFormLink<IActorValueInformationGetter> ActorValue1 { get; set; }
+        new IFormLink<IActorValueInformationGetter> MagicSkill { get; set; }
         new IFormLink<IArtObjectGetter> CastingArt { get; set; }
         new IFormLink<IMovementTypeGetter> MovementType { get; set; }
         new IFormLink<IEffectShaderGetter> HitShader { get; set; }
@@ -2259,27 +2606,38 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLink<IImpactDataSetGetter> ImpactData { get; set; }
         new IFormLink<ILightGetter> CastingLight { get; set; }
         new IFormLink<IPerkGetter> PerkToApply { get; set; }
-        new IFormLink<IActorValueInformationGetter> ActorValue2 { get; set; }
+        new IFormLink<IActorValueInformationGetter> SecondActorValue { get; set; }
         new IFormLink<IProjectileGetter> Projectile { get; set; }
         new IFormLink<IActorValueInformationGetter> ResistValue { get; set; }
-        new IFormLink<IActorValueInformationGetter> ActorValue3 { get; set; }
-        new Single UnknownFloat1 { get; set; }
-        new Single UnknownFloat2 { get; set; }
+        new IFormLink<IActorValueInformationGetter> ThirdActorValue { get; set; }
+        new Single ScriptEffectAIDelayTime { get; set; }
+        new Single ScriptEffectAIScore { get; set; }
         new AMagicEffectArchetype Archetype { get; set; }
-        new Single UnknownFloat3 { get; set; }
-        new UInt32 UnknownInt1 { get; set; }
-        new Single UnknownFloat4 { get; set; }
-        new UInt32 UnknownInt2 { get; set; }
+        new Single SpellmakingArea { get; set; }
+        new Single SpellmakingCastingTime { get; set; }
+        new Single BaseCost { get; set; }
+        new SoundLevel CastingSoundLevel { get; set; }
         new CastType CastType { get; set; }
         new TargetType TargetType { get; set; }
-        new UInt32 UnknownInt3 { get; set; }
+        new Single DualCastingScale { get; set; }
         new MagicEffect.Flag Flags { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new UInt32 MinimumSkillLevel { get; set; }
+        new UInt16 UnknownCounterEffectCount { get; set; }
+        new Single SecondActorValueWeight { get; set; }
+        new Single SkillUsageMultiplier { get; set; }
+        new Single TaperCurve { get; set; }
+        new Single TaperDuration { get; set; }
+        new Single TaperWeight { get; set; }
         new MemorySlice<Byte> Unknown2 { get; set; }
+        new ExtendedList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         new ExtendedList<MagicEffectSound> Sounds { get; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new MagicEffect.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IMagicEffectInternal :
@@ -2319,13 +2677,14 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
+        IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        IFormLinkGetter<IActorValueInformationGetter> ActorValue1 { get; }
+        IFormLinkGetter<IActorValueInformationGetter> MagicSkill { get; }
         IFormLinkGetter<IArtObjectGetter> CastingArt { get; }
         IFormLinkGetter<IMovementTypeGetter> MovementType { get; }
         IFormLinkGetter<IEffectShaderGetter> HitShader { get; }
@@ -2338,27 +2697,38 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkGetter<IImpactDataSetGetter> ImpactData { get; }
         IFormLinkGetter<ILightGetter> CastingLight { get; }
         IFormLinkGetter<IPerkGetter> PerkToApply { get; }
-        IFormLinkGetter<IActorValueInformationGetter> ActorValue2 { get; }
+        IFormLinkGetter<IActorValueInformationGetter> SecondActorValue { get; }
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
         IFormLinkGetter<IActorValueInformationGetter> ResistValue { get; }
-        IFormLinkGetter<IActorValueInformationGetter> ActorValue3 { get; }
-        Single UnknownFloat1 { get; }
-        Single UnknownFloat2 { get; }
+        IFormLinkGetter<IActorValueInformationGetter> ThirdActorValue { get; }
+        Single ScriptEffectAIDelayTime { get; }
+        Single ScriptEffectAIScore { get; }
         IAMagicEffectArchetypeGetter Archetype { get; }
-        Single UnknownFloat3 { get; }
-        UInt32 UnknownInt1 { get; }
-        Single UnknownFloat4 { get; }
-        UInt32 UnknownInt2 { get; }
+        Single SpellmakingArea { get; }
+        Single SpellmakingCastingTime { get; }
+        Single BaseCost { get; }
+        SoundLevel CastingSoundLevel { get; }
         CastType CastType { get; }
         TargetType TargetType { get; }
-        UInt32 UnknownInt3 { get; }
+        Single DualCastingScale { get; }
         MagicEffect.Flag Flags { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        UInt32 MinimumSkillLevel { get; }
+        UInt16 UnknownCounterEffectCount { get; }
+        Single SecondActorValueWeight { get; }
+        Single SkillUsageMultiplier { get; }
+        Single TaperCurve { get; }
+        Single TaperDuration { get; }
+        Single TaperWeight { get; }
         ReadOnlyMemorySlice<Byte> Unknown2 { get; }
+        IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter> Sounds { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         MagicEffect.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        MagicEffect.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -2538,41 +2908,49 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         Components = 8,
         Name = 9,
-        Keywords = 10,
-        ActorValue1 = 11,
-        CastingArt = 12,
-        MovementType = 13,
-        HitShader = 14,
-        EnchantShader = 15,
-        EnchantArt = 16,
-        EquipAbility = 17,
-        Explosion = 18,
-        HitEffectArt = 19,
-        ImageSpaceModifier = 20,
-        ImpactData = 21,
-        CastingLight = 22,
-        PerkToApply = 23,
-        ActorValue2 = 24,
-        Projectile = 25,
-        ResistValue = 26,
-        ActorValue3 = 27,
-        UnknownFloat1 = 28,
-        UnknownFloat2 = 29,
-        Archetype = 30,
-        UnknownFloat3 = 31,
-        UnknownInt1 = 32,
-        UnknownFloat4 = 33,
-        UnknownInt2 = 34,
-        CastType = 35,
-        TargetType = 36,
-        UnknownInt3 = 37,
-        Flags = 38,
-        Unknown = 39,
-        Unknown2 = 40,
-        Sounds = 41,
-        Description = 42,
-        Conditions = 43,
-        DATADataTypeState = 44,
+        MenuDisplayObject = 10,
+        Keywords = 11,
+        MagicSkill = 12,
+        CastingArt = 13,
+        MovementType = 14,
+        HitShader = 15,
+        EnchantShader = 16,
+        EnchantArt = 17,
+        EquipAbility = 18,
+        Explosion = 19,
+        HitEffectArt = 20,
+        ImageSpaceModifier = 21,
+        ImpactData = 22,
+        CastingLight = 23,
+        PerkToApply = 24,
+        SecondActorValue = 25,
+        Projectile = 26,
+        ResistValue = 27,
+        ThirdActorValue = 28,
+        ScriptEffectAIDelayTime = 29,
+        ScriptEffectAIScore = 30,
+        Archetype = 31,
+        SpellmakingArea = 32,
+        SpellmakingCastingTime = 33,
+        BaseCost = 34,
+        CastingSoundLevel = 35,
+        CastType = 36,
+        TargetType = 37,
+        DualCastingScale = 38,
+        Flags = 39,
+        MinimumSkillLevel = 40,
+        UnknownCounterEffectCount = 41,
+        SecondActorValueWeight = 42,
+        SkillUsageMultiplier = 43,
+        TaperCurve = 44,
+        TaperDuration = 45,
+        TaperWeight = 46,
+        Unknown2 = 47,
+        CounterEffects = 48,
+        Sounds = 49,
+        Description = 50,
+        Conditions = 51,
+        DATADataTypeState = 52,
     }
     #endregion
 
@@ -2583,9 +2961,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 38;
+        public const ushort AdditionalFieldCount = 46;
 
-        public const ushort FieldCount = 45;
+        public const ushort FieldCount = 53;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2623,9 +3001,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
+                RecordTypes.MDOB,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.DATA,
+                RecordTypes.ESCE,
                 RecordTypes.ESSH,
                 RecordTypes.DNAM,
                 RecordTypes.CTDA,
@@ -2679,8 +3059,9 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.Components.Clear();
             item.Name = default;
+            item.MenuDisplayObject.Clear();
             item.Keywords = null;
-            item.ActorValue1.Clear();
+            item.MagicSkill.Clear();
             item.CastingArt.Clear();
             item.MovementType.Clear();
             item.HitShader.Clear();
@@ -2693,23 +3074,30 @@ namespace Mutagen.Bethesda.Starfield
             item.ImpactData.Clear();
             item.CastingLight.Clear();
             item.PerkToApply.Clear();
-            item.ActorValue2.Clear();
+            item.SecondActorValue.Clear();
             item.Projectile.Clear();
             item.ResistValue.Clear();
-            item.ActorValue3.Clear();
-            item.UnknownFloat1 = default(Single);
-            item.UnknownFloat2 = default(Single);
+            item.ThirdActorValue.Clear();
+            item.ScriptEffectAIDelayTime = default(Single);
+            item.ScriptEffectAIScore = default(Single);
             item.Archetype.Clear();
-            item.UnknownFloat3 = default(Single);
-            item.UnknownInt1 = default(UInt32);
-            item.UnknownFloat4 = default(Single);
-            item.UnknownInt2 = default(UInt32);
+            item.SpellmakingArea = default(Single);
+            item.SpellmakingCastingTime = default(Single);
+            item.BaseCost = default(Single);
+            item.CastingSoundLevel = default(SoundLevel);
             item.CastType = default(CastType);
             item.TargetType = default(TargetType);
-            item.UnknownInt3 = default(UInt32);
+            item.DualCastingScale = default(Single);
             item.Flags = default(MagicEffect.Flag);
-            item.Unknown = new byte[22];
+            item.MinimumSkillLevel = default(UInt32);
+            item.UnknownCounterEffectCount = default(UInt16);
+            item.SecondActorValueWeight = default(Single);
+            item.SkillUsageMultiplier = default(Single);
+            item.TaperCurve = default(Single);
+            item.TaperDuration = default(Single);
+            item.TaperWeight = default(Single);
             item.Unknown2 = new byte[6];
+            item.CounterEffects.Clear();
             item.Sounds.Clear();
             item.Description = default;
             item.Conditions.Clear();
@@ -2733,8 +3121,9 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
+            obj.MenuDisplayObject.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.ActorValue1.Relink(mapping);
+            obj.MagicSkill.Relink(mapping);
             obj.CastingArt.Relink(mapping);
             obj.MovementType.Relink(mapping);
             obj.HitShader.Relink(mapping);
@@ -2747,11 +3136,12 @@ namespace Mutagen.Bethesda.Starfield
             obj.ImpactData.Relink(mapping);
             obj.CastingLight.Relink(mapping);
             obj.PerkToApply.Relink(mapping);
-            obj.ActorValue2.Relink(mapping);
+            obj.SecondActorValue.Relink(mapping);
             obj.Projectile.Relink(mapping);
             obj.ResistValue.Relink(mapping);
-            obj.ActorValue3.Relink(mapping);
+            obj.ThirdActorValue.Relink(mapping);
             obj.Archetype.RemapLinks(mapping);
+            obj.CounterEffects.RemapLinks(mapping);
             obj.Sounds.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
@@ -2855,11 +3245,12 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.MenuDisplayObject = item.MenuDisplayObject.Equals(rhs.MenuDisplayObject);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ActorValue1 = item.ActorValue1.Equals(rhs.ActorValue1);
+            ret.MagicSkill = item.MagicSkill.Equals(rhs.MagicSkill);
             ret.CastingArt = item.CastingArt.Equals(rhs.CastingArt);
             ret.MovementType = item.MovementType.Equals(rhs.MovementType);
             ret.HitShader = item.HitShader.Equals(rhs.HitShader);
@@ -2872,23 +3263,33 @@ namespace Mutagen.Bethesda.Starfield
             ret.ImpactData = item.ImpactData.Equals(rhs.ImpactData);
             ret.CastingLight = item.CastingLight.Equals(rhs.CastingLight);
             ret.PerkToApply = item.PerkToApply.Equals(rhs.PerkToApply);
-            ret.ActorValue2 = item.ActorValue2.Equals(rhs.ActorValue2);
+            ret.SecondActorValue = item.SecondActorValue.Equals(rhs.SecondActorValue);
             ret.Projectile = item.Projectile.Equals(rhs.Projectile);
             ret.ResistValue = item.ResistValue.Equals(rhs.ResistValue);
-            ret.ActorValue3 = item.ActorValue3.Equals(rhs.ActorValue3);
-            ret.UnknownFloat1 = item.UnknownFloat1.EqualsWithin(rhs.UnknownFloat1);
-            ret.UnknownFloat2 = item.UnknownFloat2.EqualsWithin(rhs.UnknownFloat2);
+            ret.ThirdActorValue = item.ThirdActorValue.Equals(rhs.ThirdActorValue);
+            ret.ScriptEffectAIDelayTime = item.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime);
+            ret.ScriptEffectAIScore = item.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore);
             ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
-            ret.UnknownFloat3 = item.UnknownFloat3.EqualsWithin(rhs.UnknownFloat3);
-            ret.UnknownInt1 = item.UnknownInt1 == rhs.UnknownInt1;
-            ret.UnknownFloat4 = item.UnknownFloat4.EqualsWithin(rhs.UnknownFloat4);
-            ret.UnknownInt2 = item.UnknownInt2 == rhs.UnknownInt2;
+            ret.SpellmakingArea = item.SpellmakingArea.EqualsWithin(rhs.SpellmakingArea);
+            ret.SpellmakingCastingTime = item.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime);
+            ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
+            ret.CastingSoundLevel = item.CastingSoundLevel == rhs.CastingSoundLevel;
             ret.CastType = item.CastType == rhs.CastType;
             ret.TargetType = item.TargetType == rhs.TargetType;
-            ret.UnknownInt3 = item.UnknownInt3 == rhs.UnknownInt3;
+            ret.DualCastingScale = item.DualCastingScale.EqualsWithin(rhs.DualCastingScale);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.MinimumSkillLevel = item.MinimumSkillLevel == rhs.MinimumSkillLevel;
+            ret.UnknownCounterEffectCount = item.UnknownCounterEffectCount == rhs.UnknownCounterEffectCount;
+            ret.SecondActorValueWeight = item.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight);
+            ret.SkillUsageMultiplier = item.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier);
+            ret.TaperCurve = item.TaperCurve.EqualsWithin(rhs.TaperCurve);
+            ret.TaperDuration = item.TaperDuration.EqualsWithin(rhs.TaperDuration);
+            ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
             ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
+            ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
+                rhs.CounterEffects,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2972,6 +3373,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(NameItem, "Name");
             }
+            if (printMask?.MenuDisplayObject ?? true)
+            {
+                sb.AppendItem(item.MenuDisplayObject.FormKeyNullable, "MenuDisplayObject");
+            }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
@@ -2987,9 +3392,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.ActorValue1 ?? true)
+            if (printMask?.MagicSkill ?? true)
             {
-                sb.AppendItem(item.ActorValue1.FormKey, "ActorValue1");
+                sb.AppendItem(item.MagicSkill.FormKey, "MagicSkill");
             }
             if (printMask?.CastingArt ?? true)
             {
@@ -3039,9 +3444,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.PerkToApply.FormKey, "PerkToApply");
             }
-            if (printMask?.ActorValue2 ?? true)
+            if (printMask?.SecondActorValue ?? true)
             {
-                sb.AppendItem(item.ActorValue2.FormKey, "ActorValue2");
+                sb.AppendItem(item.SecondActorValue.FormKey, "SecondActorValue");
             }
             if (printMask?.Projectile ?? true)
             {
@@ -3051,37 +3456,37 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ResistValue.FormKey, "ResistValue");
             }
-            if (printMask?.ActorValue3 ?? true)
+            if (printMask?.ThirdActorValue ?? true)
             {
-                sb.AppendItem(item.ActorValue3.FormKey, "ActorValue3");
+                sb.AppendItem(item.ThirdActorValue.FormKey, "ThirdActorValue");
             }
-            if (printMask?.UnknownFloat1 ?? true)
+            if (printMask?.ScriptEffectAIDelayTime ?? true)
             {
-                sb.AppendItem(item.UnknownFloat1, "UnknownFloat1");
+                sb.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
             }
-            if (printMask?.UnknownFloat2 ?? true)
+            if (printMask?.ScriptEffectAIScore ?? true)
             {
-                sb.AppendItem(item.UnknownFloat2, "UnknownFloat2");
+                sb.AppendItem(item.ScriptEffectAIScore, "ScriptEffectAIScore");
             }
             if (printMask?.Archetype?.Overall ?? true)
             {
                 item.Archetype?.Print(sb, "Archetype");
             }
-            if (printMask?.UnknownFloat3 ?? true)
+            if (printMask?.SpellmakingArea ?? true)
             {
-                sb.AppendItem(item.UnknownFloat3, "UnknownFloat3");
+                sb.AppendItem(item.SpellmakingArea, "SpellmakingArea");
             }
-            if (printMask?.UnknownInt1 ?? true)
+            if (printMask?.SpellmakingCastingTime ?? true)
             {
-                sb.AppendItem(item.UnknownInt1, "UnknownInt1");
+                sb.AppendItem(item.SpellmakingCastingTime, "SpellmakingCastingTime");
             }
-            if (printMask?.UnknownFloat4 ?? true)
+            if (printMask?.BaseCost ?? true)
             {
-                sb.AppendItem(item.UnknownFloat4, "UnknownFloat4");
+                sb.AppendItem(item.BaseCost, "BaseCost");
             }
-            if (printMask?.UnknownInt2 ?? true)
+            if (printMask?.CastingSoundLevel ?? true)
             {
-                sb.AppendItem(item.UnknownInt2, "UnknownInt2");
+                sb.AppendItem(item.CastingSoundLevel, "CastingSoundLevel");
             }
             if (printMask?.CastType ?? true)
             {
@@ -3091,21 +3496,59 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.TargetType, "TargetType");
             }
-            if (printMask?.UnknownInt3 ?? true)
+            if (printMask?.DualCastingScale ?? true)
             {
-                sb.AppendItem(item.UnknownInt3, "UnknownInt3");
+                sb.AppendItem(item.DualCastingScale, "DualCastingScale");
             }
             if (printMask?.Flags ?? true)
             {
                 sb.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.MinimumSkillLevel ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.MinimumSkillLevel, "MinimumSkillLevel");
+            }
+            if (printMask?.UnknownCounterEffectCount ?? true)
+            {
+                sb.AppendItem(item.UnknownCounterEffectCount, "UnknownCounterEffectCount");
+            }
+            if (printMask?.SecondActorValueWeight ?? true)
+            {
+                sb.AppendItem(item.SecondActorValueWeight, "SecondActorValueWeight");
+            }
+            if (printMask?.SkillUsageMultiplier ?? true)
+            {
+                sb.AppendItem(item.SkillUsageMultiplier, "SkillUsageMultiplier");
+            }
+            if (printMask?.TaperCurve ?? true)
+            {
+                sb.AppendItem(item.TaperCurve, "TaperCurve");
+            }
+            if (printMask?.TaperDuration ?? true)
+            {
+                sb.AppendItem(item.TaperDuration, "TaperDuration");
+            }
+            if (printMask?.TaperWeight ?? true)
+            {
+                sb.AppendItem(item.TaperWeight, "TaperWeight");
             }
             if (printMask?.Unknown2 ?? true)
             {
                 sb.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
+            }
+            if (printMask?.CounterEffects?.Overall ?? true)
+            {
+                sb.AppendLine("CounterEffects =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.CounterEffects)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
@@ -3210,13 +3653,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
             {
-                if (!lhs.ActorValue1.Equals(rhs.ActorValue1)) return false;
+                if (!lhs.MagicSkill.Equals(rhs.MagicSkill)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
@@ -3266,9 +3713,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.PerkToApply.Equals(rhs.PerkToApply)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
             {
-                if (!lhs.ActorValue2.Equals(rhs.ActorValue2)) return false;
+                if (!lhs.SecondActorValue.Equals(rhs.SecondActorValue)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
@@ -3278,17 +3725,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ResistValue.Equals(rhs.ResistValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ThirdActorValue) ?? true))
             {
-                if (!lhs.ActorValue3.Equals(rhs.ActorValue3)) return false;
+                if (!lhs.ThirdActorValue.Equals(rhs.ThirdActorValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
             {
-                if (!lhs.UnknownFloat1.EqualsWithin(rhs.UnknownFloat1)) return false;
+                if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
             {
-                if (!lhs.UnknownFloat2.EqualsWithin(rhs.UnknownFloat2)) return false;
+                if (!lhs.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
@@ -3298,21 +3745,21 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isArchetypeEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
             {
-                if (!lhs.UnknownFloat3.EqualsWithin(rhs.UnknownFloat3)) return false;
+                if (!lhs.SpellmakingArea.EqualsWithin(rhs.SpellmakingArea)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
             {
-                if (lhs.UnknownInt1 != rhs.UnknownInt1) return false;
+                if (!lhs.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
             {
-                if (!lhs.UnknownFloat4.EqualsWithin(rhs.UnknownFloat4)) return false;
+                if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {
-                if (lhs.UnknownInt2 != rhs.UnknownInt2) return false;
+                if (lhs.CastingSoundLevel != rhs.CastingSoundLevel) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -3322,21 +3769,49 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.TargetType != rhs.TargetType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastingScale) ?? true))
             {
-                if (lhs.UnknownInt3 != rhs.UnknownInt3) return false;
+                if (!lhs.DualCastingScale.EqualsWithin(rhs.DualCastingScale)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.MinimumSkillLevel != rhs.MinimumSkillLevel) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownCounterEffectCount) ?? true))
+            {
+                if (lhs.UnknownCounterEffectCount != rhs.UnknownCounterEffectCount) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
+            {
+                if (!lhs.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
+            {
+                if (!lhs.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
+            {
+                if (!lhs.TaperCurve.EqualsWithin(rhs.TaperCurve)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
+            {
+                if (!lhs.TaperDuration.EqualsWithin(rhs.TaperDuration)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
+            {
+                if (!lhs.TaperWeight.EqualsWithin(rhs.TaperWeight)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
+            {
+                if (!lhs.CounterEffects.SequenceEqualNullable(rhs.CounterEffects)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
@@ -3391,8 +3866,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Nameitem);
             }
+            hash.Add(item.MenuDisplayObject);
             hash.Add(item.Keywords);
-            hash.Add(item.ActorValue1);
+            hash.Add(item.MagicSkill);
             hash.Add(item.CastingArt);
             hash.Add(item.MovementType);
             hash.Add(item.HitShader);
@@ -3405,23 +3881,30 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ImpactData);
             hash.Add(item.CastingLight);
             hash.Add(item.PerkToApply);
-            hash.Add(item.ActorValue2);
+            hash.Add(item.SecondActorValue);
             hash.Add(item.Projectile);
             hash.Add(item.ResistValue);
-            hash.Add(item.ActorValue3);
-            hash.Add(item.UnknownFloat1);
-            hash.Add(item.UnknownFloat2);
+            hash.Add(item.ThirdActorValue);
+            hash.Add(item.ScriptEffectAIDelayTime);
+            hash.Add(item.ScriptEffectAIScore);
             hash.Add(item.Archetype);
-            hash.Add(item.UnknownFloat3);
-            hash.Add(item.UnknownInt1);
-            hash.Add(item.UnknownFloat4);
-            hash.Add(item.UnknownInt2);
+            hash.Add(item.SpellmakingArea);
+            hash.Add(item.SpellmakingCastingTime);
+            hash.Add(item.BaseCost);
+            hash.Add(item.CastingSoundLevel);
             hash.Add(item.CastType);
             hash.Add(item.TargetType);
-            hash.Add(item.UnknownInt3);
+            hash.Add(item.DualCastingScale);
             hash.Add(item.Flags);
-            hash.Add(item.Unknown);
+            hash.Add(item.MinimumSkillLevel);
+            hash.Add(item.UnknownCounterEffectCount);
+            hash.Add(item.SecondActorValueWeight);
+            hash.Add(item.SkillUsageMultiplier);
+            hash.Add(item.TaperCurve);
+            hash.Add(item.TaperDuration);
+            hash.Add(item.TaperWeight);
             hash.Add(item.Unknown2);
+            hash.Add(item.CounterEffects);
             hash.Add(item.Sounds);
             if (item.Description is {} Descriptionitem)
             {
@@ -3470,6 +3953,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
+            if (FormLinkInformation.TryFactory(obj.MenuDisplayObject, out var MenuDisplayObjectInfo))
+            {
+                yield return MenuDisplayObjectInfo;
+            }
             if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
@@ -3477,7 +3964,7 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            yield return FormLinkInformation.Factory(obj.ActorValue1);
+            yield return FormLinkInformation.Factory(obj.MagicSkill);
             yield return FormLinkInformation.Factory(obj.CastingArt);
             yield return FormLinkInformation.Factory(obj.MovementType);
             yield return FormLinkInformation.Factory(obj.HitShader);
@@ -3490,16 +3977,20 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.ImpactData);
             yield return FormLinkInformation.Factory(obj.CastingLight);
             yield return FormLinkInformation.Factory(obj.PerkToApply);
-            yield return FormLinkInformation.Factory(obj.ActorValue2);
+            yield return FormLinkInformation.Factory(obj.SecondActorValue);
             yield return FormLinkInformation.Factory(obj.Projectile);
             yield return FormLinkInformation.Factory(obj.ResistValue);
-            yield return FormLinkInformation.Factory(obj.ActorValue3);
+            yield return FormLinkInformation.Factory(obj.ThirdActorValue);
             if (obj.Archetype is IFormLinkContainerGetter ArchetypelinkCont)
             {
                 foreach (var item in ArchetypelinkCont.EnumerateFormLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.CounterEffects)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.Sounds.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
@@ -3673,6 +4164,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                item.MenuDisplayObject.SetTo(rhs.MenuDisplayObject.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Keywords);
@@ -3700,9 +4195,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
             {
-                item.ActorValue1.SetTo(rhs.ActorValue1.FormKey);
+                item.MagicSkill.SetTo(rhs.MagicSkill.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
             {
@@ -3752,9 +4247,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PerkToApply.SetTo(rhs.PerkToApply.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
             {
-                item.ActorValue2.SetTo(rhs.ActorValue2.FormKey);
+                item.SecondActorValue.SetTo(rhs.SecondActorValue.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {
@@ -3764,17 +4259,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ResistValue.SetTo(rhs.ResistValue.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ActorValue3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ThirdActorValue) ?? true))
             {
-                item.ActorValue3.SetTo(rhs.ActorValue3.FormKey);
+                item.ThirdActorValue.SetTo(rhs.ThirdActorValue.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
             {
-                item.UnknownFloat1 = rhs.UnknownFloat1;
+                item.ScriptEffectAIDelayTime = rhs.ScriptEffectAIDelayTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
             {
-                item.UnknownFloat2 = rhs.UnknownFloat2;
+                item.ScriptEffectAIScore = rhs.ScriptEffectAIScore;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
@@ -3798,21 +4293,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
             {
-                item.UnknownFloat3 = rhs.UnknownFloat3;
+                item.SpellmakingArea = rhs.SpellmakingArea;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
             {
-                item.UnknownInt1 = rhs.UnknownInt1;
+                item.SpellmakingCastingTime = rhs.SpellmakingCastingTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownFloat4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
             {
-                item.UnknownFloat4 = rhs.UnknownFloat4;
+                item.BaseCost = rhs.BaseCost;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
             {
-                item.UnknownInt2 = rhs.UnknownInt2;
+                item.CastingSoundLevel = rhs.CastingSoundLevel;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
             {
@@ -3822,21 +4317,64 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.TargetType = rhs.TargetType;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownInt3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastingScale) ?? true))
             {
-                item.UnknownInt3 = rhs.UnknownInt3;
+                item.DualCastingScale = rhs.DualCastingScale;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.MinimumSkillLevel = rhs.MinimumSkillLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.UnknownCounterEffectCount) ?? true))
+            {
+                item.UnknownCounterEffectCount = rhs.UnknownCounterEffectCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
+            {
+                item.SecondActorValueWeight = rhs.SecondActorValueWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
+            {
+                item.SkillUsageMultiplier = rhs.SkillUsageMultiplier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
+            {
+                item.TaperCurve = rhs.TaperCurve;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
+            {
+                item.TaperDuration = rhs.TaperDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
+            {
+                item.TaperWeight = rhs.TaperWeight;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
+            {
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffects);
+                try
+                {
+                    item.CounterEffects.SetTo(
+                        rhs.CounterEffects
+                            .Select(b => (IFormLinkGetter<IMagicEffectGetter>)new FormLink<IMagicEffectGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Sounds) ?? true))
             {
@@ -4096,6 +4634,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MenuDisplayObject,
+                header: translationParams.ConvertToCustom(RecordTypes.MDOB));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -4115,7 +4657,7 @@ namespace Mutagen.Bethesda.Starfield
                     item: item);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ActorValue1);
+                    item: item.MagicSkill);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CastingArt);
@@ -4154,7 +4696,7 @@ namespace Mutagen.Bethesda.Starfield
                     item: item.PerkToApply);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ActorValue2);
+                    item: item.SecondActorValue);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Projectile);
@@ -4163,24 +4705,29 @@ namespace Mutagen.Bethesda.Starfield
                     item: item.ResistValue);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ActorValue3);
+                    item: item.ThirdActorValue);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnknownFloat1);
+                    item: item.ScriptEffectAIDelayTime);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnknownFloat2);
+                    item: item.ScriptEffectAIScore);
                 MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
                     writer: writer,
                     item: item);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnknownFloat3);
-                writer.Write(item.UnknownInt1);
+                    item: item.SpellmakingArea);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.UnknownFloat4);
-                writer.Write(item.UnknownInt2);
+                    item: item.SpellmakingCastingTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.BaseCost);
+                EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.CastingSoundLevel,
+                    length: 4);
                 EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.CastType,
@@ -4189,14 +4736,30 @@ namespace Mutagen.Bethesda.Starfield
                     writer,
                     item.TargetType,
                     length: 1);
-                writer.Write(item.UnknownInt3);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.DualCastingScale);
                 EnumBinaryTranslation<MagicEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
-                    length: 8);
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    length: 4);
+                writer.Write(item.MinimumSkillLevel);
+                writer.Write(item.UnknownCounterEffectCount);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown);
+                    item: item.SecondActorValueWeight);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SkillUsageMultiplier);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TaperCurve);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TaperDuration);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TaperWeight);
                 if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
                 {
                     ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -4204,6 +4767,16 @@ namespace Mutagen.Bethesda.Starfield
                         item: item.Unknown2);
                 }
             }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
+                writer: writer,
+                items: item.CounterEffects,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IMagicEffectGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.ESCE));
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMagicEffectSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
@@ -4363,6 +4936,12 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)MagicEffect_FieldIndex.Name;
                 }
+                case RecordTypeInts.MDOB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MenuDisplayObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)MagicEffect_FieldIndex.MenuDisplayObject;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -4385,7 +4964,7 @@ namespace Mutagen.Bethesda.Starfield
                         frame: dataFrame,
                         item: item);
                     if (dataFrame.Remaining < 4) return null;
-                    item.ActorValue1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.MagicSkill.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.CastingArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
@@ -4411,28 +4990,30 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 4) return null;
                     item.PerkToApply.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.ActorValue2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SecondActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.Projectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
                     item.ResistValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.ActorValue3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ThirdActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ScriptEffectAIDelayTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ScriptEffectAIScore = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SpellmakingArea = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownInt1 = dataFrame.ReadUInt32();
+                    item.SpellmakingCastingTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BaseCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownInt2 = dataFrame.ReadUInt32();
+                    item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     if (dataFrame.Remaining < 1) return null;
                     item.CastType = EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
@@ -4442,19 +5023,41 @@ namespace Mutagen.Bethesda.Starfield
                         reader: dataFrame,
                         length: 1);
                     if (dataFrame.Remaining < 4) return null;
-                    item.UnknownInt3 = dataFrame.ReadUInt32();
-                    if (dataFrame.Remaining < 8) return null;
+                    item.DualCastingScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
                     item.Flags = EnumBinaryTranslation<MagicEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
-                        length: 8);
-                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(22));
+                        length: 4);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.MinimumSkillLevel = dataFrame.ReadUInt32();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.UnknownCounterEffectCount = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SecondActorValueWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SkillUsageMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TaperCurve = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TaperDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TaperWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MagicEffect.DATADataType.Break0;
-                        return (int)MagicEffect_FieldIndex.Unknown;
+                        return (int)MagicEffect_FieldIndex.TaperWeight;
                     }
                     item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(6));
                     return (int)MagicEffect_FieldIndex.Unknown2;
+                }
+                case RecordTypeInts.ESCE:
+                {
+                    item.CounterEffects.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ESCE),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.ESSH:
                 {
@@ -4559,6 +5162,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IMagicEffectGetter);
 
+        public MagicEffect.MajorFlag MajorFlags => (MagicEffect.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
         private int? _VirtualMachineAdapterLengthOverride;
@@ -4579,6 +5183,10 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
+        #region MenuDisplayObject
+        private int? _MenuDisplayObjectLocation;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _MenuDisplayObjectLocation);
+        #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
@@ -4592,10 +5200,10 @@ namespace Mutagen.Bethesda.Starfield
             OverlayStream stream,
             int offset);
         #endregion
-        #region ActorValue1
-        private int _ActorValue1Location => _DATALocation!.Value.Min + 0x4;
-        private bool _ActorValue1_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue1 => _ActorValue1_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue1Location, 0x4), isSet: _ActorValue1_IsSet) : FormLink<IActorValueInformationGetter>.Null;
+        #region MagicSkill
+        private int _MagicSkillLocation => _DATALocation!.Value.Min + 0x4;
+        private bool _MagicSkill_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IActorValueInformationGetter> MagicSkill => _MagicSkill_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_MagicSkillLocation, 0x4), isSet: _MagicSkill_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value.Min + 0x8;
@@ -4657,10 +5265,10 @@ namespace Mutagen.Bethesda.Starfield
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_PerkToApplyLocation, 0x4), isSet: _PerkToApply_IsSet) : FormLink<IPerkGetter>.Null;
         #endregion
-        #region ActorValue2
-        private int _ActorValue2Location => _DATALocation!.Value.Min + 0x38;
-        private bool _ActorValue2_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue2 => _ActorValue2_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue2Location, 0x4), isSet: _ActorValue2_IsSet) : FormLink<IActorValueInformationGetter>.Null;
+        #region SecondActorValue
+        private int _SecondActorValueLocation => _DATALocation!.Value.Min + 0x38;
+        private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IActorValueInformationGetter> SecondActorValue => _SecondActorValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_SecondActorValueLocation, 0x4), isSet: _SecondActorValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value.Min + 0x3C;
@@ -4672,45 +5280,45 @@ namespace Mutagen.Bethesda.Starfield
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
         public IFormLinkGetter<IActorValueInformationGetter> ResistValue => _ResistValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistValueLocation, 0x4), isSet: _ResistValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
-        #region ActorValue3
-        private int _ActorValue3Location => _DATALocation!.Value.Min + 0x44;
-        private bool _ActorValue3_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue3 => _ActorValue3_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValue3Location, 0x4), isSet: _ActorValue3_IsSet) : FormLink<IActorValueInformationGetter>.Null;
+        #region ThirdActorValue
+        private int _ThirdActorValueLocation => _DATALocation!.Value.Min + 0x44;
+        private bool _ThirdActorValue_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IActorValueInformationGetter> ThirdActorValue => _ThirdActorValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ThirdActorValueLocation, 0x4), isSet: _ThirdActorValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
-        #region UnknownFloat1
-        private int _UnknownFloat1Location => _DATALocation!.Value.Min + 0x48;
-        private bool _UnknownFloat1_IsSet => _DATALocation.HasValue;
-        public Single UnknownFloat1 => _UnknownFloat1_IsSet ? _recordData.Slice(_UnknownFloat1Location, 4).Float() : default(Single);
+        #region ScriptEffectAIDelayTime
+        private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value.Min + 0x48;
+        private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
+        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _recordData.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region UnknownFloat2
-        private int _UnknownFloat2Location => _DATALocation!.Value.Min + 0x4C;
-        private bool _UnknownFloat2_IsSet => _DATALocation.HasValue;
-        public Single UnknownFloat2 => _UnknownFloat2_IsSet ? _recordData.Slice(_UnknownFloat2Location, 4).Float() : default(Single);
+        #region ScriptEffectAIScore
+        private int _ScriptEffectAIScoreLocation => _DATALocation!.Value.Min + 0x4C;
+        private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
+        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _recordData.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default(Single);
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value.Min + 0x50;
         public partial IAMagicEffectArchetypeGetter GetArchetypeCustom();
         public IAMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
         #endregion
-        #region UnknownFloat3
-        private int _UnknownFloat3Location => _DATALocation!.Value.Min + 0x54;
-        private bool _UnknownFloat3_IsSet => _DATALocation.HasValue;
-        public Single UnknownFloat3 => _UnknownFloat3_IsSet ? _recordData.Slice(_UnknownFloat3Location, 4).Float() : default(Single);
+        #region SpellmakingArea
+        private int _SpellmakingAreaLocation => _DATALocation!.Value.Min + 0x54;
+        private bool _SpellmakingArea_IsSet => _DATALocation.HasValue;
+        public Single SpellmakingArea => _SpellmakingArea_IsSet ? _recordData.Slice(_SpellmakingAreaLocation, 4).Float() : default(Single);
         #endregion
-        #region UnknownInt1
-        private int _UnknownInt1Location => _DATALocation!.Value.Min + 0x58;
-        private bool _UnknownInt1_IsSet => _DATALocation.HasValue;
-        public UInt32 UnknownInt1 => _UnknownInt1_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownInt1Location, 4)) : default(UInt32);
+        #region SpellmakingCastingTime
+        private int _SpellmakingCastingTimeLocation => _DATALocation!.Value.Min + 0x58;
+        private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
+        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _recordData.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region UnknownFloat4
-        private int _UnknownFloat4Location => _DATALocation!.Value.Min + 0x5C;
-        private bool _UnknownFloat4_IsSet => _DATALocation.HasValue;
-        public Single UnknownFloat4 => _UnknownFloat4_IsSet ? _recordData.Slice(_UnknownFloat4Location, 4).Float() : default(Single);
+        #region BaseCost
+        private int _BaseCostLocation => _DATALocation!.Value.Min + 0x5C;
+        private bool _BaseCost_IsSet => _DATALocation.HasValue;
+        public Single BaseCost => _BaseCost_IsSet ? _recordData.Slice(_BaseCostLocation, 4).Float() : default(Single);
         #endregion
-        #region UnknownInt2
-        private int _UnknownInt2Location => _DATALocation!.Value.Min + 0x60;
-        private bool _UnknownInt2_IsSet => _DATALocation.HasValue;
-        public UInt32 UnknownInt2 => _UnknownInt2_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownInt2Location, 4)) : default(UInt32);
+        #region CastingSoundLevel
+        private int _CastingSoundLevelLocation => _DATALocation!.Value.Min + 0x60;
+        private bool _CastingSoundLevel_IsSet => _DATALocation.HasValue;
+        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
         #endregion
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value.Min + 0x64;
@@ -4722,26 +5330,57 @@ namespace Mutagen.Bethesda.Starfield
         private bool _TargetType_IsSet => _DATALocation.HasValue;
         public TargetType TargetType => _TargetType_IsSet ? (TargetType)_recordData.Span.Slice(_TargetTypeLocation, 0x1)[0] : default;
         #endregion
-        #region UnknownInt3
-        private int _UnknownInt3Location => _DATALocation!.Value.Min + 0x66;
-        private bool _UnknownInt3_IsSet => _DATALocation.HasValue;
-        public UInt32 UnknownInt3 => _UnknownInt3_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownInt3Location, 4)) : default(UInt32);
+        #region DualCastingScale
+        private int _DualCastingScaleLocation => _DATALocation!.Value.Min + 0x66;
+        private bool _DualCastingScale_IsSet => _DATALocation.HasValue;
+        public Single DualCastingScale => _DualCastingScale_IsSet ? _recordData.Slice(_DualCastingScaleLocation, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x6A;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt64LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x8)) : default;
+        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
-        #region Unknown
-        private int _UnknownLocation => _DATALocation!.Value.Min + 0x72;
-        private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 22).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region MinimumSkillLevel
+        private int _MinimumSkillLevelLocation => _DATALocation!.Value.Min + 0x6E;
+        private bool _MinimumSkillLevel_IsSet => _DATALocation.HasValue;
+        public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_MinimumSkillLevelLocation, 4)) : default(UInt32);
+        #endregion
+        #region UnknownCounterEffectCount
+        private int _UnknownCounterEffectCountLocation => _DATALocation!.Value.Min + 0x72;
+        private bool _UnknownCounterEffectCount_IsSet => _DATALocation.HasValue;
+        public UInt16 UnknownCounterEffectCount => _UnknownCounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownCounterEffectCountLocation, 2)) : default(UInt16);
+        #endregion
+        #region SecondActorValueWeight
+        private int _SecondActorValueWeightLocation => _DATALocation!.Value.Min + 0x74;
+        private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
+        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _recordData.Slice(_SecondActorValueWeightLocation, 4).Float() : default(Single);
+        #endregion
+        #region SkillUsageMultiplier
+        private int _SkillUsageMultiplierLocation => _DATALocation!.Value.Min + 0x78;
+        private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
+        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _recordData.Slice(_SkillUsageMultiplierLocation, 4).Float() : default(Single);
+        #endregion
+        #region TaperCurve
+        private int _TaperCurveLocation => _DATALocation!.Value.Min + 0x7C;
+        private bool _TaperCurve_IsSet => _DATALocation.HasValue;
+        public Single TaperCurve => _TaperCurve_IsSet ? _recordData.Slice(_TaperCurveLocation, 4).Float() : default(Single);
+        #endregion
+        #region TaperDuration
+        private int _TaperDurationLocation => _DATALocation!.Value.Min + 0x80;
+        private bool _TaperDuration_IsSet => _DATALocation.HasValue;
+        public Single TaperDuration => _TaperDuration_IsSet ? _recordData.Slice(_TaperDurationLocation, 4).Float() : default(Single);
+        #endregion
+        #region TaperWeight
+        private int _TaperWeightLocation => _DATALocation!.Value.Min + 0x84;
+        private bool _TaperWeight_IsSet => _DATALocation.HasValue;
+        public Single TaperWeight => _TaperWeight_IsSet ? _recordData.Slice(_TaperWeightLocation, 4).Float() : default(Single);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + 0x88;
         private bool _Unknown2_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0);
         public ReadOnlyMemorySlice<Byte> Unknown2 => _Unknown2_IsSet ? _recordData.Span.Slice(_Unknown2Location, 6).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
+        public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>> CounterEffects { get; private set; } = [];
         public IReadOnlyList<IMagicEffectSoundGetter> Sounds { get; private set; } = [];
         #region Description
         private int? _DescriptionLocation;
@@ -4841,6 +5480,11 @@ namespace Mutagen.Bethesda.Starfield
                     _NameLocation = (stream.Position - offset);
                     return (int)MagicEffect_FieldIndex.Name;
                 }
+                case RecordTypeInts.MDOB:
+                {
+                    _MenuDisplayObjectLocation = (stream.Position - offset);
+                    return (int)MagicEffect_FieldIndex.MenuDisplayObject;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -4863,6 +5507,20 @@ namespace Mutagen.Bethesda.Starfield
                         this.DATADataTypeState |= MagicEffect.DATADataType.Break0;
                     }
                     return (int)MagicEffect_FieldIndex.Unknown2;
+                }
+                case RecordTypeInts.ESCE:
+                {
+                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMagicEffectGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMagicEffectGetter>(p, s),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.ESCE,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.ESSH:
                 {
