@@ -1005,11 +1005,11 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.WKMF);
             var all = RecordCollection.Factory(
                 RecordTypes.WKMF,
+                RecordTypes.WMTI,
                 RecordTypes.WMKA,
-                RecordTypes.WMSD,
-                RecordTypes.WMSI,
                 RecordTypes.WMSS,
-                RecordTypes.WMTI);
+                RecordTypes.WMSI,
+                RecordTypes.WMSD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

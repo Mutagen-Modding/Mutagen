@@ -900,17 +900,17 @@ namespace Mutagen.Bethesda.Starfield
             var endTriggers = RecordCollection.Factory(RecordTypes.PRKF);
             var triggers = RecordCollection.Factory(RecordTypes.PRKE);
             var all = RecordCollection.Factory(
+                RecordTypes.PRKE,
+                RecordTypes.PRKF,
+                RecordTypes.PRKC,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
-                RecordTypes.CITC,
-                RecordTypes.CTDA,
-                RecordTypes.EPF2,
-                RecordTypes.EPF3,
-                RecordTypes.EPFB,
                 RecordTypes.EPFT,
-                RecordTypes.PRKC,
-                RecordTypes.PRKE,
-                RecordTypes.PRKF);
+                RecordTypes.EPFB,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,

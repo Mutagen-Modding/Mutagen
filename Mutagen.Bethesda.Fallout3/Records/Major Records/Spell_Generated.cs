@@ -1001,12 +1001,12 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var triggers = RecordCollection.Factory(RecordTypes.SPEL);
             var all = RecordCollection.Factory(
-                RecordTypes.CTDA,
+                RecordTypes.SPEL,
+                RecordTypes.FULL,
+                RecordTypes.SPIT,
                 RecordTypes.EFID,
                 RecordTypes.EFIT,
-                RecordTypes.FULL,
-                RecordTypes.SPEL,
-                RecordTypes.SPIT);
+                RecordTypes.CTDA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

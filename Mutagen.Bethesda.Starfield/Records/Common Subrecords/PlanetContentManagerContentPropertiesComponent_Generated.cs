@@ -1268,10 +1268,12 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BFCB);
             var all = RecordCollection.Factory(
                 RecordTypes.BFCB,
-                RecordTypes.CIS1,
-                RecordTypes.CIS2,
-                RecordTypes.CITC,
-                RecordTypes.CTDA,
+                RecordTypes.ZNAM,
+                RecordTypes.YNAM,
+                RecordTypes.XNAM,
+                RecordTypes.WNAM,
+                RecordTypes.VNAM,
+                RecordTypes.UNAM,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2,
                 RecordTypes.NAM3,
@@ -1281,12 +1283,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NAM7,
                 RecordTypes.NAM8,
                 RecordTypes.NAM9,
-                RecordTypes.UNAM,
-                RecordTypes.VNAM,
-                RecordTypes.WNAM,
-                RecordTypes.XNAM,
-                RecordTypes.YNAM,
-                RecordTypes.ZNAM);
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

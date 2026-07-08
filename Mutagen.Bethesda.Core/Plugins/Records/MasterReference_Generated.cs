@@ -681,8 +681,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         {
             var triggers = RecordCollection.Factory(RecordTypes.MAST);
             var all = RecordCollection.Factory(
-                RecordTypes.DATA,
-                RecordTypes.MAST);
+                RecordTypes.MAST,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

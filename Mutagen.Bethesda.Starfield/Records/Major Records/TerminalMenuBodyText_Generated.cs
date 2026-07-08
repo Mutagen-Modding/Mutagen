@@ -806,10 +806,10 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.BTXT);
             var all = RecordCollection.Factory(
                 RecordTypes.BTXT,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
-                RecordTypes.CITC,
-                RecordTypes.CTDA,
                 RecordTypes.TPLT);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,

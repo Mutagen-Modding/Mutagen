@@ -682,8 +682,8 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.ALCA,
-                RecordTypes.ALCM);
+                RecordTypes.ALCM,
+                RecordTypes.ALCA);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CreateObjectTemplateBinaryWriteTranslation);

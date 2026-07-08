@@ -728,13 +728,13 @@ namespace Mutagen.Bethesda.Fallout3
             var endTriggers = RecordCollection.Factory(RecordTypes.DSTF);
             var triggers = RecordCollection.Factory(RecordTypes.DSTD);
             var all = RecordCollection.Factory(
-                RecordTypes.DMDL,
-                RecordTypes.DMDT,
                 RecordTypes.DSTD,
                 RecordTypes.DSTF,
+                RecordTypes.DMDL,
+                RecordTypes.DMDT,
                 RecordTypes.MODB,
-                RecordTypes.MODD,
-                RecordTypes.MODS);
+                RecordTypes.MODS,
+                RecordTypes.MODD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,

@@ -935,9 +935,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.FLOR,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
+                RecordTypes.SCRI,
                 RecordTypes.PFIG,
-                RecordTypes.PFPC,
-                RecordTypes.SCRI);
+                RecordTypes.PFPC);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

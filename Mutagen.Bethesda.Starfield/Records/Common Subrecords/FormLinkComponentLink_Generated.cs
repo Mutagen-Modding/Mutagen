@@ -700,8 +700,8 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.FLFM,
-                RecordTypes.FLKW);
+                RecordTypes.FLKW,
+                RecordTypes.FLFM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FormLinkComponentLinkBinaryWriteTranslation);

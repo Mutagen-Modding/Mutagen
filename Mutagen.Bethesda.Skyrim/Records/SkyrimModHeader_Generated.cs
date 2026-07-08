@@ -1307,18 +1307,18 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.TES4);
             var all = RecordCollection.Factory(
-                RecordTypes.CNAM,
-                RecordTypes.DATA,
-                RecordTypes.DELE,
-                RecordTypes.HEDR,
-                RecordTypes.INCC,
-                RecordTypes.INTV,
-                RecordTypes.MAST,
-                RecordTypes.OFST,
-                RecordTypes.ONAM,
-                RecordTypes.SNAM,
                 RecordTypes.TES4,
-                RecordTypes.XXXX);
+                RecordTypes.HEDR,
+                RecordTypes.OFST,
+                RecordTypes.DELE,
+                RecordTypes.CNAM,
+                RecordTypes.SNAM,
+                RecordTypes.MAST,
+                RecordTypes.DATA,
+                RecordTypes.ONAM,
+                RecordTypes.XXXX,
+                RecordTypes.INTV,
+                RecordTypes.INCC);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

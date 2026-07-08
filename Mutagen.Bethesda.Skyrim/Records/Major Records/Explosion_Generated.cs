@@ -1657,15 +1657,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var triggers = RecordCollection.Factory(RecordTypes.EXPL);
             var all = RecordCollection.Factory(
-                RecordTypes.DATA,
-                RecordTypes.EITM,
                 RecordTypes.EXPL,
-                RecordTypes.FULL,
-                RecordTypes.MNAM,
-                RecordTypes.MODL,
-                RecordTypes.OBND,
                 RecordTypes.VMAD,
-                RecordTypes.XXXX);
+                RecordTypes.XXXX,
+                RecordTypes.OBND,
+                RecordTypes.FULL,
+                RecordTypes.MODL,
+                RecordTypes.EITM,
+                RecordTypes.MNAM,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

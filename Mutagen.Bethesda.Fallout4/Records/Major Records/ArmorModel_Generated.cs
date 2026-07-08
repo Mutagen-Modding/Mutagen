@@ -748,12 +748,12 @@ namespace Mutagen.Bethesda.Fallout4
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.ICON,
-                RecordTypes.MICO,
-                RecordTypes.MODC,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
                 RecordTypes.MODS,
-                RecordTypes.MODT);
+                RecordTypes.ICON,
+                RecordTypes.MICO);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(ArmorModelBinaryWriteTranslation);

@@ -796,9 +796,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.OVIS);
             var all = RecordCollection.Factory(
-                RecordTypes.DATA,
+                RecordTypes.OVIS,
                 RecordTypes.INDX,
-                RecordTypes.OVIS);
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

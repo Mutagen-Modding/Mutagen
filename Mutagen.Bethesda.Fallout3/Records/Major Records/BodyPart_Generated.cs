@@ -1808,14 +1808,14 @@ namespace Mutagen.Bethesda.Fallout3
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.BPNN,
-                RecordTypes.BPTN);
+                RecordTypes.BPTN,
+                RecordTypes.BPNN);
             var all = RecordCollection.Factory(
-                RecordTypes.BPND,
-                RecordTypes.BPNI,
+                RecordTypes.BPTN,
                 RecordTypes.BPNN,
                 RecordTypes.BPNT,
-                RecordTypes.BPTN,
+                RecordTypes.BPNI,
+                RecordTypes.BPND,
                 RecordTypes.NAM1,
                 RecordTypes.NAM4,
                 RecordTypes.NAM5);

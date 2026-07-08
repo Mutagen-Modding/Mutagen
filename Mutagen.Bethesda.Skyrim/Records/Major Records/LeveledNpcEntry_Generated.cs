@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Skyrim
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.COED,
-                RecordTypes.LVLO);
+                RecordTypes.LVLO,
+                RecordTypes.COED);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcEntryBinaryWriteTranslation);

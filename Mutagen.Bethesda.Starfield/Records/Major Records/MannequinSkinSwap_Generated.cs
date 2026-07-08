@@ -771,9 +771,9 @@ namespace Mutagen.Bethesda.Starfield
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.MSSA,
+                RecordTypes.MSSS,
                 RecordTypes.MSSI,
-                RecordTypes.MSSS);
+                RecordTypes.MSSA);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(MannequinSkinSwapBinaryWriteTranslation);

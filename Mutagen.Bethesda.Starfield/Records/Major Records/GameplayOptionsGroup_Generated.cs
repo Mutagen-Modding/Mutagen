@@ -814,10 +814,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.GPOG);
             var all = RecordCollection.Factory(
-                RecordTypes.BNAM,
-                RecordTypes.GOGL,
                 RecordTypes.GPOG,
-                RecordTypes.NNAM);
+                RecordTypes.NNAM,
+                RecordTypes.BNAM,
+                RecordTypes.GOGL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -680,8 +680,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var triggers = RecordCollection.Factory(RecordTypes.FMSI);
             var all = RecordCollection.Factory(
-                RecordTypes.FMRS,
-                RecordTypes.FMSI);
+                RecordTypes.FMSI,
+                RecordTypes.FMRS);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -728,8 +728,8 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var triggers = RecordCollection.Factory(RecordTypes.LVSP);
             var all = RecordCollection.Factory(
-                RecordTypes.FULL,
-                RecordTypes.LVSP);
+                RecordTypes.LVSP,
+                RecordTypes.FULL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

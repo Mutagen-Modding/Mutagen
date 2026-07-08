@@ -2555,24 +2555,24 @@ namespace Mutagen.Bethesda.Fallout4
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.BPNN,
-                RecordTypes.BPTN);
+                RecordTypes.BPTN,
+                RecordTypes.BPNN);
             var all = RecordCollection.Factory(
-                RecordTypes.BNAM,
-                RecordTypes.BPND,
+                RecordTypes.BPTN,
                 RecordTypes.BPNN,
                 RecordTypes.BPNT,
-                RecordTypes.BPTN,
-                RecordTypes.CNAM,
-                RecordTypes.DNAM,
+                RecordTypes.BPND,
+                RecordTypes.NAM1,
+                RecordTypes.NAM4,
+                RecordTypes.NAM5,
                 RecordTypes.ENAM,
                 RecordTypes.FNAM,
+                RecordTypes.BNAM,
                 RecordTypes.INAM,
                 RecordTypes.JNAM,
-                RecordTypes.NAM1,
+                RecordTypes.CNAM,
                 RecordTypes.NAM2,
-                RecordTypes.NAM4,
-                RecordTypes.NAM5);
+                RecordTypes.DNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

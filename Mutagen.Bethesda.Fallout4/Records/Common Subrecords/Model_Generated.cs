@@ -614,16 +614,16 @@ namespace Mutagen.Bethesda.Fallout4
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var triggers = RecordCollection.Factory(
-                RecordTypes.MODC,
                 RecordTypes.MODL,
-                RecordTypes.MODS,
-                RecordTypes.MODT);
+                RecordTypes.MODC,
+                RecordTypes.MODT,
+                RecordTypes.MODS);
             var all = RecordCollection.Factory(
-                RecordTypes.MODC,
-                RecordTypes.MODF,
                 RecordTypes.MODL,
+                RecordTypes.MODC,
+                RecordTypes.MODT,
                 RecordTypes.MODS,
-                RecordTypes.MODT);
+                RecordTypes.MODF);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

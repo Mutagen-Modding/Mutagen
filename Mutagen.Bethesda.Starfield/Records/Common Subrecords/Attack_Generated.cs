@@ -828,9 +828,9 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.ATKD,
                 RecordTypes.ATKE,
+                RecordTypes.ATKW,
                 RecordTypes.ATKS,
-                RecordTypes.ATKT,
-                RecordTypes.ATKW);
+                RecordTypes.ATKT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(AttackBinaryWriteTranslation);

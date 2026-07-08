@@ -734,8 +734,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var all = RecordCollection.Factory(
                 RecordTypes.ALNA,
-                RecordTypes.ALNR,
-                RecordTypes.ALNT);
+                RecordTypes.ALNT,
+                RecordTypes.ALNR);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FindMatchingRefNearAliasBinaryWriteTranslation);

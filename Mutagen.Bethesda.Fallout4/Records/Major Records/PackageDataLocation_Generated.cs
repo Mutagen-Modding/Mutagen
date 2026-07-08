@@ -630,8 +630,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.PNAM);
             var all = RecordCollection.Factory(
                 RecordTypes.BNAM,
-                RecordTypes.PLVD,
-                RecordTypes.PNAM);
+                RecordTypes.PNAM,
+                RecordTypes.PLVD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -64,6 +64,22 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
         AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
         AddDynamicProcessing(RecordTypes.PNDT, ProcessPlanets);
+        AddDynamicProcessing(RecordTypes.MGEF, ProcessMagicEffects);
+    }
+
+    private void ProcessMagicEffects(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var frame)) return;
+        int offset = 72;
+        ProcessZeroFloats(frame, fileOffset, ref offset, 2);
+        offset = 84;
+        ProcessZeroFloats(frame, fileOffset, ref offset, 3);
+        offset = 102;
+        ProcessZeroFloats(frame, fileOffset, ref offset, 1);
+        offset = 116;
+        ProcessZeroFloats(frame, fileOffset, ref offset, 5);
     }
 
     protected override IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)

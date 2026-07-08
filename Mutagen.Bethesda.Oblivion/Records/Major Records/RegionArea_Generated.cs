@@ -758,8 +758,8 @@ namespace Mutagen.Bethesda.Oblivion
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
             var all = RecordCollection.Factory(
-                RecordTypes.RPLD,
-                RecordTypes.RPLI);
+                RecordTypes.RPLI,
+                RecordTypes.RPLD);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(RegionAreaBinaryWriteTranslation);
