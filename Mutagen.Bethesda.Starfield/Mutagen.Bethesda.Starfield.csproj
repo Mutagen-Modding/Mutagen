@@ -4894,8 +4894,14 @@
     <Compile Include="Records\Major Records\ActorReaction_Generated.cs">
       <DependentUpon>AffinityEvent.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AimAssistModel.cs">
+      <DependentUpon>AimAssistModel.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AimAssistModel_Generated.cs">
       <DependentUpon>AimAssistModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AimAssistPose.cs">
+      <DependentUpon>AimAssistPose.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AimAssistPose_Generated.cs">
       <DependentUpon>AimAssistPose.xml</DependentUpon>
@@ -6492,7 +6498,7 @@
       <DependentUpon>LeveledSpaceCell.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\ISpaceCellSpawn_Generated.cs" />
-    <Compile Include="Records\Major Records\AimAssistPosePoint_Generated.cs">
+    <Compile Include="Records\Major Records\AimAssistPill_Generated.cs">
       <DependentUpon>AimAssistPose.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SurfaceBlockIntItem_Generated.cs">

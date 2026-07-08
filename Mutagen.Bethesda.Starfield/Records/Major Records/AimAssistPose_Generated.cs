@@ -8,12 +8,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,31 +57,36 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region AttachPoints
+        #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AimAssistPosePoint> _AttachPoints = new ExtendedList<AimAssistPosePoint>();
-        public ExtendedList<AimAssistPosePoint> AttachPoints
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
         {
-            get => this._AttachPoints;
-            init => this._AttachPoints = value;
+            get => this._Components;
+            init => this._Components = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAimAssistPosePointGetter> IAimAssistPoseGetter.AttachPoints => _AttachPoints;
+        IReadOnlyList<IAComponentGetter> IAimAssistPoseGetter.Components => _Components;
         #endregion
 
         #endregion
-        #region Connections
+        #region AimAssistPill
+        public AimAssistPill AimAssistPill { get; set; } = new AimAssistPill();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AimAssistPosePoint>? _Connections;
-        public ExtendedList<AimAssistPosePoint>? Connections
+        IAimAssistPillGetter IAimAssistPoseGetter.AimAssistPill => AimAssistPill;
+        #endregion
+        #region BulletBendingPills
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AimAssistPill>? _BulletBendingPills;
+        public ExtendedList<AimAssistPill>? BulletBendingPills
         {
-            get => this._Connections;
-            set => this._Connections = value;
+            get => this._BulletBendingPills;
+            set => this._BulletBendingPills = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAimAssistPosePointGetter>? IAimAssistPoseGetter.Connections => _Connections;
+        IReadOnlyList<IAimAssistPillGetter>? IAimAssistPoseGetter.BulletBendingPills => _BulletBendingPills;
         #endregion
 
         #endregion
@@ -107,8 +115,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.AttachPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(initialValue, []);
-                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(initialValue, []);
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.AimAssistPill = new MaskItem<TItem, AimAssistPill.Mask<TItem>?>(initialValue, new AimAssistPill.Mask<TItem>(initialValue));
+                this.BulletBendingPills = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPill.Mask<TItem>?>>?>(initialValue, []);
             }
 
             public Mask(
@@ -119,8 +128,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem AttachPoints,
-                TItem Connections)
+                TItem Components,
+                TItem AimAssistPill,
+                TItem BulletBendingPills)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -130,8 +140,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.AttachPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(AttachPoints, []);
-                this.Connections = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>(Connections, []);
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
+                this.AimAssistPill = new MaskItem<TItem, AimAssistPill.Mask<TItem>?>(AimAssistPill, new AimAssistPill.Mask<TItem>(AimAssistPill));
+                this.BulletBendingPills = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPill.Mask<TItem>?>>?>(BulletBendingPills, []);
             }
 
             #pragma warning disable CS8618
@@ -143,8 +154,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>? AttachPoints;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPosePoint.Mask<TItem>?>>?>? Connections;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public MaskItem<TItem, AimAssistPill.Mask<TItem>?>? AimAssistPill { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AimAssistPill.Mask<TItem>?>>?>? BulletBendingPills;
             #endregion
 
             #region Equals
@@ -158,15 +170,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.AttachPoints, rhs.AttachPoints)) return false;
-                if (!object.Equals(this.Connections, rhs.Connections)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.AimAssistPill, rhs.AimAssistPill)) return false;
+                if (!object.Equals(this.BulletBendingPills, rhs.BulletBendingPills)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.AttachPoints);
-                hash.Add(this.Connections);
+                hash.Add(this.Components);
+                hash.Add(this.AimAssistPill);
+                hash.Add(this.BulletBendingPills);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -177,24 +191,29 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (this.AttachPoints != null)
+                if (this.Components != null)
                 {
-                    if (!eval(this.AttachPoints.Overall)) return false;
-                    if (this.AttachPoints.Specific != null)
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
                     {
-                        foreach (var item in this.AttachPoints.Specific)
+                        foreach (var item in this.Components.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.Connections != null)
+                if (AimAssistPill != null)
                 {
-                    if (!eval(this.Connections.Overall)) return false;
-                    if (this.Connections.Specific != null)
+                    if (!eval(this.AimAssistPill.Overall)) return false;
+                    if (this.AimAssistPill.Specific != null && !this.AimAssistPill.Specific.All(eval)) return false;
+                }
+                if (this.BulletBendingPills != null)
+                {
+                    if (!eval(this.BulletBendingPills.Overall)) return false;
+                    if (this.BulletBendingPills.Specific != null)
                     {
-                        foreach (var item in this.Connections.Specific)
+                        foreach (var item in this.BulletBendingPills.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -209,24 +228,29 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (this.AttachPoints != null)
+                if (this.Components != null)
                 {
-                    if (eval(this.AttachPoints.Overall)) return true;
-                    if (this.AttachPoints.Specific != null)
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
                     {
-                        foreach (var item in this.AttachPoints.Specific)
+                        foreach (var item in this.Components.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.Connections != null)
+                if (AimAssistPill != null)
                 {
-                    if (eval(this.Connections.Overall)) return true;
-                    if (this.Connections.Specific != null)
+                    if (eval(this.AimAssistPill.Overall)) return true;
+                    if (this.AimAssistPill.Specific != null && this.AimAssistPill.Specific.Any(eval)) return true;
+                }
+                if (this.BulletBendingPills != null)
+                {
+                    if (eval(this.BulletBendingPills.Overall)) return true;
+                    if (this.BulletBendingPills.Specific != null)
                     {
-                        foreach (var item in this.Connections.Specific)
+                        foreach (var item in this.BulletBendingPills.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -248,31 +272,32 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                if (AttachPoints != null)
+                if (Components != null)
                 {
-                    obj.AttachPoints = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>?>(eval(this.AttachPoints.Overall), []);
-                    if (AttachPoints.Specific != null)
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
+                    if (Components.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>();
-                        obj.AttachPoints.Specific = l;
-                        foreach (var item in AttachPoints.Specific)
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
                         {
-                            MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (Connections != null)
+                obj.AimAssistPill = this.AimAssistPill == null ? null : new MaskItem<R, AimAssistPill.Mask<R>?>(eval(this.AimAssistPill.Overall), this.AimAssistPill.Specific?.Translate(eval));
+                if (BulletBendingPills != null)
                 {
-                    obj.Connections = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>?>(eval(this.Connections.Overall), []);
-                    if (Connections.Specific != null)
+                    obj.BulletBendingPills = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AimAssistPill.Mask<R>?>>?>(eval(this.BulletBendingPills.Overall), []);
+                    if (BulletBendingPills.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>>();
-                        obj.Connections.Specific = l;
-                        foreach (var item in Connections.Specific)
+                        var l = new List<MaskItemIndexed<R, AimAssistPill.Mask<R>?>>();
+                        obj.BulletBendingPills.Specific = l;
+                        foreach (var item in BulletBendingPills.Specific)
                         {
-                            MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AimAssistPosePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AimAssistPill.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AimAssistPill.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -296,16 +321,16 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AimAssistPose.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.AttachPoints?.Overall ?? true)
-                        && AttachPoints is {} AttachPointsItem)
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
                     {
-                        sb.AppendLine("AttachPoints =>");
+                        sb.AppendLine("Components =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(AttachPointsItem.Overall);
-                            if (AttachPointsItem.Specific != null)
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
                             {
-                                foreach (var subItem in AttachPointsItem.Specific)
+                                foreach (var subItem in ComponentsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -315,16 +340,20 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.Connections?.Overall ?? true)
-                        && Connections is {} ConnectionsItem)
+                    if (printMask?.AimAssistPill?.Overall ?? true)
                     {
-                        sb.AppendLine("Connections =>");
+                        AimAssistPill?.Print(sb);
+                    }
+                    if ((printMask?.BulletBendingPills?.Overall ?? true)
+                        && BulletBendingPills is {} BulletBendingPillsItem)
+                    {
+                        sb.AppendLine("BulletBendingPills =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ConnectionsItem.Overall);
-                            if (ConnectionsItem.Specific != null)
+                            sb.AppendItem(BulletBendingPillsItem.Overall);
+                            if (BulletBendingPillsItem.Specific != null)
                             {
-                                foreach (var subItem in ConnectionsItem.Specific)
+                                foreach (var subItem in BulletBendingPillsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -345,8 +374,9 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>? AttachPoints;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>? Connections;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public MaskItem<Exception?, AimAssistPill.ErrorMask?>? AimAssistPill;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPill.ErrorMask?>>?>? BulletBendingPills;
             #endregion
 
             #region IErrorMask
@@ -355,10 +385,12 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistPose_FieldIndex enu = (AimAssistPose_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPose_FieldIndex.AttachPoints:
-                        return AttachPoints;
-                    case AimAssistPose_FieldIndex.Connections:
-                        return Connections;
+                    case AimAssistPose_FieldIndex.Components:
+                        return Components;
+                    case AimAssistPose_FieldIndex.AimAssistPill:
+                        return AimAssistPill;
+                    case AimAssistPose_FieldIndex.BulletBendingPills:
+                        return BulletBendingPills;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -369,11 +401,14 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistPose_FieldIndex enu = (AimAssistPose_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPose_FieldIndex.AttachPoints:
-                        this.AttachPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>(ex, null);
+                    case AimAssistPose_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
-                    case AimAssistPose_FieldIndex.Connections:
-                        this.Connections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>(ex, null);
+                    case AimAssistPose_FieldIndex.AimAssistPill:
+                        this.AimAssistPill = new MaskItem<Exception?, AimAssistPill.ErrorMask?>(ex, null);
+                        break;
+                    case AimAssistPose_FieldIndex.BulletBendingPills:
+                        this.BulletBendingPills = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPill.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -386,11 +421,14 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistPose_FieldIndex enu = (AimAssistPose_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPose_FieldIndex.AttachPoints:
-                        this.AttachPoints = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>)obj;
+                    case AimAssistPose_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
-                    case AimAssistPose_FieldIndex.Connections:
-                        this.Connections = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>)obj;
+                    case AimAssistPose_FieldIndex.AimAssistPill:
+                        this.AimAssistPill = (MaskItem<Exception?, AimAssistPill.ErrorMask?>?)obj;
+                        break;
+                    case AimAssistPose_FieldIndex.BulletBendingPills:
+                        this.BulletBendingPills = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPill.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -401,8 +439,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (AttachPoints != null) return true;
-                if (Connections != null) return true;
+                if (Components != null) return true;
+                if (AimAssistPill != null) return true;
+                if (BulletBendingPills != null) return true;
                 return false;
             }
             #endregion
@@ -429,15 +468,15 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                if (AttachPoints is {} AttachPointsItem)
+                if (Components is {} ComponentsItem)
                 {
-                    sb.AppendLine("AttachPoints =>");
+                    sb.AppendLine("Components =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(AttachPointsItem.Overall);
-                        if (AttachPointsItem.Specific != null)
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
                         {
-                            foreach (var subItem in AttachPointsItem.Specific)
+                            foreach (var subItem in ComponentsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -447,15 +486,16 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (Connections is {} ConnectionsItem)
+                AimAssistPill?.Print(sb);
+                if (BulletBendingPills is {} BulletBendingPillsItem)
                 {
-                    sb.AppendLine("Connections =>");
+                    sb.AppendLine("BulletBendingPills =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ConnectionsItem.Overall);
-                        if (ConnectionsItem.Specific != null)
+                        sb.AppendItem(BulletBendingPillsItem.Overall);
+                        if (BulletBendingPillsItem.Specific != null)
                         {
-                            foreach (var subItem in ConnectionsItem.Specific)
+                            foreach (var subItem in BulletBendingPillsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -473,8 +513,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AttachPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AttachPoints?.Overall, rhs.AttachPoints?.Overall), Noggog.ExceptionExt.Combine(this.AttachPoints?.Specific, rhs.AttachPoints?.Specific));
-                ret.Connections = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPosePoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Connections?.Overall, rhs.Connections?.Overall), Noggog.ExceptionExt.Combine(this.Connections?.Specific, rhs.Connections?.Specific));
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.AimAssistPill = this.AimAssistPill.Combine(rhs.AimAssistPill, (l, r) => l.Combine(r));
+                ret.BulletBendingPills = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AimAssistPill.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.BulletBendingPills?.Overall, rhs.BulletBendingPills?.Overall), Noggog.ExceptionExt.Combine(this.BulletBendingPills?.Specific, rhs.BulletBendingPills?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -497,8 +538,9 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public AimAssistPosePoint.TranslationMask? AttachPoints;
-            public AimAssistPosePoint.TranslationMask? Connections;
+            public AComponent.TranslationMask? Components;
+            public AimAssistPill.TranslationMask? AimAssistPill;
+            public AimAssistPill.TranslationMask? BulletBendingPills;
             #endregion
 
             #region Ctors
@@ -514,8 +556,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((AttachPoints == null ? DefaultOn : !AttachPoints.GetCrystal().CopyNothing, AttachPoints?.GetCrystal()));
-                ret.Add((Connections == null ? DefaultOn : !Connections.GetCrystal().CopyNothing, Connections?.GetCrystal()));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((AimAssistPill != null ? AimAssistPill.OnOverall : DefaultOn, AimAssistPill?.GetCrystal()));
+                ret.Add((BulletBendingPills == null ? DefaultOn : !BulletBendingPills.GetCrystal().CopyNothing, BulletBendingPills?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -528,6 +571,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AimAssistPose_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AimAssistPoseCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AimAssistPoseSetterCommon.Instance.RemapLinks(this, mapping);
         public AimAssistPose(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -577,6 +622,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IAimAssistPose);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AimAssistPoseCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AimAssistPoseSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AimAssistPoseSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AimAssistPoseSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -657,11 +711,18 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IAimAssistPose :
         IAimAssistPoseGetter,
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAimAssistPoseInternal>,
         IStarfieldMajorRecordInternal
     {
-        new ExtendedList<AimAssistPosePoint> AttachPoints { get; }
-        new ExtendedList<AimAssistPosePoint>? Connections { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new AimAssistPill AimAssistPill { get; set; }
+        new ExtendedList<AimAssistPill>? BulletBendingPills { get; set; }
+        #region Mutagen
+        new AimAssistPose.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IAimAssistPoseInternal :
@@ -674,13 +735,20 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AAPD)]
     public partial interface IAimAssistPoseGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IAimAssistPoseGetter>,
         IMapsToGetter<IAimAssistPoseGetter>
     {
         static new ILoquiRegistration StaticRegistration => AimAssistPose_Registration.Instance;
-        IReadOnlyList<IAimAssistPosePointGetter> AttachPoints { get; }
-        IReadOnlyList<IAimAssistPosePointGetter>? Connections { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        IAimAssistPillGetter AimAssistPill { get; }
+        IReadOnlyList<IAimAssistPillGetter>? BulletBendingPills { get; }
+
+        #region Mutagen
+        AimAssistPose.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -857,8 +925,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        AttachPoints = 7,
-        Connections = 8,
+        Components = 7,
+        AimAssistPill = 8,
+        BulletBendingPills = 9,
     }
     #endregion
 
@@ -869,9 +938,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(AimAssistPose.Mask<>);
 
@@ -904,6 +973,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.AAPD);
             var all = RecordCollection.Factory(
                 RecordTypes.AAPD,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.AAAP,
                 RecordTypes.ANAM,
                 RecordTypes.BNAM,
@@ -954,8 +1025,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAimAssistPoseInternal item)
         {
             ClearPartial();
-            item.AttachPoints.Clear();
-            item.Connections = null;
+            item.Components.Clear();
+            item.AimAssistPill.Clear();
+            item.BulletBendingPills = null;
             base.Clear(item);
         }
         
@@ -973,6 +1045,31 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IAimAssistPose obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAimAssistPose obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAimAssistPose obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -1040,12 +1137,13 @@ namespace Mutagen.Bethesda.Starfield
             AimAssistPose.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AttachPoints = item.AttachPoints.CollectionEqualsHelper(
-                rhs.AttachPoints,
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Connections = item.Connections.CollectionEqualsHelper(
-                rhs.Connections,
+            ret.AimAssistPill = MaskItemExt.Factory(item.AimAssistPill.GetEqualsMask(rhs.AimAssistPill, include), include);
+            ret.BulletBendingPills = item.BulletBendingPills.CollectionEqualsHelper(
+                rhs.BulletBendingPills,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1097,12 +1195,12 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.AttachPoints?.Overall ?? true)
+            if (printMask?.Components?.Overall ?? true)
             {
-                sb.AppendLine("AttachPoints =>");
+                sb.AppendLine("Components =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.AttachPoints)
+                    foreach (var subItem in item.Components)
                     {
                         using (sb.Brace())
                         {
@@ -1111,13 +1209,17 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.Connections?.Overall ?? true)
-                && item.Connections is {} ConnectionsItem)
+            if (printMask?.AimAssistPill?.Overall ?? true)
             {
-                sb.AppendLine("Connections =>");
+                item.AimAssistPill?.Print(sb, "AimAssistPill");
+            }
+            if ((printMask?.BulletBendingPills?.Overall ?? true)
+                && item.BulletBendingPills is {} BulletBendingPillsItem)
+            {
+                sb.AppendLine("BulletBendingPills =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ConnectionsItem)
+                    foreach (var subItem in BulletBendingPillsItem)
                     {
                         using (sb.Brace())
                         {
@@ -1176,13 +1278,21 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.AttachPoints) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.Components) ?? true))
             {
-                if (!lhs.AttachPoints.SequenceEqual(rhs.AttachPoints, (l, r) => ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AimAssistPose_FieldIndex.AttachPoints)))) return false;
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AimAssistPose_FieldIndex.Components)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.Connections) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.AimAssistPill) ?? true))
             {
-                if (!lhs.Connections.SequenceEqualNullable(rhs.Connections, (l, r) => ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AimAssistPose_FieldIndex.Connections)))) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AimAssistPill, rhs.AimAssistPill, out var lhsAimAssistPill, out var rhsAimAssistPill, out var isAimAssistPillEqual))
+                {
+                    if (!((AimAssistPillCommon)((IAimAssistPillGetter)lhsAimAssistPill).CommonInstance()!).Equals(lhsAimAssistPill, rhsAimAssistPill, equalsMask?.GetSubCrystal((int)AimAssistPose_FieldIndex.AimAssistPill))) return false;
+                }
+                else if (!isAimAssistPillEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.BulletBendingPills) ?? true))
+            {
+                if (!lhs.BulletBendingPills.SequenceEqualNullable(rhs.BulletBendingPills, (l, r) => ((AimAssistPillCommon)((IAimAssistPillGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AimAssistPose_FieldIndex.BulletBendingPills)))) return false;
             }
             return true;
         }
@@ -1212,8 +1322,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAimAssistPoseGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.AttachPoints);
-            hash.Add(item.Connections);
+            hash.Add(item.Components);
+            hash.Add(item.AimAssistPill);
+            hash.Add(item.BulletBendingPills);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1240,6 +1351,25 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAimAssistPoseGetter obj, bool iterateNestedRecords = true)
         {
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAimAssistPoseGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
@@ -1339,13 +1469,13 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.AttachPoints) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.Components) ?? true))
             {
-                errorMask?.PushIndex((int)AimAssistPose_FieldIndex.AttachPoints);
+                errorMask?.PushIndex((int)AimAssistPose_FieldIndex.Components);
                 try
                 {
-                    item.AttachPoints.SetTo(
-                        rhs.AttachPoints
+                    item.Components.SetTo(
+                        rhs.Components
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1363,26 +1493,48 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.Connections) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.AimAssistPill) ?? true))
             {
-                errorMask?.PushIndex((int)AimAssistPose_FieldIndex.Connections);
+                errorMask?.PushIndex((int)AimAssistPose_FieldIndex.AimAssistPill);
                 try
                 {
-                    if ((rhs.Connections != null))
+                    if ((copyMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.AimAssistPill) ?? true))
                     {
-                        item.Connections = 
-                            rhs.Connections
+                        item.AimAssistPill = rhs.AimAssistPill.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)AimAssistPose_FieldIndex.AimAssistPill),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPose_FieldIndex.BulletBendingPills) ?? true))
+            {
+                errorMask?.PushIndex((int)AimAssistPose_FieldIndex.BulletBendingPills);
+                try
+                {
+                    if ((rhs.BulletBendingPills != null))
+                    {
+                        item.BulletBendingPills = 
+                            rhs.BulletBendingPills
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<AimAssistPosePoint>();
+                            .ToExtendedList<AimAssistPill>();
                     }
                     else
                     {
-                        item.Connections = null;
+                        item.BulletBendingPills = null;
                     }
                 }
                 catch (Exception ex)
@@ -1564,27 +1716,32 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            using (HeaderExport.Subrecord(writer, RecordTypes.AAAP)) { }
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAimAssistPosePointGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
-                items: item.AttachPoints,
-                transl: (MutagenWriter subWriter, IAimAssistPosePointGetter subItem, TypedWriteParams conv) =>
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((AimAssistPosePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAimAssistPosePointGetter>.Instance.WriteWithCounter(
+            var AimAssistPillItem = item.AimAssistPill;
+            using (HeaderExport.Subrecord(writer, RecordTypes.AAAP)) { }
+            ((AimAssistPillBinaryWriteTranslation)((IBinaryItem)AimAssistPillItem).BinaryWriteTranslator).Write(
+                item: AimAssistPillItem,
                 writer: writer,
-                items: item.Connections,
+                translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAimAssistPillGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.BulletBendingPills,
                 counterType: RecordTypes.AAPS,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IAimAssistPosePointGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IAimAssistPillGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((AimAssistPosePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AimAssistPillBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1657,16 +1814,23 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)AimAssistPose_FieldIndex.Components;
+                }
                 case RecordTypeInts.AAAP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.AttachPoints.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AimAssistPosePoint>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: AimAssistPosePoint_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: AimAssistPosePoint.TryCreateFromBinary));
-                    return (int)AimAssistPose_FieldIndex.AttachPoints;
+                    item.AimAssistPill = Mutagen.Bethesda.Starfield.AimAssistPill.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)AimAssistPose_FieldIndex.AimAssistPill;
                 }
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.BNAM:
@@ -1674,16 +1838,16 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WTMX:
                 case RecordTypeInts.AAPS:
                 {
-                    item.Connections = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AimAssistPosePoint>.Instance.ParsePerItem(
+                    item.BulletBendingPills = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AimAssistPill>.Instance.ParsePerItem(
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.AAPS,
-                            triggeringRecord: AimAssistPosePoint_Registration.TriggerSpecs,
+                            triggeringRecord: AimAssistPill_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: AimAssistPosePoint.TryCreateFromBinary)
-                        .CastExtendedList<AimAssistPosePoint>();
-                    return (int)AimAssistPose_FieldIndex.Connections;
+                            transl: AimAssistPill.TryCreateFromBinary)
+                        .CastExtendedList<AimAssistPill>();
+                    return (int)AimAssistPose_FieldIndex.BulletBendingPills;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1729,6 +1893,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AimAssistPoseCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AimAssistPoseCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AimAssistPoseBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1742,9 +1908,14 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IAimAssistPoseGetter);
 
+        public AimAssistPose.MajorFlag MajorFlags => (AimAssistPose.MajorFlag)this.MajorRecordFlagsRaw;
 
-        public IReadOnlyList<IAimAssistPosePointGetter> AttachPoints { get; private set; } = [];
-        public IReadOnlyList<IAimAssistPosePointGetter>? Connections { get; private set; }
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
+        #region AimAssistPill
+        private IAimAssistPillGetter? _AimAssistPill;
+        public IAimAssistPillGetter AimAssistPill => _AimAssistPill ?? new AimAssistPill();
+        #endregion
+        public IReadOnlyList<IAimAssistPillGetter>? BulletBendingPills { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1814,15 +1985,23 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)AimAssistPose_FieldIndex.Components;
+                }
                 case RecordTypeInts.AAAP:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                    this.AttachPoints = this.ParseRepeatedTypelessSubrecord<IAimAssistPosePointGetter>(
+                    this._AimAssistPill = AimAssistPillBinaryOverlay.AimAssistPillFactory(
                         stream: stream,
-                        translationParams: translationParams,
-                        trigger: AimAssistPosePoint_Registration.TriggerSpecs,
-                        factory: AimAssistPosePointBinaryOverlay.AimAssistPosePointFactory);
-                    return (int)AimAssistPose_FieldIndex.AttachPoints;
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)AimAssistPose_FieldIndex.AimAssistPill;
                 }
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.BNAM:
@@ -1830,16 +2009,16 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WTMX:
                 case RecordTypeInts.AAPS:
                 {
-                    this.Connections = BinaryOverlayList.FactoryByCountPerItem<IAimAssistPosePointGetter>(
+                    this.BulletBendingPills = BinaryOverlayList.FactoryByCountPerItem<IAimAssistPillGetter>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
-                        trigger: AimAssistPosePoint_Registration.TriggerSpecs,
+                        trigger: AimAssistPill_Registration.TriggerSpecs,
                         countType: RecordTypes.AAPS,
                         translationParams: translationParams,
-                        getter: (s, p, recConv) => AimAssistPosePointBinaryOverlay.AimAssistPosePointFactory(new OverlayStream(s, p), p, recConv),
+                        getter: (s, p, recConv) => AimAssistPillBinaryOverlay.AimAssistPillFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return (int)AimAssistPose_FieldIndex.Connections;
+                    return (int)AimAssistPose_FieldIndex.BulletBendingPills;
                 }
                 default:
                     return base.FillRecordType(

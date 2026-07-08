@@ -38,13 +38,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class AimAssistPosePoint :
-        IAimAssistPosePoint,
-        IEquatable<IAimAssistPosePointGetter>,
-        ILoquiObjectSetter<AimAssistPosePoint>
+    public partial class AimAssistPill :
+        IAimAssistPill,
+        IEquatable<IAimAssistPillGetter>,
+        ILoquiObjectSetter<AimAssistPill>
     {
         #region Ctor
-        public AimAssistPosePoint()
+        public AimAssistPill()
         {
             CustomCtor();
         }
@@ -54,22 +54,22 @@ namespace Mutagen.Bethesda.Starfield
         #region StartBoneName
         public String? StartBoneName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAimAssistPosePointGetter.StartBoneName => this.StartBoneName;
+        String? IAimAssistPillGetter.StartBoneName => this.StartBoneName;
         #endregion
         #region EndBoneName
         public String? EndBoneName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAimAssistPosePointGetter.EndBoneName => this.EndBoneName;
+        String? IAimAssistPillGetter.EndBoneName => this.EndBoneName;
         #endregion
         #region Radius
         public Single? Radius { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAimAssistPosePointGetter.Radius => this.Radius;
+        Single? IAimAssistPillGetter.Radius => this.Radius;
         #endregion
         #region Weight
         public Single? Weight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAimAssistPosePointGetter.Weight => this.Weight;
+        Single? IAimAssistPillGetter.Weight => this.Weight;
         #endregion
 
         #region To String
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AimAssistPosePointMixIn.Print(
+            AimAssistPillMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -89,16 +89,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IAimAssistPosePointGetter rhs) return false;
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAimAssistPillGetter rhs) return false;
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAimAssistPosePointGetter? obj)
+        public bool Equals(IAimAssistPillGetter? obj)
         {
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AimAssistPillCommon)((IAimAssistPillGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new AimAssistPosePoint.Mask<R>();
+                var ret = new AimAssistPill.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -213,16 +213,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(AimAssistPosePoint.Mask<bool>? printMask = null)
+            public string Print(AimAssistPill.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, AimAssistPosePoint.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, AimAssistPill.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(AimAssistPosePoint.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(AimAssistPill.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.StartBoneName ?? true)
@@ -274,16 +274,16 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                AimAssistPosePoint_FieldIndex enu = (AimAssistPosePoint_FieldIndex)index;
+                AimAssistPill_FieldIndex enu = (AimAssistPill_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPosePoint_FieldIndex.StartBoneName:
+                    case AimAssistPill_FieldIndex.StartBoneName:
                         return StartBoneName;
-                    case AimAssistPosePoint_FieldIndex.EndBoneName:
+                    case AimAssistPill_FieldIndex.EndBoneName:
                         return EndBoneName;
-                    case AimAssistPosePoint_FieldIndex.Radius:
+                    case AimAssistPill_FieldIndex.Radius:
                         return Radius;
-                    case AimAssistPosePoint_FieldIndex.Weight:
+                    case AimAssistPill_FieldIndex.Weight:
                         return Weight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -292,19 +292,19 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                AimAssistPosePoint_FieldIndex enu = (AimAssistPosePoint_FieldIndex)index;
+                AimAssistPill_FieldIndex enu = (AimAssistPill_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPosePoint_FieldIndex.StartBoneName:
+                    case AimAssistPill_FieldIndex.StartBoneName:
                         this.StartBoneName = ex;
                         break;
-                    case AimAssistPosePoint_FieldIndex.EndBoneName:
+                    case AimAssistPill_FieldIndex.EndBoneName:
                         this.EndBoneName = ex;
                         break;
-                    case AimAssistPosePoint_FieldIndex.Radius:
+                    case AimAssistPill_FieldIndex.Radius:
                         this.Radius = ex;
                         break;
-                    case AimAssistPosePoint_FieldIndex.Weight:
+                    case AimAssistPill_FieldIndex.Weight:
                         this.Weight = ex;
                         break;
                     default:
@@ -314,19 +314,19 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                AimAssistPosePoint_FieldIndex enu = (AimAssistPosePoint_FieldIndex)index;
+                AimAssistPill_FieldIndex enu = (AimAssistPill_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPosePoint_FieldIndex.StartBoneName:
+                    case AimAssistPill_FieldIndex.StartBoneName:
                         this.StartBoneName = (Exception?)obj;
                         break;
-                    case AimAssistPosePoint_FieldIndex.EndBoneName:
+                    case AimAssistPill_FieldIndex.EndBoneName:
                         this.EndBoneName = (Exception?)obj;
                         break;
-                    case AimAssistPosePoint_FieldIndex.Radius:
+                    case AimAssistPill_FieldIndex.Radius:
                         this.Radius = (Exception?)obj;
                         break;
-                    case AimAssistPosePoint_FieldIndex.Weight:
+                    case AimAssistPill_FieldIndex.Weight:
                         this.Weight = (Exception?)obj;
                         break;
                     default:
@@ -461,25 +461,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => AimAssistPosePointBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => AimAssistPillBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AimAssistPosePointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AimAssistPillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static AimAssistPosePoint CreateFromBinary(
+        public static AimAssistPill CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new AimAssistPosePoint();
-            ((AimAssistPosePointSetterCommon)((IAimAssistPosePointGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AimAssistPill();
+            ((AimAssistPillSetterCommon)((IAimAssistPillGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out AimAssistPosePoint item,
+            out AimAssistPill item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -505,21 +505,21 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((AimAssistPosePointSetterCommon)((IAimAssistPosePointGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AimAssistPillSetterCommon)((IAimAssistPillGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static AimAssistPosePoint GetNew()
+        internal static AimAssistPill GetNew()
         {
-            return new AimAssistPosePoint();
+            return new AimAssistPill();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAimAssistPosePoint :
-        IAimAssistPosePointGetter,
-        ILoquiObjectSetter<IAimAssistPosePoint>
+    public partial interface IAimAssistPill :
+        IAimAssistPillGetter,
+        ILoquiObjectSetter<IAimAssistPill>
     {
         new String? StartBoneName { get; set; }
         new String? EndBoneName { get; set; }
@@ -527,10 +527,10 @@ namespace Mutagen.Bethesda.Starfield
         new Single? Weight { get; set; }
     }
 
-    public partial interface IAimAssistPosePointGetter :
+    public partial interface IAimAssistPillGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IAimAssistPosePointGetter>
+        ILoquiObject<IAimAssistPillGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -538,7 +538,7 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => AimAssistPosePoint_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => AimAssistPill_Registration.Instance;
         String? StartBoneName { get; }
         String? EndBoneName { get; }
         Single? Radius { get; }
@@ -549,42 +549,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class AimAssistPosePointMixIn
+    public static partial class AimAssistPillMixIn
     {
-        public static void Clear(this IAimAssistPosePoint item)
+        public static void Clear(this IAimAssistPill item)
         {
-            ((AimAssistPosePointSetterCommon)((IAimAssistPosePointGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AimAssistPillSetterCommon)((IAimAssistPillGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static AimAssistPosePoint.Mask<bool> GetEqualsMask(
-            this IAimAssistPosePointGetter item,
-            IAimAssistPosePointGetter rhs,
+        public static AimAssistPill.Mask<bool> GetEqualsMask(
+            this IAimAssistPillGetter item,
+            IAimAssistPillGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IAimAssistPosePointGetter item,
+            this IAimAssistPillGetter item,
             string? name = null,
-            AimAssistPosePoint.Mask<bool>? printMask = null)
+            AimAssistPill.Mask<bool>? printMask = null)
         {
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).Print(
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IAimAssistPosePointGetter item,
+            this IAimAssistPillGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AimAssistPosePoint.Mask<bool>? printMask = null)
+            AimAssistPill.Mask<bool>? printMask = null)
         {
-            ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).Print(
+            ((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -592,21 +592,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IAimAssistPosePointGetter item,
-            IAimAssistPosePointGetter rhs,
-            AimAssistPosePoint.TranslationMask? equalsMask = null)
+            this IAimAssistPillGetter item,
+            IAimAssistPillGetter rhs,
+            AimAssistPill.TranslationMask? equalsMask = null)
         {
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).Equals(
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IAimAssistPosePoint lhs,
-            IAimAssistPosePointGetter rhs)
+            this IAimAssistPill lhs,
+            IAimAssistPillGetter rhs)
         {
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -615,11 +615,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IAimAssistPosePoint lhs,
-            IAimAssistPosePointGetter rhs,
-            AimAssistPosePoint.TranslationMask? copyMask = null)
+            this IAimAssistPill lhs,
+            IAimAssistPillGetter rhs,
+            AimAssistPill.TranslationMask? copyMask = null)
         {
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -628,28 +628,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IAimAssistPosePoint lhs,
-            IAimAssistPosePointGetter rhs,
-            out AimAssistPosePoint.ErrorMask errorMask,
-            AimAssistPosePoint.TranslationMask? copyMask = null)
+            this IAimAssistPill lhs,
+            IAimAssistPillGetter rhs,
+            out AimAssistPill.ErrorMask errorMask,
+            AimAssistPill.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = AimAssistPosePoint.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AimAssistPill.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAimAssistPosePoint lhs,
-            IAimAssistPosePointGetter rhs,
+            this IAimAssistPill lhs,
+            IAimAssistPillGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -657,32 +657,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static AimAssistPosePoint DeepCopy(
-            this IAimAssistPosePointGetter item,
-            AimAssistPosePoint.TranslationMask? copyMask = null)
+        public static AimAssistPill DeepCopy(
+            this IAimAssistPillGetter item,
+            AimAssistPill.TranslationMask? copyMask = null)
         {
-            return ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static AimAssistPosePoint DeepCopy(
-            this IAimAssistPosePointGetter item,
-            out AimAssistPosePoint.ErrorMask errorMask,
-            AimAssistPosePoint.TranslationMask? copyMask = null)
+        public static AimAssistPill DeepCopy(
+            this IAimAssistPillGetter item,
+            out AimAssistPill.ErrorMask errorMask,
+            AimAssistPill.TranslationMask? copyMask = null)
         {
-            return ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static AimAssistPosePoint DeepCopy(
-            this IAimAssistPosePointGetter item,
+        public static AimAssistPill DeepCopy(
+            this IAimAssistPillGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -690,11 +690,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IAimAssistPosePoint item,
+            this IAimAssistPill item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((AimAssistPosePointSetterCommon)((IAimAssistPosePointGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AimAssistPillSetterCommon)((IAimAssistPillGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -710,7 +710,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum AimAssistPosePoint_FieldIndex
+    internal enum AimAssistPill_FieldIndex
     {
         StartBoneName = 0,
         EndBoneName = 1,
@@ -720,9 +720,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class AimAssistPosePoint_Registration : ILoquiRegistration
+    internal partial class AimAssistPill_Registration : ILoquiRegistration
     {
-        public static readonly AimAssistPosePoint_Registration Instance = new AimAssistPosePoint_Registration();
+        public static readonly AimAssistPill_Registration Instance = new AimAssistPill_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -730,23 +730,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(AimAssistPosePoint.Mask<>);
+        public static readonly Type MaskType = typeof(AimAssistPill.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AimAssistPosePoint.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AimAssistPill.ErrorMask);
 
-        public static readonly Type ClassType = typeof(AimAssistPosePoint);
+        public static readonly Type ClassType = typeof(AimAssistPill);
 
-        public static readonly Type GetterType = typeof(IAimAssistPosePointGetter);
+        public static readonly Type GetterType = typeof(IAimAssistPillGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAimAssistPosePoint);
+        public static readonly Type SetterType = typeof(IAimAssistPill);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.AimAssistPosePoint";
+        public const string FullName = "Mutagen.Bethesda.Starfield.AimAssistPill";
 
-        public const string Name = "AimAssistPosePoint";
+        public const string Name = "AimAssistPill";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.WTMX);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(AimAssistPosePointBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AimAssistPillBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -795,13 +795,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class AimAssistPosePointSetterCommon
+    internal partial class AimAssistPillSetterCommon
     {
-        public static readonly AimAssistPosePointSetterCommon Instance = new AimAssistPosePointSetterCommon();
+        public static readonly AimAssistPillSetterCommon Instance = new AimAssistPillSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAimAssistPosePoint item)
+        public void Clear(IAimAssistPill item)
         {
             ClearPartial();
             item.StartBoneName = default;
@@ -811,7 +811,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public void RemapLinks(IAimAssistPosePoint obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IAimAssistPill obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IAimAssistPosePoint item,
+            IAimAssistPill item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -827,23 +827,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: AimAssistPosePointBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: AimAssistPillBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class AimAssistPosePointCommon
+    internal partial class AimAssistPillCommon
     {
-        public static readonly AimAssistPosePointCommon Instance = new AimAssistPosePointCommon();
+        public static readonly AimAssistPillCommon Instance = new AimAssistPillCommon();
 
-        public AimAssistPosePoint.Mask<bool> GetEqualsMask(
-            IAimAssistPosePointGetter item,
-            IAimAssistPosePointGetter rhs,
+        public AimAssistPill.Mask<bool> GetEqualsMask(
+            IAimAssistPillGetter item,
+            IAimAssistPillGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new AimAssistPosePoint.Mask<bool>(false);
-            ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AimAssistPill.Mask<bool>(false);
+            ((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -852,9 +852,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IAimAssistPosePointGetter item,
-            IAimAssistPosePointGetter rhs,
-            AimAssistPosePoint.Mask<bool> ret,
+            IAimAssistPillGetter item,
+            IAimAssistPillGetter rhs,
+            AimAssistPill.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.StartBoneName = string.Equals(item.StartBoneName, rhs.StartBoneName);
@@ -864,9 +864,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IAimAssistPosePointGetter item,
+            IAimAssistPillGetter item,
             string? name = null,
-            AimAssistPosePoint.Mask<bool>? printMask = null)
+            AimAssistPill.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -878,18 +878,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IAimAssistPosePointGetter item,
+            IAimAssistPillGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            AimAssistPosePoint.Mask<bool>? printMask = null)
+            AimAssistPill.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"AimAssistPosePoint =>");
+                sb.AppendLine($"AimAssistPill =>");
             }
             else
             {
-                sb.AppendLine($"{name} (AimAssistPosePoint) =>");
+                sb.AppendLine($"{name} (AimAssistPill) =>");
             }
             using (sb.Brace())
             {
@@ -901,9 +901,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IAimAssistPosePointGetter item,
+            IAimAssistPillGetter item,
             StructuredStringBuilder sb,
-            AimAssistPosePoint.Mask<bool>? printMask = null)
+            AimAssistPill.Mask<bool>? printMask = null)
         {
             if ((printMask?.StartBoneName ?? true)
                 && item.StartBoneName is {} StartBoneNameItem)
@@ -929,31 +929,31 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAimAssistPosePointGetter? lhs,
-            IAimAssistPosePointGetter? rhs,
+            IAimAssistPillGetter? lhs,
+            IAimAssistPillGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.StartBoneName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.StartBoneName) ?? true))
             {
                 if (!string.Equals(lhs.StartBoneName, rhs.StartBoneName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.EndBoneName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.EndBoneName) ?? true))
             {
                 if (!string.Equals(lhs.EndBoneName, rhs.EndBoneName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Radius) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.Radius) ?? true))
             {
                 if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Weight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.Weight) ?? true))
             {
                 if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IAimAssistPosePointGetter item)
+        public virtual int GetHashCode(IAimAssistPillGetter item)
         {
             var hash = new HashCode();
             if (item.StartBoneName is {} StartBoneNameitem)
@@ -980,11 +980,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return AimAssistPosePoint.GetNew();
+            return AimAssistPill.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAimAssistPosePointGetter obj, bool iterateNestedRecords = true)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAimAssistPillGetter obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -992,31 +992,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class AimAssistPosePointSetterTranslationCommon
+    internal partial class AimAssistPillSetterTranslationCommon
     {
-        public static readonly AimAssistPosePointSetterTranslationCommon Instance = new AimAssistPosePointSetterTranslationCommon();
+        public static readonly AimAssistPillSetterTranslationCommon Instance = new AimAssistPillSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IAimAssistPosePoint item,
-            IAimAssistPosePointGetter rhs,
+            IAimAssistPill item,
+            IAimAssistPillGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.StartBoneName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.StartBoneName) ?? true))
             {
                 item.StartBoneName = rhs.StartBoneName;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.EndBoneName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.EndBoneName) ?? true))
             {
                 item.EndBoneName = rhs.EndBoneName;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Radius) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.Radius) ?? true))
             {
                 item.Radius = rhs.Radius;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Weight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPill_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
             }
@@ -1029,19 +1029,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IAimAssistPosePoint item,
-            IAimAssistPosePointGetter rhs,
+            IAimAssistPill item,
+            IAimAssistPillGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public AimAssistPosePoint DeepCopy(
-            IAimAssistPosePointGetter item,
-            AimAssistPosePoint.TranslationMask? copyMask = null)
+        public AimAssistPill DeepCopy(
+            IAimAssistPillGetter item,
+            AimAssistPill.TranslationMask? copyMask = null)
         {
-            AimAssistPosePoint ret = (AimAssistPosePoint)((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).GetNew();
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AimAssistPill ret = (AimAssistPill)((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).GetNew();
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1050,30 +1050,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public AimAssistPosePoint DeepCopy(
-            IAimAssistPosePointGetter item,
-            out AimAssistPosePoint.ErrorMask errorMask,
-            AimAssistPosePoint.TranslationMask? copyMask = null)
+        public AimAssistPill DeepCopy(
+            IAimAssistPillGetter item,
+            out AimAssistPill.ErrorMask errorMask,
+            AimAssistPill.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            AimAssistPosePoint ret = (AimAssistPosePoint)((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).GetNew();
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AimAssistPill ret = (AimAssistPill)((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).GetNew();
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = AimAssistPosePoint.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AimAssistPill.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public AimAssistPosePoint DeepCopy(
-            IAimAssistPosePointGetter item,
+        public AimAssistPill DeepCopy(
+            IAimAssistPillGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            AimAssistPosePoint ret = (AimAssistPosePoint)((AimAssistPosePointCommon)((IAimAssistPosePointGetter)item).CommonInstance()!).GetNew();
-            ((AimAssistPosePointSetterTranslationCommon)((IAimAssistPosePointGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            AimAssistPill ret = (AimAssistPill)((AimAssistPillCommon)((IAimAssistPillGetter)item).CommonInstance()!).GetNew();
+            ((AimAssistPillSetterTranslationCommon)((IAimAssistPillGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1089,27 +1089,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AimAssistPosePoint
+    public partial class AimAssistPill
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AimAssistPosePoint_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => AimAssistPosePoint_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AimAssistPill_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AimAssistPill_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => AimAssistPosePointCommon.Instance;
+        protected object CommonInstance() => AimAssistPillCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return AimAssistPosePointSetterCommon.Instance;
+            return AimAssistPillSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => AimAssistPosePointSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => AimAssistPillSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAimAssistPosePointGetter.CommonInstance() => this.CommonInstance();
+        object IAimAssistPillGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IAimAssistPosePointGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IAimAssistPillGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IAimAssistPosePointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IAimAssistPillGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1120,12 +1120,12 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class AimAssistPosePointBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class AimAssistPillBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly AimAssistPosePointBinaryWriteTranslation Instance = new();
+        public static readonly AimAssistPillBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IAimAssistPosePointGetter item,
+            IAimAssistPillGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IAimAssistPosePointGetter item,
+            IAimAssistPillGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1166,19 +1166,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IAimAssistPosePointGetter)item,
+                item: (IAimAssistPillGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class AimAssistPosePointBinaryCreateTranslation
+    internal partial class AimAssistPillBinaryCreateTranslation
     {
-        public static readonly AimAssistPosePointBinaryCreateTranslation Instance = new AimAssistPosePointBinaryCreateTranslation();
+        public static readonly AimAssistPillBinaryCreateTranslation Instance = new AimAssistPillBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IAimAssistPosePoint item,
+            IAimAssistPill item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1191,37 +1191,37 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.StartBoneName, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.StartBoneName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.StartBoneName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)AimAssistPosePoint_FieldIndex.StartBoneName;
+                    return (int)AimAssistPill_FieldIndex.StartBoneName;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.EndBoneName, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.EndBoneName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EndBoneName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)AimAssistPosePoint_FieldIndex.EndBoneName;
+                    return (int)AimAssistPill_FieldIndex.EndBoneName;
                 }
                 case RecordTypeInts.RADR:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AimAssistPosePoint_FieldIndex.Radius;
+                    return (int)AimAssistPill_FieldIndex.Radius;
                 }
                 case RecordTypeInts.WTMX:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AimAssistPosePoint_FieldIndex.Weight;
+                    return (int)AimAssistPill_FieldIndex.Weight;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1234,14 +1234,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class AimAssistPosePointBinaryTranslationMixIn
+    public static class AimAssistPillBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IAimAssistPosePointGetter item,
+            this IAimAssistPillGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AimAssistPosePointBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((AimAssistPillBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1254,38 +1254,38 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class AimAssistPosePointBinaryOverlay :
+    internal partial class AimAssistPillBinaryOverlay :
         PluginBinaryOverlay,
-        IAimAssistPosePointGetter
+        IAimAssistPillGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => AimAssistPosePoint_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => AimAssistPosePoint_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AimAssistPill_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => AimAssistPill_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => AimAssistPosePointCommon.Instance;
+        protected object CommonInstance() => AimAssistPillCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => AimAssistPosePointSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => AimAssistPillSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IAimAssistPosePointGetter.CommonInstance() => this.CommonInstance();
+        object IAimAssistPillGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IAimAssistPosePointGetter.CommonSetterInstance() => null;
+        object? IAimAssistPillGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IAimAssistPosePointGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IAimAssistPillGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => AimAssistPosePointBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => AimAssistPillBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((AimAssistPosePointBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AimAssistPillBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected AimAssistPosePointBinaryOverlay(
+        protected AimAssistPillBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IAimAssistPosePointGetter AimAssistPosePointFactory(
+        public static IAimAssistPillGetter AimAssistPillFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1335,7 +1335,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new AimAssistPosePointBinaryOverlay(
+            var ret = new AimAssistPillBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1347,12 +1347,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IAimAssistPosePointGetter AimAssistPosePointFactory(
+        public static IAimAssistPillGetter AimAssistPillFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return AimAssistPosePointFactory(
+            return AimAssistPillFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1372,27 +1372,27 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.StartBoneName, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.StartBoneName, translationParams)) return ParseResult.Stop;
                     _StartBoneNameLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.StartBoneName;
+                    return (int)AimAssistPill_FieldIndex.StartBoneName;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.EndBoneName, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.EndBoneName, translationParams)) return ParseResult.Stop;
                     _EndBoneNameLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.EndBoneName;
+                    return (int)AimAssistPill_FieldIndex.EndBoneName;
                 }
                 case RecordTypeInts.RADR:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
                     _RadiusLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.Radius;
+                    return (int)AimAssistPill_FieldIndex.Radius;
                 }
                 case RecordTypeInts.WTMX:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPill_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
                     _WeightLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.Weight;
+                    return (int)AimAssistPill_FieldIndex.Weight;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1404,7 +1404,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            AimAssistPosePointMixIn.Print(
+            AimAssistPillMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1415,16 +1415,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IAimAssistPosePointGetter rhs) return false;
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IAimAssistPillGetter rhs) return false;
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IAimAssistPosePointGetter? obj)
+        public bool Equals(IAimAssistPillGetter? obj)
         {
-            return ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((AimAssistPillCommon)((IAimAssistPillGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((AimAssistPosePointCommon)((IAimAssistPosePointGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AimAssistPillCommon)((IAimAssistPillGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

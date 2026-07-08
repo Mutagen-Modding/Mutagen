@@ -8,12 +8,15 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,6 +57,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IAimAssistModelGetter.Components => _Components;
+        #endregion
+
+        #endregion
         #region InnerConeAngleDegrees
         public Single InnerConeAngleDegrees { get; set; } = default(Single);
         #endregion
@@ -145,6 +162,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.InnerConeAngleDegrees = initialValue;
                 this.OuterConeAngleDegrees = initialValue;
                 this.SteeringDegreesPerSec = initialValue;
@@ -177,6 +195,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem Components,
                 TItem InnerConeAngleDegrees,
                 TItem OuterConeAngleDegrees,
                 TItem SteeringDegreesPerSec,
@@ -208,6 +227,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
                 this.InnerConeAngleDegrees = InnerConeAngleDegrees;
                 this.OuterConeAngleDegrees = OuterConeAngleDegrees;
                 this.SteeringDegreesPerSec = SteeringDegreesPerSec;
@@ -241,6 +261,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem InnerConeAngleDegrees;
             public TItem OuterConeAngleDegrees;
             public TItem SteeringDegreesPerSec;
@@ -276,6 +297,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.InnerConeAngleDegrees, rhs.InnerConeAngleDegrees)) return false;
                 if (!object.Equals(this.OuterConeAngleDegrees, rhs.OuterConeAngleDegrees)) return false;
                 if (!object.Equals(this.SteeringDegreesPerSec, rhs.SteeringDegreesPerSec)) return false;
@@ -303,6 +325,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
                 hash.Add(this.InnerConeAngleDegrees);
                 hash.Add(this.OuterConeAngleDegrees);
                 hash.Add(this.SteeringDegreesPerSec);
@@ -335,6 +358,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.InnerConeAngleDegrees)) return false;
                 if (!eval(this.OuterConeAngleDegrees)) return false;
                 if (!eval(this.SteeringDegreesPerSec)) return false;
@@ -365,6 +400,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.InnerConeAngleDegrees)) return true;
                 if (eval(this.OuterConeAngleDegrees)) return true;
                 if (eval(this.SteeringDegreesPerSec)) return true;
@@ -402,6 +449,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), []);
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.InnerConeAngleDegrees = eval(this.InnerConeAngleDegrees);
                 obj.OuterConeAngleDegrees = eval(this.OuterConeAngleDegrees);
                 obj.SteeringDegreesPerSec = eval(this.SteeringDegreesPerSec);
@@ -442,6 +504,25 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AimAssistModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.InnerConeAngleDegrees ?? true)
                     {
                         sb.AppendItem(InnerConeAngleDegrees, "InnerConeAngleDegrees");
@@ -541,6 +622,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? InnerConeAngleDegrees;
             public Exception? OuterConeAngleDegrees;
             public Exception? SteeringDegreesPerSec;
@@ -571,6 +653,8 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistModel_FieldIndex enu = (AimAssistModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case AimAssistModel_FieldIndex.Components:
+                        return Components;
                     case AimAssistModel_FieldIndex.InnerConeAngleDegrees:
                         return InnerConeAngleDegrees;
                     case AimAssistModel_FieldIndex.OuterConeAngleDegrees:
@@ -625,6 +709,9 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistModel_FieldIndex enu = (AimAssistModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case AimAssistModel_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
                     case AimAssistModel_FieldIndex.InnerConeAngleDegrees:
                         this.InnerConeAngleDegrees = ex;
                         break;
@@ -702,6 +789,9 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistModel_FieldIndex enu = (AimAssistModel_FieldIndex)index;
                 switch (enu)
                 {
+                    case AimAssistModel_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
                     case AimAssistModel_FieldIndex.InnerConeAngleDegrees:
                         this.InnerConeAngleDegrees = (Exception?)obj;
                         break;
@@ -777,6 +867,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
                 if (InnerConeAngleDegrees != null) return true;
                 if (OuterConeAngleDegrees != null) return true;
                 if (SteeringDegreesPerSec != null) return true;
@@ -825,6 +916,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(InnerConeAngleDegrees, "InnerConeAngleDegrees");
                 }
@@ -899,6 +1008,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.InnerConeAngleDegrees = this.InnerConeAngleDegrees.Combine(rhs.InnerConeAngleDegrees);
                 ret.OuterConeAngleDegrees = this.OuterConeAngleDegrees.Combine(rhs.OuterConeAngleDegrees);
                 ret.SteeringDegreesPerSec = this.SteeringDegreesPerSec.Combine(rhs.SteeringDegreesPerSec);
@@ -943,6 +1053,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public AComponent.TranslationMask? Components;
             public bool InnerConeAngleDegrees;
             public bool OuterConeAngleDegrees;
             public bool SteeringDegreesPerSec;
@@ -1002,6 +1113,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((InnerConeAngleDegrees, null));
                 ret.Add((OuterConeAngleDegrees, null));
                 ret.Add((SteeringDegreesPerSec, null));
@@ -1036,6 +1148,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AimAssistModel_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AimAssistModelCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AimAssistModelSetterCommon.Instance.RemapLinks(this, mapping);
         public AimAssistModel(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -1085,6 +1199,15 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IAimAssistModel);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AimAssistModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AimAssistModelSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AimAssistModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AimAssistModelSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1165,9 +1288,12 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IAimAssistModel :
         IAimAssistModelGetter,
+        IAssetLinkContainer,
+        IFormLinkContainer,
         ILoquiObjectSetter<IAimAssistModelInternal>,
         IStarfieldMajorRecordInternal
     {
+        new ExtendedList<AComponent> Components { get; }
         new Single InnerConeAngleDegrees { get; set; }
         new Single OuterConeAngleDegrees { get; set; }
         new Single SteeringDegreesPerSec { get; set; }
@@ -1190,6 +1316,10 @@ namespace Mutagen.Bethesda.Starfield
         new Single AdsMultiplierFriction { get; set; }
         new Single AdsMultiplierSteeringDegreesPerSec { get; set; }
         new Boolean AimAssistEnabled { get; set; }
+        #region Mutagen
+        new AimAssistModel.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IAimAssistModelInternal :
@@ -1202,11 +1332,14 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AAMD)]
     public partial interface IAimAssistModelGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IAimAssistModelGetter>,
         IMapsToGetter<IAimAssistModelGetter>
     {
         static new ILoquiRegistration StaticRegistration => AimAssistModel_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
         Single InnerConeAngleDegrees { get; }
         Single OuterConeAngleDegrees { get; }
         Single SteeringDegreesPerSec { get; }
@@ -1229,6 +1362,10 @@ namespace Mutagen.Bethesda.Starfield
         Single AdsMultiplierFriction { get; }
         Single AdsMultiplierSteeringDegreesPerSec { get; }
         Boolean AimAssistEnabled { get; }
+
+        #region Mutagen
+        AimAssistModel.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1405,28 +1542,29 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        InnerConeAngleDegrees = 7,
-        OuterConeAngleDegrees = 8,
-        SteeringDegreesPerSec = 9,
-        PitchScale = 10,
-        InnerSteeringRing = 11,
-        OuterSteeringRing = 12,
-        Friction = 13,
-        MoveFollowDegreesPerSec = 14,
-        AdsSnapSteeringMult = 15,
-        AdsSnapSeconds = 16,
-        AdsSnapConeAngleDegrees = 17,
-        NoSteering = 18,
-        BulletBendingConeAngleDegrees = 19,
-        AdsSnapSteeringMultiplierInnerRing = 20,
-        AdsSnapSteeringMultiplierOuterRing = 21,
-        AdsMultiplierInnerConeAngleDegrees = 22,
-        AdsMultiplierOuterConeAngleDegrees = 23,
-        AdsMultiplierInnerSteeringRing = 24,
-        AdsMultiplierOuterSteeringRing = 25,
-        AdsMultiplierFriction = 26,
-        AdsMultiplierSteeringDegreesPerSec = 27,
-        AimAssistEnabled = 28,
+        Components = 7,
+        InnerConeAngleDegrees = 8,
+        OuterConeAngleDegrees = 9,
+        SteeringDegreesPerSec = 10,
+        PitchScale = 11,
+        InnerSteeringRing = 12,
+        OuterSteeringRing = 13,
+        Friction = 14,
+        MoveFollowDegreesPerSec = 15,
+        AdsSnapSteeringMult = 16,
+        AdsSnapSeconds = 17,
+        AdsSnapConeAngleDegrees = 18,
+        NoSteering = 19,
+        BulletBendingConeAngleDegrees = 20,
+        AdsSnapSteeringMultiplierInnerRing = 21,
+        AdsSnapSteeringMultiplierOuterRing = 22,
+        AdsMultiplierInnerConeAngleDegrees = 23,
+        AdsMultiplierOuterConeAngleDegrees = 24,
+        AdsMultiplierInnerSteeringRing = 25,
+        AdsMultiplierOuterSteeringRing = 26,
+        AdsMultiplierFriction = 27,
+        AdsMultiplierSteeringDegreesPerSec = 28,
+        AimAssistEnabled = 29,
     }
     #endregion
 
@@ -1437,9 +1575,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 22;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 30;
 
         public static readonly Type MaskType = typeof(AimAssistModel.Mask<>);
 
@@ -1472,6 +1610,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.AAMD);
             var all = RecordCollection.Factory(
                 RecordTypes.AAMD,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.SNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1517,6 +1657,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAimAssistModelInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
             item.InnerConeAngleDegrees = default(Single);
             item.OuterConeAngleDegrees = default(Single);
             item.SteeringDegreesPerSec = default(Single);
@@ -1556,6 +1697,31 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IAimAssistModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAimAssistModel obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAimAssistModel obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -1623,6 +1789,10 @@ namespace Mutagen.Bethesda.Starfield
             AimAssistModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.InnerConeAngleDegrees = item.InnerConeAngleDegrees.EqualsWithin(rhs.InnerConeAngleDegrees);
             ret.OuterConeAngleDegrees = item.OuterConeAngleDegrees.EqualsWithin(rhs.OuterConeAngleDegrees);
             ret.SteeringDegreesPerSec = item.SteeringDegreesPerSec.EqualsWithin(rhs.SteeringDegreesPerSec);
@@ -1694,6 +1864,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if (printMask?.InnerConeAngleDegrees ?? true)
             {
                 sb.AppendItem(item.InnerConeAngleDegrees, "InnerConeAngleDegrees");
@@ -1832,6 +2016,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistModel_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AimAssistModel_FieldIndex.Components)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)AimAssistModel_FieldIndex.InnerConeAngleDegrees) ?? true))
             {
                 if (!lhs.InnerConeAngleDegrees.EqualsWithin(rhs.InnerConeAngleDegrees)) return false;
@@ -1948,6 +2136,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAimAssistModelGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
             hash.Add(item.InnerConeAngleDegrees);
             hash.Add(item.OuterConeAngleDegrees);
             hash.Add(item.SteeringDegreesPerSec);
@@ -1996,6 +2185,25 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAimAssistModelGetter obj, bool iterateNestedRecords = true)
         {
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAimAssistModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
@@ -2095,6 +2303,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)AimAssistModel_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)AimAssistModel_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)AimAssistModel_FieldIndex.InnerConeAngleDegrees) ?? true))
             {
                 item.InnerConeAngleDegrees = rhs.InnerConeAngleDegrees;
@@ -2352,6 +2584,17 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.SNAM)))
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2487,6 +2730,16 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)AimAssistModel_FieldIndex.Components;
+                }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2581,6 +2834,8 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AimAssistModelCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AimAssistModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AimAssistModelBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2594,7 +2849,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IAimAssistModelGetter);
 
+        public AimAssistModel.MajorFlag MajorFlags => (AimAssistModel.MajorFlag)this.MajorRecordFlagsRaw;
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
         private RangeInt32? _SNAMLocation;
         #region InnerConeAngleDegrees
         private int _InnerConeAngleDegreesLocation => _SNAMLocation!.Value.Min;
@@ -2775,6 +3032,15 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)AimAssistModel_FieldIndex.Components;
+                }
                 case RecordTypeInts.SNAM:
                 {
                     _SNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);

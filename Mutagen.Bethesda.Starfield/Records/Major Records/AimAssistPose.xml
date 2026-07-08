@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="AimAssistPose" recordType="AAPD" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="AimAssistPose" recordType="AAPD" objType="Record" majorFlag="true" baseClass="StarfieldMajorRecord">
     <Fields>
-      <RefList name="AttachPoints" refName="AimAssistPosePoint" markerType="AAAP" />
-      <RefList name="Connections" refName="AimAssistPosePoint" counterRecType="AAPS" />
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="AimAssistPill" refName="AimAssistPill" markerType="AAAP" nullable="False" />
+      <RefList name="BulletBendingPills" refName="AimAssistPill" counterRecType="AAPS" />
     </Fields>
   </Object>
-  <Object name="AimAssistPosePoint" objType="Subrecord" >
+  <Object name="AimAssistPill" objType="Subrecord" >
     <Fields>
       <String name="StartBoneName" recordType="ANAM" />
       <String name="EndBoneName" recordType="BNAM" />

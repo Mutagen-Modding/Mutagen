@@ -1,6 +1,6 @@
 namespace Mutagen.Bethesda.Starfield;
 
-public partial class ActionRecord
+public partial class AimAssistPose
 {
     [Flags]
     public enum MajorFlag
@@ -9,7 +9,6 @@ public partial class ActionRecord
         GroundPiece = 0x10,
         HiddenFromLocalMap = 0x200,
         UsedAsPlatform = 0x800,
-        Restricted = 0x8000,
         HasCurrents = 0x8_0000,
         NavmeshFilter = 0x400_0000,
         NavmeshBoundingBox = 0x800_0000,
