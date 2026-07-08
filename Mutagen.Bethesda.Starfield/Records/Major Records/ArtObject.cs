@@ -11,11 +11,11 @@ public partial class ArtObject
     }
 
     [Flags]
-    public enum Flag
+    public enum Flag : uint
     {
         RotateToFaceTarget = 0x01,
         AttachToCamera = 0x02,
         InheritRotation = 0x04,
-        ReferenceEffect = 0x08,
+        ReferenceEffect = 0x8000_0000,
     }
 }
