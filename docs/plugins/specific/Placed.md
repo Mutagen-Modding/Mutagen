@@ -1,10 +1,10 @@
 # Placed Objects
 
-Cells contain "placed" records -- objects, NPCs, traps, and other things that exist at a specific position in the game world. These records live inside a Cell's `Persistent` or `Temporary` lists and are one of the most commonly interacted with record types when writing patchers.
+Cells contain "placed" records like objects, NPCs, traps, and other things that exist at a specific position in the game world. These records live inside a Cell's `Persistent` or `Temporary` lists and are one of the most commonly interacted with record types when writing patchers.
 
 ## The IPlaced Umbrella Interface
 
-`IPlaced` is an **umbrella interface** that covers all the different types of things that can be placed inside a cell. A single cell can contain a mix of placed NPCs, placed objects, placed traps, and more -- all stored together in the same list typed as `IPlaced`.
+`IPlaced` is an **umbrella interface** that covers all the different types of things that can be placed inside a cell. A single cell can contain a mix of placed NPCs, placed objects, placed traps, and more all stored together in the same list typed as `IPlaced`.
 
 The reason `IPlaced` is an interface rather than a base class is because the concrete types have very different record structures and inheritance hierarchies. A `PlacedNpc` and a `PlacedArrow` share some common placement data (position, enable parent, scripts, etc.), but are otherwise very different records. The interface unifies them under one type so cells can store them in a single collection.
 
