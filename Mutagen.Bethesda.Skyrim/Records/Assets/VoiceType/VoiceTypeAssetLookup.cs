@@ -12,7 +12,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     //Databases
     private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
+    // NPC -> Voice types
     private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
+    // Voice type -> NPCs. Kept as a List<FormLink> as we always return the full value as form links
+    private readonly Dictionary<string, List<IFormLinkGetter<IHasVoiceTypeGetter>>> _voiceSpeakers = [];
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
@@ -137,6 +140,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .SelectMany(x => x)
             .ToHashSet();
 
+        foreach (var (speaker, voices) in _speakerVoices)
+        {
+            foreach (var voice in voices)
+            {
+                _voiceSpeakers.GetOrAdd(voice).Add(speaker);
+            }
+        }
 
         // Build default voice type lookup, including those defined in masters
         foreach (var mod in _formLinkCache.PriorityOrder)
@@ -259,17 +269,23 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             voiceContainer = GetAllDefaultVoices();
         }
 
-        foreach (var formKey in voiceContainer.Voices.SelectMany(x =>
-                 {
-                     if (x.Value.Count > 0) return x.Value;
-
-                     // Get speakers with voice type when the whole voice type is used (there are no speakers)
-                     return _speakerVoices
-                         .Where(y => y.Value.Contains(x.Key))
-                         .Select(y => y.Key);
-                 }))
+        foreach (var voice in voiceContainer.Voices)
         {
-            yield return new FormLink<IHasVoiceTypeGetter>(formKey);
+            // Filtered from voice type
+            if (voice.Value.Count > 0)
+            {
+                foreach (var speaker in voice.Value)
+                    yield return new FormLink<IHasVoiceTypeGetter>(speaker);
+            }
+            // All NPCs of voice
+            else
+            {
+                if (_voiceSpeakers.TryGetValue(voice.Key, out var speakers))
+                {
+                    foreach (var speaker in speakers)
+                        yield return speaker;
+                }
+            }
         }
     }
 
