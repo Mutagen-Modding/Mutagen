@@ -31,136 +31,126 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     {
         _formLinkCache = linkCache.FormLinkCache;
 
-        var childRaces = new HashSet<FormKey>();
-        foreach (var mod in _formLinkCache.PriorityOrder)
+        foreach (var quest in _formLinkCache.WinningOverrides<IQuestGetter>())
         {
-            foreach (var quest in mod.EnumerateMajorRecords<IQuestGetter>())
+            foreach (var alias in quest.Aliases)
             {
-                foreach (var alias in quest.Aliases)
-                {
-                    var uniqueActor = alias.UniqueActor.FormKey;
-                    if (uniqueActor.IsNull) continue;
+                var uniqueActor = alias.UniqueActor.FormKey;
+                if (uniqueActor.IsNull) continue;
 
-                    foreach (var faction in alias.Factions)
+                foreach (var faction in alias.Factions)
+                {
+                    if (!faction.IsNull)
                     {
-                        if (!faction.IsNull)
-                        {
-                            _factionNPCs
-                                .GetOrAdd(faction.FormKey)
-                                .Add(uniqueActor);
-                        }
-                    }
-                }
-            }
-
-            foreach (var leveledNpc in mod.EnumerateMajorRecords<ILeveledNpcGetter>())
-            {
-                if (leveledNpc.Entries is null) continue;
-
-                var voiceTypes = leveledNpc.Entries
-                    .Select(x => x.Data?.Reference)
-                    .WhereNotNull()
-                    .SelectMany(GetVoiceTypes)
-                    .ToHashSet();
-
-                _speakerVoices
-                    .GetOrAdd(leveledNpc.FormKey)
-                    .Add(voiceTypes);
-            }
-
-            foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>())
-            {
-                _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc).ToHashSet());
-
-                foreach (var factionKey in GetFactions(npc))
-                {
-                    _factionNPCs
-                        .GetOrAdd(factionKey.FormKey)
-                        .Add(npc.FormKey);
-                }
-
-                foreach (var classKey in GetClasses(npc))
-                {
-                    _classNPCs
-                        .GetOrAdd(classKey.FormKey)
-                        .Add(npc.FormKey);
-                }
-
-                foreach (var gender in GetGenders(npc))
-                {
-                    _genderNPCs
-                        .GetOrAdd(gender)
-                        .Add(npc.FormKey);
-                }
-
-                foreach (var raceKey in GetRaces(npc))
-                {
-                    _raceNPCs
-                        .GetOrAdd(raceKey.FormKey)
-                        .Add(npc.FormKey);
-                }
-            }
-
-            foreach (var response in mod.EnumerateMajorRecords<IDialogResponsesGetter>())
-            {
-                if (!response.ResponseData.IsNull)
-                {
-                    _sharedInfoUsages
-                        .GetOrAdd(response.ResponseData.FormKey)
-                        .Add(response.FormKey);
-                }
-            }
-
-            foreach (var talkingActivator in mod.EnumerateMajorRecords<ITalkingActivatorGetter>())
-            {
-                if (!_speakerVoices.ContainsKey(talkingActivator.FormKey))
-                {
-                    var voice = GetVoiceType(talkingActivator);
-                    if (voice != null)
-                        _speakerVoices.Add(talkingActivator.FormKey, [voice]);
-                }
-            }
-
-            foreach (var race in mod.EnumerateMajorRecords<IRaceGetter>())
-            {
-                if ((race.Flags & Race.Flag.Child) != 0)
-                {
-                    childRaces.Add(race.FormKey);
-                }
-            }
-
-            foreach (var scene in mod.EnumerateMajorRecords<ISceneGetter>())
-            {
-                foreach (var action in scene.Actions)
-                {
-                    if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !_dialogueSceneAliasIndex.ContainsKey(action.Topic.FormKey))
-                    {
-                        _dialogueSceneAliasIndex.Add(action.Topic.FormKey, action.ActorID.Value);
-                    }
-                }
-            }
-
-            var defaultVoiceTypes = new HashSet<string>();
-            _defaultVoiceTypes.Add(mod.ModKey, defaultVoiceTypes);
-            foreach (var voiceType in mod.EnumerateMajorRecords<IVoiceTypeGetter>())
-            {
-                if (voiceType.EditorID != null)
-                {
-                    if ((voiceType.Flags & Skyrim.VoiceType.Flag.AllowDefaultDialog) != 0)
-                    {
-                        defaultVoiceTypes.Add(voiceType.EditorID);
+                        _factionNPCs
+                            .GetOrAdd(faction.FormKey)
+                            .Add(uniqueActor);
                     }
                 }
             }
         }
 
+        foreach (var leveledNpc in _formLinkCache.WinningOverrides<ILeveledNpcGetter>())
+        {
+            if (leveledNpc.Entries is null) continue;
+
+            var voiceTypes = leveledNpc.Entries
+                .Select(x => x.Data?.Reference)
+                .WhereNotNull()
+                .SelectMany(GetVoiceTypes)
+                .ToHashSet();
+
+            _speakerVoices
+                .GetOrAdd(leveledNpc.FormKey)
+                .Add(voiceTypes);
+        }
+
+        foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
+        {
+            _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc).ToHashSet());
+
+            foreach (var factionKey in GetFactions(npc))
+            {
+                _factionNPCs
+                    .GetOrAdd(factionKey.FormKey)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var classKey in GetClasses(npc))
+            {
+                _classNPCs
+                    .GetOrAdd(classKey.FormKey)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var gender in GetGenders(npc))
+            {
+                _genderNPCs
+                    .GetOrAdd(gender)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var raceKey in GetRaces(npc))
+            {
+                _raceNPCs
+                    .GetOrAdd(raceKey.FormKey)
+                    .Add(npc.FormKey);
+            }
+        }
+
+        foreach (var response in _formLinkCache.WinningOverrides<IDialogResponsesGetter>())
+        {
+            if (!response.ResponseData.IsNull)
+            {
+                _sharedInfoUsages
+                    .GetOrAdd(response.ResponseData.FormKey)
+                    .Add(response.FormKey);
+            }
+        }
+
+        foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
+        {
+            if (!_speakerVoices.ContainsKey(talkingActivator.FormKey))
+            {
+                var voice = GetVoiceType(talkingActivator);
+                if (voice != null)
+                    _speakerVoices.Add(talkingActivator.FormKey, [voice]);
+            }
+        }
+
+        foreach (var scene in _formLinkCache.WinningOverrides<ISceneGetter>())
+        {
+            foreach (var action in scene.Actions)
+            {
+                if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !_dialogueSceneAliasIndex.ContainsKey(action.Topic.FormKey))
+                {
+                    _dialogueSceneAliasIndex.Add(action.Topic.FormKey, action.ActorID.Value);
+                }
+            }
+        }
+
         //Build child cache
-        _childNPCs = childRaces
+        _childNPCs = _formLinkCache.WinningOverrides<IRaceGetter>()
+            .Where(r => r.Flags.HasFlag(Race.Flag.Child))
+            .Select(r => r.FormKey)
             .SelectWhere(r => _raceNPCs.TryGetValue(r, out var raceNpcFormKeys) ? TryGet<HashSet<FormKey>>.Succeed(raceNpcFormKeys) : TryGet<HashSet<FormKey>>.Failure)
             .SelectMany(x => x)
             .ToHashSet();
 
-        //Add master voice types
+
+        // Build default voice type lookup, including those defined in masters
+        foreach (var mod in _formLinkCache.PriorityOrder)
+        {
+            //var defaultVoiceTypes = new HashSet<string>();
+
+            var defaultVoiceTypes = mod.EnumerateMajorRecords<IVoiceTypeGetter>()
+                .Where(v => v.Flags.HasFlag(Skyrim.VoiceType.Flag.AllowDefaultDialog))
+                .Select(v => v.EditorID)
+                .WhereNotNull()
+                .ToHashSet();
+            _defaultVoiceTypes.Add(mod.ModKey, defaultVoiceTypes);
+        }
+
         var defaultVoicesCopy = new Dictionary<ModKey, HashSet<string>>(_defaultVoiceTypes);
         foreach (var mod in _formLinkCache.PriorityOrder)
         {
