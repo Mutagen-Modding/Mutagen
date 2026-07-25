@@ -13,6 +13,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     //Databases
     private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
     // NPC -> Voice types
+    // TODO: Most NPCs only have one voice type, but using an enumerable here is slower. Check if unions work better once updated to C# 15
     private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
     // Voice type -> NPCs. Kept as a List<FormLink> as we always return the full value as form links
     private readonly Dictionary<string, List<IFormLinkGetter<IHasVoiceTypeGetter>>> _voiceSpeakers = [];
@@ -20,9 +21,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
     private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
-    private HashSet<FormKey> _childNPCs = null!;
-    private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
+    // Child NPCs -> voice types. Used for IsChild condition. VoiceContainer is not reused as these are mutable
+    private Lazy<Dictionary<FormKey, IEnumerable<string>>> _childVoices = null!;
+    private Lazy<Dictionary<FormKey, int>> _dialogueSceneAliasIndex = null!;
+    private Lazy<Dictionary<FormKey, HashSet<FormKey>>> _sharedInfoUsages = null!;
 
     //Caches
     private readonly object _defaultSpeakerVoicesLock = new();
@@ -101,15 +103,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        foreach (var response in _formLinkCache.WinningOverrides<IDialogResponsesGetter>())
-        {
-            if (!response.ResponseData.IsNull)
-            {
-                _sharedInfoUsages
-                    .GetOrAdd(response.ResponseData.FormKey)
-                    .Add(response.FormKey);
-            }
-        }
+        // TODO: This could use a usage cache (breaking change)
+        _sharedInfoUsages = new(() => _formLinkCache.WinningOverrides<IDialogResponsesGetter>()
+            .Where(r => !r.ResponseData.IsNull)
+            .GroupBy(r => r.ResponseData.FormKey)
+            .ToDictionary(g => g.Key, g => g.Select(r => r.FormKey).ToHashSet()));
 
         foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
         {
@@ -121,24 +119,30 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        foreach (var scene in _formLinkCache.WinningOverrides<ISceneGetter>())
-        {
-            foreach (var action in scene.Actions)
+        // TODO: This could use a usage cache (breaking change)
+        _dialogueSceneAliasIndex = new(() => {
+            var index = new Dictionary<FormKey, int>();
+            foreach (var scene in _formLinkCache.WinningOverrides<ISceneGetter>())
             {
-                if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !_dialogueSceneAliasIndex.ContainsKey(action.Topic.FormKey))
+                foreach (var action in scene.Actions)
                 {
-                    _dialogueSceneAliasIndex.Add(action.Topic.FormKey, action.ActorID.Value);
+                    if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !index.ContainsKey(action.Topic.FormKey))
+                    {
+                        index.Add(action.Topic.FormKey, action.ActorID.Value);
+                    }
                 }
             }
-        }
+            return index;
+        });
+
 
         //Build child cache
-        _childNPCs = _formLinkCache.WinningOverrides<IRaceGetter>()
+        _childVoices = new(() => _formLinkCache.WinningOverrides<IRaceGetter>()
             .Where(r => r.Flags.HasFlag(Race.Flag.Child))
             .Select(r => r.FormKey)
             .SelectWhere(r => _raceNPCs.TryGetValue(r, out var raceNpcFormKeys) ? TryGet<HashSet<FormKey>>.Succeed(raceNpcFormKeys) : TryGet<HashSet<FormKey>>.Failure)
             .SelectMany(x => x)
-            .ToHashSet();
+            .ToDictionary(npc => npc, GetVoiceTypes));
 
         foreach (var (speaker, voices) in _speakerVoices)
         {
@@ -151,8 +155,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         // Build default voice type lookup, including those defined in masters
         foreach (var mod in _formLinkCache.PriorityOrder)
         {
-            //var defaultVoiceTypes = new HashSet<string>();
-
             var defaultVoiceTypes = mod.EnumerateMajorRecords<IVoiceTypeGetter>()
                 .Where(v => v.Flags.HasFlag(Skyrim.VoiceType.Flag.AllowDefaultDialog))
                 .Select(v => v.EditorID)
@@ -194,7 +196,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (response.Responses.All(r => !r.Sound.IsNull)) return new VoiceContainer();
 
         //If this is a shared info and it's not used, return no voices
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfoUsages.ContainsKey(response.FormKey)) return new VoiceContainer();
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfoUsages.Value.ContainsKey(response.FormKey)) return new VoiceContainer();
 
         //Get quest voices
         var questVoices = GetQuestVoices(topic, quest);
@@ -343,7 +345,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     }
 
     private void LimitVoicesToSharedInfoUsages(VoiceContainer voices, IDialogTopicGetter topic, IDialogResponsesGetter responses) {
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfoUsages.TryGetValue(responses.FormKey, out var responseFormKeys))
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfoUsages.Value.TryGetValue(responses.FormKey, out var responseFormKeys))
         {
             var userConditions = responseFormKeys
                 .Select(responseKey =>
@@ -413,7 +415,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (!response.Speaker.IsNull) return GetVoices(response.Speaker.FormKey);
 
         //Check scene
-        if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
+        if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.Value.TryGetValue(topic.FormKey, out var aliasIndex))
         {
             voices.IntersectWith(GetVoices(quest, aliasIndex, topic.FormKey.ModKey));
         }
@@ -557,8 +559,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IIsChildConditionDataGetter isChild:
-                voices = new VoiceContainer(_childNPCs.ToDictionary(npc => npc, GetVoiceTypes));
-
+                voices = new VoiceContainer(_childVoices.Value);
                 break;
             default:
                 voices = new VoiceContainer(true);
