@@ -13,8 +13,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     //Databases
     private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
     // NPC -> Voice types
-    // TODO: Most NPCs only have one voice type, but using an enumerable here is slower. Check if unions work better once updated to C# 15
-    private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
+    private readonly Dictionary<FormKey, IEnumerable<string>> _speakerVoices = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
@@ -65,14 +64,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 .SelectMany(GetVoiceTypes)
                 .ToHashSet();
 
-            _speakerVoices
-                .GetOrAdd(leveledNpc.FormKey)
-                .Add(voiceTypes);
+            _speakerVoices.Add(leveledNpc.FormKey, voiceTypes);
         }
 
         foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
         {
-            _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc).ToHashSet());
+            _speakerVoices.Add(npc.FormKey, GetVoiceTypes(npc));
 
             foreach (var factionKey in GetFactions(npc))
             {
@@ -111,12 +108,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
         {
-            if (!_speakerVoices.ContainsKey(talkingActivator.FormKey))
-            {
-                var voice = GetVoiceType(talkingActivator);
-                if (voice != null)
-                    _speakerVoices.Add(talkingActivator.FormKey, [voice]);
-            }
+            var voice = GetVoiceType(talkingActivator);
+            if (voice != null)
+                _speakerVoices.Add(talkingActivator.FormKey, [voice]);
         }
 
         // TODO: This could use a usage cache (breaking change)
