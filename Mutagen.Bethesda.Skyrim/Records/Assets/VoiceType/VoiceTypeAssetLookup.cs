@@ -15,8 +15,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     // NPC -> Voice types
     // TODO: Most NPCs only have one voice type, but using an enumerable here is slower. Check if unions work better once updated to C# 15
     private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
-    // Voice type -> NPCs. Kept as a List<FormLink> as we always return the full value as form links
-    private readonly Dictionary<string, List<IFormLinkGetter<IHasVoiceTypeGetter>>> _voiceSpeakers = [];
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
@@ -25,6 +23,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private Lazy<Dictionary<FormKey, IEnumerable<string>>> _childVoices = null!;
     private Lazy<Dictionary<FormKey, int>> _dialogueSceneAliasIndex = null!;
     private Lazy<Dictionary<FormKey, HashSet<FormKey>>> _sharedInfoUsages = null!;
+    // Voice type -> NPCs. Kept as a List<FormLink> as we always return the full value as form links
+    private Lazy<Dictionary<string, List<IFormLinkGetter<IHasVoiceTypeGetter>>>> _voiceSpeakers = null!;
 
     //Caches
     private readonly object _defaultSpeakerVoicesLock = new();
@@ -144,13 +144,18 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .SelectMany(x => x)
             .ToDictionary(npc => npc, GetVoiceTypes));
 
-        foreach (var (speaker, voices) in _speakerVoices)
+        _voiceSpeakers = new(() =>
         {
-            foreach (var voice in voices)
+            var lookup = new Dictionary<string, List<IFormLinkGetter<IHasVoiceTypeGetter>>>();
+            foreach (var (speaker, voices) in _speakerVoices)
             {
-                _voiceSpeakers.GetOrAdd(voice).Add(speaker);
+                foreach (var voice in voices)
+                {
+                    lookup.GetOrAdd(voice).Add(speaker);
+                }
             }
-        }
+            return lookup;
+        });
 
         // Build default voice type lookup, including those defined in masters
         foreach (var mod in _formLinkCache.PriorityOrder)
@@ -282,7 +287,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             // All NPCs of voice
             else
             {
-                if (_voiceSpeakers.TryGetValue(voice.Key, out var speakers))
+                if (_voiceSpeakers.Value.TryGetValue(voice.Key, out var speakers))
                 {
                     foreach (var speaker in speakers)
                         yield return speaker;
