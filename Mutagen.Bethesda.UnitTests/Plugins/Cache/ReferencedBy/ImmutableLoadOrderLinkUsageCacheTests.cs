@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Records;
@@ -270,5 +270,25 @@ public class ImmutableLoadOrderLinkUsageCacheTests
         TestUntypedResult(c => c.GetUsagesOf(r.ToStandardizedIdentifier()));
         TestTypedResult(c => c.GetUsagesOf<INpcGetter>(r.ToLinkGetter()));
         TestTypedResult(c => c.GetUsagesOf<INpcGetter>(r.ToLink()));
+    }
+
+    [Theory, MutagenModAutoData]
+    public void NestedRecord(
+        SkyrimMod mod,
+        Cell cell,
+        PlacedObject placed,
+        Static stat)
+    {
+        cell.Flags |= Cell.Flag.IsInteriorCell;
+        mod.Cells.AddInteriorCell(cell);
+        cell.Persistent.Add(placed);
+
+        placed.Base.SetTo(stat);
+
+        var linkCache = mod.ToImmutableLinkCache();
+        var usageCache = new ImmutableLoadOrderLinkUsageCache(linkCache);
+
+        usageCache.GetUsagesOf<ICellGetter>(stat).UsageLinks.ShouldBeEmpty();
+        usageCache.GetUsagesOf<IPlacedGetter>(stat).UsageLinks.ShouldEqualEnumerable([placed.ToLink()]);
     }
 }
