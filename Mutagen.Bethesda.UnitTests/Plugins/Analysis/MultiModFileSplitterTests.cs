@@ -367,4 +367,379 @@ public class MultiModFileSplitterTests
             modMasters.Count.ShouldBeLessThanOrEqualTo(10);
         }
     }
+
+    [Theory, MutagenModAutoData]
+    public void NonFirstFragmentReferencingBase_StaysWithinMasterLimit(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // A fragment that links to a record created in the base mod must carry the base
+        // file as a real master, and that base master has to count against the fragment's budget. 
+        const int limit = 5;
+        var mod = new SkyrimMod(ModKey.FromNameAndExtension("Synthesis.esp"), SkyrimRelease.SkyrimSE);
+
+        var baseAnchor = mod.MiscItems.AddNew();
+        baseAnchor.EditorID = "BaseAnchor";
+
+        for (int i = 0; i < 12; i++)
+        {
+            var flst = mod.FormLists.AddNew();
+            flst.EditorID = $"List_{i}";
+            flst.Items.Add(new FormKey(new ModKey($"Ext{i:D2}", ModType.Plugin), 0x800));
+            flst.Items.Add(baseAnchor.FormKey); // links back to a base-created record
+        }
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(mod, limit);
+
+        outputList.Count.ShouldBeGreaterThan(1);
+        foreach (var frag in outputList)
+        {
+            SplitTestUtil.WrittenMasterCount(frag, existingOutputDirectory, fileSystem).ShouldBeLessThanOrEqualTo(limit);
+        }
+
+        var lists = outputList.SelectMany(m => m.EnumerateMajorRecords<IFormListGetter>()).ToList();
+        lists.Count.ShouldBe(12);
+        outputList.SelectMany(m => m.EnumerateMajorRecords<IMiscItemGetter>()).Count().ShouldBe(1);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void BaseFragmentReferencingBase_UsesFullLimit(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // The first fragment keeps the base filename, so its records' base links resolve to its own key and
+        // cost no masters. It must therefore be allowed to fill to the full limit even when every record
+        // references the base.  This input fits in a single fragment and must not be split.
+        const int limit = 5;
+        var mod = new SkyrimMod(ModKey.FromNameAndExtension("Synthesis.esp"), SkyrimRelease.SkyrimSE);
+
+        var baseAnchor = mod.MiscItems.AddNew();
+        baseAnchor.EditorID = "BaseAnchor";
+
+        for (int i = 0; i < 3; i++)
+        {
+            var flst = mod.FormLists.AddNew();
+            flst.EditorID = $"List_{i}";
+            for (int e = 0; e < limit; e++)
+            {
+                flst.Items.Add(new FormKey(new ModKey($"Shared{e}", ModType.Plugin), 0x800));
+            }
+            flst.Items.Add(baseAnchor.FormKey);
+        }
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(mod, limit);
+
+        outputList.Count.ShouldBe(1);
+        SplitTestUtil.WrittenMasterCount(outputList[0], existingOutputDirectory, fileSystem).ShouldBe(limit);
+    }
+
+    /// <summary>
+    /// Asserts the split output is internally consistent: within the master limit, every reference into the
+    /// split family resolves to a record that actually exists, and no fragment references a later sibling
+    /// (masters must load first).
+    /// </summary>
+    private static void AssertSplitValid(
+        IReadOnlyList<ISkyrimMod> output, int limit, DirectoryPath outputDir, IFileSystem fileSystem)
+    {
+        var indexByKey = new Dictionary<ModKey, int>();
+        for (int i = 0; i < output.Count; i++) indexByKey[output[i].ModKey] = i;
+        var present = output
+            .Select(m => new HashSet<FormKey>(m.EnumerateMajorRecords().Select(r => r.FormKey)))
+            .ToList();
+
+        for (int i = 0; i < output.Count; i++)
+        {
+            SplitTestUtil.WrittenMasterCount(output[i], outputDir, fileSystem).ShouldBeLessThanOrEqualTo(limit);
+            foreach (var rec in output[i].EnumerateMajorRecords())
+            {
+                foreach (var fl in rec.EnumerateFormLinks())
+                {
+                    if (fl.FormKey.IsNull) continue;
+                    if (!indexByKey.TryGetValue(fl.FormKey.ModKey, out var targetIdx)) continue;
+                    present[targetIdx].ShouldContain(fl.FormKey,
+                        $"dangling reference {fl.FormKey} from fragment {i} ({output[i].ModKey})");
+                    targetIdx.ShouldBeLessThanOrEqualTo(i,
+                        $"forward reference from fragment {i} to later fragment {targetIdx}");
+                }
+            }
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_ReferencesToCreatedRecord_ResolveAcrossFragments(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // A single created record referenced by many records that must split across fragments. When the splitter
+        // re-keys the referenced record into whichever fragment holds it, every referencing link must be remapped to
+        // that new identity, so every reference still resolves after the split.
+        const int limit = 4;
+        var mod = new SkyrimMod(ModKey.FromNameAndExtension("Synthesis.esp"), SkyrimRelease.SkyrimSE);
+
+        var shared = mod.MiscItems.AddNew();
+        shared.EditorID = "SharedTarget";
+
+        for (int i = 0; i < 10; i++)
+        {
+            var flst = mod.FormLists.AddNew();
+            flst.EditorID = $"List_{i}";
+            for (int e = 0; e < 3; e++)
+            {
+                flst.Items.Add(new FormKey(new ModKey($"Ext{i:D2}_{e}", ModType.Plugin), 0x800));
+            }
+            flst.Items.Add(shared.FormKey); // reference the shared created record
+        }
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(mod, limit);
+
+        outputList.Count.ShouldBeGreaterThan(1);
+        AssertSplitValid(outputList, limit, existingOutputDirectory, fileSystem);
+
+        // The shared record exists exactly once, and every list still references whatever it became.
+        var sharedCopies = outputList.SelectMany(m => m.EnumerateMajorRecords<IMiscItemGetter>()).ToList();
+        sharedCopies.Count.ShouldBe(1);
+        var sharedKey = sharedCopies[0].FormKey;
+        var listsReferencingShared = outputList
+            .SelectMany(m => m.EnumerateMajorRecords<IFormListGetter>())
+            .Count(l => l.Items.Any(item => item.FormKey == sharedKey));
+        listsReferencingShared.ShouldBe(10);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_DanglingSelfReference_BudgetsBaseFragmentAsMaster(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // A link into the mod's own space that no record occupies is assumed to live in the first fragment. The
+        // writer masters the base file for such a link like any other, so every later fragment carrying one must
+        // budget a master slot for it. Two externals per list so several pack into a fragment; without the budget
+        // a packed fragment fills to the limit on externals alone and then exceeds it once the base is added.
+        const int limit = 4;
+        var mod = new SkyrimMod(ModKey.FromNameAndExtension("Synthesis.esp"), SkyrimRelease.SkyrimSE);
+        var dangling = new FormKey(mod.ModKey, 0x999999);
+
+        for (int i = 0; i < 8; i++)
+        {
+            var flst = mod.FormLists.AddNew();
+            flst.EditorID = $"List_{i}";
+            for (int e = 0; e < 2; e++)
+            {
+                flst.Items.Add(new FormKey(new ModKey($"Ext{i:D2}_{e}", ModType.Plugin), 0x800));
+            }
+            flst.Items.Add(dangling);
+        }
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(mod, limit);
+
+        outputList.Count.ShouldBeGreaterThan(1);
+
+        for (int i = 0; i < outputList.Count; i++)
+        {
+            var masters = SplitTestUtil.ExtractMasters(outputList[i], existingOutputDirectory, fileSystem);
+            masters.Count.ShouldBeLessThanOrEqualTo(limit);
+            if (i > 0)
+            {
+                masters.ShouldContain(mod.ModKey,
+                    $"fragment {i} carries a dangling link to the base file, so it must master it");
+            }
+        }
+
+        // The dangling link is left pointing at the base fragment rather than remapped onto a sibling.
+        var lists = outputList.SelectMany(m => m.EnumerateMajorRecords<IFormListGetter>()).ToList();
+        lists.Count.ShouldBe(8);
+        lists.ShouldAllBe(l => l.Items.Any(x => x.FormKey == dangling));
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_LaterFragmentMastersEarlierSplitSibling(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // A daisy chain of referencing records all in different fragments must point to their original references
+        // properly after the split
+        const int limit = 4;
+        var mod = new SkyrimMod(ModKey.FromNameAndExtension("Synthesis.esp"), SkyrimRelease.SkyrimSE);
+
+        FormList MakeChainLink(string id, int extBucket, FormKey? childCreated)
+        {
+            var flst = mod.FormLists.AddNew();
+            flst.EditorID = id;
+            for (int e = 0; e < 3; e++)
+            {
+                flst.Items.Add(new FormKey(new ModKey($"Ext{extBucket}_{e}", ModType.Plugin), 0x800));
+            }
+            if (childCreated.HasValue) flst.Items.Add(childCreated.Value);
+            return flst;
+        }
+
+        var a2 = MakeChainLink("A2", 2, null);
+        var a1 = MakeChainLink("A1", 1, a2.FormKey);
+        var a0 = MakeChainLink("A0", 0, a1.FormKey);
+        var r = MakeChainLink("R", 9, a0.FormKey);
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(mod, limit);
+
+        AssertSplitValid(outputList, limit, existingOutputDirectory, fileSystem);
+
+        // At least one non-base split file is used as a master by a later fragment.
+        var indexByKey = new Dictionary<ModKey, int>();
+        for (int i = 0; i < outputList.Count; i++) indexByKey[outputList[i].ModKey] = i;
+
+        bool siblingMastering = false;
+        for (int i = 0; i < outputList.Count; i++)
+        {
+            foreach (var master in SplitTestUtil.ExtractMasters(outputList[i], existingOutputDirectory, fileSystem))
+            {
+                if (indexByKey.TryGetValue(master, out var mi) && mi > 0 && mi < i)
+                {
+                    siblingMastering = true;
+                }
+            }
+        }
+        siblingMastering.ShouldBeTrue("expected a later fragment to master an earlier non-base split sibling");
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_CreatedRecordRef_NeverPointsToLaterFragment(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // Enforce that referenced records come in the same or earlier fragments
+        const int limit = 4;
+        var mod = new SkyrimMod(ModKey.FromNameAndExtension("Synthesis.esp"), SkyrimRelease.SkyrimSE);
+
+        // Create a chain of created records referencing each other.  Each list also references other records so that
+        // each patch can only contain one of them
+        FormKey? next = null;
+        for (int k = 5; k >= 0; k--)
+        {
+            var flst = mod.FormLists.AddNew();
+            flst.EditorID = $"Link_{k}";
+            for (int e = 0; e < 3; e++)
+            {
+                flst.Items.Add(new FormKey(new ModKey($"Ext{k}_{e}", ModType.Plugin), 0x800));
+            }
+            if (next.HasValue) flst.Items.Add(next.Value);
+            next = flst.FormKey;
+        }
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(mod, limit);
+
+        outputList.Count.ShouldBeGreaterThan(1);
+
+        // Load position of each fragment, and the set of FormKeys each fragment actually defines.
+        var loadPositionByKey = new Dictionary<ModKey, int>();
+        for (int i = 0; i < outputList.Count; i++) loadPositionByKey[outputList[i].ModKey] = i;
+        var definedIn = outputList
+            .Select(m => new HashSet<FormKey>(m.EnumerateMajorRecords().Select(r => r.FormKey)))
+            .ToList();
+
+        for (int i = 0; i < outputList.Count; i++)
+        {
+            foreach (var rec in outputList[i].EnumerateMajorRecords())
+            {
+                foreach (var link in rec.EnumerateFormLinks())
+                {
+                    if (link.FormKey.IsNull) continue;
+                    if (!loadPositionByKey.TryGetValue(link.FormKey.ModKey, out var targetFragment)) continue;
+
+                    definedIn[targetFragment].ShouldContain(link.FormKey,
+                        $"{rec.FormKey} in fragment {i} ({outputList[i].ModKey.FileName}) references {link.FormKey}, " +
+                        $"which is absent from the fragment its key names — an unremapped, broken reference.");
+                    targetFragment.ShouldBeLessThanOrEqualTo(i,
+                        $"reverse-master: {rec.FormKey} in fragment {i} ({outputList[i].ModKey.FileName}) references " +
+                        $"{link.FormKey} defined in later fragment {targetFragment} ({outputList[targetFragment].ModKey.FileName}).");
+                }
+            }
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_WorldspaceSharedParent_ReservesPulledInMasterPerFragment(
+        SkyrimMod inputMod, DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // A shared Worldspace parent (override of Skyrim.esm) carries an external Water link. Its placed
+        // objects split across fragments, and each fragment rebuilds Worldspace->Block->SubBlock->Cell around
+        // its objects via GetOrAddAsOverride, so every fragment declares the worldspace's water master.
+        // That master required by the water record must be taken into account
+        const int limit = 5;
+        var skyrimKey = new ModKey("Skyrim", ModType.Master);
+        var waterModKey = new ModKey("WaterMod", ModType.Plugin);
+
+        var worldspace = new Worldspace(new FormKey(skyrimKey, 0x3C), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "Tamriel",
+            Water = new FormKey(waterModKey, 0x800).ToNullableLink<IWaterGetter>()
+        };
+        var cell = new Cell(new FormKey(skyrimKey, 0x1000), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "ExtCell",
+            Grid = new CellGrid { Point = new P2Int(0, 0) }
+        };
+        worldspace.AddCell(cell);
+
+        for (uint i = 0; i < 15; i++)
+        {
+            var placedModKey = new ModKey($"Placed_{i:D2}", ModType.Plugin);
+            cell.Persistent.Add(new PlacedObject(new FormKey(placedModKey, 0x800 + i), SkyrimRelease.SkyrimSE)
+            {
+                EditorID = $"Ref_{i}"
+            });
+        }
+        inputMod.Worldspaces.Add(worldspace);
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, limit);
+
+        outputList.Count.ShouldBeGreaterThan(1);
+        foreach (var frag in outputList)
+        {
+            var masters = SplitTestUtil.ExtractMasters(frag, existingOutputDirectory, fileSystem);
+            masters.Count.ShouldBeLessThanOrEqualTo(limit);
+            masters.ShouldContain(waterModKey,
+                $"fragment {frag.ModKey.FileName} pulls in the shared worldspace but did not declare its water master");
+        }
+
+        outputList.SelectMany(m => m.EnumerateMajorRecords<IPlacedObjectGetter>()).Count().ShouldBe(15);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void Split_DialogTopicSharedParent_ReservesTopicMastersPerFragment(
+        SkyrimMod inputMod, DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // Companion to the worldspace case with a shallow (direct) parent. An override DialogTopic whose Quest
+        // link targets a distinct external master is copied into every fragment that holds some of its
+        // responses, so every fragment must reserve the quest master alongside the topic's own master.
+        const int limit = 5;
+        var topicModKey = new ModKey("Skyrim", ModType.Master);
+        var questModKey = new ModKey("QuestMod", ModType.Plugin);
+
+        var topic = new DialogTopic(new FormKey(topicModKey, 0x100), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "SharedTopic",
+            Quest = new FormKey(questModKey, 0x200).ToNullableLink<IQuestGetter>()
+        };
+        for (uint i = 0; i < 15; i++)
+        {
+            var modKey = new ModKey($"Resp_{i:D2}", ModType.Plugin);
+            topic.Responses.Add(new DialogResponses(new FormKey(modKey, 0x800 + i), SkyrimRelease.SkyrimSE)
+            {
+                EditorID = $"Override_{i}"
+            });
+        }
+        inputMod.DialogTopics.Add(topic);
+
+        var sut = new MultiModFileSplitter();
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, limit);
+
+        outputList.Count.ShouldBeGreaterThan(1);
+        foreach (var frag in outputList)
+        {
+            var masters = SplitTestUtil.ExtractMasters(frag, existingOutputDirectory, fileSystem);
+            masters.Count.ShouldBeLessThanOrEqualTo(limit);
+            masters.ShouldContain(questModKey);
+        }
+
+        outputList.SelectMany(m => m.EnumerateMajorRecords<IDialogResponsesGetter>()).Count().ShouldBe(15);
+    }
 }

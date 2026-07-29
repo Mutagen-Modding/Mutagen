@@ -483,5 +483,70 @@ public class AutoSplitModWriterTests
     }
 
     #endregion
+
+    #region Worldspace Shared-Parent Pull-In (Split Investigation #5)
+
+    [Theory, MutagenModAutoData]
+    public void WriteWithSplit_WorldspaceSharedParent_NoFragmentOverflows(
+        DirectoryPath existingOutputDirectory, IFileSystem fileSystem)
+    {
+        // A shared Worldspace parent (override of
+        // Skyrim.esm) carries an external Water link, over enough placed objects to force a split past the 254
+        // master limit. Every fragment rebuilds Worldspace->Block->SubBlock->Cell around its objects via
+        // GetOrAddAsOverride, so every fragment declares the worldspace's water master. 
+        // write must complete without a TooManyMastersException.
+        var baseKey = new ModKey("Synthesis", ModType.Plugin);
+        var mod = new SkyrimMod(baseKey, SkyrimRelease.SkyrimSE);
+
+        var skyrimKey = new ModKey("Skyrim", ModType.Master);
+        var waterModKey = new ModKey("WaterMod", ModType.Plugin);
+
+        var worldspace = new Worldspace(new FormKey(skyrimKey, 0x3C), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "Tamriel",
+            Water = new FormKey(waterModKey, 0x800).ToNullableLink<IWaterGetter>()
+        };
+        var cell = new Cell(new FormKey(skyrimKey, 0x1000), SkyrimRelease.SkyrimSE)
+        {
+            EditorID = "ExtCell",
+            Grid = new CellGrid { Point = new P2Int(0, 0) }
+        };
+        worldspace.AddCell(cell);
+
+        const int placedCount = 300; // > master limit, forces a multi-file split
+        for (uint i = 0; i < placedCount; i++)
+        {
+            var placedModKey = new ModKey($"Placed_{i:D4}", ModType.Plugin);
+            cell.Persistent.Add(new PlacedObject(new FormKey(placedModKey, 0x800 + i), SkyrimRelease.SkyrimSE)
+            {
+                EditorID = $"Ref_{i}"
+            });
+        }
+        mod.Worldspaces.Add(worldspace);
+
+        var outputPath = Path.Combine(existingOutputDirectory.Path, baseKey.FileName);
+        var sut = new AutoSplitModWriter(new MultiModFileSplitter());
+
+        Should.NotThrow(() => sut.Write<ISkyrimMod, ISkyrimModGetter>(
+            mod, outputPath, BinaryWriteParameters.Default with { FileSystem = fileSystem }));
+
+        // Read every emitted fragment back: none may exceed the master limit, and all placed objects survive.
+        var total = 0;
+        for (int i = 0; ; i++)
+        {
+            var fileName = i == 0 ? baseKey.FileName.String : $"Synthesis_{i + 1}.esp";
+            var path = Path.Combine(existingOutputDirectory.Path, fileName);
+            if (!fileSystem.File.Exists(path)) break;
+
+            using var reimport = SkyrimMod.CreateFromBinaryOverlay(
+                path, SkyrimRelease.SkyrimSE, new BinaryReadParameters { FileSystem = fileSystem });
+            reimport.MasterReferences.Count.ShouldBeLessThanOrEqualTo(
+                Mutagen.Bethesda.Plugins.Internals.Constants.PluginMasterLimit);
+            total += reimport.EnumerateMajorRecords<IPlacedObjectGetter>().Count();
+        }
+        total.ShouldBe(placedCount);
+    }
+
+    #endregion
 }
 

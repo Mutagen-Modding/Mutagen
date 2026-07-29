@@ -72,4 +72,7 @@ public static class SplitTestUtil
             .Select(m => m.Master)
             .ToHashSet();
     }
+
+    public static int WrittenMasterCount(IModGetter mod, DirectoryPath outputDir, IFileSystem fileSystem)
+        => ExtractMasters(mod, outputDir, fileSystem).Count;
 }
