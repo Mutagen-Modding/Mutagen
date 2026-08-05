@@ -97,6 +97,10 @@ public class MultiModOverlayModule : GenerationModule
             GenerateMergedCellBlockWrapper(sb, gameName);
             sb.AppendLine();
 
+            // Generate MergedCellSubBlock class
+            GenerateMergedCellSubBlock(sb, gameName);
+            sb.AppendLine();
+
             // Generate merged worldspace wrapper classes
             GenerateMergedWorldspaceWrappers(sb, obj, gameName, proto);
             sb.AppendLine();
@@ -266,7 +270,42 @@ public class MultiModOverlayModule : GenerationModule
             {
                 sb.AppendLine("_blockNumber = blockNumber;");
                 sb.AppendLine("_sourceBlocks = sourceBlocks;");
-                sb.AppendLine("_mergedSubBlocks = new Lazy<List<ICellSubBlockGetter>>(() => _sourceBlocks.SelectMany(b => b.SubBlocks).ToList());");
+                sb.AppendLine("_mergedSubBlocks = new Lazy<List<ICellSubBlockGetter>>(MergeSubBlocks);");
+            }
+            sb.AppendLine();
+
+            // Merge method: sub-blocks with the same BlockNumber coming from different split
+            // files must be combined into a single sub-block, otherwise the reconstituted mod
+            // contains duplicate sub-blocks (and later duplicate records on GetOrAddAsOverride).
+            sb.AppendLine("private List<ICellSubBlockGetter> MergeSubBlocks()");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("var subBlocksByNumber = new Dictionary<int, List<ICellSubBlockGetter>>();");
+                sb.AppendLine("var order = new List<int>();");
+                sb.AppendLine("foreach (var block in _sourceBlocks)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("foreach (var subBlock in block.SubBlocks)");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (!subBlocksByNumber.TryGetValue(subBlock.BlockNumber, out var list))");
+                        using (sb.CurlyBrace())
+                        {
+                            sb.AppendLine("list = new List<ICellSubBlockGetter>();");
+                            sb.AppendLine("subBlocksByNumber[subBlock.BlockNumber] = list;");
+                            sb.AppendLine("order.Add(subBlock.BlockNumber);");
+                        }
+                        sb.AppendLine("list.Add(subBlock);");
+                    }
+                }
+                sb.AppendLine("var result = new List<ICellSubBlockGetter>(order.Count);");
+                sb.AppendLine("foreach (var number in order)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("var subBlocks = subBlocksByNumber[number];");
+                    sb.AppendLine("result.Add(subBlocks.Count == 1 ? subBlocks[0] : new MergedCellSubBlock(number, subBlocks));");
+                }
+                sb.AppendLine("return result;");
             }
             sb.AppendLine();
 
@@ -331,6 +370,74 @@ public class MultiModOverlayModule : GenerationModule
             {
                 sb.AppendLine("=> CellBlockCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);");
             }
+        }
+    }
+
+    private void GenerateMergedCellSubBlock(StructuredStringBuilder sb, string gameName)
+    {
+        using (var comment = sb.Comment())
+        {
+            comment.Summary.AppendLine("Merged cell sub-block that combines multiple sub-blocks with the same BlockNumber, deduplicating cells by FormKey.");
+        }
+        sb.AppendLine("internal class MergedCellSubBlock : ICellSubBlockGetter");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("private readonly int _blockNumber;");
+            sb.AppendLine("private readonly List<ICellSubBlockGetter> _sourceSubBlocks;");
+            sb.AppendLine("private readonly Lazy<IReadOnlyList<ICellGetter>> _mergedCells;");
+            sb.AppendLine();
+            sb.AppendLine("public MergedCellSubBlock(int blockNumber, List<ICellSubBlockGetter> sourceSubBlocks)");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("_blockNumber = blockNumber;");
+                sb.AppendLine("_sourceSubBlocks = sourceSubBlocks;");
+                sb.AppendLine("_mergedCells = new Lazy<IReadOnlyList<ICellGetter>>(MergeCells);");
+            }
+            sb.AppendLine();
+            sb.AppendLine("public int BlockNumber => _blockNumber;");
+            sb.AppendLine("public GroupTypeEnum GroupType => _sourceSubBlocks[^1].GroupType;");
+            sb.AppendLine("public int LastModified => _sourceSubBlocks.Max(sb => sb.LastModified);");
+            sb.AppendLine("public int Unknown => 0;");
+            sb.AppendLine();
+
+            // Merge method: cells from sub-blocks of the same number are gathered together, and a
+            // cell sharing a FormKey across split files has its placed objects merged.
+            sb.AppendLine("private IReadOnlyList<ICellGetter> MergeCells()");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine("var cellsByFormKey = new Dictionary<FormKey, List<ICellGetter>>();");
+                sb.AppendLine("var order = new List<FormKey>();");
+                sb.AppendLine("foreach (var subBlock in _sourceSubBlocks)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("foreach (var cell in subBlock.Cells)");
+                    using (sb.CurlyBrace())
+                    {
+                        sb.AppendLine("if (!cellsByFormKey.TryGetValue(cell.FormKey, out var list))");
+                        using (sb.CurlyBrace())
+                        {
+                            sb.AppendLine("list = new List<ICellGetter>();");
+                            sb.AppendLine("cellsByFormKey[cell.FormKey] = list;");
+                            sb.AppendLine("order.Add(cell.FormKey);");
+                        }
+                        sb.AppendLine("list.Add(cell);");
+                    }
+                }
+                sb.AppendLine("var result = new List<ICellGetter>(order.Count);");
+                sb.AppendLine("foreach (var formKey in order)");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine("var cells = cellsByFormKey[formKey];");
+                    sb.AppendLine("result.Add(cells.Count == 1 ? cells[0] : new MergedWorldspaceCell(cells));");
+                }
+                sb.AppendLine("return result;");
+            }
+            sb.AppendLine();
+
+            sb.AppendLine("public IReadOnlyList<ICellGetter> Cells => _mergedCells.Value;");
+            sb.AppendLine();
+
+            GenerateNonMajorRecordInterfaceMembers(sb, "CellSubBlock", itemsAreMajorRecords: true);
         }
     }
 

@@ -259,4 +259,47 @@ public class BinaryReadBuilderAutoSplitTests
         readMod.MiscItems.Count.ShouldBe(1);
         readMod.MiscItems.First().EditorID.ShouldBe("TestItem");
     }
+
+    [Theory, MutagenModAutoData]
+    public void WithAutoSplitSupport_MergesDuplicateCellSubBlocks(
+        SkyrimMod mod,
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        // Put many cells in a single interior block/subblock, each overriding a record from a
+        // distinct master, so the auto-split writer distributes them across multiple split files.
+        // Each split file then contains its own CellBlock(0)/CellSubBlock(1) holding a subset.
+        var block = new CellBlock { BlockNumber = 0, GroupType = GroupTypeEnum.InteriorCellBlock };
+        var subBlock = new CellSubBlock { BlockNumber = 1, GroupType = GroupTypeEnum.InteriorCellSubBlock };
+        for (int i = 0; i < 300; i++)
+        {
+            var master = new ModKey($"Master{i}", ModType.Plugin);
+            subBlock.Cells.Add(new Cell(new FormKey(master, 0x800), SkyrimRelease.SkyrimSE) { EditorID = $"Cell{i}" });
+        }
+        block.SubBlocks.Add(subBlock);
+        mod.Cells.Records.Add(block);
+
+        var outputPath = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);
+        var autoSplitWriter = new AutoSplitModWriter(new MultiModFileSplitter());
+        autoSplitWriter.Write<ISkyrimMod, ISkyrimModGetter>(
+            mod,
+            outputPath,
+            BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        using var readMod = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
+            .FromPath(new ModPath(mod.ModKey, outputPath))
+            .WithFileSystem(fileSystem)
+            .WithAutoSplitSupport()
+            .Construct();
+
+        // When reconstituting the split files, same-numbered cell blocks/subblocks must be merged
+        // back into a single container.  Leaving duplicate CellSubBlock(1) instances produces a
+        // malformed mod where GetOrAddAsOverride later inserts duplicate records, throwing
+        // "Two records with the same FormKey were encountered" on write.
+        var block0 = readMod.Cells.Records.Where(x => x.BlockNumber == 0).ToList();
+        block0.Count.ShouldBe(1);
+        var sub1 = block0[0].SubBlocks.Where(x => x.BlockNumber == 1).ToList();
+        sub1.Count.ShouldBe(1);
+        sub1[0].Cells.Count.ShouldBe(300);
+    }
 }

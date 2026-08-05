@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -7,220 +7,358 @@ namespace Mutagen.Bethesda.Plugins.Analysis.DI;
 
 public class MultiModFileSplitter : IMultiModFileSplitter
 {
-    internal class EquatableModKeySet : IEquatable<EquatableModKeySet>
-    {
-        private readonly ModKey[] _modKeys;
-        private readonly int _hash;
-
-        public EquatableModKeySet(IEnumerable<ModKey> modKeys)
-        {
-            _modKeys = modKeys.OrderBy(x => x.FileName.String).ToArray();
-            _hash = GetHashCodeForModKeys();
-        }
-        
-        private int GetHashCodeForModKeys()
-        {
-            HashCode hashCode = default;
-            foreach (var modKey in _modKeys)
-            {
-                hashCode.Add(modKey);
-            }
-            return hashCode.ToHashCode();
-        }
-
-        public bool Equals(EquatableModKeySet? other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return _modKeys.SequenceEqual(other._modKeys);
-        }
-        
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((EquatableModKeySet)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            return _hash;
-        }
-    }
-    
     /// <summary>
-    /// Helper class to contain data for a cluster, which will eventually become a file
+    /// Record representing a record to export and what it references
     /// </summary>
-    internal class Cluster<TMod, TModGetter>
+    private class AnalyzedRecord<TMod, TModGetter>
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
         where TModGetter : IModGetter
     {
-        /// <summary>
-        /// The masters for the current cluster. The output file must have these masters.
-        /// </summary>
-        public HashSet<ModKey> Masters = new();
+        public required IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> Context { get; init; }
 
-        /// <summary>
-        /// The records for the current cluster, these would be contained in the resulting file
-        /// </summary>
-        public List<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> Records = new();
-    }
+        /// <summary>Whether this record is originally defined within the mod</summary>
+        public required bool IsOriginatingRecord { get; init; }
 
-    private static HashSet<ModKey> GetAllMastersForRecord(
-        IMajorRecordGetter record,
-        ModKey except)
-    {
-        var result = new HashSet<ModKey>();
+        /// <summary>External mods this record references, parent records included.</summary>
+        public required HashSet<ModKey> ExternalMasters { get; init; }
 
-        result.Add(record.FormKey.ModKey);
-
-        foreach (var formLink in record.EnumerateFormLinks(iterateNestedRecords: false))
-        {
-            result.Add(formLink.FormKey.ModKey);
-        }
-
-        result.Remove(except);
-
-        return result;
+        /// <summary>The originating records this record references, parent records included.</summary>
+        public required HashSet<FormKey> ReferencedOriginRecords { get; init; }
     }
 
     /// <summary>
-    /// Gets the masters needed for clustering a record, accounting for deep nested record structures.
-    /// Uses iterateNestedRecords: false to get only the record's own FormLinks, excluding child
-    /// records' FormLinks from the master count. For child records with parent contexts, this includes
-    /// the parent's own (shallow) masters since the parent will be pulled into the same output file
-    /// via GetOrAddAsOverride.
+    /// Record representing a mod fragment to export and what it references
     /// </summary>
-    private static HashSet<ModKey> GetMastersForClustering(
-        IModContext<IMajorRecordGetter> rec,
-        ModKey except)
+    private class ModFragment<TMod, TModGetter>
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
     {
-        var result = GetAllMastersForRecord(rec.Record, except);
+        public required int Index { get; init; }
+        public required ModKey Key { get; init; }
+        public HashSet<ModKey> Masters { get; } = new();
+        public List<AnalyzedRecord<TMod, TModGetter>> Records { get; } = new();
+    }
 
-        // Walk the parent chain (e.g., DialogResponse -> DialogTopic, PlacedObject -> Cell -> Worldspace)
-        // including each parent's shallow masters since GetOrAddAsOverride will pull
-        // parent records into the same output file.
-        var parent = rec.Parent;
-        while (parent?.Record is IMajorRecordGetter parentRecord)
+    /// <summary>
+    /// Collects a records information like its external masters and referenced records, walking the parent chain
+    /// </summary>
+    private static AnalyzedRecord<TMod, TModGetter> AnalyzeContext<TMod, TModGetter>(
+        IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter> context,
+        ModKey inputKey)
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
+    {
+        var externalMods = new HashSet<ModKey>();
+        var referencedOriginatedRecords = new HashSet<FormKey>();
+
+        void Accumulate(IMajorRecordGetter record)
         {
-            var parentMasters = GetAllMastersForRecord(parentRecord, except);
-            result.UnionWith(parentMasters);
+            if (record.FormKey.ModKey != inputKey)
+            {
+                externalMods.Add(record.FormKey.ModKey);
+            }
+
+            foreach (var formLink in record.EnumerateFormLinks(iterateNestedRecords: false))
+            {
+                if (formLink.FormKey.IsNull) continue;
+                
+                if (formLink.FormKey.ModKey == inputKey)
+                {
+                    referencedOriginatedRecords.Add(formLink.FormKey);
+                }
+                else
+                {
+                    externalMods.Add(formLink.FormKey.ModKey);
+                }
+            }
+        }
+
+        Accumulate(context.Record);
+
+        // Walk the full parent chain
+        var parent = context.Parent;
+        while (parent != null)
+        {
+            if (parent.Record is IMajorRecordGetter parentRecord)
+            {
+                Accumulate(parentRecord);
+            }
             parent = parent.Parent;
         }
 
-        return result;
-    }
-
-    /// <summary>
-    /// Splits a given `inputMod` into n output Clusters, each containing at most `limit` masters.
-    /// </summary>
-    /// <param name="inputMod"></param>
-    /// <param name="limit"></param>
-    /// <returns></returns>
-    private static List<Cluster<TMod, TModGetter>> GenerateClusters<TMod, TModGetter>(TMod inputMod, int limit)
-        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TModGetter : IModGetter
-    {
-        var clusters = new List<Cluster<TMod, TModGetter>>();
-
-        var clusterLookupCache = new Dictionary<EquatableModKeySet, Cluster<TMod, TModGetter>>();
-
-        var linkCache = inputMod.ToUntypedImmutableLinkCache();
-        foreach (var rec in inputMod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache))
+        return new AnalyzedRecord<TMod, TModGetter>
         {
-            var mastersHashSet = GetMastersForClustering(rec, inputMod.ModKey);
-
-            // Check if single record exceeds master limit
-            if (mastersHashSet.Count > limit)
-            {
-                throw new TooManyMastersException(
-                    inputMod.ModKey,
-                    mastersHashSet.ToArray());
-            }
-
-            var masters = new EquatableModKeySet(mastersHashSet);
-
-            if (clusterLookupCache.ContainsKey(masters))
-            {
-                var cacheCluster = clusterLookupCache[masters];
-                // found a cluster in the cache
-                // and in this case, the current masterlist should be a subset of cacheCluster already
-                cacheCluster.Records.Add(rec);
-                continue;
-            }
-
-            Cluster<TMod, TModGetter>? existingCluster = null;
-            
-            foreach (Cluster<TMod, TModGetter> curCluster in clusters)
-            {
-                var missingMasters = mastersHashSet.Except(curCluster.Masters).ToArray();
-
-                if (curCluster.Masters.Count + missingMasters.Count() <= limit)
-                {
-                    // found an existing cluster where the current record fits
-                    curCluster.Masters.Add(missingMasters);
-                    existingCluster = curCluster;
-                    break;
-                }
-            }
-
-            if (existingCluster == null)
-            {
-                // we didn't find any, create new
-                var newCluster = new Cluster<TMod, TModGetter>
-                {
-                    Masters = mastersHashSet
-                };
-                newCluster.Records.Add(rec);
-
-                clusters.Add(newCluster);
-                clusterLookupCache.Add(masters, newCluster);
-                continue;
-            }
-
-            existingCluster.Records.Add(rec);
-            clusterLookupCache.Add(masters, existingCluster);
-        }
-
-        return clusters;
+            Context = context,
+            IsOriginatingRecord = context.Record.FormKey.ModKey == inputKey,
+            ExternalMasters = externalMods,
+            ReferencedOriginRecords = referencedOriginatedRecords,
+        };
     }
-        
+
     public IReadOnlyList<TMod> Split<TMod, TModGetter>(TMod inputMod, int masterLimit)
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
         where TModGetter : IModGetter
     {
-        var result = new List<TMod>();
-        var clusters = GenerateClusters<TMod, TModGetter>(inputMod, masterLimit);
-        for (int i = 0; i < clusters.Count; i++)
+        var inputKey = inputMod.ModKey;
+        var linkCache = inputMod.ToUntypedImmutableLinkCache();
+
+        var records = inputMod
+            .EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache)
+            .Select(context => AnalyzeContext(context, inputKey))
+            .ToList();
+
+        var createdRecordsByKey = records
+            .Where(x => x.IsOriginatingRecord)
+            .ToDictionary(x => x.Context.Record.FormKey, x => x);
+
+        // Order created records so that a record is placed only after every created record it references
+        var clusterSets = OrderCreatedClusters(createdRecordsByKey);
+
+        var modFragments = new List<ModFragment<TMod, TModGetter>>();
+        var originIndexByRecord = new Dictionary<FormKey, int>();
+
+        // Place created clusters with dependencies first
+        foreach (var clusterSet in clusterSets)
         {
-            var curCluster = clusters[i];
-            string curFileName;
-            if (i == 0)
+            var externalMasters = new HashSet<ModKey>();
+            var referencedOutside = new HashSet<FormKey>();
+            foreach (var key in clusterSet)
             {
-                // call the first output the same as the input, so Synthesis.esp stays Synthesis.esp
-                curFileName = inputMod.ModKey.FileName;
-            }
-            else
-            {
-                // otherwise, suffix them with a number, making Synthesis_1.esp, Synthesis_2.esp, etc
-                curFileName = $"{inputMod.ModKey.FileName.NameWithoutExtension}_{(i + 1)}{inputMod.ModKey.FileName.Extension}";
-            }
-
-            var newMod = ModFactory<TMod>.Activator(ModKey.FromFileName(curFileName), inputMod.GameRelease);
-
-            foreach (var context in curCluster.Records)
-            {
-                if (context.Record.FormKey.ModKey == inputMod.ModKey)
+                var record = createdRecordsByKey[key];
+                externalMasters.UnionWith(record.ExternalMasters);
+                foreach (var referenced in record.ReferencedOriginRecords)
                 {
-                    // this is a Form which has been created within inputMod -> copy it right over
-                    context.DuplicateIntoAsNewRecord(newMod, new FormKey(newMod.ModKey, context.Record.FormKey.ID));
+                    if (!clusterSet.Contains(referenced))
+                    {
+                        referencedOutside.Add(referenced);
+                    }
+                }
+            }
+
+            var modFragment = ReserveModFragment(modFragments, inputMod, externalMasters, referencedOutside, masterLimit, originIndexByRecord);
+            foreach (var key in clusterSet)
+            {
+                modFragment.Records.Add(createdRecordsByKey[key]);
+                originIndexByRecord[key] = modFragment.Index;
+            }
+        }
+
+        // Place overrides. Each must load no earlier than every created record it references.
+        foreach (var record in records)
+        {
+            if (record.IsOriginatingRecord) continue;
+            var modFragment = ReserveModFragment(modFragments, inputMod, record.ExternalMasters, record.ReferencedOriginRecords, masterLimit, originIndexByRecord);
+            modFragment.Records.Add(record);
+        }
+
+        // Records originating in the first mod fragment keep the input key, so they need no remap
+        var remap = createdRecordsByKey.Keys
+            .Select(x => (Key: x, Index: originIndexByRecord.GetValueOrDefault(x, 0)))
+            .Where(x => x.Index != 0)
+            .ToDictionary(
+                x => x.Key,
+                x => new FormKey(KeyForIndex(inputKey, x.Index), x.Key.ID));
+
+        return WriteModFragments<TMod, TModGetter>(inputMod.GameRelease, modFragments, remap);
+    }
+
+    /// <summary>
+    /// Tarjan strongly-connected-components over the created-record reference graph. Each component becomes a
+    /// cluster of records that must share a mod fragment, returned in dependency-first order (a cluster is emitted
+    /// only after everything it references). Edges: a created record to each created record it links to, plus
+    /// bidirectional edges across created parent chains so a created parent and its created children always
+    /// share a cluster.
+    /// </summary>
+    private static List<HashSet<FormKey>> OrderCreatedClusters<TMod, TModGetter>(
+        Dictionary<FormKey, AnalyzedRecord<TMod, TModGetter>> createdRecordsByKey)
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
+    {
+        var adjacency = new Dictionary<FormKey, HashSet<FormKey>>();
+        foreach (var key in createdRecordsByKey.Keys)
+        {
+            adjacency.GetOrAdd(key);
+        }
+
+        foreach (var (key, record) in createdRecordsByKey)
+        {
+            foreach (var referenced in record.ReferencedOriginRecords)
+            {
+                if (referenced.Equals(key)) continue;
+                if (createdRecordsByKey.ContainsKey(referenced))
+                {
+                    adjacency.GetOrAdd(key).Add(referenced);
+                }
+            }
+
+            var parent = record.Context.Parent;
+            while (parent != null)
+            {
+                if (parent.Record is IMajorRecordGetter parentRecord
+                    && createdRecordsByKey.ContainsKey(parentRecord.FormKey)
+                    && !parentRecord.FormKey.Equals(key))
+                {
+                    adjacency.GetOrAdd(key).Add(parentRecord.FormKey);
+                    adjacency.GetOrAdd(parentRecord.FormKey).Add(key);
+                }
+                parent = parent.Parent;
+            }
+        }
+
+        var nextVisitOrder = 0;
+        var visitOrderByKey = new Dictionary<FormKey, int>();
+        var lowLinkByKey = new Dictionary<FormKey, int>();
+        var onStack = new HashSet<FormKey>();
+        var stack = new Stack<FormKey>();
+        var clusters = new List<HashSet<FormKey>>();
+
+        void StrongConnect(FormKey node)
+        {
+            visitOrderByKey[node] = nextVisitOrder;
+            lowLinkByKey[node] = nextVisitOrder;
+            nextVisitOrder++;
+            stack.Push(node);
+            onStack.Add(node);
+
+            foreach (var neighbor in adjacency.GetOrAdd(node))
+            {
+                if (!visitOrderByKey.TryGetValue(neighbor, out var neighborVisitOrder))
+                {
+                    StrongConnect(neighbor);
+                    lowLinkByKey[node] = Math.Min(lowLinkByKey[node], lowLinkByKey[neighbor]);
+                }
+                else if (onStack.Contains(neighbor))
+                {
+                    lowLinkByKey[node] = Math.Min(lowLinkByKey[node], neighborVisitOrder);
+                }
+            }
+
+            if (lowLinkByKey[node] == visitOrderByKey[node])
+            {
+                var cluster = new HashSet<FormKey>();
+                FormKey popped;
+                do
+                {
+                    popped = stack.Pop();
+                    onStack.Remove(popped);
+                    cluster.Add(popped);
+                }
+                while (!popped.Equals(node));
+                clusters.Add(cluster);
+            }
+        }
+
+        foreach (var key in createdRecordsByKey.Keys)
+        {
+            if (!visitOrderByKey.ContainsKey(key))
+            {
+                StrongConnect(key);
+            }
+        }
+
+        return clusters;
+    }
+
+    /// <summary>
+    /// Reserves the mod fragment for a set of external masters and referenced formkeys: the first mod fragment that can
+    /// hold it without exceeding the master limit and without referencing a later mod fragment, else a new mod
+    /// fragment. The unit's masters are registered on the chosen mod fragment. 
+    /// </summary>
+    private static ModFragment<TMod, TModGetter> ReserveModFragment<TMod, TModGetter>(
+        List<ModFragment<TMod, TModGetter>> modFragments,
+        TMod inputMod,
+        HashSet<ModKey> externals,
+        HashSet<FormKey> referencedCreated,
+        int masterLimit,
+        Dictionary<FormKey, int> originIndexByRecord)
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
+    {
+        var requiredMin = 0;
+        foreach (var created in referencedCreated)
+        {
+            requiredMin = Math.Max(requiredMin, originIndexByRecord.GetValueOrDefault(created, 0));
+        }
+
+        HashSet<ModKey> MastersForIndex(int index)
+        {
+            var set = new HashSet<ModKey>(externals);
+            foreach (var created in referencedCreated)
+            {
+                var createdOriginIndex = originIndexByRecord.GetValueOrDefault(created, 0);
+                if (createdOriginIndex < index)
+                {
+                    set.Add(KeyForIndex(inputMod.ModKey, createdOriginIndex));
+                }
+            }
+            return set;
+        }
+
+        for (var i = requiredMin; i < modFragments.Count; i++)
+        {
+            var modFragment = modFragments[i];
+            var needed = MastersForIndex(i);
+            var missing = needed.Count(m => !modFragment.Masters.Contains(m));
+            if (modFragment.Masters.Count + missing <= masterLimit)
+            {
+                modFragment.Masters.UnionWith(needed);
+                return modFragment;
+            }
+        }
+
+        var newIndex = modFragments.Count;
+        var newModFragment = new ModFragment<TMod, TModGetter>
+        {
+            Index = newIndex,
+            Key = KeyForIndex(inputMod.ModKey, newIndex),
+        };
+        modFragments.Add(newModFragment);
+
+        var newNeeded = MastersForIndex(newIndex);
+        if (newNeeded.Count > masterLimit)
+        {
+            throw new TooManyMastersException(inputMod.ModKey, newNeeded.ToArray());
+        }
+        newModFragment.Masters.UnionWith(newNeeded);
+        return newModFragment;
+    }
+
+    private static ModKey KeyForIndex(ModKey inputKey, int index)
+    {
+        if (index == 0) return inputKey;
+        var fileName = inputKey.FileName;
+        return ModKey.FromFileName($"{fileName.NameWithoutExtension}_{index + 1}{fileName.Extension}");
+    }
+
+    private static IReadOnlyList<TMod> WriteModFragments<TMod, TModGetter>(
+        GameRelease release,
+        List<ModFragment<TMod, TModGetter>> modFragments,
+        Dictionary<FormKey, FormKey> remap)
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+        where TModGetter : IModGetter
+    {
+        var result = new List<TMod>(modFragments.Count);
+        foreach (var modFragment in modFragments)
+        {
+            var newMod = ModFactory<TMod>.Activator(modFragment.Key, release);
+
+            foreach (var record in modFragment.Records)
+            {
+                if (record.IsOriginatingRecord)
+                {
+                    record.Context.DuplicateIntoAsNewRecord(
+                        newMod,
+                        new FormKey(newMod.ModKey, record.Context.Record.FormKey.ID));
                 }
                 else
                 {
-                    // this is an override -> copy as override
-                    context.GetOrAddAsOverride(newMod);
+                    record.Context.GetOrAddAsOverride(newMod);
                 }
+            }
+
+            if (remap.Count > 0)
+            {
+                newMod.RemapLinks(remap);
             }
 
             result.Add(newMod);
