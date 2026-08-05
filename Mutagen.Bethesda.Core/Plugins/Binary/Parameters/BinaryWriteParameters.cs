@@ -65,12 +65,6 @@ public sealed record BinaryWriteParameters
     public FormIDUniquenessOption FormIDUniqueness { get; init; } = FormIDUniquenessOption.Iterate;
 
     /// <summary>
-    /// Logic to use to ensure no record has a null FormKey of its own.<br/>
-    /// If a record with a null FormKey is found, a RecordException will be thrown.
-    /// </summary>
-    public NullFormKeyOption NullFormKey { get; init; } = NullFormKeyOption.Iterate;
-
-    /// <summary>
     /// Logic to use to ensure a mod's formIDs are compacted according to a mod's header flags.<br/>
     /// If there is a record outside the allowed setting, an ArgumentException will be thrown.
     /// </summary>

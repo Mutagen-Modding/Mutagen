@@ -129,6 +129,12 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 
         public FormKey GetFormKey(FormID formId, bool reference)
         {
+            // Only a reference can be fully null with a null ModKey
+            if (reference && formId.Raw == 0)
+            {
+                return FormKey.Null;
+            }
+
             var loadOrder = Normal;
             var modID = formId.FullMasterIndex;
 
@@ -139,16 +145,10 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
                     formId.FullId);
             }
 
-            var id = formId.FullId;
-            if (modID == 0 && id == 0)
-            {
-                return FormKey.Null;
-            }
-
             var master = loadOrder[checked((int)modID)];
             return new FormKey(
                 master,
-                id);
+                formId.FullId);
         }
     }
 
@@ -344,17 +344,18 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
 
     public FormKey GetFormKey(FormID formId, bool reference)
     {
+        // Only a reference can be fully null with a null ModKey
+        if (reference && formId.Raw == 0)
+        {
+            return FormKey.Null;
+        }
+
         ExtractFormIdInfo(
             formId,
             out var style,
             out var index,
             out var id,
             out var loadOrder);
-
-        if (index == 0 && id == 0)
-        {
-            return FormKey.Null;
-        }
 
         if (index >= loadOrder.Count)
         {

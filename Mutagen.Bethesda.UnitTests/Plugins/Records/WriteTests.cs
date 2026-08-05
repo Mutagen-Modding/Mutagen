@@ -185,39 +185,105 @@ public class WriteTests
     }
 
     [Fact]
-    public async Task Write_NullFormKey_Throw()
+    public async Task Write_ZeroIdRecord_RoundTrips()
     {
         using var tmp = GetFile();
-        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
+        var zeroId = FormKey.Factory("000000:Skyrim.esm");
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimSE);
         mod.Weapons.RecordCache.Set(
-            new Weapon(FormKey.Null, SkyrimRelease.SkyrimLE));
-        await Assert.ThrowsAsync<RecordException>(async () =>
-        {
-            await mod.BeginWrite
-                .ToPath(tmp.File.Path)
-                .WithNoLoadOrder()
-                .NoModKeySync()
-                .NoMastersListContentCheck()
-                .SingleThread()
-                .WriteAsync();
-        });
-    }
-
-    [Fact]
-    public async Task Write_NullFormKey_NoCheck()
-    {
-        using var tmp = GetFile();
-        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
-        mod.Weapons.RecordCache.Set(
-            new Weapon(FormKey.Null, SkyrimRelease.SkyrimLE));
+            new Weapon(zeroId, SkyrimRelease.SkyrimSE)
+            {
+                EditorID = "ZeroIdWeapon"
+            });
         await mod.BeginWrite
             .ToPath(tmp.File.Path)
             .WithNoLoadOrder()
             .NoModKeySync()
-            .NoMastersListContentCheck()
-            .NoNullFormKeyCheck()
+            .WithMastersListContent(MastersListContentOption.Iterate)
             .SingleThread()
             .WriteAsync();
+
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(
+            new ModPath(WriteKey, tmp.File.Path), SkyrimRelease.SkyrimSE);
+        var weap = reimport.Weapons.First();
+        weap.EditorID.ShouldBe("ZeroIdWeapon");
+        weap.FormKey.ShouldBe(zeroId);
+        weap.FormKey.IsNull.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Write_ZeroIdRecord_Reexports()
+    {
+        using var tmp = GetFile();
+        using var tmp2 = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimSE);
+        mod.Weapons.RecordCache.Set(
+            new Weapon(FormKey.Factory("000000:Skyrim.esm"), SkyrimRelease.SkyrimSE));
+        await mod.BeginWrite
+            .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate)
+            .SingleThread()
+            .WriteAsync();
+
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(
+            new ModPath(WriteKey, tmp.File.Path), SkyrimRelease.SkyrimSE);
+        await reimport.BeginWrite
+            .ToPath(tmp2.File.Path)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate)
+            .SingleThread()
+            .WriteAsync();
+    }
+
+    [Fact]
+    public async Task Write_OwnZeroIdRecord_MasterlessRoundTrips()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimSE);
+        mod.ModHeader.Stats.NextFormID = 0;
+        var kywd = mod.Keywords.AddNew();
+        kywd.EditorID = "ZeroIdKeyword";
+        kywd.FormKey.ShouldBe(new FormKey(WriteKey, 0));
+
+        await mod.BeginWrite
+            .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .WithForcedLowerFormIdRangeUsage(true)
+            .NoCheckIfLowerRangeDisallowed()
+            .SingleThread()
+            .WriteAsync();
+
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(
+            new ModPath(WriteKey, tmp.File.Path), SkyrimRelease.SkyrimSE);
+        reimport.MasterReferences.ShouldBeEmpty();
+        var re = reimport.Keywords.First();
+        re.EditorID.ShouldBe("ZeroIdKeyword");
+        re.FormKey.ShouldBe(new FormKey(WriteKey, 0));
+        re.FormKey.IsNull.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Write_NullFormLink_StaysNull()
+    {
+        using var tmp = GetFile();
+        var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimSE);
+        var weap = mod.Weapons.AddNew();
+        weap.Template.SetTo(FormKey.Null);
+        await mod.BeginWrite
+            .ToPath(tmp.File.Path)
+            .WithNoLoadOrder()
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.Iterate)
+            .SingleThread()
+            .WriteAsync();
+
+        using var reimport = SkyrimMod.CreateFromBinaryOverlay(
+            new ModPath(WriteKey, tmp.File.Path), SkyrimRelease.SkyrimSE);
+        reimport.Weapons.First().Template.FormKey.ShouldBe(FormKey.Null);
     }
 
     [Fact]

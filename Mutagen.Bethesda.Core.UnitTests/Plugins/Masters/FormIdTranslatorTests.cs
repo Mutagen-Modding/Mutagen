@@ -240,6 +240,138 @@ public class FormIdTranslatorTests
     }
 
     [Theory, MutagenAutoData]
+    internal void GetFormKeyZeroIdTypicalMasters(
+        ModKey originating,
+        ModKey modKeyA,
+        ModKey modKeyB)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        coll.SetTo(new []
+        {
+            new MasterReference()
+            {
+                Master = modKeyA
+            },
+            new MasterReference()
+            {
+                Master = modKeyB
+            },
+        });
+        var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
+        masterPackage.GetFormKey(new FormID(0x00000000), reference: true)
+            .ShouldBe(FormKey.Null);
+        masterPackage.GetFormKey(new FormID(0x00000000), reference: false)
+            .ShouldBe(new FormKey(modKeyA, 0));
+        masterPackage.GetFormKey(new FormID(0x01000000), reference: true)
+            .ShouldBe(new FormKey(modKeyB, 0));
+        masterPackage.GetFormKey(new FormID(0x01000000), reference: false)
+            .ShouldBe(new FormKey(modKeyB, 0));
+        masterPackage.GetFormKey(new FormID(0x02000000), reference: true)
+            .ShouldBe(new FormKey(originating, 0));
+        masterPackage.GetFormKey(new FormID(0x02000000), reference: false)
+            .ShouldBe(new FormKey(originating, 0));
+    }
+
+    [Theory, MutagenAutoData]
+    internal void GetFormKeyZeroIdNoMasters(
+        ModKey originating)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        var masterPackage = SeparatedMasterPackage.NotSeparate(coll);
+
+        masterPackage.GetFormKey(new FormID(0x00000000), reference: true)
+            .ShouldBe(FormKey.Null);
+        masterPackage.GetFormKey(new FormID(0x00000000), reference: false)
+            .ShouldBe(new FormKey(originating, 0));
+    }
+
+    [Theory, MutagenAutoData]
+    internal void GetFormKeyZeroIdSeparateMasters(
+        ModKey originating,
+        ModKey modA,
+        ModKey lightA,
+        ModKey mediumA)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        coll.SetTo(new []
+        {
+            new MasterReference()
+            {
+                Master = modA
+            },
+            new MasterReference()
+            {
+                Master = lightA
+            },
+            new MasterReference()
+            {
+                Master = mediumA
+            },
+        });
+        var lo = new LoadOrder<IModFlagsGetter>();
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
+        lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
+        lo.Add(orig);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, coll, lo);
+
+        masterPackage.GetFormKey(new FormID(0x00000000), reference: true)
+            .ShouldBe(FormKey.Null);
+        masterPackage.GetFormKey(new FormID(0x00000000), reference: false)
+            .ShouldBe(new FormKey(modA, 0));
+        masterPackage.GetFormKey(new FormID(0xFE000000), reference: true)
+            .ShouldBe(new FormKey(lightA, 0));
+        masterPackage.GetFormKey(new FormID(0xFE000000), reference: false)
+            .ShouldBe(new FormKey(lightA, 0));
+        masterPackage.GetFormKey(new FormID(0xFD000000), reference: true)
+            .ShouldBe(new FormKey(mediumA, 0));
+        masterPackage.GetFormKey(new FormID(0xFD000000), reference: false)
+            .ShouldBe(new FormKey(mediumA, 0));
+        masterPackage.GetFormKey(new FormID(0x01000000), reference: true)
+            .ShouldBe(new FormKey(originating, 0));
+    }
+
+    [Theory, MutagenAutoData]
+    internal void GetFormIdZeroIdSeparateMasters(
+        ModKey originating,
+        ModKey modA,
+        ModKey lightA,
+        ModKey mediumA)
+    {
+        var coll = new MasterReferenceCollection(originating);
+        coll.SetTo(new []
+        {
+            new MasterReference()
+            {
+                Master = modA
+            },
+            new MasterReference()
+            {
+                Master = lightA
+            },
+            new MasterReference()
+            {
+                Master = mediumA
+            },
+        });
+        var lo = new LoadOrder<IModFlagsGetter>();
+        var orig = MastersTestUtil.GetFlags(originating, MasterStyle.Full);
+        lo.Add(MastersTestUtil.GetFlags(modA, MasterStyle.Full));
+        lo.Add(MastersTestUtil.GetFlags(lightA, MasterStyle.Small));
+        lo.Add(MastersTestUtil.GetFlags(mediumA, MasterStyle.Medium));
+        lo.Add(orig);
+        var masterPackage = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, coll, lo);
+
+        masterPackage.GetFormID(new FormKey(modA, 0))
+            .ShouldBe(new FormID(0x00000000));
+        masterPackage.GetFormID(new FormKey(lightA, 0))
+            .ShouldBe(new FormID(0xFE000000));
+        masterPackage.GetFormID(new FormKey(mediumA, 0))
+            .ShouldBe(new FormID(0xFD000000));
+    }
+
+    [Theory, MutagenAutoData]
     internal void SeparateMastersOriginatingLight(
         ModKey originating,
         ModKey modA,
