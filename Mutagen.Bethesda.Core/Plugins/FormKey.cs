@@ -93,7 +93,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IComparable<FormKey>, IFor
         {
             return FormKey.None;
         }
-        return masterReferences.GetFormKey(formId, reference: true);
+        return masterReferences.GetFormKey(formId, reference: reference);
     }
 
     private static bool IsDelim(char c) => c is ':' or '_';
