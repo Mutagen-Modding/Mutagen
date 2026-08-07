@@ -9,6 +9,13 @@ public interface IModHeaderCommon : IBinaryItem
     int RawFlags { get; set; }
     uint NumRecords { get; set; }
     uint NextFormID { get; set; }
+    string? Author { get; set; }
+    string? Description { get; set; }
+
+    /// <summary>
+    /// The version recorded in the mod header's stats
+    /// </summary>
+    float HeaderVersion { get; set; }
 
     /// <summary>
     /// Sets the listed overridden forms contained in the Mod Header

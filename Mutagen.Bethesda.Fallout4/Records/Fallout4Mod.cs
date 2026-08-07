@@ -17,6 +17,8 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Fallout4Mod : AMod
 {
+    IModHeaderCommon IMod.ModHeader => this.ModHeader;
+
     public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormIDStatic(this.Fallout4Release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
     

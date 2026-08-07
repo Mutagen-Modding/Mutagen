@@ -18,6 +18,8 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
+    IModHeaderCommon IMod.ModHeader => this.ModHeader;
+
     public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
         GetDefaultInitialNextFormIDStatic(this.SkyrimRelease, 
             this.ModHeader.Stats.Version, 

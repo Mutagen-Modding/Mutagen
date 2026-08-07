@@ -116,6 +116,11 @@ public interface IMod : IModGetter, IMajorRecordEnumerable, IFormKeyAllocator, I
     new IList<MasterReference> MasterReferences { get; }
 
     /// <summary>
+    /// The mod's header, exposed via the members common to every game
+    /// </summary>
+    IModHeaderCommon ModHeader { get; }
+
+    /// <summary>
     /// Returns the Group object associated with the given Major Record Type.
     /// </summary>
     /// <returns>Group object associated with the given Major Record Type</returns>

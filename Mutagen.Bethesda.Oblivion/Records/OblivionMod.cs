@@ -16,6 +16,8 @@ namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
+    IModHeaderCommon IMod.ModHeader => this.ModHeader;
+
     public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,

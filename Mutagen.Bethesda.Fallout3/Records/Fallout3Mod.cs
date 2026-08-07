@@ -15,6 +15,8 @@ namespace Mutagen.Bethesda.Fallout3;
 
 public partial class Fallout3Mod : AMod
 {
+    IModHeaderCommon IMod.ModHeader => this.ModHeader;
+
     public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
