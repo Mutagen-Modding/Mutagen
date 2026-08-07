@@ -548,5 +548,166 @@ public class AutoSplitModWriterTests
     }
 
     #endregion
-}
 
+    #region Header Settings
+
+    [Theory, MutagenModAutoData]
+    public void SplitPreservesHeaderSettings(
+        SplitTestPayload payload,
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        payload.Mod.ModHeader.Flags |= SkyrimModHeader.HeaderFlag.Localized;
+        payload.Mod.ModHeader.Stats.Version = 1.71f;
+        payload.Mod.ModHeader.Author = "TheAuthor";
+        payload.Mod.ModHeader.Description = "TheDescription";
+
+        for (uint i = 0; i < 5; i++)
+        {
+            payload.CreateFormListWithContents(70);
+        }
+
+        var outputPath = Path.Combine(existingOutputDirectory.Path, payload.Mod.ModKey.FileName);
+        var sut = new AutoSplitModWriter(new MultiModFileSplitter());
+        sut.Write<ISkyrimMod, ISkyrimModGetter>(
+            payload.Mod,
+            outputPath,
+            BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(payload.Mod.ModKey.FileName);
+        var extension = Path.GetExtension(payload.Mod.ModKey.FileName);
+        var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
+
+        foreach (var p in new[] { outputPath, splitFile2Path })
+        {
+            var readMod = SkyrimMod.CreateFromBinaryOverlay(
+                p, SkyrimRelease.SkyrimSE, new BinaryReadParameters { FileSystem = fileSystem });
+            readMod.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized).ShouldBeTrue($"{p} flags");
+            readMod.ModHeader.Stats.Version.ShouldBe(1.71f, $"{p} version");
+            readMod.ModHeader.Author.ShouldBe("TheAuthor", $"{p} author");
+            readMod.ModHeader.Description.ShouldBe("TheDescription", $"{p} description");
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void SplitPreservesSmallMasterFlag(
+        SplitTestPayload payload,
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        payload.Mod.IsSmallMaster = true;
+
+        for (uint i = 0; i < 5; i++)
+        {
+            payload.CreateFormListWithContents(70);
+        }
+
+        var outputPath = Path.Combine(existingOutputDirectory.Path, payload.Mod.ModKey.FileName);
+        var sut = new AutoSplitModWriter(new MultiModFileSplitter());
+        sut.Write<ISkyrimMod, ISkyrimModGetter>(
+            payload.Mod,
+            outputPath,
+            BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(payload.Mod.ModKey.FileName);
+        var extension = Path.GetExtension(payload.Mod.ModKey.FileName);
+        var splitFile2Path = Path.Combine(existingOutputDirectory.Path, $"{fileNameWithoutExtension}_2{extension}");
+
+        foreach (var p in new[] { outputPath, splitFile2Path })
+        {
+            var readMod = SkyrimMod.CreateFromBinaryOverlay(
+                p, SkyrimRelease.SkyrimSE, new BinaryReadParameters { FileSystem = fileSystem });
+            readMod.IsSmallMaster.ShouldBeTrue($"{p} lost the small master flag");
+            readMod.MasterStyle.ShouldBe(MasterStyle.Small);
+        }
+    }
+
+    /// <summary>
+    /// A small master's created records must stay inside the compacted range in every fragment
+    /// </summary>
+    [Theory, MutagenModAutoData]
+    public void SplitOfSmallMasterKeepsRecordsInCompactedRange(
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        var mod = new SkyrimMod(ModKey.FromFileName("Patch.esp"), SkyrimRelease.SkyrimSE);
+        mod.IsSmallMaster = true;
+
+        for (uint i = 0; i < 5; i++)
+        {
+            var flst = new Mutagen.Bethesda.Skyrim.FormList(new FormKey(mod.ModKey, 0x800 + i), SkyrimRelease.SkyrimSE);
+            flst.EditorID = $"Flst{i}";
+            for (int j = 0; j < 70; j++)
+            {
+                flst.Items.Add(new FormKey(ModKey.FromFileName($"Master{i}_{j}.esp"), 0x800));
+            }
+            mod.FormLists.Add(flst);
+        }
+
+        var outputPath = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);
+        var sut = new AutoSplitModWriter(new MultiModFileSplitter());
+        sut.Write<ISkyrimMod, ISkyrimModGetter>(
+            mod,
+            outputPath,
+            BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        var files = MultiModFileAnalysis.GetSplitModFiles(new ModPath(mod.ModKey, outputPath), fileSystem);
+        files.Count.ShouldBeGreaterThan(1);
+
+        foreach (var file in files)
+        {
+            var readMod = SkyrimMod.CreateFromBinaryOverlay(
+                file.Path, SkyrimRelease.SkyrimSE, new BinaryReadParameters { FileSystem = fileSystem });
+            readMod.IsSmallMaster.ShouldBeTrue($"{file.Path} lost the small master flag");
+            foreach (var rec in readMod.EnumerateMajorRecords())
+            {
+                if (rec.FormKey.ModKey != readMod.ModKey) continue;
+                rec.FormKey.ID.ShouldBeInRange(0x800u, 0xFFFu, $"{file.Path} {rec.FormKey}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Records whose FormID lands on master index 0 with ID 0 must survive a split write and a split aware read
+    /// </summary>
+    [Theory, MutagenModAutoData]
+    public void SplitRoundTripsZeroIdOverrides(
+        DirectoryPath existingOutputDirectory,
+        IFileSystem fileSystem)
+    {
+        var mod = new SkyrimMod(ModKey.FromFileName("Patch.esp"), SkyrimRelease.SkyrimSE);
+        mod.ModHeader.Stats.Version = 1.71f;
+
+        var expected = new List<FormKey>();
+
+        for (int i = 0; i < 400; i++)
+        {
+            var master = ModKey.FromFileName($"Master{i}.esp");
+            var key = new FormKey(master, (uint)(i % 2 == 0 ? 0 : 0x800));
+            var arma = new ArmorAddon(key, SkyrimRelease.SkyrimSE);
+            arma.EditorID = $"Arma{i}";
+            mod.ArmorAddons.Add(arma);
+            expected.Add(key);
+        }
+
+        var outputPath = Path.Combine(existingOutputDirectory.Path, mod.ModKey.FileName);
+        var sut = new AutoSplitModWriter(new MultiModFileSplitter());
+        sut.Write<ISkyrimMod, ISkyrimModGetter>(
+            mod,
+            outputPath,
+            BinaryWriteParameters.Default with { FileSystem = fileSystem });
+
+        var files = MultiModFileAnalysis.GetSplitModFiles(new ModPath(mod.ModKey, outputPath), fileSystem);
+        files.Count.ShouldBeGreaterThan(1);
+
+        using var readMod = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
+            .FromPath(new ModPath(mod.ModKey, outputPath))
+            .WithFileSystem(fileSystem)
+            .WithAutoSplitSupport()
+            .Construct();
+
+        readMod.ArmorAddons.Select(x => x.FormKey).ShouldBe(expected, ignoreOrder: true);
+    }
+
+    #endregion
+}

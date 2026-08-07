@@ -159,7 +159,7 @@ public class MultiModFileSplitter : IMultiModFileSplitter
                 x => x.Key,
                 x => new FormKey(KeyForIndex(inputKey, x.Index), x.Key.ID));
 
-        return WriteModFragments<TMod, TModGetter>(inputMod.GameRelease, modFragments, remap);
+        return WriteModFragments<TMod, TModGetter>(inputMod, modFragments, remap);
     }
 
     /// <summary>
@@ -331,16 +331,24 @@ public class MultiModFileSplitter : IMultiModFileSplitter
     }
 
     private static IReadOnlyList<TMod> WriteModFragments<TMod, TModGetter>(
-        GameRelease release,
+        TMod inputMod,
         List<ModFragment<TMod, TModGetter>> modFragments,
         Dictionary<FormKey, FormKey> remap)
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
         where TModGetter : IModGetter
     {
+        var release = inputMod.GameRelease;
         var result = new List<TMod>(modFragments.Count);
         foreach (var modFragment in modFragments)
         {
-            var newMod = ModFactory<TMod>.Activator(modFragment.Key, release);
+            // Header version has to go in via the activator, as it drives the initial NextFormID
+            var newMod = ModFactory<TMod>.Activator(
+                modFragment.Key,
+                release,
+                headerVersion: inputMod.ModHeader.HeaderVersion);
+            newMod.ModHeader.RawFlags = inputMod.ModHeader.RawFlags;
+            newMod.ModHeader.Author = inputMod.ModHeader.Author;
+            newMod.ModHeader.Description = inputMod.ModHeader.Description;
 
             foreach (var record in modFragment.Records)
             {
