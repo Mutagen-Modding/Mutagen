@@ -17,6 +17,8 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class StarfieldMod : AMod
 {
+    IModHeaderCommon IMod.ModHeader => this.ModHeader;
+
     public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
         GetDefaultInitialNextFormIDStatic(
             this.StarfieldRelease,

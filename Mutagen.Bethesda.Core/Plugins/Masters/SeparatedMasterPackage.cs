@@ -269,7 +269,7 @@ public class SeparatedMasterPackage : IReadOnlySeparatedMasterPackage
         Dictionary<ModKey, MasterStyleIndex> dict,
         MasterStyle style)
     {
-        byte index = 0;
+        uint index = 0;
         foreach (var modKey in masters)
         {
             dict.Set(modKey, new(index, style));

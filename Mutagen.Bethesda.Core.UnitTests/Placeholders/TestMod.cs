@@ -26,6 +26,7 @@ public class TestMod : ITestMod, IDisposable
     public GameRelease GameRelease { get; }
 
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
+    IModHeaderCommon IMod.ModHeader => throw new NotImplementedException();
     public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
 
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();

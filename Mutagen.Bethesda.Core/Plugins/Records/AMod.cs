@@ -50,6 +50,7 @@ public abstract class AMod : IMod
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
     public abstract IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
+    IModHeaderCommon IMod.ModHeader => throw new NotImplementedException();
     uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     uint IModGetter.NextFormID { get => throw new NotImplementedException(); }
     public abstract bool CanUseLocalization { get; }

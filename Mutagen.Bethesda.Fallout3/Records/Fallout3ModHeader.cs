@@ -37,6 +37,13 @@ public partial class Fallout3ModHeader
         set => this.Stats.NextFormID = value;
     }
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    float IModHeaderCommon.HeaderVersion
+    {
+        get => this.Stats.Version;
+        set => this.Stats.Version = value;
+    }
+
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
     
     public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
