@@ -75,7 +75,7 @@ public sealed class ImmutableLoadOrderLinkUsageCache : ILinkUsageCache
             },
             record =>
             {
-                var recordLinks = record.EnumerateFormLinks()
+                var recordLinks = record.EnumerateFormLinks(iterateNestedRecords: false)
                     .Where(link => !link.IsNull)
                     .ToArray();
                 if (recordLinks.Length == 0) return;
