@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog;
 using Noggog.Testing.Extensions;
 using Shouldly;
 
@@ -290,5 +291,116 @@ public class ImmutableLoadOrderLinkUsageCacheTests
 
         usageCache.GetUsagesOf<ICellGetter>(stat).UsageLinks.ShouldBeEmpty();
         usageCache.GetUsagesOf<IPlacedGetter>(stat).UsageLinks.ShouldEqualEnumerable([placed.ToLink()]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void NestedRecordUntypedScope(
+        SkyrimMod mod,
+        Cell cell,
+        PlacedObject placed,
+        Static stat)
+    {
+        cell.Flags |= Cell.Flag.IsInteriorCell;
+        mod.Cells.AddInteriorCell(cell);
+        cell.Persistent.Add(placed);
+
+        placed.Base.SetTo(stat);
+
+        var linkCache = mod.ToImmutableLinkCache();
+        var usageCache = new ImmutableLoadOrderLinkUsageCache(linkCache);
+
+        var usages = usageCache.GetUsagesOf(stat);
+        usages.UsageLinks.ShouldEqualEnumerable([placed.ToLink<IMajorRecordGetter>()]);
+        usages.Contains(placed).ShouldBeTrue();
+        usages.Contains(cell).ShouldBeFalse();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void ContainingRecordOwnLinksStillCounted(
+        SkyrimMod mod,
+        Cell cell,
+        PlacedObject placed,
+        Static stat,
+        LightingTemplate lightingTemplate)
+    {
+        cell.Flags |= Cell.Flag.IsInteriorCell;
+        mod.Cells.AddInteriorCell(cell);
+        cell.Persistent.Add(placed);
+
+        cell.LightingTemplate.SetTo(lightingTemplate);
+        placed.Base.SetTo(stat);
+
+        var linkCache = mod.ToImmutableLinkCache();
+        var usageCache = new ImmutableLoadOrderLinkUsageCache(linkCache);
+
+        usageCache.GetUsagesOf<ICellGetter>(lightingTemplate).UsageLinks.ShouldEqualEnumerable([cell.ToLink<ICellGetter>()]);
+        usageCache.GetUsagesOf<ICellGetter>(stat).UsageLinks.ShouldBeEmpty();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void SubRecordLinksStillCounted(
+        SkyrimMod mod,
+        Npc npc,
+        Weapon weapon)
+    {
+        npc.Items = new ExtendedList<ContainerEntry>()
+        {
+            new ContainerEntry()
+            {
+                Item = new ContainerItem()
+                {
+                    Item = weapon.ToLink<IItemGetter>(),
+                    Count = 1
+                }
+            }
+        };
+
+        var linkCache = mod.ToImmutableLinkCache();
+        var usageCache = new ImmutableLoadOrderLinkUsageCache(linkCache);
+
+        usageCache.GetUsagesOf<INpcGetter>(weapon).UsageLinks.ShouldEqualEnumerable([npc.ToLink<INpcGetter>()]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void NestedRecordUsesWinningOverride(
+        ModKey modKey,
+        ModKey modKey2,
+        Static statA,
+        Static statB,
+        Static statC)
+    {
+        var mod = new SkyrimMod(modKey, SkyrimRelease.SkyrimSE);
+        var cell = new Cell(FormKey.Factory($"000800:{modKey.FileName}"), SkyrimRelease.SkyrimSE)
+        {
+            Flags = Cell.Flag.IsInteriorCell
+        };
+        mod.Cells.AddInteriorCell(cell);
+        var placedA = new PlacedObject(FormKey.Factory($"000801:{modKey.FileName}"), SkyrimRelease.SkyrimSE);
+        placedA.Base.SetTo(statA);
+        var placedB = new PlacedObject(FormKey.Factory($"000802:{modKey.FileName}"), SkyrimRelease.SkyrimSE);
+        placedB.Base.SetTo(statB);
+        cell.Persistent.Add(placedA);
+        cell.Persistent.Add(placedB);
+
+        var mod2 = new SkyrimMod(modKey2, SkyrimRelease.SkyrimSE);
+        var cellOverride = new Cell(cell.FormKey, SkyrimRelease.SkyrimSE)
+        {
+            Flags = Cell.Flag.IsInteriorCell
+        };
+        mod2.Cells.AddInteriorCell(cellOverride);
+        var placedAOverride = new PlacedObject(placedA.FormKey, SkyrimRelease.SkyrimSE);
+        placedAOverride.Base.SetTo(statC);
+        cellOverride.Persistent.Add(placedAOverride);
+
+        var linkCache = new[] { mod, mod2 }.ToImmutableLinkCache();
+        var usageCache = new ImmutableLoadOrderLinkUsageCache(linkCache);
+
+        usageCache.GetUsagesOf<IPlacedGetter>(statA).UsageLinks.ShouldBeEmpty();
+        usageCache.GetUsagesOf<IPlacedGetter>(statC).UsageLinks.ShouldEqualEnumerable([placedA.ToLink<IPlacedGetter>()]);
+        usageCache.GetUsagesOf<IPlacedGetter>(statB).UsageLinks.ShouldEqualEnumerable([placedB.ToLink<IPlacedGetter>()]);
+
+        usageCache.GetUsagesOf<ICellGetter>(statA).UsageLinks.ShouldBeEmpty();
+        usageCache.GetUsagesOf<ICellGetter>(statB).UsageLinks.ShouldBeEmpty();
+        usageCache.GetUsagesOf<ICellGetter>(statC).UsageLinks.ShouldBeEmpty();
     }
 }

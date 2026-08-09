@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Cache;
 
@@ -12,6 +12,13 @@ public interface ILinkUsageResults<TScope>
     IReadOnlySet<IFormLinkGetter<TScope>> UsageLinks { get; }
 }
 
+/// <summary>
+/// Provides lookup of which records point to a given record
+/// </summary>
+/// <remarks>
+/// Usage is only attributed to a record's own fields, which includes its subrecords, but not any nested
+/// major records it contains.
+/// </remarks>
 public interface ILinkUsageCache
 {
     /// <summary>
