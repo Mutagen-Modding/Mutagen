@@ -1,16 +1,160 @@
-﻿using Mutagen.Bethesda.Plugins;
+using AutoFixture;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
-using Xunit;
+using Shouldly;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim.Assets;
 
+public class VoiceTypeAssetLookupTestFixture
+{
+    private readonly IFixture _fixture;
+    public readonly ILinkCache LinkCache;
+    public readonly SkyrimMod Mod;
+    public readonly Quest Quest;
+    public readonly DialogTopic Topic;
+
+    public VoiceTypeAssetLookupTestFixture(
+        IFixture fixture,
+        SkyrimMod mod,
+        DialogTopic topic,
+        Quest quest)
+    {
+        _fixture = fixture;
+        LinkCache = mod.ToMutableLinkCache();
+        Mod = mod;
+        Quest = quest;
+        Topic = topic;
+        topic.Quest.SetTo(quest);
+    }
+
+    /// <summary>
+    /// Create and configure an NPC with a unique voice type
+    /// </summary>
+    public Npc CreateSpeaker(string name)
+    {
+        var npc = _fixture.Create<Npc>();
+        var voice = _fixture.Create<VoiceType>();
+        // Name is included here to provide additional context in errors
+        npc.EditorID = name;
+        voice.EditorID = name;
+        npc.Voice.SetTo(voice);
+        return npc;
+    }
+
+    public void AssertSceneSpeakersEqual(uint aliasId, IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers)
+    {
+        var scene = _fixture.Create<Scene>();
+        scene.Actors.Add(new() { ID = aliasId });
+        scene.Actions.Add(new() { ActorID = (int)aliasId, Topic = Topic.ToNullableLink() });
+
+        var response = _fixture.Create<DialogResponses>();
+        Topic.Responses.Add(response);
+        response.Conditions.AddRange(conditions);
+
+        AssertSpeakersEqualImpl(response, expectedSpeakers);
+    }
+
+    public void AssertSpeakersEqual(IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers)
+    {
+        var response = _fixture.Create<DialogResponses>();
+        Topic.Responses.Add(response);
+        response.Conditions.AddRange(conditions);
+
+        AssertSpeakersEqualImpl(response, expectedSpeakers);
+    }
+
+    void AssertSpeakersEqualImpl(DialogResponses response, IEnumerable<Npc> expectedSpeakers)
+    {
+        var assetCache = LinkCache.CreateImmutableAssetLinkCache();
+        var lookup = new VoiceTypeAssetLookup();
+        lookup.Prep(assetCache);
+
+        // We compare against a resolved list to provide more context in errors
+        var actual = lookup.GetSpeakers(response).Select(s => s.Resolve(LinkCache));
+        actual.ShouldBe(expectedSpeakers, ignoreOrder: true);
+    }
+}
+
 public class VoiceTypeAssetLookupTestSkyrim
 {
+    public static class ConditionFactory
+    {
+        public static ConditionFloat Create(ConditionData data, float compareValue, Condition.Flag flags = 0)
+        {
+            return new ConditionFloat
+            {
+                Data = data,
+                ComparisonValue = compareValue,
+                Flags = flags
+            };
+        }
+
+        public static ConditionData GetIsId(IReferenceableObjectGetter target)
+        {
+            var data = new GetIsIDConditionData();
+            data.Object.Link.SetTo(target);
+            return data;
+        }
+
+        public static ConditionData GetIsVoice(IFormLinkGetter<IVoiceTypeOrListGetter> voice)
+        {
+            var data = new GetIsVoiceTypeConditionData();
+            data.VoiceTypeOrList.Link.SetTo(voice);
+            return data;
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsId(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 1)],
+            [npc1]);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 0)],
+            [npc2]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestSceneSpeaker(VoiceTypeAssetLookupTestFixture fixture, uint aliasId)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+        fixture.Quest.Aliases.Add(new() { ID = aliasId, UniqueActor = npc1.ToNullableLink() });
+
+        fixture.AssertSceneSpeakersEqual(aliasId, [], [npc1]);
+        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], [npc1]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsVoice(VoiceTypeAssetLookupTestFixture fixture, FormList list)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc1.Voice), 1)],
+            [npc1]);
+
+        list.Items.AddRange(npc1.Voice, npc2.Voice);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1)],
+            [npc1, npc2]);
+
+        // (Voice1 || Voice2) && !Voice1
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 0)],
+            [npc1]);
+    }
+
     private readonly ILinkCache _linkCache;
     private readonly VoiceTypeAssetLookup _searcher = new();
 
