@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using Mutagen.Bethesda.Testing;
@@ -108,12 +109,57 @@ public class VoiceTypeAssetLookupTestSkyrim
             return data;
         }
 
+        public static ConditionData GetInFaction(IFactionGetter faction)
+        {
+            var data = new GetInFactionConditionData();
+            data.Faction.Link.SetTo(faction);
+            return data;
+        }
+
         public static ConditionData GetIsVoice(IFormLinkGetter<IVoiceTypeOrListGetter> voice)
         {
             var data = new GetIsVoiceTypeConditionData();
             data.VoiceTypeOrList.Link.SetTo(voice);
             return data;
         }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestWinningOverride(
+        SkyrimMod mod1,
+        SkyrimMod mod2,
+        string edid)
+    {
+        var quest = mod1.Quests.AddNew();
+        var topic = mod1.DialogTopics.AddNew();
+        topic.Quest.SetTo(quest);
+        var voice = mod1.VoiceTypes.AddNew();
+        voice.EditorID = edid;
+
+        var npc = mod1.Npcs.AddNew();
+        npc.Voice.SetTo(voice);
+        var faction = mod1.Factions.AddNew();
+        npc.Factions.Add(new() { Faction = faction.ToLink() });
+
+        var response = new DialogResponses(mod1);
+        topic.Responses.Add(response);
+        response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1));
+
+        using var loadOrder = new LoadOrder<ISkyrimModGetter> { mod1 };
+
+        // Baseline: Mod1 adds a topic conditioned to NPC1's voice
+        var lookup = new VoiceTypeAssetLookup();
+        lookup.Prep(loadOrder.ToImmutableLinkCache().CreateImmutableAssetLinkCache());
+        lookup.GetSpeakers(response).ShouldBe([npc.ToLink()]);
+
+        // User adds a second mod that removes the NPC from their faction
+        var npcOverride = mod2.Npcs.GetOrAddAsOverride(npc);
+        npcOverride.Factions.Clear();
+
+        loadOrder.Add(mod2);
+        lookup = new();
+        lookup.Prep(loadOrder.ToImmutableLinkCache().CreateImmutableAssetLinkCache());
+        lookup.GetSpeakers(response).ShouldBeEmpty();
     }
 
     [Theory, MutagenModAutoData]
