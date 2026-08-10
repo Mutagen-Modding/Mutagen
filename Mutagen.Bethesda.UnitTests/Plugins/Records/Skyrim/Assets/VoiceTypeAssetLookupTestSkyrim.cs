@@ -1,4 +1,5 @@
 using AutoFixture;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -6,6 +7,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using Shouldly;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim.Assets;
@@ -17,6 +19,14 @@ public class VoiceTypeAssetLookupTestFixture
     public readonly SkyrimMod Mod;
     public readonly Quest Quest;
     public readonly DialogTopic Topic;
+
+    public VoiceTypeAssetLookup GetLookup()
+    {
+        var assetCache = LinkCache.CreateImmutableAssetLinkCache();
+        var lookup = new VoiceTypeAssetLookup();
+        lookup.Prep(assetCache);
+        return lookup;
+    }
 
     public VoiceTypeAssetLookupTestFixture(
         IFixture fixture,
@@ -54,6 +64,7 @@ public class VoiceTypeAssetLookupTestFixture
 
         var response = _fixture.Create<DialogResponses>();
         Topic.Responses.Add(response);
+        Topic.Category = DialogTopic.CategoryEnum.Scene;
         response.Conditions.AddRange(conditions);
 
         AssertSpeakersEqualImpl(response, expectedSpeakers);
@@ -70,12 +81,8 @@ public class VoiceTypeAssetLookupTestFixture
 
     void AssertSpeakersEqualImpl(DialogResponses response, IEnumerable<Npc> expectedSpeakers)
     {
-        var assetCache = LinkCache.CreateImmutableAssetLinkCache();
-        var lookup = new VoiceTypeAssetLookup();
-        lookup.Prep(assetCache);
-
         // We compare against a resolved list to provide more context in errors
-        var actual = lookup.GetSpeakers(response).Select(s => s.Resolve(LinkCache));
+        var actual = GetLookup().GetSpeakers(response).Select(s => s.Resolve(LinkCache));
         actual.ShouldBe(expectedSpeakers, ignoreOrder: true);
     }
 }
@@ -131,7 +138,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.Quest.Aliases.Add(new() { ID = aliasId, UniqueActor = npc1.ToNullableLink() });
 
         fixture.AssertSceneSpeakersEqual(aliasId, [], [npc1]);
-        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], [npc1]);
+        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], []);
     }
 
     [Theory, MutagenModAutoData]
@@ -153,6 +160,34 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 0)],
             [npc1]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestUnfiltered(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        // The AllowDefaultDialog flag is not used at runtime
+        npc1.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
+        npc2.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
+        fixture.AssertSpeakersEqual([], [npc1, npc2]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetPaths(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        // Smoke test based on response in DialogueGeneric
+        fixture.Quest.EditorID = "DialogueGeneric";
+        fixture.Topic.EditorID = "DialogueGenericHello";
+        var npc = fixture.CreateSpeaker("MaleEvenToned");
+
+        var response = new DialogResponses(FormKey.Factory("0142C2:Skyrim.esm"), SkyrimRelease.SkyrimSE);
+        response.Responses.Add(new() { ResponseNumber = 1 });
+        fixture.Topic.Responses.Add(response);
+        response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsVoice(npc.Voice), 1));
+        fixture.Mod.ModKey.ShouldNotBe(fixture.Topic.FormKey.ModKey, "Voice paths depend on the ID of the response, and must be different for this test to cover that edge case");
+        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
     }
 
     private readonly ILinkCache _linkCache;
