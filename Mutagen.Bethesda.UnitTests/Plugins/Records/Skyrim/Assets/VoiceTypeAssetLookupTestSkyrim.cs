@@ -186,7 +186,11 @@ public class VoiceTypeAssetLookupTestSkyrim
         response.Responses.Add(new() { ResponseNumber = 1 });
         fixture.Topic.Responses.Add(response);
         response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsVoice(npc.Voice), 1));
-        fixture.Mod.ModKey.ShouldNotBe(fixture.Topic.FormKey.ModKey, "Voice paths depend on the ID of the response, and must be different for this test to cover that edge case");
+        response.FormKey.ModKey.ShouldNotBe(fixture.Topic.FormKey.ModKey, "Voice paths depend on the ID of the response, and must be different for this test to cover that edge case");
+        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
+
+        // Should also work for unfiltered response
+        response.Conditions.Clear();
         fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
     }
 
@@ -386,6 +390,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.Equal(
             new VoiceContainer(new HashSet<string>
             {
+                "CYRaaaPLACEHOLDERVoicetype",
                 "CYRMaleArgonian",
                 "CYRMaleArgonianAccented",
                 "CYRFemaleDeepToned",
