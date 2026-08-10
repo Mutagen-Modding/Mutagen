@@ -116,10 +116,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
         {
-            if (!_speakerVoices.ContainsKey(talkingActivator.FormKey))
-            {
-                _speakerVoices.Add(talkingActivator.FormKey, GetVoiceTypes(talkingActivator));
-            }
+            _speakerVoices.Add(talkingActivator.FormKey, GetVoiceTypes(talkingActivator));
         }
 
         // TODO: Use usage cache for this

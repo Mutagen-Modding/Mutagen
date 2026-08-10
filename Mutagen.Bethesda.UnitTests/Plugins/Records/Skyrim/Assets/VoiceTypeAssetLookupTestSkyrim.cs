@@ -221,7 +221,7 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestGetPaths(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestGetPaths(VoiceTypeAssetLookupTestFixture fixture, FormKey sharedInfo)
     {
         // Smoke test based on response in DialogueGeneric
         fixture.Quest.EditorID = "DialogueGeneric";
@@ -238,6 +238,10 @@ public class VoiceTypeAssetLookupTestSkyrim
         // Should also work for unfiltered response
         response.Conditions.Clear();
         fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
+
+        // A shared info should have no associated paths
+        response.ResponseData.SetTo(sharedInfo);
+        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBeEmpty();
     }
 
     private readonly ILinkCache _linkCache;
