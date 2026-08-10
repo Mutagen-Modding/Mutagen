@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
@@ -213,9 +213,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     }
     #endregion
 
-    public HashSet<string> GetVoiceTypes(HashSet<string> defaultVoiceTypes)
+    public IEnumerable<string> GetVoiceTypes(HashSet<string> allVoices)
     {
-        return IsDefault ? defaultVoiceTypes : _voices.Keys.ToHashSet();
+        return IsDefault ? allVoices : _voices.Keys;
     }
 
     public bool IsEmpty()
