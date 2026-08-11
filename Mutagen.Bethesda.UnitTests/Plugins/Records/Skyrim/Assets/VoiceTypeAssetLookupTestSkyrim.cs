@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using Mutagen.Bethesda.Testing;
@@ -92,13 +93,14 @@ public class VoiceTypeAssetLookupTestSkyrim
 {
     public static class ConditionFactory
     {
-        public static ConditionFloat Create(ConditionData data, float compareValue, Condition.Flag flags = 0)
+        // TODO: Test for combining with OR and AND
+        public static ConditionFloat Create(ConditionData data, float compareValue, CompareOperator op = CompareOperator.EqualTo)
         {
             return new ConditionFloat
             {
                 Data = data,
                 ComparisonValue = compareValue,
-                Flags = flags
+                CompareOperator = op,
             };
         }
 
@@ -125,10 +127,209 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
+    public void TestGetIsId(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 1)],
+            [npc1]);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 0)],
+            [npc2]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsVoice(VoiceTypeAssetLookupTestFixture fixture, FormList list)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc1.Voice), 1)],
+            [npc1]);
+
+        list.Items.AddRange(npc1.Voice, npc2.Voice);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1)],
+            [npc1, npc2]);
+
+        // (Voice1 || Voice2) && !Voice1
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 0)],
+            [npc1]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsAliasRef(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO. Include each way alias can be filled
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetInFaction(VoiceTypeAssetLookupTestFixture fixture, Faction faction)
+    {
+        var member = fixture.CreateSpeaker("member");
+        member.Factions.Add(new() { Faction = faction.ToLink() });
+        var nonmember = fixture.CreateSpeaker("nonmember");
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)],
+            [member]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsClass(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsRace(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsSex(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        var male = fixture.CreateSpeaker("male");
+        male.Configuration.Flags &= ~NpcConfiguration.Flag.Female;
+        var female = fixture.CreateSpeaker("female");
+        female.Configuration.Flags |= NpcConfiguration.Flag.Female;
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Male }, 1)],
+            [male]);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Female }, 1)],
+            [female]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestIsInList(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestIsChild(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Race child,
+        Race adult)
+    {
+        child.Flags |= Race.Flag.Child;
+        var childNpc = fixture.CreateSpeaker("child");
+        childNpc.Race.SetTo(child);
+
+
+        adult.Flags &= ~Race.Flag.Child;
+        var adultNpc = fixture.CreateSpeaker("adult");
+        adultNpc.Race.SetTo(adult);
+
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(new IsChildConditionData(), 1)], [childNpc]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(new IsChildConditionData(), 0)], [adultNpc]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestUnfiltered(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        // The AllowDefaultDialog flag is not used at runtime
+        npc1.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
+        npc2.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
+        fixture.AssertSpeakersEqual([], [npc1, npc2]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestSceneSpeaker(VoiceTypeAssetLookupTestFixture fixture, uint aliasId)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+        fixture.Quest.Aliases.Add(new() { ID = aliasId, UniqueActor = npc1.ToNullableLink() });
+
+        fixture.AssertSceneSpeakersEqual(aliasId, [], [npc1]);
+        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], []);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestCompareOperators(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        var data = ConditionFactory.GetIsId(npc1);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(data, 1, CompareOperator.EqualTo)],
+            [npc1]);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(data, 1, CompareOperator.NotEqualTo)],
+            [npc2]);
+
+        // Runtime does not use an epsilon when comparing floats
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(data, 1.001f, CompareOperator.EqualTo)],
+            []);
+
+        // TODO: Should we handle edge cases of comparing a bool with something other than 0 or 1 and == or !=
+        // or leave it as undefined behavior?
+        // Either way, should have an analyser to check this
+
+        false.ShouldBeTrue(); // TODO: Test for globals
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetPaths(VoiceTypeAssetLookupTestFixture fixture, FormKey sharedInfo)
+    {
+        // Smoke test based on response in DialogueGeneric
+        fixture.Quest.EditorID = "DialogueGeneric";
+        fixture.Topic.EditorID = "DialogueGenericHello";
+        var npc = fixture.CreateSpeaker("MaleEvenToned");
+
+        var response = new DialogResponses(FormKey.Factory("0142C2:Skyrim.esm"), SkyrimRelease.SkyrimSE);
+        response.Responses.Add(new() { ResponseNumber = 1 });
+        fixture.Topic.Responses.Add(response);
+        response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsVoice(npc.Voice), 1));
+        response.FormKey.ModKey.ShouldNotBe(fixture.Topic.FormKey.ModKey, "Voice paths depend on the ID of the response, and must be different for this test to cover that edge case");
+        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
+
+        // Should also work for unfiltered response
+        response.Conditions.Clear();
+        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
+
+        // A shared info should have no associated paths
+        response.ResponseData.SetTo(sharedInfo);
+        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBeEmpty();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestInheritedTraits(
+        VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestInheritedStats(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestInheritedFactions(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBe(true); // TODO
+    }
+
+    [Theory, MutagenModAutoData]
     public void TestWinningOverride(
-        SkyrimMod mod1,
-        SkyrimMod mod2,
-        string edid)
+    SkyrimMod mod1,
+    SkyrimMod mod2,
+    string edid)
     {
         var quest = mod1.Quests.AddNew();
         var topic = mod1.DialogTopics.AddNew();
@@ -160,88 +361,6 @@ public class VoiceTypeAssetLookupTestSkyrim
         lookup = new();
         lookup.Prep(loadOrder.ToImmutableLinkCache().CreateImmutableAssetLinkCache());
         lookup.GetSpeakers(response).ShouldBeEmpty();
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestGetIsId(VoiceTypeAssetLookupTestFixture fixture)
-    {
-        var npc1 = fixture.CreateSpeaker("npc1");
-        var npc2 = fixture.CreateSpeaker("npc2");
-
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 1)],
-            [npc1]);
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 0)],
-            [npc2]);
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestSceneSpeaker(VoiceTypeAssetLookupTestFixture fixture, uint aliasId)
-    {
-        var npc1 = fixture.CreateSpeaker("npc1");
-        var npc2 = fixture.CreateSpeaker("npc2");
-        fixture.Quest.Aliases.Add(new() { ID = aliasId, UniqueActor = npc1.ToNullableLink() });
-
-        fixture.AssertSceneSpeakersEqual(aliasId, [], [npc1]);
-        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], []);
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestGetIsVoice(VoiceTypeAssetLookupTestFixture fixture, FormList list)
-    {
-        var npc1 = fixture.CreateSpeaker("npc1");
-        var npc2 = fixture.CreateSpeaker("npc2");
-
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc1.Voice), 1)],
-            [npc1]);
-
-        list.Items.AddRange(npc1.Voice, npc2.Voice);
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1)],
-            [npc1, npc2]);
-
-        // (Voice1 || Voice2) && !Voice1
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 0)],
-            [npc1]);
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestUnfiltered(VoiceTypeAssetLookupTestFixture fixture)
-    {
-        var npc1 = fixture.CreateSpeaker("npc1");
-        var npc2 = fixture.CreateSpeaker("npc2");
-
-        // The AllowDefaultDialog flag is not used at runtime
-        npc1.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
-        npc2.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
-        fixture.AssertSpeakersEqual([], [npc1, npc2]);
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestGetPaths(VoiceTypeAssetLookupTestFixture fixture, FormKey sharedInfo)
-    {
-        // Smoke test based on response in DialogueGeneric
-        fixture.Quest.EditorID = "DialogueGeneric";
-        fixture.Topic.EditorID = "DialogueGenericHello";
-        var npc = fixture.CreateSpeaker("MaleEvenToned");
-
-        var response = new DialogResponses(FormKey.Factory("0142C2:Skyrim.esm"), SkyrimRelease.SkyrimSE);
-        response.Responses.Add(new() { ResponseNumber = 1 });
-        fixture.Topic.Responses.Add(response);
-        response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsVoice(npc.Voice), 1));
-        response.FormKey.ModKey.ShouldNotBe(fixture.Topic.FormKey.ModKey, "Voice paths depend on the ID of the response, and must be different for this test to cover that edge case");
-        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
-
-        // Should also work for unfiltered response
-        response.Conditions.Clear();
-        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([new DataRelativePath("Sound/Voice/Skyrim.esm/MaleEvenToned/DialogueGe_DialogueGeneric_000142C2_1.fuz")]);
-
-        // A shared info should have no associated paths
-        response.ResponseData.SetTo(sharedInfo);
-        fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBeEmpty();
     }
 
     private readonly ILinkCache _linkCache;
@@ -331,7 +450,7 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Fact]
-    public void TestGetInFaction()
+    public void TestGetInFactionOLD()
     {
         Assert.True(_linkCache.TryResolve<IDialogResponsesGetter>(FormKey.Factory("0CE3BE:VoiceTypeTestPlugin.esm"), out var responses), "Response not resolved");
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0CE39F:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
