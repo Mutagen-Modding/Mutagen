@@ -5,6 +5,11 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public static class LocationExt
 {
+    /// <summary>
+    /// Gets the location's reference type references, including added static entries and excluding removed entries.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <returns>Active reference type references</returns>
     public static IEnumerable<ILocationRefTypeReferenceGetter> LocationRefTypesReferences(this ILocationGetter location)
     {
         IEnumerable<ILocationRefTypeReferenceGetter> Added()
@@ -35,16 +40,18 @@ public static class LocationExt
             .Where(x => !removed.Contains(x.Ref.FormKey));
     }
 
-    public static IEnumerable<ILocationRefTypeReferenceGetter> AllLocationRefTypesReferences(this ILocationGetter location, ILinkCache linkCache)
+    /// <summary>
+    /// Gets all location reference type references across the override chain up to the specified mod key.
+    /// Starting from the first definition of the location, it aggregates all added references and removes any that are marked as removed in subsequent overrides.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <param name="linkCache">Link cache used to walk overrides</param>
+    /// <param name="highestOverrideModKey">Highest override mod key to include</param>
+    /// <returns>Aggregated location reference type references</returns>
+    public static IEnumerable<ILocationRefTypeReferenceGetter> AllLocationRefTypesReferences(this ILocationGetter location, ILinkCache linkCache, ModKey highestOverrideModKey)
     {
-        var previousOverrides = linkCache
-            .ResolveAll(location, ResolveTarget.Origin)
-            .TakeWhile(x => !Equals(x, location))
-            .Append(location)
-            .ToArray();
-
         var refTypes = new HashSet<ILocationRefTypeReferenceGetter>();
-        foreach (var previousOverride in previousOverrides)
+        foreach (var previousOverride in linkCache.GetPreviousOverrides(location, highestOverrideModKey))
         {
             refTypes.Add(Added(previousOverride));
             var removed = Removed(previousOverride).Select(x => x.FormKey).ToHashSet();
@@ -70,6 +77,11 @@ public static class LocationExt
         }
     }
 
+    /// <summary>
+    /// Gets the location's persistent actor references, including added static entries and excluding removed entries.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <returns>Active persistent actor references</returns>
     public static IEnumerable<IPersistentActorReferenceGetter> PersistentActorReferences(this ILocationGetter location)
     {
         IEnumerable<IPersistentActorReferenceGetter> Added()
@@ -100,16 +112,18 @@ public static class LocationExt
             .Where(x => !removed.Contains(x.Actor.FormKey));
     }
 
-    public static IEnumerable<IPersistentActorReferenceGetter> AllPersistentActorReferences(this ILocationGetter location, ILinkCache linkCache)
+    /// <summary>
+    /// Gets all persistent actor references across the override chain up to the specified mod key.
+    /// Starting from the first definition of the location, it aggregates all added references and removes any that are marked as removed in subsequent overrides.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <param name="linkCache">Link cache used to walk overrides</param>
+    /// <param name="highestOverrideModKey">Highest override mod key to include</param>
+    /// <returns>Aggregated persistent actor references</returns>
+    public static IEnumerable<IPersistentActorReferenceGetter> AllPersistentActorReferences(this ILocationGetter location, ILinkCache linkCache, ModKey highestOverrideModKey)
     {
-        var previousOverrides = linkCache
-            .ResolveAll(location, ResolveTarget.Origin)
-            .TakeWhile(x => !Equals(x, location))
-            .Append(location)
-            .ToArray();
-
         var actors = new HashSet<IPersistentActorReferenceGetter>();
-        foreach (var previousOverride in previousOverrides)
+        foreach (var previousOverride in linkCache.GetPreviousOverrides(location, highestOverrideModKey))
         {
             actors.Add(Added(previousOverride));
             var removed = Removed(previousOverride).Select(x => x.FormKey).ToHashSet();
@@ -135,6 +149,11 @@ public static class LocationExt
         }
     }
 
+    /// <summary>
+    /// Gets the location's unique actor references, including added static entries and excluding removed entries.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <returns>Active unique actor references</returns>
     public static IEnumerable<IUniqueActorReferenceGetter> UniqueActorReferences(this ILocationGetter location)
     {
         IEnumerable<IUniqueActorReferenceGetter> Added()
@@ -165,16 +184,18 @@ public static class LocationExt
             .Where(x => !removed.Contains(x.Actor.FormKey));
     }
 
-    public static IEnumerable<IUniqueActorReferenceGetter> AllUniqueActorReferences(this ILocationGetter location, ILinkCache linkCache)
+    /// <summary>
+    /// Gets all unique actor references across the override chain up to the specified mod key.
+    /// Starting from the first definition of the location, it aggregates all added references and removes any that are marked as removed in subsequent overrides.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <param name="linkCache">Link cache used to walk overrides</param>
+    /// <param name="highestOverrideModKey">Highest override mod key to include</param>
+    /// <returns>Aggregated unique actor references</returns>
+    public static IEnumerable<IUniqueActorReferenceGetter> AllUniqueActorReferences(this ILocationGetter location, ILinkCache linkCache, ModKey highestOverrideModKey)
     {
-        var previousOverrides = linkCache
-            .ResolveAll(location, ResolveTarget.Origin)
-            .TakeWhile(x => !Equals(x, location))
-            .Append(location)
-            .ToArray();
-
         var actors = new HashSet<IUniqueActorReferenceGetter>();
-        foreach (var previousOverride in previousOverrides)
+        foreach (var previousOverride in linkCache.GetPreviousOverrides(location, highestOverrideModKey))
         {
             actors.Add(Added(previousOverride));
             var removed = Removed(previousOverride).Select(x => x.FormKey).ToHashSet();
@@ -200,6 +221,11 @@ public static class LocationExt
         }
     }
 
+    /// <summary>
+    /// Gets the location's initially disabled references.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <returns>Initially disabled references</returns>
     public static IEnumerable<IFormLinkGetter<IPlacedGetter>> InitiallyDisabledReferences(this ILocationGetter location)
     {
         var staticReferences = location.InitiallyDisabledReferencesAdded;
@@ -221,16 +247,18 @@ public static class LocationExt
         }
     }
 
-    public static IEnumerable<IFormLinkGetter<IPlacedGetter>> AllInitiallyDisabledReferences(this ILocationGetter location, ILinkCache linkCache)
+    /// <summary>
+    /// Gets all initially disabled references across the override chain up to the specified mod key.
+    /// Starting from the first definition of the location, it aggregates all added references and removes any that are marked as removed in subsequent overrides.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <param name="linkCache">Link cache used to walk overrides</param>
+    /// <param name="highestOverrideModKey">Highest override mod key to include</param>
+    /// <returns>Aggregated initially disabled references</returns>
+    public static IEnumerable<IFormLinkGetter<IPlacedGetter>> AllInitiallyDisabledReferences(this ILocationGetter location, ILinkCache linkCache, ModKey highestOverrideModKey)
     {
-        var previousOverrides = linkCache
-            .ResolveAll(location, ResolveTarget.Origin)
-            .TakeWhile(x => !Equals(x, location))
-            .Append(location)
-            .ToArray();
-
         var actors = new HashSet<IFormLinkGetter<IPlacedGetter>>();
-        foreach (var previousOverride in previousOverrides)
+        foreach (var previousOverride in linkCache.GetPreviousOverrides(location, highestOverrideModKey))
         {
             actors.Add(Added(previousOverride));
         }
@@ -246,6 +274,11 @@ public static class LocationExt
         }
     }
 
+    /// <summary>
+    /// Gets the location's enable-parent references.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <returns>Enable-parent references</returns>
     public static IEnumerable<IEnableParentReferenceGetter> EnableParentReferences(this ILocationGetter location)
     {
         var staticReferences = location.EnableParentReferencesStatic;
@@ -267,16 +300,18 @@ public static class LocationExt
         }
     }
 
-    public static IEnumerable<IEnableParentReferenceGetter> AllEnableParentReferences(this ILocationGetter location, ILinkCache linkCache)
+    /// <summary>
+    /// Gets all enable-parent references across the override chain up to the specified mod key.
+    /// Starting from the first definition of the location, it aggregates all added references and removes any that are marked as removed in subsequent overrides.
+    /// </summary>
+    /// <param name="location">Location to inspect</param>
+    /// <param name="linkCache">Link cache used to walk overrides</param>
+    /// <param name="highestOverrideModKey">Highest override mod key to include</param>
+    /// <returns>Aggregated enable-parent references</returns>
+    public static IEnumerable<IEnableParentReferenceGetter> AllEnableParentReferences(this ILocationGetter location, ILinkCache linkCache, ModKey highestOverrideModKey)
     {
-        var previousOverrides = linkCache
-            .ResolveAll(location, ResolveTarget.Origin)
-            .TakeWhile(x => !Equals(x, location))
-            .Append(location)
-            .ToArray();
-
         var actors = new HashSet<IEnableParentReferenceGetter>();
-        foreach (var previousOverride in previousOverrides)
+        foreach (var previousOverride in linkCache.GetPreviousOverrides(location, highestOverrideModKey))
         {
             actors.Add(Added(previousOverride));
         }
