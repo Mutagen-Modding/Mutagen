@@ -285,6 +285,7 @@
         <Compile Include="Plugins\Cache\Internals\Implementations\MutableModLinkCache.cs" />
         <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistrations.cs" />
         <Compile Include="Plugins\Cache\ILinkUsageCache.cs" />
+        <Compile Include="Plugins\Cache\LinkCacheOverridesMixIn.cs" />
         <Compile Include="Plugins\Cache\ResolveTarget.cs" />
         <Compile Include="Plugins\Converters\FormKeyTypeConverter.cs" />
         <Compile Include="Plugins\Converters\ModKeyTypeConverter.cs" />
