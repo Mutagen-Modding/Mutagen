@@ -124,6 +124,20 @@ public class VoiceTypeAssetLookupTestSkyrim
             data.VoiceTypeOrList.Link.SetTo(voice);
             return data;
         }
+
+        public static ConditionData GetIsRace(IRaceGetter race)
+        {
+            var data = new GetIsRaceConditionData();
+            data.Race.Link.SetTo(race);
+            return data;
+        }
+
+        public static ConditionData HasKeyword(IKeywordGetter keyword)
+        {
+            var data = new HasKeywordConditionData();
+            data.Keyword.Link.SetTo(keyword);
+            return data;
+        }
     }
 
     [Theory, MutagenModAutoData]
@@ -150,6 +164,7 @@ public class VoiceTypeAssetLookupTestSkyrim
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc1.Voice), 1)],
             [npc1]);
 
+        // A form list can be used to check for any voice in a list
         list.Items.AddRange(npc1.Voice, npc2.Voice);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1)],
@@ -159,6 +174,36 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 0)],
             [npc1]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestRaceDefaultVoice(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Race race,
+        VoiceType maleVoice,
+        string maleEdid,
+        VoiceType femaleVoice,
+        string femaleEdid)
+    {
+        var male = fixture.CreateSpeaker("male");
+        var female = fixture.CreateSpeaker("female");
+        female.Configuration.Flags |= NpcConfiguration.Flag.Female;
+
+        maleVoice.EditorID = maleEdid;
+        femaleVoice.EditorID = femaleEdid;
+        race.Voices = new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(maleVoice.ToLink(), femaleVoice.ToLink());
+
+        // Race voices should only be used as a fallback
+        male.Voice.ShouldNotBeNull();
+        female.Voice.ShouldNotBeNull();
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(maleVoice.ToLink()), 1)], []);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(femaleVoice.ToLink()), 1)], []);
+
+        // If no explicit voice is provided, fall back to the race's default for the NPCs gender
+        male.Voice.SetToNull();
+        female.Voice.SetToNull();
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(maleVoice.ToLink()), 1)], [male]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(femaleVoice.ToLink()), 1)], [female]);
     }
 
     [Theory, MutagenModAutoData]
@@ -186,9 +231,54 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestGetIsRace(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestHasKeyword(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Keyword actorKeyword,
+        Keyword raceKeyword,
+        Keyword questKeyword,
+        Race race,
+        Quest quest)
     {
-        false.ShouldBe(true); // TODO
+        var actorKey = fixture.CreateSpeaker("actorKey");
+        actorKey.Keywords = [actorKeyword.ToLink()];
+        
+        var raceKey = fixture.CreateSpeaker("raceKey");
+        race.Keywords = [raceKeyword.ToLink()];
+
+        var questKey = fixture.CreateSpeaker("questKey");
+        quest.Aliases.Add(new()
+        {
+            UniqueActor = questKey.ToNullableLink(),
+            Keywords = [questKeyword.ToLink()],
+        });
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(actorKeyword), 1)],
+            [actorKey]);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
+            [raceKey]);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(questKeyword), 1)],
+            [questKey]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestGetIsRace(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Race race1,
+        Race race2)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        npc1.Race.SetTo(race1);
+        var npc2 = fixture.CreateSpeaker("npc2");
+        npc2.Race.SetTo(race2);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(race1), 1)],
+            [npc1]);
     }
 
     [Theory, MutagenModAutoData]
@@ -308,21 +398,56 @@ public class VoiceTypeAssetLookupTestSkyrim
 
     [Theory, MutagenModAutoData]
     public void TestInheritedTraits(
-        VoiceTypeAssetLookupTestFixture fixture)
+        VoiceTypeAssetLookupTestFixture fixture,
+        LeveledNpc leveledNpc,
+        Race race1,
+        Race race2,
+        Race dummyRace)
     {
+        var base1 = fixture.CreateSpeaker("base1");
+        base1.Race.SetTo(race1);
+        base1.Configuration.Flags &= ~NpcConfiguration.Flag.Female;
+        var base2 = fixture.CreateSpeaker("base2");
+        base2.Race.SetTo(race2);
+        base2.Configuration.Flags |= NpcConfiguration.Flag.Female;
+        leveledNpc.Entries =
+        [
+            new() {Data = new() {Reference = base1.ToLink() } },
+            new() {Data = new() {Reference = base2.ToLink() } },
+        ];
+
+        var derived = fixture.CreateSpeaker("derived");
+        derived.Template.SetTo(leveledNpc);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(base1.Voice), 1)],
+            [base1, derived]);
+
+        // Derived data should be disregarded if a template is used
+
+        // TODO: Race
+        // TODO: Voice
+        // TODO: Gender
+
         false.ShouldBe(true); // TODO
     }
 
     [Theory, MutagenModAutoData]
     public void TestInheritedStats(VoiceTypeAssetLookupTestFixture fixture)
     {
-        false.ShouldBe(true); // TODO
+        false.ShouldBe(true); // TODO: Class
     }
 
     [Theory, MutagenModAutoData]
     public void TestInheritedFactions(VoiceTypeAssetLookupTestFixture fixture)
     {
-        false.ShouldBe(true); // TODO
+        false.ShouldBe(true); // TODO: Factions                                                                             
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestInheritedKeywords(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData]
