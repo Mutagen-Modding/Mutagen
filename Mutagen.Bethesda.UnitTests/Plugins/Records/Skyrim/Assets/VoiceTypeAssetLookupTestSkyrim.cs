@@ -193,7 +193,9 @@ public class VoiceTypeAssetLookupTestSkyrim
         string femaleEdid)
     {
         var male = fixture.CreateSpeaker("male");
+        male.Race.SetTo(race);
         var female = fixture.CreateSpeaker("female");
+        female.Race.SetTo(race);
         female.Configuration.Flags |= NpcConfiguration.Flag.Female;
 
         maleVoice.EditorID = maleEdid;
