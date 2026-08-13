@@ -218,10 +218,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     public IEnumerable<IFormLinkGetter<IHasVoiceTypeGetter>> GetSpeakers(IDialogResponsesGetter responses)
     {
         var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
-        if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) yield break;
+        if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) return [];
 
         var quest = topic.Quest.TryResolve(_formLinkCache);
-        if (quest == null) yield break;
+        if (quest == null) return [];
 
         //Get quest voices
         var questVoices = GetQuestVoices(topic, quest);
@@ -235,18 +235,17 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             voiceContainer = new(_allVoiceTypes);
         }
 
-        foreach (var formKey in voiceContainer.Voices.SelectMany(x =>
-                 {
-                     if (x.Value.Count > 0) return x.Value;
-
-                     // Get speakers with voice type when the whole voice type is used (there are no speakers)
-                     return _speakerVoices
-                         .Where(y => y.Value.Contains(x.Key))
-                         .Select(y => y.Key);
-                 }))
+        return voiceContainer.Voices.SelectMany(x =>
         {
-            yield return new FormLink<IHasVoiceTypeGetter>(formKey);
-        }
+            // A subset of speakers is used
+            if (x.Value.Count > 0) return x.Value;
+
+            // The whole voice type is used
+            // TODO: This would benefit from a reverse lookup
+            return _speakerVoices
+                .Where(y => y.Value.Contains(x.Key))
+                .Select(y => y.Key);
+        }).Distinct().Select(speaker => new FormLink<IHasVoiceTypeGetter>(speaker));
     }
 
     private IEnumerable<DataRelativePath> GetVoiceLineFilePaths(
