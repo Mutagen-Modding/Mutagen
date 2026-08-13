@@ -9,7 +9,6 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
-using Noggog.Testing.Extensions;
 using Shouldly;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim.Assets;
@@ -58,14 +57,20 @@ public class VoiceTypeAssetLookupTestFixture
         return npc;
     }
 
+    public DialogResponses CreateResponses()
+    {
+        var response = _fixture.Create<DialogResponses>();
+        Topic.Responses.Add(response);
+        return response;
+    }
+
     public void AssertSceneSpeakersEqual(uint aliasId, IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers)
     {
         var scene = _fixture.Create<Scene>();
         scene.Actors.Add(new() { ID = aliasId });
         scene.Actions.Add(new() { ActorID = (int)aliasId, Topic = Topic.ToNullableLink() });
 
-        var response = _fixture.Create<DialogResponses>();
-        Topic.Responses.Add(response);
+        var response = CreateResponses();
         Topic.Category = DialogTopic.CategoryEnum.Scene;
         response.Conditions.AddRange(conditions);
 
@@ -74,8 +79,7 @@ public class VoiceTypeAssetLookupTestFixture
 
     public void AssertSpeakersEqual(IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers)
     {
-        var response = _fixture.Create<DialogResponses>();
-        Topic.Responses.Add(response);
+        var response = CreateResponses();
         response.Conditions.AddRange(conditions);
 
         AssertSpeakersEqualImpl(response, expectedSpeakers);
@@ -373,7 +377,15 @@ public class VoiceTypeAssetLookupTestSkyrim
     [Theory, MutagenModAutoData]
     public void TestSpecificSpeaker(VoiceTypeAssetLookupTestFixture fixture)
     {
-        false.ShouldBeTrue();
+        var npc = fixture.CreateSpeaker("npc");
+        var speaker = fixture.CreateSpeaker("speaker");
+
+        var responses = fixture.CreateResponses();
+        responses.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsId(npc), 1));
+        fixture.GetLookup().GetSpeakers(responses).ShouldBe([npc.ToLink()]);
+
+        responses.Speaker.SetTo(speaker);
+        fixture.GetLookup().GetSpeakers(responses).ShouldBe([speaker.ToLink()]);
     }
 
     [Theory, MutagenModAutoData]
