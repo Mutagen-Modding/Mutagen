@@ -138,6 +138,13 @@ public class VoiceTypeAssetLookupTestSkyrim
             data.Keyword.Link.SetTo(keyword);
             return data;
         }
+
+        public static ConditionData GetIsClass(IClassGetter npcClass)
+        {
+            var data = new GetIsClassConditionData();
+            data.Class.Link.SetTo(npcClass);
+            return data;
+        }
     }
 
     [Theory, MutagenModAutoData]
@@ -207,7 +214,15 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestGetIsAliasRef(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestGetIsAliasRef(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Quest quest,
+        Quest externalQuest,
+        FormList additionalVoices,
+        Cell cell,
+        PlacedNpc placedNpc,
+        Location location,
+        LocationReferenceType refType)
     {
         false.ShouldBe(true); // TODO. Include each way alias can be filled
     }
@@ -225,9 +240,17 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestGetIsClass(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestGetIsClass(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Class npcClass)
     {
-        false.ShouldBe(true); // TODO
+        var npc1 = fixture.CreateSpeaker("npc1");
+        npc1.Class.SetTo(npcClass);
+        fixture.CreateSpeaker("dummy");
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsClass(npcClass), 1)],
+            [npc1]);
     }
 
     [Theory, MutagenModAutoData]
@@ -346,6 +369,12 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
+    public void TestSpecificSpeaker(VoiceTypeAssetLookupTestFixture fixture)
+    {
+        false.ShouldBeTrue();
+    }
+
+    [Theory, MutagenModAutoData]
     public void TestCompareOperators(VoiceTypeAssetLookupTestFixture fixture)
     {
         var npc1 = fixture.CreateSpeaker("npc1");
@@ -417,19 +446,35 @@ public class VoiceTypeAssetLookupTestSkyrim
         ];
 
         var derived = fixture.CreateSpeaker("derived");
+        derived.Race.SetTo(dummyRace);
         derived.Template.SetTo(leveledNpc);
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(base1.Voice), 1)],
             [base1, derived]);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(race2), 1)],
+            [base2, derived]);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Male }, 1)],
+            [base1, derived]);
 
         // Derived data should be disregarded if a template is used
+        derived.Race.SetTo(dummyRace);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(dummyRace), 1)],
+            []);
+        derived.Voice.ShouldNotBeNull();
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(derived.Voice), 1)],
+            []);
 
-        // TODO: Race
-        // TODO: Voice
-        // TODO: Gender
-
-        false.ShouldBe(true); // TODO
+        // Template flags should be ignored if template is null
+        derived.Template.SetToNull();
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(dummyRace), 1)],
+            [derived]);
     }
 
     [Theory, MutagenModAutoData]

@@ -19,7 +19,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     //Databases
     private HashSet<string> _allVoiceTypes = null!;
-    private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
+    // TODO: This is probably unnecessary. Leave optimisation for its own PR.
+    // Kept as enumerable as most unique NPCs have only one voice
+    private readonly Dictionary<FormKey, IEnumerable<string>> _speakerVoices = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
@@ -72,7 +74,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
         {
-            _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc));
+            _speakerVoices.Add(npc.FormKey, GetVoiceTypes(npc));
 
             foreach (var factionKey in GetFactions(npc))
             {
@@ -98,7 +100,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             foreach (var raceKey in GetRaces(npc))
             {
                 _raceNPCs
-                    .GetOrAdd(raceKey)
+                    .GetOrAdd(raceKey.FormKey)
                     .Add(npc.FormKey);
             }
         }
@@ -116,7 +118,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
         {
-            _speakerVoices.Add(talkingActivator.FormKey, GetVoiceTypes(talkingActivator));
+            var voice = GetVoiceType(talkingActivator);
+            if (voice != null)
+                _speakerVoices.Add(talkingActivator.FormKey, [voice]);
         }
 
         // TODO: Use usage cache for this
@@ -739,71 +743,50 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : [];
     }
 
-    #region Voice Parser
-    private HashSet<string> GetVoiceTypes(INpcGetter npc)
+    private IEnumerable<T> GetInheritedData<T>(INpcSpawnGetter spawn, NpcConfiguration.TemplateFlag inheritFlag, Func<INpcGetter, IEnumerable<T>> getter)
     {
-        if (_speakerVoices.TryGetValue(npc.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
-
-        //Check voice type
-        if (!npc.Voice.IsNull)
+        switch (spawn)
         {
-            var voiceType = npc.Voice.TryResolve(_formLinkCache);
-            if (voiceType is { EditorID: {} })
-            {
-                return new HashSet<string> { voiceType.EditorID };
-            }
-        }
+            case INpcGetter npc:
+                if (npc.Configuration.TemplateFlags.HasFlag(inheritFlag) && npc.Template.TryResolve(_formLinkCache, out var template))
+                    return GetInheritedData(template, inheritFlag, getter);
+                else
+                    return getter(npc);
+            case ILeveledNpcGetter leveledNpc:
+                if (leveledNpc.Entries == null) return [];
 
-        //Check template
-        if (!npc.Template.IsNull && (npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) != 0)
-        {
-            return GetVoiceTypes(npc.Template).ToHashSet();
+                return leveledNpc.Entries
+                    .Select(e => e.Data?.Reference?.TryResolve(_formLinkCache))
+                    .WhereNotNull()
+                    .SelectMany(e => GetInheritedData(e, inheritFlag, getter));
+            default: return [];
         }
-
-        return new HashSet<string>();
     }
 
-    private HashSet<string> GetVoiceTypes(IFormLinkGetter<INpcSpawnGetter> npcSpawn)
+    private string? GetDefaultVoice(IFormLinkGetter<IRaceGetter> raceLink, bool female)
     {
-        if (npcSpawn.IsNull) return new HashSet<string>();
-
-        //NPC
-        var npc = npcSpawn.TryResolve<INpcGetter>(_formLinkCache);
-        if (npc != null)
-        {
-            return GetVoiceTypes(npc);
-        }
-
-        //Levelled NPC
-        var leveledNpc = npcSpawn.TryResolve<ILeveledNpcGetter>(_formLinkCache);
-        if (leveledNpc is { Entries: {} })
-        {
-            return leveledNpc.Entries
-                .Select(entry => entry.Data?.Reference).NotNull()
-                .SelectMany(GetVoiceTypes).ToHashSet();
-        }
-
-        return new HashSet<string>();
+        if (!raceLink.TryResolve(_formLinkCache, out var race))
+            return null;
+        var link = female ? race.Voices.Female : race.Voices.Male;
+        return link.TryResolve(_formLinkCache)?.EditorID;
     }
 
-    private HashSet<string> GetVoiceTypes(ITalkingActivatorGetter talkingActivator)
+    private IEnumerable<string> GetVoiceTypes(INpcGetter npc)
     {
-        if (_speakerVoices.TryGetValue(talkingActivator.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
-
-        if (!talkingActivator.Voice.IsNull)
-        {
-            var voiceTypeGetter = talkingActivator.Voice.TryResolve(_formLinkCache);
-            if (voiceTypeGetter is { EditorID: not null })
-            {
-                return new HashSet<string> { voiceTypeGetter.EditorID };
-            }
-        }
-
-        return new HashSet<string>();
+        return GetInheritedData<string?>(npc, NpcConfiguration.TemplateFlag.Traits, entry => {
+            if (entry.Voice.TryResolve(_formLinkCache, out var voice))
+                return [voice.EditorID];
+            else
+                return [GetDefaultVoice(npc.Race, npc.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female))];
+            // TODO: Could this avoid hash set for single-voice NPCs?
+        }).WhereNotNull().ToHashSet();
     }
-    #endregion
 
-    #region Faction Parser
+    private string? GetVoiceType(ITalkingActivatorGetter talkingActivator)
+    {
+        return talkingActivator.Voice.TryResolve(_formLinkCache)?.EditorID;
+    }
+
     private HashSet<FormKey> GetFactions(INpcGetter npc)
     {
         if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Factions) == 0)
@@ -834,9 +817,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         return new HashSet<FormKey>();
     }
-    #endregion
 
-    #region Class Parser
     private HashSet<FormKey> GetClasses(INpcGetter npc)
     {
         if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Stats) == 0 && !npc.Class.IsNull)
@@ -867,29 +848,17 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         return new HashSet<FormKey>();
     }
-    #endregion
 
-    #region Gender Parser
-    private HashSet<MaleFemaleGender> GetGenders(INpcGetter npc)
+    private IEnumerable<MaleFemaleGender> GetGenders(INpcGetter npc)
     {
-        if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0)
-        {
-            return [(npc.Configuration.Flags & NpcConfiguration.Flag.Female) != 0 ? MaleFemaleGender.Female : MaleFemaleGender.Male];
-        }
+        return GetInheritedData<MaleFemaleGender>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female) ? MaleFemaleGender.Female : MaleFemaleGender.Male])
+            // TODO: HashSet is overkill
+            .ToHashSet();
 
-        return [];
     }
-    #endregion
 
-    #region Race Parser
-    private HashSet<FormKey> GetRaces(INpcGetter npc)
+    private IEnumerable<IFormLinkGetter<IRaceGetter>> GetRaces(INpcGetter npc)
     {
-        if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0 && !npc.Race.IsNull)
-        {
-            return new HashSet<FormKey> { npc.Race.FormKey };
-        }
-
-        return [];
+        return GetInheritedData<IFormLinkGetter<IRaceGetter>>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Race]).ToHashSet();
     }
-    #endregion
 }
