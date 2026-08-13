@@ -136,7 +136,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
 
         // Build caches
-        _childNPCs = _raceNPCs.Where(raceNpcs => _formLinkCache.Resolve<IRaceGetter>(raceNpcs.Key).Flags.HasFlag(Race.Flag.Child))
+        _childNPCs = _raceNPCs.Where(raceNpcs => _formLinkCache.TryResolve<IRaceGetter>(raceNpcs.Key, out var race) && race.Flags.HasFlag(Race.Flag.Child))
             .SelectMany(raceNpcs => raceNpcs.Value)
             .ToHashSet();
 
@@ -859,6 +859,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private IEnumerable<IFormLinkGetter<IRaceGetter>> GetRaces(INpcGetter npc)
     {
-        return GetInheritedData<IFormLinkGetter<IRaceGetter>>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Race]).ToHashSet();
+        return GetInheritedData<IFormLinkGetter<IRaceGetter>>(npc, NpcConfiguration.TemplateFlag.Traits, entry => entry.Race.IsNull ? [] : [entry.Race]).ToHashSet();
     }
 }
