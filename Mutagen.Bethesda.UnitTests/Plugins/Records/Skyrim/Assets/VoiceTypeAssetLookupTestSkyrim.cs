@@ -377,7 +377,7 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestCompareOperators(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestCompareOperators(VoiceTypeAssetLookupTestFixture fixture, GlobalFloat global)
     {
         var npc1 = fixture.CreateSpeaker("npc1");
         var npc2 = fixture.CreateSpeaker("npc2");
@@ -391,16 +391,15 @@ public class VoiceTypeAssetLookupTestSkyrim
             [ConditionFactory.Create(data, 1, CompareOperator.NotEqualTo)],
             [npc2]);
 
-        // Runtime does not use an epsilon when comparing floats
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(data, 1.001f, CompareOperator.EqualTo)],
-            []);
-
-        // TODO: Should we handle edge cases of comparing a bool with something other than 0 or 1 and == or !=
-        // or leave it as undefined behavior?
-        // Either way, should have an analyser to check this
-
-        false.ShouldBeTrue(); // TODO: Test for globals
+        var conditionGlobal = new ConditionGlobal()
+        {
+            Data = data,
+            ComparisonValue = global.ToLink()
+        };
+        global.Data = 1;
+        fixture.AssertSpeakersEqual([conditionGlobal], [npc1]);
+        global.Data = 0;
+        fixture.AssertSpeakersEqual([conditionGlobal], [npc2]);
     }
 
     [Theory, MutagenModAutoData]

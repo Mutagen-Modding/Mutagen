@@ -12,6 +12,8 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 /// 
 /// Intentionally differs from CK behaviour in that it ignores the `AllowDefaultDialog` flag of voice types, which has no effect at runtime but removes a response with
 /// no explicit inclusion condition from voice export consideration in the CK.
+/// 
+/// Behaviour is undefined if a filter condition is compared against something other than a boolean, or using operators other than == or !=
 /// </summary>
 public class VoiceTypeAssetLookup : IAssetCacheComponent
 {
@@ -528,7 +530,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 break;
         }
 
-        if (!voices.IsDefault && !IsConditionValid(condition))
+        if (!voices.IsDefault && IsConditionInverted(condition))
         {
             //Can't invert alias according to CK calculation
             if (data.Function == Condition.Function.GetIsAliasRef)
@@ -542,42 +544,27 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices;
     }
 
-    private bool IsConditionValid(IConditionGetter condition)
+    private bool IsConditionInverted(IConditionGetter condition)
     {
-        const double floatTolerance = 0.001;
-
-        bool FloatEquals(float value, int expected) => Math.Abs(value - expected) < floatTolerance;
-
-        bool GlobalEquals(ILink<IGlobalGetter> global, int expected)
+        var compareValue = condition switch
         {
-            var globalValue = global.TryResolve(_formLinkCache);
-            if (globalValue == null) return false;
-
-            return globalValue switch
+            IConditionFloatGetter conditionFloat => conditionFloat.ComparisonValue,
+            IConditionGlobalGetter conditionGlobal => conditionGlobal.ComparisonValue.TryResolve(_formLinkCache) switch
             {
-                IGlobalFloatGetter globalFloat => globalFloat.Data != null && Math.Abs(globalFloat.Data.Value - expected) < floatTolerance,
-                IGlobalIntGetter globalInt => globalInt.Data != null && globalInt.Data.Value == expected,
-                IGlobalShortGetter globalShort => globalShort.Data != null && globalShort.Data.Value == expected,
-                _ => false
-            };
-        }
+                IGlobalFloat globalFloat => globalFloat.Data,
+                IGlobalInt globalInt => globalInt.Data,
+                IGlobalShortGetter globalShort => globalShort.Data,
+                _ => 0,
+            },
+            _ => 0
+        } ?? 0;
 
         switch (condition.CompareOperator)
         {
             case CompareOperator.EqualTo:
-                return condition switch
-                {
-                    IConditionFloatGetter floatCondition => FloatEquals(floatCondition.ComparisonValue, 1),
-                    IConditionGlobalGetter globalCondition => GlobalEquals(globalCondition.ComparisonValue, 1),
-                    _ => false
-                };
+                return compareValue == 0;
             case CompareOperator.NotEqualTo:
-                return condition switch
-                {
-                    IConditionFloatGetter floatCondition => FloatEquals(floatCondition.ComparisonValue, 0),
-                    IConditionGlobalGetter globalCondition => GlobalEquals(globalCondition.ComparisonValue, 0),
-                    _ => false
-                };
+                return compareValue == 1;
             case CompareOperator.GreaterThan:
             case CompareOperator.GreaterThanOrEqualTo:
             case CompareOperator.LessThan:
