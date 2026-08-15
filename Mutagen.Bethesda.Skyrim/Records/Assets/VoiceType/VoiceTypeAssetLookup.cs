@@ -59,21 +59,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        foreach (var leveledNpc in _formLinkCache.WinningOverrides<ILeveledNpcGetter>())
-        {
-            if (leveledNpc.Entries is null) continue;
-
-            var voiceTypes = leveledNpc.Entries
-                .Select(x => x.Data?.Reference)
-                .WhereNotNull()
-                .SelectMany(GetVoiceTypes)
-                .ToHashSet();
-
-            _speakerVoices
-                .GetOrAdd(leveledNpc.FormKey)
-                .Add(voiceTypes);
-        }
-
         foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
         {
             _speakerVoices.Add(npc.FormKey, GetVoiceTypes(npc));
