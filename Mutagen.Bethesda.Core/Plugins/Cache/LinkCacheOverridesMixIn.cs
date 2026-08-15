@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Plugins.Cache;
 
 public static class LinkCacheOverridesMixIn
 {
-	#region GetPreviousOverridesContext
+	#region GetPreviousOverrideSimpleContexts
 	/// <summary>
 	/// Gets all previous overrides of a record in the link cache, based on the specified override mod key and resolve target.
 	/// </summary>
@@ -14,7 +14,7 @@ public static class LinkCacheOverridesMixIn
 	/// <param name="target">Resolution target to look up previous overrides from</param>
 	/// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
-	public static IEnumerable<IModContext<TMajor>> GetPreviousOverridesContext<TMajor>(this ILinkCache cache, TMajor record, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
+	public static IEnumerable<IModContext<TMajor>> GetPreviousOverrideSimpleContexts<TMajor>(this ILinkCache cache, TMajor record, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 		where TMajor : class, IMajorRecordGetter
 	{
 		return target switch
@@ -36,7 +36,7 @@ public static class LinkCacheOverridesMixIn
 	/// <param name="target">Resolution target to look up previous overrides from</param>
 	/// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
-	public static IEnumerable<IModContext<TMajor>> GetPreviousOverridesContext<TMajor>(this ILinkCache cache, FormKey formKey, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
+	public static IEnumerable<IModContext<TMajor>> GetPreviousOverrideSimpleContexts<TMajor>(this ILinkCache cache, FormKey formKey, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 		where TMajor : class, IMajorRecordGetter
 	{
 		return target switch
@@ -57,7 +57,7 @@ public static class LinkCacheOverridesMixIn
 	/// <param name="overrideModKey">The mod key of the override to start searching from</param>
 	/// <param name="target">Resolution target to look up previous overrides from</param>
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
-	public static IEnumerable<IModContext<IMajorRecordGetter>> GetPreviousOverridesContext(this ILinkCache cache, IFormLinkIdentifier formLink, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
+	public static IEnumerable<IModContext<IMajorRecordGetter>> GetPreviousOverrideSimpleContexts(this ILinkCache cache, IFormLinkIdentifier formLink, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 	{
 		return target switch
 		{
@@ -78,7 +78,7 @@ public static class LinkCacheOverridesMixIn
 	/// <param name="overrideModKey">The mod key of the override to start searching from</param>
 	/// <param name="target">Resolution target to look up previous overrides from</param>
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
-	public static IEnumerable<IModContext<IMajorRecordGetter>> GetPreviousOverridesContext(this ILinkCache cache, FormKey formKey, Type type, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
+	public static IEnumerable<IModContext<IMajorRecordGetter>> GetPreviousOverrideSimpleContexts(this ILinkCache cache, FormKey formKey, Type type, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 	{
 		return target switch
 		{
@@ -99,7 +99,7 @@ public static class LinkCacheOverridesMixIn
 	/// <param name="target">Resolution target to look up previous overrides from</param>
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
 	[Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-	public static IEnumerable<IModContext<IMajorRecordGetter>> GetPreviousOverridesContext(this ILinkCache cache, FormKey formKey, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
+	public static IEnumerable<IModContext<IMajorRecordGetter>> GetPreviousOverrideSimpleContexts(this ILinkCache cache, FormKey formKey, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 	{
 		return target switch
 		{
@@ -125,7 +125,7 @@ public static class LinkCacheOverridesMixIn
 	public static IEnumerable<TMajor> GetPreviousOverrides<TMajor>(this ILinkCache cache, TMajor record, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 		where TMajor : class, IMajorRecordGetter
 	{
-		return cache.GetPreviousOverridesContext(record, overrideModKey, target)
+		return cache.GetPreviousOverrideSimpleContexts(record, overrideModKey, target)
 			.Select(x => x.Record);
 	}
 
@@ -141,7 +141,7 @@ public static class LinkCacheOverridesMixIn
 	public static IEnumerable<TMajor> GetPreviousOverrides<TMajor>(this ILinkCache cache, FormKey formKey, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 		where TMajor : class, IMajorRecordGetter
 	{
-		return cache.GetPreviousOverridesContext<TMajor>(formKey, overrideModKey, target)
+		return cache.GetPreviousOverrideSimpleContexts<TMajor>(formKey, overrideModKey, target)
 			.Select(x => x.Record);
 	}
 
@@ -155,7 +155,7 @@ public static class LinkCacheOverridesMixIn
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
 	public static IEnumerable<IMajorRecordGetter> GetPreviousOverrides(this ILinkCache cache, IFormLinkIdentifier formLink, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 	{
-		return cache.GetPreviousOverridesContext(formLink, overrideModKey, target)
+		return cache.GetPreviousOverrideSimpleContexts(formLink, overrideModKey, target)
 			.Select(x => x.Record);
 	}
 
@@ -170,7 +170,7 @@ public static class LinkCacheOverridesMixIn
 	/// <returns>Enumerable of all previous overrides of the record, based on the specified override mod key and resolve target</returns>
 	public static IEnumerable<IMajorRecordGetter> GetPreviousOverrides(this ILinkCache cache, FormKey formKey, Type type, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 	{
-		return cache.GetPreviousOverridesContext(formKey, type, overrideModKey, target)
+		return cache.GetPreviousOverrideSimpleContexts(formKey, type, overrideModKey, target)
 			.Select(x => x.Record);
 	}
 
@@ -185,7 +185,7 @@ public static class LinkCacheOverridesMixIn
 	[Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
 	public static IEnumerable<IMajorRecordGetter> GetPreviousOverrides(this ILinkCache cache, FormKey formKey, ModKey overrideModKey, ResolveTarget target = ResolveTarget.Winner)
 	{
-		return cache.GetPreviousOverridesContext(formKey, overrideModKey, target)
+		return cache.GetPreviousOverrideSimpleContexts(formKey, overrideModKey, target)
 			.Select(x => x.Record);
 	}
 	#endregion
