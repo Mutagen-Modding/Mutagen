@@ -144,7 +144,7 @@ public class VoiceTypeAssetLookupTestSkyrim
             return data;
         }
 
-        public static ConditionData GetIsClass(IClassGetter npcClass)
+        public static ConditionData GetIsClass(IFormLinkGetter<IClassGetter> npcClass)
         {
             var data = new GetIsClassConditionData();
             data.Class.Link.SetTo(npcClass);
@@ -315,9 +315,18 @@ public class VoiceTypeAssetLookupTestSkyrim
         member.Factions.Add(new() { Faction = faction.ToLink() });
         var nonmember = fixture.CreateSpeaker("nonmember");
 
+        // Factions may be applied via aliases
+        var questmember = fixture.CreateSpeaker("questmember");
+        fixture.Quest.Aliases.Add(new()
+        {
+            UniqueActor = questmember.ToNullableLink(),
+            Factions = [faction.ToLink()],
+        });
+
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)],
-            [member]);
+            [member, questmember]);
+
     }
 
     [Theory, MutagenModAutoData]
@@ -330,7 +339,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.CreateSpeaker("dummy");
 
         fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsClass(npcClass), 1)],
+            [ConditionFactory.Create(ConditionFactory.GetIsClass(npcClass.ToLink()), 1)],
             [npc1]);
     }
 
@@ -565,6 +574,10 @@ public class VoiceTypeAssetLookupTestSkyrim
         var derived = fixture.CreateSpeaker("derived");
         derived.Race.SetTo(dummyRace);
         derived.Template.SetTo(leveledNpc);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(base1.Voice), 1)],
+            [base1]);
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
 
         fixture.AssertSpeakersEqual(
@@ -595,21 +608,121 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestInheritedStats(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestInheritedStats(
+        VoiceTypeAssetLookupTestFixture fixture,
+        LeveledNpc leveledNpc,
+        Class class1,
+        Class class2,
+        Class dummyClass)
     {
-        false.ShouldBe(true); // TODO: Class
+        var base1 = fixture.CreateSpeaker("base1");
+        base1.Class.SetTo(class1);
+        var base2 = fixture.CreateSpeaker("base2");
+        base2.Class.SetTo(class2);
+        leveledNpc.Entries =
+        [
+            new() {Data = new() {Reference = base1.ToLink() } },
+            new() {Data = new() {Reference = base2.ToLink() } },
+        ];
+        var derived = fixture.CreateSpeaker("derived");
+        derived.Template.SetTo(leveledNpc);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsClass(base1.Class), 1)],
+            [base1]);
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Stats;
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsClass(base1.Class), 1)],
+            [base1, derived]);
+
+        // Derived data should be disregarded if a template is used
+        derived.Class.SetTo(dummyClass);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsClass(dummyClass.ToLink()), 1)],
+            []);
+
+        // Template flags should be ignored if template is null
+        derived.Template.SetToNull();
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsClass(dummyClass.ToLink()), 1)],
+            [derived]);
     }
 
     [Theory, MutagenModAutoData]
-    public void TestInheritedFactions(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestInheritedFactions(
+        VoiceTypeAssetLookupTestFixture fixture,
+        LeveledNpc leveledNpc,
+        Faction faction1,
+        Faction faction2)
     {
-        false.ShouldBe(true); // TODO: Factions                                                                             
+        var base1 = fixture.CreateSpeaker("base1");
+        base1.Factions.Add(new() { Faction = faction1.ToLink() });
+        var base2 = fixture.CreateSpeaker("base2");
+        base1.Factions.Add(new() { Faction = faction2.ToLink() });
+        leveledNpc.Entries =
+        [
+            new() {Data = new() {Reference = base1.ToLink() } },
+            new() {Data = new() {Reference = base2.ToLink() } },
+        ];
+        var derived = fixture.CreateSpeaker("derived");
+        derived.Template.SetTo(leveledNpc);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetInFaction(faction1), 1)],
+            [base1]);
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Stats;
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetInFaction(faction1), 1)],
+            [base1, derived]);
     }
 
     [Theory, MutagenModAutoData]
-    public void TestInheritedKeywords(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestInheritedKeywords(
+        VoiceTypeAssetLookupTestFixture fixture,
+        LeveledNpc leveledNpc,
+        Keyword keyword1,
+        Keyword keyword2,
+        Race race,
+        Keyword raceKeyword)
     {
-        false.ShouldBeTrue();
+        var base1 = fixture.CreateSpeaker("base1");
+        base1.Keywords = [keyword2.ToLink()];
+        var base2 = fixture.CreateSpeaker("base2");
+        base2.Keywords = [keyword2.ToLink()];
+        var raceBase = fixture.CreateSpeaker("raceBase");
+        raceBase.Race.SetTo(race);
+        race.Keywords = [raceKeyword.ToLink()];
+        leveledNpc.Entries =
+        [
+            new() {Data = new() {Reference = base1.ToLink() } },
+            new() {Data = new() {Reference = base2.ToLink() } },
+            new() {Data = new() {Reference = raceBase.ToLink() } },
+        ];
+        var derived = fixture.CreateSpeaker("derived");
+        derived.Template.SetTo(leveledNpc);
+
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(keyword1), 1)],
+            [base1]);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
+            [raceBase]);
+
+
+        // Keywords are inherited via the UseKeywords flag
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Keywords;
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(keyword1), 1)],
+            [base1]);
+
+        // They can also be inheited via the race, this time with UseStats
+        derived.Configuration.TemplateFlags &= ~NpcConfiguration.TemplateFlag.Keywords;
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Stats;
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
+            [raceBase]);
     }
 
     [Theory, MutagenModAutoData]
