@@ -98,13 +98,14 @@ public class VoiceTypeAssetLookupTestSkyrim
     public static class ConditionFactory
     {
         // TODO: Test for combining with OR and AND
-        public static ConditionFloat Create(ConditionData data, float compareValue, CompareOperator op = CompareOperator.EqualTo)
+        public static ConditionFloat Create(ConditionData data, float compareValue, CompareOperator op = CompareOperator.EqualTo, bool or = false)
         {
             return new ConditionFloat
             {
                 Data = data,
                 ComparisonValue = compareValue,
                 CompareOperator = op,
+                Flags = or ? Condition.Flag.OR : 0,
             };
         }
 
@@ -147,6 +148,13 @@ public class VoiceTypeAssetLookupTestSkyrim
         {
             var data = new GetIsClassConditionData();
             data.Class.Link.SetTo(npcClass);
+            return data;
+        }
+
+        public static ConditionData IsInList(IFormListGetter list)
+        {
+            var data = new IsInListConditionData();
+            data.FormList.Link.SetTo(list);
             return data;
         }
     }
@@ -327,6 +335,29 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
+    public void TestMultipleConditions(
+        VoiceTypeAssetLookupTestFixture fixture,
+        FormList list)
+    {
+        var npc1 = fixture.CreateSpeaker("npc1");
+        var npc2 = fixture.CreateSpeaker("npc2");
+        var npc3 = fixture.CreateSpeaker("npc3");
+
+        // Multiple OR in a block is combined as a union
+        // npc1 || npc2
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 1, or: true), ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)],
+            [npc1, npc2]);
+
+        // AND is combined as the intersection
+        // (npc1 || npc2 || npc3) && !npc3
+        list.Items.AddRange(npc1.Voice, npc2.Voice, npc3.Voice);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1, or: false), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc3.Voice), 0, or: false)],
+            [npc1, npc2]);
+    }
+
+    [Theory, MutagenModAutoData]
     public void TestHasKeyword(
         VoiceTypeAssetLookupTestFixture fixture,
         Keyword actorKeyword,
@@ -394,9 +425,15 @@ public class VoiceTypeAssetLookupTestSkyrim
     }
 
     [Theory, MutagenModAutoData]
-    public void TestIsInList(VoiceTypeAssetLookupTestFixture fixture)
+    public void TestIsInList(VoiceTypeAssetLookupTestFixture fixture, FormList list)
     {
-        false.ShouldBe(true); // TODO
+        var npc1 = fixture.CreateSpeaker("npc1");
+        fixture.CreateSpeaker("dummy");
+
+        list.Items.Add(npc1.ToLink());
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.IsInList(list), 1)],
+            [npc1]);
     }
 
     [Theory, MutagenModAutoData]
