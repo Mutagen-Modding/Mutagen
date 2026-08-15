@@ -651,7 +651,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             return additionalVoices;
         }
 
-        //Location alias
+        //Location alias. Currently only SpecificLocation is supported
         if (alias.Location is { AliasID: {} })
         {
             var locationAlias = quest.Aliases.FirstOrDefault(a => a.ID == alias.Location.AliasID.Value);

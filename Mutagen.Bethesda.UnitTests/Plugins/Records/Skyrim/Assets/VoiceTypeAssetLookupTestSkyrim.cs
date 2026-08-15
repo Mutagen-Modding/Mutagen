@@ -222,7 +222,9 @@ public class VoiceTypeAssetLookupTestSkyrim
     [Theory, MutagenModAutoData]
     public void TestGetIsAliasRef(
         VoiceTypeAssetLookupTestFixture fixture,
-        Quest quest,
+        uint locAliasId,
+        uint externalAliasId,
+        uint aliasId,
         Quest externalQuest,
         FormList additionalVoices,
         Cell cell,
@@ -230,7 +232,72 @@ public class VoiceTypeAssetLookupTestSkyrim
         Location location,
         LocationReferenceType refType)
     {
-        false.ShouldBe(true); // TODO. Include each way alias can be filled
+        var npc1 = fixture.CreateSpeaker("npc");
+        var npc2 = fixture.CreateSpeaker("npc2");
+
+        void CheckAlias(QuestAlias alias, IEnumerable<Npc>? speakers = null)
+        {
+            alias.ID = aliasId;
+            fixture.Quest.Aliases.Add(alias);
+            fixture.AssertSpeakersEqual(
+                [ConditionFactory.Create(new GetIsAliasRefConditionData() { ReferenceAliasIndex = (int)aliasId }, 1)],
+                speakers ?? [npc1]);
+            fixture.Quest.Aliases.Clear();
+        }
+
+        CheckAlias(new() { UniqueActor = npc1.ToNullableLink() });
+
+        // Forced ref
+        cell.Flags |= Cell.Flag.IsInteriorCell;
+        fixture.Mod.Cells.AddInteriorCell(cell);
+        placedNpc.Base.SetTo(npc1);
+        cell.Persistent.Add(placedNpc);
+        CheckAlias(new() { ForcedReference = placedNpc.ToNullableLink() });
+
+        // Location alias ref
+        location.LocationRefTypeReferencesAdded = [new()
+        {
+            Ref = placedNpc.ToLink(),
+            LocationRefType = refType.ToLink(),
+        }];
+        fixture.Quest.Aliases.Add(new()
+        {
+            ID = locAliasId,
+            SpecificLocation = location.ToNullableLink(),
+        });
+        CheckAlias(new()
+        {
+            Location = new()
+            {
+                AliasID = (int)locAliasId,
+                RefType = refType.ToNullableLink()
+            }
+        });
+
+        // External alias
+        externalQuest.Aliases.Add(new() { UniqueActor = npc1.ToNullableLink(), ID = externalAliasId });
+        CheckAlias(new() { External = new() { AliasID = (int)externalAliasId, Quest = externalQuest.ToNullableLink() } });
+
+        // Matching ref from event doesn't provide enough context for filtering
+        CheckAlias(new() { FindMatchingRefFromEvent = new() }, [npc1, npc2]);
+        // Matching ref near alias event would require knowing every ref linked to every possible value of the other alias
+        CheckAlias(new() { FindMatchingRefNearAlias = new() }, [npc1, npc2]);
+
+        // If conditions are present, they are applied as an intersection before additional voices
+        CheckAlias(new()
+        {
+            FindMatchingRefFromEvent = new(),
+            Conditions = [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 1)]
+        }, [npc2]);
+
+        // Additional voices are applied as a union after additional voices
+        additionalVoices.Items.AddRange(npc1.ToLink(), npc2.ToLink());
+        CheckAlias(new()
+        {
+            FindMatchingRefFromEvent = new(),
+            VoiceTypes = additionalVoices.ToNullableLink(),
+            Conditions = [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 1)]
+        }, [npc1, npc2]);
     }
 
     [Theory, MutagenModAutoData]
