@@ -27,6 +27,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _keywordNPCs = new();
     private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
@@ -54,6 +55,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                         _factionNPCs
                             .GetOrAdd(faction.FormKey)
                             .Add(uniqueActor);
+                    }
+                }
+                if (alias.Keywords != null)
+                {
+                    foreach (var keyword in alias.Keywords)
+                    {
+                        _keywordNPCs.GetOrAdd(keyword.FormKey).Add(uniqueActor);
                     }
                 }
             }
@@ -89,6 +97,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 _raceNPCs
                     .GetOrAdd(raceKey.FormKey)
                     .Add(npc.FormKey);
+            }
+
+            foreach (var keyword in GetKeywords(npc))
+            {
+                _keywordNPCs.GetOrAdd(keyword.FormKey).Add(npc.FormKey);
             }
         }
 
@@ -483,6 +496,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 }
 
                 break;
+            case IHasKeywordConditionDataGetter hasKeyword:
+                if (_keywordNPCs.TryGetValue(hasKeyword.Keyword.Link.FormKey, out var keywordNpcs))
+                {
+                    voices = new VoiceContainer(keywordNpcs.ToDictionary(npc => npc, GetVoiceTypes));
+                }
+                break;
             case IGetIsRaceConditionDataGetter getIsRace:
                 if (getIsRace.Race.UsesLink() && _raceNPCs.TryGetValue(getIsRace.Race.Link.FormKey, out var raceNpcFormKeys))
                 {
@@ -764,14 +783,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return GetInheritedData(npc, NpcConfiguration.TemplateFlag.Factions, entry => entry.Factions.Select(f => f.Faction)).ToHashSet();
     }
 
-    private HashSet<IFormLinkGetter<IClassGetter>> GetClasses(INpcGetter npc)
+    private HashSet<IFormLinkGetter<IClassGetter>> GetClasses(INpcSpawnGetter npc)
     {
         return GetInheritedData<IFormLinkGetter<IClassGetter>>(npc, NpcConfiguration.TemplateFlag.Stats, entry => [entry.Class])
             .Where(c => !c.IsNull)
             .ToHashSet();
     }
 
-    private IEnumerable<MaleFemaleGender> GetGenders(INpcGetter npc)
+    private HashSet<MaleFemaleGender> GetGenders(INpcSpawnGetter npc)
     {
         return GetInheritedData<MaleFemaleGender>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female) ? MaleFemaleGender.Female : MaleFemaleGender.Male])
             // TODO: HashSet is overkill
@@ -779,10 +798,17 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     }
 
-    private IEnumerable<IFormLinkGetter<IRaceGetter>> GetRaces(INpcGetter npc)
+    private HashSet<IFormLinkGetter<IRaceGetter>> GetRaces(INpcSpawnGetter npc)
     {
         return GetInheritedData<IFormLinkGetter<IRaceGetter>>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Race])
             .Where(r => !r.IsNull)
             .ToHashSet();
+    }
+
+    private HashSet<IFormLinkGetter<IKeywordGetter>> GetKeywords(INpcSpawnGetter npc)
+    {
+        var direct = GetInheritedData(npc, NpcConfiguration.TemplateFlag.Keywords, entry => entry.Keywords ?? []);
+        var race = GetInheritedData(npc, NpcConfiguration.TemplateFlag.Traits, entry => entry.Race.TryResolve(_formLinkCache)?.Keywords ?? []);
+        return direct.And(race).ToHashSet();
     }
 }

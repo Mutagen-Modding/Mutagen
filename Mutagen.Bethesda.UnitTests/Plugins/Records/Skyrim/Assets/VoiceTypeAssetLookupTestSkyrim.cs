@@ -382,6 +382,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         actorKey.Keywords = [actorKeyword.ToLink()];
         
         var raceKey = fixture.CreateSpeaker("raceKey");
+        raceKey.Race.SetTo(race);
         race.Keywords = [raceKeyword.ToLink()];
 
         var questKey = fixture.CreateSpeaker("questKey");
@@ -691,7 +692,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Keyword raceKeyword)
     {
         var base1 = fixture.CreateSpeaker("base1");
-        base1.Keywords = [keyword2.ToLink()];
+        base1.Keywords = [keyword1.ToLink()];
         var base2 = fixture.CreateSpeaker("base2");
         base2.Keywords = [keyword2.ToLink()];
         var raceBase = fixture.CreateSpeaker("raceBase");
@@ -718,14 +719,14 @@ public class VoiceTypeAssetLookupTestSkyrim
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Keywords;
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(keyword1), 1)],
-            [base1]);
+            [base1, derived]);
 
         // They can also be inheited via the race, this time with UseTraits
         derived.Configuration.TemplateFlags &= ~NpcConfiguration.TemplateFlag.Keywords;
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
-            [raceBase]);
+            [raceBase, derived]);
     }
 
     [Theory, MutagenModAutoData]
