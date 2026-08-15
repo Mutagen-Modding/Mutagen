@@ -255,6 +255,9 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         CheckAlias(new() { UniqueActor = npc1.ToNullableLink() });
 
+        // Created
+        CheckAlias(new() { CreateReferenceToObject = new() { Object =  npc1.ToLink() }  });
+
         // Forced ref
         cell.Flags |= Cell.Flag.IsInteriorCell;
         fixture.Mod.Cells.AddInteriorCell(cell);
@@ -671,7 +674,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetInFaction(faction1), 1)],
             [base1]);
-        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Stats;
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Factions;
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetInFaction(faction1), 1)],
@@ -717,9 +720,9 @@ public class VoiceTypeAssetLookupTestSkyrim
             [ConditionFactory.Create(ConditionFactory.HasKeyword(keyword1), 1)],
             [base1]);
 
-        // They can also be inheited via the race, this time with UseStats
+        // They can also be inheited via the race, this time with UseTraits
         derived.Configuration.TemplateFlags &= ~NpcConfiguration.TemplateFlag.Keywords;
-        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Stats;
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
             [raceBase]);
