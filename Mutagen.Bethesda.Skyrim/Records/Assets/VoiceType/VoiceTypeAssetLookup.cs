@@ -20,10 +20,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private ILinkCache _formLinkCache = null!;
 
     //Databases
-    private HashSet<string> _allVoiceTypes = null!;
+    private HashSet<FormKey> _allVoiceTypes = null!;
     // TODO: This is probably unnecessary. Leave optimisation for its own PR.
     // Kept as enumerable as most unique NPCs have only one voice
-    private readonly Dictionary<FormKey, IEnumerable<string>> _speakerVoices = new();
+    private readonly Dictionary<FormKey, IEnumerable<FormKey>> _speakerVoices = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
@@ -118,9 +118,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
         {
-            var voice = GetVoiceType(talkingActivator);
-            if (voice != null)
-                _speakerVoices.Add(talkingActivator.FormKey, [voice]);
+            if (!talkingActivator.Voice.IsNull)
+                _speakerVoices.Add(talkingActivator.FormKey, [talkingActivator.Voice.FormKey]);
         }
 
         // TODO: Use usage cache for this
@@ -141,9 +140,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .ToHashSet();
 
         _allVoiceTypes = _formLinkCache.WinningOverrides<IVoiceTypeGetter>()
-            .Select(v => v.EditorID)
-            .WhereNotNull()
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            .Select(v => v.FormKey)
+            .ToHashSet();
     }
 
     /// <summary>
@@ -272,12 +270,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             var responseNumber = response.ResponseNumber;
             foreach (var voiceType in voices.GetVoiceTypes(_allVoiceTypes))
             {
+                if (!_formLinkCache.TryResolve<IVoiceTypeGetter>(voiceType, out var voice) || voice.EditorID == null) continue;
                 yield return Path.Combine
                 (
                     "Sound",
                     "Voice",
                     responses.FormKey.ModKey.FileName,
-                    voiceType,
+                    voice.EditorID,
                     $"{questString}_{topicString}_{responseFormID}_{responseNumber}.fuz"
                 );
             }
@@ -456,15 +455,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     switch (voiceTypeRecord)
                     {
-                        case IVoiceTypeGetter voiceType when voiceType.EditorID != null:
-                            voices = new VoiceContainer(voiceType.EditorID);
+                        case IVoiceTypeGetter voiceType:
+                            voices = new VoiceContainer(voiceType.FormKey);
                             break;
                         case IFormListGetter formList:
-                            voices = new VoiceContainer(formList.Items.SelectWhere(link =>
-                            {
-                                _formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(link.FormKey, out var linkVoiceTypeEditorId);
-                                return linkVoiceTypeEditorId == null ? TryGet<string>.Failure : TryGet<string>.Succeed(linkVoiceTypeEditorId);
-                            }).ToHashSet());
+                            voices = new VoiceContainer(formList.Items
+                                .Where(link => _formLinkCache.TryResolveIdentifier(link, out var _))
+                                .Select(voice => voice.FormKey)
+                                .ToHashSet());
                             break;
                     }
                 }
@@ -705,10 +703,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var item in formList.Items)
         {
-            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(item.FormKey, out var voiceTypeEditorId))
+            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(item.FormKey, out var _))
             {
                 //FormList entry is VoiceType
-                voices.Add(new VoiceContainer(voiceTypeEditorId!));
+                voices.Add(new VoiceContainer(item.FormKey));
             }
             else if (_speakerVoices.ContainsKey(item.FormKey))
             {
@@ -729,7 +727,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return baseVoices;
     }
 
-    private IEnumerable<string> GetVoiceTypes(FormKey speaker)
+    private IEnumerable<FormKey> GetVoiceTypes(FormKey speaker)
     {
         return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : [];
     }
@@ -754,28 +752,26 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private string? GetDefaultVoice(IFormLinkGetter<IRaceGetter> raceLink, bool female)
+    private FormKey GetDefaultVoice(IFormLinkGetter<IRaceGetter> raceLink, bool female)
     {
         if (!raceLink.TryResolve(_formLinkCache, out var race))
-            return null;
+            return FormKey.Null;
         var link = female ? race.Voices.Female : race.Voices.Male;
-        return link.TryResolve(_formLinkCache)?.EditorID;
+        return link.FormKey;
     }
 
-    private HashSet<string> GetVoiceTypes(INpcGetter npc)
+    private HashSet<FormKey> GetVoiceTypes(INpcGetter npc)
     {
-        return GetInheritedData<string?>(npc, NpcConfiguration.TemplateFlag.Traits, entry => {
-            if (entry.Voice.TryResolve(_formLinkCache, out var voice))
-                return [voice.EditorID];
+        return GetInheritedData<FormKey>(npc, NpcConfiguration.TemplateFlag.Traits, entry => {
+            if (!entry.Voice.IsNull)
+                return [entry.Voice.FormKey];
             else
-                return [GetDefaultVoice(npc.Race, npc.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female))];
+            {
+                var defaultVoice = GetDefaultVoice(npc.Race, npc.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female));
+                return defaultVoice.IsNull ? [] : [defaultVoice];
+            }
             // TODO: Could this avoid hash set for single-voice NPCs?
-        }).WhereNotNull().ToHashSet();
-    }
-
-    private string? GetVoiceType(ITalkingActivatorGetter talkingActivator)
-    {
-        return talkingActivator.Voice.TryResolve(_formLinkCache)?.EditorID;
+        }).ToHashSet();
     }
 
     private HashSet<IFormLinkGetter<IFactionGetter>> GetFactions(INpcSpawnGetter npc)

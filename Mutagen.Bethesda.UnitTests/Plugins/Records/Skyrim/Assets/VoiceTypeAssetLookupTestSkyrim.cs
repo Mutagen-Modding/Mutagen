@@ -767,6 +767,28 @@ public class VoiceTypeAssetLookupTestSkyrim
         lookup.GetSpeakers(response).ShouldBeEmpty();
     }
 
+    [Theory, MutagenModAutoData]
+    public void EditorIdEqual(
+        VoiceTypeAssetLookupTestFixture fixture,
+        VoiceType voice1,
+        Npc npc1,
+        VoiceType voice2,
+        Npc npc2,
+        string edid)
+    {
+        voice1.EditorID = edid;
+        npc1.Voice.SetTo(voice1);
+        voice2.EditorID = edid;
+        npc2.Voice.SetTo(voice2);
+
+        // Voice types with the same editor ID should be considered as separate.
+        // Conditions care about form IDs, duplicated editor IDs are rare, but valid
+        // such as in patchless integration of follower mods
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsVoice(voice1.ToLink()), 1)],
+            [npc1]);
+    }
+
     private readonly ILinkCache _linkCache;
     private readonly VoiceTypeAssetLookup _searcher = new();
 
@@ -827,15 +849,16 @@ public class VoiceTypeAssetLookupTestSkyrim
         var linkCache = mod.ToImmutableLinkCache();
         var sut = new VoiceTypeAssetLookup();
         sut.Prep(linkCache.CreateImmutableAssetLinkCache());
-        
+
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
-                edid1,
-                edid2
-            }),
+            new VoiceContainer([voiceType.FormKey, voiceType2.FormKey]),
             sut.GetVoicesWithQuest(topic, dialogResponses)
         );
+    }
+
+    VoiceContainer CreateVoiceIdContainer(IEnumerable<string> editorIds)
+    {
+        return new VoiceContainer(editorIds.Select(e => _linkCache.Resolve<IVoiceTypeGetter>(e).FormKey));
     }
 
     [Fact]
@@ -845,10 +868,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("155352:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
-                "CYRaaaPLACEHOLDERVoicetype"
-            }),
+            CreateVoiceIdContainer(["CYRaaaPLACEHOLDERVoicetype"]),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
@@ -860,16 +880,13 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0CE39F:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
-                "CYRMaleEvenToned",
+            CreateVoiceIdContainer(["CYRMaleEvenToned",
                 "CYRMaleStandard",
                 "CYRMaleHonorable",
                 "CYRFemaleRich",
                 "CYRFemaleSultry",
                 "CYRFemaleEnergetic",
-                "CYRaaaPLACEHOLDERVoicetype"
-            }),
+                "CYRaaaPLACEHOLDERVoicetype"]),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
@@ -881,9 +898,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0724D7:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
-                "CYRMaleArgonian",
+            CreateVoiceIdContainer(["CYRMaleArgonian",
                 "CYRMaleArgonianAccented",
                 "CYRFemaleDeepToned",
                 "CYRFemaleKhajiit",
@@ -904,8 +919,7 @@ public class VoiceTypeAssetLookupTestSkyrim
                 "CYRMaleKhajiitMercurial",
                 "CYRFemaleEnergetic",
                 "CYRMaleEnglishRich",
-                "CYRMaleOrcAlexC"
-            }),
+                "CYRMaleOrcAlexC"]),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
@@ -917,10 +931,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("0AF395:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
-                "CYRMaleSemiUniqueTES4MaleImperialVoiceMatch"
-            }),
+            CreateVoiceIdContainer(["CYRMaleSemiUniqueTES4MaleImperialVoiceMatch"]),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
@@ -932,12 +943,10 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("07EFDC:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
-                "CYRFemaleEnergetic",
+            CreateVoiceIdContainer(["CYRFemaleEnergetic",
                 "CYRMaleHonorable",
                 "CYRMaleStandard"
-            }),
+            ]),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
@@ -949,7 +958,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("16EAE2:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>()),
+            new VoiceContainer(new HashSet<FormKey>()),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
@@ -961,8 +970,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         Assert.True(_linkCache.TryResolve<IDialogTopicGetter>(FormKey.Factory("063B3F:VoiceTypeTestPlugin.esm"), out var topic), "Topic not resolved");
 
         Assert.Equal(
-            new VoiceContainer(new HashSet<string>
-            {
+            CreateVoiceIdContainer([
                 "CYRaaaPLACEHOLDERVoicetype",
                 "CYRMaleArgonian",
                 "CYRMaleArgonianAccented",
@@ -988,7 +996,7 @@ public class VoiceTypeAssetLookupTestSkyrim
                 "CYRFemaleEnergetic",
                 "CYRMaleEnglishRich",
                 "CYRMaleOrcAlexC"
-            }),
+            ]),
             _searcher.GetVoicesWithQuest(topic!, responses!)
         );
     }
