@@ -212,12 +212,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    /// <summary>
-    /// Get all NPCs for a given dialog that can speak it based on the conditions of the dialog.
-    /// </summary>
-    /// <param name="responses">Dialog responses to get speakers for</param>
-    /// <returns>List of NPC speakers, including npcs or talking activators</returns>
-    public IEnumerable<IFormLinkGetter<IHasVoiceTypeGetter>> GetSpeakers(IDialogResponsesGetter responses)
+    private VoiceContainer GetVoiceContainer(IDialogResponsesGetter responses)
     {
         var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
         if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) return [];
@@ -236,8 +231,28 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         {
             voiceContainer = new(_allVoiceTypes);
         }
+        return voiceContainer;
+    }
 
-        return voiceContainer.Voices.SelectMany(x =>
+    /// <summary>
+    /// Get all voice types for a given dialog that can speak it based on the conditions of the dialog.
+    /// </summary>
+    /// <param name="responses">Dialog responses to get speakers for</param>
+    /// <returns>List of voice types</returns>
+    public IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> GetVoices(IDialogResponsesGetter responses)
+    {
+        return GetVoiceContainer(responses).Voices.Keys
+            .Select(v => v.ToLink<IVoiceTypeGetter>());
+    }
+
+    /// <summary>
+    /// Get all NPCs for a given dialog that can speak it based on the conditions of the dialog.
+    /// </summary>
+    /// <param name="responses">Dialog responses to get speakers for</param>
+    /// <returns>List of NPC speakers, including npcs or talking activators</returns>
+    public IEnumerable<IFormLinkGetter<IHasVoiceTypeGetter>> GetSpeakers(IDialogResponsesGetter responses)
+    {
+        return GetVoiceContainer(responses).Voices.SelectMany(x =>
         {
             // A subset of speakers is used
             if (x.Value.Count > 0) return x.Value;
