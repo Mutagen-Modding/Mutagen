@@ -214,11 +214,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetVoiceContainer(IDialogResponsesGetter responses)
     {
-        var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
-        if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) return [];
-
-        var quest = topic.Quest.TryResolve(_formLinkCache);
-        if (quest == null) return [];
+        if (!_formLinkCache.TryResolveSimpleContext(responses, out var context))
+            return new();
+        if (!context.TryGetParent<IDialogTopicGetter>(out var topic))
+            return new();
+        if (!topic.Quest.TryResolve(_formLinkCache, out var quest))
+            return new();
 
         //Get quest voices
         var questVoices = GetQuestVoices(topic, quest);
@@ -239,7 +240,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     /// </summary>
     /// <param name="responses">Dialog responses to get speakers for</param>
     /// <returns>List of voice types</returns>
-    public IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> GetVoices(IDialogResponsesGetter responses)
+    public IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> GetVoiceTypes(IDialogResponsesGetter responses)
     {
         return GetVoiceContainer(responses).Voices.Keys
             .Select(v => v.ToLink<IVoiceTypeGetter>());
@@ -262,7 +263,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             return _speakerVoices
                 .Where(y => y.Value.Contains(x.Key))
                 .Select(y => y.Key);
-        }).Distinct().Select(speaker => new FormLink<IHasVoiceTypeGetter>(speaker));
+        }).Distinct().Select(speaker => speaker.ToLink<IHasVoiceTypeGetter>());
     }
 
     private IEnumerable<DataRelativePath> GetVoiceLineFilePaths(
