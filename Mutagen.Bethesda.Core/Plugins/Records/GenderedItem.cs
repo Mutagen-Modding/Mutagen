@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Records
     /// <summary>
     /// An object exposing data in a gendered format
     /// </summary>
-    public sealed class GenderedItem<T> : IGenderedItem<T>
+    public sealed class GenderedItem<T> : IGenderedItem<T>, IEquatable<GenderedItem<T>>
     {
         /// <summary>
         /// Male item
@@ -107,6 +107,21 @@ namespace Mutagen.Bethesda.Plugins.Records
         {
             GenderedItem.Print(this, sb, name);
         }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => Equals(obj as GenderedItem<T>);
+
+        /// <inheritdoc />
+        public bool Equals(GenderedItem<T>? other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return EqualityComparer<T>.Default.Equals(Male, other.Male)
+                && EqualityComparer<T>.Default.Equals(Female, other.Female);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(Male, Female);
     }
 
     internal static class GenderedItem
