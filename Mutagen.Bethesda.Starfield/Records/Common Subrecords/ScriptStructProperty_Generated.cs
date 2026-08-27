@@ -424,6 +424,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ScriptStructPropertyCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptStructPropertySetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptStructPropertyBinaryWriteTranslation.Instance;
@@ -481,6 +486,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IScriptStructProperty :
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptStructProperty>,
         INamedRequired,
         IScriptProperty,
@@ -492,6 +498,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IScriptStructPropertyGetter :
         IScriptPropertyGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IScriptStructPropertyGetter>,
         INamedRequiredGetter
     {
