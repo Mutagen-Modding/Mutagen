@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.SkillWeights) ?? true))
             {
-                if (!lhs.SkillWeights.SequenceEqualNullable(rhs.SkillWeights)) return false;
+                if (!(EqualsMaskHelper.DictEqualsHelper(lhs: lhs.SkillWeights, rhs: rhs.SkillWeights, include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
             {
@@ -1700,7 +1700,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.StatWeights) ?? true))
             {
-                if (!lhs.StatWeights.SequenceEqualNullable(rhs.StatWeights)) return false;
+                if (!(EqualsMaskHelper.DictEqualsHelper(lhs: lhs.StatWeights, rhs: rhs.StatWeights, include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
             {

@@ -2710,7 +2710,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.Data) ?? true))
             {
-                if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
+                if (!(EqualsMaskHelper.DictEqualsHelper(lhs: lhs.Data, rhs: rhs.Data, maskGetter: (k, l, r) => l.GetEqualsMask(r, EqualsMaskHelper.Include.All), include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Package_FieldIndex.XnamMarker) ?? true))
             {

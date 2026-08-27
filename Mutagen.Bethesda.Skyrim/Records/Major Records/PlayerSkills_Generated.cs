@@ -1387,11 +1387,11 @@ namespace Mutagen.Bethesda.Skyrim
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((equalsMask?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillValues) ?? true))
             {
-                if (!lhs.SkillValues.SequenceEqualNullable(rhs.SkillValues)) return false;
+                if (!(EqualsMaskHelper.DictEqualsHelper(lhs: lhs.SkillValues, rhs: rhs.SkillValues, include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillOffsets) ?? true))
             {
-                if (!lhs.SkillOffsets.SequenceEqualNullable(rhs.SkillOffsets)) return false;
+                if (!(EqualsMaskHelper.DictEqualsHelper(lhs: lhs.SkillOffsets, rhs: rhs.SkillOffsets, include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Health) ?? true))
             {

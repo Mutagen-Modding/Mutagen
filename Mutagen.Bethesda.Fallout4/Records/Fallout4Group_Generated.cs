@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Fallout4Group_FieldIndex.RecordCache) ?? true))
             {
-                if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
+                if (!(EqualsMaskHelper.CacheEqualsHelper(lhs: lhs.RecordCache, rhs: rhs.RecordCache, maskGetter: (k, l, r) => l.GetEqualsMask(r, EqualsMaskHelper.Include.All), include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             return true;
         }

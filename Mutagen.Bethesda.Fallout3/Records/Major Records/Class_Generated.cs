@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Attributes) ?? true))
             {
-                if (!lhs.Attributes.SequenceEqualNullable(rhs.Attributes)) return false;
+                if (!(EqualsMaskHelper.DictEqualsHelper(lhs: lhs.Attributes, rhs: rhs.Attributes, include: EqualsMaskHelper.Include.All)?.Overall ?? true)) return false;
             }
             return true;
         }
