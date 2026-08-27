@@ -1784,7 +1784,7 @@ namespace Mutagen.Bethesda.Fallout4
             switch (type.TypeInt)
             {
                 case RecordTypeInts.FNAM
-                    when stream.MetaData.FormVersion >= 112:
+                    when this._package.FormVersion!.FormVersion >= 112:
                 {
                     TreeFolderCustomParse(
                         stream: stream,

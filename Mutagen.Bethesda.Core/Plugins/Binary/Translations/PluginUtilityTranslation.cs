@@ -88,6 +88,11 @@ internal static class PluginUtilityTranslation
         MajorRecordFill<M> fillTyped)
         where M : IMajorRecordGetter
     {
+        // Peek the record's FormVersion directly off its header bytes (without advancing
+        // the reader) so it is available to fillStructs' own custom struct-fill logic below.
+        // record.FormVersion isn't populated until fillStructs runs, so it can't be used yet;
+        // the header itself is already sitting right here to read from instead.
+        frame.MetaData.FormVersion = (ushort?)frame.Reader.GetMajorRecordHeader().FormVersion;
         frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
         fillStructs(
             record: record,
@@ -101,7 +106,6 @@ internal static class PluginUtilityTranslation
             }
 
             Dictionary<RecordType, int>? recordParseCount = null;
-            frame.MetaData.FormVersion = record.FormVersion;
             var lastParsed = new PreviousParse();
             while (!targetFrame.Complete)
             {
