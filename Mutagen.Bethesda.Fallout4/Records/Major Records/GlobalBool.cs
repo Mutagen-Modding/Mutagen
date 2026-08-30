@@ -42,7 +42,7 @@ partial class GlobalBoolBinaryWriteTranslation
         if (item.Data is not {} data) return;
         using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
         {
-            writer.Write(data);
+            writer.Write(data ? 1f : 0f);
         }
     }
 }
