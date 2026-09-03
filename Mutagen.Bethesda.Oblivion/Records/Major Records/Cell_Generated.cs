@@ -2220,9 +2220,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.XXXX,
                 RecordTypes.PGRD,
                 RecordTypes.LAND,
-                RecordTypes.REFR,
+                RecordTypes.ACRE,
                 RecordTypes.ACHR,
-                RecordTypes.ACRE);
+                RecordTypes.REFR);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

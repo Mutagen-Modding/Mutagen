@@ -3315,6 +3315,8 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.ONAM,
                 RecordTypes.NNAM,
                 RecordTypes.MNAM,
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
                 RecordTypes.VMAD,
                 RecordTypes.NAME,
                 RecordTypes.XHTW,
@@ -3337,9 +3339,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.XLRT,
                 RecordTypes.XLRL,
                 RecordTypes.XSCL,
-                RecordTypes.XLOD,
-                RecordTypes.REFR,
-                RecordTypes.ACHR);
+                RecordTypes.XLOD);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

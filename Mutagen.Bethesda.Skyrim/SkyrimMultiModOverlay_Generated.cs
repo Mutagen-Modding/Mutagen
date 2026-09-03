@@ -1136,9 +1136,6 @@ internal class MergedCellBlock : ICellBlockGetter
         _mergedSubBlocks = new Lazy<List<ICellSubBlockGetter>>(MergeSubBlocks);
     }
 
-    // Merge method: sub-blocks with the same BlockNumber coming from different split
-    // files must be combined into a single sub-block, otherwise the reconstituted mod
-    // contains duplicate sub-blocks (and later duplicate records on GetOrAddAsOverride).
     private List<ICellSubBlockGetter> MergeSubBlocks()
     {
         var subBlocksByNumber = new Dictionary<int, List<ICellSubBlockGetter>>();
@@ -1220,8 +1217,6 @@ internal class MergedCellSubBlock : ICellSubBlockGetter
     public int LastModified => _sourceSubBlocks.Max(sb => sb.LastModified);
     public int Unknown => 0;
 
-    // Merge method: cells from sub-blocks of the same number are gathered together, and a
-    // cell sharing a FormKey across split files has its placed objects merged.
     private IReadOnlyList<ICellGetter> MergeCells()
     {
         var cellsByFormKey = new Dictionary<FormKey, List<ICellGetter>>();

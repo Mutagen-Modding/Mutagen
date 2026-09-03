@@ -2728,12 +2728,12 @@ namespace Mutagen.Bethesda.Fallout3
                 RecordTypes.NVDP,
                 RecordTypes.NVGD,
                 RecordTypes.NVEX,
-                RecordTypes.PGRE,
-                RecordTypes.REFR,
                 RecordTypes.PBEA,
-                RecordTypes.ACHR,
                 RecordTypes.ACRE,
-                RecordTypes.PMIS);
+                RecordTypes.PGRE,
+                RecordTypes.PMIS,
+                RecordTypes.ACHR,
+                RecordTypes.REFR);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

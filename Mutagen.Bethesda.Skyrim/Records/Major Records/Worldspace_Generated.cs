@@ -2573,6 +2573,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.NAVM,
                 RecordTypes.NVNM,
                 RecordTypes.PNAM,
+                RecordTypes.ACHR,
+                RecordTypes.REFR,
                 RecordTypes.VMAD,
                 RecordTypes.NAME,
                 RecordTypes.XHTW,
@@ -2587,9 +2589,7 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.XLRT,
                 RecordTypes.XLRL,
                 RecordTypes.XLOD,
-                RecordTypes.XSCL,
-                RecordTypes.REFR,
-                RecordTypes.ACHR);
+                RecordTypes.XSCL);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

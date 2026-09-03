@@ -1390,7 +1390,33 @@ internal class MergedCellBlock : ICellBlockGetter
     {
         _blockNumber = blockNumber;
         _sourceBlocks = sourceBlocks;
-        _mergedSubBlocks = new Lazy<List<ICellSubBlockGetter>>(() => _sourceBlocks.SelectMany(b => b.SubBlocks).ToList());
+        _mergedSubBlocks = new Lazy<List<ICellSubBlockGetter>>(MergeSubBlocks);
+    }
+
+    private List<ICellSubBlockGetter> MergeSubBlocks()
+    {
+        var subBlocksByNumber = new Dictionary<int, List<ICellSubBlockGetter>>();
+        var order = new List<int>();
+        foreach (var block in _sourceBlocks)
+        {
+            foreach (var subBlock in block.SubBlocks)
+            {
+                if (!subBlocksByNumber.TryGetValue(subBlock.BlockNumber, out var list))
+                {
+                    list = new List<ICellSubBlockGetter>();
+                    subBlocksByNumber[subBlock.BlockNumber] = list;
+                    order.Add(subBlock.BlockNumber);
+                }
+                list.Add(subBlock);
+            }
+        }
+        var result = new List<ICellSubBlockGetter>(order.Count);
+        foreach (var number in order)
+        {
+            var subBlocks = subBlocksByNumber[number];
+            result.Add(subBlocks.Count == 1 ? subBlocks[0] : new MergedCellSubBlock(number, subBlocks));
+        }
+        return result;
     }
 
     public int BlockNumber => _blockNumber;
@@ -1425,6 +1451,81 @@ internal class MergedCellBlock : ICellBlockGetter
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)
         => CellBlockCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);
+}
+
+/// <summary>
+/// Merged cell sub-block that combines multiple sub-blocks with the same BlockNumber, deduplicating cells by FormKey.
+/// </summary>
+internal class MergedCellSubBlock : ICellSubBlockGetter
+{
+    private readonly int _blockNumber;
+    private readonly List<ICellSubBlockGetter> _sourceSubBlocks;
+    private readonly Lazy<IReadOnlyList<ICellGetter>> _mergedCells;
+
+    public MergedCellSubBlock(int blockNumber, List<ICellSubBlockGetter> sourceSubBlocks)
+    {
+        _blockNumber = blockNumber;
+        _sourceSubBlocks = sourceSubBlocks;
+        _mergedCells = new Lazy<IReadOnlyList<ICellGetter>>(MergeCells);
+    }
+
+    public int BlockNumber => _blockNumber;
+    public GroupTypeEnum GroupType => _sourceSubBlocks[^1].GroupType;
+    public int LastModified => _sourceSubBlocks.Max(sb => sb.LastModified);
+    public int Unknown => 0;
+
+    private IReadOnlyList<ICellGetter> MergeCells()
+    {
+        var cellsByFormKey = new Dictionary<FormKey, List<ICellGetter>>();
+        var order = new List<FormKey>();
+        foreach (var subBlock in _sourceSubBlocks)
+        {
+            foreach (var cell in subBlock.Cells)
+            {
+                if (!cellsByFormKey.TryGetValue(cell.FormKey, out var list))
+                {
+                    list = new List<ICellGetter>();
+                    cellsByFormKey[cell.FormKey] = list;
+                    order.Add(cell.FormKey);
+                }
+                list.Add(cell);
+            }
+        }
+        var result = new List<ICellGetter>(order.Count);
+        foreach (var formKey in order)
+        {
+            var cells = cellsByFormKey[formKey];
+            result.Add(cells.Count == 1 ? cells[0] : new MergedWorldspaceCell(cells));
+        }
+        return result;
+    }
+
+    public IReadOnlyList<ICellGetter> Cells => _mergedCells.Value;
+
+    ILoquiRegistration ILoquiObject.Registration => null!;
+    public void Print(StructuredStringBuilder sb, string? name) => CellSubBlockCommon.Instance.Print(this, sb, name);
+    public object CommonInstance() => CellSubBlockCommon.Instance;
+    public object? CommonSetterInstance() => null;
+    public object CommonSetterTranslationInstance() => CellSubBlockSetterTranslationCommon.Instance;
+
+    object IBinaryItem.BinaryWriteTranslator => CellSubBlockBinaryWriteTranslation.Instance;
+    void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)
+        => CellSubBlockBinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);
+
+    public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
+        => CellSubBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
+        => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+
+    public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
+        => CellSubBlockCommon.Instance.EnumerateMajorRecords(this);
+
+    public IEnumerable<T> EnumerateMajorRecords<T>(bool throwIfUnknown = true) where T : class, IMajorRecordQueryableGetter
+        => CellSubBlockCommon.Instance.EnumerateMajorRecords(this, typeof(T), throwIfUnknown).Select(m => (T)m);
+
+    public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(Type type, bool throwIfUnknown = true)
+        => CellSubBlockCommon.Instance.EnumerateMajorRecords(this, type, throwIfUnknown);
 }
 
 /// <summary>
