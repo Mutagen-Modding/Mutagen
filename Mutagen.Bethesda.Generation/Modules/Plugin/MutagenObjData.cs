@@ -80,7 +80,7 @@ public class MutagenObjData
                 this.TriggeringRecordTypes,
                 this.ObjGen)
         };
-        foreach (var subObjs in await this.ObjGen.InheritingObjects())
+        foreach (var subObjs in (await this.ObjGen.InheritingObjects()).OrderByDeclaration())
         {
             ret.Add(new KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>(
                 await subObjs.GetTriggeringRecordTypes(),

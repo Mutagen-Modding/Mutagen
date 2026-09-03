@@ -16,6 +16,18 @@ public static class ObjectGenerationExt
         return (MutagenObjData)objGen.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenObjData(objGen));
     }
 
+    /// <summary>
+    /// Objects come off disk in filesystem order, which isn't stable across checkouts.  Any set that drives record
+    /// type ordering needs sorting first, and it has to be by declaration: sorting by name would be equally stable
+    /// but would put later XML entries ahead of earlier ones.
+    /// </summary>
+    public static IEnumerable<ObjectGeneration> OrderByDeclaration(this IEnumerable<ObjectGeneration> objGens)
+    {
+        return objGens
+            .OrderBy(x => x.SourceXMLFile.Path, StringComparer.Ordinal)
+            .ThenBy(x => x.Node.ElementsBeforeSelf().Count());
+    }
+
     public static RecordType GetRecordType(this ObjectGeneration objGen)
     {
         if (!TryGetRecordType(objGen, out var data))

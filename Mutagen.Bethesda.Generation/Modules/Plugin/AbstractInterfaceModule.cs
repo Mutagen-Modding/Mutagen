@@ -102,7 +102,7 @@ public class AbstractInterfaceModule : GenerationModule
                                 regisSb.AppendLine($"new {nameof(ILoquiRegistration)}[]");
                                 using (regisSb.CurlyBrace())
                                 {
-                                    foreach (var inheriting in await rec.InheritingObjects())
+                                    foreach (var inheriting in (await rec.InheritingObjects()).OrderByDeclaration())
                                     {
                                         if (grupTypes.Contains(inheriting))
                                         {

@@ -479,6 +479,7 @@ public class TriggeringRecordModule : GenerationModule
                 var implementingObjs = obj.ProtoGen.ObjectGenerationsByName.Values
                     .Where(o => o.Interfaces.ContainsAtLeast(loqui.GetterInterface, LoquiInterfaceDefinitionType.Direct)
                         || o.Interfaces.ContainsAtLeast(loqui.SetterInterface, LoquiInterfaceDefinitionType.Direct))
+                    .OrderByDeclaration()
                     .ToArray();
                 await loqui.AddAsSubLoquiType(implementingObjs);
             }
@@ -642,7 +643,7 @@ public class TriggeringRecordModule : GenerationModule
     private async Task AddLoquiSubTypes(LoquiType loqui)
     {
         if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null || loqui.TargetObjectGeneration.GetObjectData().AbstractSplitter) return;
-        var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
+        var inheritingObjs = (await loqui.TargetObjectGeneration.InheritingObjects()).OrderByDeclaration();
         await loqui.AddAsSubLoquiType(inheritingObjs);
     }
 
