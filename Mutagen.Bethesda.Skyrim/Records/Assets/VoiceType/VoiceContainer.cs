@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
@@ -8,8 +8,8 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     /// <summary>
     /// Voice type names mapped to form keys of npcs or talking activators using that voice type 
     /// </summary>
-    private readonly Dictionary<string, HashSet<FormKey>> _voices = new();
-    public IReadOnlyDictionary<string, HashSet<FormKey>> Voices => _voices;
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _voices = new();
+    public IReadOnlyDictionary<FormKey, HashSet<FormKey>> Voices => _voices;
     public bool IsDefault { get; private set; }
 
     #region Constructors
@@ -18,7 +18,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         IsDefault = isDefault;
     }
 
-    public VoiceContainer(FormKey npc, IEnumerable<string> voiceTypes)
+    public VoiceContainer(FormKey npc, IEnumerable<FormKey> voiceTypes)
     {
         foreach (var voiceType in voiceTypes)
         {
@@ -26,7 +26,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
-    public VoiceContainer(Dictionary<FormKey, IEnumerable<string>> npcVoices)
+    public VoiceContainer(Dictionary<FormKey, IEnumerable<FormKey>> npcVoices)
     {
         foreach (var (npc, voiceTypes) in npcVoices)
         {
@@ -39,7 +39,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
-    public VoiceContainer(Dictionary<FormKey, HashSet<string>> npcVoices)
+    public VoiceContainer(Dictionary<FormKey, HashSet<FormKey>> npcVoices)
     {
         foreach (var (npc, voiceTypes) in npcVoices)
         {
@@ -53,12 +53,12 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
-    public VoiceContainer(string voiceType)
+    public VoiceContainer(FormKey voiceType)
     {
         _voices.Add(voiceType, []);
     }
 
-    public VoiceContainer(IEnumerable<string> voiceTypes)
+    public VoiceContainer(IEnumerable<FormKey> voiceTypes)
     {
         foreach (var voiceType in voiceTypes)
         {
@@ -68,9 +68,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     #endregion
 
     #region ExplicitOperators
-    public void InvertVoiceTypes(HashSet<string> voiceTypesToKeep)
+    public void InvertVoiceTypes(HashSet<FormKey> voiceTypesToKeep)
     {
-        var voiceTypes = new List<string>(_voices.Keys);
+        var voiceTypes = new List<FormKey>(_voices.Keys);
 
         foreach (var voiceType in voiceTypes.Where(voiceType => !voiceTypesToKeep.Contains(voiceType)))
         {
@@ -98,7 +98,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
 
         // If both are non-default, we need to intersect the voice types and their NPCs
-        var removeVoiceTypes = new HashSet<string>();
+        var removeVoiceTypes = new HashSet<FormKey>();
 
         foreach (var (voiceType, npcs) in _voices)
         {
@@ -177,7 +177,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     {
         if (other.IsEmpty()) return;
 
-        var removeVoiceTypes = new HashSet<string>();
+        var removeVoiceTypes = new HashSet<FormKey>();
 
         foreach (var (voiceType, npcs) in _voices)
         {
@@ -213,9 +213,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     }
     #endregion
 
-    public HashSet<string> GetVoiceTypes(HashSet<string> defaultVoiceTypes)
+    public IEnumerable<FormKey> GetVoiceTypes(HashSet<FormKey> allVoices)
     {
-        return IsDefault ? defaultVoiceTypes : _voices.Keys.ToHashSet();
+        return IsDefault ? allVoices : _voices.Keys;
     }
 
     public bool IsEmpty()

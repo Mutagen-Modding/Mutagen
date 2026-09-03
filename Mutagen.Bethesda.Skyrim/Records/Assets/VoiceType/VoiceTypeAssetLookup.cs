@@ -6,24 +6,34 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 
+/// <summary>
+/// Lookup for potential speakers and voice types of dialogue. Attempts to determine potential speakers at runtime to the extent that it can be statically determined.
+/// Considers winning overrides only.
+/// 
+/// Intentionally differs from CK behaviour in that it ignores the `AllowDefaultDialog` flag of voice types, which has no effect at runtime but removes a response with
+/// no explicit inclusion condition from voice export consideration in the CK.
+/// 
+/// Behaviour is undefined if a filter condition is compared against something other than a boolean, or using operators other than == or !=
+/// </summary>
 public class VoiceTypeAssetLookup : IAssetCacheComponent
 {
     private ILinkCache _formLinkCache = null!;
 
     //Databases
-    private readonly Dictionary<ModKey, HashSet<string>> _defaultVoiceTypes = new();
-    private readonly Dictionary<FormKey, HashSet<string>> _speakerVoices = new();
+    private HashSet<FormKey> _allVoiceTypes = null!;
+    // TODO: This is probably unnecessary. Leave optimisation for its own PR.
+    // Kept as enumerable as most unique NPCs have only one voice
+    private readonly Dictionary<FormKey, IEnumerable<FormKey>> _speakerVoices = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _keywordNPCs = new();
     private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
     private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
 
     //Caches
-    private readonly object _defaultSpeakerVoicesLock = new();
-    private readonly Dictionary<ModKey, VoiceContainer> _defaultSpeakerVoices = new();
     private readonly object _questCacheLock = new();
     private readonly Dictionary<FormKey, VoiceContainer> _questCache = new();
 
@@ -31,147 +41,107 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     {
         _formLinkCache = linkCache.FormLinkCache;
 
-        var childRaces = new HashSet<FormKey>();
-        foreach (var mod in _formLinkCache.PriorityOrder)
+        foreach (var quest in _formLinkCache.WinningOverrides<IQuestGetter>())
         {
-            foreach (var quest in mod.EnumerateMajorRecords<IQuestGetter>())
+            foreach (var alias in quest.Aliases)
             {
-                foreach (var alias in quest.Aliases)
-                {
-                    var uniqueActor = alias.UniqueActor.FormKey;
-                    if (uniqueActor.IsNull) continue;
+                var uniqueActor = alias.UniqueActor.FormKey;
+                if (uniqueActor.IsNull) continue;
 
-                    foreach (var faction in alias.Factions)
+                foreach (var faction in alias.Factions)
+                {
+                    if (!faction.IsNull)
                     {
-                        if (!faction.IsNull)
-                        {
-                            _factionNPCs
-                                .GetOrAdd(faction.FormKey)
-                                .Add(uniqueActor);
-                        }
+                        _factionNPCs
+                            .GetOrAdd(faction.FormKey)
+                            .Add(uniqueActor);
                     }
                 }
-            }
-
-            foreach (var leveledNpc in mod.EnumerateMajorRecords<ILeveledNpcGetter>())
-            {
-                if (leveledNpc.Entries is null) continue;
-
-                var voiceTypes = leveledNpc.Entries
-                    .Select(x => x.Data?.Reference)
-                    .WhereNotNull()
-                    .SelectMany(GetVoiceTypes)
-                    .ToHashSet();
-
-                _speakerVoices
-                    .GetOrAdd(leveledNpc.FormKey)
-                    .Add(voiceTypes);
-            }
-
-            foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>())
-            {
-                _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc));
-
-                foreach (var factionKey in GetFactions(npc))
+                if (alias.Keywords != null)
                 {
-                    _factionNPCs
-                        .GetOrAdd(factionKey)
-                        .Add(npc.FormKey);
-                }
-
-                foreach (var classKey in GetClasses(npc))
-                {
-                    _classNPCs
-                        .GetOrAdd(classKey)
-                        .Add(npc.FormKey);
-                }
-
-                foreach (var gender in GetGenders(npc))
-                {
-                    _genderNPCs
-                        .GetOrAdd(gender)
-                        .Add(npc.FormKey);
-                }
-
-                foreach (var raceKey in GetRaces(npc))
-                {
-                    _raceNPCs
-                        .GetOrAdd(raceKey)
-                        .Add(npc.FormKey);
-                }
-            }
-
-            foreach (var response in mod.EnumerateMajorRecords<IDialogResponsesGetter>())
-            {
-                if (!response.ResponseData.IsNull)
-                {
-                    _sharedInfoUsages
-                        .GetOrAdd(response.ResponseData.FormKey)
-                        .Add(response.FormKey);
-                }
-            }
-
-            foreach (var talkingActivator in mod.EnumerateMajorRecords<ITalkingActivatorGetter>())
-            {
-                if (!_speakerVoices.ContainsKey(talkingActivator.FormKey))
-                {
-                    _speakerVoices.Add(talkingActivator.FormKey, GetVoiceTypes(talkingActivator));
-                }
-            }
-
-            foreach (var race in mod.EnumerateMajorRecords<IRaceGetter>())
-            {
-                if ((race.Flags & Race.Flag.Child) != 0)
-                {
-                    childRaces.Add(race.FormKey);
-                }
-            }
-
-            foreach (var scene in mod.EnumerateMajorRecords<ISceneGetter>())
-            {
-                foreach (var action in scene.Actions)
-                {
-                    if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !_dialogueSceneAliasIndex.ContainsKey(action.Topic.FormKey))
+                    foreach (var keyword in alias.Keywords)
                     {
-                        _dialogueSceneAliasIndex.Add(action.Topic.FormKey, action.ActorID.Value);
-                    }
-                }
-            }
-
-            var defaultVoiceTypes = new HashSet<string>();
-            _defaultVoiceTypes.Add(mod.ModKey, defaultVoiceTypes);
-            foreach (var voiceType in mod.EnumerateMajorRecords<IVoiceTypeGetter>())
-            {
-                if (voiceType.EditorID != null)
-                {
-                    if ((voiceType.Flags & Skyrim.VoiceType.Flag.AllowDefaultDialog) != 0)
-                    {
-                        defaultVoiceTypes.Add(voiceType.EditorID);
+                        _keywordNPCs.GetOrAdd(keyword.FormKey).Add(uniqueActor);
                     }
                 }
             }
         }
 
-        //Build child cache
-        _childNPCs = childRaces
-            .SelectWhere(r => _raceNPCs.TryGetValue(r, out var raceNpcFormKeys) ? TryGet<HashSet<FormKey>>.Succeed(raceNpcFormKeys) : TryGet<HashSet<FormKey>>.Failure)
-            .SelectMany(x => x)
+        foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
+        {
+            _speakerVoices.Add(npc.FormKey, GetVoiceTypes(npc));
+
+            foreach (var factionKey in GetFactions(npc))
+            {
+                _factionNPCs
+                    .GetOrAdd(factionKey.FormKey)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var classKey in GetClasses(npc))
+            {
+                _classNPCs
+                    .GetOrAdd(classKey.FormKey)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var gender in GetGenders(npc))
+            {
+                _genderNPCs
+                    .GetOrAdd(gender)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var raceKey in GetRaces(npc))
+            {
+                _raceNPCs
+                    .GetOrAdd(raceKey.FormKey)
+                    .Add(npc.FormKey);
+            }
+
+            foreach (var keyword in GetKeywords(npc))
+            {
+                _keywordNPCs.GetOrAdd(keyword.FormKey).Add(npc.FormKey);
+            }
+        }
+
+        // TODO: Use usage cache for this
+        foreach (var response in _formLinkCache.WinningOverrides<IDialogResponsesGetter>())
+        {
+            if (!response.ResponseData.IsNull)
+            {
+                _sharedInfoUsages
+                    .GetOrAdd(response.ResponseData.FormKey)
+                    .Add(response.FormKey);
+            }
+        }
+
+        foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
+        {
+            if (!talkingActivator.Voice.IsNull)
+                _speakerVoices.Add(talkingActivator.FormKey, [talkingActivator.Voice.FormKey]);
+        }
+
+        // TODO: Use usage cache for this
+        foreach (var scene in _formLinkCache.WinningOverrides<ISceneGetter>())
+        {
+            foreach (var action in scene.Actions)
+            {
+                if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !_dialogueSceneAliasIndex.ContainsKey(action.Topic.FormKey))
+                {
+                    _dialogueSceneAliasIndex.Add(action.Topic.FormKey, action.ActorID.Value);
+                }
+            }
+        }
+
+        // Build caches
+        _childNPCs = _raceNPCs.Where(raceNpcs => _formLinkCache.TryResolve<IRaceGetter>(raceNpcs.Key, out var race) && race.Flags.HasFlag(Race.Flag.Child))
+            .SelectMany(raceNpcs => raceNpcs.Value)
             .ToHashSet();
 
-        //Add master voice types
-        var defaultVoicesCopy = new Dictionary<ModKey, HashSet<string>>(_defaultVoiceTypes);
-        foreach (var mod in _formLinkCache.PriorityOrder)
-        {
-            foreach (var master in mod.MasterReferences)
-            {
-                if (!defaultVoicesCopy.TryGetValue(master.Master, out var defaultVoiceTypes)) continue;
-
-                foreach (var voiceType in defaultVoiceTypes)
-                {
-                    _defaultVoiceTypes[mod.ModKey].Add(voiceType);
-                }
-            }
-        }
+        _allVoiceTypes = _formLinkCache.WinningOverrides<IVoiceTypeGetter>()
+            .Select(v => v.FormKey)
+            .ToHashSet();
     }
 
     /// <summary>
@@ -242,18 +212,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    /// <summary>
-    /// Get all NPCs for a given dialog that can speak it based on the conditions of the dialog.
-    /// </summary>
-    /// <param name="responses">Dialog responses to get speakers for</param>
-    /// <returns>List of NPC speakers, including npcs or talking activators</returns>
-    public IEnumerable<IFormLinkGetter<IHasVoiceTypeGetter>> GetSpeakers(IDialogResponsesGetter responses)
+    private VoiceContainer GetVoiceContainer(IDialogResponsesGetter responses)
     {
-        var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
-        if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) yield break;
-
-        var quest = topic.Quest.TryResolve(_formLinkCache);
-        if (quest == null) yield break;
+        if (!_formLinkCache.TryResolveSimpleContext(responses, out var context))
+            return new();
+        if (!context.TryGetParent<IDialogTopicGetter>(out var topic))
+            return new();
+        if (!topic.Quest.TryResolve(_formLinkCache, out var quest))
+            return new();
 
         //Get quest voices
         var questVoices = GetQuestVoices(topic, quest);
@@ -264,21 +230,40 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         if (voiceContainer.IsDefault)
         {
-            voiceContainer = GetAllDefaultVoices();
+            voiceContainer = new(_allVoiceTypes);
         }
+        return voiceContainer;
+    }
 
-        foreach (var formKey in voiceContainer.Voices.SelectMany(x =>
-                 {
-                     if (x.Value.Count > 0) return x.Value;
+    /// <summary>
+    /// Get all voice types for a given dialog that can speak it based on the conditions of the dialog.
+    /// </summary>
+    /// <param name="responses">Dialog responses to get speakers for</param>
+    /// <returns>List of voice types</returns>
+    public IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> GetVoiceTypes(IDialogResponsesGetter responses)
+    {
+        return GetVoiceContainer(responses).Voices.Keys
+            .Select(v => v.ToLink<IVoiceTypeGetter>());
+    }
 
-                     // Get speakers with voice type when the whole voice type is used (there are no speakers)
-                     return _speakerVoices
-                         .Where(y => y.Value.Contains(x.Key))
-                         .Select(y => y.Key);
-                 }))
+    /// <summary>
+    /// Get all NPCs for a given dialog that can speak it based on the conditions of the dialog.
+    /// </summary>
+    /// <param name="responses">Dialog responses to get speakers for</param>
+    /// <returns>List of NPC speakers, including npcs or talking activators</returns>
+    public IEnumerable<IFormLinkGetter<IHasVoiceTypeGetter>> GetSpeakers(IDialogResponsesGetter responses)
+    {
+        return GetVoiceContainer(responses).Voices.SelectMany(x =>
         {
-            yield return new FormLink<IHasVoiceTypeGetter>(formKey);
-        }
+            // A subset of speakers is used
+            if (x.Value.Count > 0) return x.Value;
+
+            // The whole voice type is used
+            // TODO: This would benefit from a reverse lookup
+            return _speakerVoices
+                .Where(y => y.Value.Contains(x.Key))
+                .Select(y => y.Key);
+        }).Distinct().Select(speaker => speaker.ToLink<IHasVoiceTypeGetter>());
     }
 
     private IEnumerable<DataRelativePath> GetVoiceLineFilePaths(
@@ -299,14 +284,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             if (!response.Sound.IsNull) continue;
 
             var responseNumber = response.ResponseNumber;
-            foreach (var voiceType in voices.GetVoiceTypes(_defaultVoiceTypes[topic.FormKey.ModKey]))
+            foreach (var voiceType in voices.GetVoiceTypes(_allVoiceTypes))
             {
+                if (!_formLinkCache.TryResolve<IVoiceTypeGetter>(voiceType, out var voice) || voice.EditorID == null) continue;
                 yield return Path.Combine
                 (
                     "Sound",
                     "Voice",
-                    topic.FormKey.ModKey.FileName,
-                    voiceType,
+                    responses.FormKey.ModKey.FileName,
+                    voice.EditorID,
                     $"{questString}_{topicString}_{responseFormID}_{responseNumber}.fuz"
                 );
             }
@@ -347,7 +333,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
                     if (currentQuest == null) return null;
 
-                    return GetVoices(responseContext.Record.Conditions, currentQuest, topic.FormKey.ModKey);
+                    return GetVoices(responseContext.Record.Conditions, currentQuest);
                 })
                 .WhereNotNull()
                 .MergeInsert(true);
@@ -362,7 +348,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         {
             if (!_questCache.TryGetValue(quest.FormKey, out var questVoices))
             {
-                questVoices = GetVoices(quest, topic.FormKey.ModKey);
+                questVoices = GetVoices(quest);
                 _questCache.TryAdd(quest.FormKey, questVoices);
             }
 
@@ -407,19 +393,19 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Check scene
         if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
         {
-            voices.IntersectWith(GetVoices(quest, aliasIndex, topic.FormKey.ModKey));
+            voices.IntersectWith(GetVoices(quest, aliasIndex));
         }
 
         //Search conditions
         if (response.Conditions.Any())
         {
-            voices.IntersectWith(GetVoices(response.Conditions, quest, topic.FormKey.ModKey));
+            voices.IntersectWith(GetVoices(response.Conditions, quest));
         }
 
         return voices;
     }
 
-    private VoiceContainer GetVoices(IEnumerable<IConditionGetter> conditions, IQuestGetter quest, ModKey currentMod)
+    private VoiceContainer GetVoices(IEnumerable<IConditionGetter> conditions, IQuestGetter quest)
     {
         var voiceTypesOrBlock = new List<VoiceContainer>();
         var currentConditions = new List<IConditionGetter>();
@@ -434,7 +420,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             //At every new AND or at the end of the conditions, finish the current block
             if ((condition.Flags & Condition.Flag.OR) == 0 || i == conditionsList.Count - 1)
             {
-                var voices = GetVoiceTypesOrBlock(currentConditions, quest, currentMod);
+                var voices = GetVoiceTypesOrBlock(currentConditions, quest);
                 if (!voices.IsDefault) voiceTypesOrBlock.Add(voices);
 
                 currentConditions.Clear();
@@ -445,12 +431,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voiceTypesOrBlock.Any() ? voiceTypesOrBlock.MergeIntersect() : new VoiceContainer(true);
     }
 
-    private VoiceContainer GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions, IQuestGetter quest, ModKey currentMod)
+    private VoiceContainer GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions, IQuestGetter quest)
     {
         return conditions
             .Select(condition =>
             {
-                var conditionVoices = GetVoices(condition, quest, currentMod);
+                var conditionVoices = GetVoices(condition, quest);
                 if (conditionVoices.IsDefault) return null;
 
                 return conditionVoices;
@@ -459,7 +445,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .MergeInsert(true);
     }
 
-    private VoiceContainer GetVoices(IConditionGetter condition, IQuestGetter quest, ModKey currentMod)
+    private VoiceContainer GetVoices(IConditionGetter condition, IQuestGetter quest)
     {
         var voices = new VoiceContainer();
 
@@ -485,22 +471,21 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     switch (voiceTypeRecord)
                     {
-                        case IVoiceTypeGetter voiceType when voiceType.EditorID != null:
-                            voices = new VoiceContainer(voiceType.EditorID);
+                        case IVoiceTypeGetter voiceType:
+                            voices = new VoiceContainer(voiceType.FormKey);
                             break;
                         case IFormListGetter formList:
-                            voices = new VoiceContainer(formList.Items.SelectWhere(link =>
-                            {
-                                _formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(link.FormKey, out var linkVoiceTypeEditorId);
-                                return linkVoiceTypeEditorId == null ? TryGet<string>.Failure : TryGet<string>.Succeed(linkVoiceTypeEditorId);
-                            }).ToHashSet());
+                            voices = new VoiceContainer(formList.Items
+                                .Where(link => _formLinkCache.TryResolveIdentifier(link, out var _))
+                                .Select(voice => voice.FormKey)
+                                .ToHashSet());
                             break;
                     }
                 }
 
                 break;
             case IGetIsAliasRefConditionDataGetter aliasRef:
-                voices = GetVoices(quest, aliasRef.ReferenceAliasIndex, currentMod);
+                voices = GetVoices(quest, aliasRef.ReferenceAliasIndex);
 
                 break;
             case IGetInFactionConditionDataGetter getInFaction:
@@ -524,6 +509,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     voices = new VoiceContainer(classNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
+                break;
+            case IHasKeywordConditionDataGetter hasKeyword:
+                if (_keywordNPCs.TryGetValue(hasKeyword.Keyword.Link.FormKey, out var keywordNpcs))
+                {
+                    voices = new VoiceContainer(keywordNpcs.ToDictionary(npc => npc, GetVoiceTypes));
+                }
                 break;
             case IGetIsRaceConditionDataGetter getIsRace:
                 if (getIsRace.Race.UsesLink() && _raceNPCs.TryGetValue(getIsRace.Race.Link.FormKey, out var raceNpcFormKeys))
@@ -557,7 +548,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 break;
         }
 
-        if (!voices.IsDefault && !IsConditionValid(condition))
+        if (!voices.IsDefault && IsConditionInverted(condition))
         {
             //Can't invert alias according to CK calculation
             if (data.Function == Condition.Function.GetIsAliasRef)
@@ -565,48 +556,33 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 return new VoiceContainer(true);
             }
 
-            voices = Invert(voices, data.Function == Condition.Function.GetIsVoiceType, currentMod);
+            voices = Invert(voices);
         }
 
         return voices;
     }
 
-    private bool IsConditionValid(IConditionGetter condition)
+    private bool IsConditionInverted(IConditionGetter condition)
     {
-        const double floatTolerance = 0.001;
-
-        bool FloatEquals(float value, int expected) => Math.Abs(value - expected) < floatTolerance;
-
-        bool GlobalEquals(ILink<IGlobalGetter> global, int expected)
+        var compareValue = condition switch
         {
-            var globalValue = global.TryResolve(_formLinkCache);
-            if (globalValue == null) return false;
-
-            return globalValue switch
+            IConditionFloatGetter conditionFloat => conditionFloat.ComparisonValue,
+            IConditionGlobalGetter conditionGlobal => conditionGlobal.ComparisonValue.TryResolve(_formLinkCache) switch
             {
-                IGlobalFloatGetter globalFloat => globalFloat.Data != null && Math.Abs(globalFloat.Data.Value - expected) < floatTolerance,
-                IGlobalIntGetter globalInt => globalInt.Data != null && globalInt.Data.Value == expected,
-                IGlobalShortGetter globalShort => globalShort.Data != null && globalShort.Data.Value == expected,
-                _ => false
-            };
-        }
+                IGlobalFloat globalFloat => globalFloat.Data,
+                IGlobalInt globalInt => globalInt.Data,
+                IGlobalShortGetter globalShort => globalShort.Data,
+                _ => 0,
+            },
+            _ => 0
+        } ?? 0;
 
         switch (condition.CompareOperator)
         {
             case CompareOperator.EqualTo:
-                return condition switch
-                {
-                    IConditionFloatGetter floatCondition => FloatEquals(floatCondition.ComparisonValue, 1),
-                    IConditionGlobalGetter globalCondition => GlobalEquals(globalCondition.ComparisonValue, 1),
-                    _ => false
-                };
+                return compareValue == 0;
             case CompareOperator.NotEqualTo:
-                return condition switch
-                {
-                    IConditionFloatGetter floatCondition => FloatEquals(floatCondition.ComparisonValue, 0),
-                    IConditionGlobalGetter globalCondition => GlobalEquals(globalCondition.ComparisonValue, 0),
-                    _ => false
-                };
+                return compareValue == 1;
             case CompareOperator.GreaterThan:
             case CompareOperator.GreaterThanOrEqualTo:
             case CompareOperator.LessThan:
@@ -616,13 +592,13 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private VoiceContainer GetVoices(IQuestGetter quest, int aliasIndex, ModKey currentMod)
+    private VoiceContainer GetVoices(IQuestGetter quest, int aliasIndex)
     {
         var alias = quest.Aliases.FirstOrDefault(a => a.ID == aliasIndex);
-        return alias == null ? new VoiceContainer(true) : GetVoices(alias, quest, currentMod);
+        return alias == null ? new VoiceContainer(true) : GetVoices(alias, quest);
     }
 
-    private VoiceContainer GetVoices(IQuestAliasGetter alias, IQuestGetter quest, ModKey currentMod)
+    private VoiceContainer GetVoices(IQuestAliasGetter alias, IQuestGetter quest)
     {
         //External Alias
         if (alias.External != null)
@@ -631,7 +607,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             var aliasIndex = alias.External.AliasID;
             if (externalQuest != null && aliasIndex != null)
             {
-                return GetVoices(externalQuest, aliasIndex.Value, currentMod);
+                return GetVoices(externalQuest, aliasIndex.Value);
             }
         }
 
@@ -682,7 +658,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Conditions
         if (alias.Conditions.Any())
         {
-            var voices = GetVoices(alias.Conditions, quest, currentMod);
+            var voices = GetVoices(alias.Conditions, quest);
             if (additionalVoices != null) voices.Insert(additionalVoices);
             return voices;
         }
@@ -693,7 +669,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             return additionalVoices;
         }
 
-        //Location alias
+        //Location alias. Currently only SpecificLocation is supported
         if (alias.Location is { AliasID: {} })
         {
             var locationAlias = quest.Aliases.FirstOrDefault(a => a.ID == alias.Location.AliasID.Value);
@@ -743,10 +719,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var item in formList.Items)
         {
-            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(item.FormKey, out var voiceTypeEditorId))
+            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(item.FormKey, out var _))
             {
                 //FormList entry is VoiceType
-                voices.Add(new VoiceContainer(voiceTypeEditorId!));
+                voices.Add(new VoiceContainer(item.FormKey));
             }
             else if (_speakerVoices.ContainsKey(item.FormKey))
             {
@@ -758,205 +734,93 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices.MergeInsert(false);
     }
 
-    private VoiceContainer GetVoices(IQuestGetter quest, ModKey currentMod) => GetVoices(quest.DialogConditions, quest, currentMod);
+    private VoiceContainer GetVoices(IQuestGetter quest) => GetVoices(quest.DialogConditions, quest);
 
-    private VoiceContainer GetAllDefaultVoices()
+    private VoiceContainer Invert(VoiceContainer voiceContainer)
     {
-        var allDefaultVoices = new VoiceContainer();
-
-        foreach (var modKey in _formLinkCache.PriorityOrder.Select(x => x.ModKey))
-        {
-            allDefaultVoices.Insert(GetDefaultVoices(modKey));
-        }
-
-        return allDefaultVoices;
-    }
-
-    private VoiceContainer GetDefaultVoices(ModKey mod)
-    {
-        lock (_defaultSpeakerVoicesLock)
-        {
-            if (_defaultSpeakerVoices.TryGetValue(mod, out var defaultVoiceTypes)) return defaultVoiceTypes;
-
-            var vc = new VoiceContainer(_speakerVoices);
-            vc.InvertVoiceTypes(_defaultVoiceTypes[mod]);
-            _defaultSpeakerVoices.TryAdd(mod, vc);
-            return vc;
-        }
-    }
-
-    private VoiceContainer Invert(VoiceContainer voiceContainer, bool invertDefaultVoices, ModKey currentMod)
-    {
-        VoiceContainer baseVoices;
-        if (invertDefaultVoices)
-        {
-            baseVoices = (VoiceContainer)GetDefaultVoices(currentMod).Clone();
-        }
-        else
-        {
-            baseVoices = new VoiceContainer(_speakerVoices);
-        }
-
+        VoiceContainer baseVoices = new(_speakerVoices);
         baseVoices.Remove(voiceContainer);
         return baseVoices;
     }
 
-    private IEnumerable<string> GetVoiceTypes(FormKey speaker)
+    private IEnumerable<FormKey> GetVoiceTypes(FormKey speaker)
     {
         return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : [];
     }
 
-    #region Voice Parser
-    private HashSet<string> GetVoiceTypes(INpcGetter npc)
+    private IEnumerable<T> GetInheritedData<T>(INpcSpawnGetter spawn, NpcConfiguration.TemplateFlag inheritFlag, Func<INpcGetter, IEnumerable<T>> getter)
     {
-        if (_speakerVoices.TryGetValue(npc.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
-
-        //Check voice type
-        if (!npc.Voice.IsNull)
+        switch (spawn)
         {
-            var voiceType = npc.Voice.TryResolve(_formLinkCache);
-            if (voiceType is { EditorID: {} })
+            case INpcGetter npc:
+                if (npc.Configuration.TemplateFlags.HasFlag(inheritFlag) && npc.Template.TryResolve(_formLinkCache, out var template))
+                    return GetInheritedData(template, inheritFlag, getter);
+                else
+                    return getter(npc);
+            case ILeveledNpcGetter leveledNpc:
+                if (leveledNpc.Entries == null) return [];
+
+                return leveledNpc.Entries
+                    .Select(e => e.Data?.Reference?.TryResolve(_formLinkCache))
+                    .WhereNotNull()
+                    .SelectMany(e => GetInheritedData(e, inheritFlag, getter));
+            default: return [];
+        }
+    }
+
+    private FormKey GetDefaultVoice(IFormLinkGetter<IRaceGetter> raceLink, bool female)
+    {
+        if (!raceLink.TryResolve(_formLinkCache, out var race))
+            return FormKey.Null;
+        var link = female ? race.Voices.Female : race.Voices.Male;
+        return link.FormKey;
+    }
+
+    private HashSet<FormKey> GetVoiceTypes(INpcGetter npc)
+    {
+        return GetInheritedData<FormKey>(npc, NpcConfiguration.TemplateFlag.Traits, entry => {
+            if (!entry.Voice.IsNull)
+                return [entry.Voice.FormKey];
+            else
             {
-                return new HashSet<string> { voiceType.EditorID };
+                var defaultVoice = GetDefaultVoice(npc.Race, npc.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female));
+                return defaultVoice.IsNull ? [] : [defaultVoice];
             }
-        }
-
-        //Check template
-        if (!npc.Template.IsNull && (npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) != 0)
-        {
-            return GetVoiceTypes(npc.Template).ToHashSet();
-        }
-
-        return new HashSet<string>();
+            // TODO: Could this avoid hash set for single-voice NPCs?
+        }).ToHashSet();
     }
 
-    private HashSet<string> GetVoiceTypes(IFormLinkGetter<INpcSpawnGetter> npcSpawn)
+    private HashSet<IFormLinkGetter<IFactionGetter>> GetFactions(INpcSpawnGetter npc)
     {
-        if (npcSpawn.IsNull) return new HashSet<string>();
-
-        //NPC
-        var npc = npcSpawn.TryResolve<INpcGetter>(_formLinkCache);
-        if (npc != null)
-        {
-            return GetVoiceTypes(npc);
-        }
-
-        //Levelled NPC
-        var leveledNpc = npcSpawn.TryResolve<ILeveledNpcGetter>(_formLinkCache);
-        if (leveledNpc is { Entries: {} })
-        {
-            return leveledNpc.Entries
-                .Select(entry => entry.Data?.Reference).NotNull()
-                .SelectMany(GetVoiceTypes).ToHashSet();
-        }
-
-        return new HashSet<string>();
+        return GetInheritedData(npc, NpcConfiguration.TemplateFlag.Factions, entry => entry.Factions.Select(f => f.Faction)).ToHashSet();
     }
 
-    private HashSet<string> GetVoiceTypes(ITalkingActivatorGetter talkingActivator)
+    private HashSet<IFormLinkGetter<IClassGetter>> GetClasses(INpcSpawnGetter npc)
     {
-        if (_speakerVoices.TryGetValue(talkingActivator.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
-
-        if (!talkingActivator.Voice.IsNull)
-        {
-            var voiceTypeGetter = talkingActivator.Voice.TryResolve(_formLinkCache);
-            if (voiceTypeGetter is { EditorID: not null })
-            {
-                return new HashSet<string> { voiceTypeGetter.EditorID };
-            }
-        }
-
-        return new HashSet<string>();
+        return GetInheritedData<IFormLinkGetter<IClassGetter>>(npc, NpcConfiguration.TemplateFlag.Stats, entry => [entry.Class])
+            .Where(c => !c.IsNull)
+            .ToHashSet();
     }
-    #endregion
 
-    #region Faction Parser
-    private HashSet<FormKey> GetFactions(INpcGetter npc)
+    private HashSet<MaleFemaleGender> GetGenders(INpcSpawnGetter npc)
     {
-        if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Factions) == 0)
-        {
-            return npc.Factions.Where(f => !f.Faction.IsNull).Select(f => f.Faction.FormKey).ToHashSet();
-        }
-
-        return npc.Template.IsNull ? new HashSet<FormKey>() : GetFactions(npc.Template);
+        return GetInheritedData<MaleFemaleGender>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female) ? MaleFemaleGender.Female : MaleFemaleGender.Male])
+            // TODO: HashSet is overkill
+            .ToHashSet();
 
     }
 
-    private HashSet<FormKey> GetFactions(IFormLinkGetter<INpcSpawnGetter> npcTemplate)
+    private HashSet<IFormLinkGetter<IRaceGetter>> GetRaces(INpcSpawnGetter npc)
     {
-        if (npcTemplate.IsNull) return new HashSet<FormKey>();
-
-        //NPC
-        var npc = npcTemplate.TryResolve<INpcGetter>(_formLinkCache);
-        if (npc != null) return GetFactions(npc);
-
-        //Levelled NPC
-        var leveledNpc = npcTemplate.TryResolve<ILeveledNpcGetter>(_formLinkCache);
-        if (leveledNpc is { Entries: {} })
-        {
-            return leveledNpc.Entries
-                .Select(entry => entry.Data?.Reference).NotNull()
-                .SelectMany(GetFactions).ToHashSet();
-        }
-
-        return new HashSet<FormKey>();
+        return GetInheritedData<IFormLinkGetter<IRaceGetter>>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Race])
+            .Where(r => !r.IsNull)
+            .ToHashSet();
     }
-    #endregion
 
-    #region Class Parser
-    private HashSet<FormKey> GetClasses(INpcGetter npc)
+    private HashSet<IFormLinkGetter<IKeywordGetter>> GetKeywords(INpcSpawnGetter npc)
     {
-        if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Stats) == 0 && !npc.Class.IsNull)
-        {
-            return new HashSet<FormKey> { npc.Class.FormKey };
-        }
-
-        return npc.Template.IsNull ? new HashSet<FormKey>() : GetClasses(npc.Template);
-
+        var direct = GetInheritedData(npc, NpcConfiguration.TemplateFlag.Keywords, entry => entry.Keywords ?? []);
+        var race = GetInheritedData(npc, NpcConfiguration.TemplateFlag.Traits, entry => entry.Race.TryResolve(_formLinkCache)?.Keywords ?? []);
+        return direct.And(race).ToHashSet();
     }
-
-    private HashSet<FormKey> GetClasses(IFormLinkGetter<INpcSpawnGetter> npcTemplate)
-    {
-        if (npcTemplate.IsNull) return new HashSet<FormKey>();
-
-        //NPC
-        var npc = npcTemplate.TryResolve<INpcGetter>(_formLinkCache);
-        if (npc != null) return GetClasses(npc);
-
-        //Levelled NPC
-        var leveledNpc = npcTemplate.TryResolve<ILeveledNpcGetter>(_formLinkCache);
-        if (leveledNpc is { Entries: {} })
-        {
-            return leveledNpc.Entries
-                .Select(entry => entry.Data?.Reference).NotNull()
-                .SelectMany(GetClasses).ToHashSet();
-        }
-
-        return new HashSet<FormKey>();
-    }
-    #endregion
-
-    #region Gender Parser
-    private HashSet<MaleFemaleGender> GetGenders(INpcGetter npc)
-    {
-        if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0)
-        {
-            return [(npc.Configuration.Flags & NpcConfiguration.Flag.Female) != 0 ? MaleFemaleGender.Female : MaleFemaleGender.Male];
-        }
-
-        return [];
-    }
-    #endregion
-
-    #region Race Parser
-    private HashSet<FormKey> GetRaces(INpcGetter npc)
-    {
-        if ((npc.Configuration.TemplateFlags & NpcConfiguration.TemplateFlag.Traits) == 0 && !npc.Race.IsNull)
-        {
-            return new HashSet<FormKey> { npc.Race.FormKey };
-        }
-
-        return [];
-    }
-    #endregion
 }
