@@ -14,7 +14,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
 {
     public static ContainedFormLinksModule Instance = new();
-    
+
+    // A circular field (e.g. ScriptEntryStructs.Members, RefList<ScriptProperty>) can't be
+    // recursed into at generation time, but its runtime contents can genuinely be a
+    // ScriptObjectProperty carrying a FormLink — so "maybe" here falls back to the existing
+    // runtime WhereCastable<T, IFormLinkContainerGetter> dispatch instead of silently
+    // excluding the field from EnumerateFormLinks (Mutagen-Modding/Mutagen#688).
+    protected override Case CircularFieldCase => Case.Maybe;
+
     public override async IAsyncEnumerable<(LoquiInterfaceType Location, string Interface)> Interfaces(ObjectGeneration obj)
     {
         if (await HasLinks(obj, includeBaseClass: false) != Case.No)

@@ -424,6 +424,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ScriptStructListPropertyCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptStructListPropertySetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptStructListPropertyBinaryWriteTranslation.Instance;
@@ -481,6 +486,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     public partial interface IScriptStructListProperty :
+        IFormLinkContainer,
         ILoquiObjectSetter<IScriptStructListProperty>,
         INamedRequired,
         IScriptProperty,
@@ -492,6 +498,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IScriptStructListPropertyGetter :
         IScriptPropertyGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IScriptStructListPropertyGetter>,
         INamedRequiredGetter
     {
@@ -735,6 +742,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IScriptStructListProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Structs.RemapLinks(mapping);
         }
         
         #endregion
@@ -925,6 +933,11 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Structs.WhereCastable<IScriptEntryStructsGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
