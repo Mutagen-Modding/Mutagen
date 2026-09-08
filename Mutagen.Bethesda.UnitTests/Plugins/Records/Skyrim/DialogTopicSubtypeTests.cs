@@ -28,16 +28,20 @@ public class DialogTopicSubtypeTests
         stream.Write(content);
     }
 
-    private static byte[] MakeTopicBytes(byte[]? data, string? snam, ushort formVersion = 40)
+    private static byte[] MakeTopicBytes(byte[]? data, string? snam, ushort formVersion = 40, bool snamFirst = false)
     {
         var content = new MemoryStream();
         WriteSubrecord(content, "EDID", Encoding.ASCII.GetBytes("TestTopic\0"));
         WriteSubrecord(content, "PNAM", BitConverter.GetBytes(50f));
+        if (snamFirst && snam is not null)
+        {
+            WriteSubrecord(content, "SNAM", Encoding.ASCII.GetBytes(snam));
+        }
         if (data is not null)
         {
             WriteSubrecord(content, "DATA", data);
         }
-        if (snam is not null)
+        if (!snamFirst && snam is not null)
         {
             WriteSubrecord(content, "SNAM", Encoding.ASCII.GetBytes(snam));
         }
@@ -128,6 +132,19 @@ public class DialogTopicSubtypeTests
 
         foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
         {
+            topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.Hello);
+            topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
+        }
+    }
+
+    [Fact]
+    public void SnamBeforeData_TakesSubtypeFromSnam()
+    {
+        var bytes = MakeTopicBytes(new byte[] { 0x00, 0x07, 0x49, 0x00 }, "HELO", snamFirst: true);
+
+        foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
+        {
+            topic.SubtypeName.ShouldBe(new RecordType("HELO"));
             topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.Hello);
             topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
         }

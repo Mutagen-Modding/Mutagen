@@ -319,13 +319,16 @@ partial class DialogTopicBinaryCreateTranslation
         {
             item.TopicFlags = (DialogTopic.TopicFlag)content[0];
         }
-        if (content.Length >= 2)
+        if (DialogTopic.SubtypeFromMarker(item.SubtypeName) is null)
         {
-            item.Category = (DialogTopic.CategoryEnum)content[1];
-        }
-        if (content.Length >= 4)
-        {
-            item.Subtype = (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(content.Slice(2));
+            if (content.Length >= 2)
+            {
+                item.Category = (DialogTopic.CategoryEnum)content[1];
+            }
+            if (content.Length >= 4)
+            {
+                item.Subtype = (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(content.Slice(2));
+            }
         }
         return (int)DialogTopic_FieldIndex.Subtype;
     }
