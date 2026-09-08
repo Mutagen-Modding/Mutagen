@@ -142,6 +142,141 @@ public partial class DialogTopic
         CombatGrunt = 101,
         LeaveWaterBreath = 102,
     }
+
+    // SNAM marker and DATA Category for each Subtype.
+    // SNAM is the authoritative statement of a topic's subtype: Bethesda inserted the six FlyingMount
+    // subtypes at index 20 with the Dragonborn-era Creation Kit, so every DIAL authored before that
+    // stores a DATA subtype six lower than SubtypeEnum's numbering, and no field on the record says
+    // which numbering a given record used. xEdit takes the same position, marking DATA\Subtype
+    // cpIgnore and driving it from SNAM.
+    // Markers come from xEdit's wbSubtypeNamesEnum. Categories are the value observed on the vanilla
+    // masters (Skyrim, Update, Dawnguard, HearthFires, Dragonborn) for each marker; the 20 markers
+    // those masters never use are marked "inferred" and take the category of their neighbours.
+    // Marker FVDL (raw index 3) has no SubtypeEnum member and so has no row: a topic carrying it
+    // falls back to its raw DATA values.
+    private static readonly (SubtypeEnum Subtype, string Marker, CategoryEnum Category)[] SubtypeMarkers =
+    [
+        (SubtypeEnum.Custom, "CUST", CategoryEnum.Topic),
+        (SubtypeEnum.ForceGreet, "PFGT", CategoryEnum.Topic),
+        (SubtypeEnum.Rumors, "RUMO", CategoryEnum.Topic),
+        (SubtypeEnum.Intimidate, "INTI", CategoryEnum.Favor),
+        (SubtypeEnum.Flatter, "FLAT", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Bribe, "BRIB", CategoryEnum.Favor),
+        (SubtypeEnum.AskGift, "ASKG", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Gift, "GIFF", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.AskFavor, "ASKF", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Favor, "FAVO", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.ShowRelationships, "SHRE", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Follow, "FOLL", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Reject, "FRJT", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Scene, "SCEN", CategoryEnum.Scene),
+        (SubtypeEnum.Show, "SHOW", CategoryEnum.Favors),
+        (SubtypeEnum.Agree, "AGRE", CategoryEnum.Favors),
+        (SubtypeEnum.Refuse, "REFU", CategoryEnum.Favors),
+        (SubtypeEnum.ExitFavorState, "FEXT", CategoryEnum.Favors),
+        (SubtypeEnum.MoralRefusal, "MREF", CategoryEnum.Favors),
+        (SubtypeEnum.FlyingMountLand, "FMLX", CategoryEnum.Favors),
+        (SubtypeEnum.FlyingMountCancelLand, "FMXL", CategoryEnum.Favors),
+        (SubtypeEnum.FlyingMountAcceptTarget, "FMAT", CategoryEnum.Favors),
+        (SubtypeEnum.FlyingMountRejectTarget, "FMRT", CategoryEnum.Favors),
+        (SubtypeEnum.FlyingMountNoTarget, "FMNT", CategoryEnum.Favors),
+        (SubtypeEnum.FlyingMountDestinationReached, "FMDR", CategoryEnum.Favors),
+        (SubtypeEnum.Attack, "ATCK", CategoryEnum.Combat),
+        (SubtypeEnum.PowerAttack, "POAT", CategoryEnum.Combat),
+        (SubtypeEnum.Bash, "BASH", CategoryEnum.Combat),
+        (SubtypeEnum.Hit, "HIT_", CategoryEnum.Combat),
+        (SubtypeEnum.Flee, "FLEE", CategoryEnum.Combat),
+        (SubtypeEnum.Bleedout, "BLED", CategoryEnum.Combat),
+        (SubtypeEnum.AvoidThreat, "AVTH", CategoryEnum.Combat),
+        (SubtypeEnum.Death, "DETH", CategoryEnum.Combat),
+        (SubtypeEnum.GroupStrategy, "GRST", CategoryEnum.Combat),
+        (SubtypeEnum.Block, "BLOC", CategoryEnum.Combat),
+        (SubtypeEnum.Taunt, "TAUT", CategoryEnum.Combat),
+        (SubtypeEnum.AllyKilled, "ALKL", CategoryEnum.Combat),
+        (SubtypeEnum.Steal, "STEA", CategoryEnum.Combat),
+        (SubtypeEnum.Yield, "YIEL", CategoryEnum.Combat),
+        (SubtypeEnum.AcceptYield, "ACYI", CategoryEnum.Combat),
+        (SubtypeEnum.PickpocketCombat, "PICC", CategoryEnum.Combat),
+        (SubtypeEnum.Assault, "ASSA", CategoryEnum.Combat),
+        (SubtypeEnum.Murder, "MURD", CategoryEnum.Combat),
+        (SubtypeEnum.AssaultNC, "ASNC", CategoryEnum.Combat),
+        (SubtypeEnum.MurderNC, "MUNC", CategoryEnum.Combat),
+        (SubtypeEnum.PickpocketNC, "PICN", CategoryEnum.Combat),
+        (SubtypeEnum.StealFromNC, "STFN", CategoryEnum.Combat),
+        (SubtypeEnum.TrespassAgainstNC, "TRAN", CategoryEnum.Combat),
+        (SubtypeEnum.Trespass, "TRES", CategoryEnum.Combat),
+        (SubtypeEnum.WerewolfTransformCrime, "WTCR", CategoryEnum.Combat),
+        (SubtypeEnum.VoicePowerStartShort, "VPSS", CategoryEnum.Combat),
+        (SubtypeEnum.VoicePowerStartLong, "VPSL", CategoryEnum.Combat),
+        (SubtypeEnum.VoicePowerEndShort, "VPES", CategoryEnum.Combat),
+        (SubtypeEnum.VoicePowerEndLong, "VPEL", CategoryEnum.Combat),
+        (SubtypeEnum.AlertIdle, "ALIL", CategoryEnum.Detection),
+        (SubtypeEnum.LostIdle, "LOIL", CategoryEnum.Detection),
+        (SubtypeEnum.NormalToAlert, "NOTA", CategoryEnum.Detection),
+        (SubtypeEnum.AlertToCombat, "ALTC", CategoryEnum.Detection),
+        (SubtypeEnum.NormalToCombat, "NOTC", CategoryEnum.Detection),
+        (SubtypeEnum.AlertToNormal, "ALTN", CategoryEnum.Detection),
+        (SubtypeEnum.CombatToNormal, "COTN", CategoryEnum.Detection),
+        (SubtypeEnum.CombatToLost, "COLO", CategoryEnum.Detection),
+        (SubtypeEnum.LostToNormal, "LOTN", CategoryEnum.Detection),
+        (SubtypeEnum.LostToCombat, "LOTC", CategoryEnum.Detection),
+        (SubtypeEnum.DetectFriendDie, "DFDA", CategoryEnum.Detection),
+        (SubtypeEnum.ServiceRefusal, "SERU", CategoryEnum.Service), // inferred
+        (SubtypeEnum.Repair, "REPA", CategoryEnum.Service), // inferred
+        (SubtypeEnum.Travel, "TRAV", CategoryEnum.Service), // inferred
+        (SubtypeEnum.Training, "TRAI", CategoryEnum.Service), // inferred
+        (SubtypeEnum.BarterExit, "BAEX", CategoryEnum.Service),
+        (SubtypeEnum.RepairExit, "REEX", CategoryEnum.Service), // inferred
+        (SubtypeEnum.Recharge, "RECH", CategoryEnum.Service), // inferred
+        (SubtypeEnum.RechargeExit, "RCEX", CategoryEnum.Service), // inferred
+        (SubtypeEnum.TrainingExit, "TREX", CategoryEnum.Service), // inferred
+        (SubtypeEnum.ObserveCombat, "OBCO", CategoryEnum.Misc),
+        (SubtypeEnum.NoticeCorpse, "NOTI", CategoryEnum.Misc),
+        (SubtypeEnum.TimeToGo, "TITG", CategoryEnum.Misc),
+        (SubtypeEnum.Goodbye, "GBYE", CategoryEnum.Misc),
+        (SubtypeEnum.Hello, "HELO", CategoryEnum.Misc),
+        (SubtypeEnum.SwingMeleeWeapon, "SWMW", CategoryEnum.Misc),
+        (SubtypeEnum.ShootBow, "FIWE", CategoryEnum.Misc),
+        (SubtypeEnum.ZKeyObject, "ZKEY", CategoryEnum.Misc),
+        (SubtypeEnum.Jump, "JUMP", CategoryEnum.Misc), // inferred
+        (SubtypeEnum.KnockOverObject, "KNOO", CategoryEnum.Misc),
+        (SubtypeEnum.DestroyObject, "DEOB", CategoryEnum.Misc),
+        (SubtypeEnum.StandOnFurniture, "STOF", CategoryEnum.Misc),
+        (SubtypeEnum.LockedObject, "LOOB", CategoryEnum.Misc),
+        (SubtypeEnum.PickpocketTopic, "PICT", CategoryEnum.Misc),
+        (SubtypeEnum.PursueIdleTopic, "PURS", CategoryEnum.Misc),
+        (SubtypeEnum.SharedInfo, "IDAT", CategoryEnum.Misc),
+        (SubtypeEnum.PlayerCastProjectileSpell, "PCPS", CategoryEnum.Misc), // inferred
+        (SubtypeEnum.PlayerCastSelfSpell, "PCSS", CategoryEnum.Misc), // inferred
+        (SubtypeEnum.PlayerShout, "PCSH", CategoryEnum.Misc),
+        (SubtypeEnum.Idle, "IDLE", CategoryEnum.Misc),
+        (SubtypeEnum.EnterSprintBreath, "BREA", CategoryEnum.Misc),
+        (SubtypeEnum.EnterBowZoomBreath, "ENBZ", CategoryEnum.Misc),
+        (SubtypeEnum.ExitBowZoomBreath, "EXBZ", CategoryEnum.Misc),
+        (SubtypeEnum.ActorCollideWithActor, "ACAC", CategoryEnum.Misc),
+        (SubtypeEnum.PlayerInIronSights, "PIRN", CategoryEnum.Misc),
+        (SubtypeEnum.OutOfBreath, "OUTB", CategoryEnum.Misc),
+        (SubtypeEnum.CombatGrunt, "GRNT", CategoryEnum.Misc),
+        (SubtypeEnum.LeaveWaterBreath, "LWBS", CategoryEnum.Misc),
+    ];
+
+    private static readonly IReadOnlyDictionary<RecordType, SubtypeEnum> _markerToSubtype =
+        SubtypeMarkers.ToDictionary(x => new RecordType(x.Marker), x => x.Subtype);
+
+    private static readonly IReadOnlyDictionary<SubtypeEnum, (RecordType Marker, CategoryEnum Category)> _subtypeLookup =
+        SubtypeMarkers.ToDictionary(x => x.Subtype, x => (new RecordType(x.Marker), x.Category));
+
+    /// <summary>The subtype a SNAM marker names, or null if the marker is blank or not one Mutagen models.</summary>
+    public static SubtypeEnum? SubtypeFromMarker(RecordType marker) =>
+        _markerToSubtype.TryGetValue(marker, out var subtype) ? subtype : null;
+
+    /// <summary>The SNAM marker for a subtype, or null if the value is not a modeled <see cref="SubtypeEnum"/>.</summary>
+    public static RecordType? MarkerFromSubtype(SubtypeEnum subtype) =>
+        _subtypeLookup.TryGetValue(subtype, out var found) ? found.Marker : (RecordType?)null;
+
+    /// <summary>The DATA category for a subtype, or null if the value is not a modeled <see cref="SubtypeEnum"/>.</summary>
+    public static CategoryEnum? CategoryFromSubtype(SubtypeEnum subtype) =>
+        _subtypeLookup.TryGetValue(subtype, out var found) ? found.Category : null;
 }
 
 partial class DialogTopicBinaryCreateTranslation
@@ -187,6 +322,40 @@ partial class DialogTopicBinaryCreateTranslation
         }
     }
 
+    // Raw DATA values. SNAM overwrites Subtype and Category when it names a subtype we model; these
+    // are the fallback for a topic with no SNAM, or one carrying a marker we do not model.
+    public static partial ParseResult FillBinaryDataCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
+    {
+        var content = frame.ReadSubrecord().Content;
+        if (content.Length >= 1)
+        {
+            item.TopicFlags = (DialogTopic.TopicFlag)content[0];
+        }
+        if (content.Length >= 2)
+        {
+            item.Category = (DialogTopic.CategoryEnum)content[1];
+        }
+        if (content.Length >= 4)
+        {
+            item.Subtype = (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(content.Slice(2));
+        }
+        return (int)DialogTopic_FieldIndex.Subtype;
+    }
+
+    public static partial void FillBinarySubtypeNameCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
+    {
+        var content = frame.ReadSubrecord().Content;
+        if (content.Length < 4) return;
+        var marker = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(content));
+        item.SubtypeName = marker;
+        if (DialogTopic.SubtypeFromMarker(marker) is not { } subtype) return;
+        item.Subtype = subtype;
+        if (DialogTopic.CategoryFromSubtype(subtype) is { } category)
+        {
+            item.Category = category;
+        }
+    }
+
     public static partial ParseResult FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
     {
         // Skip counter
@@ -197,6 +366,27 @@ partial class DialogTopicBinaryCreateTranslation
 
 partial class DialogTopicBinaryWriteTranslation
 {
+    // Subtype drives DATA's category and subtype, so a caller only has to set Subtype.
+    public static partial void WriteBinaryDataCustom(MutagenWriter writer, IDialogTopicGetter item)
+    {
+        using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
+        {
+            writer.Write((byte)item.TopicFlags);
+            writer.Write((byte)(DialogTopic.CategoryFromSubtype(item.Subtype) ?? item.Category));
+            writer.Write(checked((ushort)item.Subtype));
+        }
+    }
+
+    // Subtype drives SNAM too. A subtype with no marker we model leaves the field's own value alone.
+    public static partial void WriteBinarySubtypeNameCustom(MutagenWriter writer, IDialogTopicGetter item)
+    {
+        var marker = DialogTopic.MarkerFromSubtype(item.Subtype) ?? item.SubtypeName;
+        using (HeaderExport.Subrecord(writer, RecordTypes.SNAM))
+        {
+            writer.Write(marker.TypeInt);
+        }
+    }
+
     public static partial void WriteBinaryResponseCountCustom(MutagenWriter writer, IDialogTopicGetter item)
     {
         if (item.Responses is not { } resp
@@ -299,5 +489,63 @@ partial class DialogTopicBinaryOverlay
     public partial ParseResult ResponseCountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
         return null;
+    }
+
+    // Bounded to DATA's own content, so a short DATA reads as absent rather than into the next subrecord.
+    private RangeInt32? _DATALocation;
+
+    private int? _SubtypeNameLocation;
+
+    public partial ParseResult DataCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
+    {
+        var header = stream.GetSubrecordHeader();
+        var start = (stream.Position - offset) + header.HeaderLength;
+        _DATALocation = new RangeInt32(start, start + header.ContentLength - 1);
+        return (int)DialogTopic_FieldIndex.Subtype;
+    }
+
+    partial void SubtypeNameCustomParse(OverlayStream stream, int finalPos, int offset)
+    {
+        _SubtypeNameLocation = stream.Position - offset;
+    }
+
+    private ReadOnlySpan<byte> DataContent =>
+        _DATALocation is { } loc ? _recordData.Span.Slice(loc.Min, loc.Max - loc.Min + 1) : default;
+
+    public partial RecordType GetSubtypeNameCustom() => _SubtypeNameLocation.HasValue
+        ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants)))
+        : RecordType.Null;
+
+    public DialogTopic.TopicFlag TopicFlags
+    {
+        get
+        {
+            var data = DataContent;
+            return data.Length >= 1 ? (DialogTopic.TopicFlag)data[0] : default;
+        }
+    }
+
+    public DialogTopic.CategoryEnum Category
+    {
+        get
+        {
+            if (DialogTopic.SubtypeFromMarker(SubtypeName) is { } subtype
+                && DialogTopic.CategoryFromSubtype(subtype) is { } category)
+            {
+                return category;
+            }
+            var data = DataContent;
+            return data.Length >= 2 ? (DialogTopic.CategoryEnum)data[1] : default;
+        }
+    }
+
+    public DialogTopic.SubtypeEnum Subtype
+    {
+        get
+        {
+            if (DialogTopic.SubtypeFromMarker(SubtypeName) is { } subtype) return subtype;
+            var data = DataContent;
+            return data.Length >= 4 ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(data.Slice(2)) : default;
+        }
     }
 }
