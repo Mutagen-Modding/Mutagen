@@ -11,13 +11,6 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim;
 
-/// <summary>
-/// DialogTopic takes SNAM as the authoritative statement of a topic's subtype.
-/// Bethesda inserted the six FlyingMount subtypes at index 20 with the Dragonborn-era Creation Kit,
-/// so a DIAL authored before that stores a DATA subtype six lower than SubtypeEnum's numbering, and
-/// nothing on the record says which numbering it used. The three legacy cases here are real records
-/// out of Skyrim.esm.
-/// </summary>
 public class DialogTopicSubtypeTests
 {
     private static readonly ModKey TestModKey = new("Test", ModType.Plugin);
@@ -92,7 +85,6 @@ public class DialogTopicSubtypeTests
         return memStream.ToArray();
     }
 
-    /// <summary>The content of the first subrecord of the given type in a written record.</summary>
     private static byte[] Subrecord(byte[] bytes, string type)
     {
         var target = Encoding.ASCII.GetBytes(type);
@@ -108,8 +100,7 @@ public class DialogTopicSubtypeTests
         throw new InvalidOperationException($"No {type} subrecord found.");
     }
 
-    // DIAL 0002707A, 000904AC and 00000E3C from Skyrim.esm, FormVersion 40. Each stores a DATA
-    // subtype six lower than the modern numbering; SNAM says what the topic really is.
+    // DIAL 0002707A, 000904AC and 00000E3C from Skyrim.esm.
     [Theory]
     [InlineData(new byte[] { 0x00, 0x07, 0x49, 0x00 }, "HELO", DialogTopic.SubtypeEnum.Hello, DialogTopic.CategoryEnum.Misc)]
     [InlineData(new byte[] { 0x00, 0x07, 0x48, 0x00 }, "GBYE", DialogTopic.SubtypeEnum.Goodbye, DialogTopic.CategoryEnum.Misc)]
@@ -130,7 +121,6 @@ public class DialogTopicSubtypeTests
         }
     }
 
-    // A modern-numbered record: DATA already agrees with SNAM, so nothing changes.
     [Fact]
     public void ModernNumberedRecord_Agrees()
     {
@@ -143,7 +133,6 @@ public class DialogTopicSubtypeTests
         }
     }
 
-    // No SNAM: the raw DATA values are all there is, so they stand.
     [Fact]
     public void MissingSnam_FallsBackToRawData()
     {
@@ -157,8 +146,6 @@ public class DialogTopicSubtypeTests
         }
     }
 
-    // FVDL is a real marker at raw index 3 that SubtypeEnum has no member for, and a blank SNAM is
-    // not a marker at all. Neither names a subtype we model, so the raw DATA values stand.
     [Theory]
     [InlineData("FVDL")]
     [InlineData("\0\0\0\0")]
@@ -173,7 +160,6 @@ public class DialogTopicSubtypeTests
         }
     }
 
-    // A DATA shorter than four bytes must read as absent, not into the following subrecord.
     [Fact]
     public void ShortData_DoesNotOverRead()
     {
@@ -187,7 +173,6 @@ public class DialogTopicSubtypeTests
         }
     }
 
-    // Setting Subtype alone is enough: the write derives DATA's category and subtype and the SNAM marker.
     [Fact]
     public void SettingSubtypeAlone_WritesModernDataAndMatchingSnam()
     {
@@ -206,8 +191,6 @@ public class DialogTopicSubtypeTests
         ReadOverlay(bytes).Subtype.ShouldBe(DialogTopic.SubtypeEnum.Hello);
     }
 
-    // Reading a legacy record and writing it back renumbers DATA to match SNAM, which is what the
-    // Creation Kit and xEdit both do.
     [Fact]
     public void LegacyRecord_WritesBackRenumbered()
     {

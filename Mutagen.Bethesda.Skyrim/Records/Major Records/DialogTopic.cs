@@ -143,17 +143,7 @@ public partial class DialogTopic
         LeaveWaterBreath = 102,
     }
 
-    // SNAM marker and DATA Category for each Subtype.
-    // SNAM is the authoritative statement of a topic's subtype: Bethesda inserted the six FlyingMount
-    // subtypes at index 20 with the Dragonborn-era Creation Kit, so every DIAL authored before that
-    // stores a DATA subtype six lower than SubtypeEnum's numbering, and no field on the record says
-    // which numbering a given record used. xEdit takes the same position, marking DATA\Subtype
-    // cpIgnore and driving it from SNAM.
-    // Markers come from xEdit's wbSubtypeNamesEnum. Categories are the value observed on the vanilla
-    // masters (Skyrim, Update, Dawnguard, HearthFires, Dragonborn) for each marker; the 20 markers
-    // those masters never use are marked "inferred" and take the category of their neighbours.
-    // Marker FVDL (raw index 3) has no SubtypeEnum member and so has no row: a topic carrying it
-    // falls back to its raw DATA values.
+    // Marker FVDL, raw index 3, has no SubtypeEnum member and so no row here.
     private static readonly (SubtypeEnum Subtype, string Marker, CategoryEnum Category)[] SubtypeMarkers =
     [
         (SubtypeEnum.Custom, "CUST", CategoryEnum.Topic),
@@ -266,15 +256,15 @@ public partial class DialogTopic
     private static readonly IReadOnlyDictionary<SubtypeEnum, (RecordType Marker, CategoryEnum Category)> _subtypeLookup =
         SubtypeMarkers.ToDictionary(x => x.Subtype, x => (new RecordType(x.Marker), x.Category));
 
-    /// <summary>The subtype a SNAM marker names, or null if the marker is blank or not one Mutagen models.</summary>
+    /// <summary>The subtype a SNAM marker names, or null if it names none.</summary>
     public static SubtypeEnum? SubtypeFromMarker(RecordType marker) =>
         _markerToSubtype.TryGetValue(marker, out var subtype) ? subtype : null;
 
-    /// <summary>The SNAM marker for a subtype, or null if the value is not a modeled <see cref="SubtypeEnum"/>.</summary>
+    /// <summary>The SNAM marker for a subtype, or null if it has none.</summary>
     public static RecordType? MarkerFromSubtype(SubtypeEnum subtype) =>
         _subtypeLookup.TryGetValue(subtype, out var found) ? found.Marker : (RecordType?)null;
 
-    /// <summary>The DATA category for a subtype, or null if the value is not a modeled <see cref="SubtypeEnum"/>.</summary>
+    /// <summary>The DATA category for a subtype, or null if it has none.</summary>
     public static CategoryEnum? CategoryFromSubtype(SubtypeEnum subtype) =>
         _subtypeLookup.TryGetValue(subtype, out var found) ? found.Category : null;
 }
@@ -322,8 +312,6 @@ partial class DialogTopicBinaryCreateTranslation
         }
     }
 
-    // Raw DATA values. SNAM overwrites Subtype and Category when it names a subtype we model; these
-    // are the fallback for a topic with no SNAM, or one carrying a marker we do not model.
     public static partial ParseResult FillBinaryDataCustom(MutagenFrame frame, IDialogTopicInternal item, PreviousParse lastParsed)
     {
         var content = frame.ReadSubrecord().Content;
@@ -366,7 +354,6 @@ partial class DialogTopicBinaryCreateTranslation
 
 partial class DialogTopicBinaryWriteTranslation
 {
-    // Subtype drives DATA's category and subtype, so a caller only has to set Subtype.
     public static partial void WriteBinaryDataCustom(MutagenWriter writer, IDialogTopicGetter item)
     {
         using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
@@ -377,7 +364,6 @@ partial class DialogTopicBinaryWriteTranslation
         }
     }
 
-    // Subtype drives SNAM too. A subtype with no marker we model leaves the field's own value alone.
     public static partial void WriteBinarySubtypeNameCustom(MutagenWriter writer, IDialogTopicGetter item)
     {
         var marker = DialogTopic.MarkerFromSubtype(item.Subtype) ?? item.SubtypeName;
@@ -491,7 +477,6 @@ partial class DialogTopicBinaryOverlay
         return null;
     }
 
-    // Bounded to DATA's own content, so a short DATA reads as absent rather than into the next subrecord.
     private RangeInt32? _DATALocation;
 
     private int? _SubtypeNameLocation;
