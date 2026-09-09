@@ -15,9 +15,6 @@ using Fallout4Constants = Mutagen.Bethesda.Fallout4.Constants;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Fallout4;
 
-// Regression coverage for https://github.com/Mutagen-Modding/Mutagen/issues/687:
-// MaterialSwap's FNAM form-version gate needs FormVersion while its custom
-// struct-fill runs, on both the deep parser and the overlay.
 public class MaterialSwapFormVersionGateTests
 {
     private const ushort NewFormVersion = MaterialSwapBinaryCreateTranslation.NewFormVersion;
