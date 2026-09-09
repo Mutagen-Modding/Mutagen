@@ -25,10 +25,13 @@ public class MaterialSwapFormVersionGateTests
     /// string; 112+, the top FNAM is the tree folder and a substitution's own FNAM is
     /// vestigial and may legitimately differ.
     /// </summary>
-    private static byte[] BuildMswpBytes(ushort formVersion, string topFnam, string substitutionFnam)
+    private static byte[] BuildMswpBytes(ushort formVersion, string? topFnam, string substitutionFnam)
     {
         var content = new List<byte>();
-        content.AddRange(Subrecord("FNAM", NullTerminated(topFnam)));
+        if (topFnam != null)
+        {
+            content.AddRange(Subrecord("FNAM", NullTerminated(topFnam)));
+        }
         content.AddRange(Subrecord("BNAM", NullTerminated("OriginalMat")));
         content.AddRange(Subrecord("SNAM", NullTerminated("ReplacementMat")));
         content.AddRange(Subrecord("FNAM", NullTerminated(substitutionFnam)));
@@ -73,6 +76,35 @@ public class MaterialSwapFormVersionGateTests
             new BinaryOverlayFactoryPackage(Meta()));
     }
 
+    private static byte[] Write(IMaterialSwapGetter item)
+    {
+        var masters = new MasterReferenceCollection(global::Mutagen.Bethesda.Fallout4.Constants.Fallout4);
+        var stream = new MemoryStream();
+        using (var writer = new MutagenWriter(
+                   stream,
+                   new WritingBundle(GameConstants.Fallout4)
+                   {
+                       MasterReferences = masters,
+                       SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(masters),
+                   }))
+        {
+            MaterialSwapBinaryWriteTranslation.Instance.Write(writer, item, default);
+        }
+        return stream.ToArray();
+    }
+
+    private static int CountSubrecords(byte[] bytes, string type)
+    {
+        var count = 0;
+        var pos = 24;
+        while (pos < bytes.Length)
+        {
+            if (Encoding.ASCII.GetString(bytes, pos, 4) == type) count++;
+            pos += 6 + BinaryPrimitives.ReadUInt16LittleEndian(bytes.AsSpan(pos + 4));
+        }
+        return count;
+    }
+
     [Fact]
     public void DeepParse_V131DifferingFnam_ParsesTreeFolder()
     {
@@ -102,5 +134,39 @@ public class MaterialSwapFormVersionGateTests
         var bytes = BuildMswpBytes(90, topFnam: "materials", substitutionFnam: "");
         var item = ParseOverlay(bytes);
         Should.Throw<MalformedDataException>(() => item.TreeFolder);
+    }
+
+    [Fact]
+    public void DeepParse_V131NoTopFnam_TreeFolderIsNull()
+    {
+        var bytes = BuildMswpBytes(131, topFnam: null, substitutionFnam: "");
+        var item = ParseDeep(bytes);
+        item.TreeFolder.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Overlay_V131NoTopFnam_TreeFolderIsNull()
+    {
+        var bytes = BuildMswpBytes(131, topFnam: null, substitutionFnam: "");
+        var item = ParseOverlay(bytes);
+        item.TreeFolder.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Overlay_V131NoTopFnam_WritesNoFnam()
+    {
+        var bytes = BuildMswpBytes(131, topFnam: null, substitutionFnam: "");
+        var written = Write(ParseOverlay(bytes));
+        CountSubrecords(written, "FNAM").ShouldBe(0);
+        ParseOverlay(written).TreeFolder.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Overlay_V131WithTopFnam_WritesOneFnam()
+    {
+        var bytes = BuildMswpBytes(131, topFnam: "materials", substitutionFnam: "");
+        var written = Write(ParseOverlay(bytes));
+        CountSubrecords(written, "FNAM").ShouldBe(1);
+        ParseOverlay(written).TreeFolder.ShouldBe("materials");
     }
 }

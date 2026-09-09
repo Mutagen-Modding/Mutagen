@@ -132,15 +132,12 @@ partial class MaterialSwapBinaryOverlay
 {
     private int? _fnamLoc;
     private int _offset;
-
+    
     public partial String? GetTreeFolderCustom()
     {
-        // this.FormVersion is read directly off this record's own header bytes, on demand -
-        // unlike _package.MetaData.FormVersion (a deep-parse-only tracker that is never
-        // populated for overlay reads), it is always correct here.
         if (this.FormVersion >= MaterialSwapBinaryCreateTranslation.NewFormVersion)
         {
-            return _fnamLoc.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _fnamLoc.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+            return _fnamLoc.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _fnamLoc.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : null;
         }
         else
         {
