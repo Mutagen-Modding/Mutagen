@@ -140,12 +140,52 @@ public class DialogTopicSubtypeTests
     [Fact]
     public void SnamBeforeData_TakesSubtypeFromSnam()
     {
-        var bytes = MakeTopicBytes(new byte[] { 0x00, 0x07, 0x49, 0x00 }, "HELO", snamFirst: true);
+        var bytes = MakeTopicBytes(new byte[] { 0x01, 0x07, 0x49, 0x00 }, "HELO", snamFirst: true);
 
         foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
         {
             topic.SubtypeName.ShouldBe(new RecordType("HELO"));
             topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.Hello);
+            topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
+            topic.TopicFlags.ShouldBe(DialogTopic.TopicFlag.DoAllBeforeRepeating);
+        }
+    }
+
+    [Fact]
+    public void MissingData_TakesSubtypeFromSnam()
+    {
+        var bytes = MakeTopicBytes(data: null, snam: "HELO");
+
+        foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
+        {
+            topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.Hello);
+            topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
+            topic.TopicFlags.ShouldBe(default(DialogTopic.TopicFlag));
+        }
+    }
+
+    [Fact]
+    public void EmptyData_TakesSubtypeFromSnam()
+    {
+        var bytes = MakeTopicBytes(Array.Empty<byte>(), "HELO");
+
+        foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
+        {
+            topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.Hello);
+            topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
+            topic.TopicFlags.ShouldBe(default(DialogTopic.TopicFlag));
+        }
+    }
+
+    [Fact]
+    public void ShortSnam_FallsBackToRawData()
+    {
+        var bytes = MakeTopicBytes(new byte[] { 0x00, 0x07, 0x49, 0x00 }, "AB");
+
+        foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
+        {
+            topic.SubtypeName.ShouldBe(RecordType.Null);
+            topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.RechargeExit);
             topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
         }
     }
@@ -218,6 +258,50 @@ public class DialogTopicSubtypeTests
         Subrecord(written, "DATA").ShouldBe(new byte[] { 0x00, 0x07, 0x4F, 0x00 });
         Subrecord(written, "SNAM").ShouldBe(Encoding.ASCII.GetBytes("HELO"));
         Write(ReadOverlay(bytes)).ShouldBe(written);
+    }
+
+    [Fact]
+    public void UnknownSnam_WritesBackVerbatim()
+    {
+        var data = new byte[] { 0x00, 0x03, 0x17, 0x00 };
+        var bytes = MakeTopicBytes(data, "FVDL");
+
+        foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
+        {
+            var written = Write(topic);
+            Subrecord(written, "DATA").ShouldBe(data);
+            Subrecord(written, "SNAM").ShouldBe(Encoding.ASCII.GetBytes("FVDL"));
+        }
+    }
+
+    [Fact]
+    public void MissingSnam_WritesBackWithSnamFromSubtype()
+    {
+        var bytes = MakeTopicBytes(new byte[] { 0x00, 0x07, 0x49, 0x00 }, snam: null);
+
+        foreach (var topic in new[] { ReadDirect(bytes), ReadOverlay(bytes) })
+        {
+            var written = Write(topic);
+            Subrecord(written, "SNAM").ShouldBe(Encoding.ASCII.GetBytes("RCEX"));
+            Subrecord(written, "DATA").ShouldBe(new byte[] { 0x00, 0x06, 0x49, 0x00 });
+        }
+    }
+
+    [Fact]
+    public void CopyInFromBinary_OverExistingSubtypeName_TakesTheNewSnam()
+    {
+        var topic = new DialogTopic(new FormKey(TestModKey, 0x800), SkyrimRelease.SkyrimSE)
+        {
+            SubtypeName = new RecordType("HELO"),
+            Subtype = DialogTopic.SubtypeEnum.Hello,
+        };
+        var bytes = MakeTopicBytes(new byte[] { 0x00, 0x07, 0x48, 0x00 }, "GBYE");
+
+        topic.CopyInFromBinary(new MutagenFrame(new MutagenMemoryReadStream(bytes, Meta())));
+
+        topic.SubtypeName.ShouldBe(new RecordType("GBYE"));
+        topic.Subtype.ShouldBe(DialogTopic.SubtypeEnum.Goodbye);
+        topic.Category.ShouldBe(DialogTopic.CategoryEnum.Misc);
     }
 
     [Fact]
