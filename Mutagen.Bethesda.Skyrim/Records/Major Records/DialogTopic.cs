@@ -507,9 +507,13 @@ partial class DialogTopicBinaryOverlay
     private ReadOnlySpan<byte> DataContent =>
         _DATALocation is { } loc ? _recordData.Span.Slice(loc.Min, loc.Max - loc.Min + 1) : default;
 
-    public partial RecordType GetSubtypeNameCustom() => _SubtypeNameLocation.HasValue
-        ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants)))
-        : RecordType.Null;
+    public partial RecordType GetSubtypeNameCustom()
+    {
+        if (_SubtypeNameLocation is not { } loc) return RecordType.Null;
+        var content = HeaderTranslation.ExtractSubrecordMemory(_recordData, loc, _package.MetaData.Constants);
+        if (content.Length < 4) return RecordType.Null;
+        return new RecordType(BinaryPrimitives.ReadInt32LittleEndian(content));
+    }
 
     public DialogTopic.TopicFlag TopicFlags
     {
