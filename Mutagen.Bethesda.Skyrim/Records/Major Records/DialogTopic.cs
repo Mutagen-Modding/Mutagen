@@ -143,22 +143,21 @@ public partial class DialogTopic
         LeaveWaterBreath = 102,
     }
 
-    // Marker FVDL, raw index 3, has no SubtypeEnum member and so no row here.
     private static readonly (SubtypeEnum Subtype, string Marker, CategoryEnum Category)[] SubtypeMarkers =
     [
         (SubtypeEnum.Custom, "CUST", CategoryEnum.Topic),
         (SubtypeEnum.ForceGreet, "PFGT", CategoryEnum.Topic),
         (SubtypeEnum.Rumors, "RUMO", CategoryEnum.Topic),
         (SubtypeEnum.Intimidate, "INTI", CategoryEnum.Favor),
-        (SubtypeEnum.Flatter, "FLAT", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.Flatter, "FLAT", CategoryEnum.Favor),
         (SubtypeEnum.Bribe, "BRIB", CategoryEnum.Favor),
-        (SubtypeEnum.AskGift, "ASKG", CategoryEnum.Favor), // inferred
-        (SubtypeEnum.Gift, "GIFF", CategoryEnum.Favor), // inferred
-        (SubtypeEnum.AskFavor, "ASKF", CategoryEnum.Favor), // inferred
-        (SubtypeEnum.Favor, "FAVO", CategoryEnum.Favor), // inferred
-        (SubtypeEnum.ShowRelationships, "SHRE", CategoryEnum.Favor), // inferred
-        (SubtypeEnum.Follow, "FOLL", CategoryEnum.Favor), // inferred
-        (SubtypeEnum.Reject, "FRJT", CategoryEnum.Favor), // inferred
+        (SubtypeEnum.AskGift, "ASKG", CategoryEnum.Favor),
+        (SubtypeEnum.Gift, "GIFF", CategoryEnum.Favor),
+        (SubtypeEnum.AskFavor, "ASKF", CategoryEnum.Favor),
+        (SubtypeEnum.Favor, "FAVO", CategoryEnum.Favor),
+        (SubtypeEnum.ShowRelationships, "SHRE", CategoryEnum.Favor),
+        (SubtypeEnum.Follow, "FOLL", CategoryEnum.Favor),
+        (SubtypeEnum.Reject, "FRJT", CategoryEnum.Favor),
         (SubtypeEnum.Scene, "SCEN", CategoryEnum.Scene),
         (SubtypeEnum.Show, "SHOW", CategoryEnum.Favors),
         (SubtypeEnum.Agree, "AGRE", CategoryEnum.Favors),
@@ -211,15 +210,15 @@ public partial class DialogTopic
         (SubtypeEnum.LostToNormal, "LOTN", CategoryEnum.Detection),
         (SubtypeEnum.LostToCombat, "LOTC", CategoryEnum.Detection),
         (SubtypeEnum.DetectFriendDie, "DFDA", CategoryEnum.Detection),
-        (SubtypeEnum.ServiceRefusal, "SERU", CategoryEnum.Service), // inferred
-        (SubtypeEnum.Repair, "REPA", CategoryEnum.Service), // inferred
-        (SubtypeEnum.Travel, "TRAV", CategoryEnum.Service), // inferred
-        (SubtypeEnum.Training, "TRAI", CategoryEnum.Service), // inferred
+        (SubtypeEnum.ServiceRefusal, "SERU", CategoryEnum.Service),
+        (SubtypeEnum.Repair, "REPA", CategoryEnum.Service),
+        (SubtypeEnum.Travel, "TRAV", CategoryEnum.Service),
+        (SubtypeEnum.Training, "TRAI", CategoryEnum.Service),
         (SubtypeEnum.BarterExit, "BAEX", CategoryEnum.Service),
-        (SubtypeEnum.RepairExit, "REEX", CategoryEnum.Service), // inferred
-        (SubtypeEnum.Recharge, "RECH", CategoryEnum.Service), // inferred
-        (SubtypeEnum.RechargeExit, "RCEX", CategoryEnum.Service), // inferred
-        (SubtypeEnum.TrainingExit, "TREX", CategoryEnum.Service), // inferred
+        (SubtypeEnum.RepairExit, "REEX", CategoryEnum.Service),
+        (SubtypeEnum.Recharge, "RECH", CategoryEnum.Service),
+        (SubtypeEnum.RechargeExit, "RCEX", CategoryEnum.Service),
+        (SubtypeEnum.TrainingExit, "TREX", CategoryEnum.Service),
         (SubtypeEnum.ObserveCombat, "OBCO", CategoryEnum.Misc),
         (SubtypeEnum.NoticeCorpse, "NOTI", CategoryEnum.Misc),
         (SubtypeEnum.TimeToGo, "TITG", CategoryEnum.Misc),
@@ -228,7 +227,7 @@ public partial class DialogTopic
         (SubtypeEnum.SwingMeleeWeapon, "SWMW", CategoryEnum.Misc),
         (SubtypeEnum.ShootBow, "FIWE", CategoryEnum.Misc),
         (SubtypeEnum.ZKeyObject, "ZKEY", CategoryEnum.Misc),
-        (SubtypeEnum.Jump, "JUMP", CategoryEnum.Misc), // inferred
+        (SubtypeEnum.Jump, "JUMP", CategoryEnum.Misc),
         (SubtypeEnum.KnockOverObject, "KNOO", CategoryEnum.Misc),
         (SubtypeEnum.DestroyObject, "DEOB", CategoryEnum.Misc),
         (SubtypeEnum.StandOnFurniture, "STOF", CategoryEnum.Misc),
@@ -236,8 +235,8 @@ public partial class DialogTopic
         (SubtypeEnum.PickpocketTopic, "PICT", CategoryEnum.Misc),
         (SubtypeEnum.PursueIdleTopic, "PURS", CategoryEnum.Misc),
         (SubtypeEnum.SharedInfo, "IDAT", CategoryEnum.Misc),
-        (SubtypeEnum.PlayerCastProjectileSpell, "PCPS", CategoryEnum.Misc), // inferred
-        (SubtypeEnum.PlayerCastSelfSpell, "PCSS", CategoryEnum.Misc), // inferred
+        (SubtypeEnum.PlayerCastProjectileSpell, "PCPS", CategoryEnum.Misc),
+        (SubtypeEnum.PlayerCastSelfSpell, "PCSS", CategoryEnum.Misc),
         (SubtypeEnum.PlayerShout, "PCSH", CategoryEnum.Misc),
         (SubtypeEnum.Idle, "IDLE", CategoryEnum.Misc),
         (SubtypeEnum.EnterSprintBreath, "BREA", CategoryEnum.Misc),
