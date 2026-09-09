@@ -354,19 +354,29 @@ partial class DialogTopicBinaryCreateTranslation
 
 partial class DialogTopicBinaryWriteTranslation
 {
+    // SNAM is absent, or names a subtype the enum models.
+    private static bool SubtypeNameIsModeled(IDialogTopicGetter item) =>
+        item.SubtypeName == RecordType.Null
+        || DialogTopic.SubtypeFromMarker(item.SubtypeName) is not null;
+
     public static partial void WriteBinaryDataCustom(MutagenWriter writer, IDialogTopicGetter item)
     {
+        var category = SubtypeNameIsModeled(item)
+            ? DialogTopic.CategoryFromSubtype(item.Subtype) ?? item.Category
+            : item.Category;
         using (HeaderExport.Subrecord(writer, RecordTypes.DATA))
         {
             writer.Write((byte)item.TopicFlags);
-            writer.Write((byte)(DialogTopic.CategoryFromSubtype(item.Subtype) ?? item.Category));
-            writer.Write(checked((ushort)item.Subtype));
+            writer.Write((byte)category);
+            writer.Write(unchecked((ushort)item.Subtype));
         }
     }
 
     public static partial void WriteBinarySubtypeNameCustom(MutagenWriter writer, IDialogTopicGetter item)
     {
-        var marker = DialogTopic.MarkerFromSubtype(item.Subtype) ?? item.SubtypeName;
+        var marker = SubtypeNameIsModeled(item)
+            ? DialogTopic.MarkerFromSubtype(item.Subtype) ?? item.SubtypeName
+            : item.SubtypeName;
         using (HeaderExport.Subrecord(writer, RecordTypes.SNAM))
         {
             writer.Write(marker.TypeInt);
