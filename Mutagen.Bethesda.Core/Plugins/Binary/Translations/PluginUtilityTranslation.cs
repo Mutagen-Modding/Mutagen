@@ -88,6 +88,7 @@ internal static class PluginUtilityTranslation
         MajorRecordFill<M> fillTyped)
         where M : IMajorRecordGetter
     {
+        frame.MetaData.FormVersion = (ushort?)frame.Reader.GetMajorRecordHeader().FormVersion;
         frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
         fillStructs(
             record: record,
@@ -101,7 +102,6 @@ internal static class PluginUtilityTranslation
             }
 
             Dictionary<RecordType, int>? recordParseCount = null;
-            frame.MetaData.FormVersion = record.FormVersion;
             var lastParsed = new PreviousParse();
             while (!targetFrame.Complete)
             {

@@ -1751,7 +1751,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         var overlayWhenChecks = new List<string>();
                                         if (gen.Value.GetFieldData().HasVersioning)
                                         {
-                                            overlayWhenChecks.Add(VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "stream.MetaData.FormVersion"));
+                                            overlayWhenChecks.Add(VersioningModule.GetVersionIfCheck(gen.Value.GetFieldData(), "this._package.FormVersion!.FormVersion"));
                                         }
                                         if (gen.Value.GetFieldData().HasModHeaderVersioning)
                                         {

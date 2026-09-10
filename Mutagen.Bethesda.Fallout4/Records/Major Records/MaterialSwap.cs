@@ -131,14 +131,13 @@ partial class MaterialSwapBinaryWriteTranslation
 partial class MaterialSwapBinaryOverlay
 {
     private int? _fnamLoc;
-    private ushort? _formVersion;
     private int _offset;
     
     public partial String? GetTreeFolderCustom()
     {
-        if (_formVersion >= MaterialSwapBinaryCreateTranslation.NewFormVersion)
+        if (this.FormVersion >= MaterialSwapBinaryCreateTranslation.NewFormVersion)
         {
-            return _fnamLoc.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _fnamLoc.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+            return _fnamLoc.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _fnamLoc.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : null;
         }
         else
         {
@@ -175,7 +174,6 @@ partial class MaterialSwapBinaryOverlay
         int finalPos,
         int offset)
     {
-        _formVersion = stream.MetaData.FormVersion;
         _offset = offset;
     }
 }
