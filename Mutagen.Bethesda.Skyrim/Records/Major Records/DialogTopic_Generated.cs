@@ -2687,26 +2687,39 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Quest,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
-            {
-                EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.TopicFlags,
-                    length: 1);
-                EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Category,
-                    length: 1);
-                EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Subtype,
-                    length: 2);
-            }
-            RecordTypeBinaryTranslation.Instance.Write(
+            DialogTopicBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
-                item: item.SubtypeName,
-                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+                item: item);
+            DialogTopicBinaryWriteTranslation.WriteBinarySubtypeName(
+                writer: writer,
+                item: item);
             DialogTopicBinaryWriteTranslation.WriteBinaryResponseCount(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySubtypeNameCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinarySubtypeName(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinarySubtypeNameCustom(
                 writer: writer,
                 item: item);
         }
@@ -2844,26 +2857,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    if (dataFrame.Remaining < 2) return null;
-                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 2);
-                    return (int)DialogTopic_FieldIndex.Subtype;
+                    return DialogTopicBinaryCreateTranslation.FillBinaryDataCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    DialogTopicBinaryCreateTranslation.FillBinarySubtypeNameCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
@@ -2884,6 +2888,16 @@ namespace Mutagen.Bethesda.Skyrim
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial ParseResult FillBinaryDataCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
+
+        public static partial void FillBinarySubtypeNameCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryResponseCountCustom(
             MutagenFrame frame,
@@ -2979,25 +2993,19 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _QuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
-        private RangeInt32? _DATALocation;
-        #region TopicFlags
-        private int _TopicFlagsLocation => _DATALocation!.Value.Min;
-        private bool _TopicFlags_IsSet => _DATALocation.HasValue;
-        public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_recordData.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
-        #endregion
-        #region Category
-        private int _CategoryLocation => _DATALocation!.Value.Min + 0x1;
-        private bool _Category_IsSet => _DATALocation.HasValue;
-        public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_recordData.Span.Slice(_CategoryLocation, 0x1)[0] : default;
-        #endregion
-        #region Subtype
-        private int _SubtypeLocation => _DATALocation!.Value.Min + 0x2;
-        private bool _Subtype_IsSet => _DATALocation.HasValue;
-        public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SubtypeLocation, 0x2)) : default;
+        #region Data
+        public partial ParseResult DataCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region SubtypeName
-        private int? _SubtypeNameLocation;
-        public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
+        partial void SubtypeNameCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        public partial RecordType GetSubtypeNameCustom();
+        public RecordType SubtypeName => GetSubtypeNameCustom();
         #endregion
         #region ResponseCount
         public partial ParseResult ResponseCountCustomParse(
@@ -3105,12 +3113,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)DialogTopic_FieldIndex.Subtype;
+                    return DataCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SubtypeNameLocation = (stream.Position - offset);
+                    SubtypeNameCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
