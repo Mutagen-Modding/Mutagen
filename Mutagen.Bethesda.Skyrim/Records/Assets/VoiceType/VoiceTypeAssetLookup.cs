@@ -391,7 +391,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (!response.Speaker.IsNull) return GetVoices(response.Speaker.FormKey);
 
         //Check scene
-        if (topic.Category == DialogTopic.CategoryEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
+        if (topic.Subtype == DialogTopic.SubtypeEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
         {
             voices.IntersectWith(GetVoices(quest, aliasIndex));
         }
