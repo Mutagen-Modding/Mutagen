@@ -5,12 +5,14 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
 
-public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup
+public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup, IProtonPrefixProvider
 {
     internal static readonly GameLocatorLookupCache Instance = new();
     
     private readonly Dictionary<GameRelease, DirectoryPath?> _gameDirCache = new();
     private readonly Dictionary<GameRelease, IReadOnlyList<DirectoryPath>> _gameDirsCache = new();
+    private readonly Dictionary<GameRelease, string?> _protonLocalAppDataCache = new();
+    private readonly Dictionary<GameRelease, string?> _protonMyDocumentsCache = new();
     
     private IEnumerable<DirectoryPath> GetAllGameDirectories(GameRelease release)
     {
@@ -77,6 +79,34 @@ public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup
         throw new DirectoryNotFoundException($"Data folder for {release} cannot be found automatically");
     }
     
+    public string? TryGetProtonLocalAppData(GameRelease release)
+    {
+        lock (_protonLocalAppDataCache)
+        {
+            if (!_protonLocalAppDataCache.TryGetValue(release, out var path))
+            {
+                path = GameLocator.Instance.TryGetProtonLocalAppData(release);
+                _protonLocalAppDataCache[release] = path;
+            }
+
+            return path;
+        }
+    }
+
+    public string? TryGetProtonMyDocuments(GameRelease release)
+    {
+        lock (_protonMyDocumentsCache)
+        {
+            if (!_protonMyDocumentsCache.TryGetValue(release, out var path))
+            {
+                path = GameLocator.Instance.TryGetProtonMyDocuments(release);
+                _protonMyDocumentsCache[release] = path;
+            }
+
+            return path;
+        }
+    }
+
     #region Interface Implementations
 
     IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)

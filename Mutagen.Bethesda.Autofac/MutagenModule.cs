@@ -47,9 +47,9 @@ public class MutagenModule : Module
             .As(typeof(IModImporter<>));
         builder.RegisterType<GameLocatorLookupCache>()
             .As<IGameDirectoryLookup>()
-            .As<IDataDirectoryLookup>();
-        builder.RegisterType<ProtonPrefixProvider>()
-            .As<IProtonPrefixProvider>();
+            .As<IDataDirectoryLookup>()
+            .As<IProtonPrefixProvider>()
+            .SingleInstance();
         builder.RegisterType<GameAssetProvider>()
             .As<IAssetProvider>()
             .AsSelf();
