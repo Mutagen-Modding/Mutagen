@@ -122,14 +122,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region TopicFlags
         public DialogTopic.TopicFlag TopicFlags { get; set; } = default(DialogTopic.TopicFlag);
         #endregion
-        #region Category
-        public DialogTopic.CategoryEnum Category { get; set; } = default(DialogTopic.CategoryEnum);
-        #endregion
         #region Subtype
         public DialogTopic.SubtypeEnum Subtype { get; set; } = default(DialogTopic.SubtypeEnum);
-        #endregion
-        #region SubtypeName
-        public RecordType SubtypeName { get; set; } = RecordType.Null;
         #endregion
         #region Timestamp
         public Int32 Timestamp { get; set; } = default(Int32);
@@ -181,9 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Branch = initialValue;
                 this.Quest = initialValue;
                 this.TopicFlags = initialValue;
-                this.Category = initialValue;
                 this.Subtype = initialValue;
-                this.SubtypeName = initialValue;
                 this.Timestamp = initialValue;
                 this.Unknown = initialValue;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(initialValue, []);
@@ -202,9 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Branch,
                 TItem Quest,
                 TItem TopicFlags,
-                TItem Category,
                 TItem Subtype,
-                TItem SubtypeName,
                 TItem Timestamp,
                 TItem Unknown,
                 TItem Responses)
@@ -222,9 +212,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Branch = Branch;
                 this.Quest = Quest;
                 this.TopicFlags = TopicFlags;
-                this.Category = Category;
                 this.Subtype = Subtype;
-                this.SubtypeName = SubtypeName;
                 this.Timestamp = Timestamp;
                 this.Unknown = Unknown;
                 this.Responses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>(Responses, []);
@@ -244,9 +232,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Branch;
             public TItem Quest;
             public TItem TopicFlags;
-            public TItem Category;
             public TItem Subtype;
-            public TItem SubtypeName;
             public TItem Timestamp;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponses.Mask<TItem>?>>?>? Responses;
@@ -268,9 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Branch, rhs.Branch)) return false;
                 if (!object.Equals(this.Quest, rhs.Quest)) return false;
                 if (!object.Equals(this.TopicFlags, rhs.TopicFlags)) return false;
-                if (!object.Equals(this.Category, rhs.Category)) return false;
                 if (!object.Equals(this.Subtype, rhs.Subtype)) return false;
-                if (!object.Equals(this.SubtypeName, rhs.SubtypeName)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Responses, rhs.Responses)) return false;
@@ -284,9 +268,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Branch);
                 hash.Add(this.Quest);
                 hash.Add(this.TopicFlags);
-                hash.Add(this.Category);
                 hash.Add(this.Subtype);
-                hash.Add(this.SubtypeName);
                 hash.Add(this.Timestamp);
                 hash.Add(this.Unknown);
                 hash.Add(this.Responses);
@@ -305,9 +287,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Branch)) return false;
                 if (!eval(this.Quest)) return false;
                 if (!eval(this.TopicFlags)) return false;
-                if (!eval(this.Category)) return false;
                 if (!eval(this.Subtype)) return false;
-                if (!eval(this.SubtypeName)) return false;
                 if (!eval(this.Timestamp)) return false;
                 if (!eval(this.Unknown)) return false;
                 if (this.Responses != null)
@@ -335,9 +315,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Branch)) return true;
                 if (eval(this.Quest)) return true;
                 if (eval(this.TopicFlags)) return true;
-                if (eval(this.Category)) return true;
                 if (eval(this.Subtype)) return true;
-                if (eval(this.SubtypeName)) return true;
                 if (eval(this.Timestamp)) return true;
                 if (eval(this.Unknown)) return true;
                 if (this.Responses != null)
@@ -372,9 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Branch = eval(this.Branch);
                 obj.Quest = eval(this.Quest);
                 obj.TopicFlags = eval(this.TopicFlags);
-                obj.Category = eval(this.Category);
                 obj.Subtype = eval(this.Subtype);
-                obj.SubtypeName = eval(this.SubtypeName);
                 obj.Timestamp = eval(this.Timestamp);
                 obj.Unknown = eval(this.Unknown);
                 if (Responses != null)
@@ -430,17 +406,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(TopicFlags, "TopicFlags");
                     }
-                    if (printMask?.Category ?? true)
-                    {
-                        sb.AppendItem(Category, "Category");
-                    }
                     if (printMask?.Subtype ?? true)
                     {
                         sb.AppendItem(Subtype, "Subtype");
-                    }
-                    if (printMask?.SubtypeName ?? true)
-                    {
-                        sb.AppendItem(SubtypeName, "SubtypeName");
                     }
                     if (printMask?.Timestamp ?? true)
                     {
@@ -485,9 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Branch;
             public Exception? Quest;
             public Exception? TopicFlags;
-            public Exception? Category;
             public Exception? Subtype;
-            public Exception? SubtypeName;
             public Exception? Timestamp;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>? Responses;
@@ -509,12 +475,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Quest;
                     case DialogTopic_FieldIndex.TopicFlags:
                         return TopicFlags;
-                    case DialogTopic_FieldIndex.Category:
-                        return Category;
                     case DialogTopic_FieldIndex.Subtype:
                         return Subtype;
-                    case DialogTopic_FieldIndex.SubtypeName:
-                        return SubtypeName;
                     case DialogTopic_FieldIndex.Timestamp:
                         return Timestamp;
                     case DialogTopic_FieldIndex.Unknown:
@@ -546,14 +508,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogTopic_FieldIndex.TopicFlags:
                         this.TopicFlags = ex;
                         break;
-                    case DialogTopic_FieldIndex.Category:
-                        this.Category = ex;
-                        break;
                     case DialogTopic_FieldIndex.Subtype:
                         this.Subtype = ex;
-                        break;
-                    case DialogTopic_FieldIndex.SubtypeName:
-                        this.SubtypeName = ex;
                         break;
                     case DialogTopic_FieldIndex.Timestamp:
                         this.Timestamp = ex;
@@ -590,14 +546,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case DialogTopic_FieldIndex.TopicFlags:
                         this.TopicFlags = (Exception?)obj;
                         break;
-                    case DialogTopic_FieldIndex.Category:
-                        this.Category = (Exception?)obj;
-                        break;
                     case DialogTopic_FieldIndex.Subtype:
                         this.Subtype = (Exception?)obj;
-                        break;
-                    case DialogTopic_FieldIndex.SubtypeName:
-                        this.SubtypeName = (Exception?)obj;
                         break;
                     case DialogTopic_FieldIndex.Timestamp:
                         this.Timestamp = (Exception?)obj;
@@ -622,9 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Branch != null) return true;
                 if (Quest != null) return true;
                 if (TopicFlags != null) return true;
-                if (Category != null) return true;
                 if (Subtype != null) return true;
-                if (SubtypeName != null) return true;
                 if (Timestamp != null) return true;
                 if (Unknown != null) return true;
                 if (Responses != null) return true;
@@ -670,13 +618,7 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(TopicFlags, "TopicFlags");
                 }
                 {
-                    sb.AppendItem(Category, "Category");
-                }
-                {
                     sb.AppendItem(Subtype, "Subtype");
-                }
-                {
-                    sb.AppendItem(SubtypeName, "SubtypeName");
                 }
                 {
                     sb.AppendItem(Timestamp, "Timestamp");
@@ -715,9 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Branch = this.Branch.Combine(rhs.Branch);
                 ret.Quest = this.Quest.Combine(rhs.Quest);
                 ret.TopicFlags = this.TopicFlags.Combine(rhs.TopicFlags);
-                ret.Category = this.Category.Combine(rhs.Category);
                 ret.Subtype = this.Subtype.Combine(rhs.Subtype);
-                ret.SubtypeName = this.SubtypeName.Combine(rhs.SubtypeName);
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Responses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponses.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Responses?.Overall, rhs.Responses?.Overall), Noggog.ExceptionExt.Combine(this.Responses?.Specific, rhs.Responses?.Specific));
@@ -748,9 +688,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Branch;
             public bool Quest;
             public bool TopicFlags;
-            public bool Category;
             public bool Subtype;
-            public bool SubtypeName;
             public bool Timestamp;
             public bool Unknown;
             public DialogResponses.TranslationMask? Responses;
@@ -767,9 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Branch = defaultOn;
                 this.Quest = defaultOn;
                 this.TopicFlags = defaultOn;
-                this.Category = defaultOn;
                 this.Subtype = defaultOn;
-                this.SubtypeName = defaultOn;
                 this.Timestamp = defaultOn;
                 this.Unknown = defaultOn;
             }
@@ -784,9 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Branch, null));
                 ret.Add((Quest, null));
                 ret.Add((TopicFlags, null));
-                ret.Add((Category, null));
                 ret.Add((Subtype, null));
-                ret.Add((SubtypeName, null));
                 ret.Add((Timestamp, null));
                 ret.Add((Unknown, null));
                 ret.Add((Responses == null ? DefaultOn : !Responses.GetCrystal().CopyNothing, Responses?.GetCrystal()));
@@ -993,9 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IDialogBranchGetter> Branch { get; set; }
         new IFormLinkNullable<IQuestGetter> Quest { get; set; }
         new DialogTopic.TopicFlag TopicFlags { get; set; }
-        new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }
-        new RecordType SubtypeName { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
         new ExtendedList<DialogResponses> Responses { get; }
@@ -1033,9 +965,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IDialogBranchGetter> Branch { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         DialogTopic.TopicFlag TopicFlags { get; }
-        DialogTopic.CategoryEnum Category { get; }
         DialogTopic.SubtypeEnum Subtype { get; }
-        RecordType SubtypeName { get; }
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
         IReadOnlyList<IDialogResponsesGetter> Responses { get; }
@@ -1446,12 +1376,10 @@ namespace Mutagen.Bethesda.Skyrim
         Branch = 9,
         Quest = 10,
         TopicFlags = 11,
-        Category = 12,
-        Subtype = 13,
-        SubtypeName = 14,
-        Timestamp = 15,
-        Unknown = 16,
-        Responses = 17,
+        Subtype = 12,
+        Timestamp = 13,
+        Unknown = 14,
+        Responses = 15,
     }
     #endregion
 
@@ -1462,9 +1390,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(DialogTopic.Mask<>);
 
@@ -1575,9 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Branch.Clear();
             item.Quest.Clear();
             item.TopicFlags = default(DialogTopic.TopicFlag);
-            item.Category = default(DialogTopic.CategoryEnum);
             item.Subtype = default(DialogTopic.SubtypeEnum);
-            item.SubtypeName = RecordType.Null;
             item.Timestamp = default(Int32);
             item.Unknown = default(Int32);
             item.Responses.Clear();
@@ -1787,9 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Branch = item.Branch.Equals(rhs.Branch);
             ret.Quest = item.Quest.Equals(rhs.Quest);
             ret.TopicFlags = item.TopicFlags == rhs.TopicFlags;
-            ret.Category = item.Category == rhs.Category;
             ret.Subtype = item.Subtype == rhs.Subtype;
-            ret.SubtypeName = item.SubtypeName == rhs.SubtypeName;
             ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Responses = item.Responses.CollectionEqualsHelper(
@@ -1866,17 +1790,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.TopicFlags, "TopicFlags");
             }
-            if (printMask?.Category ?? true)
-            {
-                sb.AppendItem(item.Category, "Category");
-            }
             if (printMask?.Subtype ?? true)
             {
                 sb.AppendItem(item.Subtype, "Subtype");
-            }
-            if (printMask?.SubtypeName ?? true)
-            {
-                sb.AppendItem(item.SubtypeName, "SubtypeName");
             }
             if (printMask?.Timestamp ?? true)
             {
@@ -1970,17 +1886,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (lhs.TopicFlags != rhs.TopicFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
-            {
-                if (lhs.Category != rhs.Category) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
             {
                 if (lhs.Subtype != rhs.Subtype) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
-            {
-                if (lhs.SubtypeName != rhs.SubtypeName) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
@@ -2030,9 +1938,7 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.Branch);
             hash.Add(item.Quest);
             hash.Add(item.TopicFlags);
-            hash.Add(item.Category);
             hash.Add(item.Subtype);
-            hash.Add(item.SubtypeName);
             hash.Add(item.Timestamp);
             hash.Add(item.Unknown);
             hash.Add(item.Responses);
@@ -2447,17 +2353,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.TopicFlags = rhs.TopicFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
-            {
-                item.Category = rhs.Category;
-            }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
             {
                 item.Subtype = rhs.Subtype;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
-            {
-                item.SubtypeName = rhs.SubtypeName;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
@@ -2687,26 +2585,39 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Quest,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
-            {
-                EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.TopicFlags,
-                    length: 1);
-                EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Category,
-                    length: 1);
-                EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Subtype,
-                    length: 2);
-            }
-            RecordTypeBinaryTranslation.Instance.Write(
+            DialogTopicBinaryWriteTranslation.WriteBinaryData(
                 writer: writer,
-                item: item.SubtypeName,
-                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
+                item: item);
+            DialogTopicBinaryWriteTranslation.WriteBinarySubtypeMarker(
+                writer: writer,
+                item: item);
             DialogTopicBinaryWriteTranslation.WriteBinaryResponseCount(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryDataCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySubtypeMarkerCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinarySubtypeMarker(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinarySubtypeMarkerCustom(
                 writer: writer,
                 item: item);
         }
@@ -2844,27 +2755,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    if (dataFrame.Remaining < 1) return null;
-                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    if (dataFrame.Remaining < 2) return null;
-                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 2);
-                    return (int)DialogTopic_FieldIndex.Subtype;
+                    return DialogTopicBinaryCreateTranslation.FillBinaryDataCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogTopic_FieldIndex.SubtypeName;
+                    return DialogTopicBinaryCreateTranslation.FillBinarySubtypeMarkerCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.TIFC:
                 {
@@ -2884,6 +2785,16 @@ namespace Mutagen.Bethesda.Skyrim
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial ParseResult FillBinaryDataCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
+
+        public static partial ParseResult FillBinarySubtypeMarkerCustom(
+            MutagenFrame frame,
+            IDialogTopicInternal item,
+            PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryResponseCountCustom(
             MutagenFrame frame,
@@ -2979,25 +2890,17 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _QuestLocation;
         public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
         #endregion
-        private RangeInt32? _DATALocation;
-        #region TopicFlags
-        private int _TopicFlagsLocation => _DATALocation!.Value.Min;
-        private bool _TopicFlags_IsSet => _DATALocation.HasValue;
-        public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_recordData.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
+        #region Data
+        public partial ParseResult DataCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
-        #region Category
-        private int _CategoryLocation => _DATALocation!.Value.Min + 0x1;
-        private bool _Category_IsSet => _DATALocation.HasValue;
-        public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_recordData.Span.Slice(_CategoryLocation, 0x1)[0] : default;
-        #endregion
-        #region Subtype
-        private int _SubtypeLocation => _DATALocation!.Value.Min + 0x2;
-        private bool _Subtype_IsSet => _DATALocation.HasValue;
-        public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SubtypeLocation, 0x2)) : default;
-        #endregion
-        #region SubtypeName
-        private int? _SubtypeNameLocation;
-        public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
+        #region SubtypeMarker
+        public partial ParseResult SubtypeMarkerCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
         #endregion
         #region ResponseCount
         public partial ParseResult ResponseCountCustomParse(
@@ -3105,13 +3008,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)DialogTopic_FieldIndex.Subtype;
+                    return DataCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SubtypeNameLocation = (stream.Position - offset);
-                    return (int)DialogTopic_FieldIndex.SubtypeName;
+                    return SubtypeMarkerCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 case RecordTypeInts.TIFC:
                 {

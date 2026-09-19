@@ -71,7 +71,7 @@ public class VoiceTypeAssetLookupTestFixture
         scene.Actions.Add(new() { ActorID = (int)aliasId, Topic = Topic.ToNullableLink() });
 
         var response = CreateResponses();
-        Topic.Category = DialogTopic.CategoryEnum.Scene;
+        Topic.Subtype = DialogTopic.SubtypeEnum.Scene;
         response.Conditions.AddRange(conditions);
 
         AssertSpeakersEqualImpl(response, expectedSpeakers);
@@ -820,7 +820,7 @@ public class VoiceTypeAssetLookupTestSkyrim
     {
         dialogResponses.Responses.Add(dialogResponse);
         topic.Responses.Add(dialogResponses);
-        topic.Category = DialogTopic.CategoryEnum.Scene;
+        topic.Subtype = DialogTopic.SubtypeEnum.Scene;
         topic.Quest.SetTo(quest);
         
         scene.Actions.Add(new SceneAction()
