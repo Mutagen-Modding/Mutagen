@@ -235,6 +235,29 @@ public class SkyrimProcessor : Processor
             formKey,
             fileOffset);
 
+        // Derive DATA's category and subtype from SNAM
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dialDataRec)
+            && dialDataRec.ContentLength >= 4)
+        {
+            var subtype = default(DialogTopic.SubtypeEnum);
+            if (majorFrame.TryFindSubrecord(RecordTypes.SNAM, out var snamRec)
+                && snamRec.ContentLength >= 4
+                && DialogTopic.SubtypeFromMarker(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(snamRec.Content))) is { } markerSubtype)
+            {
+                subtype = markerSubtype;
+            }
+
+            byte[] derived = new byte[3];
+            derived[0] = (byte)(DialogTopic.CategoryFromSubtype(subtype) ?? default);
+            BinaryPrimitives.WriteUInt16LittleEndian(derived.AsSpan(1), (ushort)subtype);
+            if (!dialDataRec.Content.Slice(1, 3).SequenceEqual(derived))
+            {
+                Instructions.SetSubstitution(
+                    fileOffset + dialDataRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
+                    derived);
+            }
+        }
+
         // Reset misnumbered counter
         if (majorFrame.TryFindSubrecord(RecordTypes.TIFC, out var tifcRec))
         {
