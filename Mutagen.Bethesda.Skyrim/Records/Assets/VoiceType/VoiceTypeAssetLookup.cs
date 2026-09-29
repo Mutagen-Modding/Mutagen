@@ -24,7 +24,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     // TODO: This is probably unnecessary. Leave optimisation for its own PR.
     // Kept as enumerable as most unique NPCs have only one voice
     private readonly Dictionary<FormKey, IEnumerable<FormKey>> _speakerVoices = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _factionNPCs = new();
+    // NPCs who start as members of a faction
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _staticFactionNPCs = [];
+    // NPCs who start as members of a faction (quest alias or rank -1)
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _potentialFactionNPCs = [];
+
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
     private readonly Dictionary<FormKey, HashSet<FormKey>> _keywordNPCs = new();
@@ -52,7 +56,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     if (!faction.IsNull)
                     {
-                        _factionNPCs
+                        _potentialFactionNPCs
                             .GetOrAdd(faction.FormKey)
                             .Add(uniqueActor);
                     }
@@ -73,9 +77,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
             foreach (var factionKey in GetFactions(npc))
             {
-                _factionNPCs
-                    .GetOrAdd(factionKey.FormKey)
+                _potentialFactionNPCs
+                    .GetOrAdd(factionKey.Faction.FormKey)
                     .Add(npc.FormKey);
+                if (factionKey.Rank >= 0)
+                {
+                    _staticFactionNPCs
+                        .GetOrAdd(factionKey.Faction.FormKey)
+                        .Add(npc.FormKey);
+                }
             }
 
             foreach (var classKey in GetClasses(npc))
@@ -453,6 +463,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         if (data.RunOnType != Condition.RunOnType.Subject) return new VoiceContainer(true);
 
+        var inverted = IsConditionInverted(condition);
         switch (data)
         {
             case IGetIsIDConditionDataGetter getIsId:
@@ -489,7 +500,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IGetInFactionConditionDataGetter getInFaction:
-                if (getInFaction.Faction.UsesLink() && _factionNPCs.TryGetValue(getInFaction.Faction.Link.FormKey, out var factionNpcFormKeys))
+                // Inverting a GetInFaction condition requires special handling of potential members to account for cases such as `PotentialFollowerFaction == 1 && CurrentFollowerFaction == 0`
+                // Actual inversion of the container is handled below
+                if (getInFaction.Faction.UsesLink() && (inverted ? _staticFactionNPCs : _potentialFactionNPCs).TryGetValue(getInFaction.Faction.Link.FormKey, out var factionNpcFormKeys))
                 {
                     voices = new VoiceContainer(factionNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
@@ -497,7 +510,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 break;
             case IGetFactionRankConditionDataGetter getFactionRank:
                 // Assume the actor can be in any rank as long they are in the faction - they might shift ranks later on
-                if (getFactionRank.Faction.UsesLink() && _factionNPCs.TryGetValue(getFactionRank.Faction.Link.FormKey, out var factionNpcFormKeys2))
+                if (getFactionRank.Faction.UsesLink() && (inverted ? _staticFactionNPCs : _potentialFactionNPCs).TryGetValue(getFactionRank.Faction.Link.FormKey, out var factionNpcFormKeys2))
                 {
                     voices = new VoiceContainer(factionNpcFormKeys2.ToDictionary(npc => npc, GetVoiceTypes));
                 }
@@ -548,7 +561,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 break;
         }
 
-        if (!voices.IsDefault && IsConditionInverted(condition))
+        if (!voices.IsDefault && inverted)
         {
             //Can't invert alias according to CK calculation
             if (data.Function == Condition.Function.GetIsAliasRef)
@@ -790,9 +803,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }).ToHashSet();
     }
 
-    private HashSet<IFormLinkGetter<IFactionGetter>> GetFactions(INpcSpawnGetter npc)
+    private HashSet<IRankPlacementGetter> GetFactions(INpcSpawnGetter npc)
     {
-        return GetInheritedData(npc, NpcConfiguration.TemplateFlag.Factions, entry => entry.Factions.Select(f => f.Faction)).ToHashSet();
+        return GetInheritedData(npc, NpcConfiguration.TemplateFlag.Factions, entry => entry.Factions).ToHashSet();
     }
 
     private HashSet<IFormLinkGetter<IClassGetter>> GetClasses(INpcSpawnGetter npc)
