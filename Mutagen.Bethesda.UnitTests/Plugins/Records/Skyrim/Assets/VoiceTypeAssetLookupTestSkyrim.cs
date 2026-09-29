@@ -789,6 +789,36 @@ public class VoiceTypeAssetLookupTestSkyrim
             [npc1]);
     }
 
+    [Theory, MutagenModAutoData]
+    public void NegatePotentialFactionMember(
+        VoiceTypeAssetLookupTestFixture fixture,
+        Faction faction,
+        Quest quest)
+    {
+        fixture.CreateSpeaker("dummy");
+        // Rank -1 signifies an NPC is not initially a faction member, but may join
+        var npcBase = fixture.CreateSpeaker("npcBase");
+        npcBase.Factions.Add(new()
+        {
+            Faction = faction.ToLink(),
+            Rank = -1
+        });
+        // Aliases may also add an NPC to the faction
+        var npcQuest = fixture.CreateSpeaker("npcQuest");
+        quest.Aliases.Add(new()
+        {
+            UniqueActor = npcQuest.ToNullableLink(),
+            Factions = [faction.ToLink()],
+        });
+
+
+        // Positive conditions should include, as the NPC may join
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)], [npcBase, npcQuest]);
+        // Negative conditions should not exclude, as the NPC is not initially a member
+        // Vanilla example: DialogueFavorGenericFollow uses CurrentFollowerFaction == 0 && PotentialFollowerFaction == 1
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 0)], [npcBase, npcQuest]);
+    }
+
     private readonly ILinkCache _linkCache;
     private readonly VoiceTypeAssetLookup _searcher = new();
 
