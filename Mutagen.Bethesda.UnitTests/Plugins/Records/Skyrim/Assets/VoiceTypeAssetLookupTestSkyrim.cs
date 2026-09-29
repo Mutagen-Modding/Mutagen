@@ -795,10 +795,15 @@ public class VoiceTypeAssetLookupTestSkyrim
         Faction faction,
         Quest quest)
     {
-        fixture.CreateSpeaker("dummy");
+        var npcAlways = fixture.CreateSpeaker("npcAlways");
+        npcAlways.Factions.Add(new()
+        {
+            Faction = faction.ToLink(),
+            Rank = 0,
+        });
         // Rank -1 signifies an NPC is not initially a faction member, but may join
-        var npcBase = fixture.CreateSpeaker("npcBase");
-        npcBase.Factions.Add(new()
+        var npcBasePotential = fixture.CreateSpeaker("npcBasePotential");
+        npcBasePotential.Factions.Add(new()
         {
             Faction = faction.ToLink(),
             Rank = -1
@@ -813,10 +818,11 @@ public class VoiceTypeAssetLookupTestSkyrim
 
 
         // Positive conditions should include, as the NPC may join
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)], [npcBase, npcQuest]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)], [npcAlways, npcBasePotential, npcQuest]);
         // Negative conditions should not exclude, as the NPC is not initially a member
+        // Base actor members should still be excluded (though edge cases exist for both methods)
         // Vanilla example: DialogueFavorGenericFollow uses CurrentFollowerFaction == 0 && PotentialFollowerFaction == 1
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 0)], [npcBase, npcQuest]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 0)], [npcBasePotential, npcQuest]);
     }
 
     private readonly ILinkCache _linkCache;
