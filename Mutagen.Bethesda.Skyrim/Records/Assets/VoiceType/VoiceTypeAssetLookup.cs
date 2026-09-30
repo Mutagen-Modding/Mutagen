@@ -352,9 +352,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     return GetVoices(responseContext.Record.Conditions, currentQuest);
                 })
                 .WhereNotNull()
+                .ToList()
                 .MergeInsert(true);
 
-            voices.IntersectWith(userConditions);
+            // The user has conditions
+            if (userConditions != null)
+            {
+                voices.IntersectWith(userConditions);
+            }
         }
     }
 
@@ -437,7 +442,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             if ((condition.Flags & Condition.Flag.OR) == 0 || i == conditionsList.Count - 1)
             {
                 var voices = GetVoiceTypesOrBlock(currentConditions, quest);
-                if (!voices.IsDefault) voiceTypesOrBlock.Add(voices);
+                if (voices != null && !voices.IsDefault) voiceTypesOrBlock.Add(voices);
 
                 currentConditions.Clear();
             }
@@ -447,7 +452,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voiceTypesOrBlock.Any() ? voiceTypesOrBlock.MergeIntersect() : new VoiceContainer(true);
     }
 
-    private VoiceContainer GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions, IQuestGetter quest)
+    private VoiceContainer? GetVoiceTypesOrBlock(IEnumerable<IConditionGetter> conditions, IQuestGetter quest)
     {
         return conditions
             .Select(condition =>
@@ -458,6 +463,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 return conditionVoices;
             })
             .WhereNotNull()
+            .ToList()
             .MergeInsert(true);
     }
 
@@ -544,7 +550,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     var formList = isInList.FormList.Link.TryResolve(_formLinkCache);
                     //Only look at speakers in the form list
-                    if (formList != null) return formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert(false);
+                    // TODO: Don't use MergeInsert
+                    if (formList != null) return formList.Items
+                            .Select(link => GetVoices(link.FormKey))
+                            .ToList()
+                            .MergeInsert(false);
                 }
 
                 break;
@@ -735,6 +745,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetVoices(IFormListGetter formList)
     {
+        // TODO: This probably doesn't need to do a merge insert
         var voices = new List<VoiceContainer>();
 
         foreach (var item in formList.Items)
@@ -751,7 +762,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        return voices.MergeInsert(false);
+        return voices.MergeInsert(false)!;
     }
 
     private VoiceContainer GetVoices(IQuestGetter quest) => GetVoices(quest.DialogConditions, quest);

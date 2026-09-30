@@ -5,6 +5,8 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 
 public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 {
+    public static VoiceContainer Empty => new VoiceContainer();
+
     /// <summary>
     /// Voice type names mapped to form keys of npcs or talking activators using that voice type 
     /// </summary>
