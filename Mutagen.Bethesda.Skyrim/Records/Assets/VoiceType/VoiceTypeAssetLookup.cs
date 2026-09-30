@@ -353,7 +353,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 })
                 .WhereNotNull()
                 .ToList()
-                .MergeInsert(true);
+                .MergeInsert();
 
             // The user has conditions
             if (userConditions != null)
@@ -409,7 +409,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var voices = new VoiceContainer(true);
 
         //Use speaker only if we have one
-        if (!response.Speaker.IsNull) return GetVoices(response.Speaker.FormKey);
+        if (!response.Speaker.IsNull) return GetSpeakerVoiceContainer(response.Speaker.FormKey);
 
         //Check scene
         if (topic.Subtype == DialogTopic.SubtypeEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
@@ -464,7 +464,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             })
             .WhereNotNull()
             .ToList()
-            .MergeInsert(true);
+            .MergeInsert();
     }
 
     /// <summary>
@@ -546,17 +546,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IIsInListConditionDataGetter isInList:
-                if (isInList.FormList.UsesLink())
+                if (isInList.FormList.Link.TryResolve(_formLinkCache, out var formList2))
                 {
-                    var formList = isInList.FormList.Link.TryResolve(_formLinkCache);
-                    //Only look at speakers in the form list
-                    // TODO: Don't use MergeInsert
-                    if (formList != null) return formList.Items
-                            .Select(link => GetVoices(link.FormKey))
-                            .ToList()
-                            .MergeInsert(false);
-                }
+                    // Container will skip entries that are not speakers
+                    return new VoiceContainer(formList2.Items.Select(i => i.FormKey), _speakerVoices);
 
+                }
                 break;
             case IIsChildConditionDataGetter isChild:
                 return new VoiceContainer(_childNPCs, _speakerVoices);
@@ -650,8 +645,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 additionalVoices = additionalVoiceTypes switch
                 {
-                    INpcGetter npc => GetVoices(npc),
-                    IFormListGetter formList => GetVoices(formList),
+                    INpcGetter npc => GetSpeakerVoiceContainer(npc.FormKey),
+                    IFormListGetter formList => GetFormListVoices(formList),
                     _ => new VoiceContainer(true)
                 };
             }
@@ -663,7 +658,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             var placedNPC = alias.ForcedReference.TryResolve<IPlacedNpcGetter>(_formLinkCache);
             if (placedNPC != null)
             {
-                var voices = GetVoices(placedNPC.Base.FormKey);
+                var voices = GetSpeakerVoiceContainer(placedNPC.Base.FormKey);
                 if (additionalVoices != null) voices.Insert(additionalVoices);
                 return voices;
             }
@@ -671,7 +666,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             var placedObject = alias.ForcedReference.TryResolve<IPlacedObjectGetter>(_formLinkCache);
             if (placedObject != null)
             {
-                var voices = GetVoices(placedObject.Base.FormKey);
+                var voices = GetSpeakerVoiceContainer(placedObject.Base.FormKey);
                 if (additionalVoices != null) voices.Insert(additionalVoices);
                 return voices;
             }
@@ -680,7 +675,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         //Created object
         if (alias.CreateReferenceToObject != null)
         {
-            var voices = GetVoices(alias.CreateReferenceToObject.Object.FormKey);
+            var voices = GetSpeakerVoiceContainer(alias.CreateReferenceToObject.Object.FormKey);
             if (additionalVoices != null) voices.Insert(additionalVoices);
             return voices;
         }
@@ -717,8 +712,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                             return linkedRef switch
                             {
-                                IPlacedNpcGetter placedNpc => GetVoices(placedNpc.Base.FormKey),
-                                IPlacedObjectGetter placedObject => GetVoices(placedObject.Base.FormKey),
+                                IPlacedNpcGetter placedNpc => GetSpeakerVoiceContainer(placedNpc.Base.FormKey),
+                                IPlacedObjectGetter placedObject => GetSpeakerVoiceContainer(placedObject.Base.FormKey),
                                 _ => new VoiceContainer(true)
                             };
                         }
@@ -740,29 +735,23 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return new VoiceContainer();
     }
 
-    private VoiceContainer GetVoices(FormKey speaker) => new(speaker, GetVoiceTypes(speaker));
-    private VoiceContainer GetVoices(INpcGetter npc) => new(npc.FormKey, GetVoiceTypes(npc.FormKey));
+    private VoiceContainer GetSpeakerVoiceContainer(FormKey speaker) => new(speaker, GetVoiceTypes(speaker));
 
-    private VoiceContainer GetVoices(IFormListGetter formList)
+    private VoiceContainer GetFormListVoices(IFormListGetter formList)
     {
-        // TODO: This probably doesn't need to do a merge insert
-        var voices = new List<VoiceContainer>();
-
-        foreach (var item in formList.Items)
+        var voices = new VoiceContainer();
+        foreach (var entry in formList.Items)
         {
-            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(item.FormKey, out var _))
+            if (_formLinkCache.TryResolveIdentifier<IVoiceTypeGetter>(entry.FormKey, out var _))
             {
-                //FormList entry is VoiceType
-                voices.Add(new VoiceContainer(item.FormKey));
+                voices.AddFullVoice(entry.FormKey);
             }
-            else if (_speakerVoices.ContainsKey(item.FormKey))
+            else if (_speakerVoices.TryGetValue(entry.FormKey, out var speakerVoiceTypes))
             {
-                //FormList entry is Npc
-                voices.Add(GetVoices(item.FormKey));
+                voices.AddSpeaker(entry.FormKey, speakerVoiceTypes);
             }
         }
-
-        return voices.MergeInsert(false)!;
+        return voices;
     }
 
     private VoiceContainer GetVoices(IQuestGetter quest) => GetVoices(quest.DialogConditions, quest);

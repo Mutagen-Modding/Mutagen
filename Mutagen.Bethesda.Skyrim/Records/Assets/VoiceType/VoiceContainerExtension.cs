@@ -3,11 +3,12 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 public static class VoiceContainerExtension
 {
     // Perform a set union on zero or more containers. May mutate input containers
-    public static VoiceContainer? MergeInsert(this List<VoiceContainer> voiceContainers, bool isDefaultIfEmpty)
+    // Returns null (no filtering) for an empty list
+    public static VoiceContainer? MergeInsert(this List<VoiceContainer> voiceContainers)
     {
         switch (voiceContainers)
         {
-            case []: return isDefaultIfEmpty ? null : VoiceContainer.Empty;
+            case []: return null;
             case [var voiceContainer]: return voiceContainer;
             default:
                 var first = voiceContainers.First();

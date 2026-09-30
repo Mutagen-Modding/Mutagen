@@ -29,11 +29,11 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
-    public VoiceContainer(IEnumerable<FormKey> npcs, Dictionary<FormKey, HashSet<FormKey>> npcVoices)
+    public VoiceContainer(IEnumerable<FormKey> npcs, Dictionary<FormKey, HashSet<FormKey>> speakerVoices)
     {
         foreach (var npc in npcs)
         {
-            if (!npcVoices.TryGetValue(npc, out var voices))
+            if (!speakerVoices.TryGetValue(npc, out var voices))
                 continue;
             foreach (var voice in voices)
             {
@@ -183,6 +183,21 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         IsDefault = false;
     }
 
+    #endregion
+
+    #region Mutation
+    public void AddSpeaker(FormKey speaker, HashSet<FormKey> voices)
+    {
+        foreach (var voice in voices)
+        {
+            _voices.GetOrAdd(voice).Add(speaker);
+        }
+    }
+    // Add all NPCs with a voice type
+    public void AddFullVoice(FormKey voice)
+    {
+        _voices[voice] = [];
+    }
     #endregion
 
     public IEnumerable<FormKey> GetVoiceTypes(HashSet<FormKey> allVoices)
