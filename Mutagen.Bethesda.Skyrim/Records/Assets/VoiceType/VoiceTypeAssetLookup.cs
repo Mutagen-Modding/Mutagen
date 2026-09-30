@@ -19,11 +19,16 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 {
     private ILinkCache _formLinkCache = null!;
 
-    //Databases
+    // Databases. These aren't good candidates for usage caches as data here can be inherited
     private HashSet<FormKey> _allVoiceTypes = null!;
-    // TODO: This is probably unnecessary. Leave optimisation for its own PR.
-    // Kept as enumerable as most unique NPCs have only one voice
-    private readonly Dictionary<FormKey, IEnumerable<FormKey>> _speakerVoices = new();
+    // TODO: Is this necessary? Can we look up when retrieving speakers?
+    // TOOD: Most unique NPCs have only one voice. Is an enumerable faster?
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _speakerVoices = new();
+
+    // Inverse lookup of voice type -> speakers for GetIsVoiceType conditions. Kept as a list since we always use the whole set
+    // TODO: Should this also use FormLinks to avoid overhead of creating them?
+    private readonly Dictionary<FormKey, List<FormKey>> _voiceSpeakers = [];
+
     // NPCs who start as members of a faction
     private readonly Dictionary<FormKey, HashSet<FormKey>> _staticFactionNPCs = [];
     // NPCs who start as members of a faction (quest alias or rank -1)
@@ -73,7 +78,12 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
         {
-            _speakerVoices.Add(npc.FormKey, GetVoiceTypes(npc));
+            var voices = GetVoiceTypes(npc);
+            _speakerVoices.Add(npc.FormKey, voices);
+            foreach (var voice in voices)
+            {
+                _voiceSpeakers.GetOrAdd(voice).Add(npc.FormKey);
+            }
 
             foreach (var factionKey in GetFactions(npc))
             {
@@ -266,13 +276,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return GetVoiceContainer(responses).Voices.SelectMany(x =>
         {
             // A subset of speakers is used
-            if (x.Value.Count > 0) return x.Value;
+            if (x.Value.Count > 0) return x.Value as IEnumerable<FormKey>;
 
             // The whole voice type is used
-            // TODO: This would benefit from a reverse lookup
-            return _speakerVoices
-                .Where(y => y.Value.Contains(x.Key))
-                .Select(y => y.Key);
+            return _voiceSpeakers.GetOrDefault(x.Key) ?? [];
         }).Distinct().Select(speaker => speaker.ToLink<IHasVoiceTypeGetter>());
     }
 
