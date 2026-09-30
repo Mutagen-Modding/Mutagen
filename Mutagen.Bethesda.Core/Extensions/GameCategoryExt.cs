@@ -129,6 +129,9 @@ internal static class ToModRegistrationHelper
     {
         foreach (var category in Enums<GameCategory>.Values)
         {
+            if (Plugins.GameRegistrations.TryGet(category, out _)) continue;
+
+            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
             var modType = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}Mod, Mutagen.Bethesda.{category}");
             if (modType == null) continue;
@@ -145,6 +148,11 @@ internal static class ToModRegistrationHelper
 
     public static ILoquiRegistration? Get(GameCategory category)
     {
+        if (Plugins.GameRegistrations.TryGet(category, out var definition))
+        {
+            return definition.Mod;
+        }
+
         return _registrations.GetOrDefault(category);
     }
 }

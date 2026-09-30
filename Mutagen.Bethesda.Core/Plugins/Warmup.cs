@@ -33,6 +33,14 @@ public static class Warmup
 
             foreach (var category in Enums<GameCategory>.Values)
             {
+                if (GameRegistrations.TryGet(category, out var definition))
+                {
+                    protocols.Add(definition.Protocol);
+                    _registrations.Add(category);
+                    continue;
+                }
+
+                // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
                 try
                 {
                     var assemblyName = $"Mutagen.Bethesda.{category}";
