@@ -10,6 +10,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     /// </summary>
     private readonly Dictionary<FormKey, HashSet<FormKey>> _voices = new();
     public IReadOnlyDictionary<FormKey, HashSet<FormKey>> Voices => _voices;
+    [Obsolete("Represent as null")]
     public bool IsDefault { get; private set; }
 
     #region Constructors

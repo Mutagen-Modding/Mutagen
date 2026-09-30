@@ -454,7 +454,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .Select(condition =>
             {
                 var conditionVoices = GetVoices(condition, quest);
-                if (conditionVoices.IsDefault) return null;
+                if (conditionVoices == null || conditionVoices.IsDefault) return null;
 
                 return conditionVoices;
             })
@@ -462,15 +462,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .MergeInsert(true);
     }
 
-    private VoiceContainer GetVoices(IConditionGetter condition, IQuestGetter quest)
+    /// <summary>
+    /// Create a voice container for a condition data.
+    /// </summary>
+    /// <param name="quest"></param>
+    /// <param name="data"></param>
+    /// <param name="inverted">Context for functions that needs it. Does NOT invert the result</param>
+    /// <returns>Container for condition, or null if condition does not filter</returns>
+    private VoiceContainer? GetConditionDataVoices(IQuestGetter quest, IConditionDataGetter data, bool inverted)
     {
-        var voices = new VoiceContainer();
-
-        var data = condition.Data;
-
-        if (data.RunOnType != Condition.RunOnType.Subject) return new VoiceContainer(true);
-
-        var inverted = IsConditionInverted(condition);
         switch (data)
         {
             case IGetIsIDConditionDataGetter getIsId:
@@ -479,36 +479,29 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     var getIsIdFormKey = getIsId.Object.Link.FormKey;
                     if (_speakerVoices.TryGetValue(getIsIdFormKey, out var idVoices))
                     {
-                        voices = new VoiceContainer(getIsIdFormKey, idVoices);
+                        return new VoiceContainer(getIsIdFormKey, idVoices);
                     }
                 }
 
                 break;
             case IGetIsVoiceTypeConditionDataGetter isVoiceType:
-                if (isVoiceType.VoiceTypeOrList.UsesLink() && isVoiceType.VoiceTypeOrList.Link.TryResolve(_formLinkCache, out var voiceTypeRecord))
+                var voiceTypeRecord = isVoiceType.VoiceTypeOrList.Link.TryResolve(_formLinkCache);
+                switch (voiceTypeRecord)
                 {
-                    switch (voiceTypeRecord)
-                    {
-                        case IVoiceTypeGetter voiceType:
-                            voices = new VoiceContainer(voiceType.FormKey);
-                            break;
-                        case IFormListGetter formList:
-                            voices = new VoiceContainer(formList.Items.Select(i => i.FormKey).Where(_allVoiceTypes.Contains));
-                            break;
-                    }
+                    case IVoiceTypeGetter voiceType:
+                        return new VoiceContainer(voiceType.FormKey);
+                    case IFormListGetter formList:
+                        return new VoiceContainer(formList.Items.Select(i => i.FormKey).Where(_allVoiceTypes.Contains));
                 }
-
                 break;
             case IGetIsAliasRefConditionDataGetter aliasRef:
-                voices = GetVoices(quest, aliasRef.ReferenceAliasIndex);
-
-                break;
+                return GetVoices(quest, aliasRef.ReferenceAliasIndex);
             case IGetInFactionConditionDataGetter getInFaction:
                 // Inverting a GetInFaction condition requires special handling of potential members to account for cases such as `PotentialFollowerFaction == 1 && CurrentFollowerFaction == 0`
                 // Actual inversion of the container is handled below
                 if (getInFaction.Faction.UsesLink() && (inverted ? _staticFactionNPCs : _potentialFactionNPCs).TryGetValue(getInFaction.Faction.Link.FormKey, out var factionNpcFormKeys))
                 {
-                    voices = new VoiceContainer(factionNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
+                    return new VoiceContainer(factionNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
@@ -516,34 +509,34 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 // Assume the actor can be in any rank as long they are in the faction - they might shift ranks later on
                 if (getFactionRank.Faction.UsesLink() && (inverted ? _staticFactionNPCs : _potentialFactionNPCs).TryGetValue(getFactionRank.Faction.Link.FormKey, out var factionNpcFormKeys2))
                 {
-                    voices = new VoiceContainer(factionNpcFormKeys2.ToDictionary(npc => npc, GetVoiceTypes));
+                    return new VoiceContainer(factionNpcFormKeys2.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsClassConditionDataGetter getIsClass:
                 if (getIsClass.Class.UsesLink() && _classNPCs.TryGetValue(getIsClass.Class.Link.FormKey, out var classNpcFormKeys))
                 {
-                    voices = new VoiceContainer(classNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
+                    return new VoiceContainer(classNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IHasKeywordConditionDataGetter hasKeyword:
                 if (_keywordNPCs.TryGetValue(hasKeyword.Keyword.Link.FormKey, out var keywordNpcs))
                 {
-                    voices = new VoiceContainer(keywordNpcs.ToDictionary(npc => npc, GetVoiceTypes));
+                    return new VoiceContainer(keywordNpcs.ToDictionary(npc => npc, GetVoiceTypes));
                 }
                 break;
             case IGetIsRaceConditionDataGetter getIsRace:
                 if (getIsRace.Race.UsesLink() && _raceNPCs.TryGetValue(getIsRace.Race.Link.FormKey, out var raceNpcFormKeys))
                 {
-                    voices = new VoiceContainer(raceNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
+                    return new VoiceContainer(raceNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
             case IGetIsSexConditionDataGetter sexConditionDataGetter:
                 if (_genderNPCs.TryGetValue(sexConditionDataGetter.MaleFemaleGender, out var genderNpcFormKeys))
                 {
-                    voices = new VoiceContainer(genderNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
+                    return new VoiceContainer(genderNpcFormKeys.ToDictionary(npc => npc, GetVoiceTypes));
                 }
 
                 break;
@@ -552,20 +545,31 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 {
                     var formList = isInList.FormList.Link.TryResolve(_formLinkCache);
                     //Only look at speakers in the form list
-                    if (formList != null) voices = formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert(false);
+                    if (formList != null) return formList.Items.Select(link => GetVoices(link.FormKey)).MergeInsert(false);
                 }
 
                 break;
             case IIsChildConditionDataGetter isChild:
-                voices = new VoiceContainer(_childNPCs.ToDictionary(npc => npc, GetVoiceTypes));
-
-                break;
+                return new VoiceContainer(_childNPCs.ToDictionary(npc => npc, GetVoiceTypes));
             default:
-                voices = new VoiceContainer(true);
-                break;
+                // Condition does not filter
+                return null;
         }
+        // Condition has invalid argument or no NPCs meet requirement
+        return new VoiceContainer();
+    }
 
-        if (!voices.IsDefault && inverted)
+    // Returns null if condition does not filter
+    private VoiceContainer? GetVoices(IConditionGetter condition, IQuestGetter quest)
+    {
+        var data = condition.Data;
+
+        if (data.RunOnType != Condition.RunOnType.Subject) return new VoiceContainer(true);
+
+        var inverted = IsConditionInverted(condition);
+        var voices = GetConditionDataVoices(quest, data, inverted);
+
+        if (voices != null && !voices.IsDefault && inverted)
         {
             //Can't invert alias according to CK calculation
             if (data.Function == Condition.Function.GetIsAliasRef)
