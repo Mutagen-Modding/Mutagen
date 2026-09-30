@@ -27,6 +27,19 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
+    public VoiceContainer(IEnumerable<FormKey> npcs, Dictionary<FormKey, HashSet<FormKey>> npcVoices)
+    {
+        foreach (var npc in npcs)
+        {
+            if (!npcVoices.TryGetValue(npc, out var voices))
+                continue;
+            foreach (var voice in voices)
+            {
+                _voices.GetOrAdd(voice).Add(npc);
+            }
+        }
+    }
+
     public VoiceContainer(Dictionary<FormKey, IEnumerable<FormKey>> npcVoices)
     {
         foreach (var (npc, voiceTypes) in npcVoices)
