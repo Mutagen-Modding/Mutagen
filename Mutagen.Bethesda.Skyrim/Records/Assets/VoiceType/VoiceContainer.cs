@@ -8,7 +8,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     /// <summary>
     /// Voice type names mapped to form keys of npcs or talking activators using that voice type 
     /// </summary>
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _voices = new();
+    private Dictionary<FormKey, HashSet<FormKey>> _voices = new();
     public IReadOnlyDictionary<FormKey, HashSet<FormKey>> Voices => _voices;
     [Obsolete("Represent as null")]
     public bool IsDefault { get; private set; }
@@ -40,33 +40,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
-    public VoiceContainer(Dictionary<FormKey, IEnumerable<FormKey>> npcVoices)
-    {
-        foreach (var (npc, voiceTypes) in npcVoices)
-        {
-            foreach (var voiceType in voiceTypes)
-            {
-                _voices
-                    .GetOrAdd(voiceType)
-                    .Add(npc);
-            }
-        }
-    }
-
-    public VoiceContainer(Dictionary<FormKey, HashSet<FormKey>> npcVoices)
-    {
-        foreach (var (npc, voiceTypes) in npcVoices)
-        {
-            foreach (var voiceType in voiceTypes)
-            {
-                
-                _voices
-                    .GetOrAdd(voiceType)
-                    .Add(npc);
-            }
-        }
-    }
-
     public VoiceContainer(FormKey voiceType)
     {
         _voices.Add(voiceType, []);
@@ -81,19 +54,44 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     }
     #endregion
 
-    #region ExplicitOperators
-    public void InvertVoiceTypes(HashSet<FormKey> voiceTypesToKeep)
+    #region BinaryOperators
+    public void Invert(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
     {
-        var voiceTypes = new List<FormKey>(_voices.Keys);
-
-        foreach (var voiceType in voiceTypes.Where(voiceType => !voiceTypesToKeep.Contains(voiceType)))
+        // We had everything default -> become empty
+        if (IsDefault)
         {
-            _voices.Remove(voiceType);
+            IsDefault = false;
+            return;
+        }
+        // We had nothing -> become default
+        if (_voices.Count == 0)
+        {
+            IsDefault = true;
+            return;
+        }
+
+        var originalVoices = _voices;
+        _voices = [];
+        foreach (var (voice, allSpeakers) in voiceSpeakers)
+        {
+            // Had none of these speakers, gain all of them
+            if (!originalVoices.TryGetValue(voice, out var previousSpeakers))
+            {
+                _voices.Add(voice, []);
+            }
+            // Had all of these speakers, lose the whole voice
+            else if (previousSpeakers.Count == 0 || previousSpeakers.Count >= allSpeakers.Count)
+            {
+                // Do nothing
+            }
+            // Invert set of speakers
+            else
+            {
+                _voices.Add(voice, allSpeakers.Except(previousSpeakers).ToHashSet());
+            }
         }
     }
-    #endregion
 
-    #region BinaryOperators
     public void IntersectWith(VoiceContainer other)
     {
         // If the other is default, we can stay as we are
@@ -183,48 +181,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         IsDefault = false;
     }
 
-    /// <summary>
-    /// Only possible for non-default voice containers sets
-    /// </summary>
-    /// <param name="other"></param>
-    public void Remove(VoiceContainer other)
-    {
-        if (other.IsEmpty()) return;
-
-        var removeVoiceTypes = new HashSet<FormKey>();
-
-        foreach (var (voiceType, npcs) in _voices)
-        {
-            if (other._voices.TryGetValue(voiceType, out var otherNpcs))
-            {
-                if (otherNpcs.Count == 0)
-                {
-                    //Other covers whole voice type => remove it
-                    removeVoiceTypes.Add(voiceType);
-                } else
-                {
-                    //Remove all npcs
-                    foreach (var otherNpc in otherNpcs)
-                    {
-                        npcs.Remove(otherNpc);
-                    }
-
-                    //If all npcs are gone, remove the voice type
-                    if (npcs.Count == 0)
-                    {
-                        removeVoiceTypes.Add(voiceType);
-                    }
-                }
-            }
-        }
-
-        foreach (var removeVoiceType in removeVoiceTypes)
-        {
-            _voices.Remove(removeVoiceType);
-        }
-
-        IsDefault = false;
-    }
     #endregion
 
     public IEnumerable<FormKey> GetVoiceTypes(HashSet<FormKey> allVoices)

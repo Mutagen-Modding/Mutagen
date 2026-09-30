@@ -25,9 +25,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     // TOOD: Most unique NPCs have only one voice. Is an enumerable faster?
     private readonly Dictionary<FormKey, HashSet<FormKey>> _speakerVoices = new();
 
-    // Inverse lookup of voice type -> speakers for GetIsVoiceType conditions. Kept as a list since we always use the whole set
-    // TODO: Should this also use FormLinks to avoid overhead of creating them?
-    private readonly Dictionary<FormKey, List<FormKey>> _voiceSpeakers = [];
+    // Inverse lookup of voice type -> speakers for GetIsVoiceType conditions and inversions
+    private readonly Dictionary<FormKey, HashSet<FormKey>> _voiceSpeakers = [];
 
     // NPCs who start as members of a faction
     private readonly Dictionary<FormKey, HashSet<FormKey>> _staticFactionNPCs = [];
@@ -577,7 +576,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 return new VoiceContainer(true);
             }
 
-            voices = Invert(voices);
+            voices.Invert(_voiceSpeakers);
         }
 
         return voices;
@@ -756,13 +755,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     }
 
     private VoiceContainer GetVoices(IQuestGetter quest) => GetVoices(quest.DialogConditions, quest);
-
-    private VoiceContainer Invert(VoiceContainer voiceContainer)
-    {
-        VoiceContainer baseVoices = new(_speakerVoices);
-        baseVoices.Remove(voiceContainer);
-        return baseVoices;
-    }
 
     private IEnumerable<FormKey> GetVoiceTypes(FormKey speaker)
     {
