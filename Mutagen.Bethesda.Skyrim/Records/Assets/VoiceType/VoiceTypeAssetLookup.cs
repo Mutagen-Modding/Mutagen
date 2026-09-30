@@ -493,10 +493,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                             voices = new VoiceContainer(voiceType.FormKey);
                             break;
                         case IFormListGetter formList:
-                            voices = new VoiceContainer(formList.Items
-                                .Where(link => _formLinkCache.TryResolveIdentifier(link, out var _))
-                                .Select(voice => voice.FormKey)
-                                .ToHashSet());
+                            voices = new VoiceContainer(formList.Items.Select(i => i.FormKey).Where(_allVoiceTypes.Contains));
                             break;
                     }
                 }
