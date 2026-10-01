@@ -539,6 +539,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.Topic.EditorID = "DialogueGenericHello";
         var npc = fixture.CreateSpeaker("MaleEvenToned");
 
+        // Specific form ID as it is included in path
         var response = new DialogResponses(FormKey.Factory("0142C2:Skyrim.esm"), SkyrimRelease.SkyrimSE);
         response.Responses.Add(new() { ResponseNumber = 1 });
         fixture.Topic.Responses.Add(response);
@@ -554,6 +555,46 @@ public class VoiceTypeAssetLookupTestSkyrim
         response.ResponseData.SetTo(sharedInfo);
         fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBeEmpty();
     }
+
+    // TODO: Implement fix for this
+    //[Theory, MutagenModAutoData]
+    //public void TestOnlySome(VoiceTypeAssetLookupTestFixture fixture, Race khajiit, Race nord, LeveledNpc leveledNpc)
+    //{
+    //    fixture.Quest.EditorID = "CYRGenericDialogueR01";
+    //    fixture.Topic.EditorID = "CYRTaunt";
+
+    //    var khajiitNpc = fixture.CreateSpeaker("CYRR01MaleKhajiitMercurial");
+    //    khajiitNpc.Race.SetTo(khajiit);
+    //    var nordNpc = fixture.CreateSpeaker("CYRR01MaleNord");
+    //    nordNpc.Race.SetTo(nord);
+    //    leveledNpc.Entries = [
+    //        new() { Data = new() { Reference = khajiitNpc.ToLink() } },
+    //        new() { Data = new() { Reference = nordNpc.ToLink() } }
+    //    ];
+
+    //    var derived = fixture.CreateSpeaker("derived");
+    //    derived.Template.SetTo(leveledNpc);
+    //    derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
+
+    //    // Specific form ID as it is included in path
+    //    var response = new DialogResponses(FormKey.Factory("05BB0B:BSHeartland.esm"), SkyrimRelease.SkyrimSE);
+    //    response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1));
+    //    response.Responses.Add(new() { ResponseNumber = 1 });
+
+    //    // If a line is only valid for some of an NPC's potential voice types, it should only be exported for those voices
+    //    // E.g. 05BB0B:BSHeartland.esm should only be exported Khajiit voice types
+
+    //    fixture.Topic.Responses.Add(response);
+    //    // Derived may be a Khajiit from template
+    //    fixture.AssertSpeakersEqual(response.Conditions, [khajiitNpc, derived]);
+    //    // If derived is a Khajiit, they do not have a Nord voice
+    //    fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([
+    //        @"Sound\Voice\BSHeartland.esm\CYRR01MaleKhajiitMercurial\CYRGeneric_CYRTaunt_0005BB0B_1.fuz"
+    //    ]);
+
+
+    //    // Factions and classes should still consider inherited traits, as they are a different flag
+    //}
 
     [Theory, MutagenModAutoData]
     public void TestInheritedTraits(
