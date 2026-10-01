@@ -77,12 +77,30 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
         foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
         {
-            var voices = GetVoiceTypes(npc);
-            _speakerVoices.Add(npc.FormKey, voices);
-            foreach (var voice in voices)
+            // The traits flag is used for multiple filters we're interested in, no need to loop multiple times
+            var voices = new HashSet<FormKey>();
+            foreach (var traits in GetTemplateActors(npc, NpcConfiguration.TemplateFlag.Traits))
             {
+                var female = traits.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female);
+                var voice = traits.Voice.IsNull ? GetDefaultVoice(traits.Race, female) : traits.Voice.FormKey;
+                voices.Add(voice);
                 _voiceSpeakers.GetOrAdd(voice).Add(npc.FormKey);
+
+                _genderNPCs.GetOrAdd(female ? MaleFemaleGender.Female : MaleFemaleGender.Male).Add(npc.FormKey);
+
+                if (!traits.Race.IsNull)
+                {
+                    _raceNPCs.GetOrAdd(traits.Race.FormKey).Add(npc.FormKey);
+                    if (traits.Race.TryResolve(_formLinkCache, out var race) && race.Keywords != null)
+                    {
+                        foreach (var keyword in race.Keywords)
+                        {
+                            _keywordNPCs.GetOrAdd(keyword.FormKey).Add(npc.FormKey);
+                        }
+                    }
+                }
             }
+            _speakerVoices.Add(npc.FormKey, voices);
 
             foreach (var factionKey in GetFactions(npc))
             {
@@ -104,21 +122,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                     .Add(npc.FormKey);
             }
 
-            foreach (var gender in GetGenders(npc))
-            {
-                _genderNPCs
-                    .GetOrAdd(gender)
-                    .Add(npc.FormKey);
-            }
-
-            foreach (var raceKey in GetRaces(npc))
-            {
-                _raceNPCs
-                    .GetOrAdd(raceKey.FormKey)
-                    .Add(npc.FormKey);
-            }
-
-            foreach (var keyword in GetKeywords(npc))
+            foreach (var keyword in GetDirectKeywords(npc))
             {
                 _keywordNPCs.GetOrAdd(keyword.FormKey).Add(npc.FormKey);
             }
@@ -761,22 +765,22 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : [];
     }
 
-    private IEnumerable<T> GetInheritedData<T>(INpcSpawnGetter spawn, NpcConfiguration.TemplateFlag inheritFlag, Func<INpcGetter, IEnumerable<T>> getter)
+    private IEnumerable<INpcGetter> GetTemplateActors(INpcSpawnGetter spawn, NpcConfiguration.TemplateFlag inheritFlag)
     {
         switch (spawn)
         {
             case INpcGetter npc:
                 if (npc.Configuration.TemplateFlags.HasFlag(inheritFlag) && npc.Template.TryResolve(_formLinkCache, out var template))
-                    return GetInheritedData(template, inheritFlag, getter);
+                    return GetTemplateActors(template, inheritFlag);
                 else
-                    return getter(npc);
+                    return [npc];
             case ILeveledNpcGetter leveledNpc:
                 if (leveledNpc.Entries == null) return [];
 
                 return leveledNpc.Entries
                     .Select(e => e.Data?.Reference?.TryResolve(_formLinkCache))
                     .WhereNotNull()
-                    .SelectMany(e => GetInheritedData(e, inheritFlag, getter));
+                    .SelectMany(e => GetTemplateActors(e, inheritFlag));
             default: return [];
         }
     }
@@ -789,51 +793,24 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return link.FormKey;
     }
 
-    private HashSet<FormKey> GetVoiceTypes(INpcGetter npc)
+    // Getters return enumerable as a temporary hash set would be excessive
+    private IEnumerable<IRankPlacementGetter> GetFactions(INpcSpawnGetter npc)
     {
-        return GetInheritedData<FormKey>(npc, NpcConfiguration.TemplateFlag.Traits, entry => {
-            if (!entry.Voice.IsNull)
-                return [entry.Voice.FormKey];
-            else
-            {
-                var defaultVoice = GetDefaultVoice(npc.Race, npc.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female));
-                return defaultVoice.IsNull ? [] : [defaultVoice];
-            }
-            // TODO: Could this avoid hash set for single-voice NPCs?
-        }).ToHashSet();
+        return GetTemplateActors(npc, NpcConfiguration.TemplateFlag.Factions)
+            .SelectMany(n => n.Factions);
     }
 
-    private HashSet<IRankPlacementGetter> GetFactions(INpcSpawnGetter npc)
+    private IEnumerable<IFormLinkGetter<IClassGetter>> GetClasses(INpcSpawnGetter npc)
     {
-        return GetInheritedData(npc, NpcConfiguration.TemplateFlag.Factions, entry => entry.Factions).ToHashSet();
+        return GetTemplateActors(npc, NpcConfiguration.TemplateFlag.Stats)
+            .Select(n => n.Class)
+            .Where(c => !c.IsNull);
     }
 
-    private HashSet<IFormLinkGetter<IClassGetter>> GetClasses(INpcSpawnGetter npc)
+    // Does not include keywords from race
+    private IEnumerable<IFormLinkGetter<IKeywordGetter>> GetDirectKeywords(INpcSpawnGetter npc)
     {
-        return GetInheritedData<IFormLinkGetter<IClassGetter>>(npc, NpcConfiguration.TemplateFlag.Stats, entry => [entry.Class])
-            .Where(c => !c.IsNull)
-            .ToHashSet();
-    }
-
-    private HashSet<MaleFemaleGender> GetGenders(INpcSpawnGetter npc)
-    {
-        return GetInheritedData<MaleFemaleGender>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Configuration.Flags.HasFlag(NpcConfiguration.Flag.Female) ? MaleFemaleGender.Female : MaleFemaleGender.Male])
-            // TODO: HashSet is overkill
-            .ToHashSet();
-
-    }
-
-    private HashSet<IFormLinkGetter<IRaceGetter>> GetRaces(INpcSpawnGetter npc)
-    {
-        return GetInheritedData<IFormLinkGetter<IRaceGetter>>(npc, NpcConfiguration.TemplateFlag.Traits, entry => [entry.Race])
-            .Where(r => !r.IsNull)
-            .ToHashSet();
-    }
-
-    private HashSet<IFormLinkGetter<IKeywordGetter>> GetKeywords(INpcSpawnGetter npc)
-    {
-        var direct = GetInheritedData(npc, NpcConfiguration.TemplateFlag.Keywords, entry => entry.Keywords ?? []);
-        var race = GetInheritedData(npc, NpcConfiguration.TemplateFlag.Traits, entry => entry.Race.TryResolve(_formLinkCache)?.Keywords ?? []);
-        return direct.And(race).ToHashSet();
+        return GetTemplateActors(npc, NpcConfiguration.TemplateFlag.Keywords)
+            .SelectMany(n => n.Keywords ?? []);
     }
 }
