@@ -4881,12 +4881,30 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorSkeletalModel = item.SkeletalModel;
+            item.SkeletalModel = null!;
+            var priorBodyData = item.BodyData;
+            item.BodyData = null!;
+            var priorBehaviorGraph = item.BehaviorGraph;
+            item.BehaviorGraph = null!;
+            var priorHeadData = item.HeadData;
+            item.HeadData = null!;
+            try
+            {
+                PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
+                    fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.SkeletalModel == null) item.SkeletalModel = priorSkeletalModel;
+                if (item.BodyData == null) item.BodyData = priorBodyData;
+                if (item.BehaviorGraph == null) item.BehaviorGraph = priorBehaviorGraph;
+                if (item.HeadData == null) item.HeadData = priorHeadData;
+            }
         }
         
         public override void CopyInFromBinary(
@@ -7939,7 +7957,8 @@ namespace Mutagen.Bethesda.Skyrim
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         translationParams: Race_Registration.SkeletalModelConverter,
-                        transl: SimpleModel.TryCreateFromBinary);
+                        transl: SimpleModel.TryCreateFromBinary,
+                        existing: item.SkeletalModel);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
@@ -8024,7 +8043,8 @@ namespace Mutagen.Bethesda.Skyrim
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: BodyData.TryCreateFromBinary);
+                        transl: BodyData.TryCreateFromBinary,
+                        existing: item.BodyData);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -8060,7 +8080,8 @@ namespace Mutagen.Bethesda.Skyrim
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: ModelBehavior.TryCreateFromBinary);
+                        transl: ModelBehavior.TryCreateFromBinary,
+                        existing: item.BehaviorGraph);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -8193,7 +8214,8 @@ namespace Mutagen.Bethesda.Skyrim
                         femaleMarker: RecordTypes.FNAM,
                         marker: RecordTypes.NAM0,
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-                        transl: HeadData.TryCreateFromBinary);
+                        transl: HeadData.TryCreateFromBinary,
+                        existing: item.HeadData);
                     return (int)Race_FieldIndex.HeadData;
                 }
                 case RecordTypeInts.NAM8:
@@ -8823,7 +8845,8 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
-                        translationParams: Race_Registration.SkeletalModelConverter);
+                        translationParams: Race_Registration.SkeletalModelConverter,
+                        existing: _SkeletalModelOverlay);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
@@ -8894,7 +8917,8 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _BodyDataOverlay);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -8931,7 +8955,8 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => ModelBehaviorBinaryOverlay.ModelBehaviorFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _BehaviorGraphOverlay);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -9054,7 +9079,8 @@ namespace Mutagen.Bethesda.Skyrim
                         marker: RecordTypes.NAM0,
                         stream: stream,
                         creator: static (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
-                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
+                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
+                        existing: _HeadDataOverlay);
                     return (int)Race_FieldIndex.HeadData;
                 }
                 case RecordTypeInts.NAM8:
