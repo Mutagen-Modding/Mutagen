@@ -1028,6 +1028,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         {
                                             if (first)
                                             {
+                                                if (ReferenceEquals(doublesField.Field, field.Field)
+                                                    && nonDoubledKeys.Length > 0
+                                                    && field.Field is GenderedType
+                                                    && GenderedTypeBinaryTranslationGeneration.IsSplitPair(field.Field))
+                                                {
+                                                    i.Add($"(nextRecordType.TypeInt is {string.Join(" or ", nonDoubledKeys.Select(k => $"RecordTypeInts.{k.CheckedType}"))})");
+                                                }
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
@@ -1825,6 +1832,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         {
                                             if (first)
                                             {
+                                                if (ReferenceEquals(doublesField.Field, field.Field)
+                                                    && nonDoubledKeys.Length > 0
+                                                    && field.Field is GenderedType
+                                                    && GenderedTypeBinaryTranslationGeneration.IsSplitPair(field.Field))
+                                                {
+                                                    i.Add($"(type.TypeInt is {string.Join(" or ", nonDoubledKeys.Select(k => $"RecordTypeInts.{k.CheckedType}"))})");
+                                                }
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
@@ -2087,6 +2101,42 @@ public class PluginTranslationModule : BinaryTranslationModule
     }
 
     protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, StructuredStringBuilder sb, Accessor accessor)
+    {
+        // Split gendered pairs merge across entries, so reset them per record
+        var splitPairs = NeedsClear(obj)
+            ? Array.Empty<TypeGeneration>()
+            : obj.IterateFields(includeBaseClass: true)
+                .Where(f => f is GenderedType
+                            && f.GetFieldData().Binary == BinaryGenerationType.Normal
+                            && GenderedTypeBinaryTranslationGeneration.IsSplitPair(f))
+                .ToArray();
+        if (splitPairs.Length == 0)
+        {
+            await GenerateCopyInParse(obj, sb, accessor);
+            return;
+        }
+
+        foreach (var field in splitPairs)
+        {
+            sb.AppendLine($"var prior{field.Name} = {accessor}.{field.Name};");
+            sb.AppendLine($"{accessor}.{field.Name} = null!;");
+        }
+        sb.AppendLine("try");
+        using (sb.CurlyBrace())
+        {
+            await GenerateCopyInParse(obj, sb, accessor);
+        }
+        sb.AppendLine("finally");
+        using (sb.CurlyBrace())
+        {
+            foreach (var field in splitPairs)
+            {
+                sb.AppendLine($"if ({accessor}.{field.Name} == null) {accessor}.{field.Name} = prior{field.Name};");
+            }
+        }
+    }
+
+    private async Task GenerateCopyInParse(ObjectGeneration obj, StructuredStringBuilder sb, Accessor accessor)
     {
         var data = obj.GetObjectData();
 

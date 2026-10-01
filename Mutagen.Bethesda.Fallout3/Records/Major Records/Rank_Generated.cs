@@ -836,11 +836,20 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.SubrecordParse(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorName = item.Name;
+            item.Name = null!;
+            try
+            {
+                PluginUtilityTranslation.SubrecordParse(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.Name == null) item.Name = priorName;
+            }
         }
         
         #endregion
@@ -1236,7 +1245,8 @@ namespace Mutagen.Bethesda.Fallout3
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         transl: StringBinaryTranslation.Instance.Parse,
-                        skipMarker: false);
+                        skipMarker: false,
+                        existing: item.Name);
                     return (int)Rank_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:
@@ -1418,7 +1428,8 @@ namespace Mutagen.Bethesda.Fallout3
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated),
+                        existing: _NameOverlay);
                     return (int)Rank_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:

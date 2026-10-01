@@ -887,12 +887,24 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: AssociationTypeBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: AssociationTypeBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorParentTitle = item.ParentTitle;
+            item.ParentTitle = null!;
+            var priorTitle = item.Title;
+            item.Title = null!;
+            try
+            {
+                PluginUtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillStructs: AssociationTypeBinaryCreateTranslation.FillBinaryStructs,
+                    fillTyped: AssociationTypeBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.ParentTitle == null) item.ParentTitle = priorParentTitle;
+                if (item.Title == null) item.Title = priorTitle;
+            }
         }
         
         public override void CopyInFromBinary(
@@ -1532,7 +1544,8 @@ namespace Mutagen.Bethesda.Skyrim
                         maleMarker: RecordTypes.MPRT,
                         femaleMarker: RecordTypes.FPRT,
                         transl: StringBinaryTranslation.Instance.Parse,
-                        skipMarker: false);
+                        skipMarker: false,
+                        existing: item.ParentTitle);
                     return (int)AssociationType_FieldIndex.ParentTitle;
                 }
                 case RecordTypeInts.MCHT:
@@ -1543,7 +1556,8 @@ namespace Mutagen.Bethesda.Skyrim
                         maleMarker: RecordTypes.MCHT,
                         femaleMarker: RecordTypes.FCHT,
                         transl: StringBinaryTranslation.Instance.Parse,
-                        skipMarker: false);
+                        skipMarker: false,
+                        existing: item.Title);
                     return (int)AssociationType_FieldIndex.Title;
                 }
                 case RecordTypeInts.DATA:
@@ -1701,7 +1715,8 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MPRT,
                         female: RecordTypes.FPRT,
                         stream: stream,
-                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated),
+                        existing: _ParentTitleOverlay);
                     return (int)AssociationType_FieldIndex.ParentTitle;
                 }
                 case RecordTypeInts.MCHT:
@@ -1712,7 +1727,8 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MCHT,
                         female: RecordTypes.FCHT,
                         stream: stream,
-                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated),
+                        existing: _TitleOverlay);
                     return (int)AssociationType_FieldIndex.Title;
                 }
                 case RecordTypeInts.DATA:
