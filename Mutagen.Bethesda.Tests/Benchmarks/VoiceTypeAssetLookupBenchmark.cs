@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -29,6 +30,7 @@ public class VoiceTypeAssetLookupBenchmark
     DialogTopic topic;
     IAssetLinkCache assetCache;
     ILinkCache<ISkyrimMod, ISkyrimModGetter> linkCache;
+    ILinkUsageCache usageCache;
     Consumer consumer = new();
 
     public VoiceTypeAssetLookupBenchmark()
@@ -196,15 +198,16 @@ public class VoiceTypeAssetLookupBenchmark
 
         linkCache = env.LinkCache;
         assetCache = linkCache.CreateImmutableAssetLinkCache();
+        usageCache = new ImmutableLoadOrderLinkUsageCache(linkCache);
         lookup = new();
-        lookup.Prep(assetCache);
+        lookup.Prep(assetCache, usageCache);
     }
 
     [Benchmark]
     public void Prep()
     {
         var lookup = new VoiceTypeAssetLookup();
-        lookup.Prep(assetCache);
+        lookup.Prep(assetCache, usageCache);
     }
 
     void RunBench(DialogResponses response)

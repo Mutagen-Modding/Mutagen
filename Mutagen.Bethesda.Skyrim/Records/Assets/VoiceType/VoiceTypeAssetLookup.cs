@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
@@ -18,6 +20,7 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 public class VoiceTypeAssetLookup : IAssetCacheComponent
 {
     private ILinkCache _formLinkCache = null!;
+    private ILinkUsageCache _usageCache = null!;
 
     // Databases. These aren't good candidates for usage caches as data here can be inherited
     private HashSet<FormKey> _allVoiceTypes = null!;
@@ -38,16 +41,18 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _keywordNPCs = new();
     private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
     private HashSet<FormKey> _childNPCs = null!;
-    private readonly Dictionary<FormKey, int> _dialogueSceneAliasIndex = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _sharedInfoUsages = new();
 
     //Caches
-    private readonly object _questCacheLock = new();
+    private readonly Lock _questCacheLock = new();
     private readonly Dictionary<FormKey, VoiceContainer> _questCache = new();
 
-    public void Prep(IAssetLinkCache linkCache)
+    [Obsolete("Provide usage cache for better performance")]
+    public void Prep(IAssetLinkCache linkCache) => Prep(linkCache, new ImmutableLoadOrderLinkUsageCache(linkCache.FormLinkCache));
+
+    public void Prep(IAssetLinkCache linkCache, ILinkUsageCache usageCache)
     {
         _formLinkCache = linkCache.FormLinkCache;
+        _usageCache = usageCache;
 
         foreach (var quest in _formLinkCache.WinningOverrides<IQuestGetter>())
         {
@@ -128,33 +133,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             }
         }
 
-        // TODO: Use usage cache for this
-        foreach (var response in _formLinkCache.WinningOverrides<IDialogResponsesGetter>())
-        {
-            if (!response.ResponseData.IsNull)
-            {
-                _sharedInfoUsages
-                    .GetOrAdd(response.ResponseData.FormKey)
-                    .Add(response.FormKey);
-            }
-        }
-
         foreach (var talkingActivator in _formLinkCache.WinningOverrides<ITalkingActivatorGetter>())
         {
             if (!talkingActivator.Voice.IsNull)
                 _speakerVoices.Add(talkingActivator.FormKey, [talkingActivator.Voice.FormKey]);
-        }
-
-        // TODO: Use usage cache for this
-        foreach (var scene in _formLinkCache.WinningOverrides<ISceneGetter>())
-        {
-            foreach (var action in scene.Actions)
-            {
-                if (action.Type == SceneAction.TypeEnum.Dialog && !action.Topic.IsNull && action.ActorID != null && !_dialogueSceneAliasIndex.ContainsKey(action.Topic.FormKey))
-                {
-                    _dialogueSceneAliasIndex.Add(action.Topic.FormKey, action.ActorID.Value);
-                }
-            }
         }
 
         // Build caches
@@ -185,7 +167,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (response.Responses.All(r => !r.Sound.IsNull)) return new VoiceContainer();
 
         //If this is a shared info and it's not used, return no voices
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !_sharedInfoUsages.ContainsKey(response.FormKey)) return new VoiceContainer();
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && !GetSharedInfoUsages(response).Any()) return new VoiceContainer();
 
         //Get quest voices
         var questVoices = GetQuestVoices(topic, quest);
@@ -340,15 +322,19 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return voices;
     }
 
-    private void LimitVoicesToSharedInfoUsages(VoiceContainer voices, IDialogTopicGetter topic, IDialogResponsesGetter responses) {
-        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo && _sharedInfoUsages.TryGetValue(responses.FormKey, out var responseFormKeys))
-        {
-            var userConditions = responseFormKeys
-                .Select(responseKey =>
-                {
-                    var responseContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responseKey);
-                    if (responseContext is not { Parent.Record: not null }) return null;
+    IEnumerable<IModContext<IDialogResponsesGetter>> GetSharedInfoUsages(IDialogResponsesGetter response)
+    {
+        return _usageCache.GetUsagesOf<IDialogResponsesGetter>(response).UsageLinks
+            .Select(u => u.ResolveSimpleContext(_formLinkCache)).WhereNotNull()
+            .Where(u => u.Record.ResponseData.Equals(response));
+    }
 
+    private void LimitVoicesToSharedInfoUsages(VoiceContainer voices, IDialogTopicGetter topic, IDialogResponsesGetter responses) {
+        if (topic.Subtype == DialogTopic.SubtypeEnum.SharedInfo)
+        {
+            var userConditions = GetSharedInfoUsages(responses)
+                .Select(responseContext =>
+                {
                     if (!responseContext.TryGetParent<IDialogTopicGetter>(out var currentTopic)) return null;
                     var currentQuest = currentTopic.Quest.TryResolve(_formLinkCache);
                     if (currentQuest == null) return null;
@@ -408,6 +394,15 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return (questString, topicString);
     }
 
+    // Get alias index of a scene topic. Returns null for orphaned topics
+    bool GetSceneAliasIndex(IDialogTopicGetter topic, [MaybeNullWhen(false)] out int? index)
+    {
+        index = _usageCache.GetUsagesOf<ISceneGetter>(topic).UsageLinks
+            .SelectMany(u => u.Resolve(_formLinkCache).Actions)
+            .FirstOrDefault(action => action.Topic.Equals(topic))?.ActorID;
+        return index != null;
+    }
+
     private VoiceContainer GetVoices(IDialogTopicGetter topic, IDialogResponsesGetter response, IQuestGetter quest)
     {
         var voices = new VoiceContainer(true);
@@ -416,9 +411,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (!response.Speaker.IsNull) return GetSpeakerVoiceContainer(response.Speaker.FormKey);
 
         //Check scene
-        if (topic.Subtype == DialogTopic.SubtypeEnum.Scene && _dialogueSceneAliasIndex.TryGetValue(topic.FormKey, out var aliasIndex))
+        if (topic.Subtype == DialogTopic.SubtypeEnum.Scene && GetSceneAliasIndex(topic, out var aliasIndex))
         {
-            voices.IntersectWith(GetVoices(quest, aliasIndex));
+            voices.IntersectWith(GetVoices(quest, aliasIndex!.Value));
         }
 
         //Search conditions
