@@ -92,6 +92,7 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
     /// <summary>
     /// Creates a translated string with a value for the default language
     /// </summary>
+    /// <param name="targetLanguage">Target language override</param>
     /// <param name="directString">String to register for the default language</param>
     public TranslatedString(Language targetLanguage, string? directString)
     {
@@ -103,6 +104,7 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
     /// Creates a translated string with a number of strings for languages.
     /// If no string is provided for the default language, string.Empty will be assigned.
     /// </summary>
+    /// <param name="targetLanguage">Target language override</param>
     /// <param name="strs">Language string pairs to register</param>
     public TranslatedString(Language targetLanguage, IEnumerable<KeyValuePair<Language, string>> strs)
     {

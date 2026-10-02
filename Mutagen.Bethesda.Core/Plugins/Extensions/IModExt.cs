@@ -34,6 +34,7 @@ public static class IModExt
     /// Returns the top-level Group getter object associated with the given Major Record Type.
     /// </summary>
     /// <returns>Group getter object associated with the given Major Record Type</returns>
+    /// <param name="mod">Mod containing the Group</param>
     /// <param name="type">The type of Major Record to get the Group for</param>
     /// <exception cref="ArgumentException">
     /// An unexpected TMajor type will throw an exception.<br />
@@ -68,6 +69,7 @@ public static class IModExt
     /// Returns the top-level Group getter object associated with the given Major Record Type.
     /// </summary>
     /// <returns>Group getter object associated with the given Major Record Type</returns>
+    /// <param name="mod">Mod containing the Group</param>
     /// <param name="type">The type of Major Record to get the Group for</param>
     /// <exception cref="ArgumentException">
     /// An unexpected TMajor type will throw an exception.<br />

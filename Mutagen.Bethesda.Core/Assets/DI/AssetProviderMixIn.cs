@@ -21,6 +21,7 @@ public static class AssetProviderMixIn
     /// <summary>
     /// Gets a stream for the asset path in the context of the asset provider
     /// </summary>
+    /// <param name="assetProvider">Asset provider to query</param>
     /// <param name="assetPath">Asset path</param>
     /// <returns>Resulting stream</returns>
     /// <exception cref="FileNotFoundException">Thrown if the asset path does not exist in the context of the asset provider</exception>
@@ -44,6 +45,7 @@ public static class AssetProviderMixIn
     /// <summary>
     /// Gets the size of the asset path in the context of the asset provider
     /// </summary>
+    /// <param name="assetProvider">Asset provider to query</param>
     /// <param name="assetPath">Asset path</param>
     /// <returns>Resulting size in bytes</returns>
     /// <exception cref="FileNotFoundException">Thrown if the asset path does not exist in the context of the asset provider</exception>
