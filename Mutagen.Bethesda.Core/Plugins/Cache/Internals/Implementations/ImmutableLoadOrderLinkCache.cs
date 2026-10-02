@@ -879,6 +879,7 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
     /// Constructs a LoadOrderLinkCache around a target load order
     /// </summary>
     /// <param name="loadOrder">LoadOrder to resolve against when linking</param>
+    /// <param name="prefs">Preferences controlling cache retention and record type mappings</param>
     public ImmutableLoadOrderLinkCache(IEnumerable<TModGetter> loadOrder, LinkCachePreferences prefs)
     {
         var listedOrder = loadOrder.ToList();
