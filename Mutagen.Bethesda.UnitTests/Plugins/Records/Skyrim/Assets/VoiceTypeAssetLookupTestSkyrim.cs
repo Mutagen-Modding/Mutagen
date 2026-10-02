@@ -491,6 +491,49 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], []);
     }
 
+    void VoicesShouldEqual(VoiceContainer vc, Dictionary<FormKey, HashSet<FormKey>> expected)
+    {
+        vc.Voices.Keys.ShouldBe(expected.Keys);
+
+        foreach (var (voice, speakers) in vc.Voices)
+        {
+            var expectedSpeakers = expected[voice];
+            speakers.ShouldBe(expectedSpeakers);
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void IntersectLoseAll(
+        FormKey voice1, FormKey voice1Npc1, FormKey voice1Npc2,
+        FormKey voice2, FormKey voice2Npc1, FormKey voice2Npc2)
+    {
+        var speakerVoices = new Dictionary<FormKey, HashSet<FormKey>>
+        {
+            { voice1Npc1, [voice1] },
+            { voice1Npc2, [voice1] },
+            { voice2Npc1, [voice2] },
+            { voice2Npc2, [voice2] },
+        };
+
+        // We have some, but not all, NPCs of a voice type
+        var vc = new VoiceContainer([voice1Npc1], speakerVoices);
+        VoicesShouldEqual(vc, new Dictionary<FormKey, HashSet<FormKey>>
+        {
+            { voice1, [voice1Npc1] },
+        });
+
+        // Other has some npcs of voice type, but none overlap with the intersect target
+        // vc & other should be empty set
+        var other = new VoiceContainer([voice1Npc2], speakerVoices);
+        VoicesShouldEqual(other, new Dictionary<FormKey, HashSet<FormKey>>
+        {
+            { voice1, [voice1Npc2] },
+        });
+
+        vc.IntersectWith(other);
+        VoicesShouldEqual(vc, new Dictionary<FormKey, HashSet<FormKey>> { });
+    }
+
     [Theory, MutagenModAutoData]
     public void TestSpecificSpeaker(VoiceTypeAssetLookupTestFixture fixture)
     {
