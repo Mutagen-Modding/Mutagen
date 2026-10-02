@@ -16,7 +16,7 @@ var mod = new SkyrimMod(ModKey.FromFileName("MyMod.esp"), SkyrimRelease.SkyrimSE
 mod.ModHeader.Flags |= SkyrimModHeader.HeaderFlag.Small;
 ```
 
-This creates a "flagged ESP" - an `.esp` file with the small master flag set in its header. The game will treat it as a light master.
+This creates a "flagged ESP", an `.esp` file with the small master flag set in its header. The game will treat it as a light master.
 
 !!! note "ModType vs HeaderFlag"
     `ModType.Light` (used in ModKey) affects the file extension (`.esl`), while `HeaderFlag.Small` sets the internal header flag. Modern practice typically uses flagged ESPs (`.esp` files with the small master flag set).
