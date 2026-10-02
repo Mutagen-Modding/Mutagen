@@ -117,6 +117,7 @@ public static class LoadOrderExt
     /// Converts listings to Mods.  Will throw if any mods do not exist
     /// </summary>
     /// <param name="loadOrder">Listings to convert</param>
+    /// <param name="disposeItems">Whether the resulting LoadOrder disposes its mods, or null to inherit from the source LoadOrder</param>
     /// <exception cref="MissingModException">Thrown if a listing is missing its mod</exception>
     /// <returns>Mods contained in the listings</returns>
     public static LoadOrder<TModItem> ResolveAllModsExist<TModItem>(
@@ -131,6 +132,7 @@ public static class LoadOrderExt
     /// Converts any listings that have mods into Mods.  Will not throw
     /// </summary>
     /// <param name="loadOrder">Listings to convert</param>
+    /// <param name="disposeItems">Whether the resulting LoadOrder disposes its mods, or null to inherit from the source LoadOrder</param>
     /// <returns>Mods contained in the listings that exist</returns>
     public static LoadOrder<TModItem> ResolveExistingMods<TModItem>(
         this ILoadOrderGetter<IModListingGetter<TModItem>> loadOrder,
