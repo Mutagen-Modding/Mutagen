@@ -556,6 +556,24 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBeEmpty();
     }
 
+    [Theory, MutagenModAutoData]
+    public void TestConditionsAndUnique(VoiceTypeAssetLookupTestFixture fixture, uint aliasId)
+    {
+        // If both are present, conditions apply to a unique actor alias being filled at all. They do not allow a different actor to take their place
+        fixture.CreateSpeaker("dummy");
+        var unique = fixture.CreateSpeaker("unique");
+
+        fixture.Quest.Aliases.Add(new()
+        {
+            UniqueActor = unique.ToNullableLink(), ID = aliasId,
+            // E.g., an epilogue quest that uses different aliases depending on ending
+            Conditions = [ConditionFactory.Create(new GetStageConditionData(), 1)]
+        });
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(new GetIsAliasRefConditionData() { ReferenceAliasIndex = (int)aliasId }, 1)],
+            [unique]);
+    }
+
     // TODO: Implement fix for this
     //[Theory, MutagenModAutoData]
     //public void TestOnlySome(VoiceTypeAssetLookupTestFixture fixture, Race khajiit, Race nord, LeveledNpc leveledNpc)
