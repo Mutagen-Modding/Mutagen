@@ -13,6 +13,13 @@ internal sealed class AspectInterfaceMapper : InterfaceMapGetter, IAspectInterfa
         var ret = new AspectInterfaceMapper();
         foreach (var category in Enums<GameCategory>.Values)
         {
+            if (GameRegistrations.TryGet(category, out var definition))
+            {
+                ret.Register(definition.AspectMapping());
+                continue;
+            }
+
+            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}AspectInterfaceMapping, Mutagen.Bethesda.{category}");
             if (t == null) continue;

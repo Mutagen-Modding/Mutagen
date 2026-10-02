@@ -13,6 +13,13 @@ internal sealed class LinkInterfaceMapper : InterfaceMapGetter, ILinkInterfaceMa
         var ret = new LinkInterfaceMapper();
         foreach (var category in Enums<GameCategory>.Values)
         {
+            if (GameRegistrations.TryGet(category, out var definition))
+            {
+                ret.Register(definition.LinkMapping());
+                continue;
+            }
+
+            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
             var t = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}{nickname}Mapping, Mutagen.Bethesda.{category}");
             if (t == null) continue;
