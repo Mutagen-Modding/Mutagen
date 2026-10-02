@@ -71,7 +71,7 @@ public class BsaTests
         var stream = file.AsStream();
         byte[] b = new byte[stream.Length];
         stream.Remaining().ShouldBe(8);
-        stream.Read(b);
+        stream.ReadExactly(b);
         stream.Remaining().ShouldBe(0);
         BinaryStringUtility.ProcessWholeToZString(b, MutagenEncoding._1252)
             .ShouldBe("Found me");
