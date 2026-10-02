@@ -158,4 +158,9 @@ nav:
     - Binary Streams: lowlevel/Binary-Streams.md
     - Binary Utility: lowlevel/Binary-Utility.md
   - Correctness: Correctness.md
-  - Contributing: Contributing.md
+  - Contributing:
+    - Contributing/index.md
+    - Documentation: Contributing/Documentation.md
+    - Developing Mutagen:
+      - Contributing/development/index.md
+      - Code Generation: Contributing/development/Code-Generation.md
