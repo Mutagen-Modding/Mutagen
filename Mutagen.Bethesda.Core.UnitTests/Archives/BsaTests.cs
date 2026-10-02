@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Archives;
+using Mutagen.Bethesda.Archives.Bsa;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
@@ -36,6 +37,19 @@ public class BsaTests
             .ShouldBe("Found me");
     }
         
+    /// <summary>Reads the existing fixture's file completely despite short source reads.</summary>
+    [Fact]
+    public void AsBytes_ShortReads()
+    {
+        var data = File.ReadAllBytes(TestBsa.Path);
+        var archive = new BsaReader(() => new ShortReadStream(data));
+        var file = archive.Files.Single(x => x.Path.EndsWith("someotherfile.txt", StringComparison.Ordinal));
+
+        var result = file.GetBytes();
+
+        result.ShouldBe("Found me"u8.ToArray());
+    }
+
     [Fact]
     public void GetSpan()
     {
