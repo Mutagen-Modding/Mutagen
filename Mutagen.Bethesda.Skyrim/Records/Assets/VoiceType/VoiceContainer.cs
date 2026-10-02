@@ -102,7 +102,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         // If we are default, but the other is not, we become non-default and take over all voices
         if (IsDefault)
         {
-            //If other is not default, we become non-default and take over all voices
             IsDefault = false;
             foreach (var (voiceType, npcs) in other.Voices)
             {
@@ -112,7 +111,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
 
         // If both are non-default, we need to intersect the voice types and their NPCs
-        var removeVoiceTypes = new HashSet<FormKey>();
+        var removeVoiceTypes = new List<FormKey>();
 
         foreach (var (voiceType, npcs) in _voices)
         {
@@ -120,11 +119,16 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
             {
                 if (npcs.Count > 0)
                 {
-                    //We don't have all NPCs of this voice type
+                    // We don't have all NPCs of this voice type
+                    // If other doesn't have all NPCs, intersect, otherwise it stays the same
                     if (otherNpcs.Count > 0)
                     {
-                        //Only intersect if other doesn't have all NPCs, otherwise it stays the same
                         npcs.IntersectWith(otherNpcs);
+                        // If we lose all speakers here, lose the voice since an empty set is treated as having all speakers
+                        if (npcs.Count == 0)
+                        {
+                            removeVoiceTypes.Add(voiceType);
+                        }
                     }
                 } else
                 {
@@ -142,8 +146,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             _voices.Remove(removeVoiceType);
         }
-
-        IsDefault = false;
     }
 
     public void Insert(VoiceContainer other)
