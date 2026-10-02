@@ -680,7 +680,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
 
         //Conditions
-        if (alias.Conditions.Any())
+        // These do not allow a unique actor alias to fill with someone else
+        if (alias.Conditions.Any() && alias.UniqueActor.IsNull)
         {
             var voices = GetVoices(alias.Conditions, quest);
             if (additionalVoices != null) voices.Insert(additionalVoices);
