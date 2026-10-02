@@ -515,8 +515,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public virtual void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MajorRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MajorRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         }
         
         #pragma warning restore CS0618
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMajorRecord obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMajorRecord obj, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Plugins.Records
             }
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMajorRecordGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMajorRecordGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -1780,7 +1780,7 @@ namespace Mutagen.Bethesda.Plugins.Records
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MajorRecordCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

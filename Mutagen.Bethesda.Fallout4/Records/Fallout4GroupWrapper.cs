@@ -135,8 +135,9 @@ internal class Fallout4GroupWrapper<TMajor> : IFallout4GroupGetter<TMajor>
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
         IAssetLinkCache? linkCache = null, 
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
-        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);
+        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords);
     }
 }

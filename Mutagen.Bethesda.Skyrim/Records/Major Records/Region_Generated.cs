@@ -830,8 +830,8 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RegionSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => RegionSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RegionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
@@ -1278,50 +1278,50 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Sounds?.RemapLinks(mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRegion obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRegion obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Objects is {} ObjectsItems)
             {
-                foreach (var item in ObjectsItems.EnumerateListedAssetLinks())
+                foreach (var item in ObjectsItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Weather is {} WeatherItems)
             {
-                foreach (var item in WeatherItems.EnumerateListedAssetLinks())
+                foreach (var item in WeatherItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Map is {} MapItems)
             {
-                foreach (var item in MapItems.EnumerateListedAssetLinks())
+                foreach (var item in MapItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Land is {} LandItems)
             {
-                foreach (var item in LandItems.EnumerateListedAssetLinks())
+                foreach (var item in LandItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Grasses is {} GrassesItems)
             {
-                foreach (var item in GrassesItems.EnumerateListedAssetLinks())
+                foreach (var item in GrassesItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Sounds is {} SoundsItems)
             {
-                foreach (var item in SoundsItems.EnumerateListedAssetLinks())
+                foreach (var item in SoundsItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1779,50 +1779,50 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRegionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRegionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Objects is {} ObjectsItems)
             {
-                foreach (var item in ObjectsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in ObjectsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Weather is {} WeatherItems)
             {
-                foreach (var item in WeatherItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in WeatherItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Map is {} MapItems)
             {
-                foreach (var item in MapItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in MapItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Land is {} LandItems)
             {
-                foreach (var item in LandItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in LandItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Grasses is {} GrassesItems)
             {
-                foreach (var item in GrassesItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in GrassesItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
             if (obj.Sounds is {} SoundsItems)
             {
-                foreach (var item in SoundsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in SoundsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2463,7 +2463,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RegionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RegionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
