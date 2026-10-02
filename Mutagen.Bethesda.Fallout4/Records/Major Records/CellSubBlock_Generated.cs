@@ -606,8 +606,8 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CellSubBlockSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => CellSubBlockSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => CellSubBlockSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CellSubBlockSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
@@ -1411,12 +1411,15 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #pragma warning restore CS0618
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICellSubBlock obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICellSubBlock obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            if (iterateNestedRecords)
             {
-                yield return item;
+                foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainer>()
+                    .SelectMany((f) => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1796,12 +1799,15 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellSubBlockGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellSubBlockGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            if (iterateNestedRecords)
             {
-                yield return item;
+                foreach (var item in obj.Cells.WhereCastable<ICellGetter, IAssetLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2129,7 +2135,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => CellSubBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

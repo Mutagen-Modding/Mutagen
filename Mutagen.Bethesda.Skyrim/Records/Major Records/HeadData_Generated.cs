@@ -1017,8 +1017,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => HeadDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => HeadDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => HeadDataSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => HeadDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => HeadDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
@@ -1427,15 +1427,15 @@ namespace Mutagen.Bethesda.Skyrim
             obj.Model?.RemapLinks(mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHeadData obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHeadData obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateListedAssetLinks())
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1771,15 +1771,15 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IHeadDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IHeadDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.TintMasks.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
             {
                 yield return item;
             }
             if (obj.Model is {} ModelItems)
             {
-                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Skyrim
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => HeadDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => HeadDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

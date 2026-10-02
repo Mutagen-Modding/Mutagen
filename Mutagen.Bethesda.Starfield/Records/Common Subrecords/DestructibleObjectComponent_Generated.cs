@@ -362,8 +362,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => DestructibleObjectComponentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructibleObjectComponentSetterCommon.Instance.RemapLinks(this, mapping);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DestructibleObjectComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DestructibleObjectComponentSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DestructibleObjectComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => DestructibleObjectComponentSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DestructibleObjectComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DestructibleObjectComponentSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
@@ -707,15 +707,15 @@ namespace Mutagen.Bethesda.Starfield
             obj.Destructible?.RemapLinks(mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDestructibleObjectComponent obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDestructibleObjectComponent obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -927,15 +927,15 @@ namespace Mutagen.Bethesda.Starfield
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructibleObjectComponentGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructibleObjectComponentGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1231,7 +1231,7 @@ namespace Mutagen.Bethesda.Starfield
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => DestructibleObjectComponentCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DestructibleObjectComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DestructibleObjectComponentCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DestructibleObjectComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

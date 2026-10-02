@@ -489,8 +489,8 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BodyDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks() => BodyDataSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => BodyDataSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BodyDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BodyDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
@@ -862,9 +862,9 @@ namespace Mutagen.Bethesda.Fallout3
             obj.BodyParts.RemapLinks(mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBodyData obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBodyData obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.BodyParts.SelectMany(f => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.BodyParts.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1054,9 +1054,9 @@ namespace Mutagen.Bethesda.Fallout3
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.BodyParts.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.BodyParts.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Fallout3
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BodyDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => BodyDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

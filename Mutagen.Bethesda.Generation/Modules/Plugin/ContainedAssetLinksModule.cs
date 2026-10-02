@@ -1,4 +1,4 @@
-using Loqui.Generation;
+﻿using Loqui.Generation;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins.Assets;
@@ -85,7 +85,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
     private async Task GenerateEnumerateAssetLinks(ObjectGeneration obj, StructuredStringBuilder fg)
     {
         fg.AppendLine(
-            $"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType)");
+            $"public IEnumerable<{nameof(IAssetLinkGetter)}> EnumerateAssetLinks({obj.Interface(getter: true)} obj, {nameof(AssetLinkQuery)} queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType, bool iterateNestedRecords = true)");
         using (fg.CurlyBrace())
         {
             foreach (var baseClass in obj.BaseClassTrail())
@@ -93,7 +93,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                 {
                     fg.AppendLine(
-                        "foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))");
+                        "foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))");
                     using (fg.CurlyBrace())
                     {
                         fg.AppendLine("yield return item;");
@@ -153,14 +153,14 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
     private async Task GenerateEnumerateListedAssetLinks(ObjectGeneration obj, StructuredStringBuilder fg)
     {
         fg.AppendLine(
-            $"public IEnumerable<{nameof(IAssetLink)}> EnumerateListedAssetLinks({obj.Interface(getter: false)} obj)");
+            $"public IEnumerable<{nameof(IAssetLink)}> EnumerateListedAssetLinks({obj.Interface(getter: false)} obj, bool iterateNestedRecords = true)");
         using (fg.CurlyBrace())
         {
             foreach (var baseClass in obj.BaseClassTrail())
             {
                 if (await HasLinks(baseClass, includeBaseClass: true) != Case.No)
                 {
-                    fg.AppendLine("foreach (var item in base.EnumerateListedAssetLinks(obj))");
+                    fg.AppendLine("foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))");
                     using (fg.CurlyBrace())
                     {
                         fg.AppendLine("yield return item;");
@@ -201,6 +201,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     }
 
                     if (subLinkCase == Case.No) continue;
+                    var isMajorRecord = await loqui.IsMajorRecord();
                     var doBrace = true;
                     var access = $"obj.{field.Name}";
                     if (subLinkCase == Case.Maybe)
@@ -218,10 +219,15 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         doBrace = false;
                     }
 
+                    if (isMajorRecord)
+                    {
+                        fg.AppendLine("if (iterateNestedRecords)");
+                    }
+
                     using (fg.CurlyBrace())
                     {
                         fg.AppendLine(
-                            $"foreach (var item in {access}.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}())");
+                            $"foreach (var item in {access}.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(iterateNestedRecords))");
                         using (fg.CurlyBrace())
                         {
                             fg.AppendLine($"yield return item;");
@@ -236,10 +242,12 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         access = $"{field.Name}Item";
                     }
 
+                    var isContLoquiMajor = false;
                     var subFg = new StructuredStringBuilder();
                     if (cont.SubTypeGeneration is LoquiType contLoqui
                         && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                     {
+                        isContLoquiMajor = await contLoqui.IsMajorRecord();
                         string filterNulls =
                             cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                         var linktype = await HasLinks(contLoqui, includeBaseClass: true);
@@ -249,7 +257,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                             {
                                 case Case.Yes:
                                     subFg.AppendLine(
-                                        $"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}()))");
+                                        $"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(iterateNestedRecords)))");
                                     break;
                                 case Case.Maybe:
                                     subFg.AppendLine(
@@ -257,7 +265,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                     using (subFg.IncreaseDepth())
                                     {
                                         subFg.AppendLine(
-                                            $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}()))");
+                                            $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(iterateNestedRecords)))");
                                     }
 
                                     break;
@@ -278,12 +286,19 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         continue;
                     }
 
+                    var doWrapperBrace = field.Nullable;
                     if (field.Nullable)
                     {
                         fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
                     }
 
-                    using (fg.CurlyBrace(doIt: field.Nullable))
+                    if (isContLoquiMajor)
+                    {
+                        fg.AppendLine("if (iterateNestedRecords)");
+                        doWrapperBrace = true;
+                    }
+
+                    using (fg.CurlyBrace(doIt: doWrapperBrace))
                     {
                         fg.AppendLines(subFg);
                         using (fg.CurlyBrace())
@@ -303,7 +318,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             case Case.Yes:
                                 fg.AppendLine(
-                                    $"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}())");
+                                    $"foreach (var item in obj.{field.Name}.Items.SelectMany(f => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(iterateNestedRecords))");
                                 break;
                             case Case.Maybe:
                                 fg.AppendLine(
@@ -311,7 +326,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                 using (fg.IncreaseDepth())
                                 {
                                     fg.AppendLine(
-                                        $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}()))");
+                                        $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(iterateNestedRecords)))");
                                 }
 
                                 break;
@@ -509,6 +524,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 }
 
                 if (subLinkCase == Case.No) continue;
+                var isMajorRecord = await loqui.IsMajorRecord();
                 var doBrace = true;
                 var access = $"obj.{field.Name}";
                 if (subLinkCase == Case.Maybe)
@@ -526,10 +542,16 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     doBrace = false;
                 }
 
+                if (isMajorRecord)
+                {
+                    fg.AppendLine("if (iterateNestedRecords)");
+                    doBrace = true;
+                }
+
                 using (fg.CurlyBrace(doIt: doBrace))
                 {
                     fg.AppendLine(
-                        $"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))");
+                        $"foreach (var item in {access}.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))");
                     using (fg.CurlyBrace())
                     {
                         fg.AppendLine($"yield return item;");
@@ -544,10 +566,12 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     access = $"{field.Name}Item";
                 }
 
+                var isContLoquiMajor = false;
                 var subFg = new StructuredStringBuilder();
                 if (cont.SubTypeGeneration is LoquiType contLoqui
                     && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                 {
+                    isContLoquiMajor = await contLoqui.IsMajorRecord();
                     string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                     var linktype = await HasLinks(contLoqui, includeBaseClass: true);
                     if (linktype != Case.No)
@@ -556,7 +580,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         {
                             case Case.Yes:
                                 subFg.AppendLine(
-                                    $"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
+                                    $"foreach (var item in {access}{filterNulls}.SelectMany(f => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))");
                                 break;
                             case Case.Maybe:
                                 subFg.AppendLine(
@@ -564,7 +588,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                                 using (subFg.IncreaseDepth())
                                 {
                                     subFg.AppendLine(
-                                        $".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
+                                        $".SelectMany((f) => f.{nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))");
                                 }
 
                                 break;
@@ -578,12 +602,19 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     continue;
                 }
 
+                var doWrapperBrace = field.Nullable;
                 if (field.Nullable)
                 {
                     fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
                 }
 
-                using (fg.CurlyBrace(doIt: field.Nullable))
+                if (isContLoquiMajor)
+                {
+                    fg.AppendLine("if (iterateNestedRecords)");
+                    doWrapperBrace = true;
+                }
+
+                using (fg.CurlyBrace(doIt: doWrapperBrace))
                 {
                     fg.AppendLines(subFg);
                     using (fg.CurlyBrace())
@@ -611,7 +642,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                             using (fg.IncreaseDepth())
                             {
                                 fg.AppendLine(
-                                    $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))");
+                                    $".SelectMany((f) => f.{nameof(IAssetLinkContainer.EnumerateAssetLinks)}(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))");
                             }
 
                             break;
@@ -729,11 +760,11 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
     public async Task GenerateInterfaceImplementation(ObjectGeneration obj, StructuredStringBuilder fg, bool getter)
     {
         var shouldAlwaysOverride = obj.IsTopLevelGroup() || obj.IsTopLevelListGroup();
-        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(AssetLinkQuery queryCategories, {nameof(IAssetLinkCache)}? linkCache, Type? assetType) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+        fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLinkGetter)}> {nameof(IAssetLinkContainerGetter.EnumerateAssetLinks)}(AssetLinkQuery queryCategories, {nameof(IAssetLinkCache)}? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);");
 
         if (!getter)
         {
-            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLink)}> {nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}() => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(this);");
+            fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}IEnumerable<{nameof(IAssetLink)}> {nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(bool iterateNestedRecords = true) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.{nameof(IAssetLinkContainer.EnumerateListedAssetLinks)}(this, iterateNestedRecords);");
             fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IAssetLinkContainer.RemapAssetLinks)}(IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping, {nameof(AssetLinkQuery)} queryCategories, IAssetLinkCache? linkCache) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);");
             fg.AppendLine($"public{await obj.FunctionOverride(shouldAlwaysOverride, async (o) => await HasLinks(o, includeBaseClass: false) != Case.No)}void {nameof(IAssetLinkContainer.RemapListedAssetLinks)}(IReadOnlyDictionary<{nameof(IAssetLinkGetter)}, string> mapping) => {obj.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class)}.Instance.RemapAssetLinks(this, mapping, null, {nameof(AssetLinkQuery)}.{nameof(AssetLinkQuery.Listed)});");
         }

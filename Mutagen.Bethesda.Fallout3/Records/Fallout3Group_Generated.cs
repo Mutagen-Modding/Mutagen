@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Fallout3
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<T, TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<T, TMajor>(records, throwIfUnknown);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3GroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout3GroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => Fallout3GroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => Fallout3GroupSetterCommon<T>.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => Fallout3GroupSetterCommon<T>.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout3GroupSetterCommon<T>.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
@@ -893,10 +893,10 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #pragma warning restore CS0618
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3Group<T> obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3Group<T> obj, bool iterateNestedRecords = true)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+                .SelectMany((f) => f.EnumerateListedAssetLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1180,10 +1180,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout3GroupGetter<T> obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout3GroupGetter<T> obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Fallout3
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => Fallout3GroupCommon<T>.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3GroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => Fallout3GroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

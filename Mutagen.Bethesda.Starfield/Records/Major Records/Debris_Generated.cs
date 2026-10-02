@@ -471,8 +471,8 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IDebris);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => DebrisSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DebrisCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => DebrisSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DebrisSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DebrisSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
@@ -869,13 +869,13 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebris obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebris obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Models.SelectMany(f => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.Models.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1139,13 +1139,13 @@ namespace Mutagen.Bethesda.Starfield
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return item;
             }
-            foreach (var item in obj.Models.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.Models.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => DebrisCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DebrisCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

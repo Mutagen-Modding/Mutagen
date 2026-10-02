@@ -162,7 +162,7 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     public abstract IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true);
 
     /// <inheritdoc />
-    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true);
 
     /// <inheritdoc />
     public abstract void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping);
@@ -173,7 +173,8 @@ public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroup<TMajor>
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
         IAssetLinkCache? linkCache = null,
-        Type? assetType = null);
+        Type? assetType = null,
+        bool iterateNestedRecords = true);
 }
 
 internal static class GroupRecordTypeGetter<T>
@@ -379,7 +380,8 @@ internal abstract class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGrou
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
         IAssetLinkCache? linkCache = null,
-        Type? assetType = null);
+        Type? assetType = null,
+        bool iterateNestedRecords = true);
 
     public bool ContainsKey(FormKey key)
     {
