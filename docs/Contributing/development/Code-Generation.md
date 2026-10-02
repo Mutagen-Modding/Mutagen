@@ -1,5 +1,5 @@
 # Code Generation
-Most of Mutagen's record classes, interfaces, and binary translation code is generated rather than handwritten.
+Most of Mutagen's verbose record classes, interfaces, and binary translation code is created by a code generation library called Loqui, rather than handwritten.  
 
 ## Xml Definitions
 Each record is defined by an xml file that sits next to its handwritten partial class, such as `Mutagen.Bethesda.Skyrim/Records/Major Records/DialogTopic.xml`.  The xml lists the record's fields, their types, and their record types, and the generator produces the matching `_Generated.cs` file.
