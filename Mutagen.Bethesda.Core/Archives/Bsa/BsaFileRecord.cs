@@ -192,7 +192,7 @@ class BsaFileRecord : IArchiveFile
                     Path);
             }
             byte[] ret = new byte[remaining];
-            s.Read(ret);
+            s.ReadExactly(ret);
             return ret;
         }
         catch (Exception e)
