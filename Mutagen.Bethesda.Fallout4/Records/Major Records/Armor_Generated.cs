@@ -2601,12 +2601,21 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IArmorInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: ArmorBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ArmorBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorWorldModel = item.WorldModel;
+            item.WorldModel = null!;
+            try
+            {
+                PluginUtilityTranslation.MajorRecordParse<IArmorInternal>(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillStructs: ArmorBinaryCreateTranslation.FillBinaryStructs,
+                    fillTyped: ArmorBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.WorldModel == null) item.WorldModel = priorWorldModel;
+            }
         }
         
         public override void CopyInFromBinary(
@@ -4207,7 +4216,8 @@ namespace Mutagen.Bethesda.Fallout4
                         frame: frame,
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
-                        transl: ArmorModel.TryCreateFromBinary);
+                        transl: ArmorModel.TryCreateFromBinary,
+                        existing: item.WorldModel);
                     return (int)Armor_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.BOD2:
@@ -4668,7 +4678,8 @@ namespace Mutagen.Bethesda.Fallout4
                         stream: stream,
                         creator: static (s, p, r) => ArmorModelBinaryOverlay.ArmorModelFactory(s, p, r),
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
-                        maleRecordConverter: Armor_Registration.WorldModelMaleConverter);
+                        maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
+                        existing: _WorldModelOverlay);
                     return (int)Armor_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.BOD2:

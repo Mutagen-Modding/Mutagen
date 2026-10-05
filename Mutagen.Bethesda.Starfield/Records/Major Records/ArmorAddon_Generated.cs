@@ -2236,12 +2236,36 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorWorldModel = item.WorldModel;
+            item.WorldModel = null!;
+            var priorFirstPersonModel = item.FirstPersonModel;
+            item.FirstPersonModel = null!;
+            var priorAltSkeleton = item.AltSkeleton;
+            item.AltSkeleton = null!;
+            var priorSkinTexture = item.SkinTexture;
+            item.SkinTexture = null!;
+            var priorMorphs = item.Morphs;
+            item.Morphs = null!;
+            var priorBoneDataModifiers = item.BoneDataModifiers;
+            item.BoneDataModifiers = null!;
+            try
+            {
+                PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
+                    fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.WorldModel == null) item.WorldModel = priorWorldModel;
+                if (item.FirstPersonModel == null) item.FirstPersonModel = priorFirstPersonModel;
+                if (item.AltSkeleton == null) item.AltSkeleton = priorAltSkeleton;
+                if (item.SkinTexture == null) item.SkinTexture = priorSkinTexture;
+                if (item.Morphs == null) item.Morphs = priorMorphs;
+                if (item.BoneDataModifiers == null) item.BoneDataModifiers = priorBoneDataModifiers;
+            }
         }
         
         public override void CopyInFromBinary(
@@ -3674,14 +3698,16 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue
+                    if ((nextRecordType.TypeInt is RecordTypeInts.MOD2 or RecordTypeInts.MOD3 or RecordTypeInts.MO2T or RecordTypeInts.MO3T or RecordTypeInts.MLM1 or RecordTypeInts.MLM2 or RecordTypeInts.MO2C or RecordTypeInts.MO3C or RecordTypeInts.MO2F or RecordTypeInts.MO3F)
+                        || !lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.HealthBarOffset)
                     {
                         item.WorldModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
                             frame: frame,
                             femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                             maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                            transl: Model.TryCreateFromBinary);
+                            transl: Model.TryCreateFromBinary,
+                            existing: item.WorldModel);
                         return new ParseResult((int)ArmorAddon_FieldIndex.WorldModel, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.WorldModel)
@@ -3690,7 +3716,8 @@ namespace Mutagen.Bethesda.Starfield
                             frame: frame,
                             femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                             maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                            transl: Model.TryCreateFromBinary);
+                            transl: Model.TryCreateFromBinary,
+                            existing: item.FirstPersonModel);
                         return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.AltSkeleton)
@@ -3711,14 +3738,16 @@ namespace Mutagen.Bethesda.Starfield
                                     frame: frame,
                                     femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                                     maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                                    transl: Model.TryCreateFromBinary);
+                                    transl: Model.TryCreateFromBinary,
+                                    existing: item.WorldModel);
                                 return new ParseResult((int)ArmorAddon_FieldIndex.WorldModel, nextRecordType);
                             case 1:
                                 item.FirstPersonModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
                                     frame: frame,
                                     femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                                     maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                                    transl: Model.TryCreateFromBinary);
+                                    transl: Model.TryCreateFromBinary,
+                                    existing: item.FirstPersonModel);
                                 return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, nextRecordType);
                             case 2:
                                 item.ExtraLightLayers.SetTo(
@@ -3747,7 +3776,8 @@ namespace Mutagen.Bethesda.Starfield
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.FirstPersonModel);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.MOD6:
@@ -3758,7 +3788,8 @@ namespace Mutagen.Bethesda.Starfield
                         maleMarker: RecordTypes.MOD6,
                         femaleMarker: RecordTypes.MOD7,
                         transl: StringBinaryTranslation.Instance.Parse,
-                        skipMarker: false);
+                        skipMarker: false,
+                        existing: item.AltSkeleton);
                     return (int)ArmorAddon_FieldIndex.AltSkeleton;
                 }
                 case RecordTypeInts.NAM1:
@@ -3770,7 +3801,8 @@ namespace Mutagen.Bethesda.Starfield
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.SkinTextureFemaleConverter,
                         shortCircuit: false,
-                        transl: ArmorAddonSkinTexture.TryCreateFromBinary);
+                        transl: ArmorAddonSkinTexture.TryCreateFromBinary,
+                        existing: item.SkinTexture);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM6:
@@ -3782,7 +3814,8 @@ namespace Mutagen.Bethesda.Starfield
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.MorphsFemaleConverter,
                         shortCircuit: false,
-                        transl: ArmorAddonMorph.TryCreateFromBinary);
+                        transl: ArmorAddonMorph.TryCreateFromBinary,
+                        existing: item.Morphs);
                     return (int)ArmorAddon_FieldIndex.Morphs;
                 }
                 case RecordTypeInts.MODL:
@@ -3862,7 +3895,8 @@ namespace Mutagen.Bethesda.Starfield
                                     triggeringRecord: translationParams.ConvertToCustom(RecordTypes.BNAM),
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
                             return true;
-                        });
+                        },
+                        existing: item.BoneDataModifiers);
                     return (int)ArmorAddon_FieldIndex.BoneDataModifiers;
                 }
                 case RecordTypeInts.XXXX:
@@ -4148,7 +4182,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 {
-                    if (!lastParsed.ParsedIndex.HasValue
+                    if ((type.TypeInt is RecordTypeInts.MOD2 or RecordTypeInts.MOD3 or RecordTypeInts.MO2T or RecordTypeInts.MO3T or RecordTypeInts.MLM1 or RecordTypeInts.MLM2 or RecordTypeInts.MO2C or RecordTypeInts.MO3C or RecordTypeInts.MO2F or RecordTypeInts.MO3F)
+                        || !lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.HealthBarOffset)
                     {
                         _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
@@ -4157,7 +4192,8 @@ namespace Mutagen.Bethesda.Starfield
                             creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                             femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                             maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                            parseNonConvertedItems: true);
+                            parseNonConvertedItems: true,
+                            existing: _WorldModelOverlay);
                         return new ParseResult((int)ArmorAddon_FieldIndex.WorldModel, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.WorldModel)
@@ -4168,7 +4204,8 @@ namespace Mutagen.Bethesda.Starfield
                             creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                             femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                             maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                            parseNonConvertedItems: true);
+                            parseNonConvertedItems: true,
+                            existing: _FirstPersonModelOverlay);
                         return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.AltSkeleton)
@@ -4197,7 +4234,8 @@ namespace Mutagen.Bethesda.Starfield
                                     creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                                     femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                                     maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                                    parseNonConvertedItems: true);
+                                    parseNonConvertedItems: true,
+                                    existing: _WorldModelOverlay);
                                 return new ParseResult((int)ArmorAddon_FieldIndex.WorldModel, type);
                             }
                             case 1:
@@ -4208,7 +4246,8 @@ namespace Mutagen.Bethesda.Starfield
                                     creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                                     femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                                     maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                                    parseNonConvertedItems: true);
+                                    parseNonConvertedItems: true,
+                                    existing: _FirstPersonModelOverlay);
                                 return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, type);
                             }
                             case 2:
@@ -4247,7 +4286,8 @@ namespace Mutagen.Bethesda.Starfield
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                        parseNonConvertedItems: true);
+                        parseNonConvertedItems: true,
+                        existing: _FirstPersonModelOverlay);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.MOD6:
@@ -4258,7 +4298,8 @@ namespace Mutagen.Bethesda.Starfield
                         male: RecordTypes.MOD6,
                         female: RecordTypes.MOD7,
                         stream: stream,
-                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated),
+                        existing: _AltSkeletonOverlay);
                     return (int)ArmorAddon_FieldIndex.AltSkeleton;
                 }
                 case RecordTypeInts.NAM1:
@@ -4271,7 +4312,8 @@ namespace Mutagen.Bethesda.Starfield
                         stream: stream,
                         creator: static (s, p, r) => ArmorAddonSkinTextureBinaryOverlay.ArmorAddonSkinTextureFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.SkinTextureFemaleConverter,
-                        shortCircuit: false);
+                        shortCircuit: false,
+                        existing: _SkinTextureOverlay);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM6:
@@ -4284,7 +4326,8 @@ namespace Mutagen.Bethesda.Starfield
                         stream: stream,
                         creator: static (s, p, r) => ArmorAddonMorphBinaryOverlay.ArmorAddonMorphFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.MorphsFemaleConverter,
-                        shortCircuit: false);
+                        shortCircuit: false,
+                        existing: _MorphsOverlay);
                     return (int)ArmorAddon_FieldIndex.Morphs;
                 }
                 case RecordTypeInts.MODL:
@@ -4355,7 +4398,8 @@ namespace Mutagen.Bethesda.Starfield
                                     trigger: RecordTypes.BNAM,
                                     skipHeader: true,
                                     translationParams: translationParams));
-                        });
+                        },
+                        existing: _BoneDataModifiersOverlay);
                     return (int)ArmorAddon_FieldIndex.BoneDataModifiers;
                 }
                 case RecordTypeInts.XXXX:

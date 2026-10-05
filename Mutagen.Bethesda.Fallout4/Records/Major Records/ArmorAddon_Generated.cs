@@ -1627,12 +1627,30 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorWorldModel = item.WorldModel;
+            item.WorldModel = null!;
+            var priorFirstPersonModel = item.FirstPersonModel;
+            item.FirstPersonModel = null!;
+            var priorSkinTexture = item.SkinTexture;
+            item.SkinTexture = null!;
+            var priorTextureSwapList = item.TextureSwapList;
+            item.TextureSwapList = null!;
+            try
+            {
+                PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
+                    fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.WorldModel == null) item.WorldModel = priorWorldModel;
+                if (item.FirstPersonModel == null) item.FirstPersonModel = priorFirstPersonModel;
+                if (item.SkinTexture == null) item.SkinTexture = priorSkinTexture;
+                if (item.TextureSwapList == null) item.TextureSwapList = priorTextureSwapList;
+            }
         }
         
         public override void CopyInFromBinary(
@@ -2742,7 +2760,8 @@ namespace Mutagen.Bethesda.Fallout4
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
                         shortCircuit: false,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.WorldModel);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -2759,7 +2778,8 @@ namespace Mutagen.Bethesda.Fallout4
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
                         shortCircuit: false,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.FirstPersonModel);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
@@ -2771,7 +2791,8 @@ namespace Mutagen.Bethesda.Fallout4
                         femaleMarker: RecordTypes.NAM1,
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
-                        fallback: FormLinkNullable<ITextureSetGetter>.Null);
+                        fallback: FormLinkNullable<ITextureSetGetter>.Null,
+                        existing: item.SkinTexture);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
@@ -2783,7 +2804,8 @@ namespace Mutagen.Bethesda.Fallout4
                         femaleMarker: RecordTypes.NAM3,
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
-                        fallback: FormLinkNullable<IFormListGetter>.Null);
+                        fallback: FormLinkNullable<IFormListGetter>.Null,
+                        existing: item.TextureSwapList);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
@@ -3057,7 +3079,8 @@ namespace Mutagen.Bethesda.Fallout4
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                        shortCircuit: false);
+                        shortCircuit: false,
+                        existing: _WorldModelOverlay);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -3075,7 +3098,8 @@ namespace Mutagen.Bethesda.Fallout4
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                        shortCircuit: false);
+                        shortCircuit: false,
+                        existing: _FirstPersonModelOverlay);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
@@ -3087,7 +3111,8 @@ namespace Mutagen.Bethesda.Fallout4
                         female: RecordTypes.NAM1,
                         stream: stream,
                         creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ITextureSetGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
-                        fallback: FormLinkNullable<ITextureSetGetter>.Null);
+                        fallback: FormLinkNullable<ITextureSetGetter>.Null,
+                        existing: _SkinTextureOverlay);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
@@ -3099,7 +3124,8 @@ namespace Mutagen.Bethesda.Fallout4
                         female: RecordTypes.NAM3,
                         stream: stream,
                         creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<IFormListGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
-                        fallback: FormLinkNullable<IFormListGetter>.Null);
+                        fallback: FormLinkNullable<IFormListGetter>.Null,
+                        existing: _TextureSwapListOverlay);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:

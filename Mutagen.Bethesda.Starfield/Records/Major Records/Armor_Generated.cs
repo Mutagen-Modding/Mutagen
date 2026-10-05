@@ -2864,12 +2864,21 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IArmorInternal>(
-                record: item,
-                frame: frame,
-                translationParams: translationParams,
-                fillStructs: ArmorBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ArmorBinaryCreateTranslation.FillBinaryRecordTypes);
+            var priorWorldModel = item.WorldModel;
+            item.WorldModel = null!;
+            try
+            {
+                PluginUtilityTranslation.MajorRecordParse<IArmorInternal>(
+                    record: item,
+                    frame: frame,
+                    translationParams: translationParams,
+                    fillStructs: ArmorBinaryCreateTranslation.FillBinaryStructs,
+                    fillTyped: ArmorBinaryCreateTranslation.FillBinaryRecordTypes);
+            }
+            finally
+            {
+                if (item.WorldModel == null) item.WorldModel = priorWorldModel;
+            }
         }
         
         public override void CopyInFromBinary(
@@ -4786,7 +4795,8 @@ namespace Mutagen.Bethesda.Starfield
                         frame: frame,
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.WorldModel);
                     return (int)Armor_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.BO64:
@@ -5274,7 +5284,8 @@ namespace Mutagen.Bethesda.Starfield
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
-                        parseNonConvertedItems: true);
+                        parseNonConvertedItems: true,
+                        existing: _WorldModelOverlay);
                     return (int)Armor_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.BO64:

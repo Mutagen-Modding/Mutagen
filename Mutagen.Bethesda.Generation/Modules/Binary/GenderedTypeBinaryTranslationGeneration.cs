@@ -11,6 +11,17 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGeneration
 {
+    public static bool IsSplitPair(TypeGeneration typeGen)
+    {
+        var data = typeGen.GetFieldData();
+        return data.HasTrigger && !data.RecordType.HasValue;
+    }
+
+    private static NotImplementedException SplitPairNotSupported(ObjectGeneration objGen, TypeGeneration typeGen)
+    {
+        return new NotImplementedException($"{objGen.Name}.{typeGen.Name}: this parse cannot keep both halves of a gendered field whose halves are separate subrecords");
+    }
+
     public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
     {
         GenderedType gender = typeGen as GenderedType;
@@ -67,6 +78,16 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         else if (!gender.SubTypeGeneration.IsNullable)
         {
             parseSuffix = "Required";
+        }
+
+        if (IsSplitPair(typeGen)
+            && (parseSuffix == "MarkerWithinItem"
+                || (parseSuffix == "Required" && !gender.MaleMarker.HasValue && !gender.GenderEnumRecord.HasValue)
+                || (parseSuffix == string.Empty
+                    && gender.SubTypeGeneration.GetFieldData().RecordType.HasValue
+                    && !(gender.SubTypeGeneration is LoquiType))))
+        {
+            throw SplitPairNotSupported(objGen, typeGen);
         }
 
         using (var args = sb.Call(
@@ -171,6 +192,11 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             if (notNull)
             {
                 args.Add($"fallback: {gender.SubTypeGeneration.GetDefault(getter: false)}");
+            }
+
+            if (IsSplitPair(typeGen))
+            {
+                args.Add($"existing: {itemAccessor}");
             }
         }
     }
@@ -523,6 +549,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     }
 
                     bool notNull = gendered.ItemNullable && !gendered.SubTypeGeneration.IsNullable;
+                    bool withTranslationParams = false;
                     using (var args = sb.Call(
                                $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                     {
@@ -555,12 +582,14 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             {
                                 args.Add(
                                     $"translationParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                                withTranslationParams = true;
                             }
                             else if (converterAccessor != null
                                      && gendered.FemaleConversions == null
                                      && gendered.MaleConversions == null)
                             {
                                 args.Add($"translationParams: {converterAccessor}");
+                                withTranslationParams = true;
                             }
                         }
                         else if (gendered.SubTypeGeneration is ListType loquiList
@@ -634,11 +663,23 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             args.Add($"fallback: {gendered.SubTypeGeneration.GetDefault(getter: false)}");
                         }
+
+                        if (IsSplitPair(typeGen))
+                        {
+                            if (gendered.MarkerPerGender && withTranslationParams)
+                            {
+                                throw SplitPairNotSupported(objGen, typeGen);
+                            }
+                            args.Add($"existing: _{typeGen.Name}Overlay");
+                        }
                     }
                 }
                 else
                 {
-                    
+                    if (IsSplitPair(typeGen))
+                    {
+                        throw SplitPairNotSupported(objGen, typeGen);
+                    }
                     await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor,
                         converterAccessor);
                 }
