@@ -802,6 +802,7 @@ public sealed class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, T
     /// Constructs a link cache around a target mod
     /// </summary>
     /// <param name="sourceMod">Mod to resolve against when linking</param>
+    /// <param name="prefs">Preferences controlling cache retention and record type mappings</param>
     public ImmutableModLinkCache(TModGetter sourceMod, LinkCachePreferences prefs)
     {
         _sourceMod = sourceMod;
