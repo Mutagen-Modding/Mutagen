@@ -180,7 +180,7 @@ public class TestMajorRecord : ITestMajorRecord
         throw new NotImplementedException();
     }
 
-    public IEnumerable<IAssetLink> EnumerateListedAssetLinks()
+    public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true)
     {
         throw new NotImplementedException();
     }
@@ -191,7 +191,7 @@ public class TestMajorRecord : ITestMajorRecord
     }
 
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null,
-        Type? assetType = null)
+        Type? assetType = null, bool iterateNestedRecords = true)
     {
         throw new NotImplementedException();
     }
