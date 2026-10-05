@@ -12,13 +12,11 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     /// </summary>
     private Dictionary<FormKey, HashSet<FormKey>> _voices = new();
     public IReadOnlyDictionary<FormKey, HashSet<FormKey>> Voices => _voices;
-    [Obsolete("Represent as null")]
-    public bool IsDefault { get; private set; }
 
     #region Constructors
-    public VoiceContainer(bool isDefault = false)
+    public VoiceContainer()
     {
-        IsDefault = isDefault;
+        
     }
 
     public VoiceContainer(FormKey npc, IEnumerable<FormKey> voiceTypes)
@@ -59,19 +57,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     #region BinaryOperators
     public void Invert(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
     {
-        // We had everything default -> become empty
-        if (IsDefault)
-        {
-            IsDefault = false;
-            return;
-        }
-        // We had nothing -> become default
-        if (_voices.Count == 0)
-        {
-            IsDefault = true;
-            return;
-        }
-
         var originalVoices = _voices;
         _voices = [];
         foreach (var (voice, allSpeakers) in voiceSpeakers)
@@ -94,21 +79,10 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
-    public void IntersectWith(VoiceContainer other)
+    public void IntersectWith(VoiceContainer? other)
     {
         // If the other is default, we can stay as we are
-        if (other.IsDefault) return;
-
-        // If we are default, but the other is not, we become non-default and take over all voices
-        if (IsDefault)
-        {
-            IsDefault = false;
-            foreach (var (voiceType, npcs) in other.Voices)
-            {
-                _voices.Add(voiceType, [..npcs]);
-            }
-            return;
-        }
+        if (other == null) return;
 
         // If both are non-default, we need to intersect the voice types and their NPCs
         var removeVoiceTypes = new List<FormKey>();
@@ -150,13 +124,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public void Insert(VoiceContainer other)
     {
-        if (IsDefault || other.IsDefault)
-        {
-            IsDefault = true;
-            _voices.Clear();
-            return;
-        }
-
         foreach (var (voiceType, npcs) in other._voices)
         {
             if (_voices.TryGetValue(voiceType, out var otherNpcs))
@@ -181,8 +148,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
                 _voices.Add(voiceType, [..npcs]);
             }
         }
-
-        IsDefault = false;
     }
 
     #endregion
@@ -202,9 +167,9 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     }
     #endregion
 
-    public IEnumerable<FormKey> GetVoiceTypes(HashSet<FormKey> allVoices)
+    public IEnumerable<FormKey> GetVoiceTypes()
     {
-        return IsDefault ? allVoices : _voices.Keys;
+        return _voices.Keys;
     }
 
     public bool IsEmpty()
@@ -214,10 +179,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public object Clone()
     {
-        var clone = new VoiceContainer
-        {
-            IsDefault = IsDefault
-        };
+        var clone = new VoiceContainer();
 
         foreach (var (voice, npcs) in _voices)
         {
@@ -227,7 +189,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         return clone;
     }
 
-    public bool Equals(VoiceContainer? other) => other != null && IsDefault == other.IsDefault && _voices.Count == other._voices.Count && _voices.Keys.All(voiceType => other._voices.ContainsKey(voiceType));
+    public bool Equals(VoiceContainer? other) => other != null && _voices.Count == other._voices.Count && _voices.Keys.All(voiceType => other._voices.ContainsKey(voiceType));
 
     public override string ToString()
     {
@@ -235,7 +197,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         voices.Sort();
 
         StringBuilder sb = new();
-        sb.Append($"IsDefault: {IsDefault}: ");
         foreach (var voiceType in voices)
         {
             sb.Append(voiceType);
