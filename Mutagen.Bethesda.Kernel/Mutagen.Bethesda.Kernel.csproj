@@ -2,6 +2,8 @@
 
   <PropertyGroup>
 	<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
     <Description>A C# library containing the very minimal basics about Bethesda structures.  Meant to be a lightweight import with some basic definitions</Description>
     <IsPackable>true</IsPackable>
       <DebugType>portable</DebugType>
