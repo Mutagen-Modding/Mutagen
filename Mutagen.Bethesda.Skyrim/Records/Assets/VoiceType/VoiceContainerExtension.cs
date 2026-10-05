@@ -1,35 +1,38 @@
-﻿namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
+namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 
 public static class VoiceContainerExtension
 {
-    public static VoiceContainer MergeInsert(this IEnumerable<VoiceContainer> voiceContainers, bool isDefaultIfEmpty)
+    // Perform a set union on zero or more containers. May mutate input containers
+    // Returns null (no filtering) for an empty list
+    public static VoiceContainer? MergeInsert(this List<VoiceContainer> voiceContainers)
     {
-        if (!voiceContainers.Any()) return new VoiceContainer(isDefaultIfEmpty);
-
-        var output = new VoiceContainer();
-        foreach (var voiceContainer in voiceContainers)
+        switch (voiceContainers)
         {
-            output.Insert(voiceContainer);
+            case []: return null;
+            case [var voiceContainer]: return voiceContainer;
+            default:
+                var first = voiceContainers.First();
+                foreach (var other in voiceContainers.Skip(1))
+                {
+                    first.Insert(other);
+                }
+                return first;
         }
-
-        return output;
     }
 
-    public static VoiceContainer MergeIntersect(this IEnumerable<VoiceContainer> voiceContainers)
+    // Perform a set intersection on zero or more containers. May mutate input containers
+    public static VoiceContainer MergeIntersect(this List<VoiceContainer> voiceContainers)
     {
-        var voiceContainerList = voiceContainers.ToList();
-
-        switch (voiceContainerList) {
+        switch (voiceContainers) {
             case []: return new VoiceContainer();
             case [var voiceContainer]: return voiceContainer;
             default:
-                var output = new VoiceContainer(true);
-                foreach (var voiceContainer in voiceContainerList)
+                var first = voiceContainers.First();
+                foreach (var voiceContainer in voiceContainers.Skip(1))
                 {
-                    output.IntersectWith(voiceContainer);
+                    first.IntersectWith(voiceContainer);
                 }
-
-                return output;
+                return first;
         }
     }
 }
