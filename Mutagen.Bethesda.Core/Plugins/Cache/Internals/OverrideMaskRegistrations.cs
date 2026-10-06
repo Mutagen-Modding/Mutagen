@@ -1,4 +1,5 @@
-﻿using Loqui;
+﻿using System.Runtime.CompilerServices;
+using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -20,7 +21,7 @@ internal static class OverrideMaskRegistrations
             IOverrideMaskRegistration? regis;
             if (!GameRegistrations.TryGet(category, out var definition))
             {
-                // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+                if (!RuntimeFeature.IsDynamicCodeSupported) continue;
                 var t = Type.GetType(
                     $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
                 if (t == null) continue;

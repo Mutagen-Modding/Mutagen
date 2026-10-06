@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
@@ -105,11 +106,18 @@ public static class GameCategoryExt
         };
     }
 
+    /// <summary>Gets the game's mod registration.</summary>
+    /// <exception cref="InvalidOperationException">Static registration is missing and dynamic code is unsupported.</exception>
+    /// <exception cref="MissingGameLibsException">No mod registration was found.</exception>
     public static ILoquiRegistration ToModRegistration(this GameCategory category)
     {
         var ret = TryGetModRegistration(category);
         if (ret == null)
         {
+            if (!RuntimeFeature.IsDynamicCodeSupported)
+            {
+                throw new InvalidOperationException($"{category} must be statically registered before use when dynamic code is not supported.");
+            }
             throw new MissingGameLibsException(category);
         }
         return ret;
@@ -131,7 +139,7 @@ internal static class ToModRegistrationHelper
         {
             if (Plugins.GameRegistrations.TryGet(category, out _)) continue;
 
-            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+            if (!RuntimeFeature.IsDynamicCodeSupported) continue;
             var modType = Type.GetType(
                 $"Mutagen.Bethesda.{category}.{category}Mod, Mutagen.Bethesda.{category}");
             if (modType == null) continue;

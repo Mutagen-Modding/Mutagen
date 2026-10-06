@@ -1,4 +1,5 @@
-﻿using Loqui;
+﻿using System.Runtime.CompilerServices;
+using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
@@ -36,7 +37,7 @@ public static class Warmup
                 IProtocolRegistration? regis;
                 if (!GameRegistrations.TryGet(category, out var definition))
                 {
-                    // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+                    if (!RuntimeFeature.IsDynamicCodeSupported) continue;
                     try
                     {
                         var assemblyName = $"Mutagen.Bethesda.{category}";
