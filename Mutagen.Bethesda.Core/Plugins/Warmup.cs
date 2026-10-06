@@ -1,4 +1,5 @@
-﻿using Loqui;
+﻿using System.Runtime.CompilerServices;
+using Loqui;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
@@ -33,20 +34,30 @@ public static class Warmup
 
             foreach (var category in Enums<GameCategory>.Values)
             {
-                try
+                IProtocolRegistration? regis;
+                if (!GameRegistrations.TryGet(category, out var definition))
                 {
-                    var assemblyName = $"Mutagen.Bethesda.{category}";
-                    var obj = Activator.CreateInstance(
-                        assemblyName,
-                        $"Loqui.ProtocolDefinition_{category}");
-                    var regis = obj?.Unwrap() as IProtocolRegistration;
-                    if (regis == null) continue;
-                    protocols.Add(regis);
-                    _registrations.Add(category);
+                    if (!RuntimeFeature.IsDynamicCodeSupported) continue;
+                    try
+                    {
+                        var assemblyName = $"Mutagen.Bethesda.{category}";
+                        var obj = Activator.CreateInstance(
+                            assemblyName,
+                            $"Loqui.ProtocolDefinition_{category}");
+                        regis = obj?.Unwrap() as IProtocolRegistration;
+                        if (regis == null) continue;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
-                catch
+                else
                 {
+                    regis = definition.Protocol;
                 }
+                protocols.Add(regis);
+                _registrations.Add(category);
             }
             
             Initialization.SpinUp(protocols.ToArray());

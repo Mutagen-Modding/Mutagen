@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -13,12 +14,21 @@ internal sealed class InheritingInterfaceMapper : InterfaceMapGetter, IInheritin
         var ret = new InheritingInterfaceMapper();
         foreach (var category in Enums<GameCategory>.Values)
         {
-            var t = Type.GetType(
-                $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping, Mutagen.Bethesda.{category}");
-            if (t == null) continue;
-            var obj = Activator.CreateInstance(t);
-            var regis = obj as IInterfaceMapping;
-            if (regis == null) continue;
+            IInterfaceMapping? regis;
+            if (!GameRegistrations.TryGet(category, out var definition))
+            {
+                if (!RuntimeFeature.IsDynamicCodeSupported) continue;
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                regis = obj as IInterfaceMapping;
+                if (regis == null) continue;
+            }
+            else
+            {
+                regis = definition.InheritingMapping();
+            }
             ret.Register(regis);
         }
         return ret;

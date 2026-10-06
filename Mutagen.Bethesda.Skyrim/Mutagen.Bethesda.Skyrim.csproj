@@ -148,6 +148,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="GameRegistration.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Assets\VoiceType\VoiceContainer.cs" />
     <Compile Include="Records\Assets\VoiceType\VoiceContainerExtension.cs" />

@@ -1,4 +1,5 @@
-﻿using Loqui;
+﻿using System.Runtime.CompilerServices;
+using Loqui;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -17,12 +18,21 @@ internal static class OverrideMaskRegistrations
     {
         foreach (var category in Enums<GameCategory>.Values)
         {
-            var t = Type.GetType(
-                $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
-            if (t == null) continue;
-            var obj = Activator.CreateInstance(t);
-            var regis = obj as IOverrideMaskRegistration;
-            if (regis == null) continue;
+            IOverrideMaskRegistration? regis;
+            if (!GameRegistrations.TryGet(category, out var definition))
+            {
+                if (!RuntimeFeature.IsDynamicCodeSupported) continue;
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                regis = obj as IOverrideMaskRegistration;
+                if (regis == null) continue;
+            }
+            else
+            {
+                regis = definition.OverrideMasks();
+            }
             foreach (var maskMap in regis.Masks)
             {
                 AddAsOverrideMasks.Add(maskMap.Item1.ClassType, maskMap.Item2);
