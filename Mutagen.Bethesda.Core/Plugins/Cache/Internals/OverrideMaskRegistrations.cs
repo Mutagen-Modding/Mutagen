@@ -17,30 +17,27 @@ internal static class OverrideMaskRegistrations
     {
         foreach (var category in Enums<GameCategory>.Values)
         {
-            if (GameRegistrations.TryGet(category, out var definition))
+            IOverrideMaskRegistration? regis;
+            if (!GameRegistrations.TryGet(category, out var definition))
             {
-                AddMasks(definition.OverrideMasks());
-                continue;
+                // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                regis = obj as IOverrideMaskRegistration;
+                if (regis == null) continue;
             }
-
-            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
-            var t = Type.GetType(
-                $"Mutagen.Bethesda.{category}.{category}OverrideMaskRegistration, Mutagen.Bethesda.{category}");
-            if (t == null) continue;
-            var obj = Activator.CreateInstance(t);
-            var regis = obj as IOverrideMaskRegistration;
-            if (regis == null) continue;
-            AddMasks(regis);
-        }
-    }
-
-    private static void AddMasks(IOverrideMaskRegistration registration)
-    {
-        foreach (var (record, mask) in registration.Masks)
-        {
-            AddAsOverrideMasks.Add(record.ClassType, mask);
-            AddAsOverrideMasks.Add(record.GetterType, mask);
-            AddAsOverrideMasks.Add(record.SetterType, mask);
+            else
+            {
+                regis = definition.OverrideMasks();
+            }
+            foreach (var maskMap in regis.Masks)
+            {
+                AddAsOverrideMasks.Add(maskMap.Item1.ClassType, maskMap.Item2);
+                AddAsOverrideMasks.Add(maskMap.Item1.GetterType, maskMap.Item2);
+                AddAsOverrideMasks.Add(maskMap.Item1.SetterType, maskMap.Item2);
+            }
         }
     }
 

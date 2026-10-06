@@ -13,19 +13,21 @@ internal sealed class InheritingInterfaceMapper : InterfaceMapGetter, IInheritin
         var ret = new InheritingInterfaceMapper();
         foreach (var category in Enums<GameCategory>.Values)
         {
-            if (GameRegistrations.TryGet(category, out var definition))
+            IInterfaceMapping? regis;
+            if (!GameRegistrations.TryGet(category, out var definition))
             {
-                ret.Register(definition.InheritingMapping());
-                continue;
+                // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                regis = obj as IInterfaceMapping;
+                if (regis == null) continue;
             }
-
-            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
-            var t = Type.GetType(
-                $"Mutagen.Bethesda.{category}.{category}InheritingInterfaceMapping, Mutagen.Bethesda.{category}");
-            if (t == null) continue;
-            var obj = Activator.CreateInstance(t);
-            var regis = obj as IInterfaceMapping;
-            if (regis == null) continue;
+            else
+            {
+                regis = definition.InheritingMapping();
+            }
             ret.Register(regis);
         }
         return ret;

@@ -13,19 +13,21 @@ internal sealed class IsolatedAbstractInterfaceMapper : InterfaceMapGetter, IIso
         var ret = new IsolatedAbstractInterfaceMapper();
         foreach (var category in Enums<GameCategory>.Values)
         {
-            if (GameRegistrations.TryGet(category, out var definition))
+            IInterfaceMapping? regis;
+            if (!GameRegistrations.TryGet(category, out var definition))
             {
-                ret.Register(definition.AbstractMapping());
-                continue;
+                // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+                var t = Type.GetType(
+                    $"Mutagen.Bethesda.{category}.{category}IsolatedAbstractInterfaceMapping, Mutagen.Bethesda.{category}");
+                if (t == null) continue;
+                var obj = Activator.CreateInstance(t);
+                regis = obj as IInterfaceMapping;
+                if (regis == null) continue;
             }
-
-            // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
-            var t = Type.GetType(
-                $"Mutagen.Bethesda.{category}.{category}IsolatedAbstractInterfaceMapping, Mutagen.Bethesda.{category}");
-            if (t == null) continue;
-            var obj = Activator.CreateInstance(t);
-            var regis = obj as IInterfaceMapping;
-            if (regis == null) continue;
+            else
+            {
+                regis = definition.AbstractMapping();
+            }
             ret.Register(regis);
         }
         return ret;

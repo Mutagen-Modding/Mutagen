@@ -33,28 +33,30 @@ public static class Warmup
 
             foreach (var category in Enums<GameCategory>.Values)
             {
-                if (GameRegistrations.TryGet(category, out var definition))
+                IProtocolRegistration? regis;
+                if (!GameRegistrations.TryGet(category, out var definition))
                 {
-                    protocols.Add(definition.Protocol);
-                    _registrations.Add(category);
-                    continue;
+                    // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
+                    try
+                    {
+                        var assemblyName = $"Mutagen.Bethesda.{category}";
+                        var obj = Activator.CreateInstance(
+                            assemblyName,
+                            $"Loqui.ProtocolDefinition_{category}");
+                        regis = obj?.Unwrap() as IProtocolRegistration;
+                        if (regis == null) continue;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
-
-                // Compatibility fallback for games without static registration; reflection is not trim/AOT safe.
-                try
+                else
                 {
-                    var assemblyName = $"Mutagen.Bethesda.{category}";
-                    var obj = Activator.CreateInstance(
-                        assemblyName,
-                        $"Loqui.ProtocolDefinition_{category}");
-                    var regis = obj?.Unwrap() as IProtocolRegistration;
-                    if (regis == null) continue;
-                    protocols.Add(regis);
-                    _registrations.Add(category);
+                    regis = definition.Protocol;
                 }
-                catch
-                {
-                }
+                protocols.Add(regis);
+                _registrations.Add(category);
             }
             
             Initialization.SpinUp(protocols.ToArray());
