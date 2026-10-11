@@ -61,6 +61,11 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMaterialSubstitutionGetter.ReplacementMaterial => this.ReplacementMaterial;
         #endregion
+        #region ObsoleteTreeFolder
+        public String? ObsoleteTreeFolder { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMaterialSubstitutionGetter.ObsoleteTreeFolder => this.ObsoleteTreeFolder;
+        #endregion
         #region ColorRemappingIndex
         public Single? ColorRemappingIndex { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,16 +112,19 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.OriginalMaterial = initialValue;
                 this.ReplacementMaterial = initialValue;
+                this.ObsoleteTreeFolder = initialValue;
                 this.ColorRemappingIndex = initialValue;
             }
 
             public Mask(
                 TItem OriginalMaterial,
                 TItem ReplacementMaterial,
+                TItem ObsoleteTreeFolder,
                 TItem ColorRemappingIndex)
             {
                 this.OriginalMaterial = OriginalMaterial;
                 this.ReplacementMaterial = ReplacementMaterial;
+                this.ObsoleteTreeFolder = ObsoleteTreeFolder;
                 this.ColorRemappingIndex = ColorRemappingIndex;
             }
 
@@ -131,6 +139,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public TItem OriginalMaterial;
             public TItem ReplacementMaterial;
+            public TItem ObsoleteTreeFolder;
             public TItem ColorRemappingIndex;
             #endregion
 
@@ -146,6 +155,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!object.Equals(this.OriginalMaterial, rhs.OriginalMaterial)) return false;
                 if (!object.Equals(this.ReplacementMaterial, rhs.ReplacementMaterial)) return false;
+                if (!object.Equals(this.ObsoleteTreeFolder, rhs.ObsoleteTreeFolder)) return false;
                 if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
                 return true;
             }
@@ -154,6 +164,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.OriginalMaterial);
                 hash.Add(this.ReplacementMaterial);
+                hash.Add(this.ObsoleteTreeFolder);
                 hash.Add(this.ColorRemappingIndex);
                 return hash.ToHashCode();
             }
@@ -165,6 +176,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!eval(this.OriginalMaterial)) return false;
                 if (!eval(this.ReplacementMaterial)) return false;
+                if (!eval(this.ObsoleteTreeFolder)) return false;
                 if (!eval(this.ColorRemappingIndex)) return false;
                 return true;
             }
@@ -175,6 +187,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (eval(this.OriginalMaterial)) return true;
                 if (eval(this.ReplacementMaterial)) return true;
+                if (eval(this.ObsoleteTreeFolder)) return true;
                 if (eval(this.ColorRemappingIndex)) return true;
                 return false;
             }
@@ -192,6 +205,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 obj.OriginalMaterial = eval(this.OriginalMaterial);
                 obj.ReplacementMaterial = eval(this.ReplacementMaterial);
+                obj.ObsoleteTreeFolder = eval(this.ObsoleteTreeFolder);
                 obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
             }
             #endregion
@@ -218,6 +232,10 @@ namespace Mutagen.Bethesda.Fallout4
                     if (printMask?.ReplacementMaterial ?? true)
                     {
                         sb.AppendItem(ReplacementMaterial, "ReplacementMaterial");
+                    }
+                    if (printMask?.ObsoleteTreeFolder ?? true)
+                    {
+                        sb.AppendItem(ObsoleteTreeFolder, "ObsoleteTreeFolder");
                     }
                     if (printMask?.ColorRemappingIndex ?? true)
                     {
@@ -249,6 +267,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             public Exception? OriginalMaterial;
             public Exception? ReplacementMaterial;
+            public Exception? ObsoleteTreeFolder;
             public Exception? ColorRemappingIndex;
             #endregion
 
@@ -262,6 +281,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return OriginalMaterial;
                     case MaterialSubstitution_FieldIndex.ReplacementMaterial:
                         return ReplacementMaterial;
+                    case MaterialSubstitution_FieldIndex.ObsoleteTreeFolder:
+                        return ObsoleteTreeFolder;
                     case MaterialSubstitution_FieldIndex.ColorRemappingIndex:
                         return ColorRemappingIndex;
                     default:
@@ -279,6 +300,9 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case MaterialSubstitution_FieldIndex.ReplacementMaterial:
                         this.ReplacementMaterial = ex;
+                        break;
+                    case MaterialSubstitution_FieldIndex.ObsoleteTreeFolder:
+                        this.ObsoleteTreeFolder = ex;
                         break;
                     case MaterialSubstitution_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = ex;
@@ -299,6 +323,9 @@ namespace Mutagen.Bethesda.Fallout4
                     case MaterialSubstitution_FieldIndex.ReplacementMaterial:
                         this.ReplacementMaterial = (Exception?)obj;
                         break;
+                    case MaterialSubstitution_FieldIndex.ObsoleteTreeFolder:
+                        this.ObsoleteTreeFolder = (Exception?)obj;
+                        break;
                     case MaterialSubstitution_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = (Exception?)obj;
                         break;
@@ -312,6 +339,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (OriginalMaterial != null) return true;
                 if (ReplacementMaterial != null) return true;
+                if (ObsoleteTreeFolder != null) return true;
                 if (ColorRemappingIndex != null) return true;
                 return false;
             }
@@ -345,6 +373,9 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(ReplacementMaterial, "ReplacementMaterial");
                 }
                 {
+                    sb.AppendItem(ObsoleteTreeFolder, "ObsoleteTreeFolder");
+                }
+                {
                     sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                 }
             }
@@ -357,6 +388,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.OriginalMaterial = this.OriginalMaterial.Combine(rhs.OriginalMaterial);
                 ret.ReplacementMaterial = this.ReplacementMaterial.Combine(rhs.ReplacementMaterial);
+                ret.ObsoleteTreeFolder = this.ObsoleteTreeFolder.Combine(rhs.ObsoleteTreeFolder);
                 ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
                 return ret;
             }
@@ -383,6 +415,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool OnOverall;
             public bool OriginalMaterial;
             public bool ReplacementMaterial;
+            public bool ObsoleteTreeFolder;
             public bool ColorRemappingIndex;
             #endregion
 
@@ -395,6 +428,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.OnOverall = onOverall;
                 this.OriginalMaterial = defaultOn;
                 this.ReplacementMaterial = defaultOn;
+                this.ObsoleteTreeFolder = defaultOn;
                 this.ColorRemappingIndex = defaultOn;
             }
 
@@ -413,6 +447,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ret.Add((OriginalMaterial, null));
                 ret.Add((ReplacementMaterial, null));
+                ret.Add((ObsoleteTreeFolder, null));
                 ret.Add((ColorRemappingIndex, null));
             }
 
@@ -488,6 +523,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new String? OriginalMaterial { get; set; }
         new String? ReplacementMaterial { get; set; }
+        new String? ObsoleteTreeFolder { get; set; }
         new Single? ColorRemappingIndex { get; set; }
     }
 
@@ -505,6 +541,7 @@ namespace Mutagen.Bethesda.Fallout4
         static ILoquiRegistration StaticRegistration => MaterialSubstitution_Registration.Instance;
         String? OriginalMaterial { get; }
         String? ReplacementMaterial { get; }
+        String? ObsoleteTreeFolder { get; }
         Single? ColorRemappingIndex { get; }
 
     }
@@ -677,7 +714,8 @@ namespace Mutagen.Bethesda.Fallout4
     {
         OriginalMaterial = 0,
         ReplacementMaterial = 1,
-        ColorRemappingIndex = 2,
+        ObsoleteTreeFolder = 2,
+        ColorRemappingIndex = 3,
     }
     #endregion
 
@@ -688,9 +726,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(MaterialSubstitution.Mask<>);
 
@@ -768,6 +806,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.OriginalMaterial = default;
             item.ReplacementMaterial = default;
+            item.ObsoleteTreeFolder = default;
             item.ColorRemappingIndex = default;
         }
         
@@ -820,6 +859,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.OriginalMaterial = string.Equals(item.OriginalMaterial, rhs.OriginalMaterial);
             ret.ReplacementMaterial = string.Equals(item.ReplacementMaterial, rhs.ReplacementMaterial);
+            ret.ObsoleteTreeFolder = string.Equals(item.ObsoleteTreeFolder, rhs.ObsoleteTreeFolder);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
         }
         
@@ -875,6 +915,11 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(ReplacementMaterialItem, "ReplacementMaterial");
             }
+            if ((printMask?.ObsoleteTreeFolder ?? true)
+                && item.ObsoleteTreeFolder is {} ObsoleteTreeFolderItem)
+            {
+                sb.AppendItem(ObsoleteTreeFolderItem, "ObsoleteTreeFolder");
+            }
             if ((printMask?.ColorRemappingIndex ?? true)
                 && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
             {
@@ -897,6 +942,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!string.Equals(lhs.ReplacementMaterial, rhs.ReplacementMaterial)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder) ?? true))
+            {
+                if (!string.Equals(lhs.ObsoleteTreeFolder, rhs.ObsoleteTreeFolder)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex) ?? true))
             {
                 if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
@@ -914,6 +963,10 @@ namespace Mutagen.Bethesda.Fallout4
             if (item.ReplacementMaterial is {} ReplacementMaterialitem)
             {
                 hash.Add(ReplacementMaterialitem);
+            }
+            if (item.ObsoleteTreeFolder is {} ObsoleteTreeFolderitem)
+            {
+                hash.Add(ObsoleteTreeFolderitem);
             }
             if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
@@ -958,6 +1011,10 @@ namespace Mutagen.Bethesda.Fallout4
             if ((copyMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ReplacementMaterial) ?? true))
             {
                 item.ReplacementMaterial = rhs.ReplacementMaterial;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder) ?? true))
+            {
+                item.ObsoleteTreeFolder = rhs.ObsoleteTreeFolder;
             }
             if ((copyMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex) ?? true))
             {
@@ -1082,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item.ReplacementMaterial,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            MaterialSubstitutionBinaryWriteTranslation.WriteBinaryFNAMParsing(
+            MaterialSubstitutionBinaryWriteTranslation.WriteBinaryObsoleteTreeFolder(
                 writer: writer,
                 item: item);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1091,15 +1148,15 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
         }
 
-        public static partial void WriteBinaryFNAMParsingCustom(
+        public static partial void WriteBinaryObsoleteTreeFolderCustom(
             MutagenWriter writer,
             IMaterialSubstitutionGetter item);
 
-        public static void WriteBinaryFNAMParsing(
+        public static void WriteBinaryObsoleteTreeFolder(
             MutagenWriter writer,
             IMaterialSubstitutionGetter item)
         {
-            WriteBinaryFNAMParsingCustom(
+            WriteBinaryObsoleteTreeFolderCustom(
                 writer: writer,
                 item: item);
         }
@@ -1166,11 +1223,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
-                    return MaterialSubstitutionBinaryCreateTranslation.FillBinaryFNAMParsingCustom(
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder, translationParams)) return ParseResult.Stop;
+                    MaterialSubstitutionBinaryCreateTranslation.FillBinaryObsoleteTreeFolderCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item,
                         lastParsed: lastParsed);
+                    return (int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -1184,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
 
-        public static partial ParseResult FillBinaryFNAMParsingCustom(
+        public static partial void FillBinaryObsoleteTreeFolderCustom(
             MutagenFrame frame,
             IMaterialSubstitution item,
             PreviousParse lastParsed);
@@ -1260,11 +1318,13 @@ namespace Mutagen.Bethesda.Fallout4
         private int? _ReplacementMaterialLocation;
         public String? ReplacementMaterial => _ReplacementMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReplacementMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region FNAMParsing
-        public partial ParseResult FNAMParsingCustomParse(
+        #region ObsoleteTreeFolder
+        partial void ObsoleteTreeFolderCustomParse(
             OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
+            int finalPos,
+            int offset);
+        public partial String? GetObsoleteTreeFolderCustom();
+        public String? ObsoleteTreeFolder => GetObsoleteTreeFolderCustom();
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;
@@ -1347,11 +1407,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
-                    return FNAMParsingCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder, translationParams)) return ParseResult.Stop;
+                    ObsoleteTreeFolderCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
+                    return (int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder;
                 }
                 case RecordTypeInts.CNAM:
                 {
