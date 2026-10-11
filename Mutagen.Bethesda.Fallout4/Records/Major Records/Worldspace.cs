@@ -16,6 +16,7 @@ partial class Worldspace
     [Flags]
     public enum MajorFlag
     {
+        PartialForm = 0x0000_4000,
         CanNotWait = 0x0008_0000,
     }
 

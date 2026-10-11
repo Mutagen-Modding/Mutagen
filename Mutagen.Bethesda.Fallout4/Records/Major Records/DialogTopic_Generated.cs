@@ -903,6 +903,11 @@ namespace Mutagen.Bethesda.Fallout4
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         #pragma warning disable CS0618 // Type or member is obsolete
@@ -1033,6 +1038,10 @@ namespace Mutagen.Bethesda.Fallout4
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
         new ExtendedList<DialogResponses> Responses { get; }
+        #region Mutagen
+        new DialogTopic.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IDialogTopicInternal :
@@ -1073,6 +1082,10 @@ namespace Mutagen.Bethesda.Fallout4
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
         IReadOnlyList<IDialogResponsesGetter> Responses { get; }
+
+        #region Mutagen
+        DialogTopic.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -2991,6 +3004,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
         protected override Type LinkType => typeof(IDialogTopicGetter);
 
+        public DialogTopic.MajorFlag MajorFlags => (DialogTopic.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
         private int? _NameLocation;
