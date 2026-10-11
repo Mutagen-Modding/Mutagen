@@ -3474,7 +3474,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region QuestFormVersion
         private int _QuestFormVersionLocation => _DNAMLocation!.Value.Min + 0x3;
         private bool _QuestFormVersion_IsSet => _DNAMLocation.HasValue;
-        public Byte QuestFormVersion => _QuestFormVersion_IsSet ? _recordData.Span[_QuestFormVersionLocation] : default;
+        public Byte QuestFormVersion => _QuestFormVersion_IsSet ? _recordData.Span[_QuestFormVersionLocation] : Quest.QuestFormVersionDefault;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x4;

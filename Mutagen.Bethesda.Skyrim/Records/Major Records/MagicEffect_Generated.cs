@@ -4961,12 +4961,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region MagicSkill
         private int _MagicSkillLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MagicSkill_IsSet => _DATALocation.HasValue;
-        public ActorValue MagicSkill => _MagicSkill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MagicSkillLocation, 0x4)) : default;
+        public ActorValue MagicSkill => _MagicSkill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MagicSkillLocation, 0x4)) : MagicEffect.MagicSkillDefault;
         #endregion
         #region ResistValue
         private int _ResistValueLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
-        public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ResistValueLocation, 0x4)) : default;
+        public ActorValue ResistValue => _ResistValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ResistValueLocation, 0x4)) : MagicEffect.ResistValueDefault;
         #endregion
         #region CounterEffectLogic
         private int _CounterEffectLogicLocation => _DATALocation!.Value.Min + 0x14;
@@ -5058,7 +5058,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region SecondActorValue
         private int _SecondActorValueLocation => _DATALocation!.Value.Min + 0x58;
         private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
-        public ActorValue SecondActorValue => _SecondActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
+        public ActorValue SecondActorValue => _SecondActorValue_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SecondActorValueLocation, 0x4)) : MagicEffect.SecondActorValueDefault;
         #endregion
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value.Min + 0x5C;

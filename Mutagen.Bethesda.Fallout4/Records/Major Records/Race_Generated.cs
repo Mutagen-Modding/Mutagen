@@ -9466,18 +9466,18 @@ namespace Mutagen.Bethesda.Fallout4
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x3C;
         private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
+        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : Race.ShieldBipedObjectDefault;
         #endregion
         #region BeardBipedObject
         private int _BeardBipedObjectLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x40;
         private bool _BeardBipedObject_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 124;
-        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BeardBipedObjectLocation, 0x4)) : default;
+        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BeardBipedObjectLocation, 0x4)) : Race.BeardBipedObjectDefault;
         int BeardBipedObjectVersioningOffset => DefaultWeightVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 124 ? -4 : 0);
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x44;
         private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
+        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : Race.BodyBipedObjectDefault;
         #endregion
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x48;
@@ -9514,7 +9514,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region PipboyBipedObject
         private int _PipboyBipedObjectLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x80;
         private bool _PipboyBipedObject_IsSet => _DATALocation.HasValue;
-        public BipedObject PipboyBipedObject => _PipboyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PipboyBipedObjectLocation, 0x4)) : default;
+        public BipedObject PipboyBipedObject => _PipboyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PipboyBipedObjectLocation, 0x4)) : Race.PipboyBipedObjectDefault;
         #endregion
         #region XPValue
         private int _XPValueLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x84;

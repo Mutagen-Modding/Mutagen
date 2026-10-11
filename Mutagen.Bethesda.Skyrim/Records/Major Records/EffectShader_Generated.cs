@@ -7817,17 +7817,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region MembraneSourceBlendMode
         private int _MembraneSourceBlendModeLocation => _DATALocation!.Value.Min + 0x4;
         private bool _MembraneSourceBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode MembraneSourceBlendMode => _MembraneSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneSourceBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode MembraneSourceBlendMode => _MembraneSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneSourceBlendModeLocation, 0x4)) : EffectShader.MembraneSourceBlendModeDefault;
         #endregion
         #region MembraneBlendOperation
         private int _MembraneBlendOperationLocation => _DATALocation!.Value.Min + 0x8;
         private bool _MembraneBlendOperation_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendOperation MembraneBlendOperation => _MembraneBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneBlendOperationLocation, 0x4)) : default;
+        public EffectShader.BlendOperation MembraneBlendOperation => _MembraneBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneBlendOperationLocation, 0x4)) : EffectShader.MembraneBlendOperationDefault;
         #endregion
         #region MembraneZTest
         private int _MembraneZTestLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MembraneZTest_IsSet => _DATALocation.HasValue;
-        public EffectShader.ZTest MembraneZTest => _MembraneZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneZTestLocation, 0x4)) : default;
+        public EffectShader.ZTest MembraneZTest => _MembraneZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneZTestLocation, 0x4)) : EffectShader.MembraneZTestDefault;
         #endregion
         #region FillColorKey1
         private int _FillColorKey1Location => _DATALocation!.Value.Min + 0x10;
@@ -7927,27 +7927,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region MembraneDestBlendMode
         private int _MembraneDestBlendModeLocation => _DATALocation!.Value.Min + 0x5C;
         private bool _MembraneDestBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode MembraneDestBlendMode => _MembraneDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneDestBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode MembraneDestBlendMode => _MembraneDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneDestBlendModeLocation, 0x4)) : EffectShader.MembraneDestBlendModeDefault;
         #endregion
         #region ParticleSourceBlendMode
         private int _ParticleSourceBlendModeLocation => _DATALocation!.Value.Min + 0x60;
         private bool _ParticleSourceBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode ParticleSourceBlendMode => _ParticleSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleSourceBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode ParticleSourceBlendMode => _ParticleSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleSourceBlendModeLocation, 0x4)) : EffectShader.ParticleSourceBlendModeDefault;
         #endregion
         #region ParticleBlendOperation
         private int _ParticleBlendOperationLocation => _DATALocation!.Value.Min + 0x64;
         private bool _ParticleBlendOperation_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendOperation ParticleBlendOperation => _ParticleBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleBlendOperationLocation, 0x4)) : default;
+        public EffectShader.BlendOperation ParticleBlendOperation => _ParticleBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleBlendOperationLocation, 0x4)) : EffectShader.ParticleBlendOperationDefault;
         #endregion
         #region ParticleZTest
         private int _ParticleZTestLocation => _DATALocation!.Value.Min + 0x68;
         private bool _ParticleZTest_IsSet => _DATALocation.HasValue;
-        public EffectShader.ZTest ParticleZTest => _ParticleZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleZTestLocation, 0x4)) : default;
+        public EffectShader.ZTest ParticleZTest => _ParticleZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleZTestLocation, 0x4)) : EffectShader.ParticleZTestDefault;
         #endregion
         #region ParticleDestBlendMode
         private int _ParticleDestBlendModeLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _ParticleDestBlendMode_IsSet => _DATALocation.HasValue;
-        public EffectShader.BlendMode ParticleDestBlendMode => _ParticleDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleDestBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode ParticleDestBlendMode => _ParticleDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ParticleDestBlendModeLocation, 0x4)) : EffectShader.ParticleDestBlendModeDefault;
         #endregion
         #region ParticleBirthRampUpTime
         private int _ParticleBirthRampUpTimeLocation => _DATALocation!.Value.Min + 0x70;

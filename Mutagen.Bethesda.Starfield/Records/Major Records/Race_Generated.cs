@@ -7336,17 +7336,17 @@ namespace Mutagen.Bethesda.Starfield
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DAT2Location!.Value.Min + 0x40;
         private bool _ShieldBipedObject_IsSet => _DAT2Location.HasValue;
-        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
+        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : Race.ShieldBipedObjectDefault;
         #endregion
         #region BeardBipedObject
         private int _BeardBipedObjectLocation => _DAT2Location!.Value.Min + 0x44;
         private bool _BeardBipedObject_IsSet => _DAT2Location.HasValue;
-        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BeardBipedObjectLocation, 0x4)) : default;
+        public BipedObject BeardBipedObject => _BeardBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BeardBipedObjectLocation, 0x4)) : Race.BeardBipedObjectDefault;
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DAT2Location!.Value.Min + 0x48;
         private bool _BodyBipedObject_IsSet => _DAT2Location.HasValue;
-        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
+        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_BodyBipedObjectLocation, 0x4)) : Race.BodyBipedObjectDefault;
         #endregion
         #region DAT2Unknown2
         private int _DAT2Unknown2Location => _DAT2Location!.Value.Min + 0x4C;
