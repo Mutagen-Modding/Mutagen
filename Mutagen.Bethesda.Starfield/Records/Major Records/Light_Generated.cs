@@ -5230,12 +5230,12 @@ namespace Mutagen.Bethesda.Starfield
         #region FalloffExponent
         private int _FalloffExponentLocation => _DAT2Location!.Value.Min + 0x10;
         private bool _FalloffExponent_IsSet => _DAT2Location.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default(Single);
+        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : Light.FalloffExponentDefault;
         #endregion
         #region FOV
         private int _FOVLocation => _DAT2Location!.Value.Min + 0x14;
         private bool _FOV_IsSet => _DAT2Location.HasValue;
-        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default(Single);
+        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : Light.FOVDefault;
         #endregion
         #region NearClip
         private int _NearClipLocation => _DAT2Location!.Value.Min + 0x18;
