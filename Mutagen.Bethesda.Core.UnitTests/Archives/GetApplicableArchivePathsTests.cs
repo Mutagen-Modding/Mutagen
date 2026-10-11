@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using Shouldly;
+using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
@@ -109,6 +110,16 @@ public class GetApplicableArchivePathsTests
         ]);
     }
     
+    [Fact]
+    public void UpperCaseExtension()
+    {
+        using var dataDir = TestPathing.GetTempFolder(nameof(GetApplicableArchivePathsTests));
+        var archive = Path.Combine(dataDir.Dir.Path, $"{TestConstants.MasterModKey2.Name} - Main.BSA");
+        File.WriteAllText(archive, string.Empty);
+        Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, dataDir.Dir, TestConstants.MasterModKey2)
+            .ShouldBe([new FilePath(archive)]);
+    }
+
     [Theory, MutagenContainerAutoData]
     public void SuffixNaming(
         IFileSystem fs,
