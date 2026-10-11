@@ -13,7 +13,7 @@
     <Fields>
       <String name="OriginalMaterial" recordType="BNAM" />
       <String name="ReplacementMaterial" recordType="SNAM" />
-      <CustomLogic name="FNAMParsing" recordType="FNAM" />
+      <String name="ObsoleteTreeFolder" recordType="FNAM" binary="Custom" />
       <Float name="ColorRemappingIndex" recordType="CNAM" />
     </Fields>
   </Object>
