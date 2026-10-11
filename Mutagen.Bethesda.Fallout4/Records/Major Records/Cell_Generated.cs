@@ -361,29 +361,29 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CombinedMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<UInt32> _CombinedMeshes = new ExtendedList<UInt32>();
-        public ExtendedList<UInt32> CombinedMeshes
+        private ExtendedList<UInt32>? _CombinedMeshes;
+        public ExtendedList<UInt32>? CombinedMeshes
         {
             get => this._CombinedMeshes;
-            init => this._CombinedMeshes = value;
+            set => this._CombinedMeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<UInt32> ICellGetter.CombinedMeshes => _CombinedMeshes;
+        IReadOnlyList<UInt32>? ICellGetter.CombinedMeshes => _CombinedMeshes;
         #endregion
 
         #endregion
         #region CombinedMeshReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<CellCombinedMeshReference> _CombinedMeshReferences = new ExtendedList<CellCombinedMeshReference>();
-        public ExtendedList<CellCombinedMeshReference> CombinedMeshReferences
+        private ExtendedList<CellCombinedMeshReference>? _CombinedMeshReferences;
+        public ExtendedList<CellCombinedMeshReference>? CombinedMeshReferences
         {
             get => this._CombinedMeshReferences;
-            init => this._CombinedMeshReferences = value;
+            set => this._CombinedMeshReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ICellCombinedMeshReferenceGetter> ICellGetter.CombinedMeshReferences => _CombinedMeshReferences;
+        IReadOnlyList<ICellCombinedMeshReferenceGetter>? ICellGetter.CombinedMeshReferences => _CombinedMeshReferences;
         #endregion
 
         #endregion
@@ -2696,8 +2696,8 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new IFormLinkNullable<IGodRaysGetter> GodRays { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; set; }
-        new ExtendedList<UInt32> CombinedMeshes { get; }
-        new ExtendedList<CellCombinedMeshReference> CombinedMeshReferences { get; }
+        new ExtendedList<UInt32>? CombinedMeshes { get; set; }
+        new ExtendedList<CellCombinedMeshReference>? CombinedMeshReferences { get; set; }
         new Landscape? Landscape { get; set; }
         new ExtendedList<NavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
@@ -2772,8 +2772,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         IFormLinkNullableGetter<IGodRaysGetter> GodRays { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences { get; }
-        IReadOnlyList<UInt32> CombinedMeshes { get; }
-        IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; }
+        IReadOnlyList<UInt32>? CombinedMeshes { get; }
+        IReadOnlyList<ICellCombinedMeshReferenceGetter>? CombinedMeshReferences { get; }
         ILandscapeGetter? Landscape { get; }
         IReadOnlyList<INavigationMeshGetter> NavigationMeshes { get; }
         Int32 Timestamp { get; }
@@ -3414,8 +3414,8 @@ namespace Mutagen.Bethesda.Fallout4
             item.ImageSpace.Clear();
             item.GodRays.Clear();
             item.PhysicsReferences = null;
-            item.CombinedMeshes.Clear();
-            item.CombinedMeshReferences.Clear();
+            item.CombinedMeshes = null;
+            item.CombinedMeshReferences = null;
             item.Landscape = null;
             item.NavigationMeshes.Clear();
             item.Timestamp = default(Int32);
@@ -3458,7 +3458,7 @@ namespace Mutagen.Bethesda.Fallout4
             obj.ImageSpace.Relink(mapping);
             obj.GodRays.Relink(mapping);
             obj.PhysicsReferences?.RemapLinks(mapping);
-            obj.CombinedMeshReferences.RemapLinks(mapping);
+            obj.CombinedMeshReferences?.RemapLinks(mapping);
             obj.Landscape?.RemapLinks(mapping);
             obj.NavigationMeshes.RemapLinks(mapping);
             obj.Persistent.RemapLinks(mapping);
@@ -4034,12 +4034,13 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.CombinedMeshes?.Overall ?? true)
+            if ((printMask?.CombinedMeshes?.Overall ?? true)
+                && item.CombinedMeshes is {} CombinedMeshesItem)
             {
                 sb.AppendLine("CombinedMeshes =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.CombinedMeshes)
+                    foreach (var subItem in CombinedMeshesItem)
                     {
                         using (sb.Brace())
                         {
@@ -4048,12 +4049,13 @@ namespace Mutagen.Bethesda.Fallout4
                     }
                 }
             }
-            if (printMask?.CombinedMeshReferences?.Overall ?? true)
+            if ((printMask?.CombinedMeshReferences?.Overall ?? true)
+                && item.CombinedMeshReferences is {} CombinedMeshReferencesItem)
             {
                 sb.AppendLine("CombinedMeshReferences =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.CombinedMeshReferences)
+                    foreach (var subItem in CombinedMeshReferencesItem)
                     {
                         using (sb.Brace())
                         {
@@ -4333,7 +4335,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.CombinedMeshReferences) ?? true))
             {
-                if (!lhs.CombinedMeshReferences.SequenceEqual(rhs.CombinedMeshReferences, (l, r) => ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.CombinedMeshReferences)))) return false;
+                if (!lhs.CombinedMeshReferences.SequenceEqualNullable(rhs.CombinedMeshReferences, (l, r) => ((CellCombinedMeshReferenceCommon)((ICellCombinedMeshReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Cell_FieldIndex.CombinedMeshReferences)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
@@ -4598,9 +4600,12 @@ namespace Mutagen.Bethesda.Fallout4
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.CombinedMeshReferences.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            if (obj.CombinedMeshReferences is {} CombinedMeshReferencesItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in CombinedMeshReferencesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             if (obj.Landscape is {} LandscapeItems)
             if (iterateNestedRecords)
@@ -5740,7 +5745,16 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)Cell_FieldIndex.CombinedMeshes);
                 try
                 {
-                    item.CombinedMeshes.SetTo(rhs.CombinedMeshes);
+                    if ((rhs.CombinedMeshes != null))
+                    {
+                        item.CombinedMeshes = 
+                            rhs.CombinedMeshes
+                            .ToExtendedList<UInt32>();
+                    }
+                    else
+                    {
+                        item.CombinedMeshes = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5757,14 +5771,22 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)Cell_FieldIndex.CombinedMeshReferences);
                 try
                 {
-                    item.CombinedMeshReferences.SetTo(
-                        rhs.CombinedMeshReferences
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.CombinedMeshReferences != null))
+                    {
+                        item.CombinedMeshReferences = 
+                            rhs.CombinedMeshReferences
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<CellCombinedMeshReference>();
+                    }
+                    else
+                    {
+                        item.CombinedMeshReferences = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
