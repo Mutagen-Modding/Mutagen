@@ -21,6 +21,12 @@
       <Bool name="OutputChar" binary="NoGeneration" />
     </Fields>
   </Object>
+  <Object name="GlobalUnknown" recordType="GLOB" baseClass="Global" objType="Record">
+    <Fields>
+      <Char name="TypeChar" recordType="FNAM" nullable="False" binary="Custom" notDuplicate="true" />
+      <Float name="Data" recordType="FLTV" />
+    </Fields>
+  </Object>
   <Object name="GlobalBool" recordType="GLOB" baseClass="Global" objType="Record">
     <Fields>
       <Bool name="Data" recordType="FLTV" binary="Custom" />
