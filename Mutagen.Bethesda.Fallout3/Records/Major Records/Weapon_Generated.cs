@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region PowerAttackAnimationOverride
         public static readonly Weapon.PowerAttackAnim PowerAttackAnimationOverrideDefault = Weapon.PowerAttackAnim.Default;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Weapon.PowerAttackAnim _PowerAttackAnimationOverride;
+        private Weapon.PowerAttackAnim _PowerAttackAnimationOverride = PowerAttackAnimationOverrideDefault;
         public Weapon.PowerAttackAnim PowerAttackAnimationOverride
         {
             get => this._PowerAttackAnimationOverride;
@@ -10809,7 +10809,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region PowerAttackAnimationOverride
         private int _PowerAttackAnimationOverrideLocation => _DNAMLocation!.Value.Min + 0xA4;
         private bool _PowerAttackAnimationOverride_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break3);
-        public Weapon.PowerAttackAnim PowerAttackAnimationOverride => _PowerAttackAnimationOverride_IsSet ? (Weapon.PowerAttackAnim)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PowerAttackAnimationOverrideLocation, 0x4)) : default;
+        public Weapon.PowerAttackAnim PowerAttackAnimationOverride => _PowerAttackAnimationOverride_IsSet ? (Weapon.PowerAttackAnim)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PowerAttackAnimationOverrideLocation, 0x4)) : Weapon.PowerAttackAnimationOverrideDefault;
         #endregion
         #region StrengthReq
         private int _StrengthReqLocation => _DNAMLocation!.Value.Min + 0xA8;

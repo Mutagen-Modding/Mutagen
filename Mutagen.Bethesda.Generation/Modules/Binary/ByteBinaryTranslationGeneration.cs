@@ -54,14 +54,14 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
             if (typeGen.CanBeNullable(getter: true))
             {
                 recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)})";
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {recordDataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {recordDataAccessor}[0] : {typeGen.UnsetValue($"default(Byte{(typeGen.Nullable ? "?" : null)})")};");
             }
             else
             {
                 sb.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
                 if (dataType != null) throw new ArgumentException();
                 recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)})";
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {recordDataAccessor}[0] : default(Byte{(typeGen.Nullable ? "?" : null)});");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {recordDataAccessor}[0] : {typeGen.UnsetValue($"default(Byte{(typeGen.Nullable ? "?" : null)})")};");
             }
         }
         else
@@ -70,7 +70,7 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
             {
                 if (data.IsAfterBreak)
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? default : {structDataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");   
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? {typeGen.UnsetValue("default")} : {structDataAccessor}.Span[{passedLengthAccessor ?? "0x0"}];");   
                 }
                 else
                 {
@@ -80,7 +80,7 @@ public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGenerat
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span[_{typeGen.Name}Location] : default;");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {recordDataAccessor}.Span[_{typeGen.Name}Location] : {typeGen.UnsetValue("default")};");
             }
         }
     }
