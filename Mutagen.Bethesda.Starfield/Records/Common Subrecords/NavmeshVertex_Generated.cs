@@ -995,7 +995,10 @@ namespace Mutagen.Bethesda.Starfield
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
-            writer.Write(item.Unknown);
+            if (writer.MetaData.FormVersion!.Value >= 493)
+            {
+                writer.Write(item.Unknown);
+            }
         }
 
         public void Write(
@@ -1030,7 +1033,10 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame)
         {
             item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown = frame.ReadInt32();
+            if (frame.MetaData.FormVersion!.Value >= 493)
+            {
+                item.Unknown = frame.ReadInt32();
+            }
         }
 
     }
@@ -1097,7 +1103,10 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        #region Unknown
+        public Int32 Unknown => _package.FormVersion!.FormVersion!.Value >= 493 ? BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4)) : default(Int32);
+        int UnknownVersioningOffset => _package.FormVersion!.FormVersion!.Value < 493 ? -4 : 0;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1129,7 +1138,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new NavmeshVertexBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x10;
+            stream.Position += ret.UnknownVersioningOffset + 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
