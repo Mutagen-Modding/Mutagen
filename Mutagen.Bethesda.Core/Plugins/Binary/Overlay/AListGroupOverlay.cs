@@ -1,12 +1,12 @@
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
 using System.Buffers.Binary;
 using System.Collections;
 using System.IO.Compression;
 using Loqui;
-using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Assets;
 
@@ -61,7 +61,6 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
         IBinaryReadStream stream,
         ReadOnlyMemorySlice<byte> data,
         BinaryOverlayFactoryPackage package,
-        ObjectType objectType,
         int offset)
     {
         List<int> locations = new List<int>();
@@ -73,9 +72,19 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
         // Parse locations
         while (stream.Position < finalPos)
         {
-            VariableHeader meta = package.MetaData.Constants.VariableHeader(stream.RemainingMemory, objectType);
+            var groupHeader = package.MetaData.Constants.GroupHeader(stream.RemainingMemory);
+            if (!groupHeader.IsGroup)
+            {
+                var majorMeta = package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory);
+                var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID, reference: false);
+                throw new RecordException(formKey: formKey, recordType: null, modKey: package.MetaData.ModKey, edid: null, message: "Unexpected type encountered when parsing group locations: " + majorMeta.RecordType);
+            }
+            if (groupHeader.TotalLength < groupHeader.HeaderLength)
+            {
+                throw new MalformedDataException($"Group length {groupHeader.TotalLength} is shorter than its header");
+            }
             locations.Add(checked((int)stream.Position - offset));
-            stream.Position += checked((int)meta.TotalLength);
+            stream.Position += checked((int)groupHeader.TotalLength);
         }
 
         return new GroupListOverlay<T>(
