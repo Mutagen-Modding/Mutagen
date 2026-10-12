@@ -22,6 +22,13 @@ public interface IAssociatedFilesLocator
 public class AssociatedFilesLocator : IAssociatedFilesLocator
 {
     private readonly IFileSystem _fileSystem;
+    private static readonly EnumerationOptions IgnoringCase = new()
+    {
+        MatchCasing = MatchCasing.CaseInsensitive,
+        MatchType = MatchType.Win32,
+        AttributesToSkip = 0,
+        IgnoreInaccessible = false,
+    };
 
     public AssociatedFilesLocator(IFileSystem fileSystem)
     {
@@ -49,7 +56,7 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
             if (_fileSystem.Directory.Exists(stringsFolder))
             {
                 foreach (var stringsFile in _fileSystem.Directory.EnumerateFiles(stringsFolder,
-                             $"{modPath.ModKey.Name}_*.*strings"))
+                             $"{modPath.ModKey.Name}_*.*strings", IgnoringCase))
                 {
                     yield return stringsFile;
                 }
@@ -81,7 +88,7 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
         var baseName = Path.GetFileNameWithoutExtension(modPath);
         var extension = Path.GetExtension(modPath);
         var searchPattern = $"{baseName}_*{extension}";
-        foreach (var file in _fileSystem.Directory.EnumerateFiles(dir, searchPattern))
+        foreach (var file in _fileSystem.Directory.EnumerateFiles(dir, searchPattern, IgnoringCase))
         {
             var fileName = Path.GetFileNameWithoutExtension(file);
             if (MultiModFileAnalysis.IsSplitFileName(fileName, baseName))
@@ -96,12 +103,11 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
         ModKey modKey, 
         string bsaSuffix)
     {
-        var bsaPath = new FilePath(Path.Combine(dir, $"{modKey.Name}.{bsaSuffix}"));
-        if (_fileSystem.File.Exists(bsaPath))
+        foreach (var bsa in _fileSystem.Directory.EnumerateFiles(dir, $"{modKey.Name}.{bsaSuffix}", IgnoringCase))
         {
-            yield return bsaPath;
+            yield return bsa;
         }
-        foreach (var bsa in _fileSystem.Directory.EnumerateFiles(dir, $"{modKey.Name} - *.{bsaSuffix}"))
+        foreach (var bsa in _fileSystem.Directory.EnumerateFiles(dir, $"{modKey.Name} - *.{bsaSuffix}", IgnoringCase))
         {
             yield return bsa;
         }
