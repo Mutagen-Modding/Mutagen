@@ -23027,572 +23027,686 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region GameSettings
         private List<RangeInt64>? _GameSettingsLocations;
-        private ISkyrimGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? SkyrimGroupBinaryOverlay<IGameSettingGetter>.SkyrimGroupFactory(_stream, _GameSettingsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IGameSettingGetter>> _GameSettingsCache = new();
+        private ISkyrimGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? _GameSettingsCache.Get(() => SkyrimGroupBinaryOverlay<IGameSettingGetter>.SkyrimGroupFactory(_stream, _GameSettingsLocations, _package)) : default;
         public ISkyrimGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new SkyrimGroup<GameSetting>(this);
         #endregion
         #region Keywords
         private List<RangeInt64>? _KeywordsLocations;
-        private ISkyrimGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? SkyrimGroupBinaryOverlay<IKeywordGetter>.SkyrimGroupFactory(_stream, _KeywordsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IKeywordGetter>> _KeywordsCache = new();
+        private ISkyrimGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? _KeywordsCache.Get(() => SkyrimGroupBinaryOverlay<IKeywordGetter>.SkyrimGroupFactory(_stream, _KeywordsLocations, _package)) : default;
         public ISkyrimGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new SkyrimGroup<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
         private List<RangeInt64>? _LocationReferenceTypesLocations;
-        private ISkyrimGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? SkyrimGroupBinaryOverlay<ILocationReferenceTypeGetter>.SkyrimGroupFactory(_stream, _LocationReferenceTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILocationReferenceTypeGetter>> _LocationReferenceTypesCache = new();
+        private ISkyrimGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? _LocationReferenceTypesCache.Get(() => SkyrimGroupBinaryOverlay<ILocationReferenceTypeGetter>.SkyrimGroupFactory(_stream, _LocationReferenceTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new SkyrimGroup<LocationReferenceType>(this);
         #endregion
         #region Actions
         private List<RangeInt64>? _ActionsLocations;
-        private ISkyrimGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? SkyrimGroupBinaryOverlay<IActionRecordGetter>.SkyrimGroupFactory(_stream, _ActionsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IActionRecordGetter>> _ActionsCache = new();
+        private ISkyrimGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? _ActionsCache.Get(() => SkyrimGroupBinaryOverlay<IActionRecordGetter>.SkyrimGroupFactory(_stream, _ActionsLocations, _package)) : default;
         public ISkyrimGroupGetter<IActionRecordGetter> Actions => _Actions ?? new SkyrimGroup<ActionRecord>(this);
         #endregion
         #region TextureSets
         private List<RangeInt64>? _TextureSetsLocations;
-        private ISkyrimGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? SkyrimGroupBinaryOverlay<ITextureSetGetter>.SkyrimGroupFactory(_stream, _TextureSetsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ITextureSetGetter>> _TextureSetsCache = new();
+        private ISkyrimGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? _TextureSetsCache.Get(() => SkyrimGroupBinaryOverlay<ITextureSetGetter>.SkyrimGroupFactory(_stream, _TextureSetsLocations, _package)) : default;
         public ISkyrimGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new SkyrimGroup<TextureSet>(this);
         #endregion
         #region Globals
         private List<RangeInt64>? _GlobalsLocations;
-        private ISkyrimGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? SkyrimGroupBinaryOverlay<IGlobalGetter>.SkyrimGroupFactory(_stream, _GlobalsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IGlobalGetter>> _GlobalsCache = new();
+        private ISkyrimGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? _GlobalsCache.Get(() => SkyrimGroupBinaryOverlay<IGlobalGetter>.SkyrimGroupFactory(_stream, _GlobalsLocations, _package)) : default;
         public ISkyrimGroupGetter<IGlobalGetter> Globals => _Globals ?? new SkyrimGroup<Global>(this);
         #endregion
         #region Classes
         private List<RangeInt64>? _ClassesLocations;
-        private ISkyrimGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? SkyrimGroupBinaryOverlay<IClassGetter>.SkyrimGroupFactory(_stream, _ClassesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IClassGetter>> _ClassesCache = new();
+        private ISkyrimGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? _ClassesCache.Get(() => SkyrimGroupBinaryOverlay<IClassGetter>.SkyrimGroupFactory(_stream, _ClassesLocations, _package)) : default;
         public ISkyrimGroupGetter<IClassGetter> Classes => _Classes ?? new SkyrimGroup<Class>(this);
         #endregion
         #region Factions
         private List<RangeInt64>? _FactionsLocations;
-        private ISkyrimGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? SkyrimGroupBinaryOverlay<IFactionGetter>.SkyrimGroupFactory(_stream, _FactionsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IFactionGetter>> _FactionsCache = new();
+        private ISkyrimGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? _FactionsCache.Get(() => SkyrimGroupBinaryOverlay<IFactionGetter>.SkyrimGroupFactory(_stream, _FactionsLocations, _package)) : default;
         public ISkyrimGroupGetter<IFactionGetter> Factions => _Factions ?? new SkyrimGroup<Faction>(this);
         #endregion
         #region HeadParts
         private List<RangeInt64>? _HeadPartsLocations;
-        private ISkyrimGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? SkyrimGroupBinaryOverlay<IHeadPartGetter>.SkyrimGroupFactory(_stream, _HeadPartsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IHeadPartGetter>> _HeadPartsCache = new();
+        private ISkyrimGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? _HeadPartsCache.Get(() => SkyrimGroupBinaryOverlay<IHeadPartGetter>.SkyrimGroupFactory(_stream, _HeadPartsLocations, _package)) : default;
         public ISkyrimGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new SkyrimGroup<HeadPart>(this);
         #endregion
         #region Hairs
         private List<RangeInt64>? _HairsLocations;
-        private ISkyrimGroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? SkyrimGroupBinaryOverlay<IHairGetter>.SkyrimGroupFactory(_stream, _HairsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IHairGetter>> _HairsCache = new();
+        private ISkyrimGroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? _HairsCache.Get(() => SkyrimGroupBinaryOverlay<IHairGetter>.SkyrimGroupFactory(_stream, _HairsLocations, _package)) : default;
         public ISkyrimGroupGetter<IHairGetter> Hairs => _Hairs ?? new SkyrimGroup<Hair>(this);
         #endregion
         #region Eyes
         private List<RangeInt64>? _EyesLocations;
-        private ISkyrimGroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? SkyrimGroupBinaryOverlay<IEyesGetter>.SkyrimGroupFactory(_stream, _EyesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IEyesGetter>> _EyesCache = new();
+        private ISkyrimGroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? _EyesCache.Get(() => SkyrimGroupBinaryOverlay<IEyesGetter>.SkyrimGroupFactory(_stream, _EyesLocations, _package)) : default;
         public ISkyrimGroupGetter<IEyesGetter> Eyes => _Eyes ?? new SkyrimGroup<Eyes>(this);
         #endregion
         #region Races
         private List<RangeInt64>? _RacesLocations;
-        private ISkyrimGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? SkyrimGroupBinaryOverlay<IRaceGetter>.SkyrimGroupFactory(_stream, _RacesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IRaceGetter>> _RacesCache = new();
+        private ISkyrimGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? _RacesCache.Get(() => SkyrimGroupBinaryOverlay<IRaceGetter>.SkyrimGroupFactory(_stream, _RacesLocations, _package)) : default;
         public ISkyrimGroupGetter<IRaceGetter> Races => _Races ?? new SkyrimGroup<Race>(this);
         #endregion
         #region SoundMarkers
         private List<RangeInt64>? _SoundMarkersLocations;
-        private ISkyrimGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? SkyrimGroupBinaryOverlay<ISoundMarkerGetter>.SkyrimGroupFactory(_stream, _SoundMarkersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISoundMarkerGetter>> _SoundMarkersCache = new();
+        private ISkyrimGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? _SoundMarkersCache.Get(() => SkyrimGroupBinaryOverlay<ISoundMarkerGetter>.SkyrimGroupFactory(_stream, _SoundMarkersLocations, _package)) : default;
         public ISkyrimGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new SkyrimGroup<SoundMarker>(this);
         #endregion
         #region AcousticSpaces
         private List<RangeInt64>? _AcousticSpacesLocations;
-        private ISkyrimGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? SkyrimGroupBinaryOverlay<IAcousticSpaceGetter>.SkyrimGroupFactory(_stream, _AcousticSpacesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IAcousticSpaceGetter>> _AcousticSpacesCache = new();
+        private ISkyrimGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? _AcousticSpacesCache.Get(() => SkyrimGroupBinaryOverlay<IAcousticSpaceGetter>.SkyrimGroupFactory(_stream, _AcousticSpacesLocations, _package)) : default;
         public ISkyrimGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new SkyrimGroup<AcousticSpace>(this);
         #endregion
         #region MagicEffects
         private List<RangeInt64>? _MagicEffectsLocations;
-        private ISkyrimGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? SkyrimGroupBinaryOverlay<IMagicEffectGetter>.SkyrimGroupFactory(_stream, _MagicEffectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMagicEffectGetter>> _MagicEffectsCache = new();
+        private ISkyrimGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? _MagicEffectsCache.Get(() => SkyrimGroupBinaryOverlay<IMagicEffectGetter>.SkyrimGroupFactory(_stream, _MagicEffectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new SkyrimGroup<MagicEffect>(this);
         #endregion
         #region LandscapeTextures
         private List<RangeInt64>? _LandscapeTexturesLocations;
-        private ISkyrimGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? SkyrimGroupBinaryOverlay<ILandscapeTextureGetter>.SkyrimGroupFactory(_stream, _LandscapeTexturesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILandscapeTextureGetter>> _LandscapeTexturesCache = new();
+        private ISkyrimGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? _LandscapeTexturesCache.Get(() => SkyrimGroupBinaryOverlay<ILandscapeTextureGetter>.SkyrimGroupFactory(_stream, _LandscapeTexturesLocations, _package)) : default;
         public ISkyrimGroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new SkyrimGroup<LandscapeTexture>(this);
         #endregion
         #region ObjectEffects
         private List<RangeInt64>? _ObjectEffectsLocations;
-        private ISkyrimGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? SkyrimGroupBinaryOverlay<IObjectEffectGetter>.SkyrimGroupFactory(_stream, _ObjectEffectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IObjectEffectGetter>> _ObjectEffectsCache = new();
+        private ISkyrimGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? _ObjectEffectsCache.Get(() => SkyrimGroupBinaryOverlay<IObjectEffectGetter>.SkyrimGroupFactory(_stream, _ObjectEffectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new SkyrimGroup<ObjectEffect>(this);
         #endregion
         #region Spells
         private List<RangeInt64>? _SpellsLocations;
-        private ISkyrimGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? SkyrimGroupBinaryOverlay<ISpellGetter>.SkyrimGroupFactory(_stream, _SpellsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISpellGetter>> _SpellsCache = new();
+        private ISkyrimGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? _SpellsCache.Get(() => SkyrimGroupBinaryOverlay<ISpellGetter>.SkyrimGroupFactory(_stream, _SpellsLocations, _package)) : default;
         public ISkyrimGroupGetter<ISpellGetter> Spells => _Spells ?? new SkyrimGroup<Spell>(this);
         #endregion
         #region Scrolls
         private List<RangeInt64>? _ScrollsLocations;
-        private ISkyrimGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocations != null ? SkyrimGroupBinaryOverlay<IScrollGetter>.SkyrimGroupFactory(_stream, _ScrollsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IScrollGetter>> _ScrollsCache = new();
+        private ISkyrimGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocations != null ? _ScrollsCache.Get(() => SkyrimGroupBinaryOverlay<IScrollGetter>.SkyrimGroupFactory(_stream, _ScrollsLocations, _package)) : default;
         public ISkyrimGroupGetter<IScrollGetter> Scrolls => _Scrolls ?? new SkyrimGroup<Scroll>(this);
         #endregion
         #region Activators
         private List<RangeInt64>? _ActivatorsLocations;
-        private ISkyrimGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? SkyrimGroupBinaryOverlay<IActivatorGetter>.SkyrimGroupFactory(_stream, _ActivatorsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IActivatorGetter>> _ActivatorsCache = new();
+        private ISkyrimGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? _ActivatorsCache.Get(() => SkyrimGroupBinaryOverlay<IActivatorGetter>.SkyrimGroupFactory(_stream, _ActivatorsLocations, _package)) : default;
         public ISkyrimGroupGetter<IActivatorGetter> Activators => _Activators ?? new SkyrimGroup<Activator>(this);
         #endregion
         #region TalkingActivators
         private List<RangeInt64>? _TalkingActivatorsLocations;
-        private ISkyrimGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? SkyrimGroupBinaryOverlay<ITalkingActivatorGetter>.SkyrimGroupFactory(_stream, _TalkingActivatorsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ITalkingActivatorGetter>> _TalkingActivatorsCache = new();
+        private ISkyrimGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? _TalkingActivatorsCache.Get(() => SkyrimGroupBinaryOverlay<ITalkingActivatorGetter>.SkyrimGroupFactory(_stream, _TalkingActivatorsLocations, _package)) : default;
         public ISkyrimGroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new SkyrimGroup<TalkingActivator>(this);
         #endregion
         #region Armors
         private List<RangeInt64>? _ArmorsLocations;
-        private ISkyrimGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? SkyrimGroupBinaryOverlay<IArmorGetter>.SkyrimGroupFactory(_stream, _ArmorsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IArmorGetter>> _ArmorsCache = new();
+        private ISkyrimGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? _ArmorsCache.Get(() => SkyrimGroupBinaryOverlay<IArmorGetter>.SkyrimGroupFactory(_stream, _ArmorsLocations, _package)) : default;
         public ISkyrimGroupGetter<IArmorGetter> Armors => _Armors ?? new SkyrimGroup<Armor>(this);
         #endregion
         #region Books
         private List<RangeInt64>? _BooksLocations;
-        private ISkyrimGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? SkyrimGroupBinaryOverlay<IBookGetter>.SkyrimGroupFactory(_stream, _BooksLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IBookGetter>> _BooksCache = new();
+        private ISkyrimGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? _BooksCache.Get(() => SkyrimGroupBinaryOverlay<IBookGetter>.SkyrimGroupFactory(_stream, _BooksLocations, _package)) : default;
         public ISkyrimGroupGetter<IBookGetter> Books => _Books ?? new SkyrimGroup<Book>(this);
         #endregion
         #region Containers
         private List<RangeInt64>? _ContainersLocations;
-        private ISkyrimGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? SkyrimGroupBinaryOverlay<IContainerGetter>.SkyrimGroupFactory(_stream, _ContainersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IContainerGetter>> _ContainersCache = new();
+        private ISkyrimGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? _ContainersCache.Get(() => SkyrimGroupBinaryOverlay<IContainerGetter>.SkyrimGroupFactory(_stream, _ContainersLocations, _package)) : default;
         public ISkyrimGroupGetter<IContainerGetter> Containers => _Containers ?? new SkyrimGroup<Container>(this);
         #endregion
         #region Doors
         private List<RangeInt64>? _DoorsLocations;
-        private ISkyrimGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? SkyrimGroupBinaryOverlay<IDoorGetter>.SkyrimGroupFactory(_stream, _DoorsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDoorGetter>> _DoorsCache = new();
+        private ISkyrimGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? _DoorsCache.Get(() => SkyrimGroupBinaryOverlay<IDoorGetter>.SkyrimGroupFactory(_stream, _DoorsLocations, _package)) : default;
         public ISkyrimGroupGetter<IDoorGetter> Doors => _Doors ?? new SkyrimGroup<Door>(this);
         #endregion
         #region Ingredients
         private List<RangeInt64>? _IngredientsLocations;
-        private ISkyrimGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? SkyrimGroupBinaryOverlay<IIngredientGetter>.SkyrimGroupFactory(_stream, _IngredientsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IIngredientGetter>> _IngredientsCache = new();
+        private ISkyrimGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? _IngredientsCache.Get(() => SkyrimGroupBinaryOverlay<IIngredientGetter>.SkyrimGroupFactory(_stream, _IngredientsLocations, _package)) : default;
         public ISkyrimGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new SkyrimGroup<Ingredient>(this);
         #endregion
         #region Lights
         private List<RangeInt64>? _LightsLocations;
-        private ISkyrimGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? SkyrimGroupBinaryOverlay<ILightGetter>.SkyrimGroupFactory(_stream, _LightsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILightGetter>> _LightsCache = new();
+        private ISkyrimGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? _LightsCache.Get(() => SkyrimGroupBinaryOverlay<ILightGetter>.SkyrimGroupFactory(_stream, _LightsLocations, _package)) : default;
         public ISkyrimGroupGetter<ILightGetter> Lights => _Lights ?? new SkyrimGroup<Light>(this);
         #endregion
         #region MiscItems
         private List<RangeInt64>? _MiscItemsLocations;
-        private ISkyrimGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? SkyrimGroupBinaryOverlay<IMiscItemGetter>.SkyrimGroupFactory(_stream, _MiscItemsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMiscItemGetter>> _MiscItemsCache = new();
+        private ISkyrimGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? _MiscItemsCache.Get(() => SkyrimGroupBinaryOverlay<IMiscItemGetter>.SkyrimGroupFactory(_stream, _MiscItemsLocations, _package)) : default;
         public ISkyrimGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new SkyrimGroup<MiscItem>(this);
         #endregion
         #region AlchemicalApparatuses
         private List<RangeInt64>? _AlchemicalApparatusesLocations;
-        private ISkyrimGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocations != null ? SkyrimGroupBinaryOverlay<IAlchemicalApparatusGetter>.SkyrimGroupFactory(_stream, _AlchemicalApparatusesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IAlchemicalApparatusGetter>> _AlchemicalApparatusesCache = new();
+        private ISkyrimGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocations != null ? _AlchemicalApparatusesCache.Get(() => SkyrimGroupBinaryOverlay<IAlchemicalApparatusGetter>.SkyrimGroupFactory(_stream, _AlchemicalApparatusesLocations, _package)) : default;
         public ISkyrimGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses => _AlchemicalApparatuses ?? new SkyrimGroup<AlchemicalApparatus>(this);
         #endregion
         #region Statics
         private List<RangeInt64>? _StaticsLocations;
-        private ISkyrimGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? SkyrimGroupBinaryOverlay<IStaticGetter>.SkyrimGroupFactory(_stream, _StaticsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IStaticGetter>> _StaticsCache = new();
+        private ISkyrimGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? _StaticsCache.Get(() => SkyrimGroupBinaryOverlay<IStaticGetter>.SkyrimGroupFactory(_stream, _StaticsLocations, _package)) : default;
         public ISkyrimGroupGetter<IStaticGetter> Statics => _Statics ?? new SkyrimGroup<Static>(this);
         #endregion
         #region MoveableStatics
         private List<RangeInt64>? _MoveableStaticsLocations;
-        private ISkyrimGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? SkyrimGroupBinaryOverlay<IMoveableStaticGetter>.SkyrimGroupFactory(_stream, _MoveableStaticsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMoveableStaticGetter>> _MoveableStaticsCache = new();
+        private ISkyrimGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? _MoveableStaticsCache.Get(() => SkyrimGroupBinaryOverlay<IMoveableStaticGetter>.SkyrimGroupFactory(_stream, _MoveableStaticsLocations, _package)) : default;
         public ISkyrimGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new SkyrimGroup<MoveableStatic>(this);
         #endregion
         #region Grasses
         private List<RangeInt64>? _GrassesLocations;
-        private ISkyrimGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? SkyrimGroupBinaryOverlay<IGrassGetter>.SkyrimGroupFactory(_stream, _GrassesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IGrassGetter>> _GrassesCache = new();
+        private ISkyrimGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? _GrassesCache.Get(() => SkyrimGroupBinaryOverlay<IGrassGetter>.SkyrimGroupFactory(_stream, _GrassesLocations, _package)) : default;
         public ISkyrimGroupGetter<IGrassGetter> Grasses => _Grasses ?? new SkyrimGroup<Grass>(this);
         #endregion
         #region Trees
         private List<RangeInt64>? _TreesLocations;
-        private ISkyrimGroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? SkyrimGroupBinaryOverlay<ITreeGetter>.SkyrimGroupFactory(_stream, _TreesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ITreeGetter>> _TreesCache = new();
+        private ISkyrimGroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? _TreesCache.Get(() => SkyrimGroupBinaryOverlay<ITreeGetter>.SkyrimGroupFactory(_stream, _TreesLocations, _package)) : default;
         public ISkyrimGroupGetter<ITreeGetter> Trees => _Trees ?? new SkyrimGroup<Tree>(this);
         #endregion
         #region Florae
         private List<RangeInt64>? _FloraeLocations;
-        private ISkyrimGroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? SkyrimGroupBinaryOverlay<IFloraGetter>.SkyrimGroupFactory(_stream, _FloraeLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IFloraGetter>> _FloraeCache = new();
+        private ISkyrimGroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? _FloraeCache.Get(() => SkyrimGroupBinaryOverlay<IFloraGetter>.SkyrimGroupFactory(_stream, _FloraeLocations, _package)) : default;
         public ISkyrimGroupGetter<IFloraGetter> Florae => _Florae ?? new SkyrimGroup<Flora>(this);
         #endregion
         #region Furniture
         private List<RangeInt64>? _FurnitureLocations;
-        private ISkyrimGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? SkyrimGroupBinaryOverlay<IFurnitureGetter>.SkyrimGroupFactory(_stream, _FurnitureLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IFurnitureGetter>> _FurnitureCache = new();
+        private ISkyrimGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? _FurnitureCache.Get(() => SkyrimGroupBinaryOverlay<IFurnitureGetter>.SkyrimGroupFactory(_stream, _FurnitureLocations, _package)) : default;
         public ISkyrimGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new SkyrimGroup<Furniture>(this);
         #endregion
         #region Weapons
         private List<RangeInt64>? _WeaponsLocations;
-        private ISkyrimGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? SkyrimGroupBinaryOverlay<IWeaponGetter>.SkyrimGroupFactory(_stream, _WeaponsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IWeaponGetter>> _WeaponsCache = new();
+        private ISkyrimGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? _WeaponsCache.Get(() => SkyrimGroupBinaryOverlay<IWeaponGetter>.SkyrimGroupFactory(_stream, _WeaponsLocations, _package)) : default;
         public ISkyrimGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new SkyrimGroup<Weapon>(this);
         #endregion
         #region Ammunitions
         private List<RangeInt64>? _AmmunitionsLocations;
-        private ISkyrimGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? SkyrimGroupBinaryOverlay<IAmmunitionGetter>.SkyrimGroupFactory(_stream, _AmmunitionsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IAmmunitionGetter>> _AmmunitionsCache = new();
+        private ISkyrimGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? _AmmunitionsCache.Get(() => SkyrimGroupBinaryOverlay<IAmmunitionGetter>.SkyrimGroupFactory(_stream, _AmmunitionsLocations, _package)) : default;
         public ISkyrimGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new SkyrimGroup<Ammunition>(this);
         #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
-        private ISkyrimGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? SkyrimGroupBinaryOverlay<INpcGetter>.SkyrimGroupFactory(_stream, _NpcsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<INpcGetter>> _NpcsCache = new();
+        private ISkyrimGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? _NpcsCache.Get(() => SkyrimGroupBinaryOverlay<INpcGetter>.SkyrimGroupFactory(_stream, _NpcsLocations, _package)) : default;
         public ISkyrimGroupGetter<INpcGetter> Npcs => _Npcs ?? new SkyrimGroup<Npc>(this);
         #endregion
         #region LeveledNpcs
         private List<RangeInt64>? _LeveledNpcsLocations;
-        private ISkyrimGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledNpcGetter>.SkyrimGroupFactory(_stream, _LeveledNpcsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILeveledNpcGetter>> _LeveledNpcsCache = new();
+        private ISkyrimGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? _LeveledNpcsCache.Get(() => SkyrimGroupBinaryOverlay<ILeveledNpcGetter>.SkyrimGroupFactory(_stream, _LeveledNpcsLocations, _package)) : default;
         public ISkyrimGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new SkyrimGroup<LeveledNpc>(this);
         #endregion
         #region Keys
         private List<RangeInt64>? _KeysLocations;
-        private ISkyrimGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? SkyrimGroupBinaryOverlay<IKeyGetter>.SkyrimGroupFactory(_stream, _KeysLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IKeyGetter>> _KeysCache = new();
+        private ISkyrimGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? _KeysCache.Get(() => SkyrimGroupBinaryOverlay<IKeyGetter>.SkyrimGroupFactory(_stream, _KeysLocations, _package)) : default;
         public ISkyrimGroupGetter<IKeyGetter> Keys => _Keys ?? new SkyrimGroup<Key>(this);
         #endregion
         #region Ingestibles
         private List<RangeInt64>? _IngestiblesLocations;
-        private ISkyrimGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? SkyrimGroupBinaryOverlay<IIngestibleGetter>.SkyrimGroupFactory(_stream, _IngestiblesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IIngestibleGetter>> _IngestiblesCache = new();
+        private ISkyrimGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? _IngestiblesCache.Get(() => SkyrimGroupBinaryOverlay<IIngestibleGetter>.SkyrimGroupFactory(_stream, _IngestiblesLocations, _package)) : default;
         public ISkyrimGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new SkyrimGroup<Ingestible>(this);
         #endregion
         #region IdleMarkers
         private List<RangeInt64>? _IdleMarkersLocations;
-        private ISkyrimGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? SkyrimGroupBinaryOverlay<IIdleMarkerGetter>.SkyrimGroupFactory(_stream, _IdleMarkersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IIdleMarkerGetter>> _IdleMarkersCache = new();
+        private ISkyrimGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? _IdleMarkersCache.Get(() => SkyrimGroupBinaryOverlay<IIdleMarkerGetter>.SkyrimGroupFactory(_stream, _IdleMarkersLocations, _package)) : default;
         public ISkyrimGroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new SkyrimGroup<IdleMarker>(this);
         #endregion
         #region ConstructibleObjects
         private List<RangeInt64>? _ConstructibleObjectsLocations;
-        private ISkyrimGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? SkyrimGroupBinaryOverlay<IConstructibleObjectGetter>.SkyrimGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IConstructibleObjectGetter>> _ConstructibleObjectsCache = new();
+        private ISkyrimGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? _ConstructibleObjectsCache.Get(() => SkyrimGroupBinaryOverlay<IConstructibleObjectGetter>.SkyrimGroupFactory(_stream, _ConstructibleObjectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new SkyrimGroup<ConstructibleObject>(this);
         #endregion
         #region Projectiles
         private List<RangeInt64>? _ProjectilesLocations;
-        private ISkyrimGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? SkyrimGroupBinaryOverlay<IProjectileGetter>.SkyrimGroupFactory(_stream, _ProjectilesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IProjectileGetter>> _ProjectilesCache = new();
+        private ISkyrimGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? _ProjectilesCache.Get(() => SkyrimGroupBinaryOverlay<IProjectileGetter>.SkyrimGroupFactory(_stream, _ProjectilesLocations, _package)) : default;
         public ISkyrimGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new SkyrimGroup<Projectile>(this);
         #endregion
         #region Hazards
         private List<RangeInt64>? _HazardsLocations;
-        private ISkyrimGroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? SkyrimGroupBinaryOverlay<IHazardGetter>.SkyrimGroupFactory(_stream, _HazardsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IHazardGetter>> _HazardsCache = new();
+        private ISkyrimGroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? _HazardsCache.Get(() => SkyrimGroupBinaryOverlay<IHazardGetter>.SkyrimGroupFactory(_stream, _HazardsLocations, _package)) : default;
         public ISkyrimGroupGetter<IHazardGetter> Hazards => _Hazards ?? new SkyrimGroup<Hazard>(this);
         #endregion
         #region SoulGems
         private List<RangeInt64>? _SoulGemsLocations;
-        private ISkyrimGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocations != null ? SkyrimGroupBinaryOverlay<ISoulGemGetter>.SkyrimGroupFactory(_stream, _SoulGemsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISoulGemGetter>> _SoulGemsCache = new();
+        private ISkyrimGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocations != null ? _SoulGemsCache.Get(() => SkyrimGroupBinaryOverlay<ISoulGemGetter>.SkyrimGroupFactory(_stream, _SoulGemsLocations, _package)) : default;
         public ISkyrimGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new SkyrimGroup<SoulGem>(this);
         #endregion
         #region LeveledItems
         private List<RangeInt64>? _LeveledItemsLocations;
-        private ISkyrimGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledItemGetter>.SkyrimGroupFactory(_stream, _LeveledItemsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILeveledItemGetter>> _LeveledItemsCache = new();
+        private ISkyrimGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? _LeveledItemsCache.Get(() => SkyrimGroupBinaryOverlay<ILeveledItemGetter>.SkyrimGroupFactory(_stream, _LeveledItemsLocations, _package)) : default;
         public ISkyrimGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new SkyrimGroup<LeveledItem>(this);
         #endregion
         #region Weathers
         private List<RangeInt64>? _WeathersLocations;
-        private ISkyrimGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? SkyrimGroupBinaryOverlay<IWeatherGetter>.SkyrimGroupFactory(_stream, _WeathersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IWeatherGetter>> _WeathersCache = new();
+        private ISkyrimGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? _WeathersCache.Get(() => SkyrimGroupBinaryOverlay<IWeatherGetter>.SkyrimGroupFactory(_stream, _WeathersLocations, _package)) : default;
         public ISkyrimGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new SkyrimGroup<Weather>(this);
         #endregion
         #region Climates
         private List<RangeInt64>? _ClimatesLocations;
-        private ISkyrimGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? SkyrimGroupBinaryOverlay<IClimateGetter>.SkyrimGroupFactory(_stream, _ClimatesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IClimateGetter>> _ClimatesCache = new();
+        private ISkyrimGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? _ClimatesCache.Get(() => SkyrimGroupBinaryOverlay<IClimateGetter>.SkyrimGroupFactory(_stream, _ClimatesLocations, _package)) : default;
         public ISkyrimGroupGetter<IClimateGetter> Climates => _Climates ?? new SkyrimGroup<Climate>(this);
         #endregion
         #region ShaderParticleGeometries
         private List<RangeInt64>? _ShaderParticleGeometriesLocations;
-        private ISkyrimGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? SkyrimGroupBinaryOverlay<IShaderParticleGeometryGetter>.SkyrimGroupFactory(_stream, _ShaderParticleGeometriesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IShaderParticleGeometryGetter>> _ShaderParticleGeometriesCache = new();
+        private ISkyrimGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? _ShaderParticleGeometriesCache.Get(() => SkyrimGroupBinaryOverlay<IShaderParticleGeometryGetter>.SkyrimGroupFactory(_stream, _ShaderParticleGeometriesLocations, _package)) : default;
         public ISkyrimGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new SkyrimGroup<ShaderParticleGeometry>(this);
         #endregion
         #region VisualEffects
         private List<RangeInt64>? _VisualEffectsLocations;
-        private ISkyrimGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocations != null ? SkyrimGroupBinaryOverlay<IVisualEffectGetter>.SkyrimGroupFactory(_stream, _VisualEffectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IVisualEffectGetter>> _VisualEffectsCache = new();
+        private ISkyrimGroupGetter<IVisualEffectGetter>? _VisualEffects => _VisualEffectsLocations != null ? _VisualEffectsCache.Get(() => SkyrimGroupBinaryOverlay<IVisualEffectGetter>.SkyrimGroupFactory(_stream, _VisualEffectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IVisualEffectGetter> VisualEffects => _VisualEffects ?? new SkyrimGroup<VisualEffect>(this);
         #endregion
         #region Regions
         private List<RangeInt64>? _RegionsLocations;
-        private ISkyrimGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? SkyrimGroupBinaryOverlay<IRegionGetter>.SkyrimGroupFactory(_stream, _RegionsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IRegionGetter>> _RegionsCache = new();
+        private ISkyrimGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? _RegionsCache.Get(() => SkyrimGroupBinaryOverlay<IRegionGetter>.SkyrimGroupFactory(_stream, _RegionsLocations, _package)) : default;
         public ISkyrimGroupGetter<IRegionGetter> Regions => _Regions ?? new SkyrimGroup<Region>(this);
         #endregion
         #region NavigationMeshInfoMaps
         private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
-        private ISkyrimGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? SkyrimGroupBinaryOverlay<INavigationMeshInfoMapGetter>.SkyrimGroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<INavigationMeshInfoMapGetter>> _NavigationMeshInfoMapsCache = new();
+        private ISkyrimGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? _NavigationMeshInfoMapsCache.Get(() => SkyrimGroupBinaryOverlay<INavigationMeshInfoMapGetter>.SkyrimGroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package)) : default;
         public ISkyrimGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new SkyrimGroup<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
         private List<RangeInt64>? _CellsLocations;
-        private ISkyrimListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? SkyrimListGroupBinaryOverlay<ICellBlockGetter>.SkyrimListGroupFactory(_stream, _CellsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimListGroupGetter<ICellBlockGetter>> _CellsCache = new();
+        private ISkyrimListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? _CellsCache.Get(() => SkyrimListGroupBinaryOverlay<ICellBlockGetter>.SkyrimListGroupFactory(_stream, _CellsLocations, _package)) : default;
         public ISkyrimListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new SkyrimListGroup<CellBlock>();
         #endregion
         #region Worldspaces
         private List<RangeInt64>? _WorldspacesLocations;
-        private ISkyrimGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? SkyrimGroupBinaryOverlay<IWorldspaceGetter>.SkyrimGroupFactory(_stream, _WorldspacesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IWorldspaceGetter>> _WorldspacesCache = new();
+        private ISkyrimGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? _WorldspacesCache.Get(() => SkyrimGroupBinaryOverlay<IWorldspaceGetter>.SkyrimGroupFactory(_stream, _WorldspacesLocations, _package)) : default;
         public ISkyrimGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new SkyrimGroup<Worldspace>(this);
         #endregion
         #region DialogTopics
         private List<RangeInt64>? _DialogTopicsLocations;
-        private ISkyrimGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? SkyrimGroupBinaryOverlay<IDialogTopicGetter>.SkyrimGroupFactory(_stream, _DialogTopicsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDialogTopicGetter>> _DialogTopicsCache = new();
+        private ISkyrimGroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? _DialogTopicsCache.Get(() => SkyrimGroupBinaryOverlay<IDialogTopicGetter>.SkyrimGroupFactory(_stream, _DialogTopicsLocations, _package)) : default;
         public ISkyrimGroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new SkyrimGroup<DialogTopic>(this);
         #endregion
         #region Quests
         private List<RangeInt64>? _QuestsLocations;
-        private ISkyrimGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? SkyrimGroupBinaryOverlay<IQuestGetter>.SkyrimGroupFactory(_stream, _QuestsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IQuestGetter>> _QuestsCache = new();
+        private ISkyrimGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? _QuestsCache.Get(() => SkyrimGroupBinaryOverlay<IQuestGetter>.SkyrimGroupFactory(_stream, _QuestsLocations, _package)) : default;
         public ISkyrimGroupGetter<IQuestGetter> Quests => _Quests ?? new SkyrimGroup<Quest>(this);
         #endregion
         #region IdleAnimations
         private List<RangeInt64>? _IdleAnimationsLocations;
-        private ISkyrimGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? SkyrimGroupBinaryOverlay<IIdleAnimationGetter>.SkyrimGroupFactory(_stream, _IdleAnimationsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IIdleAnimationGetter>> _IdleAnimationsCache = new();
+        private ISkyrimGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? _IdleAnimationsCache.Get(() => SkyrimGroupBinaryOverlay<IIdleAnimationGetter>.SkyrimGroupFactory(_stream, _IdleAnimationsLocations, _package)) : default;
         public ISkyrimGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new SkyrimGroup<IdleAnimation>(this);
         #endregion
         #region Packages
         private List<RangeInt64>? _PackagesLocations;
-        private ISkyrimGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? SkyrimGroupBinaryOverlay<IPackageGetter>.SkyrimGroupFactory(_stream, _PackagesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IPackageGetter>> _PackagesCache = new();
+        private ISkyrimGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? _PackagesCache.Get(() => SkyrimGroupBinaryOverlay<IPackageGetter>.SkyrimGroupFactory(_stream, _PackagesLocations, _package)) : default;
         public ISkyrimGroupGetter<IPackageGetter> Packages => _Packages ?? new SkyrimGroup<Package>(this);
         #endregion
         #region CombatStyles
         private List<RangeInt64>? _CombatStylesLocations;
-        private ISkyrimGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? SkyrimGroupBinaryOverlay<ICombatStyleGetter>.SkyrimGroupFactory(_stream, _CombatStylesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ICombatStyleGetter>> _CombatStylesCache = new();
+        private ISkyrimGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? _CombatStylesCache.Get(() => SkyrimGroupBinaryOverlay<ICombatStyleGetter>.SkyrimGroupFactory(_stream, _CombatStylesLocations, _package)) : default;
         public ISkyrimGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new SkyrimGroup<CombatStyle>(this);
         #endregion
         #region LoadScreens
         private List<RangeInt64>? _LoadScreensLocations;
-        private ISkyrimGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? SkyrimGroupBinaryOverlay<ILoadScreenGetter>.SkyrimGroupFactory(_stream, _LoadScreensLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILoadScreenGetter>> _LoadScreensCache = new();
+        private ISkyrimGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? _LoadScreensCache.Get(() => SkyrimGroupBinaryOverlay<ILoadScreenGetter>.SkyrimGroupFactory(_stream, _LoadScreensLocations, _package)) : default;
         public ISkyrimGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new SkyrimGroup<LoadScreen>(this);
         #endregion
         #region LeveledSpells
         private List<RangeInt64>? _LeveledSpellsLocations;
-        private ISkyrimGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocations != null ? SkyrimGroupBinaryOverlay<ILeveledSpellGetter>.SkyrimGroupFactory(_stream, _LeveledSpellsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILeveledSpellGetter>> _LeveledSpellsCache = new();
+        private ISkyrimGroupGetter<ILeveledSpellGetter>? _LeveledSpells => _LeveledSpellsLocations != null ? _LeveledSpellsCache.Get(() => SkyrimGroupBinaryOverlay<ILeveledSpellGetter>.SkyrimGroupFactory(_stream, _LeveledSpellsLocations, _package)) : default;
         public ISkyrimGroupGetter<ILeveledSpellGetter> LeveledSpells => _LeveledSpells ?? new SkyrimGroup<LeveledSpell>(this);
         #endregion
         #region AnimatedObjects
         private List<RangeInt64>? _AnimatedObjectsLocations;
-        private ISkyrimGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? SkyrimGroupBinaryOverlay<IAnimatedObjectGetter>.SkyrimGroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IAnimatedObjectGetter>> _AnimatedObjectsCache = new();
+        private ISkyrimGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? _AnimatedObjectsCache.Get(() => SkyrimGroupBinaryOverlay<IAnimatedObjectGetter>.SkyrimGroupFactory(_stream, _AnimatedObjectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new SkyrimGroup<AnimatedObject>(this);
         #endregion
         #region Waters
         private List<RangeInt64>? _WatersLocations;
-        private ISkyrimGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? SkyrimGroupBinaryOverlay<IWaterGetter>.SkyrimGroupFactory(_stream, _WatersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IWaterGetter>> _WatersCache = new();
+        private ISkyrimGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? _WatersCache.Get(() => SkyrimGroupBinaryOverlay<IWaterGetter>.SkyrimGroupFactory(_stream, _WatersLocations, _package)) : default;
         public ISkyrimGroupGetter<IWaterGetter> Waters => _Waters ?? new SkyrimGroup<Water>(this);
         #endregion
         #region EffectShaders
         private List<RangeInt64>? _EffectShadersLocations;
-        private ISkyrimGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? SkyrimGroupBinaryOverlay<IEffectShaderGetter>.SkyrimGroupFactory(_stream, _EffectShadersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IEffectShaderGetter>> _EffectShadersCache = new();
+        private ISkyrimGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? _EffectShadersCache.Get(() => SkyrimGroupBinaryOverlay<IEffectShaderGetter>.SkyrimGroupFactory(_stream, _EffectShadersLocations, _package)) : default;
         public ISkyrimGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new SkyrimGroup<EffectShader>(this);
         #endregion
         #region Explosions
         private List<RangeInt64>? _ExplosionsLocations;
-        private ISkyrimGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? SkyrimGroupBinaryOverlay<IExplosionGetter>.SkyrimGroupFactory(_stream, _ExplosionsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IExplosionGetter>> _ExplosionsCache = new();
+        private ISkyrimGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? _ExplosionsCache.Get(() => SkyrimGroupBinaryOverlay<IExplosionGetter>.SkyrimGroupFactory(_stream, _ExplosionsLocations, _package)) : default;
         public ISkyrimGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new SkyrimGroup<Explosion>(this);
         #endregion
         #region Debris
         private List<RangeInt64>? _DebrisLocations;
-        private ISkyrimGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? SkyrimGroupBinaryOverlay<IDebrisGetter>.SkyrimGroupFactory(_stream, _DebrisLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDebrisGetter>> _DebrisCache = new();
+        private ISkyrimGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? _DebrisCache.Get(() => SkyrimGroupBinaryOverlay<IDebrisGetter>.SkyrimGroupFactory(_stream, _DebrisLocations, _package)) : default;
         public ISkyrimGroupGetter<IDebrisGetter> Debris => _Debris ?? new SkyrimGroup<Debris>(this);
         #endregion
         #region ImageSpaces
         private List<RangeInt64>? _ImageSpacesLocations;
-        private ISkyrimGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? SkyrimGroupBinaryOverlay<IImageSpaceGetter>.SkyrimGroupFactory(_stream, _ImageSpacesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IImageSpaceGetter>> _ImageSpacesCache = new();
+        private ISkyrimGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? _ImageSpacesCache.Get(() => SkyrimGroupBinaryOverlay<IImageSpaceGetter>.SkyrimGroupFactory(_stream, _ImageSpacesLocations, _package)) : default;
         public ISkyrimGroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new SkyrimGroup<ImageSpace>(this);
         #endregion
         #region ImageSpaceAdapters
         private List<RangeInt64>? _ImageSpaceAdaptersLocations;
-        private ISkyrimGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? SkyrimGroupBinaryOverlay<IImageSpaceAdapterGetter>.SkyrimGroupFactory(_stream, _ImageSpaceAdaptersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IImageSpaceAdapterGetter>> _ImageSpaceAdaptersCache = new();
+        private ISkyrimGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? _ImageSpaceAdaptersCache.Get(() => SkyrimGroupBinaryOverlay<IImageSpaceAdapterGetter>.SkyrimGroupFactory(_stream, _ImageSpaceAdaptersLocations, _package)) : default;
         public ISkyrimGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new SkyrimGroup<ImageSpaceAdapter>(this);
         #endregion
         #region FormLists
         private List<RangeInt64>? _FormListsLocations;
-        private ISkyrimGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? SkyrimGroupBinaryOverlay<IFormListGetter>.SkyrimGroupFactory(_stream, _FormListsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IFormListGetter>> _FormListsCache = new();
+        private ISkyrimGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? _FormListsCache.Get(() => SkyrimGroupBinaryOverlay<IFormListGetter>.SkyrimGroupFactory(_stream, _FormListsLocations, _package)) : default;
         public ISkyrimGroupGetter<IFormListGetter> FormLists => _FormLists ?? new SkyrimGroup<FormList>(this);
         #endregion
         #region Perks
         private List<RangeInt64>? _PerksLocations;
-        private ISkyrimGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? SkyrimGroupBinaryOverlay<IPerkGetter>.SkyrimGroupFactory(_stream, _PerksLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IPerkGetter>> _PerksCache = new();
+        private ISkyrimGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? _PerksCache.Get(() => SkyrimGroupBinaryOverlay<IPerkGetter>.SkyrimGroupFactory(_stream, _PerksLocations, _package)) : default;
         public ISkyrimGroupGetter<IPerkGetter> Perks => _Perks ?? new SkyrimGroup<Perk>(this);
         #endregion
         #region BodyParts
         private List<RangeInt64>? _BodyPartsLocations;
-        private ISkyrimGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? SkyrimGroupBinaryOverlay<IBodyPartDataGetter>.SkyrimGroupFactory(_stream, _BodyPartsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IBodyPartDataGetter>> _BodyPartsCache = new();
+        private ISkyrimGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? _BodyPartsCache.Get(() => SkyrimGroupBinaryOverlay<IBodyPartDataGetter>.SkyrimGroupFactory(_stream, _BodyPartsLocations, _package)) : default;
         public ISkyrimGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new SkyrimGroup<BodyPartData>(this);
         #endregion
         #region AddonNodes
         private List<RangeInt64>? _AddonNodesLocations;
-        private ISkyrimGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? SkyrimGroupBinaryOverlay<IAddonNodeGetter>.SkyrimGroupFactory(_stream, _AddonNodesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IAddonNodeGetter>> _AddonNodesCache = new();
+        private ISkyrimGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? _AddonNodesCache.Get(() => SkyrimGroupBinaryOverlay<IAddonNodeGetter>.SkyrimGroupFactory(_stream, _AddonNodesLocations, _package)) : default;
         public ISkyrimGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new SkyrimGroup<AddonNode>(this);
         #endregion
         #region ActorValueInformation
         private List<RangeInt64>? _ActorValueInformationLocations;
-        private ISkyrimGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? SkyrimGroupBinaryOverlay<IActorValueInformationGetter>.SkyrimGroupFactory(_stream, _ActorValueInformationLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IActorValueInformationGetter>> _ActorValueInformationCache = new();
+        private ISkyrimGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? _ActorValueInformationCache.Get(() => SkyrimGroupBinaryOverlay<IActorValueInformationGetter>.SkyrimGroupFactory(_stream, _ActorValueInformationLocations, _package)) : default;
         public ISkyrimGroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new SkyrimGroup<ActorValueInformation>(this);
         #endregion
         #region CameraShots
         private List<RangeInt64>? _CameraShotsLocations;
-        private ISkyrimGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? SkyrimGroupBinaryOverlay<ICameraShotGetter>.SkyrimGroupFactory(_stream, _CameraShotsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ICameraShotGetter>> _CameraShotsCache = new();
+        private ISkyrimGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? _CameraShotsCache.Get(() => SkyrimGroupBinaryOverlay<ICameraShotGetter>.SkyrimGroupFactory(_stream, _CameraShotsLocations, _package)) : default;
         public ISkyrimGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new SkyrimGroup<CameraShot>(this);
         #endregion
         #region CameraPaths
         private List<RangeInt64>? _CameraPathsLocations;
-        private ISkyrimGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? SkyrimGroupBinaryOverlay<ICameraPathGetter>.SkyrimGroupFactory(_stream, _CameraPathsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ICameraPathGetter>> _CameraPathsCache = new();
+        private ISkyrimGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? _CameraPathsCache.Get(() => SkyrimGroupBinaryOverlay<ICameraPathGetter>.SkyrimGroupFactory(_stream, _CameraPathsLocations, _package)) : default;
         public ISkyrimGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new SkyrimGroup<CameraPath>(this);
         #endregion
         #region VoiceTypes
         private List<RangeInt64>? _VoiceTypesLocations;
-        private ISkyrimGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? SkyrimGroupBinaryOverlay<IVoiceTypeGetter>.SkyrimGroupFactory(_stream, _VoiceTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IVoiceTypeGetter>> _VoiceTypesCache = new();
+        private ISkyrimGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? _VoiceTypesCache.Get(() => SkyrimGroupBinaryOverlay<IVoiceTypeGetter>.SkyrimGroupFactory(_stream, _VoiceTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new SkyrimGroup<VoiceType>(this);
         #endregion
         #region MaterialTypes
         private List<RangeInt64>? _MaterialTypesLocations;
-        private ISkyrimGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? SkyrimGroupBinaryOverlay<IMaterialTypeGetter>.SkyrimGroupFactory(_stream, _MaterialTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMaterialTypeGetter>> _MaterialTypesCache = new();
+        private ISkyrimGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? _MaterialTypesCache.Get(() => SkyrimGroupBinaryOverlay<IMaterialTypeGetter>.SkyrimGroupFactory(_stream, _MaterialTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new SkyrimGroup<MaterialType>(this);
         #endregion
         #region Impacts
         private List<RangeInt64>? _ImpactsLocations;
-        private ISkyrimGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? SkyrimGroupBinaryOverlay<IImpactGetter>.SkyrimGroupFactory(_stream, _ImpactsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IImpactGetter>> _ImpactsCache = new();
+        private ISkyrimGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? _ImpactsCache.Get(() => SkyrimGroupBinaryOverlay<IImpactGetter>.SkyrimGroupFactory(_stream, _ImpactsLocations, _package)) : default;
         public ISkyrimGroupGetter<IImpactGetter> Impacts => _Impacts ?? new SkyrimGroup<Impact>(this);
         #endregion
         #region ImpactDataSets
         private List<RangeInt64>? _ImpactDataSetsLocations;
-        private ISkyrimGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? SkyrimGroupBinaryOverlay<IImpactDataSetGetter>.SkyrimGroupFactory(_stream, _ImpactDataSetsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IImpactDataSetGetter>> _ImpactDataSetsCache = new();
+        private ISkyrimGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? _ImpactDataSetsCache.Get(() => SkyrimGroupBinaryOverlay<IImpactDataSetGetter>.SkyrimGroupFactory(_stream, _ImpactDataSetsLocations, _package)) : default;
         public ISkyrimGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new SkyrimGroup<ImpactDataSet>(this);
         #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
-        private ISkyrimGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? SkyrimGroupBinaryOverlay<IArmorAddonGetter>.SkyrimGroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IArmorAddonGetter>> _ArmorAddonsCache = new();
+        private ISkyrimGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? _ArmorAddonsCache.Get(() => SkyrimGroupBinaryOverlay<IArmorAddonGetter>.SkyrimGroupFactory(_stream, _ArmorAddonsLocations, _package)) : default;
         public ISkyrimGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new SkyrimGroup<ArmorAddon>(this);
         #endregion
         #region EncounterZones
         private List<RangeInt64>? _EncounterZonesLocations;
-        private ISkyrimGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? SkyrimGroupBinaryOverlay<IEncounterZoneGetter>.SkyrimGroupFactory(_stream, _EncounterZonesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IEncounterZoneGetter>> _EncounterZonesCache = new();
+        private ISkyrimGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? _EncounterZonesCache.Get(() => SkyrimGroupBinaryOverlay<IEncounterZoneGetter>.SkyrimGroupFactory(_stream, _EncounterZonesLocations, _package)) : default;
         public ISkyrimGroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new SkyrimGroup<EncounterZone>(this);
         #endregion
         #region Locations
         private List<RangeInt64>? _LocationsLocations;
-        private ISkyrimGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? SkyrimGroupBinaryOverlay<ILocationGetter>.SkyrimGroupFactory(_stream, _LocationsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILocationGetter>> _LocationsCache = new();
+        private ISkyrimGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? _LocationsCache.Get(() => SkyrimGroupBinaryOverlay<ILocationGetter>.SkyrimGroupFactory(_stream, _LocationsLocations, _package)) : default;
         public ISkyrimGroupGetter<ILocationGetter> Locations => _Locations ?? new SkyrimGroup<Location>(this);
         #endregion
         #region Messages
         private List<RangeInt64>? _MessagesLocations;
-        private ISkyrimGroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? SkyrimGroupBinaryOverlay<IMessageGetter>.SkyrimGroupFactory(_stream, _MessagesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMessageGetter>> _MessagesCache = new();
+        private ISkyrimGroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? _MessagesCache.Get(() => SkyrimGroupBinaryOverlay<IMessageGetter>.SkyrimGroupFactory(_stream, _MessagesLocations, _package)) : default;
         public ISkyrimGroupGetter<IMessageGetter> Messages => _Messages ?? new SkyrimGroup<Message>(this);
         #endregion
         #region DefaultObjectManagers
         private List<RangeInt64>? _DefaultObjectManagersLocations;
-        private ISkyrimGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? SkyrimGroupBinaryOverlay<IDefaultObjectManagerGetter>.SkyrimGroupFactory(_stream, _DefaultObjectManagersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDefaultObjectManagerGetter>> _DefaultObjectManagersCache = new();
+        private ISkyrimGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? _DefaultObjectManagersCache.Get(() => SkyrimGroupBinaryOverlay<IDefaultObjectManagerGetter>.SkyrimGroupFactory(_stream, _DefaultObjectManagersLocations, _package)) : default;
         public ISkyrimGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new SkyrimGroup<DefaultObjectManager>(this);
         #endregion
         #region LightingTemplates
         private List<RangeInt64>? _LightingTemplatesLocations;
-        private ISkyrimGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? SkyrimGroupBinaryOverlay<ILightingTemplateGetter>.SkyrimGroupFactory(_stream, _LightingTemplatesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILightingTemplateGetter>> _LightingTemplatesCache = new();
+        private ISkyrimGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? _LightingTemplatesCache.Get(() => SkyrimGroupBinaryOverlay<ILightingTemplateGetter>.SkyrimGroupFactory(_stream, _LightingTemplatesLocations, _package)) : default;
         public ISkyrimGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new SkyrimGroup<LightingTemplate>(this);
         #endregion
         #region MusicTypes
         private List<RangeInt64>? _MusicTypesLocations;
-        private ISkyrimGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? SkyrimGroupBinaryOverlay<IMusicTypeGetter>.SkyrimGroupFactory(_stream, _MusicTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMusicTypeGetter>> _MusicTypesCache = new();
+        private ISkyrimGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? _MusicTypesCache.Get(() => SkyrimGroupBinaryOverlay<IMusicTypeGetter>.SkyrimGroupFactory(_stream, _MusicTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new SkyrimGroup<MusicType>(this);
         #endregion
         #region Footsteps
         private List<RangeInt64>? _FootstepsLocations;
-        private ISkyrimGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? SkyrimGroupBinaryOverlay<IFootstepGetter>.SkyrimGroupFactory(_stream, _FootstepsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IFootstepGetter>> _FootstepsCache = new();
+        private ISkyrimGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? _FootstepsCache.Get(() => SkyrimGroupBinaryOverlay<IFootstepGetter>.SkyrimGroupFactory(_stream, _FootstepsLocations, _package)) : default;
         public ISkyrimGroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new SkyrimGroup<Footstep>(this);
         #endregion
         #region FootstepSets
         private List<RangeInt64>? _FootstepSetsLocations;
-        private ISkyrimGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? SkyrimGroupBinaryOverlay<IFootstepSetGetter>.SkyrimGroupFactory(_stream, _FootstepSetsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IFootstepSetGetter>> _FootstepSetsCache = new();
+        private ISkyrimGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? _FootstepSetsCache.Get(() => SkyrimGroupBinaryOverlay<IFootstepSetGetter>.SkyrimGroupFactory(_stream, _FootstepSetsLocations, _package)) : default;
         public ISkyrimGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new SkyrimGroup<FootstepSet>(this);
         #endregion
         #region StoryManagerBranchNodes
         private List<RangeInt64>? _StoryManagerBranchNodesLocations;
-        private ISkyrimGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.SkyrimGroupFactory(_stream, _StoryManagerBranchNodesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IStoryManagerBranchNodeGetter>> _StoryManagerBranchNodesCache = new();
+        private ISkyrimGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? _StoryManagerBranchNodesCache.Get(() => SkyrimGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.SkyrimGroupFactory(_stream, _StoryManagerBranchNodesLocations, _package)) : default;
         public ISkyrimGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new SkyrimGroup<StoryManagerBranchNode>(this);
         #endregion
         #region StoryManagerQuestNodes
         private List<RangeInt64>? _StoryManagerQuestNodesLocations;
-        private ISkyrimGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.SkyrimGroupFactory(_stream, _StoryManagerQuestNodesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IStoryManagerQuestNodeGetter>> _StoryManagerQuestNodesCache = new();
+        private ISkyrimGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? _StoryManagerQuestNodesCache.Get(() => SkyrimGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.SkyrimGroupFactory(_stream, _StoryManagerQuestNodesLocations, _package)) : default;
         public ISkyrimGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new SkyrimGroup<StoryManagerQuestNode>(this);
         #endregion
         #region StoryManagerEventNodes
         private List<RangeInt64>? _StoryManagerEventNodesLocations;
-        private ISkyrimGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? SkyrimGroupBinaryOverlay<IStoryManagerEventNodeGetter>.SkyrimGroupFactory(_stream, _StoryManagerEventNodesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IStoryManagerEventNodeGetter>> _StoryManagerEventNodesCache = new();
+        private ISkyrimGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? _StoryManagerEventNodesCache.Get(() => SkyrimGroupBinaryOverlay<IStoryManagerEventNodeGetter>.SkyrimGroupFactory(_stream, _StoryManagerEventNodesLocations, _package)) : default;
         public ISkyrimGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new SkyrimGroup<StoryManagerEventNode>(this);
         #endregion
         #region DialogBranches
         private List<RangeInt64>? _DialogBranchesLocations;
-        private ISkyrimGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocations != null ? SkyrimGroupBinaryOverlay<IDialogBranchGetter>.SkyrimGroupFactory(_stream, _DialogBranchesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDialogBranchGetter>> _DialogBranchesCache = new();
+        private ISkyrimGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocations != null ? _DialogBranchesCache.Get(() => SkyrimGroupBinaryOverlay<IDialogBranchGetter>.SkyrimGroupFactory(_stream, _DialogBranchesLocations, _package)) : default;
         public ISkyrimGroupGetter<IDialogBranchGetter> DialogBranches => _DialogBranches ?? new SkyrimGroup<DialogBranch>(this);
         #endregion
         #region MusicTracks
         private List<RangeInt64>? _MusicTracksLocations;
-        private ISkyrimGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? SkyrimGroupBinaryOverlay<IMusicTrackGetter>.SkyrimGroupFactory(_stream, _MusicTracksLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMusicTrackGetter>> _MusicTracksCache = new();
+        private ISkyrimGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? _MusicTracksCache.Get(() => SkyrimGroupBinaryOverlay<IMusicTrackGetter>.SkyrimGroupFactory(_stream, _MusicTracksLocations, _package)) : default;
         public ISkyrimGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new SkyrimGroup<MusicTrack>(this);
         #endregion
         #region DialogViews
         private List<RangeInt64>? _DialogViewsLocations;
-        private ISkyrimGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? SkyrimGroupBinaryOverlay<IDialogViewGetter>.SkyrimGroupFactory(_stream, _DialogViewsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDialogViewGetter>> _DialogViewsCache = new();
+        private ISkyrimGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocations != null ? _DialogViewsCache.Get(() => SkyrimGroupBinaryOverlay<IDialogViewGetter>.SkyrimGroupFactory(_stream, _DialogViewsLocations, _package)) : default;
         public ISkyrimGroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new SkyrimGroup<DialogView>(this);
         #endregion
         #region WordsOfPower
         private List<RangeInt64>? _WordsOfPowerLocations;
-        private ISkyrimGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocations != null ? SkyrimGroupBinaryOverlay<IWordOfPowerGetter>.SkyrimGroupFactory(_stream, _WordsOfPowerLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IWordOfPowerGetter>> _WordsOfPowerCache = new();
+        private ISkyrimGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocations != null ? _WordsOfPowerCache.Get(() => SkyrimGroupBinaryOverlay<IWordOfPowerGetter>.SkyrimGroupFactory(_stream, _WordsOfPowerLocations, _package)) : default;
         public ISkyrimGroupGetter<IWordOfPowerGetter> WordsOfPower => _WordsOfPower ?? new SkyrimGroup<WordOfPower>(this);
         #endregion
         #region Shouts
         private List<RangeInt64>? _ShoutsLocations;
-        private ISkyrimGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocations != null ? SkyrimGroupBinaryOverlay<IShoutGetter>.SkyrimGroupFactory(_stream, _ShoutsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IShoutGetter>> _ShoutsCache = new();
+        private ISkyrimGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocations != null ? _ShoutsCache.Get(() => SkyrimGroupBinaryOverlay<IShoutGetter>.SkyrimGroupFactory(_stream, _ShoutsLocations, _package)) : default;
         public ISkyrimGroupGetter<IShoutGetter> Shouts => _Shouts ?? new SkyrimGroup<Shout>(this);
         #endregion
         #region EquipTypes
         private List<RangeInt64>? _EquipTypesLocations;
-        private ISkyrimGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? SkyrimGroupBinaryOverlay<IEquipTypeGetter>.SkyrimGroupFactory(_stream, _EquipTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IEquipTypeGetter>> _EquipTypesCache = new();
+        private ISkyrimGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? _EquipTypesCache.Get(() => SkyrimGroupBinaryOverlay<IEquipTypeGetter>.SkyrimGroupFactory(_stream, _EquipTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new SkyrimGroup<EquipType>(this);
         #endregion
         #region Relationships
         private List<RangeInt64>? _RelationshipsLocations;
-        private ISkyrimGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? SkyrimGroupBinaryOverlay<IRelationshipGetter>.SkyrimGroupFactory(_stream, _RelationshipsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IRelationshipGetter>> _RelationshipsCache = new();
+        private ISkyrimGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocations != null ? _RelationshipsCache.Get(() => SkyrimGroupBinaryOverlay<IRelationshipGetter>.SkyrimGroupFactory(_stream, _RelationshipsLocations, _package)) : default;
         public ISkyrimGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new SkyrimGroup<Relationship>(this);
         #endregion
         #region Scenes
         private List<RangeInt64>? _ScenesLocations;
-        private ISkyrimGroupGetter<ISceneGetter>? _Scenes => _ScenesLocations != null ? SkyrimGroupBinaryOverlay<ISceneGetter>.SkyrimGroupFactory(_stream, _ScenesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISceneGetter>> _ScenesCache = new();
+        private ISkyrimGroupGetter<ISceneGetter>? _Scenes => _ScenesLocations != null ? _ScenesCache.Get(() => SkyrimGroupBinaryOverlay<ISceneGetter>.SkyrimGroupFactory(_stream, _ScenesLocations, _package)) : default;
         public ISkyrimGroupGetter<ISceneGetter> Scenes => _Scenes ?? new SkyrimGroup<Scene>(this);
         #endregion
         #region AssociationTypes
         private List<RangeInt64>? _AssociationTypesLocations;
-        private ISkyrimGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? SkyrimGroupBinaryOverlay<IAssociationTypeGetter>.SkyrimGroupFactory(_stream, _AssociationTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IAssociationTypeGetter>> _AssociationTypesCache = new();
+        private ISkyrimGroupGetter<IAssociationTypeGetter>? _AssociationTypes => _AssociationTypesLocations != null ? _AssociationTypesCache.Get(() => SkyrimGroupBinaryOverlay<IAssociationTypeGetter>.SkyrimGroupFactory(_stream, _AssociationTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<IAssociationTypeGetter> AssociationTypes => _AssociationTypes ?? new SkyrimGroup<AssociationType>(this);
         #endregion
         #region Outfits
         private List<RangeInt64>? _OutfitsLocations;
-        private ISkyrimGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? SkyrimGroupBinaryOverlay<IOutfitGetter>.SkyrimGroupFactory(_stream, _OutfitsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IOutfitGetter>> _OutfitsCache = new();
+        private ISkyrimGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? _OutfitsCache.Get(() => SkyrimGroupBinaryOverlay<IOutfitGetter>.SkyrimGroupFactory(_stream, _OutfitsLocations, _package)) : default;
         public ISkyrimGroupGetter<IOutfitGetter> Outfits => _Outfits ?? new SkyrimGroup<Outfit>(this);
         #endregion
         #region ArtObjects
         private List<RangeInt64>? _ArtObjectsLocations;
-        private ISkyrimGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? SkyrimGroupBinaryOverlay<IArtObjectGetter>.SkyrimGroupFactory(_stream, _ArtObjectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IArtObjectGetter>> _ArtObjectsCache = new();
+        private ISkyrimGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? _ArtObjectsCache.Get(() => SkyrimGroupBinaryOverlay<IArtObjectGetter>.SkyrimGroupFactory(_stream, _ArtObjectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new SkyrimGroup<ArtObject>(this);
         #endregion
         #region MaterialObjects
         private List<RangeInt64>? _MaterialObjectsLocations;
-        private ISkyrimGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? SkyrimGroupBinaryOverlay<IMaterialObjectGetter>.SkyrimGroupFactory(_stream, _MaterialObjectsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMaterialObjectGetter>> _MaterialObjectsCache = new();
+        private ISkyrimGroupGetter<IMaterialObjectGetter>? _MaterialObjects => _MaterialObjectsLocations != null ? _MaterialObjectsCache.Get(() => SkyrimGroupBinaryOverlay<IMaterialObjectGetter>.SkyrimGroupFactory(_stream, _MaterialObjectsLocations, _package)) : default;
         public ISkyrimGroupGetter<IMaterialObjectGetter> MaterialObjects => _MaterialObjects ?? new SkyrimGroup<MaterialObject>(this);
         #endregion
         #region MovementTypes
         private List<RangeInt64>? _MovementTypesLocations;
-        private ISkyrimGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? SkyrimGroupBinaryOverlay<IMovementTypeGetter>.SkyrimGroupFactory(_stream, _MovementTypesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IMovementTypeGetter>> _MovementTypesCache = new();
+        private ISkyrimGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? _MovementTypesCache.Get(() => SkyrimGroupBinaryOverlay<IMovementTypeGetter>.SkyrimGroupFactory(_stream, _MovementTypesLocations, _package)) : default;
         public ISkyrimGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new SkyrimGroup<MovementType>(this);
         #endregion
         #region SoundDescriptors
         private List<RangeInt64>? _SoundDescriptorsLocations;
-        private ISkyrimGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? SkyrimGroupBinaryOverlay<ISoundDescriptorGetter>.SkyrimGroupFactory(_stream, _SoundDescriptorsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISoundDescriptorGetter>> _SoundDescriptorsCache = new();
+        private ISkyrimGroupGetter<ISoundDescriptorGetter>? _SoundDescriptors => _SoundDescriptorsLocations != null ? _SoundDescriptorsCache.Get(() => SkyrimGroupBinaryOverlay<ISoundDescriptorGetter>.SkyrimGroupFactory(_stream, _SoundDescriptorsLocations, _package)) : default;
         public ISkyrimGroupGetter<ISoundDescriptorGetter> SoundDescriptors => _SoundDescriptors ?? new SkyrimGroup<SoundDescriptor>(this);
         #endregion
         #region DualCastData
         private List<RangeInt64>? _DualCastDataLocations;
-        private ISkyrimGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocations != null ? SkyrimGroupBinaryOverlay<IDualCastDataGetter>.SkyrimGroupFactory(_stream, _DualCastDataLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IDualCastDataGetter>> _DualCastDataCache = new();
+        private ISkyrimGroupGetter<IDualCastDataGetter>? _DualCastData => _DualCastDataLocations != null ? _DualCastDataCache.Get(() => SkyrimGroupBinaryOverlay<IDualCastDataGetter>.SkyrimGroupFactory(_stream, _DualCastDataLocations, _package)) : default;
         public ISkyrimGroupGetter<IDualCastDataGetter> DualCastData => _DualCastData ?? new SkyrimGroup<DualCastData>(this);
         #endregion
         #region SoundCategories
         private List<RangeInt64>? _SoundCategoriesLocations;
-        private ISkyrimGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? SkyrimGroupBinaryOverlay<ISoundCategoryGetter>.SkyrimGroupFactory(_stream, _SoundCategoriesLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISoundCategoryGetter>> _SoundCategoriesCache = new();
+        private ISkyrimGroupGetter<ISoundCategoryGetter>? _SoundCategories => _SoundCategoriesLocations != null ? _SoundCategoriesCache.Get(() => SkyrimGroupBinaryOverlay<ISoundCategoryGetter>.SkyrimGroupFactory(_stream, _SoundCategoriesLocations, _package)) : default;
         public ISkyrimGroupGetter<ISoundCategoryGetter> SoundCategories => _SoundCategories ?? new SkyrimGroup<SoundCategory>(this);
         #endregion
         #region SoundOutputModels
         private List<RangeInt64>? _SoundOutputModelsLocations;
-        private ISkyrimGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? SkyrimGroupBinaryOverlay<ISoundOutputModelGetter>.SkyrimGroupFactory(_stream, _SoundOutputModelsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ISoundOutputModelGetter>> _SoundOutputModelsCache = new();
+        private ISkyrimGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocations != null ? _SoundOutputModelsCache.Get(() => SkyrimGroupBinaryOverlay<ISoundOutputModelGetter>.SkyrimGroupFactory(_stream, _SoundOutputModelsLocations, _package)) : default;
         public ISkyrimGroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new SkyrimGroup<SoundOutputModel>(this);
         #endregion
         #region CollisionLayers
         private List<RangeInt64>? _CollisionLayersLocations;
-        private ISkyrimGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? SkyrimGroupBinaryOverlay<ICollisionLayerGetter>.SkyrimGroupFactory(_stream, _CollisionLayersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ICollisionLayerGetter>> _CollisionLayersCache = new();
+        private ISkyrimGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? _CollisionLayersCache.Get(() => SkyrimGroupBinaryOverlay<ICollisionLayerGetter>.SkyrimGroupFactory(_stream, _CollisionLayersLocations, _package)) : default;
         public ISkyrimGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new SkyrimGroup<CollisionLayer>(this);
         #endregion
         #region Colors
         private List<RangeInt64>? _ColorsLocations;
-        private ISkyrimGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? SkyrimGroupBinaryOverlay<IColorRecordGetter>.SkyrimGroupFactory(_stream, _ColorsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IColorRecordGetter>> _ColorsCache = new();
+        private ISkyrimGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? _ColorsCache.Get(() => SkyrimGroupBinaryOverlay<IColorRecordGetter>.SkyrimGroupFactory(_stream, _ColorsLocations, _package)) : default;
         public ISkyrimGroupGetter<IColorRecordGetter> Colors => _Colors ?? new SkyrimGroup<ColorRecord>(this);
         #endregion
         #region ReverbParameters
         private List<RangeInt64>? _ReverbParametersLocations;
-        private ISkyrimGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? SkyrimGroupBinaryOverlay<IReverbParametersGetter>.SkyrimGroupFactory(_stream, _ReverbParametersLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IReverbParametersGetter>> _ReverbParametersCache = new();
+        private ISkyrimGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? _ReverbParametersCache.Get(() => SkyrimGroupBinaryOverlay<IReverbParametersGetter>.SkyrimGroupFactory(_stream, _ReverbParametersLocations, _package)) : default;
         public ISkyrimGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new SkyrimGroup<ReverbParameters>(this);
         #endregion
         #region VolumetricLightings
         private List<RangeInt64>? _VolumetricLightingsLocations;
-        private ISkyrimGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? SkyrimGroupBinaryOverlay<IVolumetricLightingGetter>.SkyrimGroupFactory(_stream, _VolumetricLightingsLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<IVolumetricLightingGetter>> _VolumetricLightingsCache = new();
+        private ISkyrimGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? _VolumetricLightingsCache.Get(() => SkyrimGroupBinaryOverlay<IVolumetricLightingGetter>.SkyrimGroupFactory(_stream, _VolumetricLightingsLocations, _package)) : default;
         public ISkyrimGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new SkyrimGroup<VolumetricLighting>(this);
         #endregion
         #region LensFlares
         private List<RangeInt64>? _LensFlaresLocations;
-        private ISkyrimGroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? SkyrimGroupBinaryOverlay<ILensFlareGetter>.SkyrimGroupFactory(_stream, _LensFlaresLocations, _package) : default;
+        private readonly GroupCache<ISkyrimGroupGetter<ILensFlareGetter>> _LensFlaresCache = new();
+        private ISkyrimGroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? _LensFlaresCache.Get(() => SkyrimGroupBinaryOverlay<ILensFlareGetter>.SkyrimGroupFactory(_stream, _LensFlaresLocations, _package)) : default;
         public ISkyrimGroupGetter<ILensFlareGetter> LensFlares => _LensFlares ?? new SkyrimGroup<LensFlare>(this);
         #endregion
         protected SkyrimModBinaryOverlay(

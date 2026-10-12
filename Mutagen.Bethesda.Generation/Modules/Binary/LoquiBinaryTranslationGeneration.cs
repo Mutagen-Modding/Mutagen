@@ -354,6 +354,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                     || (loqui.TargetObjectGeneration?.IsTopLevelListGroup() ?? false))
                 {
                     sb.AppendLine($"private List<{GetLocationObjectString(objGen)}>? _{typeGen.Name}Locations;");
+                    sb.AppendLine($"private readonly GroupCache<{loqui.Interface(getter: true, internalInterface: true)}> _{typeGen.Name}Cache = new();");
                     using (sb.Line())
                     {
                         if (loqui.IsNullable)
@@ -376,13 +377,13 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
                         sb.Append($"{typeGen.Name}");
                         sb.Append($" => _{typeGen.Name}Locations != null ? ");
                         sb.Append(
-                            $"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({recordDataAccessor}, _{typeGen.Name}Locations, _package");
+                            $"_{typeGen.Name}Cache.Get(() => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory({recordDataAccessor}, _{typeGen.Name}Locations, _package");
                         if (!recConverter.StartsWith("default("))
                         {
                             sb.Append($", {recConverter}");
                         }
 
-                        sb.Append($") ");
+                        sb.Append($")) ");
                         sb.Append($": default;");
                     }
                 }

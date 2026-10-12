@@ -20443,507 +20443,608 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region GameSettings
         private List<RangeInt64>? _GameSettingsLocations;
-        private IFallout3GroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? Fallout3GroupBinaryOverlay<IGameSettingGetter>.Fallout3GroupFactory(_stream, _GameSettingsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IGameSettingGetter>> _GameSettingsCache = new();
+        private IFallout3GroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? _GameSettingsCache.Get(() => Fallout3GroupBinaryOverlay<IGameSettingGetter>.Fallout3GroupFactory(_stream, _GameSettingsLocations, _package)) : default;
         public IFallout3GroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Fallout3Group<GameSetting>(this);
         #endregion
         #region TextureSets
         private List<RangeInt64>? _TextureSetsLocations;
-        private IFallout3GroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? Fallout3GroupBinaryOverlay<ITextureSetGetter>.Fallout3GroupFactory(_stream, _TextureSetsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ITextureSetGetter>> _TextureSetsCache = new();
+        private IFallout3GroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? _TextureSetsCache.Get(() => Fallout3GroupBinaryOverlay<ITextureSetGetter>.Fallout3GroupFactory(_stream, _TextureSetsLocations, _package)) : default;
         public IFallout3GroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Fallout3Group<TextureSet>(this);
         #endregion
         #region MenuIcons
         private List<RangeInt64>? _MenuIconsLocations;
-        private IFallout3GroupGetter<IMenuIconGetter>? _MenuIcons => _MenuIconsLocations != null ? Fallout3GroupBinaryOverlay<IMenuIconGetter>.Fallout3GroupFactory(_stream, _MenuIconsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMenuIconGetter>> _MenuIconsCache = new();
+        private IFallout3GroupGetter<IMenuIconGetter>? _MenuIcons => _MenuIconsLocations != null ? _MenuIconsCache.Get(() => Fallout3GroupBinaryOverlay<IMenuIconGetter>.Fallout3GroupFactory(_stream, _MenuIconsLocations, _package)) : default;
         public IFallout3GroupGetter<IMenuIconGetter> MenuIcons => _MenuIcons ?? new Fallout3Group<MenuIcon>(this);
         #endregion
         #region Globals
         private List<RangeInt64>? _GlobalsLocations;
-        private IFallout3GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? Fallout3GroupBinaryOverlay<IGlobalGetter>.Fallout3GroupFactory(_stream, _GlobalsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IGlobalGetter>> _GlobalsCache = new();
+        private IFallout3GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? _GlobalsCache.Get(() => Fallout3GroupBinaryOverlay<IGlobalGetter>.Fallout3GroupFactory(_stream, _GlobalsLocations, _package)) : default;
         public IFallout3GroupGetter<IGlobalGetter> Globals => _Globals ?? new Fallout3Group<Global>(this);
         #endregion
         #region Classes
         private List<RangeInt64>? _ClassesLocations;
-        private IFallout3GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? Fallout3GroupBinaryOverlay<IClassGetter>.Fallout3GroupFactory(_stream, _ClassesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IClassGetter>> _ClassesCache = new();
+        private IFallout3GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? _ClassesCache.Get(() => Fallout3GroupBinaryOverlay<IClassGetter>.Fallout3GroupFactory(_stream, _ClassesLocations, _package)) : default;
         public IFallout3GroupGetter<IClassGetter> Classes => _Classes ?? new Fallout3Group<Class>(this);
         #endregion
         #region Factions
         private List<RangeInt64>? _FactionsLocations;
-        private IFallout3GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? Fallout3GroupBinaryOverlay<IFactionGetter>.Fallout3GroupFactory(_stream, _FactionsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IFactionGetter>> _FactionsCache = new();
+        private IFallout3GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? _FactionsCache.Get(() => Fallout3GroupBinaryOverlay<IFactionGetter>.Fallout3GroupFactory(_stream, _FactionsLocations, _package)) : default;
         public IFallout3GroupGetter<IFactionGetter> Factions => _Factions ?? new Fallout3Group<Faction>(this);
         #endregion
         #region HeadParts
         private List<RangeInt64>? _HeadPartsLocations;
-        private IFallout3GroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? Fallout3GroupBinaryOverlay<IHeadPartGetter>.Fallout3GroupFactory(_stream, _HeadPartsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IHeadPartGetter>> _HeadPartsCache = new();
+        private IFallout3GroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? _HeadPartsCache.Get(() => Fallout3GroupBinaryOverlay<IHeadPartGetter>.Fallout3GroupFactory(_stream, _HeadPartsLocations, _package)) : default;
         public IFallout3GroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Fallout3Group<HeadPart>(this);
         #endregion
         #region Hairs
         private List<RangeInt64>? _HairsLocations;
-        private IFallout3GroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? Fallout3GroupBinaryOverlay<IHairGetter>.Fallout3GroupFactory(_stream, _HairsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IHairGetter>> _HairsCache = new();
+        private IFallout3GroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? _HairsCache.Get(() => Fallout3GroupBinaryOverlay<IHairGetter>.Fallout3GroupFactory(_stream, _HairsLocations, _package)) : default;
         public IFallout3GroupGetter<IHairGetter> Hairs => _Hairs ?? new Fallout3Group<Hair>(this);
         #endregion
         #region Eyes
         private List<RangeInt64>? _EyesLocations;
-        private IFallout3GroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? Fallout3GroupBinaryOverlay<IEyesGetter>.Fallout3GroupFactory(_stream, _EyesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IEyesGetter>> _EyesCache = new();
+        private IFallout3GroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? _EyesCache.Get(() => Fallout3GroupBinaryOverlay<IEyesGetter>.Fallout3GroupFactory(_stream, _EyesLocations, _package)) : default;
         public IFallout3GroupGetter<IEyesGetter> Eyes => _Eyes ?? new Fallout3Group<Eyes>(this);
         #endregion
         #region Races
         private List<RangeInt64>? _RacesLocations;
-        private IFallout3GroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? Fallout3GroupBinaryOverlay<IRaceGetter>.Fallout3GroupFactory(_stream, _RacesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IRaceGetter>> _RacesCache = new();
+        private IFallout3GroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? _RacesCache.Get(() => Fallout3GroupBinaryOverlay<IRaceGetter>.Fallout3GroupFactory(_stream, _RacesLocations, _package)) : default;
         public IFallout3GroupGetter<IRaceGetter> Races => _Races ?? new Fallout3Group<Race>(this);
         #endregion
         #region Sounds
         private List<RangeInt64>? _SoundsLocations;
-        private IFallout3GroupGetter<ISoundGetter>? _Sounds => _SoundsLocations != null ? Fallout3GroupBinaryOverlay<ISoundGetter>.Fallout3GroupFactory(_stream, _SoundsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ISoundGetter>> _SoundsCache = new();
+        private IFallout3GroupGetter<ISoundGetter>? _Sounds => _SoundsLocations != null ? _SoundsCache.Get(() => Fallout3GroupBinaryOverlay<ISoundGetter>.Fallout3GroupFactory(_stream, _SoundsLocations, _package)) : default;
         public IFallout3GroupGetter<ISoundGetter> Sounds => _Sounds ?? new Fallout3Group<Sound>(this);
         #endregion
         #region AcousticSpaces
         private List<RangeInt64>? _AcousticSpacesLocations;
-        private IFallout3GroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? Fallout3GroupBinaryOverlay<IAcousticSpaceGetter>.Fallout3GroupFactory(_stream, _AcousticSpacesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IAcousticSpaceGetter>> _AcousticSpacesCache = new();
+        private IFallout3GroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? _AcousticSpacesCache.Get(() => Fallout3GroupBinaryOverlay<IAcousticSpaceGetter>.Fallout3GroupFactory(_stream, _AcousticSpacesLocations, _package)) : default;
         public IFallout3GroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new Fallout3Group<AcousticSpace>(this);
         #endregion
         #region MagicEffects
         private List<RangeInt64>? _MagicEffectsLocations;
-        private IFallout3GroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? Fallout3GroupBinaryOverlay<IMagicEffectGetter>.Fallout3GroupFactory(_stream, _MagicEffectsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMagicEffectGetter>> _MagicEffectsCache = new();
+        private IFallout3GroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? _MagicEffectsCache.Get(() => Fallout3GroupBinaryOverlay<IMagicEffectGetter>.Fallout3GroupFactory(_stream, _MagicEffectsLocations, _package)) : default;
         public IFallout3GroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new Fallout3Group<MagicEffect>(this);
         #endregion
         #region Scripts
         private List<RangeInt64>? _ScriptsLocations;
-        private IFallout3GroupGetter<IScriptGetter>? _Scripts => _ScriptsLocations != null ? Fallout3GroupBinaryOverlay<IScriptGetter>.Fallout3GroupFactory(_stream, _ScriptsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IScriptGetter>> _ScriptsCache = new();
+        private IFallout3GroupGetter<IScriptGetter>? _Scripts => _ScriptsLocations != null ? _ScriptsCache.Get(() => Fallout3GroupBinaryOverlay<IScriptGetter>.Fallout3GroupFactory(_stream, _ScriptsLocations, _package)) : default;
         public IFallout3GroupGetter<IScriptGetter> Scripts => _Scripts ?? new Fallout3Group<Script>(this);
         #endregion
         #region LandscapeTextures
         private List<RangeInt64>? _LandscapeTexturesLocations;
-        private IFallout3GroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? Fallout3GroupBinaryOverlay<ILandscapeTextureGetter>.Fallout3GroupFactory(_stream, _LandscapeTexturesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILandscapeTextureGetter>> _LandscapeTexturesCache = new();
+        private IFallout3GroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? _LandscapeTexturesCache.Get(() => Fallout3GroupBinaryOverlay<ILandscapeTextureGetter>.Fallout3GroupFactory(_stream, _LandscapeTexturesLocations, _package)) : default;
         public IFallout3GroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new Fallout3Group<LandscapeTexture>(this);
         #endregion
         #region ObjectEffects
         private List<RangeInt64>? _ObjectEffectsLocations;
-        private IFallout3GroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? Fallout3GroupBinaryOverlay<IObjectEffectGetter>.Fallout3GroupFactory(_stream, _ObjectEffectsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IObjectEffectGetter>> _ObjectEffectsCache = new();
+        private IFallout3GroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? _ObjectEffectsCache.Get(() => Fallout3GroupBinaryOverlay<IObjectEffectGetter>.Fallout3GroupFactory(_stream, _ObjectEffectsLocations, _package)) : default;
         public IFallout3GroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new Fallout3Group<ObjectEffect>(this);
         #endregion
         #region Spells
         private List<RangeInt64>? _SpellsLocations;
-        private IFallout3GroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? Fallout3GroupBinaryOverlay<ISpellGetter>.Fallout3GroupFactory(_stream, _SpellsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ISpellGetter>> _SpellsCache = new();
+        private IFallout3GroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? _SpellsCache.Get(() => Fallout3GroupBinaryOverlay<ISpellGetter>.Fallout3GroupFactory(_stream, _SpellsLocations, _package)) : default;
         public IFallout3GroupGetter<ISpellGetter> Spells => _Spells ?? new Fallout3Group<Spell>(this);
         #endregion
         #region Activators
         private List<RangeInt64>? _ActivatorsLocations;
-        private IFallout3GroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? Fallout3GroupBinaryOverlay<IActivatorGetter>.Fallout3GroupFactory(_stream, _ActivatorsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IActivatorGetter>> _ActivatorsCache = new();
+        private IFallout3GroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? _ActivatorsCache.Get(() => Fallout3GroupBinaryOverlay<IActivatorGetter>.Fallout3GroupFactory(_stream, _ActivatorsLocations, _package)) : default;
         public IFallout3GroupGetter<IActivatorGetter> Activators => _Activators ?? new Fallout3Group<Activator>(this);
         #endregion
         #region TalkingActivators
         private List<RangeInt64>? _TalkingActivatorsLocations;
-        private IFallout3GroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? Fallout3GroupBinaryOverlay<ITalkingActivatorGetter>.Fallout3GroupFactory(_stream, _TalkingActivatorsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ITalkingActivatorGetter>> _TalkingActivatorsCache = new();
+        private IFallout3GroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocations != null ? _TalkingActivatorsCache.Get(() => Fallout3GroupBinaryOverlay<ITalkingActivatorGetter>.Fallout3GroupFactory(_stream, _TalkingActivatorsLocations, _package)) : default;
         public IFallout3GroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new Fallout3Group<TalkingActivator>(this);
         #endregion
         #region Terminals
         private List<RangeInt64>? _TerminalsLocations;
-        private IFallout3GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? Fallout3GroupBinaryOverlay<ITerminalGetter>.Fallout3GroupFactory(_stream, _TerminalsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ITerminalGetter>> _TerminalsCache = new();
+        private IFallout3GroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? _TerminalsCache.Get(() => Fallout3GroupBinaryOverlay<ITerminalGetter>.Fallout3GroupFactory(_stream, _TerminalsLocations, _package)) : default;
         public IFallout3GroupGetter<ITerminalGetter> Terminals => _Terminals ?? new Fallout3Group<Terminal>(this);
         #endregion
         #region Armors
         private List<RangeInt64>? _ArmorsLocations;
-        private IFallout3GroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? Fallout3GroupBinaryOverlay<IArmorGetter>.Fallout3GroupFactory(_stream, _ArmorsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IArmorGetter>> _ArmorsCache = new();
+        private IFallout3GroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? _ArmorsCache.Get(() => Fallout3GroupBinaryOverlay<IArmorGetter>.Fallout3GroupFactory(_stream, _ArmorsLocations, _package)) : default;
         public IFallout3GroupGetter<IArmorGetter> Armors => _Armors ?? new Fallout3Group<Armor>(this);
         #endregion
         #region Books
         private List<RangeInt64>? _BooksLocations;
-        private IFallout3GroupGetter<IBookGetter>? _Books => _BooksLocations != null ? Fallout3GroupBinaryOverlay<IBookGetter>.Fallout3GroupFactory(_stream, _BooksLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IBookGetter>> _BooksCache = new();
+        private IFallout3GroupGetter<IBookGetter>? _Books => _BooksLocations != null ? _BooksCache.Get(() => Fallout3GroupBinaryOverlay<IBookGetter>.Fallout3GroupFactory(_stream, _BooksLocations, _package)) : default;
         public IFallout3GroupGetter<IBookGetter> Books => _Books ?? new Fallout3Group<Book>(this);
         #endregion
         #region Containers
         private List<RangeInt64>? _ContainersLocations;
-        private IFallout3GroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? Fallout3GroupBinaryOverlay<IContainerGetter>.Fallout3GroupFactory(_stream, _ContainersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IContainerGetter>> _ContainersCache = new();
+        private IFallout3GroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? _ContainersCache.Get(() => Fallout3GroupBinaryOverlay<IContainerGetter>.Fallout3GroupFactory(_stream, _ContainersLocations, _package)) : default;
         public IFallout3GroupGetter<IContainerGetter> Containers => _Containers ?? new Fallout3Group<Container>(this);
         #endregion
         #region Doors
         private List<RangeInt64>? _DoorsLocations;
-        private IFallout3GroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? Fallout3GroupBinaryOverlay<IDoorGetter>.Fallout3GroupFactory(_stream, _DoorsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IDoorGetter>> _DoorsCache = new();
+        private IFallout3GroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? _DoorsCache.Get(() => Fallout3GroupBinaryOverlay<IDoorGetter>.Fallout3GroupFactory(_stream, _DoorsLocations, _package)) : default;
         public IFallout3GroupGetter<IDoorGetter> Doors => _Doors ?? new Fallout3Group<Door>(this);
         #endregion
         #region Ingredients
         private List<RangeInt64>? _IngredientsLocations;
-        private IFallout3GroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? Fallout3GroupBinaryOverlay<IIngredientGetter>.Fallout3GroupFactory(_stream, _IngredientsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IIngredientGetter>> _IngredientsCache = new();
+        private IFallout3GroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocations != null ? _IngredientsCache.Get(() => Fallout3GroupBinaryOverlay<IIngredientGetter>.Fallout3GroupFactory(_stream, _IngredientsLocations, _package)) : default;
         public IFallout3GroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Fallout3Group<Ingredient>(this);
         #endregion
         #region Lights
         private List<RangeInt64>? _LightsLocations;
-        private IFallout3GroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? Fallout3GroupBinaryOverlay<ILightGetter>.Fallout3GroupFactory(_stream, _LightsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILightGetter>> _LightsCache = new();
+        private IFallout3GroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? _LightsCache.Get(() => Fallout3GroupBinaryOverlay<ILightGetter>.Fallout3GroupFactory(_stream, _LightsLocations, _package)) : default;
         public IFallout3GroupGetter<ILightGetter> Lights => _Lights ?? new Fallout3Group<Light>(this);
         #endregion
         #region MiscItems
         private List<RangeInt64>? _MiscItemsLocations;
-        private IFallout3GroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? Fallout3GroupBinaryOverlay<IMiscItemGetter>.Fallout3GroupFactory(_stream, _MiscItemsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMiscItemGetter>> _MiscItemsCache = new();
+        private IFallout3GroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? _MiscItemsCache.Get(() => Fallout3GroupBinaryOverlay<IMiscItemGetter>.Fallout3GroupFactory(_stream, _MiscItemsLocations, _package)) : default;
         public IFallout3GroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Fallout3Group<MiscItem>(this);
         #endregion
         #region Statics
         private List<RangeInt64>? _StaticsLocations;
-        private IFallout3GroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? Fallout3GroupBinaryOverlay<IStaticGetter>.Fallout3GroupFactory(_stream, _StaticsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IStaticGetter>> _StaticsCache = new();
+        private IFallout3GroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? _StaticsCache.Get(() => Fallout3GroupBinaryOverlay<IStaticGetter>.Fallout3GroupFactory(_stream, _StaticsLocations, _package)) : default;
         public IFallout3GroupGetter<IStaticGetter> Statics => _Statics ?? new Fallout3Group<Static>(this);
         #endregion
         #region StaticCollections
         private List<RangeInt64>? _StaticCollectionsLocations;
-        private IFallout3GroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? Fallout3GroupBinaryOverlay<IStaticCollectionGetter>.Fallout3GroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IStaticCollectionGetter>> _StaticCollectionsCache = new();
+        private IFallout3GroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? _StaticCollectionsCache.Get(() => Fallout3GroupBinaryOverlay<IStaticCollectionGetter>.Fallout3GroupFactory(_stream, _StaticCollectionsLocations, _package)) : default;
         public IFallout3GroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new Fallout3Group<StaticCollection>(this);
         #endregion
         #region MoveableStatics
         private List<RangeInt64>? _MoveableStaticsLocations;
-        private IFallout3GroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? Fallout3GroupBinaryOverlay<IMoveableStaticGetter>.Fallout3GroupFactory(_stream, _MoveableStaticsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMoveableStaticGetter>> _MoveableStaticsCache = new();
+        private IFallout3GroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? _MoveableStaticsCache.Get(() => Fallout3GroupBinaryOverlay<IMoveableStaticGetter>.Fallout3GroupFactory(_stream, _MoveableStaticsLocations, _package)) : default;
         public IFallout3GroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new Fallout3Group<MoveableStatic>(this);
         #endregion
         #region PlaceableWaters
         private List<RangeInt64>? _PlaceableWatersLocations;
-        private IFallout3GroupGetter<IPlaceableWaterGetter>? _PlaceableWaters => _PlaceableWatersLocations != null ? Fallout3GroupBinaryOverlay<IPlaceableWaterGetter>.Fallout3GroupFactory(_stream, _PlaceableWatersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IPlaceableWaterGetter>> _PlaceableWatersCache = new();
+        private IFallout3GroupGetter<IPlaceableWaterGetter>? _PlaceableWaters => _PlaceableWatersLocations != null ? _PlaceableWatersCache.Get(() => Fallout3GroupBinaryOverlay<IPlaceableWaterGetter>.Fallout3GroupFactory(_stream, _PlaceableWatersLocations, _package)) : default;
         public IFallout3GroupGetter<IPlaceableWaterGetter> PlaceableWaters => _PlaceableWaters ?? new Fallout3Group<PlaceableWater>(this);
         #endregion
         #region Grasses
         private List<RangeInt64>? _GrassesLocations;
-        private IFallout3GroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? Fallout3GroupBinaryOverlay<IGrassGetter>.Fallout3GroupFactory(_stream, _GrassesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IGrassGetter>> _GrassesCache = new();
+        private IFallout3GroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? _GrassesCache.Get(() => Fallout3GroupBinaryOverlay<IGrassGetter>.Fallout3GroupFactory(_stream, _GrassesLocations, _package)) : default;
         public IFallout3GroupGetter<IGrassGetter> Grasses => _Grasses ?? new Fallout3Group<Grass>(this);
         #endregion
         #region Trees
         private List<RangeInt64>? _TreesLocations;
-        private IFallout3GroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? Fallout3GroupBinaryOverlay<ITreeGetter>.Fallout3GroupFactory(_stream, _TreesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ITreeGetter>> _TreesCache = new();
+        private IFallout3GroupGetter<ITreeGetter>? _Trees => _TreesLocations != null ? _TreesCache.Get(() => Fallout3GroupBinaryOverlay<ITreeGetter>.Fallout3GroupFactory(_stream, _TreesLocations, _package)) : default;
         public IFallout3GroupGetter<ITreeGetter> Trees => _Trees ?? new Fallout3Group<Tree>(this);
         #endregion
         #region Furniture
         private List<RangeInt64>? _FurnitureLocations;
-        private IFallout3GroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? Fallout3GroupBinaryOverlay<IFurnitureGetter>.Fallout3GroupFactory(_stream, _FurnitureLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IFurnitureGetter>> _FurnitureCache = new();
+        private IFallout3GroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? _FurnitureCache.Get(() => Fallout3GroupBinaryOverlay<IFurnitureGetter>.Fallout3GroupFactory(_stream, _FurnitureLocations, _package)) : default;
         public IFallout3GroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Fallout3Group<Furniture>(this);
         #endregion
         #region Weapons
         private List<RangeInt64>? _WeaponsLocations;
-        private IFallout3GroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? Fallout3GroupBinaryOverlay<IWeaponGetter>.Fallout3GroupFactory(_stream, _WeaponsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IWeaponGetter>> _WeaponsCache = new();
+        private IFallout3GroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? _WeaponsCache.Get(() => Fallout3GroupBinaryOverlay<IWeaponGetter>.Fallout3GroupFactory(_stream, _WeaponsLocations, _package)) : default;
         public IFallout3GroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Fallout3Group<Weapon>(this);
         #endregion
         #region Ammunitions
         private List<RangeInt64>? _AmmunitionsLocations;
-        private IFallout3GroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? Fallout3GroupBinaryOverlay<IAmmunitionGetter>.Fallout3GroupFactory(_stream, _AmmunitionsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IAmmunitionGetter>> _AmmunitionsCache = new();
+        private IFallout3GroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? _AmmunitionsCache.Get(() => Fallout3GroupBinaryOverlay<IAmmunitionGetter>.Fallout3GroupFactory(_stream, _AmmunitionsLocations, _package)) : default;
         public IFallout3GroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Fallout3Group<Ammunition>(this);
         #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
-        private IFallout3GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout3GroupBinaryOverlay<INpcGetter>.Fallout3GroupFactory(_stream, _NpcsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<INpcGetter>> _NpcsCache = new();
+        private IFallout3GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? _NpcsCache.Get(() => Fallout3GroupBinaryOverlay<INpcGetter>.Fallout3GroupFactory(_stream, _NpcsLocations, _package)) : default;
         public IFallout3GroupGetter<INpcGetter> Npcs => _Npcs ?? new Fallout3Group<Npc>(this);
         #endregion
         #region Creatures
         private List<RangeInt64>? _CreaturesLocations;
-        private IFallout3GroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocations != null ? Fallout3GroupBinaryOverlay<ICreatureGetter>.Fallout3GroupFactory(_stream, _CreaturesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICreatureGetter>> _CreaturesCache = new();
+        private IFallout3GroupGetter<ICreatureGetter>? _Creatures => _CreaturesLocations != null ? _CreaturesCache.Get(() => Fallout3GroupBinaryOverlay<ICreatureGetter>.Fallout3GroupFactory(_stream, _CreaturesLocations, _package)) : default;
         public IFallout3GroupGetter<ICreatureGetter> Creatures => _Creatures ?? new Fallout3Group<Creature>(this);
         #endregion
         #region LeveledCreatures
         private List<RangeInt64>? _LeveledCreaturesLocations;
-        private IFallout3GroupGetter<ILeveledCreatureGetter>? _LeveledCreatures => _LeveledCreaturesLocations != null ? Fallout3GroupBinaryOverlay<ILeveledCreatureGetter>.Fallout3GroupFactory(_stream, _LeveledCreaturesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILeveledCreatureGetter>> _LeveledCreaturesCache = new();
+        private IFallout3GroupGetter<ILeveledCreatureGetter>? _LeveledCreatures => _LeveledCreaturesLocations != null ? _LeveledCreaturesCache.Get(() => Fallout3GroupBinaryOverlay<ILeveledCreatureGetter>.Fallout3GroupFactory(_stream, _LeveledCreaturesLocations, _package)) : default;
         public IFallout3GroupGetter<ILeveledCreatureGetter> LeveledCreatures => _LeveledCreatures ?? new Fallout3Group<LeveledCreature>(this);
         #endregion
         #region LeveledNpcs
         private List<RangeInt64>? _LeveledNpcsLocations;
-        private IFallout3GroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? Fallout3GroupBinaryOverlay<ILeveledNpcGetter>.Fallout3GroupFactory(_stream, _LeveledNpcsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILeveledNpcGetter>> _LeveledNpcsCache = new();
+        private IFallout3GroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? _LeveledNpcsCache.Get(() => Fallout3GroupBinaryOverlay<ILeveledNpcGetter>.Fallout3GroupFactory(_stream, _LeveledNpcsLocations, _package)) : default;
         public IFallout3GroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Fallout3Group<LeveledNpc>(this);
         #endregion
         #region Keys
         private List<RangeInt64>? _KeysLocations;
-        private IFallout3GroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? Fallout3GroupBinaryOverlay<IKeyGetter>.Fallout3GroupFactory(_stream, _KeysLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IKeyGetter>> _KeysCache = new();
+        private IFallout3GroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? _KeysCache.Get(() => Fallout3GroupBinaryOverlay<IKeyGetter>.Fallout3GroupFactory(_stream, _KeysLocations, _package)) : default;
         public IFallout3GroupGetter<IKeyGetter> Keys => _Keys ?? new Fallout3Group<Key>(this);
         #endregion
         #region Ingestibles
         private List<RangeInt64>? _IngestiblesLocations;
-        private IFallout3GroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? Fallout3GroupBinaryOverlay<IIngestibleGetter>.Fallout3GroupFactory(_stream, _IngestiblesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IIngestibleGetter>> _IngestiblesCache = new();
+        private IFallout3GroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? _IngestiblesCache.Get(() => Fallout3GroupBinaryOverlay<IIngestibleGetter>.Fallout3GroupFactory(_stream, _IngestiblesLocations, _package)) : default;
         public IFallout3GroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new Fallout3Group<Ingestible>(this);
         #endregion
         #region IdleMarkers
         private List<RangeInt64>? _IdleMarkersLocations;
-        private IFallout3GroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? Fallout3GroupBinaryOverlay<IIdleMarkerGetter>.Fallout3GroupFactory(_stream, _IdleMarkersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IIdleMarkerGetter>> _IdleMarkersCache = new();
+        private IFallout3GroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? _IdleMarkersCache.Get(() => Fallout3GroupBinaryOverlay<IIdleMarkerGetter>.Fallout3GroupFactory(_stream, _IdleMarkersLocations, _package)) : default;
         public IFallout3GroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new Fallout3Group<IdleMarker>(this);
         #endregion
         #region Notes
         private List<RangeInt64>? _NotesLocations;
-        private IFallout3GroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? Fallout3GroupBinaryOverlay<INoteGetter>.Fallout3GroupFactory(_stream, _NotesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<INoteGetter>> _NotesCache = new();
+        private IFallout3GroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? _NotesCache.Get(() => Fallout3GroupBinaryOverlay<INoteGetter>.Fallout3GroupFactory(_stream, _NotesLocations, _package)) : default;
         public IFallout3GroupGetter<INoteGetter> Notes => _Notes ?? new Fallout3Group<Note>(this);
         #endregion
         #region ConstructibleObjects
         private List<RangeInt64>? _ConstructibleObjectsLocations;
-        private IFallout3GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? Fallout3GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout3GroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IConstructibleObjectGetter>> _ConstructibleObjectsCache = new();
+        private IFallout3GroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? _ConstructibleObjectsCache.Get(() => Fallout3GroupBinaryOverlay<IConstructibleObjectGetter>.Fallout3GroupFactory(_stream, _ConstructibleObjectsLocations, _package)) : default;
         public IFallout3GroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Fallout3Group<ConstructibleObject>(this);
         #endregion
         #region Projectiles
         private List<RangeInt64>? _ProjectilesLocations;
-        private IFallout3GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? Fallout3GroupBinaryOverlay<IProjectileGetter>.Fallout3GroupFactory(_stream, _ProjectilesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IProjectileGetter>> _ProjectilesCache = new();
+        private IFallout3GroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? _ProjectilesCache.Get(() => Fallout3GroupBinaryOverlay<IProjectileGetter>.Fallout3GroupFactory(_stream, _ProjectilesLocations, _package)) : default;
         public IFallout3GroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Fallout3Group<Projectile>(this);
         #endregion
         #region LeveledItems
         private List<RangeInt64>? _LeveledItemsLocations;
-        private IFallout3GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? Fallout3GroupBinaryOverlay<ILeveledItemGetter>.Fallout3GroupFactory(_stream, _LeveledItemsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILeveledItemGetter>> _LeveledItemsCache = new();
+        private IFallout3GroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? _LeveledItemsCache.Get(() => Fallout3GroupBinaryOverlay<ILeveledItemGetter>.Fallout3GroupFactory(_stream, _LeveledItemsLocations, _package)) : default;
         public IFallout3GroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Fallout3Group<LeveledItem>(this);
         #endregion
         #region Weather
         private List<RangeInt64>? _WeatherLocations;
-        private IFallout3GroupGetter<IWeatherGetter>? _Weather => _WeatherLocations != null ? Fallout3GroupBinaryOverlay<IWeatherGetter>.Fallout3GroupFactory(_stream, _WeatherLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IWeatherGetter>> _WeatherCache = new();
+        private IFallout3GroupGetter<IWeatherGetter>? _Weather => _WeatherLocations != null ? _WeatherCache.Get(() => Fallout3GroupBinaryOverlay<IWeatherGetter>.Fallout3GroupFactory(_stream, _WeatherLocations, _package)) : default;
         public IFallout3GroupGetter<IWeatherGetter> Weather => _Weather ?? new Fallout3Group<Weather>(this);
         #endregion
         #region Climates
         private List<RangeInt64>? _ClimatesLocations;
-        private IFallout3GroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? Fallout3GroupBinaryOverlay<IClimateGetter>.Fallout3GroupFactory(_stream, _ClimatesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IClimateGetter>> _ClimatesCache = new();
+        private IFallout3GroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? _ClimatesCache.Get(() => Fallout3GroupBinaryOverlay<IClimateGetter>.Fallout3GroupFactory(_stream, _ClimatesLocations, _package)) : default;
         public IFallout3GroupGetter<IClimateGetter> Climates => _Climates ?? new Fallout3Group<Climate>(this);
         #endregion
         #region Regions
         private List<RangeInt64>? _RegionsLocations;
-        private IFallout3GroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? Fallout3GroupBinaryOverlay<IRegionGetter>.Fallout3GroupFactory(_stream, _RegionsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IRegionGetter>> _RegionsCache = new();
+        private IFallout3GroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? _RegionsCache.Get(() => Fallout3GroupBinaryOverlay<IRegionGetter>.Fallout3GroupFactory(_stream, _RegionsLocations, _package)) : default;
         public IFallout3GroupGetter<IRegionGetter> Regions => _Regions ?? new Fallout3Group<Region>(this);
         #endregion
         #region NavigationMeshInfoMaps
         private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
-        private IFallout3GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? Fallout3GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout3GroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<INavigationMeshInfoMapGetter>> _NavigationMeshInfoMapsCache = new();
+        private IFallout3GroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? _NavigationMeshInfoMapsCache.Get(() => Fallout3GroupBinaryOverlay<INavigationMeshInfoMapGetter>.Fallout3GroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package)) : default;
         public IFallout3GroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new Fallout3Group<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
         private List<RangeInt64>? _CellsLocations;
-        private IFallout3ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? Fallout3ListGroupBinaryOverlay<ICellBlockGetter>.Fallout3ListGroupFactory(_stream, _CellsLocations, _package) : default;
+        private readonly GroupCache<IFallout3ListGroupGetter<ICellBlockGetter>> _CellsCache = new();
+        private IFallout3ListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? _CellsCache.Get(() => Fallout3ListGroupBinaryOverlay<ICellBlockGetter>.Fallout3ListGroupFactory(_stream, _CellsLocations, _package)) : default;
         public IFallout3ListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new Fallout3ListGroup<CellBlock>();
         #endregion
         #region Worldspaces
         private List<RangeInt64>? _WorldspacesLocations;
-        private IFallout3GroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? Fallout3GroupBinaryOverlay<IWorldspaceGetter>.Fallout3GroupFactory(_stream, _WorldspacesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IWorldspaceGetter>> _WorldspacesCache = new();
+        private IFallout3GroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? _WorldspacesCache.Get(() => Fallout3GroupBinaryOverlay<IWorldspaceGetter>.Fallout3GroupFactory(_stream, _WorldspacesLocations, _package)) : default;
         public IFallout3GroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new Fallout3Group<Worldspace>(this);
         #endregion
         #region DialogTopics
         private List<RangeInt64>? _DialogTopicsLocations;
-        private IFallout3GroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? Fallout3GroupBinaryOverlay<IDialogTopicGetter>.Fallout3GroupFactory(_stream, _DialogTopicsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IDialogTopicGetter>> _DialogTopicsCache = new();
+        private IFallout3GroupGetter<IDialogTopicGetter>? _DialogTopics => _DialogTopicsLocations != null ? _DialogTopicsCache.Get(() => Fallout3GroupBinaryOverlay<IDialogTopicGetter>.Fallout3GroupFactory(_stream, _DialogTopicsLocations, _package)) : default;
         public IFallout3GroupGetter<IDialogTopicGetter> DialogTopics => _DialogTopics ?? new Fallout3Group<DialogTopic>(this);
         #endregion
         #region Quests
         private List<RangeInt64>? _QuestsLocations;
-        private IFallout3GroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? Fallout3GroupBinaryOverlay<IQuestGetter>.Fallout3GroupFactory(_stream, _QuestsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IQuestGetter>> _QuestsCache = new();
+        private IFallout3GroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? _QuestsCache.Get(() => Fallout3GroupBinaryOverlay<IQuestGetter>.Fallout3GroupFactory(_stream, _QuestsLocations, _package)) : default;
         public IFallout3GroupGetter<IQuestGetter> Quests => _Quests ?? new Fallout3Group<Quest>(this);
         #endregion
         #region IdleAnimations
         private List<RangeInt64>? _IdleAnimationsLocations;
-        private IFallout3GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? Fallout3GroupBinaryOverlay<IIdleAnimationGetter>.Fallout3GroupFactory(_stream, _IdleAnimationsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IIdleAnimationGetter>> _IdleAnimationsCache = new();
+        private IFallout3GroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? _IdleAnimationsCache.Get(() => Fallout3GroupBinaryOverlay<IIdleAnimationGetter>.Fallout3GroupFactory(_stream, _IdleAnimationsLocations, _package)) : default;
         public IFallout3GroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new Fallout3Group<IdleAnimation>(this);
         #endregion
         #region Packages
         private List<RangeInt64>? _PackagesLocations;
-        private IFallout3GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? Fallout3GroupBinaryOverlay<IPackageGetter>.Fallout3GroupFactory(_stream, _PackagesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IPackageGetter>> _PackagesCache = new();
+        private IFallout3GroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? _PackagesCache.Get(() => Fallout3GroupBinaryOverlay<IPackageGetter>.Fallout3GroupFactory(_stream, _PackagesLocations, _package)) : default;
         public IFallout3GroupGetter<IPackageGetter> Packages => _Packages ?? new Fallout3Group<Package>(this);
         #endregion
         #region CombatStyles
         private List<RangeInt64>? _CombatStylesLocations;
-        private IFallout3GroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? Fallout3GroupBinaryOverlay<ICombatStyleGetter>.Fallout3GroupFactory(_stream, _CombatStylesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICombatStyleGetter>> _CombatStylesCache = new();
+        private IFallout3GroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? _CombatStylesCache.Get(() => Fallout3GroupBinaryOverlay<ICombatStyleGetter>.Fallout3GroupFactory(_stream, _CombatStylesLocations, _package)) : default;
         public IFallout3GroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new Fallout3Group<CombatStyle>(this);
         #endregion
         #region LoadScreens
         private List<RangeInt64>? _LoadScreensLocations;
-        private IFallout3GroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? Fallout3GroupBinaryOverlay<ILoadScreenGetter>.Fallout3GroupFactory(_stream, _LoadScreensLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILoadScreenGetter>> _LoadScreensCache = new();
+        private IFallout3GroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? _LoadScreensCache.Get(() => Fallout3GroupBinaryOverlay<ILoadScreenGetter>.Fallout3GroupFactory(_stream, _LoadScreensLocations, _package)) : default;
         public IFallout3GroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new Fallout3Group<LoadScreen>(this);
         #endregion
         #region AnimatedObjects
         private List<RangeInt64>? _AnimatedObjectsLocations;
-        private IFallout3GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? Fallout3GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout3GroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IAnimatedObjectGetter>> _AnimatedObjectsCache = new();
+        private IFallout3GroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? _AnimatedObjectsCache.Get(() => Fallout3GroupBinaryOverlay<IAnimatedObjectGetter>.Fallout3GroupFactory(_stream, _AnimatedObjectsLocations, _package)) : default;
         public IFallout3GroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new Fallout3Group<AnimatedObject>(this);
         #endregion
         #region Waters
         private List<RangeInt64>? _WatersLocations;
-        private IFallout3GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? Fallout3GroupBinaryOverlay<IWaterGetter>.Fallout3GroupFactory(_stream, _WatersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IWaterGetter>> _WatersCache = new();
+        private IFallout3GroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? _WatersCache.Get(() => Fallout3GroupBinaryOverlay<IWaterGetter>.Fallout3GroupFactory(_stream, _WatersLocations, _package)) : default;
         public IFallout3GroupGetter<IWaterGetter> Waters => _Waters ?? new Fallout3Group<Water>(this);
         #endregion
         #region EffectShaders
         private List<RangeInt64>? _EffectShadersLocations;
-        private IFallout3GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? Fallout3GroupBinaryOverlay<IEffectShaderGetter>.Fallout3GroupFactory(_stream, _EffectShadersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IEffectShaderGetter>> _EffectShadersCache = new();
+        private IFallout3GroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? _EffectShadersCache.Get(() => Fallout3GroupBinaryOverlay<IEffectShaderGetter>.Fallout3GroupFactory(_stream, _EffectShadersLocations, _package)) : default;
         public IFallout3GroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new Fallout3Group<EffectShader>(this);
         #endregion
         #region Explosions
         private List<RangeInt64>? _ExplosionsLocations;
-        private IFallout3GroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? Fallout3GroupBinaryOverlay<IExplosionGetter>.Fallout3GroupFactory(_stream, _ExplosionsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IExplosionGetter>> _ExplosionsCache = new();
+        private IFallout3GroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? _ExplosionsCache.Get(() => Fallout3GroupBinaryOverlay<IExplosionGetter>.Fallout3GroupFactory(_stream, _ExplosionsLocations, _package)) : default;
         public IFallout3GroupGetter<IExplosionGetter> Explosions => _Explosions ?? new Fallout3Group<Explosion>(this);
         #endregion
         #region Debris
         private List<RangeInt64>? _DebrisLocations;
-        private IFallout3GroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? Fallout3GroupBinaryOverlay<IDebrisGetter>.Fallout3GroupFactory(_stream, _DebrisLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IDebrisGetter>> _DebrisCache = new();
+        private IFallout3GroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? _DebrisCache.Get(() => Fallout3GroupBinaryOverlay<IDebrisGetter>.Fallout3GroupFactory(_stream, _DebrisLocations, _package)) : default;
         public IFallout3GroupGetter<IDebrisGetter> Debris => _Debris ?? new Fallout3Group<Debris>(this);
         #endregion
         #region ImageSpaces
         private List<RangeInt64>? _ImageSpacesLocations;
-        private IFallout3GroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? Fallout3GroupBinaryOverlay<IImageSpaceGetter>.Fallout3GroupFactory(_stream, _ImageSpacesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IImageSpaceGetter>> _ImageSpacesCache = new();
+        private IFallout3GroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? _ImageSpacesCache.Get(() => Fallout3GroupBinaryOverlay<IImageSpaceGetter>.Fallout3GroupFactory(_stream, _ImageSpacesLocations, _package)) : default;
         public IFallout3GroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new Fallout3Group<ImageSpace>(this);
         #endregion
         #region ImageSpaceAdapters
         private List<RangeInt64>? _ImageSpaceAdaptersLocations;
-        private IFallout3GroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? Fallout3GroupBinaryOverlay<IImageSpaceAdapterGetter>.Fallout3GroupFactory(_stream, _ImageSpaceAdaptersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IImageSpaceAdapterGetter>> _ImageSpaceAdaptersCache = new();
+        private IFallout3GroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? _ImageSpaceAdaptersCache.Get(() => Fallout3GroupBinaryOverlay<IImageSpaceAdapterGetter>.Fallout3GroupFactory(_stream, _ImageSpaceAdaptersLocations, _package)) : default;
         public IFallout3GroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new Fallout3Group<ImageSpaceAdapter>(this);
         #endregion
         #region Messages
         private List<RangeInt64>? _MessagesLocations;
-        private IFallout3GroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? Fallout3GroupBinaryOverlay<IMessageGetter>.Fallout3GroupFactory(_stream, _MessagesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMessageGetter>> _MessagesCache = new();
+        private IFallout3GroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? _MessagesCache.Get(() => Fallout3GroupBinaryOverlay<IMessageGetter>.Fallout3GroupFactory(_stream, _MessagesLocations, _package)) : default;
         public IFallout3GroupGetter<IMessageGetter> Messages => _Messages ?? new Fallout3Group<Message>(this);
         #endregion
         #region Perks
         private List<RangeInt64>? _PerksLocations;
-        private IFallout3GroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? Fallout3GroupBinaryOverlay<IPerkGetter>.Fallout3GroupFactory(_stream, _PerksLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IPerkGetter>> _PerksCache = new();
+        private IFallout3GroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? _PerksCache.Get(() => Fallout3GroupBinaryOverlay<IPerkGetter>.Fallout3GroupFactory(_stream, _PerksLocations, _package)) : default;
         public IFallout3GroupGetter<IPerkGetter> Perks => _Perks ?? new Fallout3Group<Perk>(this);
         #endregion
         #region BodyParts
         private List<RangeInt64>? _BodyPartsLocations;
-        private IFallout3GroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? Fallout3GroupBinaryOverlay<IBodyPartDataGetter>.Fallout3GroupFactory(_stream, _BodyPartsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IBodyPartDataGetter>> _BodyPartsCache = new();
+        private IFallout3GroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? _BodyPartsCache.Get(() => Fallout3GroupBinaryOverlay<IBodyPartDataGetter>.Fallout3GroupFactory(_stream, _BodyPartsLocations, _package)) : default;
         public IFallout3GroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new Fallout3Group<BodyPartData>(this);
         #endregion
         #region AddonNodes
         private List<RangeInt64>? _AddonNodesLocations;
-        private IFallout3GroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? Fallout3GroupBinaryOverlay<IAddonNodeGetter>.Fallout3GroupFactory(_stream, _AddonNodesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IAddonNodeGetter>> _AddonNodesCache = new();
+        private IFallout3GroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? _AddonNodesCache.Get(() => Fallout3GroupBinaryOverlay<IAddonNodeGetter>.Fallout3GroupFactory(_stream, _AddonNodesLocations, _package)) : default;
         public IFallout3GroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new Fallout3Group<AddonNode>(this);
         #endregion
         #region ActorValueInformation
         private List<RangeInt64>? _ActorValueInformationLocations;
-        private IFallout3GroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? Fallout3GroupBinaryOverlay<IActorValueInformationGetter>.Fallout3GroupFactory(_stream, _ActorValueInformationLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IActorValueInformationGetter>> _ActorValueInformationCache = new();
+        private IFallout3GroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? _ActorValueInformationCache.Get(() => Fallout3GroupBinaryOverlay<IActorValueInformationGetter>.Fallout3GroupFactory(_stream, _ActorValueInformationLocations, _package)) : default;
         public IFallout3GroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new Fallout3Group<ActorValueInformation>(this);
         #endregion
         #region RadiationStages
         private List<RangeInt64>? _RadiationStagesLocations;
-        private IFallout3GroupGetter<IRadiationStageGetter>? _RadiationStages => _RadiationStagesLocations != null ? Fallout3GroupBinaryOverlay<IRadiationStageGetter>.Fallout3GroupFactory(_stream, _RadiationStagesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IRadiationStageGetter>> _RadiationStagesCache = new();
+        private IFallout3GroupGetter<IRadiationStageGetter>? _RadiationStages => _RadiationStagesLocations != null ? _RadiationStagesCache.Get(() => Fallout3GroupBinaryOverlay<IRadiationStageGetter>.Fallout3GroupFactory(_stream, _RadiationStagesLocations, _package)) : default;
         public IFallout3GroupGetter<IRadiationStageGetter> RadiationStages => _RadiationStages ?? new Fallout3Group<RadiationStage>(this);
         #endregion
         #region CameraShots
         private List<RangeInt64>? _CameraShotsLocations;
-        private IFallout3GroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? Fallout3GroupBinaryOverlay<ICameraShotGetter>.Fallout3GroupFactory(_stream, _CameraShotsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICameraShotGetter>> _CameraShotsCache = new();
+        private IFallout3GroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? _CameraShotsCache.Get(() => Fallout3GroupBinaryOverlay<ICameraShotGetter>.Fallout3GroupFactory(_stream, _CameraShotsLocations, _package)) : default;
         public IFallout3GroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new Fallout3Group<CameraShot>(this);
         #endregion
         #region CameraPaths
         private List<RangeInt64>? _CameraPathsLocations;
-        private IFallout3GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? Fallout3GroupBinaryOverlay<ICameraPathGetter>.Fallout3GroupFactory(_stream, _CameraPathsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICameraPathGetter>> _CameraPathsCache = new();
+        private IFallout3GroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? _CameraPathsCache.Get(() => Fallout3GroupBinaryOverlay<ICameraPathGetter>.Fallout3GroupFactory(_stream, _CameraPathsLocations, _package)) : default;
         public IFallout3GroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new Fallout3Group<CameraPath>(this);
         #endregion
         #region VoiceTypes
         private List<RangeInt64>? _VoiceTypesLocations;
-        private IFallout3GroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? Fallout3GroupBinaryOverlay<IVoiceTypeGetter>.Fallout3GroupFactory(_stream, _VoiceTypesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IVoiceTypeGetter>> _VoiceTypesCache = new();
+        private IFallout3GroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? _VoiceTypesCache.Get(() => Fallout3GroupBinaryOverlay<IVoiceTypeGetter>.Fallout3GroupFactory(_stream, _VoiceTypesLocations, _package)) : default;
         public IFallout3GroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new Fallout3Group<VoiceType>(this);
         #endregion
         #region Impacts
         private List<RangeInt64>? _ImpactsLocations;
-        private IFallout3GroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? Fallout3GroupBinaryOverlay<IImpactGetter>.Fallout3GroupFactory(_stream, _ImpactsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IImpactGetter>> _ImpactsCache = new();
+        private IFallout3GroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? _ImpactsCache.Get(() => Fallout3GroupBinaryOverlay<IImpactGetter>.Fallout3GroupFactory(_stream, _ImpactsLocations, _package)) : default;
         public IFallout3GroupGetter<IImpactGetter> Impacts => _Impacts ?? new Fallout3Group<Impact>(this);
         #endregion
         #region ImpactDataSets
         private List<RangeInt64>? _ImpactDataSetsLocations;
-        private IFallout3GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? Fallout3GroupBinaryOverlay<IImpactDataSetGetter>.Fallout3GroupFactory(_stream, _ImpactDataSetsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IImpactDataSetGetter>> _ImpactDataSetsCache = new();
+        private IFallout3GroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? _ImpactDataSetsCache.Get(() => Fallout3GroupBinaryOverlay<IImpactDataSetGetter>.Fallout3GroupFactory(_stream, _ImpactDataSetsLocations, _package)) : default;
         public IFallout3GroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Fallout3Group<ImpactDataSet>(this);
         #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
-        private IFallout3GroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? Fallout3GroupBinaryOverlay<IArmorAddonGetter>.Fallout3GroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IArmorAddonGetter>> _ArmorAddonsCache = new();
+        private IFallout3GroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? _ArmorAddonsCache.Get(() => Fallout3GroupBinaryOverlay<IArmorAddonGetter>.Fallout3GroupFactory(_stream, _ArmorAddonsLocations, _package)) : default;
         public IFallout3GroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Fallout3Group<ArmorAddon>(this);
         #endregion
         #region EncounterZones
         private List<RangeInt64>? _EncounterZonesLocations;
-        private IFallout3GroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? Fallout3GroupBinaryOverlay<IEncounterZoneGetter>.Fallout3GroupFactory(_stream, _EncounterZonesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IEncounterZoneGetter>> _EncounterZonesCache = new();
+        private IFallout3GroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocations != null ? _EncounterZonesCache.Get(() => Fallout3GroupBinaryOverlay<IEncounterZoneGetter>.Fallout3GroupFactory(_stream, _EncounterZonesLocations, _package)) : default;
         public IFallout3GroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new Fallout3Group<EncounterZone>(this);
         #endregion
         #region Ragdolls
         private List<RangeInt64>? _RagdollsLocations;
-        private IFallout3GroupGetter<IRagdollGetter>? _Ragdolls => _RagdollsLocations != null ? Fallout3GroupBinaryOverlay<IRagdollGetter>.Fallout3GroupFactory(_stream, _RagdollsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IRagdollGetter>> _RagdollsCache = new();
+        private IFallout3GroupGetter<IRagdollGetter>? _Ragdolls => _RagdollsLocations != null ? _RagdollsCache.Get(() => Fallout3GroupBinaryOverlay<IRagdollGetter>.Fallout3GroupFactory(_stream, _RagdollsLocations, _package)) : default;
         public IFallout3GroupGetter<IRagdollGetter> Ragdolls => _Ragdolls ?? new Fallout3Group<Ragdoll>(this);
         #endregion
         #region DefaultObjectManagers
         private List<RangeInt64>? _DefaultObjectManagersLocations;
-        private IFallout3GroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? Fallout3GroupBinaryOverlay<IDefaultObjectManagerGetter>.Fallout3GroupFactory(_stream, _DefaultObjectManagersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IDefaultObjectManagerGetter>> _DefaultObjectManagersCache = new();
+        private IFallout3GroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? _DefaultObjectManagersCache.Get(() => Fallout3GroupBinaryOverlay<IDefaultObjectManagerGetter>.Fallout3GroupFactory(_stream, _DefaultObjectManagersLocations, _package)) : default;
         public IFallout3GroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new Fallout3Group<DefaultObjectManager>(this);
         #endregion
         #region LightingTemplates
         private List<RangeInt64>? _LightingTemplatesLocations;
-        private IFallout3GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? Fallout3GroupBinaryOverlay<ILightingTemplateGetter>.Fallout3GroupFactory(_stream, _LightingTemplatesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILightingTemplateGetter>> _LightingTemplatesCache = new();
+        private IFallout3GroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? _LightingTemplatesCache.Get(() => Fallout3GroupBinaryOverlay<ILightingTemplateGetter>.Fallout3GroupFactory(_stream, _LightingTemplatesLocations, _package)) : default;
         public IFallout3GroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Fallout3Group<LightingTemplate>(this);
         #endregion
         #region MusicTypes
         private List<RangeInt64>? _MusicTypesLocations;
-        private IFallout3GroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? Fallout3GroupBinaryOverlay<IMusicTypeGetter>.Fallout3GroupFactory(_stream, _MusicTypesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMusicTypeGetter>> _MusicTypesCache = new();
+        private IFallout3GroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? _MusicTypesCache.Get(() => Fallout3GroupBinaryOverlay<IMusicTypeGetter>.Fallout3GroupFactory(_stream, _MusicTypesLocations, _package)) : default;
         public IFallout3GroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Fallout3Group<MusicType>(this);
         #endregion
         #region FormLists
         private List<RangeInt64>? _FormListsLocations;
-        private IFallout3GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? Fallout3GroupBinaryOverlay<IFormListGetter>.Fallout3GroupFactory(_stream, _FormListsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IFormListGetter>> _FormListsCache = new();
+        private IFallout3GroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? _FormListsCache.Get(() => Fallout3GroupBinaryOverlay<IFormListGetter>.Fallout3GroupFactory(_stream, _FormListsLocations, _package)) : default;
         public IFallout3GroupGetter<IFormListGetter> FormLists => _FormLists ?? new Fallout3Group<FormList>(this);
         #endregion
         #region ItemMods
         private List<RangeInt64>? _ItemModsLocations;
-        private IFallout3GroupGetter<IItemModGetter>? _ItemMods => _ItemModsLocations != null ? Fallout3GroupBinaryOverlay<IItemModGetter>.Fallout3GroupFactory(_stream, _ItemModsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IItemModGetter>> _ItemModsCache = new();
+        private IFallout3GroupGetter<IItemModGetter>? _ItemMods => _ItemModsLocations != null ? _ItemModsCache.Get(() => Fallout3GroupBinaryOverlay<IItemModGetter>.Fallout3GroupFactory(_stream, _ItemModsLocations, _package)) : default;
         public IFallout3GroupGetter<IItemModGetter> ItemMods => _ItemMods ?? new Fallout3Group<ItemMod>(this);
         #endregion
         #region Reputations
         private List<RangeInt64>? _ReputationsLocations;
-        private IFallout3GroupGetter<IReputationGetter>? _Reputations => _ReputationsLocations != null ? Fallout3GroupBinaryOverlay<IReputationGetter>.Fallout3GroupFactory(_stream, _ReputationsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IReputationGetter>> _ReputationsCache = new();
+        private IFallout3GroupGetter<IReputationGetter>? _Reputations => _ReputationsLocations != null ? _ReputationsCache.Get(() => Fallout3GroupBinaryOverlay<IReputationGetter>.Fallout3GroupFactory(_stream, _ReputationsLocations, _package)) : default;
         public IFallout3GroupGetter<IReputationGetter> Reputations => _Reputations ?? new Fallout3Group<Reputation>(this);
         #endregion
         #region Recipes
         private List<RangeInt64>? _RecipesLocations;
-        private IFallout3GroupGetter<IRecipeGetter>? _Recipes => _RecipesLocations != null ? Fallout3GroupBinaryOverlay<IRecipeGetter>.Fallout3GroupFactory(_stream, _RecipesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IRecipeGetter>> _RecipesCache = new();
+        private IFallout3GroupGetter<IRecipeGetter>? _Recipes => _RecipesLocations != null ? _RecipesCache.Get(() => Fallout3GroupBinaryOverlay<IRecipeGetter>.Fallout3GroupFactory(_stream, _RecipesLocations, _package)) : default;
         public IFallout3GroupGetter<IRecipeGetter> Recipes => _Recipes ?? new Fallout3Group<Recipe>(this);
         #endregion
         #region RecipeCategories
         private List<RangeInt64>? _RecipeCategoriesLocations;
-        private IFallout3GroupGetter<IRecipeCategoryGetter>? _RecipeCategories => _RecipeCategoriesLocations != null ? Fallout3GroupBinaryOverlay<IRecipeCategoryGetter>.Fallout3GroupFactory(_stream, _RecipeCategoriesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IRecipeCategoryGetter>> _RecipeCategoriesCache = new();
+        private IFallout3GroupGetter<IRecipeCategoryGetter>? _RecipeCategories => _RecipeCategoriesLocations != null ? _RecipeCategoriesCache.Get(() => Fallout3GroupBinaryOverlay<IRecipeCategoryGetter>.Fallout3GroupFactory(_stream, _RecipeCategoriesLocations, _package)) : default;
         public IFallout3GroupGetter<IRecipeCategoryGetter> RecipeCategories => _RecipeCategories ?? new Fallout3Group<RecipeCategory>(this);
         #endregion
         #region CasinoChips
         private List<RangeInt64>? _CasinoChipsLocations;
-        private IFallout3GroupGetter<ICasinoChipGetter>? _CasinoChips => _CasinoChipsLocations != null ? Fallout3GroupBinaryOverlay<ICasinoChipGetter>.Fallout3GroupFactory(_stream, _CasinoChipsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICasinoChipGetter>> _CasinoChipsCache = new();
+        private IFallout3GroupGetter<ICasinoChipGetter>? _CasinoChips => _CasinoChipsLocations != null ? _CasinoChipsCache.Get(() => Fallout3GroupBinaryOverlay<ICasinoChipGetter>.Fallout3GroupFactory(_stream, _CasinoChipsLocations, _package)) : default;
         public IFallout3GroupGetter<ICasinoChipGetter> CasinoChips => _CasinoChips ?? new Fallout3Group<CasinoChip>(this);
         #endregion
         #region Casinos
         private List<RangeInt64>? _CasinosLocations;
-        private IFallout3GroupGetter<ICasinoGetter>? _Casinos => _CasinosLocations != null ? Fallout3GroupBinaryOverlay<ICasinoGetter>.Fallout3GroupFactory(_stream, _CasinosLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICasinoGetter>> _CasinosCache = new();
+        private IFallout3GroupGetter<ICasinoGetter>? _Casinos => _CasinosLocations != null ? _CasinosCache.Get(() => Fallout3GroupBinaryOverlay<ICasinoGetter>.Fallout3GroupFactory(_stream, _CasinosLocations, _package)) : default;
         public IFallout3GroupGetter<ICasinoGetter> Casinos => _Casinos ?? new Fallout3Group<Casino>(this);
         #endregion
         #region LoadScreenTypes
         private List<RangeInt64>? _LoadScreenTypesLocations;
-        private IFallout3GroupGetter<ILoadScreenTypeGetter>? _LoadScreenTypes => _LoadScreenTypesLocations != null ? Fallout3GroupBinaryOverlay<ILoadScreenTypeGetter>.Fallout3GroupFactory(_stream, _LoadScreenTypesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ILoadScreenTypeGetter>> _LoadScreenTypesCache = new();
+        private IFallout3GroupGetter<ILoadScreenTypeGetter>? _LoadScreenTypes => _LoadScreenTypesLocations != null ? _LoadScreenTypesCache.Get(() => Fallout3GroupBinaryOverlay<ILoadScreenTypeGetter>.Fallout3GroupFactory(_stream, _LoadScreenTypesLocations, _package)) : default;
         public IFallout3GroupGetter<ILoadScreenTypeGetter> LoadScreenTypes => _LoadScreenTypes ?? new Fallout3Group<LoadScreenType>(this);
         #endregion
         #region MediaSets
         private List<RangeInt64>? _MediaSetsLocations;
-        private IFallout3GroupGetter<IMediaSetGetter>? _MediaSets => _MediaSetsLocations != null ? Fallout3GroupBinaryOverlay<IMediaSetGetter>.Fallout3GroupFactory(_stream, _MediaSetsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMediaSetGetter>> _MediaSetsCache = new();
+        private IFallout3GroupGetter<IMediaSetGetter>? _MediaSets => _MediaSetsLocations != null ? _MediaSetsCache.Get(() => Fallout3GroupBinaryOverlay<IMediaSetGetter>.Fallout3GroupFactory(_stream, _MediaSetsLocations, _package)) : default;
         public IFallout3GroupGetter<IMediaSetGetter> MediaSets => _MediaSets ?? new Fallout3Group<MediaSet>(this);
         #endregion
         #region MediaLocationControllers
         private List<RangeInt64>? _MediaLocationControllersLocations;
-        private IFallout3GroupGetter<IMediaLocationControllerGetter>? _MediaLocationControllers => _MediaLocationControllersLocations != null ? Fallout3GroupBinaryOverlay<IMediaLocationControllerGetter>.Fallout3GroupFactory(_stream, _MediaLocationControllersLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IMediaLocationControllerGetter>> _MediaLocationControllersCache = new();
+        private IFallout3GroupGetter<IMediaLocationControllerGetter>? _MediaLocationControllers => _MediaLocationControllersLocations != null ? _MediaLocationControllersCache.Get(() => Fallout3GroupBinaryOverlay<IMediaLocationControllerGetter>.Fallout3GroupFactory(_stream, _MediaLocationControllersLocations, _package)) : default;
         public IFallout3GroupGetter<IMediaLocationControllerGetter> MediaLocationControllers => _MediaLocationControllers ?? new Fallout3Group<MediaLocationController>(this);
         #endregion
         #region Challenges
         private List<RangeInt64>? _ChallengesLocations;
-        private IFallout3GroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? Fallout3GroupBinaryOverlay<IChallengeGetter>.Fallout3GroupFactory(_stream, _ChallengesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IChallengeGetter>> _ChallengesCache = new();
+        private IFallout3GroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? _ChallengesCache.Get(() => Fallout3GroupBinaryOverlay<IChallengeGetter>.Fallout3GroupFactory(_stream, _ChallengesLocations, _package)) : default;
         public IFallout3GroupGetter<IChallengeGetter> Challenges => _Challenges ?? new Fallout3Group<Challenge>(this);
         #endregion
         #region AmmoEffects
         private List<RangeInt64>? _AmmoEffectsLocations;
-        private IFallout3GroupGetter<IAmmoEffectGetter>? _AmmoEffects => _AmmoEffectsLocations != null ? Fallout3GroupBinaryOverlay<IAmmoEffectGetter>.Fallout3GroupFactory(_stream, _AmmoEffectsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IAmmoEffectGetter>> _AmmoEffectsCache = new();
+        private IFallout3GroupGetter<IAmmoEffectGetter>? _AmmoEffects => _AmmoEffectsLocations != null ? _AmmoEffectsCache.Get(() => Fallout3GroupBinaryOverlay<IAmmoEffectGetter>.Fallout3GroupFactory(_stream, _AmmoEffectsLocations, _package)) : default;
         public IFallout3GroupGetter<IAmmoEffectGetter> AmmoEffects => _AmmoEffects ?? new Fallout3Group<AmmoEffect>(this);
         #endregion
         #region CaravanCards
         private List<RangeInt64>? _CaravanCardsLocations;
-        private IFallout3GroupGetter<ICaravanCardGetter>? _CaravanCards => _CaravanCardsLocations != null ? Fallout3GroupBinaryOverlay<ICaravanCardGetter>.Fallout3GroupFactory(_stream, _CaravanCardsLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICaravanCardGetter>> _CaravanCardsCache = new();
+        private IFallout3GroupGetter<ICaravanCardGetter>? _CaravanCards => _CaravanCardsLocations != null ? _CaravanCardsCache.Get(() => Fallout3GroupBinaryOverlay<ICaravanCardGetter>.Fallout3GroupFactory(_stream, _CaravanCardsLocations, _package)) : default;
         public IFallout3GroupGetter<ICaravanCardGetter> CaravanCards => _CaravanCards ?? new Fallout3Group<CaravanCard>(this);
         #endregion
         #region CaravanMonies
         private List<RangeInt64>? _CaravanMoniesLocations;
-        private IFallout3GroupGetter<ICaravanMoneyGetter>? _CaravanMonies => _CaravanMoniesLocations != null ? Fallout3GroupBinaryOverlay<ICaravanMoneyGetter>.Fallout3GroupFactory(_stream, _CaravanMoniesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICaravanMoneyGetter>> _CaravanMoniesCache = new();
+        private IFallout3GroupGetter<ICaravanMoneyGetter>? _CaravanMonies => _CaravanMoniesLocations != null ? _CaravanMoniesCache.Get(() => Fallout3GroupBinaryOverlay<ICaravanMoneyGetter>.Fallout3GroupFactory(_stream, _CaravanMoniesLocations, _package)) : default;
         public IFallout3GroupGetter<ICaravanMoneyGetter> CaravanMonies => _CaravanMonies ?? new Fallout3Group<CaravanMoney>(this);
         #endregion
         #region CaravanDecks
         private List<RangeInt64>? _CaravanDecksLocations;
-        private IFallout3GroupGetter<ICaravanDeckGetter>? _CaravanDecks => _CaravanDecksLocations != null ? Fallout3GroupBinaryOverlay<ICaravanDeckGetter>.Fallout3GroupFactory(_stream, _CaravanDecksLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ICaravanDeckGetter>> _CaravanDecksCache = new();
+        private IFallout3GroupGetter<ICaravanDeckGetter>? _CaravanDecks => _CaravanDecksLocations != null ? _CaravanDecksCache.Get(() => Fallout3GroupBinaryOverlay<ICaravanDeckGetter>.Fallout3GroupFactory(_stream, _CaravanDecksLocations, _package)) : default;
         public IFallout3GroupGetter<ICaravanDeckGetter> CaravanDecks => _CaravanDecks ?? new Fallout3Group<CaravanDeck>(this);
         #endregion
         #region DehydrationStages
         private List<RangeInt64>? _DehydrationStagesLocations;
-        private IFallout3GroupGetter<IDehydrationStageGetter>? _DehydrationStages => _DehydrationStagesLocations != null ? Fallout3GroupBinaryOverlay<IDehydrationStageGetter>.Fallout3GroupFactory(_stream, _DehydrationStagesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IDehydrationStageGetter>> _DehydrationStagesCache = new();
+        private IFallout3GroupGetter<IDehydrationStageGetter>? _DehydrationStages => _DehydrationStagesLocations != null ? _DehydrationStagesCache.Get(() => Fallout3GroupBinaryOverlay<IDehydrationStageGetter>.Fallout3GroupFactory(_stream, _DehydrationStagesLocations, _package)) : default;
         public IFallout3GroupGetter<IDehydrationStageGetter> DehydrationStages => _DehydrationStages ?? new Fallout3Group<DehydrationStage>(this);
         #endregion
         #region HungerStages
         private List<RangeInt64>? _HungerStagesLocations;
-        private IFallout3GroupGetter<IHungerStageGetter>? _HungerStages => _HungerStagesLocations != null ? Fallout3GroupBinaryOverlay<IHungerStageGetter>.Fallout3GroupFactory(_stream, _HungerStagesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<IHungerStageGetter>> _HungerStagesCache = new();
+        private IFallout3GroupGetter<IHungerStageGetter>? _HungerStages => _HungerStagesLocations != null ? _HungerStagesCache.Get(() => Fallout3GroupBinaryOverlay<IHungerStageGetter>.Fallout3GroupFactory(_stream, _HungerStagesLocations, _package)) : default;
         public IFallout3GroupGetter<IHungerStageGetter> HungerStages => _HungerStages ?? new Fallout3Group<HungerStage>(this);
         #endregion
         #region SleepDeprivationStages
         private List<RangeInt64>? _SleepDeprivationStagesLocations;
-        private IFallout3GroupGetter<ISleepDeprivationStageGetter>? _SleepDeprivationStages => _SleepDeprivationStagesLocations != null ? Fallout3GroupBinaryOverlay<ISleepDeprivationStageGetter>.Fallout3GroupFactory(_stream, _SleepDeprivationStagesLocations, _package) : default;
+        private readonly GroupCache<IFallout3GroupGetter<ISleepDeprivationStageGetter>> _SleepDeprivationStagesCache = new();
+        private IFallout3GroupGetter<ISleepDeprivationStageGetter>? _SleepDeprivationStages => _SleepDeprivationStagesLocations != null ? _SleepDeprivationStagesCache.Get(() => Fallout3GroupBinaryOverlay<ISleepDeprivationStageGetter>.Fallout3GroupFactory(_stream, _SleepDeprivationStagesLocations, _package)) : default;
         public IFallout3GroupGetter<ISleepDeprivationStageGetter> SleepDeprivationStages => _SleepDeprivationStages ?? new Fallout3Group<SleepDeprivationStage>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
