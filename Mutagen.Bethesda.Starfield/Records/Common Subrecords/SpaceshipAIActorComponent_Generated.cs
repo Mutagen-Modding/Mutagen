@@ -1062,7 +1062,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SAIA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpaceshipAIActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpaceshipAIActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SpaceshipAIActorComponent_FieldIndex.SpaceshipAIActor;
                 }
                 default:
@@ -1191,7 +1194,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.SAIA:
                 {
-                    _SpaceshipAIActorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpaceshipAIActorLocation = (stream.Position - offset);
+                    }
                     return (int)SpaceshipAIActorComponent_FieldIndex.SpaceshipAIActor;
                 }
                 default:

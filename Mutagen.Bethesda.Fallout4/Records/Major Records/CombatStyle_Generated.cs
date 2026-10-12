@@ -4315,7 +4315,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CSRA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RangedAccuracyMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.RangedAccuracyMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)CombatStyle_FieldIndex.RangedAccuracyMult;
                 }
                 case RecordTypeInts.CSCR:
@@ -4375,7 +4378,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CSCV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CoverSearchDistanceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.CoverSearchDistanceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)CombatStyle_FieldIndex.CoverSearchDistanceMult;
                 }
                 case RecordTypeInts.CSFL:
@@ -4811,7 +4817,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CSRA:
                 {
-                    _RangedAccuracyMultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RangedAccuracyMultLocation = (stream.Position - offset);
+                    }
                     return (int)CombatStyle_FieldIndex.RangedAccuracyMult;
                 }
                 case RecordTypeInts.CSCR:
@@ -4835,7 +4844,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CSCV:
                 {
-                    _CoverSearchDistanceMultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CoverSearchDistanceMultLocation = (stream.Position - offset);
+                    }
                     return (int)CombatStyle_FieldIndex.CoverSearchDistanceMult;
                 }
                 case RecordTypeInts.CSFL:

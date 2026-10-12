@@ -2168,7 +2168,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)Animation_FieldIndex.NpcAnimation, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NpcAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NpcAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Animation_FieldIndex.NpcAnimation;
                 }
                 case RecordTypeInts.STRV:
@@ -2183,19 +2186,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BodyArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BodyArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Animation_FieldIndex.BodyArchetype;
                 }
                 case RecordTypeInts.FLMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FaceArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FaceArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Animation_FieldIndex.FaceArchetype;
                 }
                 case RecordTypeInts.FLAV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flavor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Flavor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Animation_FieldIndex.Flavor;
                 }
                 case RecordTypeInts.QUAL:
@@ -2231,7 +2243,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DelayStartTimeAction = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DelayStartTimeAction = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Animation_FieldIndex.DelayStartTimeAction;
                 }
                 case RecordTypeInts.CTDA:
@@ -2247,7 +2262,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ATAC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Action.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Action.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Animation_FieldIndex.Action;
                 }
                 case RecordTypeInts.SHRT:
@@ -2263,7 +2281,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DTGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DTGT = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.DTGT = frame.ReadInt32();
+                    }
                     return (int)Animation_FieldIndex.DTGT;
                 }
                 case RecordTypeInts.ACEP:
@@ -2480,7 +2501,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     if (lastParsed.ShortCircuit((int)Animation_FieldIndex.NpcAnimation, translationParams)) return ParseResult.Stop;
-                    _NpcAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NpcAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.NpcAnimation;
                 }
                 case RecordTypeInts.STRV:
@@ -2490,17 +2514,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VCLR:
                 {
-                    _BodyArchetypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BodyArchetypeLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.BodyArchetype;
                 }
                 case RecordTypeInts.FLMV:
                 {
-                    _FaceArchetypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FaceArchetypeLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.FaceArchetype;
                 }
                 case RecordTypeInts.FLAV:
                 {
-                    _FlavorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FlavorLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.Flavor;
                 }
                 case RecordTypeInts.QUAL:
@@ -2535,7 +2568,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVCR:
                 {
-                    _DelayStartTimeActionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DelayStartTimeActionLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.DelayStartTimeAction;
                 }
                 case RecordTypeInts.CTDA:
@@ -2555,7 +2591,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ATAC:
                 {
-                    _ActionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActionLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.Action;
                 }
                 case RecordTypeInts.SHRT:
@@ -2570,7 +2609,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DTGT:
                 {
-                    _DTGTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DTGTLocation = (stream.Position - offset);
+                    }
                     return (int)Animation_FieldIndex.DTGT;
                 }
                 case RecordTypeInts.ACEP:

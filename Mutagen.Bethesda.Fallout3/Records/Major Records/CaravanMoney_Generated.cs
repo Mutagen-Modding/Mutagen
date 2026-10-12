@@ -2070,19 +2070,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)CaravanMoney_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)CaravanMoney_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AbsoluteValue = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AbsoluteValue = frame.ReadUInt32();
+                    }
                     return (int)CaravanMoney_FieldIndex.AbsoluteValue;
                 }
                 default:
@@ -2277,17 +2286,26 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)CaravanMoney_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _DropSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DropSoundLocation = (stream.Position - offset);
+                    }
                     return (int)CaravanMoney_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _AbsoluteValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AbsoluteValueLocation = (stream.Position - offset);
+                    }
                     return (int)CaravanMoney_FieldIndex.AbsoluteValue;
                 }
                 default:

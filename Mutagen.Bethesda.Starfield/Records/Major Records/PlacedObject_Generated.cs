@@ -9481,7 +9481,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)PlacedObject_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -9497,25 +9500,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMSP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XMSP.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XMSP.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XMSP;
                 }
                 case RecordTypeInts.XPWR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XPWR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XPWR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XPWR;
                 }
                 case RecordTypeInts.XLTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XLTW.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XLTW.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XLTW;
                 }
                 case RecordTypeInts.XTRV:
@@ -9580,13 +9595,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XEMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XRDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XLIG:
@@ -9638,13 +9659,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XTNM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TeleportName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TeleportName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.TeleportName;
                 }
                 case RecordTypeInts.XRFG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.ReferenceGroup;
                 }
                 case RecordTypeInts.XLRT:
@@ -9670,19 +9697,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XPCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XPCK.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XPCK.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XPCK;
                 }
                 case RecordTypeInts.XPCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XPDD:
@@ -9703,7 +9739,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCDD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ConstrainedDecal = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.ConstrainedDecal = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.ConstrainedDecal;
                 }
                 case RecordTypeInts.XIS2:
@@ -9714,7 +9753,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XLGD:
@@ -9740,7 +9782,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCNT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Count = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Count = frame.ReadInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.Count;
                 }
                 case RecordTypeInts.XFLG:
@@ -9765,29 +9810,41 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XLLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LightLayerData = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 4);
+                    if (contentLength >= 4)
+                    {
+                        item.LightLayerData = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 4);
+                    }
                     return (int)PlacedObject_FieldIndex.LightLayerData;
                 }
                 case RecordTypeInts.XLSM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LightStaticShadowMap = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 4);
+                    if (contentLength >= 4)
+                    {
+                        item.LightStaticShadowMap = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 4);
+                    }
                     return (int)PlacedObject_FieldIndex.LightStaticShadowMap;
                 }
                 case RecordTypeInts.XLVD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LightVolumetricData = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LightVolumetricData = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.LightVolumetricData;
                 }
                 case RecordTypeInts.XRFE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LightRadiusFalloutExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LightRadiusFalloutExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.LightRadiusFalloutExponent;
                 }
                 case RecordTypeInts.XOWN:
@@ -9815,25 +9872,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XBPO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlueprintPartOrigin = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.BlueprintPartOrigin = frame.ReadUInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.BlueprintPartOrigin;
                 }
                 case RecordTypeInts.XLYR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
                 case RecordTypeInts.BOLV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BOLV = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.BOLV = frame.ReadUInt16();
+                    }
                     return (int)PlacedObject_FieldIndex.BOLV;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XWCN.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XWCN.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCU:
@@ -9845,13 +9914,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XLRL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Location;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XTRI = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.XTRI = frame.ReadUInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.XTRI;
                 }
                 case RecordTypeInts.XLRD:
@@ -9878,7 +9953,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XLIB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XLIB.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XLIB.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XLIB;
                 }
                 case RecordTypeInts.XSL1:
@@ -9894,13 +9972,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XGDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GeometryDirtinessScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.GeometryDirtinessScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.GeometryDirtinessScale;
                 }
                 case RecordTypeInts.XLOC:
@@ -9926,7 +10010,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XHTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XBSD:
@@ -9943,27 +10030,39 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XATR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XRGB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XHLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HealthPercent = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.HealthPercent = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)PlacedObject_FieldIndex.HealthPercent;
                 }
                 case RecordTypeInts.TODD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.XESP:
@@ -9992,7 +10091,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.ONAM:
@@ -10461,7 +10563,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -10475,22 +10580,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAME:
                 {
-                    _BaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMSP:
                 {
-                    _XMSPLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XMSPLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XMSP;
                 }
                 case RecordTypeInts.XPWR:
                 {
-                    _XPWRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XPWRLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XPWR;
                 }
                 case RecordTypeInts.XLTW:
                 {
-                    _XLTWLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XLTWLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XLTW;
                 }
                 case RecordTypeInts.XTRV:
@@ -10548,12 +10665,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XEMI:
                 {
-                    _EmittanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmittanceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XRDS:
                 {
-                    _RadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadiusLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XLIG:
@@ -10609,12 +10732,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XTNM:
                 {
-                    _TeleportNameLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TeleportNameLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.TeleportName;
                 }
                 case RecordTypeInts.XRFG:
                 {
-                    _ReferenceGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReferenceGroupLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.ReferenceGroup;
                 }
                 case RecordTypeInts.XLRT:
@@ -10639,17 +10768,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XPCK:
                 {
-                    _XPCKLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XPCKLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XPCK;
                 }
                 case RecordTypeInts.XPCS:
                 {
-                    _SourcePackInLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SourcePackInLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _PersistentLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PersistentLocationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XPDD:
@@ -10669,7 +10807,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCDD:
                 {
-                    _ConstrainedDecalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _ConstrainedDecalLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.ConstrainedDecal;
                 }
                 case RecordTypeInts.XIS2:
@@ -10679,7 +10820,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XLGD:
@@ -10709,7 +10853,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCNT:
                 {
-                    _CountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CountLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Count;
                 }
                 case RecordTypeInts.XFLG:
@@ -10733,22 +10880,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLLD:
                 {
-                    _LightLayerDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightLayerDataLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LightLayerData;
                 }
                 case RecordTypeInts.XLSM:
                 {
-                    _LightStaticShadowMapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightStaticShadowMapLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LightStaticShadowMap;
                 }
                 case RecordTypeInts.XLVD:
                 {
-                    _LightVolumetricDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightVolumetricDataLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LightVolumetricData;
                 }
                 case RecordTypeInts.XRFE:
                 {
-                    _LightRadiusFalloutExponentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightRadiusFalloutExponentLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LightRadiusFalloutExponent;
                 }
                 case RecordTypeInts.XOWN:
@@ -10786,22 +10945,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XBPO:
                 {
-                    _BlueprintPartOriginLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlueprintPartOriginLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.BlueprintPartOrigin;
                 }
                 case RecordTypeInts.XLYR:
                 {
-                    _LayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LayerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
                 case RecordTypeInts.BOLV:
                 {
-                    _BOLVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _BOLVLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.BOLV;
                 }
                 case RecordTypeInts.XWCN:
                 {
-                    _XWCNLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XWCNLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCU:
@@ -10811,12 +10982,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRL:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Location;
                 }
                 case RecordTypeInts.XTRI:
                 {
-                    _XTRILocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XTRILocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XTRI;
                 }
                 case RecordTypeInts.XLRD:
@@ -10850,7 +11027,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLIB:
                 {
-                    _XLIBLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XLIBLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XLIB;
                 }
                 case RecordTypeInts.XSL1:
@@ -10864,12 +11044,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterZoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterZoneLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XGDS:
                 {
-                    _GeometryDirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GeometryDirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.GeometryDirtinessScale;
                 }
                 case RecordTypeInts.XLOC:
@@ -10894,7 +11080,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XHTW:
                 {
-                    _HeadTrackingWeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadTrackingWeightLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XBSD:
@@ -10909,22 +11098,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XATR:
                 {
-                    _AttachRefLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttachRefLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XRGB:
                 {
-                    _RagdollBipedRotationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _RagdollBipedRotationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XHLT:
                 {
-                    _HealthPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HealthPercentLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.HealthPercent;
                 }
                 case RecordTypeInts.TODD:
                 {
-                    _TimeOfDayLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TimeOfDayLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.XESP:
@@ -10954,7 +11155,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XSCL:
                 {
-                    _ScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScaleLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.ONAM:

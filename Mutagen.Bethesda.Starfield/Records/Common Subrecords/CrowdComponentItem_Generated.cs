@@ -1505,7 +1505,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)CrowdComponentItem_FieldIndex.FLTV, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLTV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FLTV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)CrowdComponentItem_FieldIndex.FLTV;
                 }
                 default:
@@ -1685,7 +1688,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLTV:
                 {
                     if (lastParsed.ShortCircuit((int)CrowdComponentItem_FieldIndex.FLTV, translationParams)) return ParseResult.Stop;
-                    _FLTVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FLTVLocation = (stream.Position - offset);
+                    }
                     return (int)CrowdComponentItem_FieldIndex.FLTV;
                 }
                 default:

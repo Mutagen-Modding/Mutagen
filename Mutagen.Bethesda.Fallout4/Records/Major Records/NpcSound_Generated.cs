@@ -1087,14 +1087,20 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)NpcSound_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.CS2D:
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)NpcSound_FieldIndex.Sound;
                 }
                 default:
@@ -1240,13 +1246,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CS2K:
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
-                    _KeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _KeywordLocation = (stream.Position - offset);
+                    }
                     return (int)NpcSound_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.CS2D:
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)NpcSound_FieldIndex.Sound;
                 }
                 default:

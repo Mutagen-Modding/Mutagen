@@ -1085,7 +1085,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.RotationsPerMinute, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RotationsPerMinute = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.RotationsPerMinute = frame.ReadUInt32();
+                    }
                     return (int)SoundRateOfFire_FieldIndex.RotationsPerMinute;
                 }
                 case RecordTypeInts.FNAM:
@@ -1250,7 +1253,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INTV:
                 {
                     if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.RotationsPerMinute, translationParams)) return ParseResult.Stop;
-                    _RotationsPerMinuteLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RotationsPerMinuteLocation = (stream.Position - offset);
+                    }
                     return (int)SoundRateOfFire_FieldIndex.RotationsPerMinute;
                 }
                 case RecordTypeInts.FNAM:

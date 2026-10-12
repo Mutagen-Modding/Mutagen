@@ -1649,13 +1649,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Cell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Cell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PackIn_FieldIndex.Cell;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Version = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Version = frame.ReadUInt32();
+                    }
                     return (int)PackIn_FieldIndex.Version;
                 }
                 default:
@@ -1815,12 +1821,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CellLocation = (stream.Position - offset);
+                    }
                     return (int)PackIn_FieldIndex.Cell;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VersionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VersionLocation = (stream.Position - offset);
+                    }
                     return (int)PackIn_FieldIndex.Version;
                 }
                 default:

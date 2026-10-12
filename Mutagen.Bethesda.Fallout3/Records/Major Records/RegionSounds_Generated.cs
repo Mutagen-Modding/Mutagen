@@ -1578,13 +1578,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RDMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MusicType = frame.ReadUInt32();
+                    }
                     return (int)RegionSounds_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSI:
@@ -1592,7 +1598,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.IncidentalMediaSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.IncidentalMediaSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)RegionSounds_FieldIndex.IncidentalMediaSet;
                 }
@@ -1751,17 +1760,26 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.RDMD:
                 {
-                    _MusicTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicTypeLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.RDMO:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSI:
                 {
-                    _IncidentalMediaSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IncidentalMediaSetLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.IncidentalMediaSet;
                 }
                 case RecordTypeInts.RDSB:

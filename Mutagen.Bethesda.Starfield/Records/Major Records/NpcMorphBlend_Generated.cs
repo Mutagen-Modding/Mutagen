@@ -1069,7 +1069,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BMPV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Intensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Intensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)NpcMorphBlend_FieldIndex.Intensity;
                 }
                 default:
@@ -1219,7 +1222,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BMPV:
                 {
-                    _IntensityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IntensityLocation = (stream.Position - offset);
+                    }
                     return (int)NpcMorphBlend_FieldIndex.Intensity;
                 }
                 default:

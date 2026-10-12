@@ -1389,13 +1389,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasID = frame.ReadInt32();
+                    }
                     return (int)ASceneAction_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)ASceneAction_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
@@ -1409,13 +1415,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StartPhase = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.StartPhase = frame.ReadUInt32();
+                    }
                     return (int)ASceneAction_FieldIndex.StartPhase;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EndPhase = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EndPhase = frame.ReadUInt32();
+                    }
                     return (int)ASceneAction_FieldIndex.EndPhase;
                 }
                 default:
@@ -1557,12 +1569,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALID:
                 {
-                    _AliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)ASceneAction_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)ASceneAction_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
@@ -1572,12 +1590,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _StartPhaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _StartPhaseLocation = (stream.Position - offset);
+                    }
                     return (int)ASceneAction_FieldIndex.StartPhase;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EndPhaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EndPhaseLocation = (stream.Position - offset);
+                    }
                     return (int)ASceneAction_FieldIndex.EndPhase;
                 }
                 default:

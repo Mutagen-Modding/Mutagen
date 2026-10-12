@@ -1946,7 +1946,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BendableSpline_FieldIndex.Texture;
                 }
                 default:
@@ -2134,7 +2137,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TextureLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureLocation = (stream.Position - offset);
+                    }
                     return (int)BendableSpline_FieldIndex.Texture;
                 }
                 default:

@@ -1708,7 +1708,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.BaseEffect, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
@@ -1732,42 +1735,60 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Magnitude, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Magnitude.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Magnitude.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Effect_FieldIndex.Magnitude;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Area, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Area.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Area.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Effect_FieldIndex.Area;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Duration, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Duration.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Duration.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Effect_FieldIndex.Duration;
                 }
                 case RecordTypeInts.MAGF:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.MAGF, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MAGF = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MAGF = frame.ReadInt32();
+                    }
                     return (int)Effect_FieldIndex.MAGF;
                 }
                 case RecordTypeInts.EFIF:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.EFIF, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EFIF = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EFIF = frame.ReadInt32();
+                    }
                     return (int)Effect_FieldIndex.EFIF;
                 }
                 case RecordTypeInts.MUID:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.MUID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MUID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MUID = frame.ReadInt32();
+                    }
                     return (int)Effect_FieldIndex.MUID;
                 }
                 default:
@@ -1938,7 +1959,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.EFID:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.BaseEffect, translationParams)) return ParseResult.Stop;
-                    _BaseEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
@@ -1966,37 +1990,55 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Magnitude, translationParams)) return ParseResult.Stop;
-                    _MagnitudeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MagnitudeLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.Magnitude;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Area, translationParams)) return ParseResult.Stop;
-                    _AreaLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AreaLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.Area;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.Duration, translationParams)) return ParseResult.Stop;
-                    _DurationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DurationLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.Duration;
                 }
                 case RecordTypeInts.MAGF:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.MAGF, translationParams)) return ParseResult.Stop;
-                    _MAGFLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MAGFLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.MAGF;
                 }
                 case RecordTypeInts.EFIF:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.EFIF, translationParams)) return ParseResult.Stop;
-                    _EFIFLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EFIFLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.EFIF;
                 }
                 case RecordTypeInts.MUID:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.MUID, translationParams)) return ParseResult.Stop;
-                    _MUIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MUIDLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.MUID;
                 }
                 default:

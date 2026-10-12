@@ -1452,14 +1452,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)QuestStageRewardData_FieldIndex.XpAwarded, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XpAwarded.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XpAwarded.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestStageRewardData_FieldIndex.XpAwarded;
                 }
                 case RecordTypeInts.QRCR:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStageRewardData_FieldIndex.BonusCredits, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BonusCredits.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BonusCredits.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestStageRewardData_FieldIndex.BonusCredits;
                 }
                 case RecordTypeInts.QRRD:
@@ -1629,13 +1635,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QRXP:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStageRewardData_FieldIndex.XpAwarded, translationParams)) return ParseResult.Stop;
-                    _XpAwardedLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XpAwardedLocation = (stream.Position - offset);
+                    }
                     return (int)QuestStageRewardData_FieldIndex.XpAwarded;
                 }
                 case RecordTypeInts.QRCR:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStageRewardData_FieldIndex.BonusCredits, translationParams)) return ParseResult.Stop;
-                    _BonusCreditsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BonusCreditsLocation = (stream.Position - offset);
+                    }
                     return (int)QuestStageRewardData_FieldIndex.BonusCredits;
                 }
                 case RecordTypeInts.QRRD:

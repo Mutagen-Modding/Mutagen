@@ -4443,7 +4443,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)QuestReferenceAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ID = frame.ReadUInt32();
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALID:
@@ -4466,31 +4469,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALFG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ALFG = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ALFG = frame.ReadUInt32();
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ALFG;
                 }
                 case RecordTypeInts.ALLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LegendaryRank = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.LegendaryRank = frame.ReadUInt8();
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.LegendaryRank;
                 }
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ClosestToAlias = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ClosestToAlias = frame.ReadInt32();
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ClosestToAlias;
                 }
                 case RecordTypeInts.ALFR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALFA:
@@ -4528,13 +4546,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALUA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UniqueActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UniqueActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALUB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UniqueBaseForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UniqueBaseForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.UniqueBaseForm;
                 }
                 case RecordTypeInts.ALNA:
@@ -4549,7 +4573,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceCollectionAliasID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ReferenceCollectionAliasID = frame.ReadInt32();
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ReferenceCollectionAliasID;
                 }
                 case RecordTypeInts.ALCM:
@@ -4600,25 +4627,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SPOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpectatorOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpectatorOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObserveDeadBodyOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObserveDeadBodyOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GuardWarnOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GuardWarnOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CombatOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALLA:
@@ -4634,19 +4673,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALDN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALDI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.ALFV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedVoice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedVoice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ForcedVoice;
                 }
                 case RecordTypeInts.ALSP:
@@ -4688,7 +4736,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALTM:
@@ -4913,7 +4964,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALST:
                 {
                     if (lastParsed.ShortCircuit((int)QuestReferenceAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
-                    _IDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IDLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALID:
@@ -4928,27 +4982,42 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALFG:
                 {
-                    _ALFGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ALFGLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ALFG;
                 }
                 case RecordTypeInts.ALLR:
                 {
-                    _LegendaryRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _LegendaryRankLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.LegendaryRank;
                 }
                 case RecordTypeInts.ALFI:
                 {
-                    _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALCC:
                 {
-                    _ClosestToAliasLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClosestToAliasLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ClosestToAlias;
                 }
                 case RecordTypeInts.ALFR:
                 {
-                    _ForcedReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALFA:
@@ -4989,12 +5058,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALUA:
                 {
-                    _UniqueActorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UniqueActorLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALUB:
                 {
-                    _UniqueBaseFormLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UniqueBaseFormLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.UniqueBaseForm;
                 }
                 case RecordTypeInts.ALNA:
@@ -5009,7 +5084,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALCS:
                 {
-                    _ReferenceCollectionAliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReferenceCollectionAliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ReferenceCollectionAliasID;
                 }
                 case RecordTypeInts.ALCM:
@@ -5065,22 +5143,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPOR:
                 {
-                    _SpectatorOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpectatorOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
-                    _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
-                    _GuardWarnOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GuardWarnOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
-                    _CombatOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CombatOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALLA:
@@ -5095,17 +5185,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALDN:
                 {
-                    _DisplayNameLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DisplayNameLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALDI:
                 {
-                    _DeathItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DeathItemLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.ALFV:
                 {
-                    _ForcedVoiceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedVoiceLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.ForcedVoice;
                 }
                 case RecordTypeInts.ALSP:
@@ -5157,7 +5256,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VTCK:
                 {
-                    _VoiceTypesLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VoiceTypesLocation = (stream.Position - offset);
+                    }
                     return (int)QuestReferenceAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALTM:

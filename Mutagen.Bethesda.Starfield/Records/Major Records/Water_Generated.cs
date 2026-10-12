@@ -3078,7 +3078,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Opacity = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.Opacity = frame.ReadUInt8();
+                    }
                     return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
@@ -3098,13 +3101,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ConsumeSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ConsumeSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.ConsumeSpell;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ContactSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ContactSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.ContactSpell;
                 }
                 case RecordTypeInts.DATA:
@@ -3128,13 +3137,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LinearVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.LinearVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
@@ -3167,55 +3182,82 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM5 = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.NAM5 = frame.ReadUInt8();
+                    }
                     return (int)Water_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM6 = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.NAM6 = frame.ReadUInt8();
+                    }
                     return (int)Water_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RiverAbsorptionCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RiverAbsorptionCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.RiverAbsorptionCurve;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OceanAbsorptionCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OceanAbsorptionCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.OceanAbsorptionCurve;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RiverScatteringCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RiverScatteringCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.RiverScatteringCurve;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OceanScatteringCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OceanScatteringCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.OceanScatteringCurve;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PhytoplanktonCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PhytoplanktonCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.PhytoplanktonCurve;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SedimentCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SedimentCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.SedimentCurve;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.YelowMatterCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.YelowMatterCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.YelowMatterCurve;
                 }
                 case RecordTypeInts.XXXX:
@@ -3471,7 +3513,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _OpacityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _OpacityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
@@ -3490,12 +3535,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _ConsumeSpellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ConsumeSpellLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.ConsumeSpell;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _ContactSpellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ContactSpellLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.ContactSpell;
                 }
                 case RecordTypeInts.DATA:
@@ -3515,12 +3566,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _LinearVelocityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _LinearVelocityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _AngularVelocityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _AngularVelocityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
@@ -3540,47 +3597,74 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _NAM5Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _NAM5Location = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
-                    _NAM6Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _NAM6Location = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _RiverAbsorptionCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RiverAbsorptionCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.RiverAbsorptionCurve;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _OceanAbsorptionCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OceanAbsorptionCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.OceanAbsorptionCurve;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _RiverScatteringCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RiverScatteringCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.RiverScatteringCurve;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _OceanScatteringCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OceanScatteringCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.OceanScatteringCurve;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _PhytoplanktonCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PhytoplanktonCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.PhytoplanktonCurve;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _SedimentCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SedimentCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.SedimentCurve;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _YelowMatterCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _YelowMatterCurveLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.YelowMatterCurve;
                 }
                 case RecordTypeInts.XXXX:

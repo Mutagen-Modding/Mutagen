@@ -1069,7 +1069,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FMRS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlendIntensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.BlendIntensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)NpcMorphGroup_FieldIndex.BlendIntensity;
                 }
                 default:
@@ -1219,7 +1222,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FMRS:
                 {
-                    _BlendIntensityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlendIntensityLocation = (stream.Position - offset);
+                    }
                     return (int)NpcMorphGroup_FieldIndex.BlendIntensity;
                 }
                 default:

@@ -3882,13 +3882,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.Script;
                 }
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.BMDT:
@@ -4050,13 +4056,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.REPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RepairList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RepairList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.RepairList;
                 }
                 case RecordTypeInts.BIPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BipedModelList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BipedModelList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.BipedModelList;
                 }
                 case RecordTypeInts.ETYP:
@@ -4070,13 +4082,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.DATA:
@@ -4117,9 +4135,12 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.OverridesAnimationSounds = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            byteLength: 4);
+                        if (contentLength >= 4)
+                        {
+                            item.OverridesAnimationSounds = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                                reader: frame.SpawnWithLength(contentLength),
+                                byteLength: 4);
+                        }
                     }
                     return (int)Armor_FieldIndex.OverridesAnimationSounds;
                 }
@@ -4138,7 +4159,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.AnimationSoundsTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.AnimationSoundsTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Armor_FieldIndex.AnimationSoundsTemplate;
                 }
@@ -4406,12 +4430,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.Script;
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.BMDT:
@@ -4573,12 +4603,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.REPL:
                 {
-                    _RepairListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RepairListLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.RepairList;
                 }
                 case RecordTypeInts.BIPL:
                 {
-                    _BipedModelListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BipedModelListLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.BipedModelList;
                 }
                 case RecordTypeInts.ETYP:
@@ -4588,12 +4624,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _DropSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DropSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.DATA:
@@ -4613,7 +4655,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _OverridesAnimationSoundsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OverridesAnimationSoundsLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.OverridesAnimationSounds;
                 }
                 case RecordTypeInts.SNAM:
@@ -4633,7 +4678,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _AnimationSoundsTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AnimationSoundsTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.AnimationSoundsTemplate;
                 }
                 default:

@@ -1202,7 +1202,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Static, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Static.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Static.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)StaticPart_FieldIndex.Static;
                 }
                 case RecordTypeInts.DATA:
@@ -1356,7 +1359,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ONAM:
                 {
                     if (lastParsed.ShortCircuit((int)StaticPart_FieldIndex.Static, translationParams)) return ParseResult.Stop;
-                    _StaticLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _StaticLocation = (stream.Position - offset);
+                    }
                     return (int)StaticPart_FieldIndex.Static;
                 }
                 case RecordTypeInts.DATA:

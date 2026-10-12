@@ -2309,7 +2309,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NVER:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Version = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Version = frame.ReadUInt32();
+                    }
                     return (int)Ragdoll_FieldIndex.Version;
                 }
                 case RecordTypeInts.DATA:
@@ -2337,13 +2340,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorBase.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActorBase.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ragdoll_FieldIndex.ActorBase;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ragdoll_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.RAFD:
@@ -2573,7 +2582,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.NVER:
                 {
-                    _VersionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VersionLocation = (stream.Position - offset);
+                    }
                     return (int)Ragdoll_FieldIndex.Version;
                 }
                 case RecordTypeInts.DATA:
@@ -2583,12 +2595,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _ActorBaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorBaseLocation = (stream.Position - offset);
+                    }
                     return (int)Ragdoll_FieldIndex.ActorBase;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _BodyPartDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BodyPartDataLocation = (stream.Position - offset);
+                    }
                     return (int)Ragdoll_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.RAFD:

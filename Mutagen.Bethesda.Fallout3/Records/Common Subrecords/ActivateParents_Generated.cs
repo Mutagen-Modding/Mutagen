@@ -1189,7 +1189,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)ActivateParents_FieldIndex.ParentActivateOnly, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentActivateOnly = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.ParentActivateOnly = frame.ReadBoolean();
+                    }
                     return (int)ActivateParents_FieldIndex.ParentActivateOnly;
                 }
                 case RecordTypeInts.XAPR:
@@ -1342,7 +1345,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XAPD:
                 {
                     if (lastParsed.ShortCircuit((int)ActivateParents_FieldIndex.ParentActivateOnly, translationParams)) return ParseResult.Stop;
-                    _ParentActivateOnlyLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _ParentActivateOnlyLocation = (stream.Position - offset);
+                    }
                     return (int)ActivateParents_FieldIndex.ParentActivateOnly;
                 }
                 case RecordTypeInts.XAPR:

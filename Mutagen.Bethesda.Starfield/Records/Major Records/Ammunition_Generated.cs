@@ -3084,9 +3084,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Ammunition_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTT2:
@@ -3130,7 +3133,10 @@ namespace Mutagen.Bethesda.Starfield
                     else if (lastParsed.ParsedIndex.Value <= (int)Ammunition_FieldIndex.CasingModel)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.LightLayer = frame.ReadUInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.LightLayer = frame.ReadUInt32();
+                        }
                         return new ParseResult((int)Ammunition_FieldIndex.LightLayer, nextRecordType);
                     }
                     else
@@ -3144,7 +3150,10 @@ namespace Mutagen.Bethesda.Starfield
                                 return new ParseResult((int)Ammunition_FieldIndex.Model, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.LightLayer = frame.ReadUInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.LightLayer = frame.ReadUInt32();
+                                }
                                 return new ParseResult((int)Ammunition_FieldIndex.LightLayer, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -3471,7 +3480,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Ammunition_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTT2:
@@ -3510,7 +3522,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Ammunition_FieldIndex.CasingModel)
                     {
-                        _LightLayerLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _LightLayerLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Ammunition_FieldIndex.LightLayer, type);
                     }
                     else
@@ -3527,7 +3542,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 1:
                             {
-                                _LightLayerLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _LightLayerLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Ammunition_FieldIndex.LightLayer, type);
                             }
                             default:

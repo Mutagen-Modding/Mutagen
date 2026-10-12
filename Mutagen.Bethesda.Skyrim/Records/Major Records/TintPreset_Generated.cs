@@ -1143,21 +1143,30 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Color, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Color.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)TintPreset_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
                     if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.DefaultValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)TintPreset_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Index = frame.ReadUInt16();
+                    }
                     return (int)TintPreset_FieldIndex.Index;
                 }
                 default:
@@ -1307,19 +1316,28 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINC:
                 {
                     if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Color, translationParams)) return ParseResult.Stop;
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)TintPreset_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
                     if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.DefaultValue, translationParams)) return ParseResult.Stop;
-                    _DefaultValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultValueLocation = (stream.Position - offset);
+                    }
                     return (int)TintPreset_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.TIRS:
                 {
                     if (lastParsed.ShortCircuit((int)TintPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)TintPreset_FieldIndex.Index;
                 }
                 default:

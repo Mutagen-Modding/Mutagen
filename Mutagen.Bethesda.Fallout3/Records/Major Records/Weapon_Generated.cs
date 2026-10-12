@@ -9618,25 +9618,37 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.Script;
                 }
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnchantmentChargeAmount = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.EnchantmentChargeAmount = frame.ReadUInt16();
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentChargeAmount;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Ammo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Ammo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.Ammo;
                 }
                 case RecordTypeInts.DEST:
@@ -9650,7 +9662,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.REPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RepairList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RepairList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.RepairList;
                 }
                 case RecordTypeInts.ETYP:
@@ -9664,19 +9679,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.BIPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BipedModelList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BipedModelList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.BipedModelList;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.MOD2:
@@ -9700,7 +9724,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.EFSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScopeEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ScopeEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ScopeEffect;
                 }
                 case RecordTypeInts.MOD4:
@@ -9820,13 +9847,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FirstPersonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FirstPersonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.WNM1:
@@ -9834,7 +9867,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1;
                 }
@@ -9843,7 +9879,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod2;
                 }
@@ -9852,7 +9891,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod1And2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod1And2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1And2;
                 }
@@ -9861,7 +9903,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod3;
                 }
@@ -9870,7 +9915,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod1And3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod1And3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1And3;
                 }
@@ -9879,7 +9927,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod2And3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod2And3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod2And3;
                 }
@@ -9888,7 +9939,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.FirstPersonModelMod1And2And3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.FirstPersonModelMod1And2And3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1And2And3;
                 }
@@ -9897,7 +9951,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.WeaponMod1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.WeaponMod1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.WeaponMod1;
                 }
@@ -9906,7 +9963,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.WeaponMod2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.WeaponMod2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.WeaponMod2;
                 }
@@ -9915,7 +9975,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.WeaponMod3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.WeaponMod3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.WeaponMod3;
                 }
@@ -9925,13 +9988,19 @@ namespace Mutagen.Bethesda.Fallout3
                         || lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.WeaponMod3)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundGunShoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundGunShoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundGunShoot3D, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.SoundGunShoot3D)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundGunShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundGunShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundGunShootDist, nextRecordType);
                     }
                     else
@@ -9940,11 +10009,17 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.SoundGunShoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.SoundGunShoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundGunShoot3D, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.SoundGunShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.SoundGunShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundGunShootDist, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -9954,43 +10029,64 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundGunShoot2D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundGunShoot2D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundGunShoot2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundGunShoot3DLooping.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundGunShoot3DLooping.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundGunShoot3DLooping;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundMeleeSwingGunNoAmmo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundMeleeSwingGunNoAmmo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundMeleeSwingGunNoAmmo;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundBlock.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundBlock.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundBlock;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundIdle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundIdle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundIdle;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundEquip.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundEquip.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundEquip;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundUnequip.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundUnequip.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.SoundUnequip;
                 }
                 case RecordTypeInts.WMS1:
@@ -9999,13 +10095,19 @@ namespace Mutagen.Bethesda.Fallout3
                         || lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.SoundUnequip)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundMod1Shoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundMod1Shoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundMod1Shoot3D, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.SoundMod1Shoot3D)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundMod1ShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundMod1ShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundMod1ShootDist, nextRecordType);
                     }
                     else
@@ -10014,11 +10116,17 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.SoundMod1Shoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.SoundMod1Shoot3D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundMod1Shoot3D, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.SoundMod1ShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.SoundMod1ShootDist.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundMod1ShootDist, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -10030,7 +10138,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundMod1Shoot2D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundMod1Shoot2D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weapon_FieldIndex.SoundMod1Shoot2D;
                 }
@@ -11088,22 +11199,34 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.Script;
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
-                    _EnchantmentChargeAmountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _EnchantmentChargeAmountLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentChargeAmount;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _AmmoLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AmmoLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.Ammo;
                 }
                 case RecordTypeInts.DEST:
@@ -11117,7 +11240,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.REPL:
                 {
-                    _RepairListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RepairListLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.RepairList;
                 }
                 case RecordTypeInts.ETYP:
@@ -11127,17 +11253,26 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.BIPL:
                 {
-                    _BipedModelListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BipedModelListLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.BipedModelList;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _DropSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DropSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.MOD2:
@@ -11162,7 +11297,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.EFSD:
                 {
-                    _ScopeEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScopeEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ScopeEffect;
                 }
                 case RecordTypeInts.MOD4:
@@ -11222,62 +11360,98 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _ImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _FirstPersonModelLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.WNM1:
                 {
-                    _FirstPersonModelMod1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod1Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1;
                 }
                 case RecordTypeInts.WNM2:
                 {
-                    _FirstPersonModelMod2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod2Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod2;
                 }
                 case RecordTypeInts.WNM3:
                 {
-                    _FirstPersonModelMod1And2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod1And2Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1And2;
                 }
                 case RecordTypeInts.WNM4:
                 {
-                    _FirstPersonModelMod3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod3Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod3;
                 }
                 case RecordTypeInts.WNM5:
                 {
-                    _FirstPersonModelMod1And3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod1And3Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1And3;
                 }
                 case RecordTypeInts.WNM6:
                 {
-                    _FirstPersonModelMod2And3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod2And3Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod2And3;
                 }
                 case RecordTypeInts.WNM7:
                 {
-                    _FirstPersonModelMod1And2And3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelMod1And2And3Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModelMod1And2And3;
                 }
                 case RecordTypeInts.WMI1:
                 {
-                    _WeaponMod1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeaponMod1Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.WeaponMod1;
                 }
                 case RecordTypeInts.WMI2:
                 {
-                    _WeaponMod2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeaponMod2Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.WeaponMod2;
                 }
                 case RecordTypeInts.WMI3:
                 {
-                    _WeaponMod3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeaponMod3Location = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.WeaponMod3;
                 }
                 case RecordTypeInts.SNAM:
@@ -11285,12 +11459,18 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.WeaponMod3)
                     {
-                        _SoundGunShoot3DLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _SoundGunShoot3DLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundGunShoot3D, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.SoundGunShoot3D)
                     {
-                        _SoundGunShootDistLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _SoundGunShootDistLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundGunShootDist, type);
                     }
                     else
@@ -11299,12 +11479,18 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             case 0:
                             {
-                                _SoundGunShoot3DLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _SoundGunShoot3DLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundGunShoot3D, type);
                             }
                             case 1:
                             {
-                                _SoundGunShootDistLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _SoundGunShootDistLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundGunShootDist, type);
                             }
                             default:
@@ -11314,37 +11500,58 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _SoundGunShoot2DLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundGunShoot2DLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundGunShoot2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
-                    _SoundGunShoot3DLoopingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundGunShoot3DLoopingLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundGunShoot3DLooping;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _SoundMeleeSwingGunNoAmmoLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundMeleeSwingGunNoAmmoLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundMeleeSwingGunNoAmmo;
                 }
                 case RecordTypeInts.NAM6:
                 {
-                    _SoundBlockLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundBlockLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundBlock;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _SoundIdleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundIdleLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundIdle;
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    _SoundEquipLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundEquipLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundEquip;
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _SoundUnequipLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundUnequipLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundUnequip;
                 }
                 case RecordTypeInts.WMS1:
@@ -11352,12 +11559,18 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.SoundUnequip)
                     {
-                        _SoundMod1Shoot3DLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _SoundMod1Shoot3DLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundMod1Shoot3D, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Weapon_FieldIndex.SoundMod1Shoot3D)
                     {
-                        _SoundMod1ShootDistLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _SoundMod1ShootDistLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Weapon_FieldIndex.SoundMod1ShootDist, type);
                     }
                     else
@@ -11366,12 +11579,18 @@ namespace Mutagen.Bethesda.Fallout3
                         {
                             case 0:
                             {
-                                _SoundMod1Shoot3DLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _SoundMod1Shoot3DLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundMod1Shoot3D, type);
                             }
                             case 1:
                             {
-                                _SoundMod1ShootDistLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _SoundMod1ShootDistLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Weapon_FieldIndex.SoundMod1ShootDist, type);
                             }
                             default:
@@ -11381,7 +11600,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.WMS2:
                 {
-                    _SoundMod1Shoot2DLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundMod1Shoot2DLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.SoundMod1Shoot2D;
                 }
                 case RecordTypeInts.DATA:

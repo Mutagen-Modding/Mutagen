@@ -1923,19 +1923,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxConcurrentQuests = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MaxConcurrentQuests = frame.ReadUInt32();
+                    }
                     return (int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxNumQuestsToRun = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MaxNumQuestsToRun = frame.ReadUInt32();
+                    }
                     return (int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HoursUntilReset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HoursUntilReset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)StoryManagerQuestNode_FieldIndex.HoursUntilReset;
                 }
                 case RecordTypeInts.NNAM:
@@ -2112,17 +2121,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _MaxConcurrentQuestsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxConcurrentQuestsLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MaxNumQuestsToRunLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxNumQuestsToRunLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HoursUntilResetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HoursUntilResetLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerQuestNode_FieldIndex.HoursUntilReset;
                 }
                 case RecordTypeInts.NNAM:

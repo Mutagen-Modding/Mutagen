@@ -1101,7 +1101,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)MannequinSkinSwapItem_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MannequinSkinSwapItem_FieldIndex.MaterialSwap;
                 }
                 default:
@@ -1253,7 +1256,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MSSA:
                 {
                     if (lastParsed.ShortCircuit((int)MannequinSkinSwapItem_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
-                    _MaterialSwapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialSwapLocation = (stream.Position - offset);
+                    }
                     return (int)MannequinSkinSwapItem_FieldIndex.MaterialSwap;
                 }
                 default:

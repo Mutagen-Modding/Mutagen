@@ -1986,13 +1986,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeakerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpeakerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ListenerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ListenerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 case RecordTypeInts.TNAM:
@@ -2011,7 +2017,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SRAF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraPath.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CameraPath.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.CameraPath;
                 }
                 case RecordTypeInts.WZMD:
@@ -2263,12 +2272,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SpeakerIdleAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerIdleAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _ListenerIdleAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ListenerIdleAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 case RecordTypeInts.TNAM:
@@ -2285,7 +2300,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SRAF:
                 {
-                    _CameraPathLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CameraPathLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.CameraPath;
                 }
                 case RecordTypeInts.WZMD:

@@ -1483,7 +1483,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:
@@ -1629,7 +1632,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _IdleAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:

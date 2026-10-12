@@ -1145,24 +1145,33 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)StoryManagerQuest_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)StoryManagerQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.ShortCircuit((int)StoryManagerQuest_FieldIndex.FNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FNAM = frame.ReadUInt32();
+                    }
                     return (int)StoryManagerQuest_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.ShortCircuit((int)StoryManagerQuest_FieldIndex.HoursUntilReset, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HoursUntilReset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        multiplier: null,
-                        divisor: 24f);
+                    if (contentLength >= 4)
+                    {
+                        item.HoursUntilReset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            multiplier: null,
+                            divisor: 24f);
+                    }
                     return (int)StoryManagerQuest_FieldIndex.HoursUntilReset;
                 }
                 default:
@@ -1312,19 +1321,28 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NNAM:
                 {
                     if (lastParsed.ShortCircuit((int)StoryManagerQuest_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.ShortCircuit((int)StoryManagerQuest_FieldIndex.FNAM, translationParams)) return ParseResult.Stop;
-                    _FNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FNAMLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerQuest_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.ShortCircuit((int)StoryManagerQuest_FieldIndex.HoursUntilReset, translationParams)) return ParseResult.Stop;
-                    _HoursUntilResetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HoursUntilResetLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerQuest_FieldIndex.HoursUntilReset;
                 }
                 default:

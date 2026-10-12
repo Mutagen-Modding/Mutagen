@@ -1087,14 +1087,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)FormLinkComponentLink_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)FormLinkComponentLink_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.FLFM:
                 {
                     if (lastParsed.ShortCircuit((int)FormLinkComponentLink_FieldIndex.LinkedForm, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LinkedForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LinkedForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)FormLinkComponentLink_FieldIndex.LinkedForm;
                 }
                 default:
@@ -1240,13 +1246,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLKW:
                 {
                     if (lastParsed.ShortCircuit((int)FormLinkComponentLink_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
-                    _KeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _KeywordLocation = (stream.Position - offset);
+                    }
                     return (int)FormLinkComponentLink_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.FLFM:
                 {
                     if (lastParsed.ShortCircuit((int)FormLinkComponentLink_FieldIndex.LinkedForm, translationParams)) return ParseResult.Stop;
-                    _LinkedFormLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LinkedFormLocation = (stream.Position - offset);
+                    }
                     return (int)FormLinkComponentLink_FieldIndex.LinkedForm;
                 }
                 default:

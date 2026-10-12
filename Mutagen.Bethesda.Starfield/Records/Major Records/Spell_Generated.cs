@@ -3119,9 +3119,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Spell_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.FULL:
@@ -3151,7 +3154,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Spell_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.PUSH:
@@ -3215,7 +3221,10 @@ namespace Mutagen.Bethesda.Starfield
                         || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.CastingPerk)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.MAGF = frame.ReadInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.MAGF = frame.ReadInt32();
+                        }
                         return new ParseResult((int)Spell_FieldIndex.MAGF, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
@@ -3234,7 +3243,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.MAGF = frame.ReadInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.MAGF = frame.ReadInt32();
+                                }
                                 return new ParseResult((int)Spell_FieldIndex.MAGF, nextRecordType);
                             case 1:
                                 item.Effects.SetTo(
@@ -3255,7 +3267,10 @@ namespace Mutagen.Bethesda.Starfield
                         || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MAGF)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.MUID = frame.ReadInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.MUID = frame.ReadInt32();
+                        }
                         return new ParseResult((int)Spell_FieldIndex.MUID, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
@@ -3274,7 +3289,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.MUID = frame.ReadInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.MUID = frame.ReadInt32();
+                                }
                                 return new ParseResult((int)Spell_FieldIndex.MUID, nextRecordType);
                             case 1:
                                 item.Effects.SetTo(
@@ -3551,7 +3569,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Spell_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.FULL:
@@ -3574,7 +3595,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Spell_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.PUSH:
@@ -3610,7 +3634,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.CastingPerk)
                     {
-                        _MAGFLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _MAGFLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Spell_FieldIndex.MAGF, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
@@ -3628,7 +3655,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                _MAGFLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _MAGFLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Spell_FieldIndex.MAGF, type);
                             }
                             case 1:
@@ -3650,7 +3680,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MAGF)
                     {
-                        _MUIDLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _MUIDLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Spell_FieldIndex.MUID, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Spell_FieldIndex.MUID)
@@ -3668,7 +3701,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                _MUIDLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _MUIDLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Spell_FieldIndex.MUID, type);
                             }
                             case 1:

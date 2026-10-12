@@ -2615,7 +2615,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.List.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.List.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Resource_FieldIndex.List;
                 }
                 case RecordTypeInts.SNAM:
@@ -2638,7 +2641,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TINC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SurfaceColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.SurfaceColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Resource_FieldIndex.SurfaceColor;
                 }
                 case RecordTypeInts.NNAM:
@@ -2664,19 +2670,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Resource_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Produce.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Produce.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Resource_FieldIndex.Produce;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Interval.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Interval.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Resource_FieldIndex.Interval;
                 }
                 case RecordTypeInts.XXXX:
@@ -2907,7 +2922,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _ListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ListLocation = (stream.Position - offset);
+                    }
                     return (int)Resource_FieldIndex.List;
                 }
                 case RecordTypeInts.SNAM:
@@ -2931,7 +2949,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TINC:
                 {
-                    _SurfaceColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SurfaceColorLocation = (stream.Position - offset);
+                    }
                     return (int)Resource_FieldIndex.SurfaceColor;
                 }
                 case RecordTypeInts.NNAM:
@@ -2946,17 +2967,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _ActorValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorValueLocation = (stream.Position - offset);
+                    }
                     return (int)Resource_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _ProduceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ProduceLocation = (stream.Position - offset);
+                    }
                     return (int)Resource_FieldIndex.Produce;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _IntervalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IntervalLocation = (stream.Position - offset);
+                    }
                     return (int)Resource_FieldIndex.Interval;
                 }
                 case RecordTypeInts.XXXX:

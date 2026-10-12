@@ -1070,7 +1070,10 @@ namespace Mutagen.Bethesda.Plugins.Records
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileSize = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.FileSize = frame.ReadUInt64();
+                    }
                     return (int)MasterReference_FieldIndex.FileSize;
                 }
                 default:
@@ -1220,7 +1223,10 @@ namespace Mutagen.Bethesda.Plugins.Records
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _FileSizeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _FileSizeLocation = (stream.Position - offset);
+                    }
                     return (int)MasterReference_FieldIndex.FileSize;
                 }
                 default:

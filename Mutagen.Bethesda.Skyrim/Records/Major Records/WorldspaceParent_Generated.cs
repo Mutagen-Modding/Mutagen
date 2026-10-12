@@ -1077,7 +1077,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)WorldspaceParent_FieldIndex.Worldspace, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.PNAM:
@@ -1231,7 +1234,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.ShortCircuit((int)WorldspaceParent_FieldIndex.Worldspace, translationParams)) return ParseResult.Stop;
-                    _WorldspaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorldspaceLocation = (stream.Position - offset);
+                    }
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.PNAM:

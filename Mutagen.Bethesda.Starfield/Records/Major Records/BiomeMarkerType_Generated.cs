@@ -1225,7 +1225,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)BiomeMarkerType_FieldIndex.MarkerType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BiomeMarkerType_FieldIndex.MarkerType;
                 }
                 case RecordTypeInts.KSIZ:
@@ -1385,7 +1388,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.KNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeMarkerType_FieldIndex.MarkerType, translationParams)) return ParseResult.Stop;
-                    _MarkerTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerTypeLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeMarkerType_FieldIndex.MarkerType;
                 }
                 case RecordTypeInts.KSIZ:

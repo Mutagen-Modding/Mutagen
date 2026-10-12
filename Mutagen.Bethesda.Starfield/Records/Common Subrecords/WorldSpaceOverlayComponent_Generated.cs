@@ -1231,7 +1231,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SurfaceBlock.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SurfaceBlock.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)WorldSpaceOverlayComponent_FieldIndex.SurfaceBlock;
                 }
                 default:
@@ -1378,7 +1381,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _SurfaceBlockLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SurfaceBlockLocation = (stream.Position - offset);
+                    }
                     return (int)WorldSpaceOverlayComponent_FieldIndex.SurfaceBlock;
                 }
                 default:

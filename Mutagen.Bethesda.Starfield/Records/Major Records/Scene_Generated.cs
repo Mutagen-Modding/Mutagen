@@ -4429,13 +4429,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Scene_FieldIndex.Quest;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LastActionIndex = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.LastActionIndex = frame.ReadUInt32();
+                    }
                     return (int)Scene_FieldIndex.LastActionIndex;
                 }
                 case RecordTypeInts.VNAM:
@@ -4471,7 +4477,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Scene_FieldIndex.Template;
                 }
                 case RecordTypeInts.BOLV:
@@ -4483,7 +4492,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)Scene_FieldIndex.Index;
                 }
                 case RecordTypeInts.SCPI:
@@ -4501,7 +4513,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SCPP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCPP.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SCPP.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Scene_FieldIndex.SCPP;
                 }
                 case RecordTypeInts.SCSP:
@@ -4872,12 +4887,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)Scene_FieldIndex.Quest;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _LastActionIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LastActionIndexLocation = (stream.Position - offset);
+                    }
                     return (int)Scene_FieldIndex.LastActionIndex;
                 }
                 case RecordTypeInts.VNAM:
@@ -4912,7 +4933,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Scene_FieldIndex.Template;
                 }
                 case RecordTypeInts.BOLV:
@@ -4922,7 +4946,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)Scene_FieldIndex.Index;
                 }
                 case RecordTypeInts.SCPI:
@@ -4937,7 +4964,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SCPP:
                 {
-                    _SCPPLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SCPPLocation = (stream.Position - offset);
+                    }
                     return (int)Scene_FieldIndex.SCPP;
                 }
                 case RecordTypeInts.SCSP:

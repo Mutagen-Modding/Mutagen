@@ -1428,7 +1428,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.DecibelValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        if (contentLength >= 4)
+                        {
+                            item.DecibelValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        }
                     }
                     return (int)MusicType_FieldIndex.DecibelValue;
                 }
@@ -1574,7 +1577,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _DecibelValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DecibelValueLocation = (stream.Position - offset);
+                    }
                     return (int)MusicType_FieldIndex.DecibelValue;
                 }
                 default:

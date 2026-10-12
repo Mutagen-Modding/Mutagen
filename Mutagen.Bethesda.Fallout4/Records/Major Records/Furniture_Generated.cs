@@ -4519,7 +4519,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -4578,13 +4581,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NTRM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.NativeTerminal;
                 }
                 case RecordTypeInts.FTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.ForcedLocRefType;
                 }
                 case RecordTypeInts.PNAM:
@@ -4596,7 +4605,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DrinkingWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DrinkingWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.DrinkingWater;
                 }
                 case RecordTypeInts.ATTX:
@@ -4675,7 +4687,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AssociatedForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.AssociatedForm;
                 }
                 case RecordTypeInts.ENAM:
@@ -5037,7 +5052,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -5091,12 +5109,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NTRM:
                 {
-                    _NativeTerminalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NativeTerminalLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.NativeTerminal;
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.ForcedLocRefType;
                 }
                 case RecordTypeInts.PNAM:
@@ -5106,7 +5130,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _DrinkingWaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DrinkingWaterLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.DrinkingWater;
                 }
                 case RecordTypeInts.ATTX:
@@ -5169,7 +5196,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _AssociatedFormLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AssociatedFormLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.AssociatedForm;
                 }
                 case RecordTypeInts.ENAM:

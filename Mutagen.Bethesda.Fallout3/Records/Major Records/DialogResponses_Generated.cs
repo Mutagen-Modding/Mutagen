@@ -3199,19 +3199,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.QSTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Quest;
                 }
                 case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousInfo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousInfo.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousInfo;
                 }
                 case RecordTypeInts.NAME:
@@ -3291,7 +3300,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SNDD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnusedSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnusedSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.UnusedSound;
                 }
                 case RecordTypeInts.RNAM:
@@ -3306,13 +3318,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorValuePerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActorValuePerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.ActorValuePerk;
                 }
                 case RecordTypeInts.DNAM:
@@ -3503,17 +3521,26 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.QSTI:
                 {
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Quest;
                 }
                 case RecordTypeInts.TPIC:
                 {
-                    _PreviousTopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousTopicLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PreviousInfoLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousInfoLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousInfo;
                 }
                 case RecordTypeInts.NAME:
@@ -3615,7 +3642,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SNDD:
                 {
-                    _UnusedSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnusedSoundLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.UnusedSound;
                 }
                 case RecordTypeInts.RNAM:
@@ -3625,12 +3655,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _SpeakerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _ActorValuePerkLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorValuePerkLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.ActorValuePerk;
                 }
                 case RecordTypeInts.DNAM:

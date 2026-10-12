@@ -1103,14 +1103,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value1 = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.Value1 = frame.ReadBoolean();
+                    }
                     return (int)BoolGameplayOptionData_FieldIndex.Value1;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value2 = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.Value2 = frame.ReadBoolean();
+                    }
                     return (int)BoolGameplayOptionData_FieldIndex.Value2;
                 }
                 default:
@@ -1236,13 +1242,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
-                    _Value1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _Value1Location = (stream.Position - offset);
+                    }
                     return (int)BoolGameplayOptionData_FieldIndex.Value1;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
-                    _Value2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _Value2Location = (stream.Position - offset);
+                    }
                     return (int)BoolGameplayOptionData_FieldIndex.Value2;
                 }
                 default:

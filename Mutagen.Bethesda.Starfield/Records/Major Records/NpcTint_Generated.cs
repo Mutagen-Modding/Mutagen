@@ -1323,13 +1323,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TintColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.TintColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)NpcTint_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TintIntensity = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.TintIntensity = frame.ReadUInt32();
+                    }
                     return (int)NpcTint_FieldIndex.TintIntensity;
                 }
                 default:
@@ -1510,12 +1516,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _TintColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TintColorLocation = (stream.Position - offset);
+                    }
                     return (int)NpcTint_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    _TintIntensityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TintIntensityLocation = (stream.Position - offset);
+                    }
                     return (int)NpcTint_FieldIndex.TintIntensity;
                 }
                 default:

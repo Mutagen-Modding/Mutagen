@@ -1413,35 +1413,50 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PlayerChoice, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PlayerChoice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PlayerChoice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PlayerChoice;
                 }
                 case RecordTypeInts.PPST:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PPST, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PPST.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PPST.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PPST;
                 }
                 case RecordTypeInts.PNST:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PNST, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNST.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PNST.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PNST;
                 }
                 case RecordTypeInts.PASP:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.StartScene, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.StartScene;
                 }
                 case RecordTypeInts.PAPI:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PhaseIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PhaseIndex = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.PhaseIndex = frame.ReadUInt32();
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PhaseIndex;
                 }
                 case RecordTypeInts.PAPN:
@@ -1458,7 +1473,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.NpcResponse, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NpcResponse.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NpcResponse.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.NpcResponse;
                 }
                 default:
@@ -1624,31 +1642,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ESCE:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PlayerChoice, translationParams)) return ParseResult.Stop;
-                    _PlayerChoiceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PlayerChoiceLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PlayerChoice;
                 }
                 case RecordTypeInts.PPST:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PPST, translationParams)) return ParseResult.Stop;
-                    _PPSTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PPSTLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PPST;
                 }
                 case RecordTypeInts.PNST:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PNST, translationParams)) return ParseResult.Stop;
-                    _PNSTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PNSTLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PNST;
                 }
                 case RecordTypeInts.PASP:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.StartScene, translationParams)) return ParseResult.Stop;
-                    _StartSceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _StartSceneLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.StartScene;
                 }
                 case RecordTypeInts.PAPI:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.PhaseIndex, translationParams)) return ParseResult.Stop;
-                    _PhaseIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PhaseIndexLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.PhaseIndex;
                 }
                 case RecordTypeInts.PAPN:
@@ -1660,7 +1693,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ESCS:
                 {
                     if (lastParsed.ShortCircuit((int)PlayerDialogueSceneActionItem_FieldIndex.NpcResponse, translationParams)) return ParseResult.Stop;
-                    _NpcResponseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NpcResponseLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneActionItem_FieldIndex.NpcResponse;
                 }
                 default:

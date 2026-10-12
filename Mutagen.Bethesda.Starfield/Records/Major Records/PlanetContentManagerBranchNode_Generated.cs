@@ -2575,25 +2575,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChildSelection = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ChildSelection = frame.ReadInt32();
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.ChildSelection;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CountCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CountCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.CountCurve;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DistributionCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DistributionCurve.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.DistributionCurve;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ConsumeRequestEvenOnFailure = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.ConsumeRequestEvenOnFailure = frame.ReadBoolean();
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure;
                 }
                 case RecordTypeInts.PCCB:
@@ -2632,13 +2644,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PRTN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ParentNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.ParentNode;
                 }
                 case RecordTypeInts.PRVN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.PreviousNode;
                 }
                 default:
@@ -2821,22 +2839,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _ChildSelectionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ChildSelectionLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.ChildSelection;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _CountCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CountCurveLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.CountCurve;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _DistributionCurveLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DistributionCurveLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.DistributionCurve;
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _ConsumeRequestEvenOnFailureLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _ConsumeRequestEvenOnFailureLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.ConsumeRequestEvenOnFailure;
                 }
                 case RecordTypeInts.PCCB:
@@ -2879,12 +2909,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PRTN:
                 {
-                    _ParentNodeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentNodeLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.ParentNode;
                 }
                 case RecordTypeInts.PRVN:
                 {
-                    _PreviousNodeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousNodeLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerBranchNode_FieldIndex.PreviousNode;
                 }
                 default:

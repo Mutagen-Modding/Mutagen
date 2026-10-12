@@ -1,6 +1,7 @@
 using Loqui.Generation;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog.StructuredStrings;
@@ -23,6 +24,18 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
     public List<ParamTest> AdditionalCopyInParams = new List<ParamTest>();
     public List<ParamTest> AdditionalCopyInRetParams = new List<ParamTest>();
     public abstract Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen);
+
+    public virtual Task<int?> ShortestReadableContent(ObjectGeneration objGen, TypeGeneration typeGen) => Task.FromResult<int?>(null);
+
+    protected async Task<IDisposable> ContentLengthGuard(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor contentLengthAccessor)
+    {
+        var length = await ShortestReadableContent(objGen, typeGen);
+        if (length != null)
+        {
+            sb.AppendLine($"if ({contentLengthAccessor} >= {length})");
+        }
+        return sb.CurlyBrace(doIt: length != null);
+    }
 
     public virtual bool AllowDirectWrite(
         ObjectGeneration objGen,
@@ -123,7 +136,10 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
                 {
                     sb.AppendLine($"stream.ReadSubrecord(); // Skip marker");
                 }
-                sb.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
+                using (await ContentLengthGuard(sb, objGen, typeGen, $"stream.{nameof(StreamHeaderMixIn.GetSubrecordHeader)}().{nameof(SubrecordHeader.ContentLength)}"))
+                {
+                    sb.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
+                }
                 if (data.MarkerType.HasValue)
                 {
                     sb.AppendLine($"stream.ReadSubrecord(); // Skip record");

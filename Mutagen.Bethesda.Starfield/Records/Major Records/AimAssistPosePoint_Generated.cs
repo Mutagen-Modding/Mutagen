@@ -1213,14 +1213,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AimAssistPosePoint_FieldIndex.Radius;
                 }
                 case RecordTypeInts.WTMX:
                 {
                     if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AimAssistPosePoint_FieldIndex.Weight;
                 }
                 default:
@@ -1385,13 +1391,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RADR:
                 {
                     if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
-                    _RadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadiusLocation = (stream.Position - offset);
+                    }
                     return (int)AimAssistPosePoint_FieldIndex.Radius;
                 }
                 case RecordTypeInts.WTMX:
                 {
                     if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
-                    _WeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeightLocation = (stream.Position - offset);
+                    }
                     return (int)AimAssistPosePoint_FieldIndex.Weight;
                 }
                 default:

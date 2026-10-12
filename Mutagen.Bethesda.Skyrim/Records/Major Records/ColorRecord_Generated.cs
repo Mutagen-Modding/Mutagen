@@ -1538,15 +1538,21 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)ColorRecord_FieldIndex.Color;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Playable = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 4);
+                    if (contentLength >= 4)
+                    {
+                        item.Playable = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 4);
+                    }
                     return (int)ColorRecord_FieldIndex.Playable;
                 }
                 default:
@@ -1703,12 +1709,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)ColorRecord_FieldIndex.Color;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _PlayableLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PlayableLocation = (stream.Position - offset);
+                    }
                     return (int)ColorRecord_FieldIndex.Playable;
                 }
                 default:

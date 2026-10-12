@@ -1659,7 +1659,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationFaceArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AnimationFaceArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)VoiceType_FieldIndex.AnimationFaceArchetype;
                 }
                 case RecordTypeInts.PNAM:
@@ -1836,7 +1839,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _AnimationFaceArchetypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AnimationFaceArchetypeLocation = (stream.Position - offset);
+                    }
                     return (int)VoiceType_FieldIndex.AnimationFaceArchetype;
                 }
                 case RecordTypeInts.PNAM:

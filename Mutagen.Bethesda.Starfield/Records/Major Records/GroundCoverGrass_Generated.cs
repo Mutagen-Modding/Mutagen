@@ -1081,14 +1081,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.Grass, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Grass.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Grass.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)GroundCoverGrass_FieldIndex.Grass;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.OverrideDensity, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OverrideDensity = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.OverrideDensity = frame.ReadInt16();
+                    }
                     return (int)GroundCoverGrass_FieldIndex.OverrideDensity;
                 }
                 default:
@@ -1234,13 +1240,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.Grass, translationParams)) return ParseResult.Stop;
-                    _GrassLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GrassLocation = (stream.Position - offset);
+                    }
                     return (int)GroundCoverGrass_FieldIndex.Grass;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.OverrideDensity, translationParams)) return ParseResult.Stop;
-                    _OverrideDensityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _OverrideDensityLocation = (stream.Position - offset);
+                    }
                     return (int)GroundCoverGrass_FieldIndex.OverrideDensity;
                 }
                 default:

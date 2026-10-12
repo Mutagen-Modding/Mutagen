@@ -3102,25 +3102,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousDialog;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SharedDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.SharedDialog;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DialogGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.DialogGroup;
                 }
                 case RecordTypeInts.IOVR:
@@ -3166,13 +3178,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TSCE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.StartScene;
                 }
                 case RecordTypeInts.INTV:
@@ -3184,19 +3202,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ALFA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedAlias = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedAlias = frame.ReadInt32();
+                    }
                     return (int)DialogResponses_FieldIndex.ForcedAlias;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AudioOutputOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AudioOutputOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
                 case RecordTypeInts.GREE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GreetDistance = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.GreetDistance = frame.ReadUInt32();
+                    }
                     return (int)DialogResponses_FieldIndex.GreetDistance;
                 }
                 case RecordTypeInts.TIQS:
@@ -3224,7 +3251,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MODQ:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResetGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ResetGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.ResetGlobal;
                 }
                 case RecordTypeInts.INAM:
@@ -3466,22 +3496,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TPIC:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PreviousDialogLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousDialogLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousDialog;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _SharedDialogLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SharedDialogLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.SharedDialog;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _DialogGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DialogGroupLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.DialogGroup;
                 }
                 case RecordTypeInts.IOVR:
@@ -3520,12 +3562,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _SpeakerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TSCE:
                 {
-                    _StartSceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _StartSceneLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.StartScene;
                 }
                 case RecordTypeInts.INTV:
@@ -3535,17 +3583,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALFA:
                 {
-                    _ForcedAliasLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedAliasLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.ForcedAlias;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _AudioOutputOverrideLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AudioOutputOverrideLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
                 case RecordTypeInts.GREE:
                 {
-                    _GreetDistanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GreetDistanceLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.GreetDistance;
                 }
                 case RecordTypeInts.TIQS:
@@ -3565,7 +3622,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MODQ:
                 {
-                    _ResetGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ResetGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.ResetGlobal;
                 }
                 case RecordTypeInts.INAM:

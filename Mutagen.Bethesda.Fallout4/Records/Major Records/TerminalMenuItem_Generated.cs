@@ -1598,7 +1598,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ITID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ItemId = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.ItemId = frame.ReadUInt16();
+                    }
                     return (int)TerminalMenuItem_FieldIndex.ItemId;
                 }
                 case RecordTypeInts.UNAM:
@@ -1624,7 +1627,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Submenu.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Submenu.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)TerminalMenuItem_FieldIndex.Submenu;
                 }
                 case RecordTypeInts.CTDA:
@@ -1816,7 +1822,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ITID:
                 {
-                    _ItemIdLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _ItemIdLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuItem_FieldIndex.ItemId;
                 }
                 case RecordTypeInts.UNAM:
@@ -1831,7 +1840,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _SubmenuLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SubmenuLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuItem_FieldIndex.Submenu;
                 }
                 case RecordTypeInts.CTDA:

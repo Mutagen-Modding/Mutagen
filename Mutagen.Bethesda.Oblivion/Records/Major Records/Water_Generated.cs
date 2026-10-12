@@ -1841,7 +1841,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Opacity = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.Opacity = frame.ReadUInt8();
+                    }
                     return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
@@ -1864,7 +1867,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DATA:
@@ -2052,7 +2058,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _OpacityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _OpacityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
@@ -2067,7 +2076,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DATA:

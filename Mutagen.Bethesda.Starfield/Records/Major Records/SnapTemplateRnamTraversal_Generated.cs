@@ -1180,7 +1180,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SnapTemplateRnamTraversal_FieldIndex.Traversal, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Traversal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Traversal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SnapTemplateRnamTraversal_FieldIndex.Traversal;
                 }
                 case RecordTypeInts.SNAM:
@@ -1333,7 +1336,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.ShortCircuit((int)SnapTemplateRnamTraversal_FieldIndex.Traversal, translationParams)) return ParseResult.Stop;
-                    _TraversalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TraversalLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateRnamTraversal_FieldIndex.Traversal;
                 }
                 case RecordTypeInts.SNAM:

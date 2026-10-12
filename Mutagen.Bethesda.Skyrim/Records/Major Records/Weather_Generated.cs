@@ -6256,13 +6256,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Precipitation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Precipitation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VisualEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VisualEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
@@ -6512,7 +6518,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SunGlareLensFlare.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SunGlareLensFlare.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
@@ -7033,12 +7042,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _PrecipitationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PrecipitationLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _VisualEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VisualEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
@@ -7175,7 +7190,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _SunGlareLensFlareLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SunGlareLensFlareLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
                 default:

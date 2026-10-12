@@ -1426,7 +1426,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Index = frame.ReadUInt16();
+                    }
                     return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
@@ -1449,7 +1452,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.PresetDefault, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PresetDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PresetDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
@@ -1618,7 +1624,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINI:
                 {
                     if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
@@ -1636,7 +1645,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TIND:
                 {
                     if (lastParsed.ShortCircuit((int)TintAssets_FieldIndex.PresetDefault, translationParams)) return ParseResult.Stop;
-                    _PresetDefaultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PresetDefaultLocation = (stream.Position - offset);
+                    }
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:

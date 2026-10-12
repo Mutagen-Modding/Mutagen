@@ -2039,37 +2039,55 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AffinityEvent_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EventSize.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EventSize.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AffinityEvent_FieldIndex.EventSize;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DistanceToPlayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DistanceToPlayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AffinityEvent_FieldIndex.DistanceToPlayer;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CooldownInMinutes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CooldownInMinutes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AffinityEvent_FieldIndex.CooldownInMinutes;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RequiredFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RequiredFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AffinityEvent_FieldIndex.RequiredFaction;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AddToEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AddToEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AffinityEvent_FieldIndex.AddToEvent;
                 }
                 default:
@@ -2255,32 +2273,50 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ActorValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorValueLocation = (stream.Position - offset);
+                    }
                     return (int)AffinityEvent_FieldIndex.ActorValue;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EventSizeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EventSizeLocation = (stream.Position - offset);
+                    }
                     return (int)AffinityEvent_FieldIndex.EventSize;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DistanceToPlayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DistanceToPlayerLocation = (stream.Position - offset);
+                    }
                     return (int)AffinityEvent_FieldIndex.DistanceToPlayer;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CooldownInMinutesLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CooldownInMinutesLocation = (stream.Position - offset);
+                    }
                     return (int)AffinityEvent_FieldIndex.CooldownInMinutes;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _RequiredFactionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RequiredFactionLocation = (stream.Position - offset);
+                    }
                     return (int)AffinityEvent_FieldIndex.RequiredFaction;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _AddToEventLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AddToEventLocation = (stream.Position - offset);
+                    }
                     return (int)AffinityEvent_FieldIndex.AddToEvent;
                 }
                 default:

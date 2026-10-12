@@ -1081,14 +1081,20 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Item, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RecipeIngredient_FieldIndex.Item;
                 }
                 case RecordTypeInts.RCQY:
                 {
                     if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Quantity, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quantity = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Quantity = frame.ReadUInt32();
+                    }
                     return (int)RecipeIngredient_FieldIndex.Quantity;
                 }
                 default:
@@ -1234,13 +1240,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RCIL:
                 {
                     if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Item, translationParams)) return ParseResult.Stop;
-                    _ItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ItemLocation = (stream.Position - offset);
+                    }
                     return (int)RecipeIngredient_FieldIndex.Item;
                 }
                 case RecordTypeInts.RCQY:
                 {
                     if (lastParsed.ShortCircuit((int)RecipeIngredient_FieldIndex.Quantity, translationParams)) return ParseResult.Stop;
-                    _QuantityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuantityLocation = (stream.Position - offset);
+                    }
                     return (int)RecipeIngredient_FieldIndex.Quantity;
                 }
                 default:

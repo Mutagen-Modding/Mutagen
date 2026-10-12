@@ -3959,7 +3959,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.CTDA:
@@ -3995,25 +3998,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CreatedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CreatedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.CreatedObject;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmountProduced = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.AmountProduced = frame.ReadUInt16();
+                    }
                     return (int)ConstructibleObject_FieldIndex.AmountProduced;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuSortOrder = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MenuSortOrder = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ConstructibleObject_FieldIndex.MenuSortOrder;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Tier = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.Tier = frame.ReadUInt8();
+                    }
                     return (int)ConstructibleObject_FieldIndex.Tier;
                 }
                 case RecordTypeInts.CUSH:
@@ -4055,37 +4070,55 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Value = frame.ReadUInt32();
+                    }
                     return (int)ConstructibleObject_FieldIndex.Value;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MenuArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.MenuArtObject;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LearnedFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LearnedFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.LearnedFrom;
                 }
                 case RecordTypeInts.CVT0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseReturnScaleTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseReturnScaleTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.BaseReturnScaleTable;
                 }
                 case RecordTypeInts.LRNC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LearnChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LearnChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.LearnChance;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxBuildCountGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaxBuildCountGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.MaxBuildCountGlobal;
                 }
                 case RecordTypeInts.FNAM:
@@ -4101,7 +4134,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CIFK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InstantiationFilterKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InstantiationFilterKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword;
                 }
                 case RecordTypeInts.RECF:
@@ -4348,7 +4384,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _WorkbenchKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorkbenchKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.CTDA:
@@ -4388,22 +4427,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CreatedObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CreatedObjectLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.CreatedObject;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _AmountProducedLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _AmountProducedLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.AmountProduced;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _MenuSortOrderLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MenuSortOrderLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.MenuSortOrder;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _TierLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.Tier;
                 }
                 case RecordTypeInts.CUSH:
@@ -4450,32 +4501,50 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _ValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ValueLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.Value;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _MenuArtObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MenuArtObjectLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.MenuArtObject;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _LearnedFromLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LearnedFromLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.LearnedFrom;
                 }
                 case RecordTypeInts.CVT0:
                 {
-                    _BaseReturnScaleTableLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseReturnScaleTableLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.BaseReturnScaleTable;
                 }
                 case RecordTypeInts.LRNC:
                 {
-                    _LearnChanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LearnChanceLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.LearnChance;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _MaxBuildCountGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxBuildCountGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.MaxBuildCountGlobal;
                 }
                 case RecordTypeInts.FNAM:
@@ -4490,7 +4559,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CIFK:
                 {
-                    _InstantiationFilterKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InstantiationFilterKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword;
                 }
                 case RecordTypeInts.RECF:

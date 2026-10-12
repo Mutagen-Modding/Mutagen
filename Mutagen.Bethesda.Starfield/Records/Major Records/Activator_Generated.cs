@@ -4396,9 +4396,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Activator_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4414,25 +4417,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNTP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.SnapTemplate;
                 }
                 case RecordTypeInts.SNBH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SnapBehavior.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SnapBehavior.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.SnapBehavior;
                 }
                 case RecordTypeInts.DEFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)Activator_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -4515,13 +4530,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NTRM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.NativeTerminal;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Activator_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.WMAT:
@@ -4559,7 +4580,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WTFM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.Water;
                 }
                 case RecordTypeInts.FNAM:
@@ -4573,7 +4597,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActivationAngle = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.ActivationAngle = frame.ReadUInt16();
+                    }
                     return (int)Activator_FieldIndex.ActivationAngle;
                 }
                 case RecordTypeInts.INAM:
@@ -4851,7 +4878,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4866,22 +4896,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNTP:
                 {
-                    _SnapTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SnapTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.SnapTemplate;
                 }
                 case RecordTypeInts.SNBH:
                 {
-                    _SnapBehaviorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SnapBehaviorLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.SnapBehavior;
                 }
                 case RecordTypeInts.DEFL:
                 {
-                    _DefaultLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultLayerLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -4958,12 +5000,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NTRM:
                 {
-                    _NativeTerminalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NativeTerminalLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.NativeTerminal;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _MarkerColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerColorLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.WMAT:
@@ -4996,7 +5044,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.WTFM:
                 {
-                    _WaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.Water;
                 }
                 case RecordTypeInts.FNAM:
@@ -5006,7 +5057,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _ActivationAngleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _ActivationAngleLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.ActivationAngle;
                 }
                 case RecordTypeInts.INAM:

@@ -1033,7 +1033,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.ShortCircuit((int)ScriptVariableReference_FieldIndex.VariableIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VariableIndex = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.VariableIndex = frame.ReadInt32();
+                    }
                     return (int)ScriptVariableReference_FieldIndex.VariableIndex;
                 }
                 default:
@@ -1155,7 +1158,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRV:
                 {
                     if (lastParsed.ShortCircuit((int)ScriptVariableReference_FieldIndex.VariableIndex, translationParams)) return ParseResult.Stop;
-                    _VariableIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VariableIndexLocation = (stream.Position - offset);
+                    }
                     return (int)ScriptVariableReference_FieldIndex.VariableIndex;
                 }
                 default:

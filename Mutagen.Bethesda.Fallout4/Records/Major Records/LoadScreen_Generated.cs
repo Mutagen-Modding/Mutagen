@@ -1993,13 +1993,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadingScreenNif.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoadingScreenNif.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Transform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Transform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LoadScreen_FieldIndex.Transform;
                 }
                 case RecordTypeInts.ONAM:
@@ -2193,12 +2199,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _LoadingScreenNifLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoadingScreenNifLocation = (stream.Position - offset);
+                    }
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TransformLocation = (stream.Position - offset);
+                    }
                     return (int)LoadScreen_FieldIndex.Transform;
                 }
                 case RecordTypeInts.ONAM:

@@ -1236,7 +1236,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EdgeFallOff = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EdgeFallOff = frame.ReadUInt32();
+                    }
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
@@ -1252,7 +1255,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Unknown = frame.ReadUInt32();
+                    }
                     return (int)RegionArea_FieldIndex.Unknown;
                 }
                 default:
@@ -1398,7 +1404,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.RPLI:
                 {
                     if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
-                    _EdgeFallOffLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EdgeFallOffLocation = (stream.Position - offset);
+                    }
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
@@ -1413,7 +1422,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _UnknownLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnknownLocation = (stream.Position - offset);
+                    }
                     return (int)RegionArea_FieldIndex.Unknown;
                 }
                 default:

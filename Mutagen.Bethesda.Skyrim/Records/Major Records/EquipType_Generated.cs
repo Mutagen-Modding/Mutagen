@@ -1563,9 +1563,12 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseAllParents = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 4);
+                    if (contentLength >= 4)
+                    {
+                        item.UseAllParents = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 4);
+                    }
                     return (int)EquipType_FieldIndex.UseAllParents;
                 }
                 default:
@@ -1713,7 +1716,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _UseAllParentsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseAllParentsLocation = (stream.Position - offset);
+                    }
                     return (int)EquipType_FieldIndex.UseAllParents;
                 }
                 default:
