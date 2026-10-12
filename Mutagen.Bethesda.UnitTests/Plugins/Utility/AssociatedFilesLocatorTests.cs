@@ -161,4 +161,28 @@ public class AssociatedFilesLocatorTests
         sut.GetAssociatedFiles(existingModPath, AssociatedModFileCategory.SplitPlugins)
             .ShouldBeEmpty();
     }
+
+    [Fact]
+    public void UpperCaseFileNames()
+    {
+        using var dir = TestPathing.GetTempFolder(nameof(AssociatedFilesLocatorTests));
+        var modPath = new ModPath(Path.Combine(dir.Dir.Path, "MyMod.esp"));
+        var associated = new[]
+        {
+            modPath.Path.Path,
+            Path.Combine(dir.Dir.Path, "Strings", "MyMod_English.STRINGS"),
+            Path.Combine(dir.Dir.Path, "MyMod.BSA"),
+            Path.Combine(dir.Dir.Path, "MyMod - Textures.BA2"),
+            Path.Combine(dir.Dir.Path, "MyMod_2.ESP"),
+        };
+        Directory.CreateDirectory(Path.Combine(dir.Dir.Path, "Strings"));
+        foreach (var file in associated)
+        {
+            File.WriteAllText(file, string.Empty);
+        }
+
+        new AssociatedFilesLocator(new FileSystem()).GetAssociatedFiles(modPath)
+            .Select(x => x.Path)
+            .ShouldBe(associated, ignoreOrder: true);
+    }
 }

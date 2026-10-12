@@ -22,6 +22,13 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
     private readonly IGetApplicableArchivePaths _getApplicableArchivePaths;
     private readonly IFileSystem _fileSystem;
     private readonly StringsReadParameters? _readParameters;
+    private static readonly EnumerationOptions IgnoringCase = new()
+    {
+        MatchCasing = MatchCasing.CaseInsensitive,
+        MatchType = MatchType.Win32,
+        AttributesToSkip = 0,
+        IgnoreInaccessible = false,
+    };
 
     public StringsFolderLookupFactory(
         IGameReleaseContext gameRelease,
@@ -61,7 +68,9 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                     var bundle = new StringsFolderLookupOverlay.DictionaryBundle();
                     if (_fileSystem.Directory.Exists(stringsFolderPath.Value))
                     {
-                        var stringsFilesEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}", fileSystem: _fileSystem);
+                        var stringsFilesEnumer = _fileSystem.Directory
+                            .EnumerateFiles(stringsFolderPath.Value, $"{modKey.Name}*{StringsUtility.StringsFileExtension}", IgnoringCase)
+                            .Select(path => new FilePath(path));
                         foreach (var file in stringsFilesEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
