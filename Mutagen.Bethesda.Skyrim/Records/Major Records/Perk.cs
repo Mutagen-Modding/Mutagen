@@ -445,18 +445,20 @@ partial class PerkBinaryWriteTranslation
                         writer.Write((byte)paramType);
                     }
                 }
-                        
-                if (effect is PerkEntryPointAddActivateChoice choice)
+            }
+            if (effect.ButtonLabel != null)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
                 {
-                    if (choice.ButtonLabel != null)
-                    {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
-                        {
-                            StringBinaryTranslation.Instance.Write(writer, choice.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
-                        }
-                    }
-                    choice.Flags.WriteToBinary(writer);
+                    StringBinaryTranslation.Instance.Write(writer, effect.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
                 }
+            }
+            if (effect is PerkEntryPointAddActivateChoice choice)
+            {
+                choice.Flags.WriteToBinary(writer);
+            }
+            if (effect is APerkEntryPointEffect)
+            {
                 switch (effect)
                 {
                     case PerkEntryPointModifyValue modVal:
