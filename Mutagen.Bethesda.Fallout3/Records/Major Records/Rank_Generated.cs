@@ -1224,7 +1224,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)Rank_FieldIndex.RankNumber, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RankNumber = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.RankNumber = frame.ReadInt32();
+                    }
                     return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
@@ -1406,7 +1409,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.ShortCircuit((int)Rank_FieldIndex.RankNumber, translationParams)) return ParseResult.Stop;
-                    _RankNumberLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RankNumberLocation = (stream.Position - offset);
+                    }
                     return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:

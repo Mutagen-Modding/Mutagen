@@ -1050,7 +1050,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.ShortCircuit((int)ScriptObjectReference_FieldIndex.Reference, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ScriptObjectReference_FieldIndex.Reference;
                 }
                 default:
@@ -1173,7 +1176,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRO:
                 {
                     if (lastParsed.ShortCircuit((int)ScriptObjectReference_FieldIndex.Reference, translationParams)) return ParseResult.Stop;
-                    _ReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)ScriptObjectReference_FieldIndex.Reference;
                 }
                 default:

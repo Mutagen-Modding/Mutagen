@@ -2654,13 +2654,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Key_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Key_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -2914,12 +2920,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:

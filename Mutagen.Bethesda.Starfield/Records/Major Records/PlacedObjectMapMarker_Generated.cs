@@ -1423,7 +1423,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VNAM = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.VNAM = frame.ReadUInt16();
+                    }
                     return (int)PlacedObjectMapMarker_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.UNAM:
@@ -1440,7 +1443,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VISI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VISI = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.VISI = frame.ReadUInt8();
+                    }
                     return (int)PlacedObjectMapMarker_FieldIndex.VISI;
                 }
                 default:
@@ -1627,7 +1633,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _VNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObjectMapMarker_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.UNAM:
@@ -1637,7 +1646,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VISI:
                 {
-                    _VISILocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _VISILocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObjectMapMarker_FieldIndex.VISI;
                 }
                 default:

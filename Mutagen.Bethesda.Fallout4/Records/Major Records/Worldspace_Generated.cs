@@ -5525,25 +5525,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.WCTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FixedDimensionsCenterCell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FixedDimensionsCenterCell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Worldspace_FieldIndex.FixedDimensionsCenterCell;
                 }
                 case RecordTypeInts.LTMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteriorLighting.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InteriorLighting.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.InteriorLighting;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Location;
                 }
                 case RecordTypeInts.WNAM:
@@ -5556,25 +5568,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Climate;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Water;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LodWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.LodWater;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LodWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Worldspace_FieldIndex.LodWaterHeight;
                 }
                 case RecordTypeInts.DNAM:
@@ -5619,7 +5643,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAMA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DistantLodMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DistantLodMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Worldspace_FieldIndex.DistantLodMultiplier;
                 }
                 case RecordTypeInts.DATA:
@@ -5651,7 +5678,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Music;
                 }
                 case RecordTypeInts.NNAM:
@@ -6046,22 +6076,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.WCTR:
                 {
-                    _FixedDimensionsCenterCellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FixedDimensionsCenterCellLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.FixedDimensionsCenterCell;
                 }
                 case RecordTypeInts.LTMP:
                 {
-                    _InteriorLightingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InteriorLightingLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.InteriorLighting;
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterZoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterZoneLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Location;
                 }
                 case RecordTypeInts.WNAM:
@@ -6074,22 +6116,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ClimateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClimateLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Climate;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _WaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Water;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _LodWaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LodWaterLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.LodWater;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _LodWaterHeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LodWaterHeightLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.LodWaterHeight;
                 }
                 case RecordTypeInts.DNAM:
@@ -6125,7 +6179,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAMA:
                 {
-                    _DistantLodMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DistantLodMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.DistantLodMultiplier;
                 }
                 case RecordTypeInts.DATA:
@@ -6145,7 +6202,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Music;
                 }
                 case RecordTypeInts.NNAM:

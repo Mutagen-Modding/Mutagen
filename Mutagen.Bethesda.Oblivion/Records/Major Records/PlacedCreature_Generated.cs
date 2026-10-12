@@ -2018,25 +2018,37 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.Base;
                 }
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)PlacedCreature_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XGLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlobalVariable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GlobalVariable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.GlobalVariable;
                 }
                 case RecordTypeInts.XLOD:
@@ -2058,7 +2070,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedCreature_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:
@@ -2230,22 +2245,34 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.NAME:
                 {
-                    _BaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Base;
                 }
                 case RecordTypeInts.XOWN:
                 {
-                    _OwnerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XGLB:
                 {
-                    _GlobalVariableLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GlobalVariableLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.GlobalVariable;
                 }
                 case RecordTypeInts.XLOD:
@@ -2265,7 +2292,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.XSCL:
                 {
-                    _ScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScaleLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:

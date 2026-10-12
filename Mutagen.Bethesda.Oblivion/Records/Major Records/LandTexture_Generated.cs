@@ -1702,7 +1702,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSpecularExponent = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.TextureSpecularExponent = frame.ReadUInt8();
+                    }
                     return (int)LandTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
@@ -1867,7 +1870,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _TextureSpecularExponentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _TextureSpecularExponentLocation = (stream.Position - offset);
+                    }
                     return (int)LandTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:

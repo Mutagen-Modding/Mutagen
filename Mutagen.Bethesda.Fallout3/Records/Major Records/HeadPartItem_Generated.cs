@@ -1392,7 +1392,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartItem_FieldIndex.Head, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Head.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Head.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)HeadPartItem_FieldIndex.Head;
                 }
                 case RecordTypeInts.MODL:
@@ -1567,7 +1570,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartItem_FieldIndex.Head, translationParams)) return ParseResult.Stop;
-                    _HeadLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPartItem_FieldIndex.Head;
                 }
                 case RecordTypeInts.MODL:

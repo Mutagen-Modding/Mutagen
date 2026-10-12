@@ -4448,7 +4448,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnarmedAttackEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnarmedAttackEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.UnarmedAttackEffect;
                 }
                 case RecordTypeInts.EAMT:
@@ -4500,19 +4503,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Voice.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.Voice;
                 }
                 case RecordTypeInts.TPLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.Template;
                 }
                 case RecordTypeInts.DEST:
@@ -4526,7 +4538,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -4578,37 +4593,55 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackReach = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.AttackReach = frame.ReadUInt8();
+                    }
                     return (int)Creature_FieldIndex.AttackReach;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TurningSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.TurningSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Creature_FieldIndex.TurningSpeed;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Creature_FieldIndex.BaseScale;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FootWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Creature_FieldIndex.FootWeight;
                 }
                 case RecordTypeInts.NAM4:
@@ -4630,7 +4663,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.CSCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InheritsSoundFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InheritsSoundFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.InheritsSoundFrom;
                 }
                 case RecordTypeInts.CSDT:
@@ -4647,13 +4683,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImpactDataset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.ImpactDataset;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MeleeWeaponList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MeleeWeaponList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Creature_FieldIndex.MeleeWeaponList;
                 }
                 default:
@@ -4932,7 +4974,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _UnarmedAttackEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnarmedAttackEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.UnarmedAttackEffect;
                 }
                 case RecordTypeInts.EAMT:
@@ -4977,17 +5022,26 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _DeathItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DeathItemLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.VTCK:
                 {
-                    _VoiceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VoiceLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.Voice;
                 }
                 case RecordTypeInts.TPLT:
                 {
-                    _TemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.Template;
                 }
                 case RecordTypeInts.DEST:
@@ -5001,7 +5055,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -5049,32 +5106,50 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _AttackReachLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _AttackReachLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.AttackReach;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _CombatStyleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CombatStyleLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _BodyPartDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BodyPartDataLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TurningSpeedLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TurningSpeedLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.TurningSpeed;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BaseScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.BaseScale;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _FootWeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FootWeightLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.FootWeight;
                 }
                 case RecordTypeInts.NAM4:
@@ -5089,7 +5164,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.CSCR:
                 {
-                    _InheritsSoundFromLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InheritsSoundFromLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.InheritsSoundFrom;
                 }
                 case RecordTypeInts.CSDT:
@@ -5104,12 +5182,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ImpactDatasetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImpactDatasetLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.ImpactDataset;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _MeleeWeaponListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MeleeWeaponListLocation = (stream.Position - offset);
+                    }
                     return (int)Creature_FieldIndex.MeleeWeaponList;
                 }
                 default:

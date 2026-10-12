@@ -1416,7 +1416,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)Model_FieldIndex.MODB, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MODB = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MODB = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Model_FieldIndex.MODB;
                 }
                 case RecordTypeInts.MODT:
@@ -1605,7 +1608,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.MODB:
                 {
                     if (lastParsed.ShortCircuit((int)Model_FieldIndex.MODB, translationParams)) return ParseResult.Stop;
-                    _MODBLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MODBLocation = (stream.Position - offset);
+                    }
                     return (int)Model_FieldIndex.MODB;
                 }
                 case RecordTypeInts.MODT:

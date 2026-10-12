@@ -3469,13 +3469,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnchantmentAmount = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.EnchantmentAmount = frame.ReadUInt16();
+                    }
                     return (int)Armor_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.MOD2:
@@ -3511,13 +3517,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.BMCT:
@@ -3532,25 +3544,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.BashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.Race;
                 }
                 case RecordTypeInts.KSIZ:
@@ -3599,17 +3623,23 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArmorRating = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt,
-                        multiplier: null,
-                        divisor: 100f);
+                    if (contentLength >= 4)
+                    {
+                        item.ArmorRating = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt,
+                            multiplier: null,
+                            divisor: 100f);
+                    }
                     return (int)Armor_FieldIndex.ArmorRating;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TemplateArmor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TemplateArmor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.TemplateArmor;
                 }
                 case RecordTypeInts.XXXX:
@@ -3874,12 +3904,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
-                    _EnchantmentAmountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _EnchantmentAmountLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.MOD2:
@@ -3916,12 +3952,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.BMCT:
@@ -3931,22 +3973,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
-                    _BashImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BashImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.BashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
-                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _RaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RaceLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.Race;
                 }
                 case RecordTypeInts.KSIZ:
@@ -3988,12 +4042,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _ArmorRatingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ArmorRatingLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.ArmorRating;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TemplateArmorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateArmorLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.TemplateArmor;
                 }
                 case RecordTypeInts.XXXX:

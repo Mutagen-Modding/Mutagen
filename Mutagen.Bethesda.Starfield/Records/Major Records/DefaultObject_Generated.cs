@@ -1435,13 +1435,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)DefaultObject_FieldIndex.XALG;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DefaultObject_FieldIndex.Object;
                 }
                 default:
@@ -1582,12 +1588,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)DefaultObject_FieldIndex.XALG;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _ObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectLocation = (stream.Position - offset);
+                    }
                     return (int)DefaultObject_FieldIndex.Object;
                 }
                 default:

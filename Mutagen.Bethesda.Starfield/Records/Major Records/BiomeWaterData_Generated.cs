@@ -1144,14 +1144,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)BiomeWaterData_FieldIndex.HasWater, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HasWater = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.HasWater = frame.ReadBoolean();
+                    }
                     return (int)BiomeWaterData_FieldIndex.HasWater;
                 }
                 case RecordTypeInts.INAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeWaterData_FieldIndex.Water, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BiomeWaterData_FieldIndex.Water;
                 }
                 case RecordTypeInts.JNAM:
@@ -1311,13 +1317,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeWaterData_FieldIndex.HasWater, translationParams)) return ParseResult.Stop;
-                    _HasWaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _HasWaterLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeWaterData_FieldIndex.HasWater;
                 }
                 case RecordTypeInts.INAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeWaterData_FieldIndex.Water, translationParams)) return ParseResult.Stop;
-                    _WaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeWaterData_FieldIndex.Water;
                 }
                 case RecordTypeInts.JNAM:

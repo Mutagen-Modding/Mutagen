@@ -2370,7 +2370,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Key_FieldIndex.Script;
                 }
                 case RecordTypeInts.DEST:
@@ -2384,13 +2387,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Key_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DropSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Key_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.DATA:
@@ -2408,7 +2417,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundRandomLooping.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundRandomLooping.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Key_FieldIndex.SoundRandomLooping;
                 }
@@ -2622,7 +2634,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.Script;
                 }
                 case RecordTypeInts.DEST:
@@ -2636,12 +2651,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _DropSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DropSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.DropSound;
                 }
                 case RecordTypeInts.DATA:
@@ -2651,7 +2672,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _SoundRandomLoopingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundRandomLoopingLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.SoundRandomLooping;
                 }
                 default:

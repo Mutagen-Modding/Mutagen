@@ -12023,9 +12023,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Weapon_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -12041,7 +12044,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)Weapon_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -12110,31 +12116,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnchantmentAmount = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.EnchantmentAmount = frame.ReadUInt16();
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.BlockBashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.PUSH:
@@ -12176,7 +12197,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INRD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.InstanceNaming;
                 }
                 case RecordTypeInts.APPR:
@@ -12210,7 +12234,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EmbeddedWeaponMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EmbeddedWeaponMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
                 }
                 case RecordTypeInts.BNAM:
@@ -13566,7 +13593,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -13581,7 +13611,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -13650,27 +13683,42 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
-                    _EnchantmentAmountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _EnchantmentAmountLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
-                    _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.BlockBashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
-                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.PUSH:
@@ -13711,7 +13759,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INRD:
                 {
-                    _InstanceNamingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InstanceNamingLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.InstanceNaming;
                 }
                 case RecordTypeInts.APPR:
@@ -13744,7 +13795,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _EmbeddedWeaponModLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmbeddedWeaponModLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
                 }
                 case RecordTypeInts.BNAM:

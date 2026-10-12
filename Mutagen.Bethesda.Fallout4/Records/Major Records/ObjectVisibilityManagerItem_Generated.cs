@@ -1202,7 +1202,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.Object, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ObjectVisibilityManagerItem_FieldIndex.Object;
                 }
                 case RecordTypeInts.DATA:
@@ -1356,7 +1359,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)ObjectVisibilityManagerItem_FieldIndex.Object, translationParams)) return ParseResult.Stop;
-                    _ObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectLocation = (stream.Position - offset);
+                    }
                     return (int)ObjectVisibilityManagerItem_FieldIndex.Object;
                 }
                 case RecordTypeInts.DATA:

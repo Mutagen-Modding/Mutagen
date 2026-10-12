@@ -1955,13 +1955,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OnLocalMap = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.OnLocalMap = frame.ReadBoolean();
+                    }
                     return (int)MoveableStatic_FieldIndex.OnLocalMap;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MoveableStatic_FieldIndex.Sound;
                 }
                 default:
@@ -2148,12 +2154,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _OnLocalMapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _OnLocalMapLocation = (stream.Position - offset);
+                    }
                     return (int)MoveableStatic_FieldIndex.OnLocalMap;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)MoveableStatic_FieldIndex.Sound;
                 }
                 default:

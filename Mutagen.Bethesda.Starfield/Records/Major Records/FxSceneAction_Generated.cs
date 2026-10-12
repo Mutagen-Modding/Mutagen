@@ -1751,31 +1751,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.REPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.REPL.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.REPL.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)FxSceneAction_FieldIndex.REPL;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)FxSceneAction_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VCLR = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.VCLR = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)FxSceneAction_FieldIndex.VCLR;
                 }
                 case RecordTypeInts.BTXT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BTXT = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.BTXT = frame.ReadInt32();
+                    }
                     return (int)FxSceneAction_FieldIndex.BTXT;
                 }
                 case RecordTypeInts.FLMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLMV = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FLMV = frame.ReadInt32();
+                    }
                     return (int)FxSceneAction_FieldIndex.FLMV;
                 }
                 case RecordTypeInts.WED0:
@@ -1797,13 +1812,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BIPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BIPL.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BIPL.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)FxSceneAction_FieldIndex.BIPL;
                 }
                 case RecordTypeInts.LVLO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LVLO = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.LVLO = frame.ReadInt32();
+                    }
                     return (int)FxSceneAction_FieldIndex.LVLO;
                 }
                 default:
@@ -1958,27 +1979,42 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.REPL:
                 {
-                    _REPLLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _REPLLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.REPL;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HNAMLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.VCLR:
                 {
-                    _VCLRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VCLRLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.VCLR;
                 }
                 case RecordTypeInts.BTXT:
                 {
-                    _BTXTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BTXTLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.BTXT;
                 }
                 case RecordTypeInts.FLMV:
                 {
-                    _FLMVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FLMVLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.FLMV;
                 }
                 case RecordTypeInts.WED0:
@@ -2007,12 +2043,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BIPL:
                 {
-                    _BIPLLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BIPLLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.BIPL;
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    _LVLOLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LVLOLocation = (stream.Position - offset);
+                    }
                     return (int)FxSceneAction_FieldIndex.LVLO;
                 }
                 default:

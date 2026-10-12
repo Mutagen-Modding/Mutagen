@@ -2689,9 +2689,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)BiomeMarker_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -2748,19 +2751,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BiomeMarker_FieldIndex.MarkerType;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FloraList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FloraList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BiomeMarker_FieldIndex.FloraList;
                 }
                 case RecordTypeInts.LNA2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NavmeshObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NavmeshObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BiomeMarker_FieldIndex.NavmeshObject;
                 }
                 case RecordTypeInts.XXXX:
@@ -2952,7 +2964,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeMarker_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -3013,17 +3028,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _MarkerTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerTypeLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeMarker_FieldIndex.MarkerType;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _FloraListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FloraListLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeMarker_FieldIndex.FloraList;
                 }
                 case RecordTypeInts.LNA2:
                 {
-                    _NavmeshObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NavmeshObjectLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeMarker_FieldIndex.NavmeshObject;
                 }
                 case RecordTypeInts.XXXX:

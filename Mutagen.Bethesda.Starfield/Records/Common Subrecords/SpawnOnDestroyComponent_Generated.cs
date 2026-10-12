@@ -1062,7 +1062,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SODA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpawnOnDestroy.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpawnOnDestroy.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SpawnOnDestroyComponent_FieldIndex.SpawnOnDestroy;
                 }
                 default:
@@ -1191,7 +1194,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.SODA:
                 {
-                    _SpawnOnDestroyLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpawnOnDestroyLocation = (stream.Position - offset);
+                    }
                     return (int)SpawnOnDestroyComponent_FieldIndex.SpawnOnDestroy;
                 }
                 default:

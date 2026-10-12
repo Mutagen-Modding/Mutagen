@@ -2195,19 +2195,28 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadingScreenNif.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoadingScreenNif.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.InitialScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialRotation = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 6)
+                    {
+                        item.InitialRotation = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
@@ -2219,7 +2228,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialTranslationOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.InitialTranslationOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
@@ -2415,17 +2427,26 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _LoadingScreenNifLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoadingScreenNifLocation = (stream.Position - offset);
+                    }
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _InitialScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InitialScaleLocation = (stream.Position - offset);
+                    }
                     return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _InitialRotationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 6)
+                    {
+                        _InitialRotationLocation = (stream.Position - offset);
+                    }
                     return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
@@ -2439,7 +2460,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _InitialTranslationOffsetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _InitialTranslationOffsetLocation = (stream.Position - offset);
+                    }
                     return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:

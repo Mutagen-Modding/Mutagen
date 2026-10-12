@@ -2636,7 +2636,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ResearchProject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.CTDA:
@@ -2676,19 +2679,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CreatedItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CreatedItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ResearchProject_FieldIndex.CreatedItem;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NumberCreated = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.NumberCreated = frame.ReadUInt16();
+                    }
                     return (int)ResearchProject_FieldIndex.NumberCreated;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SortingPriority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.SortingPriority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ResearchProject_FieldIndex.SortingPriority;
                 }
                 case RecordTypeInts.TNAM:
@@ -2702,7 +2714,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CategoryKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CategoryKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ResearchProject_FieldIndex.CategoryKeyword;
                 }
                 case RecordTypeInts.RNAM:
@@ -2898,7 +2913,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _WorkbenchKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorkbenchKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)ResearchProject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.CTDA:
@@ -2937,17 +2955,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CreatedItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CreatedItemLocation = (stream.Position - offset);
+                    }
                     return (int)ResearchProject_FieldIndex.CreatedItem;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _NumberCreatedLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _NumberCreatedLocation = (stream.Position - offset);
+                    }
                     return (int)ResearchProject_FieldIndex.NumberCreated;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SortingPriorityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SortingPriorityLocation = (stream.Position - offset);
+                    }
                     return (int)ResearchProject_FieldIndex.SortingPriority;
                 }
                 case RecordTypeInts.TNAM:
@@ -2957,7 +2984,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _CategoryKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CategoryKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)ResearchProject_FieldIndex.CategoryKeyword;
                 }
                 case RecordTypeInts.RNAM:

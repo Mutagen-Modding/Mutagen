@@ -1341,7 +1341,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Subspace_FieldIndex.Point;
                 }
                 default:
@@ -1477,7 +1480,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.DNAM:
                 {
-                    _PointLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _PointLocation = (stream.Position - offset);
+                    }
                     return (int)Subspace_FieldIndex.Point;
                 }
                 default:

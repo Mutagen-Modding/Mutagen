@@ -2255,7 +2255,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ActorID = frame.ReadInt32();
+                    }
                     return (int)SceneAction_FieldIndex.ActorID;
                 }
                 case RecordTypeInts.LNAM:
@@ -2267,7 +2270,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)SceneAction_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
@@ -2284,13 +2290,19 @@ namespace Mutagen.Bethesda.Skyrim
                         || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Flags)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.StartPhase = frame.ReadUInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.StartPhase = frame.ReadUInt32();
+                        }
                         return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EndPhase)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        if (contentLength >= 4)
+                        {
+                            item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        }
                         return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
                     }
                     else
@@ -2299,11 +2311,17 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.StartPhase = frame.ReadUInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.StartPhase = frame.ReadUInt32();
+                                }
                                 return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                if (contentLength >= 4)
+                                {
+                                    item.TimerSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                }
                                 return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -2313,7 +2331,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EndPhase = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EndPhase = frame.ReadUInt32();
+                    }
                     return (int)SceneAction_FieldIndex.EndPhase;
                 }
                 case RecordTypeInts.PNAM:
@@ -2328,25 +2349,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.HTID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HeadtrackActorID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.HeadtrackActorID = frame.ReadInt32();
+                    }
                     return (int)SceneAction_FieldIndex.HeadtrackActorID;
                 }
                 case RecordTypeInts.DMAX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SceneAction_FieldIndex.LoopingMax;
                 }
                 case RecordTypeInts.DMIN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SceneAction_FieldIndex.LoopingMin;
                 }
                 case RecordTypeInts.DEMO:
@@ -2360,7 +2393,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DEVA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EmotionValue = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EmotionValue = frame.ReadUInt32();
+                    }
                     return (int)SceneAction_FieldIndex.EmotionValue;
                 }
                 case RecordTypeInts.SCHR:
@@ -2612,7 +2648,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALID:
                 {
-                    _ActorIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorIDLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.ActorID;
                 }
                 case RecordTypeInts.LNAM:
@@ -2622,7 +2661,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
@@ -2635,12 +2677,18 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.Flags)
                     {
-                        _StartPhaseLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _StartPhaseLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneAction_FieldIndex.EndPhase)
                     {
-                        _TimerSecondsLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _TimerSecondsLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
                     }
                     else
@@ -2649,12 +2697,18 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             case 0:
                             {
-                                _StartPhaseLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _StartPhaseLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)SceneAction_FieldIndex.StartPhase, type);
                             }
                             case 1:
                             {
-                                _TimerSecondsLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _TimerSecondsLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, type);
                             }
                             default:
@@ -2664,7 +2718,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EndPhaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EndPhaseLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.EndPhase;
                 }
                 case RecordTypeInts.PNAM:
@@ -2683,22 +2740,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.HTID:
                 {
-                    _HeadtrackActorIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadtrackActorIDLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.HeadtrackActorID;
                 }
                 case RecordTypeInts.DMAX:
                 {
-                    _LoopingMaxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingMaxLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.LoopingMax;
                 }
                 case RecordTypeInts.DMIN:
                 {
-                    _LoopingMinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingMinLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.LoopingMin;
                 }
                 case RecordTypeInts.DEMO:
@@ -2708,7 +2777,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DEVA:
                 {
-                    _EmotionValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmotionValueLocation = (stream.Position - offset);
+                    }
                     return (int)SceneAction_FieldIndex.EmotionValue;
                 }
                 case RecordTypeInts.SCHR:

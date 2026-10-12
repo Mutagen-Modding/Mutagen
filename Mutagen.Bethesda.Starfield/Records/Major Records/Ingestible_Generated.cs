@@ -4239,9 +4239,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Ingestible_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4267,7 +4270,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)Ingestible_FieldIndex.XALG;
                 }
                 case RecordTypeInts.FULL:
@@ -4332,7 +4338,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.CUSH:
@@ -4375,7 +4384,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
@@ -4672,7 +4684,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4696,7 +4711,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.XALG;
                 }
                 case RecordTypeInts.FULL:
@@ -4762,7 +4780,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.CUSH:
@@ -4801,7 +4822,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _WeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeightLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:

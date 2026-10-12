@@ -3138,7 +3138,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XEMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)APlacedTrap_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XRGD:
@@ -3154,13 +3157,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XRFG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)APlacedTrap_FieldIndex.ReferenceGroup;
                 }
                 case RecordTypeInts.XPCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SourcePackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)APlacedTrap_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XIS2:
@@ -3171,7 +3180,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OwnerFactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.OwnerFactionRank = frame.ReadInt32();
+                    }
                     return (int)APlacedTrap_FieldIndex.OwnerFactionRank;
                 }
                 case RecordTypeInts.XLKR:
@@ -3197,19 +3209,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)APlacedTrap_FieldIndex.EncounterLocation;
                 }
                 case RecordTypeInts.XLYR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)APlacedTrap_FieldIndex.Layer;
                 }
                 case RecordTypeInts.XHTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)APlacedTrap_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XLRT:
@@ -3235,7 +3256,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)APlacedTrap_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:
@@ -3452,7 +3476,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XEMI:
                 {
-                    _EmittanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmittanceLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XRGD:
@@ -3467,12 +3494,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRFG:
                 {
-                    _ReferenceGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReferenceGroupLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.ReferenceGroup;
                 }
                 case RecordTypeInts.XPCS:
                 {
-                    _SourcePackInLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SourcePackInLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.SourcePackIn;
                 }
                 case RecordTypeInts.XIS2:
@@ -3482,7 +3515,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _OwnerFactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerFactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.OwnerFactionRank;
                 }
                 case RecordTypeInts.XLKR:
@@ -3515,17 +3551,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterLocationLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.EncounterLocation;
                 }
                 case RecordTypeInts.XLYR:
                 {
-                    _LayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LayerLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.Layer;
                 }
                 case RecordTypeInts.XHTW:
                 {
-                    _HeadTrackingWeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadTrackingWeightLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XLRT:
@@ -3550,7 +3595,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XSCL:
                 {
-                    _ScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScaleLocation = (stream.Position - offset);
+                    }
                     return (int)APlacedTrap_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:

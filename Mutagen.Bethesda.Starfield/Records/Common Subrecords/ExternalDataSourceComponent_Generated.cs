@@ -1482,7 +1482,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.EXDC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExternalBaseTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ExternalBaseTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ExternalDataSourceComponent_FieldIndex.ExternalBaseTemplate;
                 }
                 case RecordTypeInts.EXDZ:
@@ -1650,7 +1653,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.EXDC:
                 {
-                    _ExternalBaseTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExternalBaseTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)ExternalDataSourceComponent_FieldIndex.ExternalBaseTemplate;
                 }
                 case RecordTypeInts.EXDZ:

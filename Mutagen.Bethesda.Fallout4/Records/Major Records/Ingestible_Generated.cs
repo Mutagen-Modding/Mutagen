@@ -3161,7 +3161,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ingestible_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -3209,25 +3212,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ingestible_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ingestible_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.CUSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CraftingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CraftingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ingestible_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DEST:
@@ -3253,7 +3268,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
@@ -3516,7 +3534,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -3559,22 +3580,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.CUSD:
                 {
-                    _CraftingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CraftingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DEST:
@@ -3594,7 +3627,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _WeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeightLocation = (stream.Position - offset);
+                    }
                     return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:

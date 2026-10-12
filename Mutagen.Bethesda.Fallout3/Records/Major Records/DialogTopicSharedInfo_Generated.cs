@@ -1082,13 +1082,19 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)DialogTopicSharedInfo_FieldIndex.InfoConnection, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InfoConnection.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InfoConnection.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogTopicSharedInfo_FieldIndex.InfoConnection;
                 }
                 case RecordTypeInts.INFX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InfoIndex = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.InfoIndex = frame.ReadInt32();
+                    }
                     return (int)DialogTopicSharedInfo_FieldIndex.InfoIndex;
                 }
                 default:
@@ -1234,12 +1240,18 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INFC:
                 {
                     if (lastParsed.ShortCircuit((int)DialogTopicSharedInfo_FieldIndex.InfoConnection, translationParams)) return ParseResult.Stop;
-                    _InfoConnectionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InfoConnectionLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopicSharedInfo_FieldIndex.InfoConnection;
                 }
                 case RecordTypeInts.INFX:
                 {
-                    _InfoIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InfoIndexLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopicSharedInfo_FieldIndex.InfoIndex;
                 }
                 default:

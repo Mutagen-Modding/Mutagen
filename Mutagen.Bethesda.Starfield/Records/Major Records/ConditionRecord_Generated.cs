@@ -1631,13 +1631,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConditionRecord_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OwnerPackage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OwnerPackage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ConditionRecord_FieldIndex.OwnerPackage;
                 }
                 default:
@@ -1794,12 +1800,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _OwnerQuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerQuestLocation = (stream.Position - offset);
+                    }
                     return (int)ConditionRecord_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _OwnerPackageLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerPackageLocation = (stream.Position - offset);
+                    }
                     return (int)ConditionRecord_FieldIndex.OwnerPackage;
                 }
                 default:

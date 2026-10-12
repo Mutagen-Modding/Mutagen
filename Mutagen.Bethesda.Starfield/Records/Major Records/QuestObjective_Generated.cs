@@ -1321,7 +1321,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)QuestObjective_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Index = frame.ReadUInt16();
+                    }
                     return (int)QuestObjective_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
@@ -1501,7 +1504,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QOBJ:
                 {
                     if (lastParsed.ShortCircuit((int)QuestObjective_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)QuestObjective_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:

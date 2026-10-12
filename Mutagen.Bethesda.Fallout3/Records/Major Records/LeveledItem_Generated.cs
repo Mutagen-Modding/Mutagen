@@ -1786,9 +1786,12 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.ByteHundred);
+                    if (contentLength >= 1)
+                    {
+                        item.ChanceNone = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.ByteHundred);
+                    }
                     return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1802,7 +1805,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:
@@ -1967,7 +1973,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.LVLD:
                 {
-                    _ChanceNoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _ChanceNoneLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1977,7 +1986,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.LVLG:
                 {
-                    _GlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GlobalLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:

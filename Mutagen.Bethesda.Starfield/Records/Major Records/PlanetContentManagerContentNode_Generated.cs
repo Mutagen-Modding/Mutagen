@@ -2005,7 +2005,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PCCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Content.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Content.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerContentNode_FieldIndex.Content;
                 }
                 case RecordTypeInts.IOVR:
@@ -2026,13 +2029,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PRTN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ParentNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerContentNode_FieldIndex.ParentNode;
                 }
                 case RecordTypeInts.PRVN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerContentNode_FieldIndex.PreviousNode;
                 }
                 default:
@@ -2196,7 +2205,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PCCC:
                 {
-                    _ContentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ContentLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentNode_FieldIndex.Content;
                 }
                 case RecordTypeInts.IOVR:
@@ -2216,12 +2228,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PRTN:
                 {
-                    _ParentNodeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentNodeLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentNode_FieldIndex.ParentNode;
                 }
                 case RecordTypeInts.PRVN:
                 {
-                    _PreviousNodeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousNodeLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentNode_FieldIndex.PreviousNode;
                 }
                 default:

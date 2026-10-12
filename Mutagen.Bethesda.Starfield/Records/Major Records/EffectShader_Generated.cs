@@ -2669,7 +2669,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EffectSequence.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EffectSequence.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)EffectShader_FieldIndex.EffectSequence;
                 }
                 case RecordTypeInts.DATA:
@@ -2962,7 +2965,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EffectSequenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EffectSequenceLocation = (stream.Position - offset);
+                    }
                     return (int)EffectShader_FieldIndex.EffectSequence;
                 }
                 case RecordTypeInts.DATA:

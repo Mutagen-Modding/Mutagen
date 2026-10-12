@@ -1401,13 +1401,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SnapTemplateBehaviorItem_FieldIndex.ENAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ENAM = frame.ReadInt32();
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.ENAM;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.BaseObject;
                 }
                 case RecordTypeInts.CTDA:
@@ -1427,13 +1433,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SnapTemplateNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SnapTemplateNode.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.SnapTemplateNode;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.Keyword;
                 }
                 default:
@@ -1588,12 +1600,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     if (lastParsed.ShortCircuit((int)SnapTemplateBehaviorItem_FieldIndex.ENAM, translationParams)) return ParseResult.Stop;
-                    _ENAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ENAMLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.ENAM;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _BaseObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseObjectLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.BaseObject;
                 }
                 case RecordTypeInts.CTDA:
@@ -1612,12 +1630,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _SnapTemplateNodeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SnapTemplateNodeLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.SnapTemplateNode;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _KeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _KeywordLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateBehaviorItem_FieldIndex.Keyword;
                 }
                 default:

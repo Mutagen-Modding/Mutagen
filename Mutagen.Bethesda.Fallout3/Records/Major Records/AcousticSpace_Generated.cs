@@ -2021,14 +2021,20 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.WallaTriggerCount = frame.ReadUInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.WallaTriggerCount = frame.ReadUInt32();
+                        }
                     }
                     return (int)AcousticSpace_FieldIndex.WallaTriggerCount;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.ANAM:
@@ -2044,9 +2050,12 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.IsInterior = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            byteLength: 4);
+                        if (contentLength >= 4)
+                        {
+                            item.IsInterior = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                                reader: frame.SpawnWithLength(contentLength),
+                                byteLength: 4);
+                        }
                     }
                     return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
@@ -2224,12 +2233,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WallaTriggerCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WallaTriggerCountLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.WallaTriggerCount;
                 }
                 case RecordTypeInts.RDAT:
                 {
-                    _UseSoundFromRegionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseSoundFromRegionLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.ANAM:
@@ -2239,7 +2254,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _IsInteriorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IsInteriorLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
                 default:

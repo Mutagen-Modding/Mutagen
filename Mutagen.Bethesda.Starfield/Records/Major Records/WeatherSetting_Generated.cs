@@ -1529,7 +1529,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RFDP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReflectionParent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ReflectionParent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)WeatherSetting_FieldIndex.ReflectionParent;
                 }
                 case RecordTypeInts.RDIF:
@@ -1685,7 +1688,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RFDP:
                 {
-                    _ReflectionParentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReflectionParentLocation = (stream.Position - offset);
+                    }
                     return (int)WeatherSetting_FieldIndex.ReflectionParent;
                 }
                 case RecordTypeInts.RDIF:

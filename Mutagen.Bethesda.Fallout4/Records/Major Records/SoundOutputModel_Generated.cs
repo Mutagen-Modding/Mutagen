@@ -1832,11 +1832,14 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UShort,
-                        multiplier: null,
-                        divisor: 100f);
+                    if (contentLength >= 2)
+                    {
+                        item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UShort,
+                            multiplier: null,
+                            divisor: 100f);
+                    }
                     return (int)SoundOutputModel_FieldIndex.StaticAttenuation;
                 }
                 case RecordTypeInts.ONAM:
@@ -1852,7 +1855,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EffectChain.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EffectChain.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundOutputModel_FieldIndex.EffectChain;
                 }
                 default:
@@ -2019,7 +2025,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _StaticAttenuationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _StaticAttenuationLocation = (stream.Position - offset);
+                    }
                     return (int)SoundOutputModel_FieldIndex.StaticAttenuation;
                 }
                 case RecordTypeInts.ONAM:
@@ -2034,7 +2043,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EffectChainLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EffectChainLocation = (stream.Position - offset);
+                    }
                     return (int)SoundOutputModel_FieldIndex.EffectChain;
                 }
                 default:

@@ -4880,9 +4880,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Light_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4898,13 +4901,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DEFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Light_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)Light_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -5049,7 +5058,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Lens.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Lens.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Light_FieldIndex.Lens;
                 }
                 case RecordTypeInts.FLBD:
@@ -5086,7 +5098,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VolumetricLightIntensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.VolumetricLightIntensityScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Light_FieldIndex.VolumetricLightIntensityScale;
                 }
                 case RecordTypeInts.XXXX:
@@ -5432,7 +5447,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -5447,12 +5465,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DEFL:
                 {
-                    _DefaultLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultLayerLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -5538,7 +5562,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LensLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LensLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.Lens;
                 }
                 case RecordTypeInts.FLBD:
@@ -5580,7 +5607,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FVLD:
                 {
-                    _VolumetricLightIntensityScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VolumetricLightIntensityScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.VolumetricLightIntensityScale;
                 }
                 case RecordTypeInts.XXXX:

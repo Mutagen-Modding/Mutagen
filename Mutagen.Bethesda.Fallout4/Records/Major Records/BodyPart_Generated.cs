@@ -4056,31 +4056,46 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GoreEffectsDismemberBloodArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GoreEffectsDismemberBloodArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.GoreEffectsDismemberBloodArt;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GoreEffectsBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GoreEffectsBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.GoreEffectsBloodImpactMaterialType;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OnCrippleBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OnCrippleBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.OnCrippleBloodImpactMaterialType;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MeatCapTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MeatCapTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.MeatCapTextureSet;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CollarTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CollarTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.CollarTextureSet;
                 }
                 case RecordTypeInts.DNAM:
@@ -4513,27 +4528,42 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _GoreEffectsDismemberBloodArtLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GoreEffectsDismemberBloodArtLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.GoreEffectsDismemberBloodArt;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _GoreEffectsBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GoreEffectsBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.GoreEffectsBloodImpactMaterialType;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _OnCrippleBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OnCrippleBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.OnCrippleBloodImpactMaterialType;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _MeatCapTextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MeatCapTextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.MeatCapTextureSet;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _CollarTextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CollarTextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.CollarTextureSet;
                 }
                 case RecordTypeInts.DNAM:

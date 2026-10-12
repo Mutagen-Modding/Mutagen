@@ -1999,7 +1999,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -2020,13 +2023,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CloseSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CloseSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.CloseSound;
                 }
                 default:
@@ -2198,7 +2207,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -2223,12 +2235,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _OpenSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OpenSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _CloseSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CloseSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.CloseSound;
                 }
                 default:

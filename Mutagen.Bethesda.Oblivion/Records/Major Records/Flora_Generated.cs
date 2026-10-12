@@ -1754,13 +1754,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.Script;
                 }
                 case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.PFPC:
@@ -1932,12 +1938,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.Script;
                 }
                 case RecordTypeInts.PFIG:
                 {
-                    _IngredientLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IngredientLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.PFPC:

@@ -1568,7 +1568,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RABG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AudioBus = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 16)
+                    {
+                        item.AudioBus = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ReverbParameters_FieldIndex.AudioBus;
                 }
                 case RecordTypeInts.ANAM:
@@ -1738,7 +1741,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RABG:
                 {
-                    _AudioBusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 16)
+                    {
+                        _AudioBusLocation = (stream.Position - offset);
+                    }
                     return (int)ReverbParameters_FieldIndex.AudioBus;
                 }
                 case RecordTypeInts.ANAM:

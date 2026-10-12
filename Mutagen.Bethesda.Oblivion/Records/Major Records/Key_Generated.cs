@@ -1760,7 +1760,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Key_FieldIndex.Script;
                 }
                 case RecordTypeInts.DATA:
@@ -1937,7 +1940,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Key_FieldIndex.Script;
                 }
                 case RecordTypeInts.DATA:

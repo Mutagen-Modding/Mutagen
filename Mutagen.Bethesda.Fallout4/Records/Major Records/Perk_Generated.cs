@@ -2583,13 +2583,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Perk_FieldIndex.Sound;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NextPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Perk_FieldIndex.NextPerk;
                 }
                 case RecordTypeInts.FNAM:
@@ -2868,12 +2874,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)Perk_FieldIndex.Sound;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _NextPerkLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NextPerkLocation = (stream.Position - offset);
+                    }
                     return (int)Perk_FieldIndex.NextPerk;
                 }
                 case RecordTypeInts.FNAM:

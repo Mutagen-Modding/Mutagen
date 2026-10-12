@@ -1131,7 +1131,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SoundKeywordMappingItem_FieldIndex.RSMC, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RSMC = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.RSMC = frame.ReadUInt32();
+                    }
                     return (int)SoundKeywordMappingItem_FieldIndex.RSMC;
                 }
                 case RecordTypeInts.RSMH:
@@ -1281,7 +1284,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RSMC:
                 {
                     if (lastParsed.ShortCircuit((int)SoundKeywordMappingItem_FieldIndex.RSMC, translationParams)) return ParseResult.Stop;
-                    _RSMCLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RSMCLocation = (stream.Position - offset);
+                    }
                     return (int)SoundKeywordMappingItem_FieldIndex.RSMC;
                 }
                 case RecordTypeInts.RSMH:

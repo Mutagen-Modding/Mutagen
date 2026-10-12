@@ -2952,25 +2952,37 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts._0_IAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceSunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpaceSunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceSunrise;
                 }
                 case RecordTypeInts._1_IAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpaceDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceDay;
                 }
                 case RecordTypeInts._2_IAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceSunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpaceSunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceSunset;
                 }
                 case RecordTypeInts._3_IAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceNight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpaceNight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceNight;
                 }
                 case RecordTypeInts._4_IAD:
@@ -2978,7 +2990,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.ImageSpaceHighNoon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.ImageSpaceHighNoon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weather_FieldIndex.ImageSpaceHighNoon;
                 }
@@ -2987,7 +3002,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.ImageSpaceMidnight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.ImageSpaceMidnight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Weather_FieldIndex.ImageSpaceMidnight;
                 }
@@ -3041,7 +3059,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.LNAM = frame.ReadUInt32();
+                    }
                     return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.ONAM:
@@ -3309,32 +3330,50 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts._0_IAD:
                 {
-                    _ImageSpaceSunriseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceSunriseLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceSunrise;
                 }
                 case RecordTypeInts._1_IAD:
                 {
-                    _ImageSpaceDayLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceDayLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceDay;
                 }
                 case RecordTypeInts._2_IAD:
                 {
-                    _ImageSpaceSunsetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceSunsetLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceSunset;
                 }
                 case RecordTypeInts._3_IAD:
                 {
-                    _ImageSpaceNightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceNightLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceNight;
                 }
                 case RecordTypeInts._4_IAD:
                 {
-                    _ImageSpaceHighNoonLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceHighNoonLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceHighNoon;
                 }
                 case RecordTypeInts._5_IAD:
                 {
-                    _ImageSpaceMidnightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceMidnightLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.ImageSpaceMidnight;
                 }
                 case RecordTypeInts.DNAM:
@@ -3371,7 +3410,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LNAMLocation = (stream.Position - offset);
+                    }
                     return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.ONAM:

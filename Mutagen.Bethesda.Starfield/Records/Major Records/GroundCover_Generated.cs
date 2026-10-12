@@ -2117,7 +2117,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PaintedMaterialThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.PaintedMaterialThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)GroundCover_FieldIndex.PaintedMaterialThreshold;
                 }
                 case RecordTypeInts.XXXX:
@@ -2312,7 +2315,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PaintedMaterialThresholdLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PaintedMaterialThresholdLocation = (stream.Position - offset);
+                    }
                     return (int)GroundCover_FieldIndex.PaintedMaterialThreshold;
                 }
                 case RecordTypeInts.XXXX:

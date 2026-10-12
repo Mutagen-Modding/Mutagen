@@ -1875,19 +1875,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NodeIndex = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NodeIndex = frame.ReadUInt32();
+                    }
                     return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AddonNode_FieldIndex.Sound;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AddonNode_FieldIndex.Light;
                 }
                 case RecordTypeInts.DNAM:
@@ -2077,17 +2086,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _NodeIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NodeIndexLocation = (stream.Position - offset);
+                    }
                     return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)AddonNode_FieldIndex.Sound;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightLocation = (stream.Position - offset);
+                    }
                     return (int)AddonNode_FieldIndex.Light;
                 }
                 case RecordTypeInts.DNAM:

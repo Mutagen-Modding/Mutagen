@@ -2046,7 +2046,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MoveableStatic_FieldIndex.LoopingSound;
                 }
                 default:
@@ -2241,7 +2244,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)MoveableStatic_FieldIndex.LoopingSound;
                 }
                 default:

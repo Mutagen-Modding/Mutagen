@@ -3147,7 +3147,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -3222,7 +3225,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.ForcedLocRefType;
                 }
                 case RecordTypeInts.PRPS:
@@ -3238,31 +3244,46 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NTRM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.NativeTerminal;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CloseSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CloseSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.CloseSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TakeAllSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TakeAllSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.TakeAllSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FilterList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FilterList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Container_FieldIndex.FilterList;
                 }
                 case RecordTypeInts.XXXX:
@@ -3486,7 +3507,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -3549,7 +3573,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.ForcedLocRefType;
                 }
                 case RecordTypeInts.PRPS:
@@ -3564,27 +3591,42 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NTRM:
                 {
-                    _NativeTerminalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NativeTerminalLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.NativeTerminal;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _OpenSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OpenSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _CloseSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CloseSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.CloseSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TakeAllSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TakeAllSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.TakeAllSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _FilterListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FilterListLocation = (stream.Position - offset);
+                    }
                     return (int)Container_FieldIndex.FilterList;
                 }
                 case RecordTypeInts.XXXX:

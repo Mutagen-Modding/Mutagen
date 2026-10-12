@@ -1216,7 +1216,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PcmTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PcmTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestLocationAliasALPS_FieldIndex.PcmTypeKeyword;
                 }
                 default:
@@ -1374,7 +1377,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _PcmTypeKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PcmTypeKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAliasALPS_FieldIndex.PcmTypeKeyword;
                 }
                 default:

@@ -1698,27 +1698,36 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundCategory_FieldIndex.Parent;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StaticVolumeMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UShort,
-                        multiplier: null,
-                        divisor: 65535f);
+                    if (contentLength >= 2)
+                    {
+                        item.StaticVolumeMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UShort,
+                            multiplier: null,
+                            divisor: 65535f);
+                    }
                     return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultMenuVolume = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UShort,
-                        multiplier: null,
-                        divisor: 65535f);
+                    if (contentLength >= 2)
+                    {
+                        item.DefaultMenuVolume = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UShort,
+                            multiplier: null,
+                            divisor: 65535f);
+                    }
                     return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 default:
@@ -1889,17 +1898,26 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _ParentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.Parent;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _StaticVolumeMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _StaticVolumeMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _DefaultMenuVolumeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _DefaultMenuVolumeLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 default:

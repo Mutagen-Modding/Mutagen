@@ -3163,7 +3163,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -3218,13 +3221,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -3243,7 +3252,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FIMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FeaturedItemMessage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FeaturedItemMessage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.FeaturedItemMessage;
                 }
                 case RecordTypeInts.DATA:
@@ -3286,7 +3298,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InventoryArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InventoryArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.XXXX:
@@ -3537,7 +3552,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -3582,12 +3600,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -3605,7 +3629,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FIMD:
                 {
-                    _FeaturedItemMessageLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FeaturedItemMessageLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.FeaturedItemMessage;
                 }
                 case RecordTypeInts.DATA:
@@ -3625,7 +3652,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _InventoryArtLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InventoryArtLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.XXXX:

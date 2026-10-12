@@ -3643,9 +3643,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Static_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTTA:
@@ -3666,25 +3669,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNTP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Static_FieldIndex.SnapTemplate;
                 }
                 case RecordTypeInts.SNBH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SnapBehavior.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SnapBehavior.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Static_FieldIndex.SnapBehavior;
                 }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)Static_FieldIndex.XALG;
                 }
                 case RecordTypeInts.DEFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Static_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.BFCB:
@@ -4011,7 +4026,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTTA:
@@ -4031,22 +4049,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNTP:
                 {
-                    _SnapTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SnapTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.SnapTemplate;
                 }
                 case RecordTypeInts.SNBH:
                 {
-                    _SnapBehaviorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SnapBehaviorLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.SnapBehavior;
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.XALG;
                 }
                 case RecordTypeInts.DEFL:
                 {
-                    _DefaultLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultLayerLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.BFCB:

@@ -1306,7 +1306,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index;
                 }
                 case RecordTypeInts.DATA:
@@ -1483,7 +1486,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Index;
                 }
                 case RecordTypeInts.DATA:

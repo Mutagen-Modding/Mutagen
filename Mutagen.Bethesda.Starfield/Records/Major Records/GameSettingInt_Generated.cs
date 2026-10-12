@@ -1474,7 +1474,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Data = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Data = frame.ReadInt32();
+                    }
                     return (int)GameSettingInt_FieldIndex.Data;
                 }
                 default:
@@ -1610,7 +1613,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DataLocation = (stream.Position - offset);
+                    }
                     return (int)GameSettingInt_FieldIndex.Data;
                 }
                 default:

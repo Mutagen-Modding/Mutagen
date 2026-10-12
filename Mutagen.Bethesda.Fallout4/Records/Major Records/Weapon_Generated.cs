@@ -6673,13 +6673,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.STCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AnimationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AnimationSound;
                 }
                 case RecordTypeInts.FULL:
@@ -6714,13 +6720,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnchantmentAmount = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.EnchantmentAmount = frame.ReadUInt16();
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
@@ -6735,31 +6747,46 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.BlockBashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -6789,7 +6816,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INRD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.InstanceNaming;
                 }
                 case RecordTypeInts.APPR:
@@ -6819,7 +6849,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EmbeddedWeaponMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EmbeddedWeaponMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
                 }
                 case RecordTypeInts.MOD4:
@@ -6835,7 +6868,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MO4F:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MO4F = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MO4F = frame.ReadInt32();
+                    }
                     return (int)Weapon_FieldIndex.MO4F;
                 }
                 case RecordTypeInts.DNAM:
@@ -6946,31 +6982,46 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NpcAddAmmoList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NpcAddAmmoList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.NpcAddAmmoList;
                 }
                 case RecordTypeInts.WAMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AimModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AimModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AimModel;
                 }
                 case RecordTypeInts.WZMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Zoom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Zoom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.Template;
                 }
                 case RecordTypeInts.DAMA:
@@ -7466,12 +7517,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.STCP:
                 {
-                    _AnimationSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AnimationSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AnimationSound;
                 }
                 case RecordTypeInts.FULL:
@@ -7501,12 +7558,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
-                    _EnchantmentAmountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _EnchantmentAmountLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
@@ -7521,27 +7584,42 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
-                    _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.BlockBashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
-                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -7564,7 +7642,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INRD:
                 {
-                    _InstanceNamingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InstanceNamingLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.InstanceNaming;
                 }
                 case RecordTypeInts.APPR:
@@ -7593,7 +7674,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _EmbeddedWeaponModLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmbeddedWeaponModLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EmbeddedWeaponMod;
                 }
                 case RecordTypeInts.MOD4:
@@ -7609,7 +7693,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MO4F:
                 {
-                    _MO4FLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MO4FLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.MO4F;
                 }
                 case RecordTypeInts.DNAM:
@@ -7629,27 +7716,42 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _ImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _NpcAddAmmoListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NpcAddAmmoListLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.NpcAddAmmoList;
                 }
                 case RecordTypeInts.WAMD:
                 {
-                    _AimModelLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AimModelLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AimModel;
                 }
                 case RecordTypeInts.WZMD:
                 {
-                    _ZoomLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ZoomLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _TemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.Template;
                 }
                 case RecordTypeInts.DAMA:

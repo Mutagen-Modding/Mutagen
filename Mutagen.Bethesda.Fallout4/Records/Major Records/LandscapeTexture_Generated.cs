@@ -1777,13 +1777,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
@@ -1799,7 +1805,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSpecularExponent = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.TextureSpecularExponent = frame.ReadUInt8();
+                    }
                     return (int)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
@@ -1965,12 +1974,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.TNAM:
                 {
-                    _TextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
@@ -1980,7 +1995,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _TextureSpecularExponentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _TextureSpecularExponentLocation = (stream.Position - offset);
+                    }
                     return (int)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:

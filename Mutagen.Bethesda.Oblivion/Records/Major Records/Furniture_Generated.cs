@@ -1642,13 +1642,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.Script;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerFlags = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerFlags = frame.ReadInt32();
+                    }
                     return (int)Furniture_FieldIndex.MarkerFlags;
                 }
                 default:
@@ -1811,12 +1817,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.Script;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MarkerFlagsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerFlagsLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.MarkerFlags;
                 }
                 default:

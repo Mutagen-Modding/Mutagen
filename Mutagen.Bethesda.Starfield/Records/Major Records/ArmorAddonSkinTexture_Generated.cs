@@ -1087,14 +1087,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddonSkinTexture_FieldIndex.Texture;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.SwapList, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SwapList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SwapList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddonSkinTexture_FieldIndex.SwapList;
                 }
                 default:
@@ -1240,13 +1246,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM0:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
-                    _TextureLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddonSkinTexture_FieldIndex.Texture;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.SwapList, translationParams)) return ParseResult.Stop;
-                    _SwapListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SwapListLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddonSkinTexture_FieldIndex.SwapList;
                 }
                 default:

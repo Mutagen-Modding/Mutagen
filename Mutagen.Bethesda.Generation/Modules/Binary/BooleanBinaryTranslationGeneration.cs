@@ -42,6 +42,13 @@ public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGene
         return bType.ByteLength;
     }
 
+    public override Task<int?> ShortestReadableContent(ObjectGeneration objGen, TypeGeneration typeGen)
+    {
+        return ((BoolType)typeGen).BoolAsMarker == null
+            ? base.ShortestReadableContent(objGen, typeGen)
+            : Task.FromResult<int?>(null);
+    }
+
     public override string GenerateForTypicalWrapper(
         ObjectGeneration objGen, 
         TypeGeneration typeGen, 

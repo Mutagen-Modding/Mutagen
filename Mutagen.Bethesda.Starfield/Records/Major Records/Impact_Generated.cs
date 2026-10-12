@@ -3163,13 +3163,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootstepParticleMaxDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FootstepParticleMaxDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Impact_FieldIndex.FootstepParticleMaxDist;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DecalLifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DecalLifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Impact_FieldIndex.DecalLifetime;
                 }
                 default:
@@ -3443,12 +3449,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FootstepParticleMaxDistLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FootstepParticleMaxDistLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.FootstepParticleMaxDist;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _DecalLifetimeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DecalLifetimeLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.DecalLifetime;
                 }
                 default:

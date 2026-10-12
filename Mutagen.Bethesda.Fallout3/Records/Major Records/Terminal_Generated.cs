@@ -2567,7 +2567,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Terminal_FieldIndex.Script;
                 }
                 case RecordTypeInts.DEST:
@@ -2590,13 +2593,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Terminal_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PasswordNote.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PasswordNote.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Terminal_FieldIndex.PasswordNote;
                 }
                 case RecordTypeInts.DNAM:
@@ -2842,7 +2851,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Terminal_FieldIndex.Script;
                 }
                 case RecordTypeInts.DEST:
@@ -2861,12 +2873,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Terminal_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PasswordNoteLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PasswordNoteLocation = (stream.Position - offset);
+                    }
                     return (int)Terminal_FieldIndex.PasswordNote;
                 }
                 case RecordTypeInts.DNAM:

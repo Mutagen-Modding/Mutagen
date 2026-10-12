@@ -1206,7 +1206,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)DialogTopicAssociatedQuest_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogTopicAssociatedQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.INFC:
@@ -1363,7 +1366,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.QSTI:
                 {
                     if (lastParsed.ShortCircuit((int)DialogTopicAssociatedQuest_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopicAssociatedQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.INFC:

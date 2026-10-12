@@ -1312,7 +1312,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.BaseEffect, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
@@ -1476,7 +1479,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.EFID:
                 {
                     if (lastParsed.ShortCircuit((int)Effect_FieldIndex.BaseEffect, translationParams)) return ParseResult.Stop;
-                    _BaseEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:

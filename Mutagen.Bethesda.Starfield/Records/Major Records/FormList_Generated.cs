@@ -2113,7 +2113,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AddToList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AddToList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)FormList_FieldIndex.AddToList;
                 }
                 default:
@@ -2305,7 +2308,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _AddToListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AddToListLocation = (stream.Position - offset);
+                    }
                     return (int)FormList_FieldIndex.AddToList;
                 }
                 default:

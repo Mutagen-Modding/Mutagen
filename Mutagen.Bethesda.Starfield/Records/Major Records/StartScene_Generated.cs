@@ -1469,27 +1469,39 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.LCEPScene, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LCEPScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LCEPScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)StartScene_FieldIndex.LCEPScene;
                 }
                 case RecordTypeInts.STSC:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.STSCScene, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.STSCScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.STSCScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)StartScene_FieldIndex.STSCScene;
                 }
                 case RecordTypeInts.INTT:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.INTTPhaseIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTTPhaseIndex = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.INTTPhaseIndex = frame.ReadUInt16();
+                    }
                     return (int)StartScene_FieldIndex.INTTPhaseIndex;
                 }
                 case RecordTypeInts.ACTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ACTVPhaseIndex = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.ACTVPhaseIndex = frame.ReadUInt16();
+                    }
                     return (int)StartScene_FieldIndex.ACTVPhaseIndex;
                 }
                 case RecordTypeInts.SSPN:
@@ -1671,24 +1683,36 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LCEP:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.LCEPScene, translationParams)) return ParseResult.Stop;
-                    _LCEPSceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LCEPSceneLocation = (stream.Position - offset);
+                    }
                     return (int)StartScene_FieldIndex.LCEPScene;
                 }
                 case RecordTypeInts.STSC:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.STSCScene, translationParams)) return ParseResult.Stop;
-                    _STSCSceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _STSCSceneLocation = (stream.Position - offset);
+                    }
                     return (int)StartScene_FieldIndex.STSCScene;
                 }
                 case RecordTypeInts.INTT:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.INTTPhaseIndex, translationParams)) return ParseResult.Stop;
-                    _INTTPhaseIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _INTTPhaseIndexLocation = (stream.Position - offset);
+                    }
                     return (int)StartScene_FieldIndex.INTTPhaseIndex;
                 }
                 case RecordTypeInts.ACTV:
                 {
-                    _ACTVPhaseIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _ACTVPhaseIndexLocation = (stream.Position - offset);
+                    }
                     return (int)StartScene_FieldIndex.ACTVPhaseIndex;
                 }
                 case RecordTypeInts.SSPN:

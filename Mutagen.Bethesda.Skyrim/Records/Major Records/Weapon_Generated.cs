@@ -4241,13 +4241,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnchantmentAmount = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.EnchantmentAmount = frame.ReadUInt16();
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
@@ -4262,31 +4268,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockBashImpact.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BlockBashImpact.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -4329,55 +4350,82 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FirstPersonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FirstPersonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttackSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackSound2D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttackSound2D.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackLoopSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttackLoopSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackFailSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttackFailSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnequipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnequipSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
@@ -4406,7 +4454,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Weapon_FieldIndex.Template;
                 }
                 case RecordTypeInts.XXXX:
@@ -4705,12 +4756,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
-                    _EnchantmentAmountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _EnchantmentAmountLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
@@ -4725,27 +4782,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
-                    _BlockBashImpactLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlockBashImpactLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
-                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KSIZ:
@@ -4781,47 +4853,74 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _ImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _FirstPersonModelLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonModelLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _AttackSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttackSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _AttackSound2DLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttackSound2DLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
-                    _AttackLoopSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttackLoopSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _AttackFailSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttackFailSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _IdleSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    _EquipSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _UnequipSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnequipSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
@@ -4846,7 +4945,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _TemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Weapon_FieldIndex.Template;
                 }
                 case RecordTypeInts.XXXX:

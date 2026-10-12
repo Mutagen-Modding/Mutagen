@@ -1195,7 +1195,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Stage, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Stage = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Stage = frame.ReadUInt16();
+                    }
                     return (int)QuestStage_FieldIndex.Stage;
                 }
                 case RecordTypeInts.QSDT:
@@ -1353,7 +1356,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Stage, translationParams)) return ParseResult.Stop;
-                    _StageLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _StageLocation = (stream.Position - offset);
+                    }
                     return (int)QuestStage_FieldIndex.Stage;
                 }
                 case RecordTypeInts.QSDT:

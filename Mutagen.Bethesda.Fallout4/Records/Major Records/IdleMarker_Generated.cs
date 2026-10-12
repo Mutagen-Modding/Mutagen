@@ -2211,7 +2211,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.IDLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:
@@ -2225,7 +2228,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Unknown.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)IdleMarker_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.MODL:
@@ -2445,7 +2451,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.IDLT:
                 {
-                    _IdleTimerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleTimerLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:
@@ -2460,7 +2469,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _UnknownLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnknownLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.MODL:

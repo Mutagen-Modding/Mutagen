@@ -1432,7 +1432,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.EPFB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PerkEntryID = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.PerkEntryID = frame.ReadUInt16();
+                    }
                     return (int)APerkEffect_FieldIndex.PerkEntryID;
                 }
                 case RecordTypeInts.EPFT:
@@ -1596,7 +1599,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.EPFB:
                 {
-                    _PerkEntryIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _PerkEntryIDLocation = (stream.Position - offset);
+                    }
                     return (int)APerkEffect_FieldIndex.PerkEntryID;
                 }
                 case RecordTypeInts.EPFT:

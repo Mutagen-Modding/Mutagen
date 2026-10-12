@@ -1067,14 +1067,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)CreateObjectTemplate_FieldIndex.TemplateAlias, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TemplateAlias = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.TemplateAlias = frame.ReadInt32();
+                    }
                     return (int)CreateObjectTemplate_FieldIndex.TemplateAlias;
                 }
                 case RecordTypeInts.ALCA:
                 {
                     if (lastParsed.ShortCircuit((int)CreateObjectTemplate_FieldIndex.TargetOverrideAlias, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TargetOverrideAlias = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.TargetOverrideAlias = frame.ReadInt32();
+                    }
                     return (int)CreateObjectTemplate_FieldIndex.TargetOverrideAlias;
                 }
                 default:
@@ -1219,13 +1225,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALCM:
                 {
                     if (lastParsed.ShortCircuit((int)CreateObjectTemplate_FieldIndex.TemplateAlias, translationParams)) return ParseResult.Stop;
-                    _TemplateAliasLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateAliasLocation = (stream.Position - offset);
+                    }
                     return (int)CreateObjectTemplate_FieldIndex.TemplateAlias;
                 }
                 case RecordTypeInts.ALCA:
                 {
                     if (lastParsed.ShortCircuit((int)CreateObjectTemplate_FieldIndex.TargetOverrideAlias, translationParams)) return ParseResult.Stop;
-                    _TargetOverrideAliasLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TargetOverrideAliasLocation = (stream.Position - offset);
+                    }
                     return (int)CreateObjectTemplate_FieldIndex.TargetOverrideAlias;
                 }
                 default:

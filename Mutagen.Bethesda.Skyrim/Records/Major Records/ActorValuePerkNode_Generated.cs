@@ -1634,7 +1634,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)ActorValuePerkNode_FieldIndex.Perk, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
@@ -1646,31 +1649,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PerkGridX = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.PerkGridX = frame.ReadUInt32();
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.PerkGridX;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PerkGridY = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.PerkGridY = frame.ReadUInt32();
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.PerkGridY;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HorizontalPosition = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HorizontalPosition = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.HorizontalPosition;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VerticalPosition = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.VerticalPosition = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.VerticalPosition;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedSkill.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AssociatedSkill.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:
@@ -1685,7 +1703,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.Index;
                 }
                 default:
@@ -1856,7 +1877,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PNAM:
                 {
                     if (lastParsed.ShortCircuit((int)ActorValuePerkNode_FieldIndex.Perk, translationParams)) return ParseResult.Stop;
-                    _PerkLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PerkLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
@@ -1866,27 +1890,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _PerkGridXLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PerkGridXLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.PerkGridX;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PerkGridYLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PerkGridYLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.PerkGridY;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HorizontalPositionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HorizontalPositionLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.HorizontalPosition;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VerticalPositionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VerticalPositionLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.VerticalPosition;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _AssociatedSkillLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AssociatedSkillLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:
@@ -1905,7 +1944,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValuePerkNode_FieldIndex.Index;
                 }
                 default:

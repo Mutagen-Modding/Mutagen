@@ -2331,7 +2331,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)QuestLocationAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ID = frame.ReadUInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALID:
@@ -2354,19 +2357,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALFG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ALFG = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ALFG = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ALFG;
                 }
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestLocationAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFA:
@@ -2413,31 +2425,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ClosestToAlias = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ClosestToAlias = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ClosestToAlias;
                 }
                 case RecordTypeInts.ALSY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SystemLocationAliasID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.SystemLocationAliasID = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.SystemLocationAliasID;
                 }
                 case RecordTypeInts.ALPN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentSystemLocationAliasID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ParentSystemLocationAliasID = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID;
                 }
                 case RecordTypeInts.ALKF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LocationTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestLocationAlias_FieldIndex.LocationTypeKeyword;
                 }
                 case RecordTypeInts.ALDN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestLocationAlias_FieldIndex.DisplayName;
                 }
                 default:
@@ -2605,7 +2632,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALLS:
                 {
                     if (lastParsed.ShortCircuit((int)QuestLocationAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
-                    _IDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IDLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALID:
@@ -2620,17 +2650,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALFG:
                 {
-                    _ALFGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ALFGLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ALFG;
                 }
                 case RecordTypeInts.ALFI:
                 {
-                    _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
-                    _SpecificLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpecificLocationLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFA:
@@ -2685,27 +2724,42 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ALCC:
                 {
-                    _ClosestToAliasLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClosestToAliasLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ClosestToAlias;
                 }
                 case RecordTypeInts.ALSY:
                 {
-                    _SystemLocationAliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SystemLocationAliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.SystemLocationAliasID;
                 }
                 case RecordTypeInts.ALPN:
                 {
-                    _ParentSystemLocationAliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentSystemLocationAliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ParentSystemLocationAliasID;
                 }
                 case RecordTypeInts.ALKF:
                 {
-                    _LocationTypeKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationTypeKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.LocationTypeKeyword;
                 }
                 case RecordTypeInts.ALDN:
                 {
-                    _DisplayNameLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DisplayNameLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.DisplayName;
                 }
                 default:

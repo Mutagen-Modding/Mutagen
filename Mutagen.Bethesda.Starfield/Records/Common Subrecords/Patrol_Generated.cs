@@ -1345,7 +1345,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)Patrol_FieldIndex.IdleTime, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
@@ -1358,7 +1361,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Idle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Idle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.PDTO:
@@ -1372,7 +1378,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Patrol_FieldIndex.Topic;
                 }
                 default:
@@ -1546,7 +1555,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XPRD:
                 {
                     if (lastParsed.ShortCircuit((int)Patrol_FieldIndex.IdleTime, translationParams)) return ParseResult.Stop;
-                    _IdleTimeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleTimeLocation = (stream.Position - offset);
+                    }
                     return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
@@ -1558,7 +1570,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _IdleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleLocation = (stream.Position - offset);
+                    }
                     return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.PDTO:
@@ -1573,7 +1588,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)Patrol_FieldIndex.Topic;
                 }
                 default:

@@ -5260,43 +5260,64 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ParentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnreportedCrimeFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnreportedCrimeFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorldLocationMarkerRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WorldLocationMarkerRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorldLocationRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.WorldLocationRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Location_FieldIndex.WorldLocationRadius;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HorseMarkerRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.HorseMarkerRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Location_FieldIndex.Color;
                 }
                 default:
@@ -5667,37 +5688,58 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _ParentLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentLocationLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _UnreportedCrimeFactionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnreportedCrimeFactionLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _WorldLocationMarkerRefLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorldLocationMarkerRefLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _WorldLocationRadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorldLocationRadiusLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.WorldLocationRadius;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _HorseMarkerRefLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HorseMarkerRefLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)Location_FieldIndex.Color;
                 }
                 default:

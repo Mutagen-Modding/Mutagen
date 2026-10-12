@@ -2256,13 +2256,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.RCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Region_FieldIndex.MapColor;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:
@@ -2433,12 +2439,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RCLR:
                 {
-                    _MapColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MapColorLocation = (stream.Position - offset);
+                    }
                     return (int)Region_FieldIndex.MapColor;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WorldspaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorldspaceLocation = (stream.Position - offset);
+                    }
                     return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:

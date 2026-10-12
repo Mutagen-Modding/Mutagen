@@ -6449,19 +6449,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LTMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LightingTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LightingTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XILS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XILS = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.XILS = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Cell_FieldIndex.XILS;
                 }
                 case RecordTypeInts.XCLA:
@@ -6484,7 +6493,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCCM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CellSkyRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CellSkyRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.CellSkyRegion;
                 }
                 case RecordTypeInts.XOWN:
@@ -6495,13 +6507,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XCWT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XCWM:
@@ -6531,13 +6549,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCAS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AcousticSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AcousticSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XCIM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.XWEM:
@@ -6552,13 +6576,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XILL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LockList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LockList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XCMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCGD:
@@ -6573,13 +6603,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCIB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlobalDirtLayerInheritBiomeLayer = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.GlobalDirtLayerInheritBiomeLayer = frame.ReadBoolean();
+                    }
                     return (int)Cell_FieldIndex.GlobalDirtLayerInheritBiomeLayer;
                 }
                 case RecordTypeInts.TODD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.XLKR:
@@ -6933,17 +6969,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LTMP:
                 {
-                    _LightingTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightingTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.XCLW:
                 {
-                    _WaterHeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterHeightLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XILS:
                 {
-                    _XILSLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XILSLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.XILS;
                 }
                 case RecordTypeInts.XCLA:
@@ -6963,7 +7008,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCCM:
                 {
-                    _CellSkyRegionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CellSkyRegionLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.CellSkyRegion;
                 }
                 case RecordTypeInts.XOWN:
@@ -6976,12 +7024,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XCWT:
                 {
-                    _WaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XCWM:
@@ -7006,12 +7060,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCAS:
                 {
-                    _AcousticSpaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AcousticSpaceLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XCIM:
                 {
-                    _ImageSpaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.XWEM:
@@ -7021,12 +7081,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XILL:
                 {
-                    _LockListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LockListLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XCMO:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCGD:
@@ -7036,12 +7102,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCIB:
                 {
-                    _GlobalDirtLayerInheritBiomeLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _GlobalDirtLayerInheritBiomeLayerLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.GlobalDirtLayerInheritBiomeLayer;
                 }
                 case RecordTypeInts.TODD:
                 {
-                    _TimeOfDayLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TimeOfDayLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.XLKR:

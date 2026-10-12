@@ -1342,7 +1342,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.CategoryIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CategoryIndex = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.CategoryIndex = frame.ReadUInt32();
+                    }
                     return (int)TintGroup_FieldIndex.CategoryIndex;
                 }
                 default:
@@ -1513,7 +1516,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TTGE:
                 {
                     if (lastParsed.ShortCircuit((int)TintGroup_FieldIndex.CategoryIndex, translationParams)) return ParseResult.Stop;
-                    _CategoryIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CategoryIndexLocation = (stream.Position - offset);
+                    }
                     return (int)TintGroup_FieldIndex.CategoryIndex;
                 }
                 default:

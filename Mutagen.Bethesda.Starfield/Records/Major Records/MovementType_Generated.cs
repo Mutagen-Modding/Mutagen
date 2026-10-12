@@ -1721,19 +1721,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FlightAngleGain = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FlightAngleGain = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MovementType_FieldIndex.FlightAngleGain;
                 }
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.KNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.KNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MovementType_FieldIndex.KNAM;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.INTV = frame.ReadUInt32();
+                    }
                     return (int)MovementType_FieldIndex.INTV;
                 }
                 case RecordTypeInts.BOLV:
@@ -1908,17 +1917,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _FlightAngleGainLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FlightAngleGainLocation = (stream.Position - offset);
+                    }
                     return (int)MovementType_FieldIndex.FlightAngleGain;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _KNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _KNAMLocation = (stream.Position - offset);
+                    }
                     return (int)MovementType_FieldIndex.KNAM;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    _INTVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _INTVLocation = (stream.Position - offset);
+                    }
                     return (int)MovementType_FieldIndex.INTV;
                 }
                 case RecordTypeInts.BOLV:

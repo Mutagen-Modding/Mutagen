@@ -3461,7 +3461,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.DATA:
@@ -3475,7 +3478,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CRGR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedCrimeFactionList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SharedCrimeFactionList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.CRVA:
@@ -3509,13 +3515,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VEND:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
@@ -3546,7 +3558,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.VoiceType;
                 }
                 case RecordTypeInts.CRHR:
@@ -3565,7 +3580,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (nextRec.RecordType != RecordTypes.GRPH) throw new ArgumentException("Marker was read but not followed by expected subrecord.");
                     contentLength = nextRec.ContentLength;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FormationRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FormationRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
                     return (int)Faction_FieldIndex.FormationRadius;
                 }
                 case RecordTypeInts.XXXX:
@@ -3807,7 +3829,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _KeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _KeywordLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.DATA:
@@ -3817,7 +3842,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CRGR:
                 {
-                    _SharedCrimeFactionListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SharedCrimeFactionListLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.CRVA:
@@ -3849,12 +3877,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VEND:
                 {
-                    _VendorBuySellListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VendorBuySellListLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
-                    _MerchantContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MerchantContainerLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
@@ -3888,7 +3922,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VTCK:
                 {
-                    _VoiceTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VoiceTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.VoiceType;
                 }
                 case RecordTypeInts.CRHR:
@@ -3901,7 +3938,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CRGP:
                 {
                     stream.ReadSubrecord(); // Skip marker
-                    _FormationRadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FormationRadiusLocation = (stream.Position - offset);
+                    }
                     stream.ReadSubrecord(); // Skip record
                     return (int)Faction_FieldIndex.FormationRadius;
                 }

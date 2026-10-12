@@ -2474,7 +2474,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SnapTemplate_FieldIndex.Parent;
                 }
                 case RecordTypeInts.ENAM:
@@ -2507,13 +2510,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextNodeID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NextNodeID = frame.ReadUInt32();
+                    }
                     return (int)SnapTemplate_FieldIndex.NextNodeID;
                 }
                 case RecordTypeInts.STPT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.STPT = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.STPT = frame.ReadUInt32();
+                    }
                     return (int)SnapTemplate_FieldIndex.STPT;
                 }
                 case RecordTypeInts.CNAM:
@@ -2700,7 +2709,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _ParentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplate_FieldIndex.Parent;
                 }
                 case RecordTypeInts.ENAM:
@@ -2735,12 +2747,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _NextNodeIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NextNodeIDLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplate_FieldIndex.NextNodeID;
                 }
                 case RecordTypeInts.STPT:
                 {
-                    _STPTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _STPTLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplate_FieldIndex.STPT;
                 }
                 case RecordTypeInts.CNAM:

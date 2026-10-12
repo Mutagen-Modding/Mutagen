@@ -6714,7 +6714,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Skin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Skin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BO64:
@@ -6751,7 +6754,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.DAT2:
@@ -6948,13 +6954,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKD:
@@ -6984,7 +6996,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AimAssistPose.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AimAssistPose.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.AimAssistPose;
                 }
                 case RecordTypeInts.NAM3:
@@ -6997,7 +7012,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.ImpactMaterialType;
                 }
                 case RecordTypeInts.WED0:
@@ -7053,37 +7071,55 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.UNWP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnarmedWeapon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnarmedWeapon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.UnarmedWeapon;
                 }
                 case RecordTypeInts.WKMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefault;
                 }
                 case RecordTypeInts.SWMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementSwimDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementSwimDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementSwimDefault;
                 }
                 case RecordTypeInts.FLMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementFlyDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementFlyDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementFlyDefault;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArmorRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ArmorRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.ArmorRace;
                 }
                 case RecordTypeInts.SRAC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubgraphTemplateRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SubgraphTemplateRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
                 case RecordTypeInts.SADD:
@@ -7104,19 +7140,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PTOP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleChatterTimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleChatterTimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.IdleChatterTimeMin;
                 }
                 case RecordTypeInts.NTOP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleChatterTimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleChatterTimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.IdleChatterTimeMax;
                 }
                 case RecordTypeInts.QSTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogueQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DialogueQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.DialogueQuest;
                 }
                 case RecordTypeInts.MSSS:
@@ -7600,7 +7645,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _SkinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SkinLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BO64:
@@ -7633,7 +7681,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _BodyPartDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BodyPartDataLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.DAT2:
@@ -7802,12 +7853,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _FacegenMainClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FacegenMainClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _FacegenFaceClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FacegenFaceClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKD:
@@ -7837,7 +7894,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _AimAssistPoseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AimAssistPoseLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.AimAssistPose;
                 }
                 case RecordTypeInts.NAM3:
@@ -7849,7 +7909,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _ImpactMaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImpactMaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.ImpactMaterialType;
                 }
                 case RecordTypeInts.WED0:
@@ -7905,32 +7968,50 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.UNWP:
                 {
-                    _UnarmedWeaponLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnarmedWeaponLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.UnarmedWeapon;
                 }
                 case RecordTypeInts.WKMV:
                 {
-                    _BaseMovementDefaultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefault;
                 }
                 case RecordTypeInts.SWMV:
                 {
-                    _BaseMovementSwimDefaultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementSwimDefaultLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementSwimDefault;
                 }
                 case RecordTypeInts.FLMV:
                 {
-                    _BaseMovementFlyDefaultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementFlyDefaultLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementFlyDefault;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ArmorRaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ArmorRaceLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.ArmorRace;
                 }
                 case RecordTypeInts.SRAC:
                 {
-                    _SubgraphTemplateRaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SubgraphTemplateRaceLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
                 case RecordTypeInts.SADD:
@@ -7949,17 +8030,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PTOP:
                 {
-                    _IdleChatterTimeMinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleChatterTimeMinLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.IdleChatterTimeMin;
                 }
                 case RecordTypeInts.NTOP:
                 {
-                    _IdleChatterTimeMaxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleChatterTimeMaxLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.IdleChatterTimeMax;
                 }
                 case RecordTypeInts.QSTI:
                 {
-                    _DialogueQuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DialogueQuestLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.DialogueQuest;
                 }
                 case RecordTypeInts.MSSS:

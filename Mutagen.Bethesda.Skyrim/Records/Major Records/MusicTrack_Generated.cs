@@ -2330,13 +2330,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MusicTrack_FieldIndex.Duration;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeOut = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FadeOut = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MusicTrack_FieldIndex.FadeOut;
                 }
                 case RecordTypeInts.ANAM:
@@ -2553,12 +2559,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.FLTV:
                 {
-                    _DurationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DurationLocation = (stream.Position - offset);
+                    }
                     return (int)MusicTrack_FieldIndex.Duration;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _FadeOutLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FadeOutLocation = (stream.Position - offset);
+                    }
                     return (int)MusicTrack_FieldIndex.FadeOut;
                 }
                 case RecordTypeInts.ANAM:

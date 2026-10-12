@@ -3230,19 +3230,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultHairColor = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.DefaultHairColor = frame.ReadUInt8();
+                    }
                     return (int)Race_FieldIndex.DefaultHairColor;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FaceGenMainClamp = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FaceGenMainClamp = frame.ReadInt32();
+                    }
                     return (int)Race_FieldIndex.FaceGenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FaceGenFaceClamp = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FaceGenFaceClamp = frame.ReadInt32();
+                    }
                     return (int)Race_FieldIndex.FaceGenFaceClamp;
                 }
                 case RecordTypeInts.ATTR:
@@ -3306,7 +3315,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SNAM = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.SNAM = frame.ReadInt16();
+                    }
                     return (int)Race_FieldIndex.SNAM;
                 }
                 default:
@@ -3577,17 +3589,26 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _DefaultHairColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _DefaultHairColorLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.DefaultHairColor;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _FaceGenMainClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FaceGenMainClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FaceGenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _FaceGenFaceClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FaceGenFaceClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FaceGenFaceClamp;
                 }
                 case RecordTypeInts.ATTR:
@@ -3649,7 +3670,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _SNAMLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.SNAM;
                 }
                 default:

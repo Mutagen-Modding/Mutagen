@@ -2699,37 +2699,55 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GNAM = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.GNAM = frame.ReadUInt8();
+                    }
                     return (int)SurfaceBlock_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HNAM = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.HNAM = frame.ReadUInt16();
+                    }
                     return (int)SurfaceBlock_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INAM = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.INAM = frame.ReadUInt8();
+                    }
                     return (int)SurfaceBlock_FieldIndex.INAM;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JNAM = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.JNAM = frame.ReadUInt8();
+                    }
                     return (int)SurfaceBlock_FieldIndex.JNAM;
                 }
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.KNAM = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.KNAM = frame.ReadUInt8();
+                    }
                     return (int)SurfaceBlock_FieldIndex.KNAM;
                 }
                 case RecordTypeInts.WHGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WHGT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.WHGT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SurfaceBlock_FieldIndex.WHGT;
                 }
                 case RecordTypeInts.NAM0:
@@ -2753,7 +2771,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM2 = frame.ReadInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.NAM2 = frame.ReadInt64();
+                    }
                     return (int)SurfaceBlock_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
@@ -2771,7 +2792,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM5.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NAM5.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SurfaceBlock_FieldIndex.NAM5;
                 }
                 default:
@@ -3001,32 +3025,50 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _GNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _GNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _HNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _INAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _INAMLocation = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.INAM;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _JNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _JNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.JNAM;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _KNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _KNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.KNAM;
                 }
                 case RecordTypeInts.WHGT:
                 {
-                    _WHGTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WHGTLocation = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.WHGT;
                 }
                 case RecordTypeInts.NAM0:
@@ -3041,7 +3083,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _NAM2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _NAM2Location = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
@@ -3064,7 +3109,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _NAM5Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM5Location = (stream.Position - offset);
+                    }
                     return (int)SurfaceBlock_FieldIndex.NAM5;
                 }
                 default:

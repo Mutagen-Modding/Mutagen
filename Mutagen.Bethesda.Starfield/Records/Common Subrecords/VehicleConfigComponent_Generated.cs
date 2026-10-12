@@ -1709,7 +1709,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VCMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MountedWeapon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MountedWeapon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)VehicleConfigComponent_FieldIndex.MountedWeapon;
                 }
                 case RecordTypeInts.VCTT:
@@ -1885,7 +1888,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VCMT:
                 {
-                    _MountedWeaponLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MountedWeaponLocation = (stream.Position - offset);
+                    }
                     return (int)VehicleConfigComponent_FieldIndex.MountedWeapon;
                 }
                 case RecordTypeInts.VCTT:

@@ -2769,13 +2769,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Static_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedLocRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Static_FieldIndex.ForcedLocRefType;
                 }
                 case RecordTypeInts.MODL:
@@ -3063,12 +3069,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedLocRefTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.ForcedLocRefType;
                 }
                 case RecordTypeInts.MODL:
