@@ -1648,8 +1648,8 @@ internal class MergedWorldspaceCell : ICellGetter
     public IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace => _primary.ImageSpace;
     public IFormLinkNullableGetter<IGodRaysGetter> GodRays => _primary.GodRays;
     public IReadOnlyList<IFormLinkGetter<IPlacedThingGetter>>? PhysicsReferences => _primary.PhysicsReferences;
-    public IReadOnlyList<UInt32> CombinedMeshes => _primary.CombinedMeshes;
-    public IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences => _primary.CombinedMeshReferences;
+    public IReadOnlyList<UInt32>? CombinedMeshes => _primary.CombinedMeshes;
+    public IReadOnlyList<ICellCombinedMeshReferenceGetter>? CombinedMeshReferences => _primary.CombinedMeshReferences;
     public ILandscapeGetter? Landscape => _primary.Landscape;
     public IReadOnlyList<INavigationMeshGetter> NavigationMeshes => _primary.NavigationMeshes;
     public Int32 Timestamp => _primary.Timestamp;
