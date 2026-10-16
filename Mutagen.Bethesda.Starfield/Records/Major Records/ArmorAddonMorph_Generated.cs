@@ -1087,14 +1087,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonMorph_FieldIndex.WorldMorph, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorldMorph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WorldMorph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddonMorph_FieldIndex.WorldMorph;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonMorph_FieldIndex.FirstPersonMorph, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FirstPersonMorph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FirstPersonMorph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddonMorph_FieldIndex.FirstPersonMorph;
                 }
                 default:
@@ -1240,13 +1246,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM4:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonMorph_FieldIndex.WorldMorph, translationParams)) return ParseResult.Stop;
-                    _WorldMorphLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WorldMorphLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddonMorph_FieldIndex.WorldMorph;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonMorph_FieldIndex.FirstPersonMorph, translationParams)) return ParseResult.Stop;
-                    _FirstPersonMorphLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FirstPersonMorphLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddonMorph_FieldIndex.FirstPersonMorph;
                 }
                 default:

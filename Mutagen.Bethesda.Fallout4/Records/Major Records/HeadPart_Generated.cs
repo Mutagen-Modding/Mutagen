@@ -2472,19 +2472,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Color.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ValidRaces.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ValidRaces.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 case RecordTypeInts.CTDA:
@@ -2714,17 +2723,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ValidRacesLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ValidRacesLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 case RecordTypeInts.CTDA:

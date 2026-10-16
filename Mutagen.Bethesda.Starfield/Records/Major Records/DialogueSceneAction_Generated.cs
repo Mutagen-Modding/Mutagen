@@ -1501,19 +1501,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogueSceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.DMAX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)DialogueSceneAction_FieldIndex.LoopingMax;
                 }
                 case RecordTypeInts.DMIN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)DialogueSceneAction_FieldIndex.LoopingMin;
                 }
                 case RecordTypeInts.HNAM:
@@ -1526,7 +1535,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VENC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogueSubtype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DialogueSubtype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogueSceneAction_FieldIndex.DialogueSubtype;
                 }
                 case RecordTypeInts.WED0:
@@ -1678,17 +1690,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)DialogueSceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.DMAX:
                 {
-                    _LoopingMaxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingMaxLocation = (stream.Position - offset);
+                    }
                     return (int)DialogueSceneAction_FieldIndex.LoopingMax;
                 }
                 case RecordTypeInts.DMIN:
                 {
-                    _LoopingMinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingMinLocation = (stream.Position - offset);
+                    }
                     return (int)DialogueSceneAction_FieldIndex.LoopingMin;
                 }
                 case RecordTypeInts.HNAM:
@@ -1701,7 +1722,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VENC:
                 {
-                    _DialogueSubtypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DialogueSubtypeLocation = (stream.Position - offset);
+                    }
                     return (int)DialogueSceneAction_FieldIndex.DialogueSubtype;
                 }
                 case RecordTypeInts.WED0:

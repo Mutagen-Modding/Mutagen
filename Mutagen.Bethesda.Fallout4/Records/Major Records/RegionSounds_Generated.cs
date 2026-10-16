@@ -1404,7 +1404,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:
@@ -1420,13 +1423,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.RLDM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodDisplayDistanceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LodDisplayDistanceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OcclusionAccuracyDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.OcclusionAccuracyDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)RegionSounds_FieldIndex.OcclusionAccuracyDist;
                 }
                 default:
@@ -1564,7 +1573,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.RDMO:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:
@@ -1579,12 +1591,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RLDM:
                 {
-                    _LodDisplayDistanceMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LodDisplayDistanceMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.LodDisplayDistanceMultiplier;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _OcclusionAccuracyDistLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OcclusionAccuracyDistLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.OcclusionAccuracyDist;
                 }
                 default:

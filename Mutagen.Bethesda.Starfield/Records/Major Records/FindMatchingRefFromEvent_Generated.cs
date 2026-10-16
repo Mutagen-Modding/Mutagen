@@ -1068,7 +1068,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.FromEvent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FromEvent = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FromEvent = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
@@ -1222,7 +1225,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALFE:
                 {
                     if (lastParsed.ShortCircuit((int)FindMatchingRefFromEvent_FieldIndex.FromEvent, translationParams)) return ParseResult.Stop;
-                    _FromEventLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FromEventLocation = (stream.Position - offset);
+                    }
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:

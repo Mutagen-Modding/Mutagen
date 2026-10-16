@@ -3604,25 +3604,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    }
                     return (int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ForcedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALUA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UniqueActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UniqueActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALFA:
@@ -3705,31 +3717,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.SPOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpectatorOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpectatorOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObserveDeadBodyOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObserveDeadBodyOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GuardWarnOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GuardWarnOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CombatOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALDN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALSP:
@@ -3762,7 +3789,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALED: // End Marker
@@ -4000,22 +4030,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ALFI:
                 {
-                    _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
-                    _SpecificLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpecificLocationLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFR:
                 {
-                    _ForcedReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ForcedReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALUA:
                 {
-                    _UniqueActorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UniqueActorLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALFA:
@@ -4107,27 +4149,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SPOR:
                 {
-                    _SpectatorOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpectatorOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
-                    _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObserveDeadBodyOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
-                    _GuardWarnOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GuardWarnOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
-                    _CombatOverridePackageListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CombatOverridePackageListLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALDN:
                 {
-                    _DisplayNameLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DisplayNameLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALSP:
@@ -4174,7 +4231,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.VTCK:
                 {
-                    _VoiceTypesLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VoiceTypesLocation = (stream.Position - offset);
+                    }
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALED: // End Marker

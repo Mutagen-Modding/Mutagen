@@ -1600,21 +1600,30 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)AudioOcclusionPrimitive_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OBSV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Obstruction = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Obstruction = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AudioOcclusionPrimitive_FieldIndex.Obstruction;
                 }
                 case RecordTypeInts.OCCV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Occlusion = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Occlusion = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AudioOcclusionPrimitive_FieldIndex.Occlusion;
                 }
                 default:
@@ -1768,17 +1777,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)AudioOcclusionPrimitive_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OBSV:
                 {
-                    _ObstructionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObstructionLocation = (stream.Position - offset);
+                    }
                     return (int)AudioOcclusionPrimitive_FieldIndex.Obstruction;
                 }
                 case RecordTypeInts.OCCV:
                 {
-                    _OcclusionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OcclusionLocation = (stream.Position - offset);
+                    }
                     return (int)AudioOcclusionPrimitive_FieldIndex.Occlusion;
                 }
                 default:

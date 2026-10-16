@@ -1765,7 +1765,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ITID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ID = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.ID = frame.ReadUInt16();
+                    }
                     return (int)TerminalMenuItem_FieldIndex.ID;
                 }
                 case RecordTypeInts.XLOC:
@@ -1997,7 +2000,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ITID:
                 {
-                    _IDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IDLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuItem_FieldIndex.ID;
                 }
                 case RecordTypeInts.XLOC:

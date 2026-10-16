@@ -4386,9 +4386,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Flora_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4471,7 +4474,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Flora_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ATTX:
@@ -4500,7 +4506,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.PFHS:
@@ -4545,43 +4554,64 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.ActionKeyword;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DamageRequiredToHarvest = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DamageRequiredToHarvest = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Flora_FieldIndex.DamageRequiredToHarvest;
                 }
                 case RecordTypeInts.FMAH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxHarvestCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MaxHarvestCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Flora_FieldIndex.MaxHarvestCount;
                 }
                 case RecordTypeInts.FMIH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MinHarvestCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MinHarvestCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Flora_FieldIndex.MinHarvestCount;
                 }
                 case RecordTypeInts.FMAG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaxGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.MaxGlobal;
                 }
                 case RecordTypeInts.FMIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MinGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MinGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.MinGlobal;
                 }
                 case RecordTypeInts.FLXP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Flora_FieldIndex.Explosion;
                 }
                 case RecordTypeInts.FHLS:
@@ -4840,7 +4870,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -4917,7 +4950,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _MarkerColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerColorLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ATTX:
@@ -4937,7 +4973,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PFIG:
                 {
-                    _IngredientLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IngredientLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.PFHS:
@@ -4984,37 +5023,58 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ActionKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActionKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.ActionKeyword;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _DamageRequiredToHarvestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DamageRequiredToHarvestLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.DamageRequiredToHarvest;
                 }
                 case RecordTypeInts.FMAH:
                 {
-                    _MaxHarvestCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxHarvestCountLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.MaxHarvestCount;
                 }
                 case RecordTypeInts.FMIH:
                 {
-                    _MinHarvestCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MinHarvestCountLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.MinHarvestCount;
                 }
                 case RecordTypeInts.FMAG:
                 {
-                    _MaxGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.MaxGlobal;
                 }
                 case RecordTypeInts.FMIG:
                 {
-                    _MinGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MinGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.MinGlobal;
                 }
                 case RecordTypeInts.FLXP:
                 {
-                    _ExplosionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExplosionLocation = (stream.Position - offset);
+                    }
                     return (int)Flora_FieldIndex.Explosion;
                 }
                 case RecordTypeInts.FHLS:

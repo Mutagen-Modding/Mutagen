@@ -1062,7 +1062,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FCTF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LinkedVoiceTypeComponent_FieldIndex.VoiceType;
                 }
                 default:
@@ -1191,7 +1194,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.FCTF:
                 {
-                    _VoiceTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VoiceTypeLocation = (stream.Position - offset);
+                    }
                     return (int)LinkedVoiceTypeComponent_FieldIndex.VoiceType;
                 }
                 default:

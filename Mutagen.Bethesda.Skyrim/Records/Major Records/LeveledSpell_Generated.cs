@@ -1734,9 +1734,12 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.ByteHundred);
+                    if (contentLength >= 1)
+                    {
+                        item.ChanceNone = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.ByteHundred);
+                    }
                     return (int)LeveledSpell_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1911,7 +1914,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.LVLD:
                 {
-                    _ChanceNoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _ChanceNoneLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledSpell_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:

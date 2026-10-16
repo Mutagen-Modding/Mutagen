@@ -1279,7 +1279,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TPLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseTemplatedText = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.UseTemplatedText = frame.ReadBoolean();
+                    }
                     return (int)TerminalMenuBodyText_FieldIndex.UseTemplatedText;
                 }
                 default:
@@ -1446,7 +1449,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TPLT:
                 {
-                    _UseTemplatedTextLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _UseTemplatedTextLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuBodyText_FieldIndex.UseTemplatedText;
                 }
                 default:

@@ -7809,7 +7809,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Skin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Skin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BODT:
@@ -7985,25 +7988,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NumberOfTintsInList = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.NumberOfTintsInList = frame.ReadUInt16();
+                    }
                     return (int)Race_FieldIndex.NumberOfTintsInList;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttackRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.AttackRace;
                 }
                 case RecordTypeInts.ATKD:
@@ -8050,7 +8065,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.NAM3:
@@ -8066,31 +8084,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DecapitationFX.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DecapitationFX.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.DecapitationFX;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OpenLootSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OpenLootSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.OpenLootSound;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CloseLootSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CloseLootSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.CloseLootSound;
                 }
                 case RecordTypeInts.NAME:
@@ -8132,7 +8165,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.UNES:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnarmedEquipSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnarmedEquipSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.UnarmedEquipSlot;
                 }
                 case RecordTypeInts.PHTN:
@@ -8152,37 +8188,55 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.WKMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefaultWalk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefaultWalk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultWalk;
                 }
                 case RecordTypeInts.RNMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefaultRun.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefaultRun.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultRun;
                 }
                 case RecordTypeInts.SWMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefaultSwim.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefaultSwim.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultSwim;
                 }
                 case RecordTypeInts.FLMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefaultFly.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefaultFly.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultFly;
                 }
                 case RecordTypeInts.SNMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefaultSneak.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefaultSneak.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultSneak;
                 }
                 case RecordTypeInts.SPMV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseMovementDefaultSprint.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BaseMovementDefaultSprint.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultSprint;
                 }
                 case RecordTypeInts.NAM0:
@@ -8199,13 +8253,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MorphRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MorphRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.MorphRace;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArmorRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ArmorRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.ArmorRace;
                 }
                 default:
@@ -8779,7 +8839,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _SkinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SkinLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BODT:
@@ -8857,22 +8920,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TINL:
                 {
-                    _NumberOfTintsInListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _NumberOfTintsInListLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.NumberOfTintsInList;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _FacegenMainClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FacegenMainClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _FacegenFaceClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FacegenFaceClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKR:
                 {
-                    _AttackRaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttackRaceLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.AttackRace;
                 }
                 case RecordTypeInts.ATKD:
@@ -8919,7 +8994,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _BodyPartDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BodyPartDataLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.NAM3:
@@ -8936,27 +9014,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _MaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _ImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.NAM7:
                 {
-                    _DecapitationFXLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DecapitationFXLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.DecapitationFX;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _OpenLootSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OpenLootSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.OpenLootSound;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _CloseLootSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CloseLootSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.CloseLootSound;
                 }
                 case RecordTypeInts.NAME:
@@ -8998,7 +9091,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.UNES:
                 {
-                    _UnarmedEquipSlotLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnarmedEquipSlotLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.UnarmedEquipSlot;
                 }
                 case RecordTypeInts.PHTN:
@@ -9017,32 +9113,50 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.WKMV:
                 {
-                    _BaseMovementDefaultWalkLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultWalkLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultWalk;
                 }
                 case RecordTypeInts.RNMV:
                 {
-                    _BaseMovementDefaultRunLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultRunLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultRun;
                 }
                 case RecordTypeInts.SWMV:
                 {
-                    _BaseMovementDefaultSwimLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultSwimLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultSwim;
                 }
                 case RecordTypeInts.FLMV:
                 {
-                    _BaseMovementDefaultFlyLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultFlyLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultFly;
                 }
                 case RecordTypeInts.SNMV:
                 {
-                    _BaseMovementDefaultSneakLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultSneakLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultSneak;
                 }
                 case RecordTypeInts.SPMV:
                 {
-                    _BaseMovementDefaultSprintLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseMovementDefaultSprintLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.BaseMovementDefaultSprint;
                 }
                 case RecordTypeInts.NAM0:
@@ -9059,12 +9173,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _MorphRaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MorphRaceLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.MorphRace;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ArmorRaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ArmorRaceLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.ArmorRace;
                 }
                 default:

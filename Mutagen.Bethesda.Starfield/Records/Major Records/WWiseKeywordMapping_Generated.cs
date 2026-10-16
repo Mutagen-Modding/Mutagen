@@ -1810,7 +1810,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WMTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WMTI = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.WMTI = frame.ReadUInt16();
+                    }
                     return (int)WWiseKeywordMapping_FieldIndex.WMTI;
                 }
                 case RecordTypeInts.WMKA:
@@ -1826,7 +1829,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WMSS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WMSS = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.WMSS = frame.ReadUInt32();
+                    }
                     return (int)WWiseKeywordMapping_FieldIndex.WMSS;
                 }
                 case RecordTypeInts.WMSI:
@@ -1983,7 +1989,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.WMTI:
                 {
-                    _WMTILocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _WMTILocation = (stream.Position - offset);
+                    }
                     return (int)WWiseKeywordMapping_FieldIndex.WMTI;
                 }
                 case RecordTypeInts.WMKA:
@@ -1998,7 +2007,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.WMSS:
                 {
-                    _WMSSLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WMSSLocation = (stream.Position - offset);
+                    }
                     return (int)WWiseKeywordMapping_FieldIndex.WMSS;
                 }
                 case RecordTypeInts.WMSI:

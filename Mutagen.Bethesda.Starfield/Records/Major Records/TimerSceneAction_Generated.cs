@@ -1348,7 +1348,10 @@ namespace Mutagen.Bethesda.Starfield
                     else if (lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.EndPhase)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        if (contentLength >= 4)
+                        {
+                            item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        }
                         return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, nextRecordType);
                     }
                     else
@@ -1366,7 +1369,10 @@ namespace Mutagen.Bethesda.Starfield
                                     translationParams: translationParams.WithNoConverter());
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                if (contentLength >= 4)
+                                {
+                                    item.MaxSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                }
                                 return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -1376,7 +1382,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MinSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MinSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)TimerSceneAction_FieldIndex.MinSeconds;
                 }
                 case RecordTypeInts.HNAM:
@@ -1387,13 +1396,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SCQS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCQS = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.SCQS = frame.ReadInt16();
+                    }
                     return (int)TimerSceneAction_FieldIndex.SCQS;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.INTV = frame.ReadInt16();
+                    }
                     return (int)TimerSceneAction_FieldIndex.INTV;
                 }
                 default:
@@ -1551,7 +1566,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)ASceneAction_FieldIndex.EndPhase)
                     {
-                        _MaxSecondsLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _MaxSecondsLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, type);
                     }
                     else
@@ -1571,7 +1589,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 1:
                             {
-                                _MaxSecondsLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _MaxSecondsLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)TimerSceneAction_FieldIndex.MaxSeconds, type);
                             }
                             default:
@@ -1581,7 +1602,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _MinSecondsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MinSecondsLocation = (stream.Position - offset);
+                    }
                     return (int)TimerSceneAction_FieldIndex.MinSeconds;
                 }
                 case RecordTypeInts.HNAM:
@@ -1591,12 +1615,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SCQS:
                 {
-                    _SCQSLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _SCQSLocation = (stream.Position - offset);
+                    }
                     return (int)TimerSceneAction_FieldIndex.SCQS;
                 }
                 case RecordTypeInts.INTV:
                 {
-                    _INTVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _INTVLocation = (stream.Position - offset);
+                    }
                     return (int)TimerSceneAction_FieldIndex.INTV;
                 }
                 default:

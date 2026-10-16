@@ -3020,43 +3020,64 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM1 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM1 = frame.ReadUInt32();
+                    }
                     return (int)MediaLocationController_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM2 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM2 = frame.ReadUInt32();
+                    }
                     return (int)MediaLocationController_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM3 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM3 = frame.ReadUInt32();
+                    }
                     return (int)MediaLocationController_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LocationDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaLocationController_FieldIndex.LocationDelay;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DayStart = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.DayStart = frame.ReadUInt32();
+                    }
                     return (int)MediaLocationController_FieldIndex.DayStart;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightStart = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NightStart = frame.ReadUInt32();
+                    }
                     return (int)MediaLocationController_FieldIndex.NightStart;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RetriggerDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.RetriggerDelay = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaLocationController_FieldIndex.RetriggerDelay;
                 }
                 case RecordTypeInts.HNAM:
@@ -3116,13 +3137,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ConditionalFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ConditionalFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MediaLocationController_FieldIndex.ConditionalFaction;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FNAM = frame.ReadUInt32();
+                    }
                     return (int)MediaLocationController_FieldIndex.FNAM;
                 }
                 default:
@@ -3314,37 +3341,58 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _NAM1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM1Location = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _NAM2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM2Location = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _NAM3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM3Location = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _LocationDelayLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationDelayLocation = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.LocationDelay;
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _DayStartLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DayStartLocation = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.DayStart;
                 }
                 case RecordTypeInts.NAM6:
                 {
-                    _NightStartLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightStartLocation = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.NightStart;
                 }
                 case RecordTypeInts.NAM7:
                 {
-                    _RetriggerDelayLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RetriggerDelayLocation = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.RetriggerDelay;
                 }
                 case RecordTypeInts.HNAM:
@@ -3433,12 +3481,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ConditionalFactionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ConditionalFactionLocation = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.ConditionalFaction;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FNAMLocation = (stream.Position - offset);
+                    }
                     return (int)MediaLocationController_FieldIndex.FNAM;
                 }
                 default:

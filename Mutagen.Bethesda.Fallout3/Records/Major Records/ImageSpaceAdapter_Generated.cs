@@ -12669,7 +12669,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundIntro.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundIntro.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)ImageSpaceAdapter_FieldIndex.SoundIntro;
                 }
@@ -12678,7 +12681,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SoundOutro.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SoundOutro.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)ImageSpaceAdapter_FieldIndex.SoundOutro;
                 }
@@ -13546,12 +13552,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RDSD:
                 {
-                    _SoundIntroLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundIntroLocation = (stream.Position - offset);
+                    }
                     return (int)ImageSpaceAdapter_FieldIndex.SoundIntro;
                 }
                 case RecordTypeInts.RDSI:
                 {
-                    _SoundOutroLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundOutroLocation = (stream.Position - offset);
+                    }
                     return (int)ImageSpaceAdapter_FieldIndex.SoundOutro;
                 }
                 default:

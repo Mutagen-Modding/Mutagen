@@ -2997,7 +2997,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteractionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InteractionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.InteractionKeyword;
                 }
                 case RecordTypeInts.MNAM:
@@ -3015,7 +3018,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AssociatedSpell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Furniture_FieldIndex.AssociatedSpell;
                 }
                 case RecordTypeInts.ENAM:
@@ -3337,7 +3343,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _InteractionKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InteractionKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.InteractionKeyword;
                 }
                 case RecordTypeInts.MNAM:
@@ -3354,7 +3363,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _AssociatedSpellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AssociatedSpellLocation = (stream.Position - offset);
+                    }
                     return (int)Furniture_FieldIndex.AssociatedSpell;
                 }
                 case RecordTypeInts.ENAM:

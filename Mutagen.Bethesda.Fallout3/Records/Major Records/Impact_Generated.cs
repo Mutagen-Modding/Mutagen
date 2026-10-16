@@ -2108,19 +2108,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.Sound2;
                 }
                 default:
@@ -2323,17 +2332,26 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _TextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _Sound1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Sound1Location = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _Sound2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Sound2Location = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.Sound2;
                 }
                 default:

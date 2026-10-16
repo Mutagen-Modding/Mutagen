@@ -3741,13 +3741,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Npc_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Npc_FieldIndex.Race;
                 }
                 case RecordTypeInts.SPLO:
@@ -3762,7 +3768,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Npc_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -3809,7 +3818,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Class.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Class.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Npc_FieldIndex.Class;
                 }
                 case RecordTypeInts.DATA:
@@ -3820,13 +3832,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Hair.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Hair.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Npc_FieldIndex.Hair;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HairLength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HairLength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Npc_FieldIndex.HairLength;
                 }
                 case RecordTypeInts.ENAM:
@@ -3842,13 +3860,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.HCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HairColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.HairColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Npc_FieldIndex.HairColor;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Npc_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.FGGS:
@@ -4113,12 +4137,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _DeathItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DeathItemLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _RaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RaceLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.Race;
                 }
                 case RecordTypeInts.SPLO:
@@ -4137,7 +4167,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
@@ -4186,7 +4219,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ClassLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClassLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.Class;
                 }
                 case RecordTypeInts.DATA:
@@ -4196,12 +4232,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HairLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HairLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.Hair;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _HairLengthLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HairLengthLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.HairLength;
                 }
                 case RecordTypeInts.ENAM:
@@ -4216,12 +4258,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.HCLR:
                 {
-                    _HairColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HairColorLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.HairColor;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _CombatStyleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CombatStyleLocation = (stream.Position - offset);
+                    }
                     return (int)Npc_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.FGGS:

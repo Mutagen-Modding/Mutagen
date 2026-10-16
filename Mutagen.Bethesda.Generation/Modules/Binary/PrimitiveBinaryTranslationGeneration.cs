@@ -122,6 +122,31 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
             sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
+        using (fieldData.HasTrigger ? await ContentLengthGuard(sb, objGen, typeGen, "contentLength") : null)
+        {
+            await GenerateCopyInRead(sb, objGen, typeGen, fieldData, frameAccessor, itemAccessor, errorMaskAccessor);
+        }
+        if (fieldData.HasTrigger && fieldData.MarkerType.HasValue && await ShortestReadableContent(objGen, typeGen) != null)
+        {
+            sb.AppendLine("else");
+            using (sb.CurlyBrace())
+            {
+                sb.AppendLine($"{frameAccessor}.Position += contentLength;");
+            }
+        }
+    }
+
+    public override Task<int?> ShortestReadableContent(ObjectGeneration objGen, TypeGeneration typeGen) => ExpectedLength(objGen, typeGen);
+
+    private async Task GenerateCopyInRead(
+        StructuredStringBuilder sb,
+        ObjectGeneration objGen,
+        TypeGeneration typeGen,
+        MutagenFieldData fieldData,
+        Accessor frameAccessor,
+        Accessor itemAccessor,
+        Accessor errorMaskAccessor)
+    {
         bool hasCustom = false;
         List<string> extraArgs = new List<string>();
         extraArgs.Add($"reader: {frameAccessor}{(fieldData.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");

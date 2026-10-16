@@ -1238,7 +1238,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ColorRemappingIndex = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
                 case RecordTypeInts.MODT:
@@ -1252,7 +1255,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 default:
@@ -1412,7 +1418,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MODC:
                 {
                     if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.ColorRemappingIndex, translationParams)) return ParseResult.Stop;
-                    _ColorRemappingIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorRemappingIndexLocation = (stream.Position - offset);
+                    }
                     return (int)SimpleModel_FieldIndex.ColorRemappingIndex;
                 }
                 case RecordTypeInts.MODT:
@@ -1424,7 +1433,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MODS:
                 {
                     if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.MaterialSwap, translationParams)) return ParseResult.Stop;
-                    _MaterialSwapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialSwapLocation = (stream.Position - offset);
+                    }
                     return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 default:

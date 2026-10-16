@@ -1294,7 +1294,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)QuestStageCompleteData_FieldIndex.AffinityChange, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AffinityChange.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AffinityChange.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestStageCompleteData_FieldIndex.AffinityChange;
                 }
                 case RecordTypeInts.QRXP:
@@ -1461,7 +1464,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM1:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStageCompleteData_FieldIndex.AffinityChange, translationParams)) return ParseResult.Stop;
-                    _AffinityChangeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AffinityChangeLocation = (stream.Position - offset);
+                    }
                     return (int)QuestStageCompleteData_FieldIndex.AffinityChange;
                 }
                 case RecordTypeInts.QRXP:

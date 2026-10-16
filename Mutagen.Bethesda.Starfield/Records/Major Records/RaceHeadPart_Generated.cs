@@ -1079,13 +1079,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)RaceHeadPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)RaceHeadPart_FieldIndex.Index;
                 }
                 case RecordTypeInts.HEAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Part.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Part.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RaceHeadPart_FieldIndex.Part;
                 }
                 default:
@@ -1231,12 +1237,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)RaceHeadPart_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)RaceHeadPart_FieldIndex.Index;
                 }
                 case RecordTypeInts.HEAD:
                 {
-                    _PartLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PartLocation = (stream.Position - offset);
+                    }
                     return (int)RaceHeadPart_FieldIndex.Part;
                 }
                 default:

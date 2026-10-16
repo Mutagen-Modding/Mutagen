@@ -1953,19 +1953,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Enchantment.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Enchantment.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnchantmentPoints = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.EnchantmentPoints = frame.ReadUInt16();
+                    }
                     return (int)Book_FieldIndex.EnchantmentPoints;
                 }
                 case RecordTypeInts.DESC:
@@ -2163,17 +2172,26 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EnchantmentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EnchantmentLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _EnchantmentPointsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _EnchantmentPointsLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.EnchantmentPoints;
                 }
                 case RecordTypeInts.DESC:

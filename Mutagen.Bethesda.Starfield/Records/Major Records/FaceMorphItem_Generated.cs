@@ -1181,7 +1181,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)FaceMorphItem_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRU:
@@ -1360,7 +1363,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FMSR:
                 {
                     if (lastParsed.ShortCircuit((int)FaceMorphItem_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)FaceMorphItem_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRU:

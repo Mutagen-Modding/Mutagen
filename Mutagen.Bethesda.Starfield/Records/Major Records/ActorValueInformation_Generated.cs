@@ -2031,7 +2031,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ActorValueInformation_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.AVFL:
@@ -2053,13 +2056,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Min = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Min = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ActorValueInformation_FieldIndex.Min;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Max = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Max = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ActorValueInformation_FieldIndex.Max;
                 }
                 case RecordTypeInts.XXXX:
@@ -2268,7 +2277,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _DefaultValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultValueLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValueInformation_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.AVFL:
@@ -2283,12 +2295,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _MinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MinLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValueInformation_FieldIndex.Min;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _MaxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValueInformation_FieldIndex.Max;
                 }
                 case RecordTypeInts.XXXX:

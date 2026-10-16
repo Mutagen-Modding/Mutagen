@@ -2494,43 +2494,64 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SecondaryTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SecondaryTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootstepExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FootstepExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.FootstepExplosion;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Hazard.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Hazard.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Impact_FieldIndex.Hazard;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootstepParticleMaxDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FootstepParticleMaxDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Impact_FieldIndex.FootstepParticleMaxDist;
                 }
                 default:
@@ -2758,37 +2779,58 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _TextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _SecondaryTextureSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SecondaryTextureSetLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _Sound1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Sound1Location = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _Sound2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Sound2Location = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _FootstepExplosionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FootstepExplosionLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.FootstepExplosion;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _HazardLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HazardLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.Hazard;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FootstepParticleMaxDistLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FootstepParticleMaxDistLocation = (stream.Position - offset);
+                    }
                     return (int)Impact_FieldIndex.FootstepParticleMaxDist;
                 }
                 default:

@@ -6152,19 +6152,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.EncounterLocation;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Location;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Biome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Biome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Biome;
                 }
                 case RecordTypeInts.WNAM:
@@ -6177,13 +6186,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Climate;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Water;
                 }
                 case RecordTypeInts.NAM7:
@@ -6198,13 +6213,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LodWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.LodWater;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LodWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Worldspace_FieldIndex.LodWaterHeight;
                 }
                 case RecordTypeInts.DNAM:
@@ -6225,7 +6246,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAMA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DistantLodMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DistantLodMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Worldspace_FieldIndex.DistantLodMultiplier;
                 }
                 case RecordTypeInts.DATA:
@@ -6263,13 +6287,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.Music;
                 }
                 case RecordTypeInts.WAMB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbienceSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AmbienceSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Worldspace_FieldIndex.AmbienceSet;
                 }
                 case RecordTypeInts.XEMP:
@@ -6293,7 +6323,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.GNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Worldspace_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.LNAM:
@@ -6673,17 +6706,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterLocationLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.EncounterLocation;
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Location;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BiomeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BiomeLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Biome;
                 }
                 case RecordTypeInts.WNAM:
@@ -6696,12 +6738,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ClimateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClimateLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Climate;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _WaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Water;
                 }
                 case RecordTypeInts.NAM7:
@@ -6711,12 +6759,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _LodWaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LodWaterLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.LodWater;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _LodWaterHeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LodWaterHeightLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.LodWaterHeight;
                 }
                 case RecordTypeInts.DNAM:
@@ -6736,7 +6790,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAMA:
                 {
-                    _DistantLodMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DistantLodMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.DistantLodMultiplier;
                 }
                 case RecordTypeInts.DATA:
@@ -6761,12 +6818,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.Music;
                 }
                 case RecordTypeInts.WAMB:
                 {
-                    _AmbienceSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AmbienceSetLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.AmbienceSet;
                 }
                 case RecordTypeInts.XEMP:
@@ -6781,7 +6844,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _GNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GNAMLocation = (stream.Position - offset);
+                    }
                     return (int)Worldspace_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.LNAM:

@@ -1365,7 +1365,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.IDLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IDLB = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.IDLB = frame.ReadInt32();
+                    }
                     return (int)PackageIdles_FieldIndex.IDLB;
                 }
                 default:
@@ -1561,7 +1564,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.IDLB:
                 {
-                    _IDLBLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IDLBLocation = (stream.Position - offset);
+                    }
                     return (int)PackageIdles_FieldIndex.IDLB;
                 }
                 default:

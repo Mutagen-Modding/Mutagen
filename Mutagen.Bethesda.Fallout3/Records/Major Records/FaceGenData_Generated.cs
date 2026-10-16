@@ -1245,7 +1245,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SNAM = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.SNAM = frame.ReadInt16();
+                    }
                     return (int)FaceGenData_FieldIndex.SNAM;
                 }
                 default:
@@ -1416,7 +1419,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SNAM:
                 {
                     if (lastParsed.ShortCircuit((int)FaceGenData_FieldIndex.SNAM, translationParams)) return ParseResult.Stop;
-                    _SNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _SNAMLocation = (stream.Position - offset);
+                    }
                     return (int)FaceGenData_FieldIndex.SNAM;
                 }
                 default:

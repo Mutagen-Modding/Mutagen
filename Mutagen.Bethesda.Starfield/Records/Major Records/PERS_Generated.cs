@@ -1568,7 +1568,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DATA = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.DATA = frame.ReadUInt32();
+                    }
                     return (int)PERS_FieldIndex.DATA;
                 }
                 case RecordTypeInts.XXXX:
@@ -1724,7 +1727,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DATALocation = (stream.Position - offset);
+                    }
                     return (int)PERS_FieldIndex.DATA;
                 }
                 case RecordTypeInts.XXXX:

@@ -1710,7 +1710,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NVER:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Version = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Version = frame.ReadUInt32();
+                    }
                     return (int)NavigationMeshInfoMap_FieldIndex.Version;
                 }
                 case RecordTypeInts.NVMI:
@@ -1869,7 +1872,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.NVER:
                 {
-                    _VersionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VersionLocation = (stream.Position - offset);
+                    }
                     return (int)NavigationMeshInfoMap_FieldIndex.Version;
                 }
                 case RecordTypeInts.NVMI:

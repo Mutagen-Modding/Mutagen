@@ -6661,13 +6661,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BoundHalfExtents = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.BoundHalfExtents = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.BoundHalfExtents;
                 }
                 case RecordTypeInts.XPRM:
@@ -6730,7 +6736,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XRDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XPWR:
@@ -6755,7 +6764,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XEMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
@@ -6776,13 +6788,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XTNM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TeleportMessageBox.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TeleportMessageBox.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.TeleportMessageBox;
                 }
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
@@ -6811,7 +6829,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XCZR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XCZR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:
@@ -6823,19 +6844,28 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XCZC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZC.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XCZC.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.XCZC;
                 }
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.XSPC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpawnContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpawnContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
@@ -6848,7 +6878,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XLIB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.LeveledItemBaseObject;
                 }
                 case RecordTypeInts.XLCM:
@@ -6862,13 +6895,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CollisionLayer = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.CollisionLayer = frame.ReadUInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.XLOC:
@@ -6879,7 +6918,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
@@ -6905,31 +6947,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XCNT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ItemCount = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ItemCount = frame.ReadInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.ItemCount;
                 }
                 case RecordTypeInts.XCHG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Charge = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Charge = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Charge;
                 }
                 case RecordTypeInts.XLRL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XESP:
@@ -6965,13 +7022,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XHTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XFVC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FavorCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FavorCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.FavorCost;
                 }
                 case RecordTypeInts.ONAM:
@@ -6990,7 +7053,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XATR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XLOD:
@@ -7353,12 +7419,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAME:
                 {
-                    _BaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
                 {
-                    _BoundHalfExtentsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _BoundHalfExtentsLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.BoundHalfExtents;
                 }
                 case RecordTypeInts.XPRM:
@@ -7423,7 +7495,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XRDS:
                 {
-                    _RadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadiusLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XPWR:
@@ -7457,7 +7532,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XEMI:
                 {
-                    _EmittanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmittanceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
@@ -7477,12 +7555,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XTNM:
                 {
-                    _TeleportMessageBoxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TeleportMessageBoxLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.TeleportMessageBox;
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiBoundReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MultiBoundReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
@@ -7507,7 +7591,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XCZR:
                 {
-                    _XCZRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XCZRLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:
@@ -7517,17 +7604,26 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XCZC:
                 {
-                    _XCZCLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XCZCLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.XCZC;
                 }
                 case RecordTypeInts.XSCL:
                 {
-                    _ScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScaleLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.XSPC:
                 {
-                    _SpawnContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpawnContainerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
@@ -7540,7 +7636,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLIB:
                 {
-                    _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LeveledItemBaseObject;
                 }
                 case RecordTypeInts.XLCM:
@@ -7550,12 +7649,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _PersistentLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PersistentLocationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
                 {
-                    _CollisionLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CollisionLayerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.XLOC:
@@ -7565,7 +7670,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterZoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterZoneLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
@@ -7590,27 +7698,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XOWN:
                 {
-                    _OwnerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XCNT:
                 {
-                    _ItemCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ItemCountLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.ItemCount;
                 }
                 case RecordTypeInts.XCHG:
                 {
-                    _ChargeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ChargeLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Charge;
                 }
                 case RecordTypeInts.XLRL:
                 {
-                    _LocationReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XESP:
@@ -7648,12 +7771,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XHTW:
                 {
-                    _HeadTrackingWeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadTrackingWeightLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XFVC:
                 {
-                    _FavorCostLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FavorCostLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.FavorCost;
                 }
                 case RecordTypeInts.ONAM:
@@ -7672,7 +7801,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XATR:
                 {
-                    _AttachRefLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttachRefLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XLOD:

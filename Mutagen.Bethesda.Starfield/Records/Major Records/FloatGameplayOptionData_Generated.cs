@@ -1269,14 +1269,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)FloatGameplayOptionData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Value1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)FloatGameplayOptionData_FieldIndex.Value1;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.ShortCircuit((int)FloatGameplayOptionData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Value2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)FloatGameplayOptionData_FieldIndex.Value2;
                 }
                 case RecordTypeInts.GPOD:
@@ -1431,13 +1437,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VNAM:
                 {
                     if (lastParsed.ShortCircuit((int)FloatGameplayOptionData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
-                    _Value1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Value1Location = (stream.Position - offset);
+                    }
                     return (int)FloatGameplayOptionData_FieldIndex.Value1;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     if (lastParsed.ShortCircuit((int)FloatGameplayOptionData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
-                    _Value2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Value2Location = (stream.Position - offset);
+                    }
                     return (int)FloatGameplayOptionData_FieldIndex.Value2;
                 }
                 case RecordTypeInts.GPOD:

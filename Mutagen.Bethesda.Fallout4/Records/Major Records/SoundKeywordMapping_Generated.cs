@@ -1944,25 +1944,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PrimaryDescriptor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PrimaryDescriptor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.PrimaryDescriptor;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExteriorTail.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ExteriorTail.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.ExteriorTail;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VatsDescriptor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VatsDescriptor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.VatsDescriptor;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VatsThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.VatsThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.VatsThreshold;
                 }
                 case RecordTypeInts.KNAM:
@@ -2135,22 +2147,34 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.DNAM:
                 {
-                    _PrimaryDescriptorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PrimaryDescriptorLocation = (stream.Position - offset);
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.PrimaryDescriptor;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ExteriorTailLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExteriorTailLocation = (stream.Position - offset);
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.ExteriorTail;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VatsDescriptorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VatsDescriptorLocation = (stream.Position - offset);
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.VatsDescriptor;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _VatsThresholdLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VatsThresholdLocation = (stream.Position - offset);
+                    }
                     return (int)SoundKeywordMapping_FieldIndex.VatsThreshold;
                 }
                 case RecordTypeInts.KNAM:

@@ -7947,13 +7947,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BoundHalfExtents = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.BoundHalfExtents = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.BoundHalfExtents;
                 }
                 case RecordTypeInts.XPRM:
@@ -8014,19 +8020,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XRGB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XRDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XEMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Emittance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
@@ -8056,13 +8071,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XTNM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TeleportLocName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TeleportLocName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.TeleportLocName;
                 }
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MultiBoundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
@@ -8079,7 +8100,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XASP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AcousticRestriction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AcousticRestriction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.AcousticRestriction;
                 }
                 case RecordTypeInts.XATP:
@@ -8090,7 +8114,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XAMC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmmoCount = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AmmoCount = frame.ReadUInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.AmmoCount;
                 }
                 case RecordTypeInts.XLKT:
@@ -8101,19 +8128,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XLYR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
                 case RecordTypeInts.XMSP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaterialSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.MaterialSwap;
                 }
                 case RecordTypeInts.XRFG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ReferenceGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.ReferenceGroup;
                 }
                 case RecordTypeInts.XRDO:
@@ -8134,7 +8170,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XSPC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpawnContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpawnContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
@@ -8150,13 +8189,19 @@ namespace Mutagen.Bethesda.Fallout4
                         || lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.ActivateParents)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.LocationReference)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, nextRecordType);
                     }
                     else
@@ -8165,11 +8210,17 @@ namespace Mutagen.Bethesda.Fallout4
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.LeveledItemBaseObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -8187,13 +8238,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PersistentLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CollisionLayer = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.CollisionLayer = frame.ReadUInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.XLOC:
@@ -8204,7 +8261,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
@@ -8215,7 +8275,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XLRL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XLRT:
@@ -8241,21 +8304,30 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XCNT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ItemCount = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ItemCount = frame.ReadInt32();
+                    }
                     return (int)PlacedObject_FieldIndex.ItemCount;
                 }
                 case RecordTypeInts.XHLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HealthPercent = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.HealthPercent = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)PlacedObject_FieldIndex.HealthPercent;
                 }
                 case RecordTypeInts.XESP:
@@ -8291,13 +8363,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XHTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.HeadTrackingWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XFVC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FavorCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FavorCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.FavorCost;
                 }
                 case RecordTypeInts.ONAM:
@@ -8316,7 +8394,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XATR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AttachRef.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XPLK:
@@ -8357,7 +8438,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XCZR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CurrentZoneReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CurrentZoneReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.CurrentZoneReference;
                 }
                 case RecordTypeInts.XCZA:
@@ -8369,13 +8453,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XCZC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CurrentZoneCell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CurrentZoneCell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObject_FieldIndex.CurrentZoneCell;
                 }
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.XLOD:
@@ -8805,12 +8895,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAME:
                 {
-                    _BaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
                 {
-                    _BoundHalfExtentsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _BoundHalfExtentsLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.BoundHalfExtents;
                 }
                 case RecordTypeInts.XPRM:
@@ -8875,17 +8971,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XRGB:
                 {
-                    _RagdollBipedRotationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _RagdollBipedRotationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XRDS:
                 {
-                    _RadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadiusLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XEMI:
                 {
-                    _EmittanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmittanceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
@@ -8919,12 +9024,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XTNM:
                 {
-                    _TeleportLocNameLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TeleportLocNameLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.TeleportLocName;
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiBoundReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MultiBoundReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.MultiBoundReference;
                 }
                 case RecordTypeInts.XWCN:
@@ -8939,7 +9050,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XASP:
                 {
-                    _AcousticRestrictionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AcousticRestrictionLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.AcousticRestriction;
                 }
                 case RecordTypeInts.XATP:
@@ -8949,7 +9063,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XAMC:
                 {
-                    _AmmoCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AmmoCountLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.AmmoCount;
                 }
                 case RecordTypeInts.XLKT:
@@ -8959,17 +9076,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLYR:
                 {
-                    _LayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LayerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Layer;
                 }
                 case RecordTypeInts.XMSP:
                 {
-                    _MaterialSwapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialSwapLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.MaterialSwap;
                 }
                 case RecordTypeInts.XRFG:
                 {
-                    _ReferenceGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReferenceGroupLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.ReferenceGroup;
                 }
                 case RecordTypeInts.XRDO:
@@ -8989,7 +9115,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XSPC:
                 {
-                    _SpawnContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpawnContainerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
@@ -9005,12 +9134,18 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.ActivateParents)
                     {
-                        _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)PlacedObject_FieldIndex.LocationReference)
                     {
-                        _LocationRefTypeLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _LocationRefTypeLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
                     }
                     else
@@ -9019,12 +9154,18 @@ namespace Mutagen.Bethesda.Fallout4
                         {
                             case 0:
                             {
-                                _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _LeveledItemBaseObjectLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)PlacedObject_FieldIndex.LeveledItemBaseObject, type);
                             }
                             case 1:
                             {
-                                _LocationRefTypeLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _LocationRefTypeLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)PlacedObject_FieldIndex.LocationRefType, type);
                             }
                             default:
@@ -9039,12 +9180,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _PersistentLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PersistentLocationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
                 {
-                    _CollisionLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CollisionLayerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.XLOC:
@@ -9054,7 +9201,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterZoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterZoneLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
@@ -9064,7 +9214,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XLRL:
                 {
-                    _LocationReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XLRT:
@@ -9092,17 +9245,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XCNT:
                 {
-                    _ItemCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ItemCountLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.ItemCount;
                 }
                 case RecordTypeInts.XHLT:
                 {
-                    _HealthPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HealthPercentLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.HealthPercent;
                 }
                 case RecordTypeInts.XESP:
@@ -9140,12 +9302,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XHTW:
                 {
-                    _HeadTrackingWeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadTrackingWeightLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XFVC:
                 {
-                    _FavorCostLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FavorCostLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.FavorCost;
                 }
                 case RecordTypeInts.ONAM:
@@ -9164,7 +9332,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XATR:
                 {
-                    _AttachRefLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AttachRefLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XPLK:
@@ -9210,7 +9381,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XCZR:
                 {
-                    _CurrentZoneReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CurrentZoneReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.CurrentZoneReference;
                 }
                 case RecordTypeInts.XCZA:
@@ -9220,12 +9394,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.XCZC:
                 {
-                    _CurrentZoneCellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CurrentZoneCellLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.CurrentZoneCell;
                 }
                 case RecordTypeInts.XSCL:
                 {
-                    _ScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScaleLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.XLOD:

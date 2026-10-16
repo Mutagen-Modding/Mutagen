@@ -1348,14 +1348,20 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.Scene, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)StartScene_FieldIndex.Scene;
                 }
                 case RecordTypeInts.INTT:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.PhaseIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PhaseIndex = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.PhaseIndex = frame.ReadUInt16();
+                    }
                     return (int)StartScene_FieldIndex.PhaseIndex;
                 }
                 case RecordTypeInts.SSPN:
@@ -1531,13 +1537,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LCEP:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.Scene, translationParams)) return ParseResult.Stop;
-                    _SceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SceneLocation = (stream.Position - offset);
+                    }
                     return (int)StartScene_FieldIndex.Scene;
                 }
                 case RecordTypeInts.INTT:
                 {
                     if (lastParsed.ShortCircuit((int)StartScene_FieldIndex.PhaseIndex, translationParams)) return ParseResult.Stop;
-                    _PhaseIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _PhaseIndexLocation = (stream.Position - offset);
+                    }
                     return (int)StartScene_FieldIndex.PhaseIndex;
                 }
                 case RecordTypeInts.SSPN:

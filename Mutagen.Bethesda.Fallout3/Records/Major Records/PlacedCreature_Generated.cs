@@ -3254,13 +3254,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.Base;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XRGD:
@@ -3276,7 +3282,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XRGB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.RagdollBipedRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedCreature_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XPRD:
@@ -3293,43 +3302,64 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XLCM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LevelModifier = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.LevelModifier = frame.ReadInt32();
+                    }
                     return (int)PlacedCreature_FieldIndex.LevelModifier;
                 }
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)PlacedCreature_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XMRC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.XCNT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Count = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Count = frame.ReadInt32();
+                    }
                     return (int)PlacedCreature_FieldIndex.Count;
                 }
                 case RecordTypeInts.XRDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedCreature_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XHLP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Health = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Health = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedCreature_FieldIndex.Health;
                 }
                 case RecordTypeInts.XDCR:
@@ -3345,7 +3375,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XLKR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LinkedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LinkedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.LinkedReference;
                 }
                 case RecordTypeInts.XCLP:
@@ -3368,13 +3401,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XEMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EmittanceLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EmittanceLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.EmittanceLight;
                 }
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MultiboundReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedCreature_FieldIndex.MultiboundReference;
                 }
                 case RecordTypeInts.XATO:
@@ -3397,7 +3436,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlacedCreature_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:
@@ -3627,12 +3669,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 case RecordTypeInts.NAME:
                 {
-                    _BaseLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BaseLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Base;
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterZoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterZoneLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XRGD:
@@ -3647,7 +3695,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XRGB:
                 {
-                    _RagdollBipedRotationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _RagdollBipedRotationLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.RagdollBipedRotation;
                 }
                 case RecordTypeInts.XPRD:
@@ -3664,37 +3715,58 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XLCM:
                 {
-                    _LevelModifierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LevelModifierLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.LevelModifier;
                 }
                 case RecordTypeInts.XOWN:
                 {
-                    _OwnerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XMRC:
                 {
-                    _MerchantContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MerchantContainerLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.XCNT:
                 {
-                    _CountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CountLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Count;
                 }
                 case RecordTypeInts.XRDS:
                 {
-                    _RadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadiusLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XHLP:
                 {
-                    _HealthLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HealthLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Health;
                 }
                 case RecordTypeInts.XDCR:
@@ -3714,7 +3786,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XLKR:
                 {
-                    _LinkedReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LinkedReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.LinkedReference;
                 }
                 case RecordTypeInts.XCLP:
@@ -3737,12 +3812,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XEMI:
                 {
-                    _EmittanceLightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EmittanceLightLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.EmittanceLight;
                 }
                 case RecordTypeInts.XMBR:
                 {
-                    _MultiboundReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MultiboundReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.MultiboundReference;
                 }
                 case RecordTypeInts.XATO:
@@ -3757,7 +3838,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.XSCL:
                 {
-                    _ScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScaleLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedCreature_FieldIndex.Scale;
                 }
                 case RecordTypeInts.DATA:

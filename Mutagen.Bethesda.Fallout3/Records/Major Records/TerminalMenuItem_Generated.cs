@@ -1575,13 +1575,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayNote.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DisplayNote.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)TerminalMenuItem_FieldIndex.DisplayNote;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubMenu.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SubMenu.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)TerminalMenuItem_FieldIndex.SubMenu;
                 }
                 case RecordTypeInts.SCHR:
@@ -1778,12 +1784,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _DisplayNoteLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DisplayNoteLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuItem_FieldIndex.DisplayNote;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _SubMenuLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SubMenuLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuItem_FieldIndex.SubMenu;
                 }
                 case RecordTypeInts.SCHR:

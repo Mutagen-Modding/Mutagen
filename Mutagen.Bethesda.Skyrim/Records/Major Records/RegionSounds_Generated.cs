@@ -1280,7 +1280,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:
@@ -1420,7 +1423,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RDMO:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:

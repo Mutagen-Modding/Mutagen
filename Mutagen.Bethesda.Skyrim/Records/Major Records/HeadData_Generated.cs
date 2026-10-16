@@ -2236,7 +2236,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.DefaultFaceTexture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultFaceTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultFaceTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
                 case RecordTypeInts.TINI:
@@ -2476,7 +2479,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DFTM:
                 {
                     if (lastParsed.ShortCircuit((int)HeadData_FieldIndex.DefaultFaceTexture, translationParams)) return ParseResult.Stop;
-                    _DefaultFaceTextureLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultFaceTextureLocation = (stream.Position - offset);
+                    }
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
                 case RecordTypeInts.TINI:

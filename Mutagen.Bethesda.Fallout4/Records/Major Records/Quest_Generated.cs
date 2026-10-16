@@ -4921,19 +4921,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.Location;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestCompletionXp.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QuestCompletionXp.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.QuestCompletionXp;
                 }
                 case RecordTypeInts.QTGL:
@@ -5014,7 +5023,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QuestGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.QuestGroup;
                 }
                 case RecordTypeInts.SNAM:
@@ -5285,17 +5297,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EventLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EventLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.Location;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _QuestCompletionXpLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestCompletionXpLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.QuestCompletionXp;
                 }
                 case RecordTypeInts.QTGL:
@@ -5370,7 +5391,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _QuestGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestGroupLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.QuestGroup;
                 }
                 case RecordTypeInts.SNAM:

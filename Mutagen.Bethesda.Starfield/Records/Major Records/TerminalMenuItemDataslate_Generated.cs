@@ -1053,7 +1053,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)TerminalMenuItemDataslate_FieldIndex.Dataslate, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Dataslate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Dataslate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)TerminalMenuItemDataslate_FieldIndex.Dataslate;
                 }
                 default:
@@ -1176,7 +1179,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     if (lastParsed.ShortCircuit((int)TerminalMenuItemDataslate_FieldIndex.Dataslate, translationParams)) return ParseResult.Stop;
-                    _DataslateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DataslateLocation = (stream.Position - offset);
+                    }
                     return (int)TerminalMenuItemDataslate_FieldIndex.Dataslate;
                 }
                 default:

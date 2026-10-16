@@ -2641,9 +2641,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)AcousticSpace_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -2672,43 +2675,64 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.AAMB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbientSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AmbientSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.AmbientSet;
                 }
                 case RecordTypeInts.AMUS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 case RecordTypeInts.AEAR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExteriorWeatherAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ExteriorWeatherAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AcousticSpace_FieldIndex.ExteriorWeatherAttenuation;
                 }
                 case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteriorExteriorRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.InteriorExteriorRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AcousticSpace_FieldIndex.InteriorExteriorRatio;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IsInterior = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.IsInterior = frame.ReadBoolean();
+                    }
                     return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
                 case RecordTypeInts.BOLV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AllowExterior = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.AllowExterior = frame.ReadBoolean();
+                    }
                     return (int)AcousticSpace_FieldIndex.AllowExterior;
                 }
                 case RecordTypeInts.DEVT:
@@ -2935,7 +2959,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -2972,37 +2999,58 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.AAMB:
                 {
-                    _AmbientSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AmbientSetLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.AmbientSet;
                 }
                 case RecordTypeInts.AMUS:
                 {
-                    _MusicTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicTypeLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _EnvironmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EnvironmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 case RecordTypeInts.AEAR:
                 {
-                    _ExteriorWeatherAttenuationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExteriorWeatherAttenuationLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.ExteriorWeatherAttenuation;
                 }
                 case RecordTypeInts.FLTV:
                 {
-                    _InteriorExteriorRatioLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InteriorExteriorRatioLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.InteriorExteriorRatio;
                 }
                 case RecordTypeInts.XTRI:
                 {
-                    _IsInteriorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _IsInteriorLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
                 case RecordTypeInts.BOLV:
                 {
-                    _AllowExteriorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _AllowExteriorLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.AllowExterior;
                 }
                 case RecordTypeInts.DEVT:

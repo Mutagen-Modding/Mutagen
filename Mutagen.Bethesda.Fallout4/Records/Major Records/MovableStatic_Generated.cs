@@ -2558,7 +2558,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MovableStatic_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -2617,13 +2620,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OnLocalMap = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.OnLocalMap = frame.ReadBoolean();
+                    }
                     return (int)MovableStatic_FieldIndex.OnLocalMap;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MovableStatic_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.XXXX:
@@ -2819,7 +2828,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)MovableStatic_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -2873,12 +2885,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _OnLocalMapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _OnLocalMapLocation = (stream.Position - offset);
+                    }
                     return (int)MovableStatic_FieldIndex.OnLocalMap;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)MovableStatic_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.XXXX:

@@ -271,6 +271,8 @@ public class ByteArrayBinaryTranslationGeneration : PrimitiveBinaryTranslationGe
         return bType.Length;
     }
 
+    public override Task<int?> ShortestReadableContent(ObjectGeneration objGen, TypeGeneration typeGen) => Task.FromResult<int?>(null);
+
     public override async Task GenerateWrapperRecordTypeParse(
         StructuredStringBuilder sb, 
         ObjectGeneration objGen,

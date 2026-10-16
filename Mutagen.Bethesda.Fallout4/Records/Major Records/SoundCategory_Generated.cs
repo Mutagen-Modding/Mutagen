@@ -1884,45 +1884,63 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundCategory_FieldIndex.Parent;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuSlider.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MenuSlider.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundCategory_FieldIndex.MenuSlider;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StaticVolumeMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UShort,
-                        multiplier: null,
-                        divisor: 65535f);
+                    if (contentLength >= 2)
+                    {
+                        item.StaticVolumeMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UShort,
+                            multiplier: null,
+                            divisor: 65535f);
+                    }
                     return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultMenuVolume = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UShort,
-                        multiplier: null,
-                        divisor: 65535f);
+                    if (contentLength >= 2)
+                    {
+                        item.DefaultMenuVolume = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UShort,
+                            multiplier: null,
+                            divisor: 65535f);
+                    }
                     return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MinFrequencyMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MinFrequencyMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SoundCategory_FieldIndex.MinFrequencyMultiplier;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SidechainTargetMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.SidechainTargetMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SoundCategory_FieldIndex.SidechainTargetMultiplier;
                 }
                 default:
@@ -2105,32 +2123,50 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _ParentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.Parent;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _MenuSliderLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MenuSliderLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.MenuSlider;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _StaticVolumeMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _StaticVolumeMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _DefaultMenuVolumeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _DefaultMenuVolumeLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MinFrequencyMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MinFrequencyMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.MinFrequencyMultiplier;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _SidechainTargetMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SidechainTargetMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)SoundCategory_FieldIndex.SidechainTargetMultiplier;
                 }
                 default:

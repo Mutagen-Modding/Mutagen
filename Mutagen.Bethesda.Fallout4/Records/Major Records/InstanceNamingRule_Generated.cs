@@ -1470,7 +1470,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Index = frame.ReadUInt16();
+                    }
                     return (int)InstanceNamingRule_FieldIndex.Index;
                 }
                 default:
@@ -1658,7 +1661,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.YNAM:
                 {
                     if (lastParsed.ShortCircuit((int)InstanceNamingRule_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)InstanceNamingRule_FieldIndex.Index;
                 }
                 default:

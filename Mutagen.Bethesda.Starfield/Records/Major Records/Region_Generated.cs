@@ -1758,7 +1758,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Region_FieldIndex.MapColor;
                 }
                 case RecordTypeInts.RPLI:
@@ -1924,7 +1927,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.RCLR:
                 {
-                    _MapColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MapColorLocation = (stream.Position - offset);
+                    }
                     return (int)Region_FieldIndex.MapColor;
                 }
                 case RecordTypeInts.RPLI:

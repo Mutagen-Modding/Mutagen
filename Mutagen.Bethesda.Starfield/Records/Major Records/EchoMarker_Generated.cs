@@ -1556,7 +1556,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)EchoMarker_FieldIndex.ECTE, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ECTE = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 16)
+                    {
+                        item.ECTE = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)EchoMarker_FieldIndex.ECTE;
                 }
                 case RecordTypeInts.ECSH:
@@ -1577,7 +1580,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)EchoMarker_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.BNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)EchoMarker_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.CNAM:
@@ -1775,7 +1781,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ECTE:
                 {
                     if (lastParsed.ShortCircuit((int)EchoMarker_FieldIndex.ECTE, translationParams)) return ParseResult.Stop;
-                    _ECTELocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 16)
+                    {
+                        _ECTELocation = (stream.Position - offset);
+                    }
                     return (int)EchoMarker_FieldIndex.ECTE;
                 }
                 case RecordTypeInts.ECSH:
@@ -1797,7 +1806,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     if (lastParsed.ShortCircuit((int)EchoMarker_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
-                    _BNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BNAMLocation = (stream.Position - offset);
+                    }
                     return (int)EchoMarker_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.CNAM:

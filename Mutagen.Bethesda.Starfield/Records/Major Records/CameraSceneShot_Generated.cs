@@ -1834,38 +1834,56 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)CameraSceneShot_FieldIndex.CameraShot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraShot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CameraShot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)CameraSceneShot_FieldIndex.CameraShot;
                 }
                 case RecordTypeInts.ALLA:
                 {
                     if (lastParsed.ShortCircuit((int)CameraSceneShot_FieldIndex.ALLA, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ALLA = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ALLA = frame.ReadInt32();
+                    }
                     return (int)CameraSceneShot_FieldIndex.ALLA;
                 }
                 case RecordTypeInts.REPL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.REPL.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.REPL.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)CameraSceneShot_FieldIndex.REPL;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HNAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.HNAM = frame.ReadInt32();
+                    }
                     return (int)CameraSceneShot_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VCLR = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.VCLR = frame.ReadInt32();
+                    }
                     return (int)CameraSceneShot_FieldIndex.VCLR;
                 }
                 case RecordTypeInts.LVCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LVCR = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.LVCR = frame.ReadInt32();
+                    }
                     return (int)CameraSceneShot_FieldIndex.LVCR;
                 }
                 case RecordTypeInts.BTXT:
@@ -2097,33 +2115,51 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.ShortCircuit((int)CameraSceneShot_FieldIndex.CameraShot, translationParams)) return ParseResult.Stop;
-                    _CameraShotLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CameraShotLocation = (stream.Position - offset);
+                    }
                     return (int)CameraSceneShot_FieldIndex.CameraShot;
                 }
                 case RecordTypeInts.ALLA:
                 {
                     if (lastParsed.ShortCircuit((int)CameraSceneShot_FieldIndex.ALLA, translationParams)) return ParseResult.Stop;
-                    _ALLALocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ALLALocation = (stream.Position - offset);
+                    }
                     return (int)CameraSceneShot_FieldIndex.ALLA;
                 }
                 case RecordTypeInts.REPL:
                 {
-                    _REPLLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _REPLLocation = (stream.Position - offset);
+                    }
                     return (int)CameraSceneShot_FieldIndex.REPL;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HNAMLocation = (stream.Position - offset);
+                    }
                     return (int)CameraSceneShot_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.VCLR:
                 {
-                    _VCLRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VCLRLocation = (stream.Position - offset);
+                    }
                     return (int)CameraSceneShot_FieldIndex.VCLR;
                 }
                 case RecordTypeInts.LVCR:
                 {
-                    _LVCRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LVCRLocation = (stream.Position - offset);
+                    }
                     return (int)CameraSceneShot_FieldIndex.LVCR;
                 }
                 case RecordTypeInts.BTXT:

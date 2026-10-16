@@ -2296,7 +2296,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.Script;
                 }
                 case RecordTypeInts.DEST:
@@ -2310,13 +2313,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActivationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActivationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.ActivationSound;
                 }
                 case RecordTypeInts.INAM:
@@ -2324,20 +2333,29 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.RadioTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.RadioTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Activator_FieldIndex.RadioTemplate;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RadioStation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RadioStation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.RadioStation;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WaterType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.WaterType;
                 }
                 case RecordTypeInts.XATO:
@@ -2547,7 +2565,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.Script;
                 }
                 case RecordTypeInts.DEST:
@@ -2561,27 +2582,42 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _ActivationSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActivationSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.ActivationSound;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _RadioTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadioTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.RadioTemplate;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _RadioStationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RadioStationLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.RadioStation;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WaterTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.WaterType;
                 }
                 case RecordTypeInts.XATO:

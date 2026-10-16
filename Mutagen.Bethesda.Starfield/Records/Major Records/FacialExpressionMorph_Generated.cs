@@ -1078,7 +1078,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)FacialExpressionMorph_FieldIndex.Value, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)FacialExpressionMorph_FieldIndex.Value;
                 }
                 default:
@@ -1229,7 +1232,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MWGT:
                 {
                     if (lastParsed.ShortCircuit((int)FacialExpressionMorph_FieldIndex.Value, translationParams)) return ParseResult.Stop;
-                    _ValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ValueLocation = (stream.Position - offset);
+                    }
                     return (int)FacialExpressionMorph_FieldIndex.Value;
                 }
                 default:

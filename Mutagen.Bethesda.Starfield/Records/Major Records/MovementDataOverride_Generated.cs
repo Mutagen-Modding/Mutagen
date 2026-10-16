@@ -1094,7 +1094,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MovementType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MovementType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MovementDataOverride_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
@@ -1247,7 +1250,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MTYP:
                 {
                     if (lastParsed.ShortCircuit((int)MovementDataOverride_FieldIndex.MovementType, translationParams)) return ParseResult.Stop;
-                    _MovementTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MovementTypeLocation = (stream.Position - offset);
+                    }
                     return (int)MovementDataOverride_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:

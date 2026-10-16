@@ -1819,25 +1819,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CUSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CraftingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CraftingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Component_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AutoCalcValue = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AutoCalcValue = frame.ReadUInt32();
+                    }
                     return (int)Component_FieldIndex.AutoCalcValue;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScrapItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ScrapItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Component_FieldIndex.ScrapItem;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModScrapScalar.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ModScrapScalar.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Component_FieldIndex.ModScrapScalar;
                 }
                 default:
@@ -2013,22 +2025,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.CUSD:
                 {
-                    _CraftingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CraftingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Component_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _AutoCalcValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AutoCalcValueLocation = (stream.Position - offset);
+                    }
                     return (int)Component_FieldIndex.AutoCalcValue;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _ScrapItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScrapItemLocation = (stream.Position - offset);
+                    }
                     return (int)Component_FieldIndex.ScrapItem;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _ModScrapScalarLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ModScrapScalarLocation = (stream.Position - offset);
+                    }
                     return (int)Component_FieldIndex.ModScrapScalar;
                 }
                 default:

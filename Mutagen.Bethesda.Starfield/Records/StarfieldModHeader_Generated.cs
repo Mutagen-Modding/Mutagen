@@ -2570,13 +2570,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.INTV = frame.ReadInt32();
+                    }
                     return (int)StarfieldModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteriorCellCount = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.InteriorCellCount = frame.ReadInt32();
+                    }
                     return (int)StarfieldModHeader_FieldIndex.InteriorCellCount;
                 }
                 case RecordTypeInts.CHGL:
@@ -2851,12 +2857,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INTV:
                 {
-                    _INTVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _INTVLocation = (stream.Position - offset);
+                    }
                     return (int)StarfieldModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
-                    _InteriorCellCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InteriorCellCountLocation = (stream.Position - offset);
+                    }
                     return (int)StarfieldModHeader_FieldIndex.InteriorCellCount;
                 }
                 case RecordTypeInts.CHGL:

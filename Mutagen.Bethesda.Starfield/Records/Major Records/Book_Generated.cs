@@ -3872,9 +3872,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)Book_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTT2:
@@ -3885,13 +3888,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DEFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)Book_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -3977,7 +3986,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FIMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FeaturedItemMessage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FeaturedItemMessage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.FeaturedItemMessage;
                 }
                 case RecordTypeInts.DATA:
@@ -4046,13 +4058,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InventoryArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InventoryArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Book_FieldIndex.Scene;
                 }
                 case RecordTypeInts.XXXX:
@@ -4327,7 +4345,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTT2:
@@ -4337,12 +4358,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DEFL:
                 {
-                    _DefaultLayerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultLayerLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -4422,7 +4449,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FIMD:
                 {
-                    _FeaturedItemMessageLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FeaturedItemMessageLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.FeaturedItemMessage;
                 }
                 case RecordTypeInts.DATA:
@@ -4452,12 +4482,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _InventoryArtLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InventoryArtLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _SceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SceneLocation = (stream.Position - offset);
+                    }
                     return (int)Book_FieldIndex.Scene;
                 }
                 case RecordTypeInts.XXXX:

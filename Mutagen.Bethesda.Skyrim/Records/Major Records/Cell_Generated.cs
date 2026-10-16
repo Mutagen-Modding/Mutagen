@@ -5520,7 +5520,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.LTMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LightingTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LightingTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.LNAM:
@@ -5532,7 +5535,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XNAM:
@@ -5557,7 +5563,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XWCN:
@@ -5580,25 +5589,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XCWT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)Cell_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XILL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LockList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LockList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XWEM:
@@ -5613,31 +5634,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XCCM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SkyAndWeatherFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SkyAndWeatherFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
                 }
                 case RecordTypeInts.XCAS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AcousticSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AcousticSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XCMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCIM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Cell_FieldIndex.ImageSpace;
                 }
                 default:
@@ -5940,7 +5976,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.LTMP:
                 {
-                    _LightingTemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightingTemplateLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.LNAM:
@@ -5950,7 +5989,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XCLW:
                 {
-                    _WaterHeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterHeightLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XNAM:
@@ -5970,7 +6012,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XLCN:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XWCN:
@@ -5990,22 +6035,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XCWT:
                 {
-                    _WaterLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 {
-                    _OwnerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.FactionRank;
                 }
                 case RecordTypeInts.XILL:
                 {
-                    _LockListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LockListLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XWEM:
@@ -6015,27 +6072,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XCCM:
                 {
-                    _SkyAndWeatherFromRegionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SkyAndWeatherFromRegionLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
                 }
                 case RecordTypeInts.XCAS:
                 {
-                    _AcousticSpaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AcousticSpaceLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XEZN:
                 {
-                    _EncounterZoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EncounterZoneLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XCMO:
                 {
-                    _MusicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCIM:
                 {
-                    _ImageSpaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceLocation = (stream.Position - offset);
+                    }
                     return (int)Cell_FieldIndex.ImageSpace;
                 }
                 default:

@@ -2560,19 +2560,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.QSTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogItem_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogItem_FieldIndex.PreviousItem;
                 }
                 case RecordTypeInts.NAME:
@@ -2793,17 +2802,26 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.QSTI:
                 {
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.TPIC:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)DialogItem_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PreviousItemLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousItemLocation = (stream.Position - offset);
+                    }
                     return (int)DialogItem_FieldIndex.PreviousItem;
                 }
                 case RecordTypeInts.NAME:

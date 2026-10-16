@@ -1079,13 +1079,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AddonIndex = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.AddonIndex = frame.ReadUInt16();
+                    }
                     return (int)ArmorAddonModel_FieldIndex.AddonIndex;
                 }
                 case RecordTypeInts.MODL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArmorAddon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ArmorAddon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddonModel_FieldIndex.ArmorAddon;
                 }
                 default:
@@ -1231,12 +1237,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
-                    _AddonIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _AddonIndexLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddonModel_FieldIndex.AddonIndex;
                 }
                 case RecordTypeInts.MODL:
                 {
-                    _ArmorAddonLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ArmorAddonLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddonModel_FieldIndex.ArmorAddon;
                 }
                 default:

@@ -1775,13 +1775,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeakerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpeakerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ListenerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ListenerIdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 default:
@@ -2000,12 +2006,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SpeakerIdleAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerIdleAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _ListenerIdleAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ListenerIdleAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 default:

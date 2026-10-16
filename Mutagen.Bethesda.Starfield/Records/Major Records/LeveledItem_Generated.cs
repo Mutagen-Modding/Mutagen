@@ -3591,9 +3591,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)LeveledItem_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -3614,7 +3617,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XALG = frame.ReadUInt64();
+                    }
                     return (int)LeveledItem_FieldIndex.XALG;
                 }
                 case RecordTypeInts.LVLD:
@@ -3628,7 +3634,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxCount = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.MaxCount = frame.ReadUInt8();
+                    }
                     return (int)LeveledItem_FieldIndex.MaxCount;
                 }
                 case RecordTypeInts.LVLF:
@@ -3652,19 +3661,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseChanceNoneGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UseChanceNoneGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.UseChanceNoneGlobal;
                 }
                 case RecordTypeInts.LLRB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RequiredBiome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RequiredBiome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.RequiredBiome;
                 }
                 case RecordTypeInts.LLRV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RequiredResourceVein.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RequiredResourceVein.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.RequiredResourceVein;
                 }
                 case RecordTypeInts.LVLO:
@@ -3694,13 +3712,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVSG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EpicLootChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EpicLootChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.EpicLootChance;
                 }
                 case RecordTypeInts.LIMC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)LeveledItem_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ONAM:
@@ -3717,7 +3741,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LegendaryItemDefaultListRank = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.LegendaryItemDefaultListRank = frame.ReadUInt8();
+                    }
                     return (int)LeveledItem_FieldIndex.LegendaryItemDefaultListRank;
                 }
                 case RecordTypeInts.MODL:
@@ -3973,7 +4000,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
@@ -3992,7 +4022,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XALG:
                 {
-                    _XALGLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XALGLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.XALG;
                 }
                 case RecordTypeInts.LVLD:
@@ -4005,7 +4038,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVLM:
                 {
-                    _MaxCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _MaxCountLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.MaxCount;
                 }
                 case RecordTypeInts.LVLF:
@@ -4030,17 +4066,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVLG:
                 {
-                    _UseChanceNoneGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseChanceNoneGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.UseChanceNoneGlobal;
                 }
                 case RecordTypeInts.LLRB:
                 {
-                    _RequiredBiomeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RequiredBiomeLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.RequiredBiome;
                 }
                 case RecordTypeInts.LLRV:
                 {
-                    _RequiredResourceVeinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RequiredResourceVeinLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.RequiredResourceVein;
                 }
                 case RecordTypeInts.LVLO:
@@ -4069,12 +4114,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVSG:
                 {
-                    _EpicLootChanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EpicLootChanceLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.EpicLootChance;
                 }
                 case RecordTypeInts.LIMC:
                 {
-                    _MarkerColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerColorLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ONAM:
@@ -4084,7 +4135,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVLL:
                 {
-                    _LegendaryItemDefaultListRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _LegendaryItemDefaultListRankLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.LegendaryItemDefaultListRank;
                 }
                 case RecordTypeInts.MODL:

@@ -1157,7 +1157,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Number = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Number = frame.ReadUInt32();
+                    }
                     return (int)Rank_FieldIndex.Number;
                 }
                 case RecordTypeInts.MNAM:
@@ -1337,7 +1340,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Number, translationParams)) return ParseResult.Stop;
-                    _NumberLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NumberLocation = (stream.Position - offset);
+                    }
                     return (int)Rank_FieldIndex.Number;
                 }
                 case RecordTypeInts.MNAM:

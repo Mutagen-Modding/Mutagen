@@ -1686,7 +1686,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DTGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogueTargetActor = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.DialogueTargetActor = frame.ReadInt32();
+                    }
                     return (int)PlayerDialogueSceneAction_FieldIndex.DialogueTargetActor;
                 }
                 case RecordTypeInts.ESCE:
@@ -1882,7 +1885,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DTGT:
                 {
-                    _DialogueTargetActorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DialogueTargetActorLocation = (stream.Position - offset);
+                    }
                     return (int)PlayerDialogueSceneAction_FieldIndex.DialogueTargetActor;
                 }
                 case RecordTypeInts.ESCE:

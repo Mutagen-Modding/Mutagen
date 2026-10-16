@@ -1350,7 +1350,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)BiomeProceduralObjectGeneration_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.BNAM = frame.ReadInt32();
+                    }
                     return (int)BiomeProceduralObjectGeneration_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.GNAM:
@@ -1525,7 +1528,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeProceduralObjectGeneration_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
-                    _BNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BNAMLocation = (stream.Position - offset);
+                    }
                     return (int)BiomeProceduralObjectGeneration_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.GNAM:

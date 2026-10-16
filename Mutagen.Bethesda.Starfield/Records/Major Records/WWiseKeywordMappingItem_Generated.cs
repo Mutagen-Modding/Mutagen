@@ -1128,7 +1128,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)WWiseKeywordMappingItem_FieldIndex.WMSI, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WMSI = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.WMSI = frame.ReadUInt16();
+                    }
                     return (int)WWiseKeywordMappingItem_FieldIndex.WMSI;
                 }
                 case RecordTypeInts.WMSD:
@@ -1280,7 +1283,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WMSI:
                 {
                     if (lastParsed.ShortCircuit((int)WWiseKeywordMappingItem_FieldIndex.WMSI, translationParams)) return ParseResult.Stop;
-                    _WMSILocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _WMSILocation = (stream.Position - offset);
+                    }
                     return (int)WWiseKeywordMappingItem_FieldIndex.WMSI;
                 }
                 case RecordTypeInts.WMSD:

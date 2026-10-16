@@ -2155,13 +2155,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.INTV = frame.ReadInt32();
+                    }
                     return (int)SkyrimModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INCC = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.INCC = frame.ReadInt32();
+                    }
                     return (int)SkyrimModHeader_FieldIndex.INCC;
                 }
                 case RecordTypeInts.XXXX:
@@ -2392,12 +2398,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.INTV:
                 {
-                    _INTVLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _INTVLocation = (stream.Position - offset);
+                    }
                     return (int)SkyrimModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
-                    _INCCLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _INCCLocation = (stream.Position - offset);
+                    }
                     return (int)SkyrimModHeader_FieldIndex.INCC;
                 }
                 case RecordTypeInts.XXXX:

@@ -1377,7 +1377,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Keyword_FieldIndex.Color;
                 }
                 default:
@@ -1513,7 +1516,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)Keyword_FieldIndex.Color;
                 }
                 default:

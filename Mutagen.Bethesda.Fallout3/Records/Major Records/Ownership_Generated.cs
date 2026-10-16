@@ -1081,14 +1081,20 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)Ownership_FieldIndex.Owner, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Ownership_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
                     if (lastParsed.ShortCircuit((int)Ownership_FieldIndex.FactionRank, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FactionRank = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FactionRank = frame.ReadInt32();
+                    }
                     return (int)Ownership_FieldIndex.FactionRank;
                 }
                 default:
@@ -1234,13 +1240,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.XOWN:
                 {
                     if (lastParsed.ShortCircuit((int)Ownership_FieldIndex.Owner, translationParams)) return ParseResult.Stop;
-                    _OwnerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerLocation = (stream.Position - offset);
+                    }
                     return (int)Ownership_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
                 {
                     if (lastParsed.ShortCircuit((int)Ownership_FieldIndex.FactionRank, translationParams)) return ParseResult.Stop;
-                    _FactionRankLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FactionRankLocation = (stream.Position - offset);
+                    }
                     return (int)Ownership_FieldIndex.FactionRank;
                 }
                 default:

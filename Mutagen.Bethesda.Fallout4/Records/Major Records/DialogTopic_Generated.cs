@@ -2859,25 +2859,37 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Branch.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Branch.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogTopic_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.DATA:
@@ -2901,7 +2913,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
@@ -3131,22 +3146,34 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PriorityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PriorityLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BranchLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BranchLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _KeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _KeywordLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopic_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.DATA:
@@ -3156,7 +3183,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SubtypeNameLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SubtypeNameLocation = (stream.Position - offset);
+                    }
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:

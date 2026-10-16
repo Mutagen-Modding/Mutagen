@@ -1759,35 +1759,50 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IsInterior = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.IsInterior = frame.ReadBoolean();
+                    }
                     return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WeatherAttenuationDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UShort,
-                        multiplier: null,
-                        divisor: 100f);
+                    if (contentLength >= 2)
+                    {
+                        item.WeatherAttenuationDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UShort,
+                            multiplier: null,
+                            divisor: 100f);
+                    }
                     return (int)AcousticSpace_FieldIndex.WeatherAttenuationDb;
                 }
                 default:
@@ -1950,27 +1965,42 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
-                    _UseSoundFromRegionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseSoundFromRegionLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _EnvironmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EnvironmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 case RecordTypeInts.XTRI:
                 {
-                    _IsInteriorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _IsInteriorLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.IsInterior;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WeatherAttenuationDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _WeatherAttenuationDbLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.WeatherAttenuationDb;
                 }
                 default:

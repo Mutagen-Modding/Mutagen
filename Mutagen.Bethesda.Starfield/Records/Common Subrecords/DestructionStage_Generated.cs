@@ -1818,7 +1818,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DMDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnusedMaterialSwap = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.UnusedMaterialSwap = frame.ReadInt32();
+                    }
                     return (int)DestructionStage_FieldIndex.UnusedMaterialSwap;
                 }
                 case RecordTypeInts.DSTF: // End Marker
@@ -2041,7 +2044,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DMDS:
                 {
-                    _UnusedMaterialSwapLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnusedMaterialSwapLocation = (stream.Position - offset);
+                    }
                     return (int)DestructionStage_FieldIndex.UnusedMaterialSwap;
                 }
                 case RecordTypeInts.DSTF: // End Marker

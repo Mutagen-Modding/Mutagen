@@ -1658,7 +1658,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NVER:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NavMeshVersion = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NavMeshVersion = frame.ReadUInt32();
+                    }
                     return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
                 }
                 case RecordTypeInts.NVMI:
@@ -1815,7 +1818,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.NVER:
                 {
-                    _NavMeshVersionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NavMeshVersionLocation = (stream.Position - offset);
+                    }
                     return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
                 }
                 case RecordTypeInts.NVMI:

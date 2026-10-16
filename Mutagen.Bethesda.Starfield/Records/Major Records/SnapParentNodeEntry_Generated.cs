@@ -1115,7 +1115,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SnapParentNodeEntry_FieldIndex.NodeID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NodeID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NodeID = frame.ReadUInt32();
+                    }
                     return (int)SnapParentNodeEntry_FieldIndex.NodeID;
                 }
                 case RecordTypeInts.TNAM:
@@ -1264,7 +1267,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ONAM:
                 {
                     if (lastParsed.ShortCircuit((int)SnapParentNodeEntry_FieldIndex.NodeID, translationParams)) return ParseResult.Stop;
-                    _NodeIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NodeIDLocation = (stream.Position - offset);
+                    }
                     return (int)SnapParentNodeEntry_FieldIndex.NodeID;
                 }
                 case RecordTypeInts.TNAM:

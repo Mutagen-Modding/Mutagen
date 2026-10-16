@@ -1405,7 +1405,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RadioSceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.WED0:
@@ -1423,7 +1426,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VENC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogueSubtype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DialogueSubtype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)RadioSceneAction_FieldIndex.DialogueSubtype;
                 }
                 default:
@@ -1558,7 +1564,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)RadioSceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.WED0:
@@ -1581,7 +1590,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.VENC:
                 {
-                    _DialogueSubtypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DialogueSubtypeLocation = (stream.Position - offset);
+                    }
                     return (int)RadioSceneAction_FieldIndex.DialogueSubtype;
                 }
                 default:

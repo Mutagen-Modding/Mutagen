@@ -2194,13 +2194,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.INAM = frame.ReadInt32();
+                    }
                     return (int)Message_FieldIndex.INAM;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Message_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.DNAM:
@@ -2214,13 +2220,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayTime = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.DisplayTime = frame.ReadUInt32();
+                    }
                     return (int)Message_FieldIndex.DisplayTime;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.BNAM = frame.ReadUInt32();
+                    }
                     return (int)Message_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.NNAM:
@@ -2449,12 +2461,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _INAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _INAMLocation = (stream.Position - offset);
+                    }
                     return (int)Message_FieldIndex.INAM;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _OwnerQuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerQuestLocation = (stream.Position - offset);
+                    }
                     return (int)Message_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.DNAM:
@@ -2464,12 +2482,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _DisplayTimeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DisplayTimeLocation = (stream.Position - offset);
+                    }
                     return (int)Message_FieldIndex.DisplayTime;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BNAMLocation = (stream.Position - offset);
+                    }
                     return (int)Message_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.NNAM:

@@ -1347,27 +1347,39 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)GroupedPackIn_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.HNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)GroupedPackIn_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INAM = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 2);
+                    if (contentLength >= 2)
+                    {
+                        item.INAM = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 2);
+                    }
                     return (int)GroupedPackIn_FieldIndex.INAM;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.JNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)GroupedPackIn_FieldIndex.JNAM;
                 }
                 case RecordTypeInts.LNAM:
@@ -1545,22 +1557,34 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.GNAM:
                 {
-                    _GNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GNAMLocation = (stream.Position - offset);
+                    }
                     return (int)GroupedPackIn_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HNAMLocation = (stream.Position - offset);
+                    }
                     return (int)GroupedPackIn_FieldIndex.HNAM;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _INAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _INAMLocation = (stream.Position - offset);
+                    }
                     return (int)GroupedPackIn_FieldIndex.INAM;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _JNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _JNAMLocation = (stream.Position - offset);
+                    }
                     return (int)GroupedPackIn_FieldIndex.JNAM;
                 }
                 case RecordTypeInts.LNAM:

@@ -1544,7 +1544,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Priority = frame.ReadUInt16();
+                    }
                     return (int)AudioCategorySnapshot_FieldIndex.Priority;
                 }
                 case RecordTypeInts.CNAM:
@@ -1692,7 +1695,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.PNAM:
                 {
-                    _PriorityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _PriorityLocation = (stream.Position - offset);
+                    }
                     return (int)AudioCategorySnapshot_FieldIndex.Priority;
                 }
                 case RecordTypeInts.CNAM:

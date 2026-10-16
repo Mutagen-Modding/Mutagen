@@ -2738,13 +2738,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HarvestSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.HarvestSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
@@ -3052,12 +3058,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PFIG:
                 {
-                    _IngredientLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IngredientLocation = (stream.Position - offset);
+                    }
                     return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _HarvestSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HarvestSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:

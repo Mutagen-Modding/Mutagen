@@ -1699,7 +1699,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PRUC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnknownStatic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UnknownStatic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PerkRank_FieldIndex.UnknownStatic;
                 }
                 default:
@@ -1907,7 +1910,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PRUC:
                 {
-                    _UnknownStaticLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UnknownStaticLocation = (stream.Position - offset);
+                    }
                     return (int)PerkRank_FieldIndex.UnknownStatic;
                 }
                 default:

@@ -2197,15 +2197,21 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.ByteHundred);
+                    if (contentLength >= 1)
+                    {
+                        item.ChanceNone = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.ByteHundred);
+                    }
                     return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxCount = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.MaxCount = frame.ReadUInt8();
+                    }
                     return (int)LeveledItem_FieldIndex.MaxCount;
                 }
                 case RecordTypeInts.LVLF:
@@ -2219,7 +2225,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:
@@ -2250,7 +2259,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LVSG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EpicLootChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EpicLootChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledItem_FieldIndex.EpicLootChance;
                 }
                 case RecordTypeInts.ONAM:
@@ -2430,12 +2442,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LVLD:
                 {
-                    _ChanceNoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _ChanceNoneLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLM:
                 {
-                    _MaxCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _MaxCountLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.MaxCount;
                 }
                 case RecordTypeInts.LVLF:
@@ -2445,7 +2463,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LVLG:
                 {
-                    _GlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GlobalLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:
@@ -2475,7 +2496,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LVSG:
                 {
-                    _EpicLootChanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EpicLootChanceLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledItem_FieldIndex.EpicLootChance;
                 }
                 case RecordTypeInts.ONAM:

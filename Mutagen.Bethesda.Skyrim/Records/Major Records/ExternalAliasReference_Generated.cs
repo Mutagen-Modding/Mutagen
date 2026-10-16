@@ -1081,14 +1081,20 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
                     if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasID = frame.ReadInt32();
+                    }
                     return (int)ExternalAliasReference_FieldIndex.AliasID;
                 }
                 default:
@@ -1234,13 +1240,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALEQ:
                 {
                     if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.Quest, translationParams)) return ParseResult.Stop;
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
                     if (lastParsed.ShortCircuit((int)ExternalAliasReference_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
-                    _AliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)ExternalAliasReference_FieldIndex.AliasID;
                 }
                 default:

@@ -1546,7 +1546,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ReferenceGroup_FieldIndex.Reference;
                 }
                 case RecordTypeInts.PNAM:
@@ -1706,7 +1709,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ReferenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ReferenceLocation = (stream.Position - offset);
+                    }
                     return (int)ReferenceGroup_FieldIndex.Reference;
                 }
                 case RecordTypeInts.PNAM:

@@ -3215,7 +3215,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.WGDR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GodRays.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GodRays.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LightingTemplate_FieldIndex.GodRays;
                 }
                 default:
@@ -3513,7 +3516,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.WGDR:
                 {
-                    _GodRaysLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GodRaysLocation = (stream.Position - offset);
+                    }
                     return (int)LightingTemplate_FieldIndex.GodRays;
                 }
                 default:

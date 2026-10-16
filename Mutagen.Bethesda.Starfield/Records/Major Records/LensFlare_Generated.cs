@@ -1914,31 +1914,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.ColorInfluence;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExposureInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ExposureInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.ExposureInfluence;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MinEV100 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MinEV100 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.MinEV100;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxEV100 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.MaxEV100 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.MaxEV100;
                 }
                 case RecordTypeInts.LFSP:
@@ -2126,27 +2141,42 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorInfluenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorInfluenceLocation = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.ColorInfluence;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ExposureInfluenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExposureInfluenceLocation = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.ExposureInfluence;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MinEV100Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MinEV100Location = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.MinEV100;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _MaxEV100Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxEV100Location = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.MaxEV100;
                 }
                 case RecordTypeInts.LFSP:

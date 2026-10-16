@@ -4492,7 +4492,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.Climate;
                 }
                 case RecordTypeInts.MNAM:
@@ -4507,73 +4510,109 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockDensityMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.BlockDensityMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Biome_FieldIndex.BlockDensityMult;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CellDensityMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.CellDensityMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Biome_FieldIndex.CellDensityMult;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScanWorldspaceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ScanWorldspaceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Biome_FieldIndex.ScanWorldspaceMult;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Child.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Child.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.Child;
                 }
                 case RecordTypeInts.BIAS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbienceSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AmbienceSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.AmbienceSet;
                 }
                 case RecordTypeInts.BIMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.PatternStyle;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Biome_FieldIndex.Color;
                 }
                 case RecordTypeInts.BMC1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SurfaceColor1 = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.SurfaceColor1 = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Biome_FieldIndex.SurfaceColor1;
                 }
                 case RecordTypeInts.BMC2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SurfaceColor2 = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.SurfaceColor2 = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Biome_FieldIndex.SurfaceColor2;
                 }
                 case RecordTypeInts.BMC3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RockTint = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.RockTint = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Biome_FieldIndex.RockTint;
                 }
                 case RecordTypeInts.TNAM:
@@ -4644,19 +4683,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockDensityMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BlockDensityMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.BlockDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CellDensityMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CellDensityMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.CellDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScanWorldspaceMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ScanWorldspaceMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Biome_FieldIndex.ScanWorldspaceMultGlobal;
                 }
                 default:
@@ -5033,7 +5081,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ClimateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClimateLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.Climate;
                 }
                 case RecordTypeInts.MNAM:
@@ -5048,62 +5099,98 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _BlockDensityMultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlockDensityMultLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.BlockDensityMult;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _CellDensityMultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CellDensityMultLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.CellDensityMult;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _ScanWorldspaceMultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScanWorldspaceMultLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.ScanWorldspaceMult;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _ChildLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ChildLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.Child;
                 }
                 case RecordTypeInts.BIAS:
                 {
-                    _AmbienceSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AmbienceSetLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.AmbienceSet;
                 }
                 case RecordTypeInts.BIMT:
                 {
-                    _MusicTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MusicTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _TimeOfDayLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TimeOfDayLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _PatternStyleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PatternStyleLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.PatternStyle;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.Color;
                 }
                 case RecordTypeInts.BMC1:
                 {
-                    _SurfaceColor1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SurfaceColor1Location = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.SurfaceColor1;
                 }
                 case RecordTypeInts.BMC2:
                 {
-                    _SurfaceColor2Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SurfaceColor2Location = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.SurfaceColor2;
                 }
                 case RecordTypeInts.BMC3:
                 {
-                    _RockTintLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RockTintLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.RockTint;
                 }
                 case RecordTypeInts.TNAM:
@@ -5158,17 +5245,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _BlockDensityMultGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlockDensityMultGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.BlockDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _CellDensityMultGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CellDensityMultGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.CellDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _ScanWorldspaceMultGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScanWorldspaceMultGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)Biome_FieldIndex.ScanWorldspaceMultGlobal;
                 }
                 default:

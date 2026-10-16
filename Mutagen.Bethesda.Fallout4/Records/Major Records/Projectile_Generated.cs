@@ -3629,7 +3629,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundLevel = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.SoundLevel = frame.ReadUInt32();
+                    }
                     return (int)Projectile_FieldIndex.SoundLevel;
                 }
                 default:
@@ -3974,7 +3977,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _SoundLevelLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLevelLocation = (stream.Position - offset);
+                    }
                     return (int)Projectile_FieldIndex.SoundLevel;
                 }
                 default:
