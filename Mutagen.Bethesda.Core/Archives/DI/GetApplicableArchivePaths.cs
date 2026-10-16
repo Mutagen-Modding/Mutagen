@@ -68,8 +68,10 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
             return [];
         }
             
+        var extension = _archiveExtension.Get();
         var ret = _fileSystem.Directory
-            .EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
+            .EnumerateFilePaths(_dataDirectoryProvider.Path)
+            .Where(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
         if (modKey != null && !modKey.Value.IsNull)
         {
             ret = ret
