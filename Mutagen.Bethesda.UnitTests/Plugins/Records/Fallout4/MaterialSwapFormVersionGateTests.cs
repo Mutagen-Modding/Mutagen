@@ -32,15 +32,41 @@ public class MaterialSwapFormVersionGateTests
         content.AddRange(Subrecord("BNAM", NullTerminated("OriginalMat")));
         content.AddRange(Subrecord("SNAM", NullTerminated("ReplacementMat")));
         content.AddRange(Subrecord("FNAM", NullTerminated("")));
-        var contentBytes = content.ToArray();
+        return Mswp(formVersion, content);
+    }
 
+    private static byte[] BuildTwoSubstitutionMswpBytes()
+    {
+        var content = new List<byte>();
+        content.AddRange(Subrecord("FNAM", NullTerminated("materials")));
+        content.AddRange(Subrecord("BNAM", NullTerminated("FirstOriginal")));
+        content.AddRange(Subrecord("SNAM", NullTerminated("FirstReplacement")));
+        content.AddRange(Subrecord("FNAM", NullTerminated("")));
+        content.AddRange(Subrecord("CNAM", BitConverter.GetBytes(1f)));
+        content.AddRange(Subrecord("BNAM", NullTerminated("SecondOriginal")));
+        content.AddRange(Subrecord("SNAM", NullTerminated("SecondReplacement")));
+        content.AddRange(Subrecord("CNAM", BitConverter.GetBytes(2f)));
+        return Mswp(NewFormVersion, content);
+    }
+
+    private static byte[] Mswp(ushort formVersion, List<byte> content)
+    {
         var header = new byte[GameConstants.Fallout4.MajorConstants.HeaderLength];
         Encoding.ASCII.GetBytes("MSWP").CopyTo(header, 0);
-        BinaryPrimitives.WriteUInt32LittleEndian(header.AsSpan(4), checked((uint)contentBytes.Length));
+        BinaryPrimitives.WriteUInt32LittleEndian(header.AsSpan(4), checked((uint)content.Count));
         BinaryPrimitives.WriteUInt32LittleEndian(header.AsSpan(12), 0x00000001);
         BinaryPrimitives.WriteUInt16LittleEndian(header.AsSpan(20), formVersion);
+        return header.Concat(content).ToArray();
+    }
 
-        return header.Concat(contentBytes).ToArray();
+    private static void ShouldHoldBothSubstitutions(IMaterialSwapGetter item)
+    {
+        item.Substitutions.Count.ShouldBe(2);
+        item.Substitutions[0].ObsoleteTreeFolder.ShouldBe(string.Empty);
+        item.Substitutions[0].ColorRemappingIndex.ShouldBe(1f);
+        item.Substitutions[1].OriginalMaterial.ShouldBe("SecondOriginal");
+        item.Substitutions[1].ObsoleteTreeFolder.ShouldBeNull();
+        item.Substitutions[1].ColorRemappingIndex.ShouldBe(2f);
     }
 
     private static byte[] Subrecord(string type, byte[] content)
@@ -137,18 +163,52 @@ public class MaterialSwapFormVersionGateTests
     }
 
     [Fact]
-    public void Overlay_NewFormVersionNoTopFnam_WritesNoFnam()
+    public void Overlay_NewFormVersionNoTopFnam_WritesOnlyTheSubstitutionsFnam()
     {
         var written = Write(ParseOverlay(BuildMswpBytes(NewFormVersion, topFnam: null)));
-        CountFnam(written).ShouldBe(0);
+        CountFnam(written).ShouldBe(1);
         ParseOverlay(written).TreeFolder.ShouldBeNull();
     }
 
     [Fact]
-    public void Overlay_NewFormVersionTopFnam_WritesOneFnam()
+    public void Overlay_NewFormVersionTopFnam_WritesBothFnams()
     {
         var written = Write(ParseOverlay(BuildMswpBytes(NewFormVersion, topFnam: "materials")));
-        CountFnam(written).ShouldBe(1);
+        CountFnam(written).ShouldBe(2);
         ParseOverlay(written).TreeFolder.ShouldBe("materials");
+    }
+
+    [Fact]
+    public void DeepParse_NewFormVersionTwoSubstitutions_KeepsEachFnamAndCnamAcrossAWrite()
+    {
+        var item = ParseDeep(BuildTwoSubstitutionMswpBytes());
+        ShouldHoldBothSubstitutions(item);
+        ShouldHoldBothSubstitutions(ParseOverlay(Write(item)));
+    }
+
+    [Fact]
+    public void Overlay_NewFormVersionTwoSubstitutions_KeepsEachFnamAndCnamAcrossAWrite()
+    {
+        var item = ParseOverlay(BuildTwoSubstitutionMswpBytes());
+        ShouldHoldBothSubstitutions(item);
+        ShouldHoldBothSubstitutions(ParseDeep(Write(item)));
+    }
+
+    [Fact]
+    public void DeepParse_LegacyFormVersionSubstitutionFnam_IsTheTreeFolderAndWrittenOnce()
+    {
+        var item = ParseDeep(BuildMswpBytes(LegacyFormVersion, topFnam: null));
+        item.Substitutions.ShouldHaveSingleItem().ObsoleteTreeFolder.ShouldBeNull();
+        item.TreeFolder.ShouldBe(string.Empty);
+        CountFnam(Write(item)).ShouldBe(1);
+    }
+
+    [Fact]
+    public void Overlay_LegacyFormVersionSubstitutionFnam_IsTheTreeFolderAndWrittenOnce()
+    {
+        var item = ParseOverlay(BuildMswpBytes(LegacyFormVersion, topFnam: null));
+        item.Substitutions.ShouldHaveSingleItem().ObsoleteTreeFolder.ShouldBeNull();
+        item.TreeFolder.ShouldBe(string.Empty);
+        CountFnam(Write(item)).ShouldBe(1);
     }
 }
