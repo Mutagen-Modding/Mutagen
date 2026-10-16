@@ -664,6 +664,8 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     /// <param name="skipHeader">Whether to skip the header in the return location values</param>
     /// <param name="triggersAlwaysAreNewRecords">If false, RecordTypes that are triggers but not before the last parsed
     /// RecordType in the order type will be considered part of the last section</param>
+    /// <param name="translationParams">Parameters for translating record types</param>
+    /// <param name="endMarker">Optional record type that stops parsing after it is consumed</param>
     /// <returns>Array of located positions relative to the stream's position at the start</returns>
     public static IReadOnlyList<int> ParseRecordLocationsByCount(
         OverlayStream stream,
@@ -686,6 +688,9 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
     /// <param name="trigger">Set of record types expected within one record</param>
     /// <param name="constants">Metadata for reference</param>
     /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+    /// <param name="triggersAlwaysAreNewRecords">Whether every triggering RecordType starts a new record regardless of its order</param>
+    /// <param name="translationParams">Parameters for translating record types</param>
+    /// <param name="endMarker">Optional record type that stops parsing after it is consumed</param>
     /// <returns>Array of located positions relative to the stream's position at the start</returns>
     public static IReadOnlyList<int> ParseRecordLocations(
         OverlayStream stream,

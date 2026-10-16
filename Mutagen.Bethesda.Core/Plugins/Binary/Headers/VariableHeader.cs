@@ -34,6 +34,7 @@ public readonly struct VariableHeader
     /// Constructor
     /// </summary>
     /// <param name="constants">Record constants to use as reference for alignment</param>
+    /// <param name="objectType">Object type whose header metadata should be used</param>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     public VariableHeader(GameConstants constants, ObjectType objectType, ReadOnlyMemorySlice<byte> span)
     {
@@ -46,6 +47,7 @@ public readonly struct VariableHeader
     /// Constructor
     /// </summary>
     /// <param name="constants">Record constants to use as reference for alignment</param>
+    /// <param name="headerConstants">Header metadata to use as reference for alignment</param>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     public VariableHeader(GameConstants constants, RecordHeaderConstants headerConstants, ReadOnlyMemorySlice<byte> span)
     {
@@ -129,6 +131,7 @@ public readonly struct VariablePinHeader
     /// Constructor
     /// </summary>
     /// <param name="constants">Record constants to use as reference for alignment</param>
+    /// <param name="objectType">Object type whose header metadata should be used</param>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     /// <param name="pinLocation">Location pin tracker relative to parent GroupFrame</param>
     public VariablePinHeader(GameConstants constants, ObjectType objectType, ReadOnlyMemorySlice<byte> span, int pinLocation)
@@ -141,6 +144,7 @@ public readonly struct VariablePinHeader
     /// Constructor
     /// </summary>
     /// <param name="constants">Record constants to use as reference for alignment</param>
+    /// <param name="recordHeaderConstants">Header metadata to use as reference for alignment</param>
     /// <param name="span">Span to overlay on, aligned to the start of the header</param>
     /// <param name="pinLocation">Location pin tracker relative to parent GroupFrame</param>
     public VariablePinHeader(GameConstants constants, RecordHeaderConstants recordHeaderConstants, ReadOnlyMemorySlice<byte> span, int pinLocation)

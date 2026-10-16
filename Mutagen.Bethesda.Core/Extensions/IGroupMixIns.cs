@@ -173,6 +173,7 @@ public static class IGroupMixIns
     /// <param name="group">Group to add to</param>
     /// <param name="source">Source record to duplicate</param>
     /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
+    /// <param name="formKey">FormKey to use for the record, or null to allocate one using the EditorID</param>
     /// <returns>Duplicated and added record</returns>
     public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter source, string? edid, FormKey? formKey = null)
         where TMajor : IMajorRecord, TMajorGetter

@@ -23,7 +23,7 @@ public interface IMultiModFileReader
     /// <param name="gameRelease">The game release for the mods</param>
     /// <param name="loadOrder">Load order to use for master ordering</param>
     /// <param name="readParams">Binary read parameters</param>
-    /// <returns">Merged mod overlay with the original ModKey (read-only)</returns>
+    /// <returns>Merged mod overlay with the original ModKey (read-only)</returns>
     TModGetter Read<TModGetter>(
         DirectoryPath folder,
         ModKey modKey,

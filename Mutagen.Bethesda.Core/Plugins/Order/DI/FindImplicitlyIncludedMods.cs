@@ -14,7 +14,7 @@ public interface IFindImplicitlyIncludedMods
     /// <param name="loadOrderListing">List of mods to consider</param>
     /// <param name="skipMissingMods">Whether to skip any mod that does not exist in the data directory</param>
     /// <returns>ModKeys that were referenced but not enabled</returns>
-    /// <exception cref="MissingModException">If a mod was missing and <see cref="skipMissingMods"/> was false</exception>
+    /// <exception cref="MissingModException">If a mod was missing and <paramref name="skipMissingMods"/> was false</exception>
     IEnumerable<ModKey> Find(
         IEnumerable<ILoadOrderListingGetter> loadOrderListing,
         bool skipMissingMods = false);

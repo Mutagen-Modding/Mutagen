@@ -1230,7 +1230,7 @@ public interface IBinaryModdedWriteBuilder
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(IEnumerable{ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1239,7 +1239,7 @@ public interface IBinaryModdedWriteBuilder
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(IEnumerable{ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -1948,7 +1948,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(IEnumerable{ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -2687,7 +2687,7 @@ public record BinaryWriteBuilder<TModGetter>
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="P"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(IEnumerable{ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
@@ -2711,7 +2711,7 @@ public record BinaryWriteBuilder<TModGetter>
     /// <summary>
     /// Specifies a list of masters to set the mod to contain. <br />
     /// This overrides all normally contained masters, and may result in a corrupted mod if set incorrectly. <br />
-    /// If set after <see cref="WithExtraIncludedMasters" /> or <see cref="WithCkRequiredMasters"/>, they will be forgotten.
+    /// If set after <see cref="WithExtraIncludedMasters(IEnumerable{ModKey})" /> or <see cref="WithAllParentMasters"/>, they will be forgotten.
     /// </summary>
     /// <param name="modKeys">ModKeys to have the mod contain</param>
     /// <returns>Builder object to continue customization</returns>
