@@ -54,6 +54,21 @@ partial class NavmeshGeometryBinaryWriteTranslation
 
 partial class NavmeshGeometryBinaryOverlay
 {
+    private int VertexLength => _package.FormVersion!.FormVersion!.Value < 493 ? 12 : 16;
+
+    public IReadOnlyList<INavmeshVertexGetter> Vertices => BinaryOverlayList.FactoryByCountLength<INavmeshVertexGetter>(
+        _structData.Slice(0x10),
+        _package,
+        VertexLength,
+        countLength: 4,
+        (s, p) => NavmeshVertexBinaryOverlay.NavmeshVertexFactory(s, p));
+
+    partial void CustomVerticesEndPos()
+    {
+        var count = BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x10));
+        VerticesEndingPos = 0x10 + checked((int)((count * VertexLength) + 4));
+    }
+
     public IReadOnlyList<INavmeshTriangleGetter> Triangles =>
         new TrianglesOverlay(
             _structData,
