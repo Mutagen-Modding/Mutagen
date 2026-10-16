@@ -101,7 +101,7 @@ public static class Archive
     /// <param name="release">GameRelease to query for</param>
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">Currently unused</param>
+    /// <param name="returnEmptyIfMissing">Ignored. Missing data folder or INI always yields an empty result; retained for compatibility.</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(
         GameRelease release, DirectoryPath dataFolderPath, IFileSystem? fileSystem = null, 
@@ -120,7 +120,7 @@ public static class Archive
     /// <param name="dataFolderPath">Folder to query within</param>
     /// <param name="modKey">ModKey to query about</param>
     /// <param name="fileSystem">FileSystem to use</param>
-    /// <param name="returnEmptyIfMissing">Currently unused</param>
+    /// <param name="returnEmptyIfMissing">Ignored. Missing data folder or INI always yields an empty result; retained for compatibility.</param>
     /// <returns></returns>
     public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath,
         ModKey modKey, IFileSystem? fileSystem = null, bool returnEmptyIfMissing = true)
