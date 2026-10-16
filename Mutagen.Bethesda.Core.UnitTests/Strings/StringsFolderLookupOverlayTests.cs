@@ -398,4 +398,32 @@ public class StringsFolderLookupOverlayTests
         sourcePath.ShouldContain(existingPath.Path);
         sourcePath.ShouldContain("skyrim_english.strings");
     }
+
+    [Fact]
+    public void LowerCaseFileNames()
+    {
+        using var dir = TestPathing.GetTempFolder(nameof(StringsFolderLookupOverlayTests));
+        var fileSystem = new FileSystem();
+        var modKey = ModKey.FromFileName("MyMod.esp");
+        uint id;
+        using (var writer = new StringsWriter(GameRelease.SkyrimSE, modKey, dir.Dir, new MutagenEncodingProvider(), fileSystem))
+        {
+            id = writer.Register("Hello", Language.English, StringsSource.Normal);
+        }
+        foreach (var written in Directory.EnumerateFiles(dir.Dir.Path))
+        {
+            File.Move(written, Path.Combine(dir.Dir.Path, Path.GetFileName(written).ToLowerInvariant()));
+        }
+        var gameRelease = Substitute.For<IGameReleaseContext>();
+        gameRelease.Release.Returns(GameRelease.SkyrimSE);
+        var factory = new StringsFolderLookupFactory(
+            gameRelease,
+            Substitute.For<IDataDirectoryProvider>(),
+            Substitute.For<IGetApplicableArchivePaths>(),
+            fileSystem,
+            new StringsReadParameters { StringsFolderOverride = dir.Dir });
+
+        factory.InternalFactory(modKey).TryLookup(StringsSource.Normal, Language.English, id, out var str).ShouldBeTrue();
+        str.ShouldBe("Hello");
+    }
 }
