@@ -35,7 +35,7 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType genderEnumRecord,
         RecordType contentMarker,
         BinarySubParseDelegate<MutagenFrame, TItem> transl,
-        IGenderedItemGetter<TItem>? existing = null)
+        IGenderedItemGetter<TItem>? existing)
         where TItem : new()
     {
         int i = 0;
@@ -91,34 +91,36 @@ internal sealed class GenderedItemBinaryTranslation
         MutagenFrame frame,
         BinaryMasterParseDelegate<TItem> transl,
         RecordTypeConverter femaleRecordConverter,
+        IGenderedItemGetter<TItem?>? existing,
         RecordTypeConverter? maleRecordConverter = null,
-        bool shortCircuit = true,
-        IGenderedItemGetter<TItem?>? existing = null)
+        bool shortCircuit = true)
         where TItem : class
     {
         TItem? male = existing?.Male, female = existing?.Female;
-        if ((male == null || NextIsConverted(frame, maleRecordConverter))
-            && transl(frame, out var readMale, new TypedParseParams(
+        if (MayRead(frame, male, maleRecordConverter)
+            && transl(frame, out var parsedMale, new TypedParseParams(
                 lengthOverride: null,
                 recordTypeConverter: maleRecordConverter,
                 doNotShortCircuit: !shortCircuit)))
         {
-            male = readMale;
+            male = parsedMale;
         }
-        if ((female == null || NextIsConverted(frame, femaleRecordConverter))
-            && transl(frame, out var readFemale, new TypedParseParams(
+        if (MayRead(frame, female, femaleRecordConverter)
+            && transl(frame, out var parsedFemale, new TypedParseParams(
                 lengthOverride: null,
                 recordTypeConverter: femaleRecordConverter,
                 doNotShortCircuit: !shortCircuit)))
         {
-            female = readFemale;
+            female = parsedFemale;
         }
         return new GenderedItem<TItem?>(male, female);
     }
 
-    private static bool NextIsConverted(MutagenFrame frame, RecordTypeConverter? converter)
+    // A held half is replaced only by a subrecord its own converter maps
+    private static bool MayRead<TItem>(MutagenFrame frame, TItem? held, RecordTypeConverter? converter)
+        where TItem : class
     {
-        if (converter == null) return true;
+        if (held == null || converter == null) return true;
         if (frame.Reader.Complete) return false;
         return converter.ToConversions.ContainsKey(frame.GetSubrecordHeader().RecordType);
     }
@@ -149,7 +151,7 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType femaleMarker,
         BinarySubParseDelegate<MutagenFrame, TItem> transl,
         bool skipMarker,
-        IGenderedItemGetter<TItem?>? existing = null)
+        IGenderedItemGetter<TItem?>? existing)
         where TItem : class
     {
         TItem? male = existing?.Male, female = existing?.Female;
@@ -202,7 +204,7 @@ internal sealed class GenderedItemBinaryTranslation
         BinarySubParseDelegate<MutagenFrame, TItem> transl,
         bool skipMarker,
         TItem fallback,
-        IGenderedItemGetter<TItem>? existing = null)
+        IGenderedItemGetter<TItem>? existing)
     {
         TItem male = existing != null ? existing.Male : fallback;
         TItem female = existing != null ? existing.Female : fallback;
@@ -256,9 +258,9 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType maleMarker,
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
+        IGenderedItemGetter<TItem?>? existing,
         TypedParseParams maleRecordConverter = default,
-        TypedParseParams femaleRecordConverter = default,
-        IGenderedItemGetter<TItem?>? existing = null)
+        TypedParseParams femaleRecordConverter = default)
         where TItem : class
     {
         femaleRecordConverter = femaleRecordConverter.ShortCircuit();
@@ -298,13 +300,12 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
         TypedParseParams translationParams,
-        IGenderedItemGetter<TItem?>? existing = null)
+        IGenderedItemGetter<TItem?>? existing)
         where TItem : class
     {
         return Parse<TItem>(frame, maleMarker, femaleMarker,
-            transl, maleRecordConverter: translationParams,
-            femaleRecordConverter: translationParams,
-            existing: existing);
+            transl, existing, maleRecordConverter: translationParams,
+            femaleRecordConverter: translationParams);
     }
 
     public static GenderedItem<TItem?> Parse<TItem>(
@@ -371,8 +372,8 @@ internal sealed class GenderedItemBinaryTranslation
         RecordType maleMarker,
         RecordType femaleMarker,
         BinaryMasterParseDelegate<TItem> transl,
-        RecordTypeConverter? femaleRecordConverter = null,
-        IGenderedItemGetter<TItem?>? existing = null)
+        IGenderedItemGetter<TItem?>? existing,
+        RecordTypeConverter? femaleRecordConverter = null)
         where TItem : class
     {
         TItem? male = existing?.Male, female = existing?.Female;

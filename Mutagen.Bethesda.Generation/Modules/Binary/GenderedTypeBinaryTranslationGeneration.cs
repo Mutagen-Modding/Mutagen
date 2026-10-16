@@ -80,12 +80,13 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             parseSuffix = "Required";
         }
 
-        if (IsSplitPair(typeGen)
-            && (parseSuffix == "MarkerWithinItem"
-                || (parseSuffix == "Required" && !gender.MaleMarker.HasValue && !gender.GenderEnumRecord.HasValue)
-                || (parseSuffix == string.Empty
-                    && gender.SubTypeGeneration.GetFieldData().RecordType.HasValue
-                    && !(gender.SubTypeGeneration is LoquiType))))
+        // Parses that read both halves in one entry take no existing pair
+        var takesExisting = !(parseSuffix == "MarkerWithinItem"
+            || (parseSuffix == "Required" && !gender.MaleMarker.HasValue && !gender.GenderEnumRecord.HasValue)
+            || (parseSuffix == string.Empty
+                && gender.SubTypeGeneration.GetFieldData().RecordType.HasValue
+                && !(gender.SubTypeGeneration is LoquiType)));
+        if (IsSplitPair(typeGen) && !takesExisting)
         {
             throw SplitPairNotSupported(objGen, typeGen);
         }
@@ -194,7 +195,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 args.Add($"fallback: {gender.SubTypeGeneration.GetDefault(getter: false)}");
             }
 
-            if (IsSplitPair(typeGen))
+            if (takesExisting)
             {
                 args.Add($"existing: {itemAccessor}");
             }
@@ -549,7 +550,6 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                     }
 
                     bool notNull = gendered.ItemNullable && !gendered.SubTypeGeneration.IsNullable;
-                    bool withTranslationParams = false;
                     using (var args = sb.Call(
                                $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>"))
                     {
@@ -582,14 +582,12 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             {
                                 args.Add(
                                     $"translationParams: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
-                                withTranslationParams = true;
                             }
                             else if (converterAccessor != null
                                      && gendered.FemaleConversions == null
                                      && gendered.MaleConversions == null)
                             {
                                 args.Add($"translationParams: {converterAccessor}");
-                                withTranslationParams = true;
                             }
                         }
                         else if (gendered.SubTypeGeneration is ListType loquiList
@@ -664,14 +662,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                             args.Add($"fallback: {gendered.SubTypeGeneration.GetDefault(getter: false)}");
                         }
 
-                        if (IsSplitPair(typeGen))
-                        {
-                            if (gendered.MarkerPerGender && withTranslationParams)
-                            {
-                                throw SplitPairNotSupported(objGen, typeGen);
-                            }
-                            args.Add($"existing: _{typeGen.Name}Overlay");
-                        }
+                        args.Add($"existing: _{typeGen.Name}Overlay");
                     }
                 }
                 else

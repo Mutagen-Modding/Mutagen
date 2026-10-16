@@ -275,7 +275,7 @@ public class GenderedSplitPairTests
     }
 
     [Fact]
-    public void ArmorAddon_CopyInFromBinary_ReplacesPresentPairAndKeepsAbsentPair()
+    public void ArmorAddon_CopyInFromBinary_MergesPresentHalfAndKeepsAbsentPair()
     {
         var arma = ReadArmaDirect(ArmaAdjacent());
         var bytes = MakeRecord("ARMA",
@@ -286,7 +286,8 @@ public class GenderedSplitPairTests
         arma.CopyInFromBinary(Frame(bytes));
 
         arma.WorldModel.ShouldNotBeNull();
-        arma.WorldModel.Male.ShouldBeNull();
+        arma.WorldModel.Male.ShouldNotBeNull();
+        arma.WorldModel.Male.File.GivenPath.ShouldBe("male.nif");
         arma.WorldModel.Female.ShouldNotBeNull();
         arma.WorldModel.Female.File.GivenPath.ShouldBe("newfemale.nif");
         arma.FirstPersonModel.ShouldNotBeNull();
@@ -294,7 +295,7 @@ public class GenderedSplitPairTests
         arma.FirstPersonModel.Male.File.GivenPath.ShouldBe("male1st.nif");
         arma.FirstPersonModel.Female.ShouldNotBeNull();
         arma.FirstPersonModel.Female.File.GivenPath.ShouldBe("female1st.nif");
-        SubrecordTypes(Constants, Write(arma)).ShouldNotContain("MOD2");
+        SubrecordTypes(Constants, Write(arma)).ShouldContain("MOD2");
     }
 
     [Fact]
