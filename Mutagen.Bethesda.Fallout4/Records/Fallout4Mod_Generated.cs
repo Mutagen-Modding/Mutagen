@@ -8759,6 +8759,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IGlobalFloatGetter":
                 case "IGlobalFloat":
                 case "IGlobalFloatInternal":
+                case "GlobalUnknown":
+                case "IGlobalUnknownGetter":
+                case "IGlobalUnknown":
+                case "IGlobalUnknownInternal":
                 case "GlobalBool":
                 case "IGlobalBoolGetter":
                 case "IGlobalBool":
@@ -11830,6 +11834,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case "IGlobalFloatGetter":
                 case "IGlobalFloat":
                 case "IGlobalFloatInternal":
+                case "GlobalUnknown":
+                case "IGlobalUnknownGetter":
+                case "IGlobalUnknown":
+                case "IGlobalUnknownInternal":
                 case "GlobalBool":
                 case "IGlobalBoolGetter":
                 case "IGlobalBool":

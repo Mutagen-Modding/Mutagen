@@ -141,6 +141,16 @@ internal class Fallout4InheritingInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IGlobalShort),
                 Getter: typeof(IGlobalShortGetter)));
         dict[typeof(IGlobalShortGetter)] = dict[typeof(IGlobalShort)] with { Setter = false };
+        dict[typeof(IGlobalUnknown)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Global_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGlobalUnknown),
+                Getter: typeof(IGlobalUnknownGetter)));
+        dict[typeof(IGlobalUnknownGetter)] = dict[typeof(IGlobalUnknown)] with { Setter = false };
         dict[typeof(INpcModification)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

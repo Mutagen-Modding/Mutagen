@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [GlobalBool, GlobalFloat, GlobalInt, GlobalShort]
+    /// Implemented by: [GlobalBool, GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public abstract partial class Global :
         Fallout4MajorRecord,
@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [GlobalBool, GlobalFloat, GlobalInt, GlobalShort]
+    /// Implemented by: [GlobalBool, GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public partial interface IGlobal :
         IFallout4MajorRecordInternal,
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [GlobalBool, GlobalFloat, GlobalInt, GlobalShort]
+    /// Implemented by: [GlobalBool, GlobalFloat, GlobalInt, GlobalShort, GlobalUnknown]
     /// </summary>
     public partial interface IGlobalGetter :
         IFallout4MajorRecordGetter,
