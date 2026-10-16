@@ -245,7 +245,6 @@ partial class PerkRankBinaryCreateTranslation
                                 break;
                             case APerkEntryPointEffect.FunctionType.AddActivateChoice:
                                 if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
-                                if (!payload.EPF3.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPF3 record");
                                 if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.SpellWithStrings)
                                 {
                                     throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
@@ -253,8 +252,6 @@ partial class PerkRankBinaryCreateTranslation
                                 entryPointEffect = new PerkEntryPointAddActivateChoice()
                                 {
                                     Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, payload.EPFD?.Content),
-                                    ButtonLabel = payload.EPF2.HasValue ? StringBinaryTranslation.Instance.Parse(payload.EPF2.Value.Content, StringsSource.Normal, stream.MetaData, eager: true) : null,
-                                    Flags = (PerkEntryPointAddActivateChoice.Flag)BinaryPrimitives.ReadInt16LittleEndian(payload.EPF3.Value.Content),
                                 };
                                 break;
                             case APerkEntryPointEffect.FunctionType.SelectSpell:
@@ -446,7 +443,7 @@ partial class PerkRankBinaryWriteTranslation
                 writer,
                 effect.Conditions,
                 (w, i) => i.WriteToBinary(w));
-            if (effect is APerkEntryPointEffect ptEffect)
+            if (effect is APerkEntryPointEffect)
             {
                 var paramType = effect switch
                 {
@@ -473,32 +470,33 @@ partial class PerkRankBinaryWriteTranslation
                         writer.Write((byte)paramType);
                     }
                 }
-
-                if (ptEffect.PerkEntryID is { } id)
+            }
+            if (effect.PerkEntryID is { } id)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.EPFB))
                 {
-                    using (HeaderExport.Subrecord(writer, RecordTypes.EPFB))
-                    {
-                        writer.Write(id);
-                    }
+                    writer.Write(id);
                 }
-
-                if (effect is PerkEntryPointAddActivateChoice choice)
+            }
+            if (effect.ButtonLabel != null)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
                 {
-                    if (choice.ButtonLabel != null)
-                    {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
-                        {
-                            StringBinaryTranslation.Instance.Write(writer, choice.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
-                        }
-                    }
-                    using (HeaderExport.Subrecord(writer, RecordTypes.EPF3))
-                    {
-                        EnumBinaryTranslation<PerkEntryPointAddActivateChoice.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                            writer,
-                            choice.Flags,
-                            2);
-                    }
+                    StringBinaryTranslation.Instance.Write(writer, effect.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
                 }
+            }
+            if (effect.Flags is { } flags)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.EPF3))
+                {
+                    EnumBinaryTranslation<APerkEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                        writer,
+                        flags,
+                        2);
+                }
+            }
+            if (effect is APerkEntryPointEffect)
+            {
                 switch (effect)
                 {
                     case PerkEntryPointModifyValue modVal:
