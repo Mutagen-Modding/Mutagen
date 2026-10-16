@@ -1888,21 +1888,12 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorBodyData = item.BodyData;
-            item.BodyData = null!;
-            try
-            {
-                PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
-                    fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.BodyData == null) item.BodyData = priorBodyData;
-            }
+            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

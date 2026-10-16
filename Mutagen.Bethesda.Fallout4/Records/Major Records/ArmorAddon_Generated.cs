@@ -1627,30 +1627,12 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorWorldModel = item.WorldModel;
-            item.WorldModel = null!;
-            var priorFirstPersonModel = item.FirstPersonModel;
-            item.FirstPersonModel = null!;
-            var priorSkinTexture = item.SkinTexture;
-            item.SkinTexture = null!;
-            var priorTextureSwapList = item.TextureSwapList;
-            item.TextureSwapList = null!;
-            try
-            {
-                PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
-                    fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.WorldModel == null) item.WorldModel = priorWorldModel;
-                if (item.FirstPersonModel == null) item.FirstPersonModel = priorFirstPersonModel;
-                if (item.SkinTexture == null) item.SkinTexture = priorSkinTexture;
-                if (item.TextureSwapList == null) item.TextureSwapList = priorTextureSwapList;
-            }
+            PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

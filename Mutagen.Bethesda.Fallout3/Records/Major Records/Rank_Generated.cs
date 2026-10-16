@@ -836,20 +836,11 @@ namespace Mutagen.Bethesda.Fallout3
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorName = item.Name;
-            item.Name = null!;
-            try
-            {
-                PluginUtilityTranslation.SubrecordParse(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.Name == null) item.Name = priorName;
-            }
+            PluginUtilityTranslation.SubrecordParse(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion

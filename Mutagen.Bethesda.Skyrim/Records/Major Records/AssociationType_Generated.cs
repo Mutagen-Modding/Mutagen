@@ -887,24 +887,12 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorParentTitle = item.ParentTitle;
-            item.ParentTitle = null!;
-            var priorTitle = item.Title;
-            item.Title = null!;
-            try
-            {
-                PluginUtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillStructs: AssociationTypeBinaryCreateTranslation.FillBinaryStructs,
-                    fillTyped: AssociationTypeBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.ParentTitle == null) item.ParentTitle = priorParentTitle;
-                if (item.Title == null) item.Title = priorTitle;
-            }
+            PluginUtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: AssociationTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AssociationTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

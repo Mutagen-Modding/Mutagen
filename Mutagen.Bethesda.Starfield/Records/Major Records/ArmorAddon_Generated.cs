@@ -2236,36 +2236,12 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorWorldModel = item.WorldModel;
-            item.WorldModel = null!;
-            var priorFirstPersonModel = item.FirstPersonModel;
-            item.FirstPersonModel = null!;
-            var priorAltSkeleton = item.AltSkeleton;
-            item.AltSkeleton = null!;
-            var priorSkinTexture = item.SkinTexture;
-            item.SkinTexture = null!;
-            var priorMorphs = item.Morphs;
-            item.Morphs = null!;
-            var priorBoneDataModifiers = item.BoneDataModifiers;
-            item.BoneDataModifiers = null!;
-            try
-            {
-                PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
-                    fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.WorldModel == null) item.WorldModel = priorWorldModel;
-                if (item.FirstPersonModel == null) item.FirstPersonModel = priorFirstPersonModel;
-                if (item.AltSkeleton == null) item.AltSkeleton = priorAltSkeleton;
-                if (item.SkinTexture == null) item.SkinTexture = priorSkinTexture;
-                if (item.Morphs == null) item.Morphs = priorMorphs;
-                if (item.BoneDataModifiers == null) item.BoneDataModifiers = priorBoneDataModifiers;
-            }
+            PluginUtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: ArmorAddonBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ArmorAddonBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

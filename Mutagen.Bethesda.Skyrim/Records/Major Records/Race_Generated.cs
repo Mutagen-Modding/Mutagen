@@ -4881,30 +4881,12 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorSkeletalModel = item.SkeletalModel;
-            item.SkeletalModel = null!;
-            var priorBodyData = item.BodyData;
-            item.BodyData = null!;
-            var priorBehaviorGraph = item.BehaviorGraph;
-            item.BehaviorGraph = null!;
-            var priorHeadData = item.HeadData;
-            item.HeadData = null!;
-            try
-            {
-                PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
-                    fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.SkeletalModel == null) item.SkeletalModel = priorSkeletalModel;
-                if (item.BodyData == null) item.BodyData = priorBodyData;
-                if (item.BehaviorGraph == null) item.BehaviorGraph = priorBehaviorGraph;
-                if (item.HeadData == null) item.HeadData = priorHeadData;
-            }
+            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(

@@ -791,20 +791,11 @@ namespace Mutagen.Bethesda.Skyrim
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            var priorTitle = item.Title;
-            item.Title = null!;
-            try
-            {
-                PluginUtilityTranslation.SubrecordParse(
-                    record: item,
-                    frame: frame,
-                    translationParams: translationParams,
-                    fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
-            }
-            finally
-            {
-                if (item.Title == null) item.Title = priorTitle;
-            }
+            PluginUtilityTranslation.SubrecordParse(
+                record: item,
+                frame: frame,
+                translationParams: translationParams,
+                fillTyped: RankBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
