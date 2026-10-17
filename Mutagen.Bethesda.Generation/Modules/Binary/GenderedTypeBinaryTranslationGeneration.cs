@@ -17,11 +17,6 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         return data.HasTrigger && !data.RecordType.HasValue;
     }
 
-    private static NotImplementedException SplitPairNotSupported(ObjectGeneration objGen, TypeGeneration typeGen)
-    {
-        return new NotImplementedException($"{objGen.Name}.{typeGen.Name}: this parse cannot keep both halves of a gendered field whose halves are separate subrecords");
-    }
-
     public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
     {
         GenderedType gender = typeGen as GenderedType;
@@ -86,10 +81,6 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             || (parseSuffix == string.Empty
                 && gender.SubTypeGeneration.GetFieldData().RecordType.HasValue
                 && !(gender.SubTypeGeneration is LoquiType)));
-        if (IsSplitPair(typeGen) && !takesExisting)
-        {
-            throw SplitPairNotSupported(objGen, typeGen);
-        }
 
         using (var args = sb.Call(
                    $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{parseSuffix}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
@@ -667,10 +658,7 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                 }
                 else
                 {
-                    if (IsSplitPair(typeGen))
-                    {
-                        throw SplitPairNotSupported(objGen, typeGen);
-                    }
+                    
                     await base.GenerateWrapperRecordTypeParse(sb, objGen, typeGen, locationAccessor, packageAccessor,
                         converterAccessor);
                 }
