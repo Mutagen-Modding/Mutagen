@@ -2707,7 +2707,8 @@ namespace Mutagen.Bethesda.Skyrim
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.WorldModel);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -2717,7 +2718,8 @@ namespace Mutagen.Bethesda.Skyrim
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.FirstPersonModel);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
@@ -2729,7 +2731,8 @@ namespace Mutagen.Bethesda.Skyrim
                         femaleMarker: RecordTypes.NAM1,
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
-                        fallback: FormLinkNullable<ITextureSetGetter>.Null);
+                        fallback: FormLinkNullable<ITextureSetGetter>.Null,
+                        existing: item.SkinTexture);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
@@ -2741,7 +2744,8 @@ namespace Mutagen.Bethesda.Skyrim
                         femaleMarker: RecordTypes.NAM3,
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
-                        fallback: FormLinkNullable<IFormListGetter>.Null);
+                        fallback: FormLinkNullable<IFormListGetter>.Null,
+                        existing: item.TextureSwapList);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
@@ -3003,7 +3007,8 @@ namespace Mutagen.Bethesda.Skyrim
                         stream: stream,
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
-                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter);
+                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                        existing: _WorldModelOverlay);
                     return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
@@ -3014,7 +3019,8 @@ namespace Mutagen.Bethesda.Skyrim
                         stream: stream,
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
-                        maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter);
+                        maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
+                        existing: _FirstPersonModelOverlay);
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
@@ -3026,7 +3032,8 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.NAM1,
                         stream: stream,
                         creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ITextureSetGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
-                        fallback: FormLinkNullable<ITextureSetGetter>.Null);
+                        fallback: FormLinkNullable<ITextureSetGetter>.Null,
+                        existing: _SkinTextureOverlay);
                     return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
@@ -3038,7 +3045,8 @@ namespace Mutagen.Bethesda.Skyrim
                         female: RecordTypes.NAM3,
                         stream: stream,
                         creator: static (m, p) => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<IFormListGetter>(p, HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)),
-                        fallback: FormLinkNullable<IFormListGetter>.Null);
+                        fallback: FormLinkNullable<IFormListGetter>.Null,
+                        existing: _TextureSwapListOverlay);
                     return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:

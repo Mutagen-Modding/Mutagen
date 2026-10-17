@@ -1028,6 +1028,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         {
                                             if (first)
                                             {
+                                                if (ReferenceEquals(doublesField.Field, field.Field)
+                                                    && nonDoubledKeys.Length > 0
+                                                    && field.Field is GenderedType
+                                                    && GenderedTypeBinaryTranslationGeneration.IsSplitPair(field.Field))
+                                                {
+                                                    i.Add($"(nextRecordType.TypeInt is {string.Join(" or ", nonDoubledKeys.Select(k => $"RecordTypeInts.{k.CheckedType}"))})");
+                                                }
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
@@ -1825,6 +1832,13 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         {
                                             if (first)
                                             {
+                                                if (ReferenceEquals(doublesField.Field, field.Field)
+                                                    && nonDoubledKeys.Length > 0
+                                                    && field.Field is GenderedType
+                                                    && GenderedTypeBinaryTranslationGeneration.IsSplitPair(field.Field))
+                                                {
+                                                    i.Add($"(type.TypeInt is {string.Join(" or ", nonDoubledKeys.Select(k => $"RecordTypeInts.{k.CheckedType}"))})");
+                                                }
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
