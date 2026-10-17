@@ -768,6 +768,7 @@
         <Compile Include="Plugins\Binary\Overlay\GenderedItemBinaryOverlay.cs" />
         <Compile Include="Plugins\Records\AGroup.cs" />
         <Compile Include="Plugins\Binary\Overlay\PluginBinaryOverlay.cs" />
+        <Compile Include="Plugins\Binary\Overlay\GroupCache.cs" />
         <Compile Include="Plugins\Binary\Streams\CompositeReadStream.cs" />
         <Compile Include="Plugins\Binary\Translations\GlobalCustomParsing.cs" />
         <Compile Include="Plugins\Binary\Translations\GenderedItemBinaryTranslation.cs" />

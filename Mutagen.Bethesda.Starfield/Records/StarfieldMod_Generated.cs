@@ -34391,887 +34391,1064 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region GameSettings
         private List<RangeInt64>? _GameSettingsLocations;
-        private IStarfieldGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? StarfieldGroupBinaryOverlay<IGameSettingGetter>.StarfieldGroupFactory(_stream, _GameSettingsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGameSettingGetter>> _GameSettingsCache = new();
+        private IStarfieldGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? _GameSettingsCache.Get(() => StarfieldGroupBinaryOverlay<IGameSettingGetter>.StarfieldGroupFactory(_stream, _GameSettingsLocations, _package)) : default;
         public IStarfieldGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new StarfieldGroup<GameSetting>(this);
         #endregion
         #region Keywords
         private List<RangeInt64>? _KeywordsLocations;
-        private IStarfieldGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? StarfieldGroupBinaryOverlay<IKeywordGetter>.StarfieldGroupFactory(_stream, _KeywordsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IKeywordGetter>> _KeywordsCache = new();
+        private IStarfieldGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? _KeywordsCache.Get(() => StarfieldGroupBinaryOverlay<IKeywordGetter>.StarfieldGroupFactory(_stream, _KeywordsLocations, _package)) : default;
         public IStarfieldGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new StarfieldGroup<Keyword>(this);
         #endregion
         #region FormFolderKeywordLists
         private List<RangeInt64>? _FormFolderKeywordListsLocations;
-        private IStarfieldGroupGetter<IFormFolderKeywordListGetter>? _FormFolderKeywordLists => _FormFolderKeywordListsLocations != null ? StarfieldGroupBinaryOverlay<IFormFolderKeywordListGetter>.StarfieldGroupFactory(_stream, _FormFolderKeywordListsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFormFolderKeywordListGetter>> _FormFolderKeywordListsCache = new();
+        private IStarfieldGroupGetter<IFormFolderKeywordListGetter>? _FormFolderKeywordLists => _FormFolderKeywordListsLocations != null ? _FormFolderKeywordListsCache.Get(() => StarfieldGroupBinaryOverlay<IFormFolderKeywordListGetter>.StarfieldGroupFactory(_stream, _FormFolderKeywordListsLocations, _package)) : default;
         public IStarfieldGroupGetter<IFormFolderKeywordListGetter> FormFolderKeywordLists => _FormFolderKeywordLists ?? new StarfieldGroup<FormFolderKeywordList>(this);
         #endregion
         #region LocationReferenceTypes
         private List<RangeInt64>? _LocationReferenceTypesLocations;
-        private IStarfieldGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? StarfieldGroupBinaryOverlay<ILocationReferenceTypeGetter>.StarfieldGroupFactory(_stream, _LocationReferenceTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILocationReferenceTypeGetter>> _LocationReferenceTypesCache = new();
+        private IStarfieldGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocations != null ? _LocationReferenceTypesCache.Get(() => StarfieldGroupBinaryOverlay<ILocationReferenceTypeGetter>.StarfieldGroupFactory(_stream, _LocationReferenceTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new StarfieldGroup<LocationReferenceType>(this);
         #endregion
         #region Actions
         private List<RangeInt64>? _ActionsLocations;
-        private IStarfieldGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? StarfieldGroupBinaryOverlay<IActionRecordGetter>.StarfieldGroupFactory(_stream, _ActionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IActionRecordGetter>> _ActionsCache = new();
+        private IStarfieldGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocations != null ? _ActionsCache.Get(() => StarfieldGroupBinaryOverlay<IActionRecordGetter>.StarfieldGroupFactory(_stream, _ActionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IActionRecordGetter> Actions => _Actions ?? new StarfieldGroup<ActionRecord>(this);
         #endregion
         #region Transforms
         private List<RangeInt64>? _TransformsLocations;
-        private IStarfieldGroupGetter<ITransformGetter>? _Transforms => _TransformsLocations != null ? StarfieldGroupBinaryOverlay<ITransformGetter>.StarfieldGroupFactory(_stream, _TransformsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ITransformGetter>> _TransformsCache = new();
+        private IStarfieldGroupGetter<ITransformGetter>? _Transforms => _TransformsLocations != null ? _TransformsCache.Get(() => StarfieldGroupBinaryOverlay<ITransformGetter>.StarfieldGroupFactory(_stream, _TransformsLocations, _package)) : default;
         public IStarfieldGroupGetter<ITransformGetter> Transforms => _Transforms ?? new StarfieldGroup<Transform>(this);
         #endregion
         #region TextureSets
         private List<RangeInt64>? _TextureSetsLocations;
-        private IStarfieldGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? StarfieldGroupBinaryOverlay<ITextureSetGetter>.StarfieldGroupFactory(_stream, _TextureSetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ITextureSetGetter>> _TextureSetsCache = new();
+        private IStarfieldGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? _TextureSetsCache.Get(() => StarfieldGroupBinaryOverlay<ITextureSetGetter>.StarfieldGroupFactory(_stream, _TextureSetsLocations, _package)) : default;
         public IStarfieldGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new StarfieldGroup<TextureSet>(this);
         #endregion
         #region Globals
         private List<RangeInt64>? _GlobalsLocations;
-        private IStarfieldGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? StarfieldGroupBinaryOverlay<IGlobalGetter>.StarfieldGroupFactory(_stream, _GlobalsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGlobalGetter>> _GlobalsCache = new();
+        private IStarfieldGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? _GlobalsCache.Get(() => StarfieldGroupBinaryOverlay<IGlobalGetter>.StarfieldGroupFactory(_stream, _GlobalsLocations, _package)) : default;
         public IStarfieldGroupGetter<IGlobalGetter> Globals => _Globals ?? new StarfieldGroup<Global>(this);
         #endregion
         #region DamageTypes
         private List<RangeInt64>? _DamageTypesLocations;
-        private IStarfieldGroupGetter<IDamageTypeGetter>? _DamageTypes => _DamageTypesLocations != null ? StarfieldGroupBinaryOverlay<IDamageTypeGetter>.StarfieldGroupFactory(_stream, _DamageTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IDamageTypeGetter>> _DamageTypesCache = new();
+        private IStarfieldGroupGetter<IDamageTypeGetter>? _DamageTypes => _DamageTypesLocations != null ? _DamageTypesCache.Get(() => StarfieldGroupBinaryOverlay<IDamageTypeGetter>.StarfieldGroupFactory(_stream, _DamageTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<IDamageTypeGetter> DamageTypes => _DamageTypes ?? new StarfieldGroup<DamageType>(this);
         #endregion
         #region Classes
         private List<RangeInt64>? _ClassesLocations;
-        private IStarfieldGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? StarfieldGroupBinaryOverlay<IClassGetter>.StarfieldGroupFactory(_stream, _ClassesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IClassGetter>> _ClassesCache = new();
+        private IStarfieldGroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? _ClassesCache.Get(() => StarfieldGroupBinaryOverlay<IClassGetter>.StarfieldGroupFactory(_stream, _ClassesLocations, _package)) : default;
         public IStarfieldGroupGetter<IClassGetter> Classes => _Classes ?? new StarfieldGroup<Class>(this);
         #endregion
         #region Factions
         private List<RangeInt64>? _FactionsLocations;
-        private IStarfieldGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? StarfieldGroupBinaryOverlay<IFactionGetter>.StarfieldGroupFactory(_stream, _FactionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFactionGetter>> _FactionsCache = new();
+        private IStarfieldGroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? _FactionsCache.Get(() => StarfieldGroupBinaryOverlay<IFactionGetter>.StarfieldGroupFactory(_stream, _FactionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IFactionGetter> Factions => _Factions ?? new StarfieldGroup<Faction>(this);
         #endregion
         #region AffinityEvents
         private List<RangeInt64>? _AffinityEventsLocations;
-        private IStarfieldGroupGetter<IAffinityEventGetter>? _AffinityEvents => _AffinityEventsLocations != null ? StarfieldGroupBinaryOverlay<IAffinityEventGetter>.StarfieldGroupFactory(_stream, _AffinityEventsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAffinityEventGetter>> _AffinityEventsCache = new();
+        private IStarfieldGroupGetter<IAffinityEventGetter>? _AffinityEvents => _AffinityEventsLocations != null ? _AffinityEventsCache.Get(() => StarfieldGroupBinaryOverlay<IAffinityEventGetter>.StarfieldGroupFactory(_stream, _AffinityEventsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAffinityEventGetter> AffinityEvents => _AffinityEvents ?? new StarfieldGroup<AffinityEvent>(this);
         #endregion
         #region HeadParts
         private List<RangeInt64>? _HeadPartsLocations;
-        private IStarfieldGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? StarfieldGroupBinaryOverlay<IHeadPartGetter>.StarfieldGroupFactory(_stream, _HeadPartsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IHeadPartGetter>> _HeadPartsCache = new();
+        private IStarfieldGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? _HeadPartsCache.Get(() => StarfieldGroupBinaryOverlay<IHeadPartGetter>.StarfieldGroupFactory(_stream, _HeadPartsLocations, _package)) : default;
         public IStarfieldGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new StarfieldGroup<HeadPart>(this);
         #endregion
         #region Races
         private List<RangeInt64>? _RacesLocations;
-        private IStarfieldGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? StarfieldGroupBinaryOverlay<IRaceGetter>.StarfieldGroupFactory(_stream, _RacesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IRaceGetter>> _RacesCache = new();
+        private IStarfieldGroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? _RacesCache.Get(() => StarfieldGroupBinaryOverlay<IRaceGetter>.StarfieldGroupFactory(_stream, _RacesLocations, _package)) : default;
         public IStarfieldGroupGetter<IRaceGetter> Races => _Races ?? new StarfieldGroup<Race>(this);
         #endregion
         #region SoundMarkers
         private List<RangeInt64>? _SoundMarkersLocations;
-        private IStarfieldGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? StarfieldGroupBinaryOverlay<ISoundMarkerGetter>.StarfieldGroupFactory(_stream, _SoundMarkersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISoundMarkerGetter>> _SoundMarkersCache = new();
+        private IStarfieldGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocations != null ? _SoundMarkersCache.Get(() => StarfieldGroupBinaryOverlay<ISoundMarkerGetter>.StarfieldGroupFactory(_stream, _SoundMarkersLocations, _package)) : default;
         public IStarfieldGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new StarfieldGroup<SoundMarker>(this);
         #endregion
         #region SoundEchoMarkers
         private List<RangeInt64>? _SoundEchoMarkersLocations;
-        private IStarfieldGroupGetter<ISoundEchoMarkerGetter>? _SoundEchoMarkers => _SoundEchoMarkersLocations != null ? StarfieldGroupBinaryOverlay<ISoundEchoMarkerGetter>.StarfieldGroupFactory(_stream, _SoundEchoMarkersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISoundEchoMarkerGetter>> _SoundEchoMarkersCache = new();
+        private IStarfieldGroupGetter<ISoundEchoMarkerGetter>? _SoundEchoMarkers => _SoundEchoMarkersLocations != null ? _SoundEchoMarkersCache.Get(() => StarfieldGroupBinaryOverlay<ISoundEchoMarkerGetter>.StarfieldGroupFactory(_stream, _SoundEchoMarkersLocations, _package)) : default;
         public IStarfieldGroupGetter<ISoundEchoMarkerGetter> SoundEchoMarkers => _SoundEchoMarkers ?? new StarfieldGroup<SoundEchoMarker>(this);
         #endregion
         #region AcousticSpaces
         private List<RangeInt64>? _AcousticSpacesLocations;
-        private IStarfieldGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? StarfieldGroupBinaryOverlay<IAcousticSpaceGetter>.StarfieldGroupFactory(_stream, _AcousticSpacesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAcousticSpaceGetter>> _AcousticSpacesCache = new();
+        private IStarfieldGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocations != null ? _AcousticSpacesCache.Get(() => StarfieldGroupBinaryOverlay<IAcousticSpaceGetter>.StarfieldGroupFactory(_stream, _AcousticSpacesLocations, _package)) : default;
         public IStarfieldGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new StarfieldGroup<AcousticSpace>(this);
         #endregion
         #region AudioOcclusionPrimitives
         private List<RangeInt64>? _AudioOcclusionPrimitivesLocations;
-        private IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter>? _AudioOcclusionPrimitives => _AudioOcclusionPrimitivesLocations != null ? StarfieldGroupBinaryOverlay<IAudioOcclusionPrimitiveGetter>.StarfieldGroupFactory(_stream, _AudioOcclusionPrimitivesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter>> _AudioOcclusionPrimitivesCache = new();
+        private IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter>? _AudioOcclusionPrimitives => _AudioOcclusionPrimitivesLocations != null ? _AudioOcclusionPrimitivesCache.Get(() => StarfieldGroupBinaryOverlay<IAudioOcclusionPrimitiveGetter>.StarfieldGroupFactory(_stream, _AudioOcclusionPrimitivesLocations, _package)) : default;
         public IStarfieldGroupGetter<IAudioOcclusionPrimitiveGetter> AudioOcclusionPrimitives => _AudioOcclusionPrimitives ?? new StarfieldGroup<AudioOcclusionPrimitive>(this);
         #endregion
         #region MagicEffects
         private List<RangeInt64>? _MagicEffectsLocations;
-        private IStarfieldGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? StarfieldGroupBinaryOverlay<IMagicEffectGetter>.StarfieldGroupFactory(_stream, _MagicEffectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMagicEffectGetter>> _MagicEffectsCache = new();
+        private IStarfieldGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocations != null ? _MagicEffectsCache.Get(() => StarfieldGroupBinaryOverlay<IMagicEffectGetter>.StarfieldGroupFactory(_stream, _MagicEffectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new StarfieldGroup<MagicEffect>(this);
         #endregion
         #region LandscapeTextures
         private List<RangeInt64>? _LandscapeTexturesLocations;
-        private IStarfieldGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? StarfieldGroupBinaryOverlay<ILandscapeTextureGetter>.StarfieldGroupFactory(_stream, _LandscapeTexturesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILandscapeTextureGetter>> _LandscapeTexturesCache = new();
+        private IStarfieldGroupGetter<ILandscapeTextureGetter>? _LandscapeTextures => _LandscapeTexturesLocations != null ? _LandscapeTexturesCache.Get(() => StarfieldGroupBinaryOverlay<ILandscapeTextureGetter>.StarfieldGroupFactory(_stream, _LandscapeTexturesLocations, _package)) : default;
         public IStarfieldGroupGetter<ILandscapeTextureGetter> LandscapeTextures => _LandscapeTextures ?? new StarfieldGroup<LandscapeTexture>(this);
         #endregion
         #region ProjectedDecals
         private List<RangeInt64>? _ProjectedDecalsLocations;
-        private IStarfieldGroupGetter<IProjectedDecalGetter>? _ProjectedDecals => _ProjectedDecalsLocations != null ? StarfieldGroupBinaryOverlay<IProjectedDecalGetter>.StarfieldGroupFactory(_stream, _ProjectedDecalsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IProjectedDecalGetter>> _ProjectedDecalsCache = new();
+        private IStarfieldGroupGetter<IProjectedDecalGetter>? _ProjectedDecals => _ProjectedDecalsLocations != null ? _ProjectedDecalsCache.Get(() => StarfieldGroupBinaryOverlay<IProjectedDecalGetter>.StarfieldGroupFactory(_stream, _ProjectedDecalsLocations, _package)) : default;
         public IStarfieldGroupGetter<IProjectedDecalGetter> ProjectedDecals => _ProjectedDecals ?? new StarfieldGroup<ProjectedDecal>(this);
         #endregion
         #region ObjectEffects
         private List<RangeInt64>? _ObjectEffectsLocations;
-        private IStarfieldGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? StarfieldGroupBinaryOverlay<IObjectEffectGetter>.StarfieldGroupFactory(_stream, _ObjectEffectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IObjectEffectGetter>> _ObjectEffectsCache = new();
+        private IStarfieldGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocations != null ? _ObjectEffectsCache.Get(() => StarfieldGroupBinaryOverlay<IObjectEffectGetter>.StarfieldGroupFactory(_stream, _ObjectEffectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new StarfieldGroup<ObjectEffect>(this);
         #endregion
         #region Spells
         private List<RangeInt64>? _SpellsLocations;
-        private IStarfieldGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? StarfieldGroupBinaryOverlay<ISpellGetter>.StarfieldGroupFactory(_stream, _SpellsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISpellGetter>> _SpellsCache = new();
+        private IStarfieldGroupGetter<ISpellGetter>? _Spells => _SpellsLocations != null ? _SpellsCache.Get(() => StarfieldGroupBinaryOverlay<ISpellGetter>.StarfieldGroupFactory(_stream, _SpellsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISpellGetter> Spells => _Spells ?? new StarfieldGroup<Spell>(this);
         #endregion
         #region Activators
         private List<RangeInt64>? _ActivatorsLocations;
-        private IStarfieldGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? StarfieldGroupBinaryOverlay<IActivatorGetter>.StarfieldGroupFactory(_stream, _ActivatorsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IActivatorGetter>> _ActivatorsCache = new();
+        private IStarfieldGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocations != null ? _ActivatorsCache.Get(() => StarfieldGroupBinaryOverlay<IActivatorGetter>.StarfieldGroupFactory(_stream, _ActivatorsLocations, _package)) : default;
         public IStarfieldGroupGetter<IActivatorGetter> Activators => _Activators ?? new StarfieldGroup<Activator>(this);
         #endregion
         #region CurveTables
         private List<RangeInt64>? _CurveTablesLocations;
-        private IStarfieldGroupGetter<ICurveTableGetter>? _CurveTables => _CurveTablesLocations != null ? StarfieldGroupBinaryOverlay<ICurveTableGetter>.StarfieldGroupFactory(_stream, _CurveTablesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICurveTableGetter>> _CurveTablesCache = new();
+        private IStarfieldGroupGetter<ICurveTableGetter>? _CurveTables => _CurveTablesLocations != null ? _CurveTablesCache.Get(() => StarfieldGroupBinaryOverlay<ICurveTableGetter>.StarfieldGroupFactory(_stream, _CurveTablesLocations, _package)) : default;
         public IStarfieldGroupGetter<ICurveTableGetter> CurveTables => _CurveTables ?? new StarfieldGroup<CurveTable>(this);
         #endregion
         #region Curve3Ds
         private List<RangeInt64>? _Curve3DsLocations;
-        private IStarfieldGroupGetter<ICurve3DGetter>? _Curve3Ds => _Curve3DsLocations != null ? StarfieldGroupBinaryOverlay<ICurve3DGetter>.StarfieldGroupFactory(_stream, _Curve3DsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICurve3DGetter>> _Curve3DsCache = new();
+        private IStarfieldGroupGetter<ICurve3DGetter>? _Curve3Ds => _Curve3DsLocations != null ? _Curve3DsCache.Get(() => StarfieldGroupBinaryOverlay<ICurve3DGetter>.StarfieldGroupFactory(_stream, _Curve3DsLocations, _package)) : default;
         public IStarfieldGroupGetter<ICurve3DGetter> Curve3Ds => _Curve3Ds ?? new StarfieldGroup<Curve3D>(this);
         #endregion
         #region Armors
         private List<RangeInt64>? _ArmorsLocations;
-        private IStarfieldGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? StarfieldGroupBinaryOverlay<IArmorGetter>.StarfieldGroupFactory(_stream, _ArmorsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IArmorGetter>> _ArmorsCache = new();
+        private IStarfieldGroupGetter<IArmorGetter>? _Armors => _ArmorsLocations != null ? _ArmorsCache.Get(() => StarfieldGroupBinaryOverlay<IArmorGetter>.StarfieldGroupFactory(_stream, _ArmorsLocations, _package)) : default;
         public IStarfieldGroupGetter<IArmorGetter> Armors => _Armors ?? new StarfieldGroup<Armor>(this);
         #endregion
         #region Books
         private List<RangeInt64>? _BooksLocations;
-        private IStarfieldGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? StarfieldGroupBinaryOverlay<IBookGetter>.StarfieldGroupFactory(_stream, _BooksLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IBookGetter>> _BooksCache = new();
+        private IStarfieldGroupGetter<IBookGetter>? _Books => _BooksLocations != null ? _BooksCache.Get(() => StarfieldGroupBinaryOverlay<IBookGetter>.StarfieldGroupFactory(_stream, _BooksLocations, _package)) : default;
         public IStarfieldGroupGetter<IBookGetter> Books => _Books ?? new StarfieldGroup<Book>(this);
         #endregion
         #region Containers
         private List<RangeInt64>? _ContainersLocations;
-        private IStarfieldGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? StarfieldGroupBinaryOverlay<IContainerGetter>.StarfieldGroupFactory(_stream, _ContainersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IContainerGetter>> _ContainersCache = new();
+        private IStarfieldGroupGetter<IContainerGetter>? _Containers => _ContainersLocations != null ? _ContainersCache.Get(() => StarfieldGroupBinaryOverlay<IContainerGetter>.StarfieldGroupFactory(_stream, _ContainersLocations, _package)) : default;
         public IStarfieldGroupGetter<IContainerGetter> Containers => _Containers ?? new StarfieldGroup<Container>(this);
         #endregion
         #region Doors
         private List<RangeInt64>? _DoorsLocations;
-        private IStarfieldGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? StarfieldGroupBinaryOverlay<IDoorGetter>.StarfieldGroupFactory(_stream, _DoorsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IDoorGetter>> _DoorsCache = new();
+        private IStarfieldGroupGetter<IDoorGetter>? _Doors => _DoorsLocations != null ? _DoorsCache.Get(() => StarfieldGroupBinaryOverlay<IDoorGetter>.StarfieldGroupFactory(_stream, _DoorsLocations, _package)) : default;
         public IStarfieldGroupGetter<IDoorGetter> Doors => _Doors ?? new StarfieldGroup<Door>(this);
         #endregion
         #region Lights
         private List<RangeInt64>? _LightsLocations;
-        private IStarfieldGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? StarfieldGroupBinaryOverlay<ILightGetter>.StarfieldGroupFactory(_stream, _LightsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILightGetter>> _LightsCache = new();
+        private IStarfieldGroupGetter<ILightGetter>? _Lights => _LightsLocations != null ? _LightsCache.Get(() => StarfieldGroupBinaryOverlay<ILightGetter>.StarfieldGroupFactory(_stream, _LightsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILightGetter> Lights => _Lights ?? new StarfieldGroup<Light>(this);
         #endregion
         #region MiscItems
         private List<RangeInt64>? _MiscItemsLocations;
-        private IStarfieldGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? StarfieldGroupBinaryOverlay<IMiscItemGetter>.StarfieldGroupFactory(_stream, _MiscItemsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMiscItemGetter>> _MiscItemsCache = new();
+        private IStarfieldGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocations != null ? _MiscItemsCache.Get(() => StarfieldGroupBinaryOverlay<IMiscItemGetter>.StarfieldGroupFactory(_stream, _MiscItemsLocations, _package)) : default;
         public IStarfieldGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new StarfieldGroup<MiscItem>(this);
         #endregion
         #region Statics
         private List<RangeInt64>? _StaticsLocations;
-        private IStarfieldGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? StarfieldGroupBinaryOverlay<IStaticGetter>.StarfieldGroupFactory(_stream, _StaticsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IStaticGetter>> _StaticsCache = new();
+        private IStarfieldGroupGetter<IStaticGetter>? _Statics => _StaticsLocations != null ? _StaticsCache.Get(() => StarfieldGroupBinaryOverlay<IStaticGetter>.StarfieldGroupFactory(_stream, _StaticsLocations, _package)) : default;
         public IStarfieldGroupGetter<IStaticGetter> Statics => _Statics ?? new StarfieldGroup<Static>(this);
         #endregion
         #region StaticCollections
         private List<RangeInt64>? _StaticCollectionsLocations;
-        private IStarfieldGroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? StarfieldGroupBinaryOverlay<IStaticCollectionGetter>.StarfieldGroupFactory(_stream, _StaticCollectionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IStaticCollectionGetter>> _StaticCollectionsCache = new();
+        private IStarfieldGroupGetter<IStaticCollectionGetter>? _StaticCollections => _StaticCollectionsLocations != null ? _StaticCollectionsCache.Get(() => StarfieldGroupBinaryOverlay<IStaticCollectionGetter>.StarfieldGroupFactory(_stream, _StaticCollectionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IStaticCollectionGetter> StaticCollections => _StaticCollections ?? new StarfieldGroup<StaticCollection>(this);
         #endregion
         #region PackIns
         private List<RangeInt64>? _PackInsLocations;
-        private IStarfieldGroupGetter<IPackInGetter>? _PackIns => _PackInsLocations != null ? StarfieldGroupBinaryOverlay<IPackInGetter>.StarfieldGroupFactory(_stream, _PackInsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPackInGetter>> _PackInsCache = new();
+        private IStarfieldGroupGetter<IPackInGetter>? _PackIns => _PackInsLocations != null ? _PackInsCache.Get(() => StarfieldGroupBinaryOverlay<IPackInGetter>.StarfieldGroupFactory(_stream, _PackInsLocations, _package)) : default;
         public IStarfieldGroupGetter<IPackInGetter> PackIns => _PackIns ?? new StarfieldGroup<PackIn>(this);
         #endregion
         #region MoveableStatics
         private List<RangeInt64>? _MoveableStaticsLocations;
-        private IStarfieldGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? StarfieldGroupBinaryOverlay<IMoveableStaticGetter>.StarfieldGroupFactory(_stream, _MoveableStaticsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMoveableStaticGetter>> _MoveableStaticsCache = new();
+        private IStarfieldGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocations != null ? _MoveableStaticsCache.Get(() => StarfieldGroupBinaryOverlay<IMoveableStaticGetter>.StarfieldGroupFactory(_stream, _MoveableStaticsLocations, _package)) : default;
         public IStarfieldGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new StarfieldGroup<MoveableStatic>(this);
         #endregion
         #region Grasses
         private List<RangeInt64>? _GrassesLocations;
-        private IStarfieldGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? StarfieldGroupBinaryOverlay<IGrassGetter>.StarfieldGroupFactory(_stream, _GrassesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGrassGetter>> _GrassesCache = new();
+        private IStarfieldGroupGetter<IGrassGetter>? _Grasses => _GrassesLocations != null ? _GrassesCache.Get(() => StarfieldGroupBinaryOverlay<IGrassGetter>.StarfieldGroupFactory(_stream, _GrassesLocations, _package)) : default;
         public IStarfieldGroupGetter<IGrassGetter> Grasses => _Grasses ?? new StarfieldGroup<Grass>(this);
         #endregion
         #region Florae
         private List<RangeInt64>? _FloraeLocations;
-        private IStarfieldGroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? StarfieldGroupBinaryOverlay<IFloraGetter>.StarfieldGroupFactory(_stream, _FloraeLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFloraGetter>> _FloraeCache = new();
+        private IStarfieldGroupGetter<IFloraGetter>? _Florae => _FloraeLocations != null ? _FloraeCache.Get(() => StarfieldGroupBinaryOverlay<IFloraGetter>.StarfieldGroupFactory(_stream, _FloraeLocations, _package)) : default;
         public IStarfieldGroupGetter<IFloraGetter> Florae => _Florae ?? new StarfieldGroup<Flora>(this);
         #endregion
         #region Furniture
         private List<RangeInt64>? _FurnitureLocations;
-        private IStarfieldGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? StarfieldGroupBinaryOverlay<IFurnitureGetter>.StarfieldGroupFactory(_stream, _FurnitureLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFurnitureGetter>> _FurnitureCache = new();
+        private IStarfieldGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocations != null ? _FurnitureCache.Get(() => StarfieldGroupBinaryOverlay<IFurnitureGetter>.StarfieldGroupFactory(_stream, _FurnitureLocations, _package)) : default;
         public IStarfieldGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new StarfieldGroup<Furniture>(this);
         #endregion
         #region Weapons
         private List<RangeInt64>? _WeaponsLocations;
-        private IStarfieldGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponGetter>.StarfieldGroupFactory(_stream, _WeaponsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWeaponGetter>> _WeaponsCache = new();
+        private IStarfieldGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocations != null ? _WeaponsCache.Get(() => StarfieldGroupBinaryOverlay<IWeaponGetter>.StarfieldGroupFactory(_stream, _WeaponsLocations, _package)) : default;
         public IStarfieldGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new StarfieldGroup<Weapon>(this);
         #endregion
         #region Ammunitions
         private List<RangeInt64>? _AmmunitionsLocations;
-        private IStarfieldGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? StarfieldGroupBinaryOverlay<IAmmunitionGetter>.StarfieldGroupFactory(_stream, _AmmunitionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAmmunitionGetter>> _AmmunitionsCache = new();
+        private IStarfieldGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocations != null ? _AmmunitionsCache.Get(() => StarfieldGroupBinaryOverlay<IAmmunitionGetter>.StarfieldGroupFactory(_stream, _AmmunitionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new StarfieldGroup<Ammunition>(this);
         #endregion
         #region Npcs
         private List<RangeInt64>? _NpcsLocations;
-        private IStarfieldGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? StarfieldGroupBinaryOverlay<INpcGetter>.StarfieldGroupFactory(_stream, _NpcsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<INpcGetter>> _NpcsCache = new();
+        private IStarfieldGroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? _NpcsCache.Get(() => StarfieldGroupBinaryOverlay<INpcGetter>.StarfieldGroupFactory(_stream, _NpcsLocations, _package)) : default;
         public IStarfieldGroupGetter<INpcGetter> Npcs => _Npcs ?? new StarfieldGroup<Npc>(this);
         #endregion
         #region LeveledNpcs
         private List<RangeInt64>? _LeveledNpcsLocations;
-        private IStarfieldGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? StarfieldGroupBinaryOverlay<ILeveledNpcGetter>.StarfieldGroupFactory(_stream, _LeveledNpcsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILeveledNpcGetter>> _LeveledNpcsCache = new();
+        private IStarfieldGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocations != null ? _LeveledNpcsCache.Get(() => StarfieldGroupBinaryOverlay<ILeveledNpcGetter>.StarfieldGroupFactory(_stream, _LeveledNpcsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new StarfieldGroup<LeveledNpc>(this);
         #endregion
         #region LeveledPackIns
         private List<RangeInt64>? _LeveledPackInsLocations;
-        private IStarfieldGroupGetter<ILeveledPackInGetter>? _LeveledPackIns => _LeveledPackInsLocations != null ? StarfieldGroupBinaryOverlay<ILeveledPackInGetter>.StarfieldGroupFactory(_stream, _LeveledPackInsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILeveledPackInGetter>> _LeveledPackInsCache = new();
+        private IStarfieldGroupGetter<ILeveledPackInGetter>? _LeveledPackIns => _LeveledPackInsLocations != null ? _LeveledPackInsCache.Get(() => StarfieldGroupBinaryOverlay<ILeveledPackInGetter>.StarfieldGroupFactory(_stream, _LeveledPackInsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILeveledPackInGetter> LeveledPackIns => _LeveledPackIns ?? new StarfieldGroup<LeveledPackIn>(this);
         #endregion
         #region Keys
         private List<RangeInt64>? _KeysLocations;
-        private IStarfieldGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? StarfieldGroupBinaryOverlay<IKeyGetter>.StarfieldGroupFactory(_stream, _KeysLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IKeyGetter>> _KeysCache = new();
+        private IStarfieldGroupGetter<IKeyGetter>? _Keys => _KeysLocations != null ? _KeysCache.Get(() => StarfieldGroupBinaryOverlay<IKeyGetter>.StarfieldGroupFactory(_stream, _KeysLocations, _package)) : default;
         public IStarfieldGroupGetter<IKeyGetter> Keys => _Keys ?? new StarfieldGroup<Key>(this);
         #endregion
         #region Ingestibles
         private List<RangeInt64>? _IngestiblesLocations;
-        private IStarfieldGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? StarfieldGroupBinaryOverlay<IIngestibleGetter>.StarfieldGroupFactory(_stream, _IngestiblesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IIngestibleGetter>> _IngestiblesCache = new();
+        private IStarfieldGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocations != null ? _IngestiblesCache.Get(() => StarfieldGroupBinaryOverlay<IIngestibleGetter>.StarfieldGroupFactory(_stream, _IngestiblesLocations, _package)) : default;
         public IStarfieldGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new StarfieldGroup<Ingestible>(this);
         #endregion
         #region IdleMarkers
         private List<RangeInt64>? _IdleMarkersLocations;
-        private IStarfieldGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? StarfieldGroupBinaryOverlay<IIdleMarkerGetter>.StarfieldGroupFactory(_stream, _IdleMarkersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IIdleMarkerGetter>> _IdleMarkersCache = new();
+        private IStarfieldGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocations != null ? _IdleMarkersCache.Get(() => StarfieldGroupBinaryOverlay<IIdleMarkerGetter>.StarfieldGroupFactory(_stream, _IdleMarkersLocations, _package)) : default;
         public IStarfieldGroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new StarfieldGroup<IdleMarker>(this);
         #endregion
         #region BiomeMarkers
         private List<RangeInt64>? _BiomeMarkersLocations;
-        private IStarfieldGroupGetter<IBiomeMarkerGetter>? _BiomeMarkers => _BiomeMarkersLocations != null ? StarfieldGroupBinaryOverlay<IBiomeMarkerGetter>.StarfieldGroupFactory(_stream, _BiomeMarkersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IBiomeMarkerGetter>> _BiomeMarkersCache = new();
+        private IStarfieldGroupGetter<IBiomeMarkerGetter>? _BiomeMarkers => _BiomeMarkersLocations != null ? _BiomeMarkersCache.Get(() => StarfieldGroupBinaryOverlay<IBiomeMarkerGetter>.StarfieldGroupFactory(_stream, _BiomeMarkersLocations, _package)) : default;
         public IStarfieldGroupGetter<IBiomeMarkerGetter> BiomeMarkers => _BiomeMarkers ?? new StarfieldGroup<BiomeMarker>(this);
         #endregion
         #region Notes
         private List<RangeInt64>? _NotesLocations;
-        private IStarfieldGroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? StarfieldGroupBinaryOverlay<INoteGetter>.StarfieldGroupFactory(_stream, _NotesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<INoteGetter>> _NotesCache = new();
+        private IStarfieldGroupGetter<INoteGetter>? _Notes => _NotesLocations != null ? _NotesCache.Get(() => StarfieldGroupBinaryOverlay<INoteGetter>.StarfieldGroupFactory(_stream, _NotesLocations, _package)) : default;
         public IStarfieldGroupGetter<INoteGetter> Notes => _Notes ?? new StarfieldGroup<Note>(this);
         #endregion
         #region Projectiles
         private List<RangeInt64>? _ProjectilesLocations;
-        private IStarfieldGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? StarfieldGroupBinaryOverlay<IProjectileGetter>.StarfieldGroupFactory(_stream, _ProjectilesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IProjectileGetter>> _ProjectilesCache = new();
+        private IStarfieldGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocations != null ? _ProjectilesCache.Get(() => StarfieldGroupBinaryOverlay<IProjectileGetter>.StarfieldGroupFactory(_stream, _ProjectilesLocations, _package)) : default;
         public IStarfieldGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new StarfieldGroup<Projectile>(this);
         #endregion
         #region Hazards
         private List<RangeInt64>? _HazardsLocations;
-        private IStarfieldGroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? StarfieldGroupBinaryOverlay<IHazardGetter>.StarfieldGroupFactory(_stream, _HazardsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IHazardGetter>> _HazardsCache = new();
+        private IStarfieldGroupGetter<IHazardGetter>? _Hazards => _HazardsLocations != null ? _HazardsCache.Get(() => StarfieldGroupBinaryOverlay<IHazardGetter>.StarfieldGroupFactory(_stream, _HazardsLocations, _package)) : default;
         public IStarfieldGroupGetter<IHazardGetter> Hazards => _Hazards ?? new StarfieldGroup<Hazard>(this);
         #endregion
         #region BendableSplines
         private List<RangeInt64>? _BendableSplinesLocations;
-        private IStarfieldGroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? StarfieldGroupBinaryOverlay<IBendableSplineGetter>.StarfieldGroupFactory(_stream, _BendableSplinesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IBendableSplineGetter>> _BendableSplinesCache = new();
+        private IStarfieldGroupGetter<IBendableSplineGetter>? _BendableSplines => _BendableSplinesLocations != null ? _BendableSplinesCache.Get(() => StarfieldGroupBinaryOverlay<IBendableSplineGetter>.StarfieldGroupFactory(_stream, _BendableSplinesLocations, _package)) : default;
         public IStarfieldGroupGetter<IBendableSplineGetter> BendableSplines => _BendableSplines ?? new StarfieldGroup<BendableSpline>(this);
         #endregion
         #region Terminals
         private List<RangeInt64>? _TerminalsLocations;
-        private IStarfieldGroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? StarfieldGroupBinaryOverlay<ITerminalGetter>.StarfieldGroupFactory(_stream, _TerminalsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ITerminalGetter>> _TerminalsCache = new();
+        private IStarfieldGroupGetter<ITerminalGetter>? _Terminals => _TerminalsLocations != null ? _TerminalsCache.Get(() => StarfieldGroupBinaryOverlay<ITerminalGetter>.StarfieldGroupFactory(_stream, _TerminalsLocations, _package)) : default;
         public IStarfieldGroupGetter<ITerminalGetter> Terminals => _Terminals ?? new StarfieldGroup<Terminal>(this);
         #endregion
         #region LeveledItems
         private List<RangeInt64>? _LeveledItemsLocations;
-        private IStarfieldGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? StarfieldGroupBinaryOverlay<ILeveledItemGetter>.StarfieldGroupFactory(_stream, _LeveledItemsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILeveledItemGetter>> _LeveledItemsCache = new();
+        private IStarfieldGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocations != null ? _LeveledItemsCache.Get(() => StarfieldGroupBinaryOverlay<ILeveledItemGetter>.StarfieldGroupFactory(_stream, _LeveledItemsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new StarfieldGroup<LeveledItem>(this);
         #endregion
         #region GenericBaseFormTemplates
         private List<RangeInt64>? _GenericBaseFormTemplatesLocations;
-        private IStarfieldGroupGetter<IGenericBaseFormTemplateGetter>? _GenericBaseFormTemplates => _GenericBaseFormTemplatesLocations != null ? StarfieldGroupBinaryOverlay<IGenericBaseFormTemplateGetter>.StarfieldGroupFactory(_stream, _GenericBaseFormTemplatesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGenericBaseFormTemplateGetter>> _GenericBaseFormTemplatesCache = new();
+        private IStarfieldGroupGetter<IGenericBaseFormTemplateGetter>? _GenericBaseFormTemplates => _GenericBaseFormTemplatesLocations != null ? _GenericBaseFormTemplatesCache.Get(() => StarfieldGroupBinaryOverlay<IGenericBaseFormTemplateGetter>.StarfieldGroupFactory(_stream, _GenericBaseFormTemplatesLocations, _package)) : default;
         public IStarfieldGroupGetter<IGenericBaseFormTemplateGetter> GenericBaseFormTemplates => _GenericBaseFormTemplates ?? new StarfieldGroup<GenericBaseFormTemplate>(this);
         #endregion
         #region GenericBaseForms
         private List<RangeInt64>? _GenericBaseFormsLocations;
-        private IStarfieldGroupGetter<IGenericBaseFormGetter>? _GenericBaseForms => _GenericBaseFormsLocations != null ? StarfieldGroupBinaryOverlay<IGenericBaseFormGetter>.StarfieldGroupFactory(_stream, _GenericBaseFormsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGenericBaseFormGetter>> _GenericBaseFormsCache = new();
+        private IStarfieldGroupGetter<IGenericBaseFormGetter>? _GenericBaseForms => _GenericBaseFormsLocations != null ? _GenericBaseFormsCache.Get(() => StarfieldGroupBinaryOverlay<IGenericBaseFormGetter>.StarfieldGroupFactory(_stream, _GenericBaseFormsLocations, _package)) : default;
         public IStarfieldGroupGetter<IGenericBaseFormGetter> GenericBaseForms => _GenericBaseForms ?? new StarfieldGroup<GenericBaseForm>(this);
         #endregion
         #region LeveledBaseForms
         private List<RangeInt64>? _LeveledBaseFormsLocations;
-        private IStarfieldGroupGetter<ILeveledBaseFormGetter>? _LeveledBaseForms => _LeveledBaseFormsLocations != null ? StarfieldGroupBinaryOverlay<ILeveledBaseFormGetter>.StarfieldGroupFactory(_stream, _LeveledBaseFormsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILeveledBaseFormGetter>> _LeveledBaseFormsCache = new();
+        private IStarfieldGroupGetter<ILeveledBaseFormGetter>? _LeveledBaseForms => _LeveledBaseFormsLocations != null ? _LeveledBaseFormsCache.Get(() => StarfieldGroupBinaryOverlay<ILeveledBaseFormGetter>.StarfieldGroupFactory(_stream, _LeveledBaseFormsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILeveledBaseFormGetter> LeveledBaseForms => _LeveledBaseForms ?? new StarfieldGroup<LeveledBaseForm>(this);
         #endregion
         #region Weathers
         private List<RangeInt64>? _WeathersLocations;
-        private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWeatherGetter>> _WeathersCache = new();
+        private IStarfieldGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocations != null ? _WeathersCache.Get(() => StarfieldGroupBinaryOverlay<IWeatherGetter>.StarfieldGroupFactory(_stream, _WeathersLocations, _package)) : default;
         public IStarfieldGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new StarfieldGroup<Weather>(this);
         #endregion
         #region WeatherSettings
         private List<RangeInt64>? _WeatherSettingsLocations;
-        private IStarfieldGroupGetter<IWeatherSettingGetter>? _WeatherSettings => _WeatherSettingsLocations != null ? StarfieldGroupBinaryOverlay<IWeatherSettingGetter>.StarfieldGroupFactory(_stream, _WeatherSettingsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWeatherSettingGetter>> _WeatherSettingsCache = new();
+        private IStarfieldGroupGetter<IWeatherSettingGetter>? _WeatherSettings => _WeatherSettingsLocations != null ? _WeatherSettingsCache.Get(() => StarfieldGroupBinaryOverlay<IWeatherSettingGetter>.StarfieldGroupFactory(_stream, _WeatherSettingsLocations, _package)) : default;
         public IStarfieldGroupGetter<IWeatherSettingGetter> WeatherSettings => _WeatherSettings ?? new StarfieldGroup<WeatherSetting>(this);
         #endregion
         #region Climates
         private List<RangeInt64>? _ClimatesLocations;
-        private IStarfieldGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? StarfieldGroupBinaryOverlay<IClimateGetter>.StarfieldGroupFactory(_stream, _ClimatesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IClimateGetter>> _ClimatesCache = new();
+        private IStarfieldGroupGetter<IClimateGetter>? _Climates => _ClimatesLocations != null ? _ClimatesCache.Get(() => StarfieldGroupBinaryOverlay<IClimateGetter>.StarfieldGroupFactory(_stream, _ClimatesLocations, _package)) : default;
         public IStarfieldGroupGetter<IClimateGetter> Climates => _Climates ?? new StarfieldGroup<Climate>(this);
         #endregion
         #region ShaderParticleGeometries
         private List<RangeInt64>? _ShaderParticleGeometriesLocations;
-        private IStarfieldGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? StarfieldGroupBinaryOverlay<IShaderParticleGeometryGetter>.StarfieldGroupFactory(_stream, _ShaderParticleGeometriesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IShaderParticleGeometryGetter>> _ShaderParticleGeometriesCache = new();
+        private IStarfieldGroupGetter<IShaderParticleGeometryGetter>? _ShaderParticleGeometries => _ShaderParticleGeometriesLocations != null ? _ShaderParticleGeometriesCache.Get(() => StarfieldGroupBinaryOverlay<IShaderParticleGeometryGetter>.StarfieldGroupFactory(_stream, _ShaderParticleGeometriesLocations, _package)) : default;
         public IStarfieldGroupGetter<IShaderParticleGeometryGetter> ShaderParticleGeometries => _ShaderParticleGeometries ?? new StarfieldGroup<ShaderParticleGeometry>(this);
         #endregion
         #region Regions
         private List<RangeInt64>? _RegionsLocations;
-        private IStarfieldGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? StarfieldGroupBinaryOverlay<IRegionGetter>.StarfieldGroupFactory(_stream, _RegionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IRegionGetter>> _RegionsCache = new();
+        private IStarfieldGroupGetter<IRegionGetter>? _Regions => _RegionsLocations != null ? _RegionsCache.Get(() => StarfieldGroupBinaryOverlay<IRegionGetter>.StarfieldGroupFactory(_stream, _RegionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IRegionGetter> Regions => _Regions ?? new StarfieldGroup<Region>(this);
         #endregion
         #region NavigationMeshInfoMaps
         private List<RangeInt64>? _NavigationMeshInfoMapsLocations;
-        private IStarfieldGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? StarfieldGroupBinaryOverlay<INavigationMeshInfoMapGetter>.StarfieldGroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<INavigationMeshInfoMapGetter>> _NavigationMeshInfoMapsCache = new();
+        private IStarfieldGroupGetter<INavigationMeshInfoMapGetter>? _NavigationMeshInfoMaps => _NavigationMeshInfoMapsLocations != null ? _NavigationMeshInfoMapsCache.Get(() => StarfieldGroupBinaryOverlay<INavigationMeshInfoMapGetter>.StarfieldGroupFactory(_stream, _NavigationMeshInfoMapsLocations, _package)) : default;
         public IStarfieldGroupGetter<INavigationMeshInfoMapGetter> NavigationMeshInfoMaps => _NavigationMeshInfoMaps ?? new StarfieldGroup<NavigationMeshInfoMap>(this);
         #endregion
         #region Cells
         private List<RangeInt64>? _CellsLocations;
-        private IStarfieldListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? StarfieldListGroupBinaryOverlay<ICellBlockGetter>.StarfieldListGroupFactory(_stream, _CellsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldListGroupGetter<ICellBlockGetter>> _CellsCache = new();
+        private IStarfieldListGroupGetter<ICellBlockGetter>? _Cells => _CellsLocations != null ? _CellsCache.Get(() => StarfieldListGroupBinaryOverlay<ICellBlockGetter>.StarfieldListGroupFactory(_stream, _CellsLocations, _package)) : default;
         public IStarfieldListGroupGetter<ICellBlockGetter> Cells => _Cells ?? new StarfieldListGroup<CellBlock>();
         #endregion
         #region Worldspaces
         private List<RangeInt64>? _WorldspacesLocations;
-        private IStarfieldGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? StarfieldGroupBinaryOverlay<IWorldspaceGetter>.StarfieldGroupFactory(_stream, _WorldspacesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWorldspaceGetter>> _WorldspacesCache = new();
+        private IStarfieldGroupGetter<IWorldspaceGetter>? _Worldspaces => _WorldspacesLocations != null ? _WorldspacesCache.Get(() => StarfieldGroupBinaryOverlay<IWorldspaceGetter>.StarfieldGroupFactory(_stream, _WorldspacesLocations, _package)) : default;
         public IStarfieldGroupGetter<IWorldspaceGetter> Worldspaces => _Worldspaces ?? new StarfieldGroup<Worldspace>(this);
         #endregion
         #region Quests
         private List<RangeInt64>? _QuestsLocations;
-        private IStarfieldGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? StarfieldGroupBinaryOverlay<IQuestGetter>.StarfieldGroupFactory(_stream, _QuestsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IQuestGetter>> _QuestsCache = new();
+        private IStarfieldGroupGetter<IQuestGetter>? _Quests => _QuestsLocations != null ? _QuestsCache.Get(() => StarfieldGroupBinaryOverlay<IQuestGetter>.StarfieldGroupFactory(_stream, _QuestsLocations, _package)) : default;
         public IStarfieldGroupGetter<IQuestGetter> Quests => _Quests ?? new StarfieldGroup<Quest>(this);
         #endregion
         #region IdleAnimations
         private List<RangeInt64>? _IdleAnimationsLocations;
-        private IStarfieldGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? StarfieldGroupBinaryOverlay<IIdleAnimationGetter>.StarfieldGroupFactory(_stream, _IdleAnimationsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IIdleAnimationGetter>> _IdleAnimationsCache = new();
+        private IStarfieldGroupGetter<IIdleAnimationGetter>? _IdleAnimations => _IdleAnimationsLocations != null ? _IdleAnimationsCache.Get(() => StarfieldGroupBinaryOverlay<IIdleAnimationGetter>.StarfieldGroupFactory(_stream, _IdleAnimationsLocations, _package)) : default;
         public IStarfieldGroupGetter<IIdleAnimationGetter> IdleAnimations => _IdleAnimations ?? new StarfieldGroup<IdleAnimation>(this);
         #endregion
         #region Packages
         private List<RangeInt64>? _PackagesLocations;
-        private IStarfieldGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? StarfieldGroupBinaryOverlay<IPackageGetter>.StarfieldGroupFactory(_stream, _PackagesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPackageGetter>> _PackagesCache = new();
+        private IStarfieldGroupGetter<IPackageGetter>? _Packages => _PackagesLocations != null ? _PackagesCache.Get(() => StarfieldGroupBinaryOverlay<IPackageGetter>.StarfieldGroupFactory(_stream, _PackagesLocations, _package)) : default;
         public IStarfieldGroupGetter<IPackageGetter> Packages => _Packages ?? new StarfieldGroup<Package>(this);
         #endregion
         #region CombatStyles
         private List<RangeInt64>? _CombatStylesLocations;
-        private IStarfieldGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? StarfieldGroupBinaryOverlay<ICombatStyleGetter>.StarfieldGroupFactory(_stream, _CombatStylesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICombatStyleGetter>> _CombatStylesCache = new();
+        private IStarfieldGroupGetter<ICombatStyleGetter>? _CombatStyles => _CombatStylesLocations != null ? _CombatStylesCache.Get(() => StarfieldGroupBinaryOverlay<ICombatStyleGetter>.StarfieldGroupFactory(_stream, _CombatStylesLocations, _package)) : default;
         public IStarfieldGroupGetter<ICombatStyleGetter> CombatStyles => _CombatStyles ?? new StarfieldGroup<CombatStyle>(this);
         #endregion
         #region LoadScreens
         private List<RangeInt64>? _LoadScreensLocations;
-        private IStarfieldGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? StarfieldGroupBinaryOverlay<ILoadScreenGetter>.StarfieldGroupFactory(_stream, _LoadScreensLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILoadScreenGetter>> _LoadScreensCache = new();
+        private IStarfieldGroupGetter<ILoadScreenGetter>? _LoadScreens => _LoadScreensLocations != null ? _LoadScreensCache.Get(() => StarfieldGroupBinaryOverlay<ILoadScreenGetter>.StarfieldGroupFactory(_stream, _LoadScreensLocations, _package)) : default;
         public IStarfieldGroupGetter<ILoadScreenGetter> LoadScreens => _LoadScreens ?? new StarfieldGroup<LoadScreen>(this);
         #endregion
         #region AnimatedObjects
         private List<RangeInt64>? _AnimatedObjectsLocations;
-        private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAnimatedObjectGetter>> _AnimatedObjectsCache = new();
+        private IStarfieldGroupGetter<IAnimatedObjectGetter>? _AnimatedObjects => _AnimatedObjectsLocations != null ? _AnimatedObjectsCache.Get(() => StarfieldGroupBinaryOverlay<IAnimatedObjectGetter>.StarfieldGroupFactory(_stream, _AnimatedObjectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAnimatedObjectGetter> AnimatedObjects => _AnimatedObjects ?? new StarfieldGroup<AnimatedObject>(this);
         #endregion
         #region Waters
         private List<RangeInt64>? _WatersLocations;
-        private IStarfieldGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? StarfieldGroupBinaryOverlay<IWaterGetter>.StarfieldGroupFactory(_stream, _WatersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWaterGetter>> _WatersCache = new();
+        private IStarfieldGroupGetter<IWaterGetter>? _Waters => _WatersLocations != null ? _WatersCache.Get(() => StarfieldGroupBinaryOverlay<IWaterGetter>.StarfieldGroupFactory(_stream, _WatersLocations, _package)) : default;
         public IStarfieldGroupGetter<IWaterGetter> Waters => _Waters ?? new StarfieldGroup<Water>(this);
         #endregion
         #region EffectShaders
         private List<RangeInt64>? _EffectShadersLocations;
-        private IStarfieldGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? StarfieldGroupBinaryOverlay<IEffectShaderGetter>.StarfieldGroupFactory(_stream, _EffectShadersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IEffectShaderGetter>> _EffectShadersCache = new();
+        private IStarfieldGroupGetter<IEffectShaderGetter>? _EffectShaders => _EffectShadersLocations != null ? _EffectShadersCache.Get(() => StarfieldGroupBinaryOverlay<IEffectShaderGetter>.StarfieldGroupFactory(_stream, _EffectShadersLocations, _package)) : default;
         public IStarfieldGroupGetter<IEffectShaderGetter> EffectShaders => _EffectShaders ?? new StarfieldGroup<EffectShader>(this);
         #endregion
         #region Explosions
         private List<RangeInt64>? _ExplosionsLocations;
-        private IStarfieldGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? StarfieldGroupBinaryOverlay<IExplosionGetter>.StarfieldGroupFactory(_stream, _ExplosionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IExplosionGetter>> _ExplosionsCache = new();
+        private IStarfieldGroupGetter<IExplosionGetter>? _Explosions => _ExplosionsLocations != null ? _ExplosionsCache.Get(() => StarfieldGroupBinaryOverlay<IExplosionGetter>.StarfieldGroupFactory(_stream, _ExplosionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IExplosionGetter> Explosions => _Explosions ?? new StarfieldGroup<Explosion>(this);
         #endregion
         #region Debris
         private List<RangeInt64>? _DebrisLocations;
-        private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IDebrisGetter>> _DebrisCache = new();
+        private IStarfieldGroupGetter<IDebrisGetter>? _Debris => _DebrisLocations != null ? _DebrisCache.Get(() => StarfieldGroupBinaryOverlay<IDebrisGetter>.StarfieldGroupFactory(_stream, _DebrisLocations, _package)) : default;
         public IStarfieldGroupGetter<IDebrisGetter> Debris => _Debris ?? new StarfieldGroup<Debris>(this);
         #endregion
         #region ImageSpaces
         private List<RangeInt64>? _ImageSpacesLocations;
-        private IStarfieldGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? StarfieldGroupBinaryOverlay<IImageSpaceGetter>.StarfieldGroupFactory(_stream, _ImageSpacesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IImageSpaceGetter>> _ImageSpacesCache = new();
+        private IStarfieldGroupGetter<IImageSpaceGetter>? _ImageSpaces => _ImageSpacesLocations != null ? _ImageSpacesCache.Get(() => StarfieldGroupBinaryOverlay<IImageSpaceGetter>.StarfieldGroupFactory(_stream, _ImageSpacesLocations, _package)) : default;
         public IStarfieldGroupGetter<IImageSpaceGetter> ImageSpaces => _ImageSpaces ?? new StarfieldGroup<ImageSpace>(this);
         #endregion
         #region ImageSpaceAdapters
         private List<RangeInt64>? _ImageSpaceAdaptersLocations;
-        private IStarfieldGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? StarfieldGroupBinaryOverlay<IImageSpaceAdapterGetter>.StarfieldGroupFactory(_stream, _ImageSpaceAdaptersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IImageSpaceAdapterGetter>> _ImageSpaceAdaptersCache = new();
+        private IStarfieldGroupGetter<IImageSpaceAdapterGetter>? _ImageSpaceAdapters => _ImageSpaceAdaptersLocations != null ? _ImageSpaceAdaptersCache.Get(() => StarfieldGroupBinaryOverlay<IImageSpaceAdapterGetter>.StarfieldGroupFactory(_stream, _ImageSpaceAdaptersLocations, _package)) : default;
         public IStarfieldGroupGetter<IImageSpaceAdapterGetter> ImageSpaceAdapters => _ImageSpaceAdapters ?? new StarfieldGroup<ImageSpaceAdapter>(this);
         #endregion
         #region FormLists
         private List<RangeInt64>? _FormListsLocations;
-        private IStarfieldGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? StarfieldGroupBinaryOverlay<IFormListGetter>.StarfieldGroupFactory(_stream, _FormListsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFormListGetter>> _FormListsCache = new();
+        private IStarfieldGroupGetter<IFormListGetter>? _FormLists => _FormListsLocations != null ? _FormListsCache.Get(() => StarfieldGroupBinaryOverlay<IFormListGetter>.StarfieldGroupFactory(_stream, _FormListsLocations, _package)) : default;
         public IStarfieldGroupGetter<IFormListGetter> FormLists => _FormLists ?? new StarfieldGroup<FormList>(this);
         #endregion
         #region Perks
         private List<RangeInt64>? _PerksLocations;
-        private IStarfieldGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? StarfieldGroupBinaryOverlay<IPerkGetter>.StarfieldGroupFactory(_stream, _PerksLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPerkGetter>> _PerksCache = new();
+        private IStarfieldGroupGetter<IPerkGetter>? _Perks => _PerksLocations != null ? _PerksCache.Get(() => StarfieldGroupBinaryOverlay<IPerkGetter>.StarfieldGroupFactory(_stream, _PerksLocations, _package)) : default;
         public IStarfieldGroupGetter<IPerkGetter> Perks => _Perks ?? new StarfieldGroup<Perk>(this);
         #endregion
         #region BodyParts
         private List<RangeInt64>? _BodyPartsLocations;
-        private IStarfieldGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? StarfieldGroupBinaryOverlay<IBodyPartDataGetter>.StarfieldGroupFactory(_stream, _BodyPartsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IBodyPartDataGetter>> _BodyPartsCache = new();
+        private IStarfieldGroupGetter<IBodyPartDataGetter>? _BodyParts => _BodyPartsLocations != null ? _BodyPartsCache.Get(() => StarfieldGroupBinaryOverlay<IBodyPartDataGetter>.StarfieldGroupFactory(_stream, _BodyPartsLocations, _package)) : default;
         public IStarfieldGroupGetter<IBodyPartDataGetter> BodyParts => _BodyParts ?? new StarfieldGroup<BodyPartData>(this);
         #endregion
         #region AddonNodes
         private List<RangeInt64>? _AddonNodesLocations;
-        private IStarfieldGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? StarfieldGroupBinaryOverlay<IAddonNodeGetter>.StarfieldGroupFactory(_stream, _AddonNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAddonNodeGetter>> _AddonNodesCache = new();
+        private IStarfieldGroupGetter<IAddonNodeGetter>? _AddonNodes => _AddonNodesLocations != null ? _AddonNodesCache.Get(() => StarfieldGroupBinaryOverlay<IAddonNodeGetter>.StarfieldGroupFactory(_stream, _AddonNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<IAddonNodeGetter> AddonNodes => _AddonNodes ?? new StarfieldGroup<AddonNode>(this);
         #endregion
         #region ActorValueInformation
         private List<RangeInt64>? _ActorValueInformationLocations;
-        private IStarfieldGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? StarfieldGroupBinaryOverlay<IActorValueInformationGetter>.StarfieldGroupFactory(_stream, _ActorValueInformationLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IActorValueInformationGetter>> _ActorValueInformationCache = new();
+        private IStarfieldGroupGetter<IActorValueInformationGetter>? _ActorValueInformation => _ActorValueInformationLocations != null ? _ActorValueInformationCache.Get(() => StarfieldGroupBinaryOverlay<IActorValueInformationGetter>.StarfieldGroupFactory(_stream, _ActorValueInformationLocations, _package)) : default;
         public IStarfieldGroupGetter<IActorValueInformationGetter> ActorValueInformation => _ActorValueInformation ?? new StarfieldGroup<ActorValueInformation>(this);
         #endregion
         #region CameraShots
         private List<RangeInt64>? _CameraShotsLocations;
-        private IStarfieldGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? StarfieldGroupBinaryOverlay<ICameraShotGetter>.StarfieldGroupFactory(_stream, _CameraShotsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICameraShotGetter>> _CameraShotsCache = new();
+        private IStarfieldGroupGetter<ICameraShotGetter>? _CameraShots => _CameraShotsLocations != null ? _CameraShotsCache.Get(() => StarfieldGroupBinaryOverlay<ICameraShotGetter>.StarfieldGroupFactory(_stream, _CameraShotsLocations, _package)) : default;
         public IStarfieldGroupGetter<ICameraShotGetter> CameraShots => _CameraShots ?? new StarfieldGroup<CameraShot>(this);
         #endregion
         #region CameraPaths
         private List<RangeInt64>? _CameraPathsLocations;
-        private IStarfieldGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? StarfieldGroupBinaryOverlay<ICameraPathGetter>.StarfieldGroupFactory(_stream, _CameraPathsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICameraPathGetter>> _CameraPathsCache = new();
+        private IStarfieldGroupGetter<ICameraPathGetter>? _CameraPaths => _CameraPathsLocations != null ? _CameraPathsCache.Get(() => StarfieldGroupBinaryOverlay<ICameraPathGetter>.StarfieldGroupFactory(_stream, _CameraPathsLocations, _package)) : default;
         public IStarfieldGroupGetter<ICameraPathGetter> CameraPaths => _CameraPaths ?? new StarfieldGroup<CameraPath>(this);
         #endregion
         #region VoiceTypes
         private List<RangeInt64>? _VoiceTypesLocations;
-        private IStarfieldGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? StarfieldGroupBinaryOverlay<IVoiceTypeGetter>.StarfieldGroupFactory(_stream, _VoiceTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IVoiceTypeGetter>> _VoiceTypesCache = new();
+        private IStarfieldGroupGetter<IVoiceTypeGetter>? _VoiceTypes => _VoiceTypesLocations != null ? _VoiceTypesCache.Get(() => StarfieldGroupBinaryOverlay<IVoiceTypeGetter>.StarfieldGroupFactory(_stream, _VoiceTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<IVoiceTypeGetter> VoiceTypes => _VoiceTypes ?? new StarfieldGroup<VoiceType>(this);
         #endregion
         #region MaterialTypes
         private List<RangeInt64>? _MaterialTypesLocations;
-        private IStarfieldGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? StarfieldGroupBinaryOverlay<IMaterialTypeGetter>.StarfieldGroupFactory(_stream, _MaterialTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMaterialTypeGetter>> _MaterialTypesCache = new();
+        private IStarfieldGroupGetter<IMaterialTypeGetter>? _MaterialTypes => _MaterialTypesLocations != null ? _MaterialTypesCache.Get(() => StarfieldGroupBinaryOverlay<IMaterialTypeGetter>.StarfieldGroupFactory(_stream, _MaterialTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<IMaterialTypeGetter> MaterialTypes => _MaterialTypes ?? new StarfieldGroup<MaterialType>(this);
         #endregion
         #region Impacts
         private List<RangeInt64>? _ImpactsLocations;
-        private IStarfieldGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? StarfieldGroupBinaryOverlay<IImpactGetter>.StarfieldGroupFactory(_stream, _ImpactsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IImpactGetter>> _ImpactsCache = new();
+        private IStarfieldGroupGetter<IImpactGetter>? _Impacts => _ImpactsLocations != null ? _ImpactsCache.Get(() => StarfieldGroupBinaryOverlay<IImpactGetter>.StarfieldGroupFactory(_stream, _ImpactsLocations, _package)) : default;
         public IStarfieldGroupGetter<IImpactGetter> Impacts => _Impacts ?? new StarfieldGroup<Impact>(this);
         #endregion
         #region ImpactDataSets
         private List<RangeInt64>? _ImpactDataSetsLocations;
-        private IStarfieldGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? StarfieldGroupBinaryOverlay<IImpactDataSetGetter>.StarfieldGroupFactory(_stream, _ImpactDataSetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IImpactDataSetGetter>> _ImpactDataSetsCache = new();
+        private IStarfieldGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocations != null ? _ImpactDataSetsCache.Get(() => StarfieldGroupBinaryOverlay<IImpactDataSetGetter>.StarfieldGroupFactory(_stream, _ImpactDataSetsLocations, _package)) : default;
         public IStarfieldGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new StarfieldGroup<ImpactDataSet>(this);
         #endregion
         #region ArmorAddons
         private List<RangeInt64>? _ArmorAddonsLocations;
-        private IStarfieldGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? StarfieldGroupBinaryOverlay<IArmorAddonGetter>.StarfieldGroupFactory(_stream, _ArmorAddonsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IArmorAddonGetter>> _ArmorAddonsCache = new();
+        private IStarfieldGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocations != null ? _ArmorAddonsCache.Get(() => StarfieldGroupBinaryOverlay<IArmorAddonGetter>.StarfieldGroupFactory(_stream, _ArmorAddonsLocations, _package)) : default;
         public IStarfieldGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new StarfieldGroup<ArmorAddon>(this);
         #endregion
         #region Locations
         private List<RangeInt64>? _LocationsLocations;
-        private IStarfieldGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? StarfieldGroupBinaryOverlay<ILocationGetter>.StarfieldGroupFactory(_stream, _LocationsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILocationGetter>> _LocationsCache = new();
+        private IStarfieldGroupGetter<ILocationGetter>? _Locations => _LocationsLocations != null ? _LocationsCache.Get(() => StarfieldGroupBinaryOverlay<ILocationGetter>.StarfieldGroupFactory(_stream, _LocationsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILocationGetter> Locations => _Locations ?? new StarfieldGroup<Location>(this);
         #endregion
         #region Messages
         private List<RangeInt64>? _MessagesLocations;
-        private IStarfieldGroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? StarfieldGroupBinaryOverlay<IMessageGetter>.StarfieldGroupFactory(_stream, _MessagesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMessageGetter>> _MessagesCache = new();
+        private IStarfieldGroupGetter<IMessageGetter>? _Messages => _MessagesLocations != null ? _MessagesCache.Get(() => StarfieldGroupBinaryOverlay<IMessageGetter>.StarfieldGroupFactory(_stream, _MessagesLocations, _package)) : default;
         public IStarfieldGroupGetter<IMessageGetter> Messages => _Messages ?? new StarfieldGroup<Message>(this);
         #endregion
         #region DefaultObjectManagers
         private List<RangeInt64>? _DefaultObjectManagersLocations;
-        private IStarfieldGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? StarfieldGroupBinaryOverlay<IDefaultObjectManagerGetter>.StarfieldGroupFactory(_stream, _DefaultObjectManagersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IDefaultObjectManagerGetter>> _DefaultObjectManagersCache = new();
+        private IStarfieldGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocations != null ? _DefaultObjectManagersCache.Get(() => StarfieldGroupBinaryOverlay<IDefaultObjectManagerGetter>.StarfieldGroupFactory(_stream, _DefaultObjectManagersLocations, _package)) : default;
         public IStarfieldGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new StarfieldGroup<DefaultObjectManager>(this);
         #endregion
         #region DefaultObjects
         private List<RangeInt64>? _DefaultObjectsLocations;
-        private IStarfieldGroupGetter<IDefaultObjectGetter>? _DefaultObjects => _DefaultObjectsLocations != null ? StarfieldGroupBinaryOverlay<IDefaultObjectGetter>.StarfieldGroupFactory(_stream, _DefaultObjectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IDefaultObjectGetter>> _DefaultObjectsCache = new();
+        private IStarfieldGroupGetter<IDefaultObjectGetter>? _DefaultObjects => _DefaultObjectsLocations != null ? _DefaultObjectsCache.Get(() => StarfieldGroupBinaryOverlay<IDefaultObjectGetter>.StarfieldGroupFactory(_stream, _DefaultObjectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IDefaultObjectGetter> DefaultObjects => _DefaultObjects ?? new StarfieldGroup<DefaultObject>(this);
         #endregion
         #region LightingTemplates
         private List<RangeInt64>? _LightingTemplatesLocations;
-        private IStarfieldGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? StarfieldGroupBinaryOverlay<ILightingTemplateGetter>.StarfieldGroupFactory(_stream, _LightingTemplatesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILightingTemplateGetter>> _LightingTemplatesCache = new();
+        private IStarfieldGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocations != null ? _LightingTemplatesCache.Get(() => StarfieldGroupBinaryOverlay<ILightingTemplateGetter>.StarfieldGroupFactory(_stream, _LightingTemplatesLocations, _package)) : default;
         public IStarfieldGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new StarfieldGroup<LightingTemplate>(this);
         #endregion
         #region MusicTypes
         private List<RangeInt64>? _MusicTypesLocations;
-        private IStarfieldGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? StarfieldGroupBinaryOverlay<IMusicTypeGetter>.StarfieldGroupFactory(_stream, _MusicTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMusicTypeGetter>> _MusicTypesCache = new();
+        private IStarfieldGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocations != null ? _MusicTypesCache.Get(() => StarfieldGroupBinaryOverlay<IMusicTypeGetter>.StarfieldGroupFactory(_stream, _MusicTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new StarfieldGroup<MusicType>(this);
         #endregion
         #region Footsteps
         private List<RangeInt64>? _FootstepsLocations;
-        private IStarfieldGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? StarfieldGroupBinaryOverlay<IFootstepGetter>.StarfieldGroupFactory(_stream, _FootstepsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFootstepGetter>> _FootstepsCache = new();
+        private IStarfieldGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocations != null ? _FootstepsCache.Get(() => StarfieldGroupBinaryOverlay<IFootstepGetter>.StarfieldGroupFactory(_stream, _FootstepsLocations, _package)) : default;
         public IStarfieldGroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new StarfieldGroup<Footstep>(this);
         #endregion
         #region FootstepSets
         private List<RangeInt64>? _FootstepSetsLocations;
-        private IStarfieldGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? StarfieldGroupBinaryOverlay<IFootstepSetGetter>.StarfieldGroupFactory(_stream, _FootstepSetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFootstepSetGetter>> _FootstepSetsCache = new();
+        private IStarfieldGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocations != null ? _FootstepSetsCache.Get(() => StarfieldGroupBinaryOverlay<IFootstepSetGetter>.StarfieldGroupFactory(_stream, _FootstepSetsLocations, _package)) : default;
         public IStarfieldGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new StarfieldGroup<FootstepSet>(this);
         #endregion
         #region StoryManagerBranchNodes
         private List<RangeInt64>? _StoryManagerBranchNodesLocations;
-        private IStarfieldGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? StarfieldGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.StarfieldGroupFactory(_stream, _StoryManagerBranchNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IStoryManagerBranchNodeGetter>> _StoryManagerBranchNodesCache = new();
+        private IStarfieldGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocations != null ? _StoryManagerBranchNodesCache.Get(() => StarfieldGroupBinaryOverlay<IStoryManagerBranchNodeGetter>.StarfieldGroupFactory(_stream, _StoryManagerBranchNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new StarfieldGroup<StoryManagerBranchNode>(this);
         #endregion
         #region StoryManagerQuestNodes
         private List<RangeInt64>? _StoryManagerQuestNodesLocations;
-        private IStarfieldGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? StarfieldGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.StarfieldGroupFactory(_stream, _StoryManagerQuestNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IStoryManagerQuestNodeGetter>> _StoryManagerQuestNodesCache = new();
+        private IStarfieldGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocations != null ? _StoryManagerQuestNodesCache.Get(() => StarfieldGroupBinaryOverlay<IStoryManagerQuestNodeGetter>.StarfieldGroupFactory(_stream, _StoryManagerQuestNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new StarfieldGroup<StoryManagerQuestNode>(this);
         #endregion
         #region StoryManagerEventNodes
         private List<RangeInt64>? _StoryManagerEventNodesLocations;
-        private IStarfieldGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? StarfieldGroupBinaryOverlay<IStoryManagerEventNodeGetter>.StarfieldGroupFactory(_stream, _StoryManagerEventNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IStoryManagerEventNodeGetter>> _StoryManagerEventNodesCache = new();
+        private IStarfieldGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocations != null ? _StoryManagerEventNodesCache.Get(() => StarfieldGroupBinaryOverlay<IStoryManagerEventNodeGetter>.StarfieldGroupFactory(_stream, _StoryManagerEventNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new StarfieldGroup<StoryManagerEventNode>(this);
         #endregion
         #region MusicTracks
         private List<RangeInt64>? _MusicTracksLocations;
-        private IStarfieldGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? StarfieldGroupBinaryOverlay<IMusicTrackGetter>.StarfieldGroupFactory(_stream, _MusicTracksLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMusicTrackGetter>> _MusicTracksCache = new();
+        private IStarfieldGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocations != null ? _MusicTracksCache.Get(() => StarfieldGroupBinaryOverlay<IMusicTrackGetter>.StarfieldGroupFactory(_stream, _MusicTracksLocations, _package)) : default;
         public IStarfieldGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new StarfieldGroup<MusicTrack>(this);
         #endregion
         #region EquipTypes
         private List<RangeInt64>? _EquipTypesLocations;
-        private IStarfieldGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? StarfieldGroupBinaryOverlay<IEquipTypeGetter>.StarfieldGroupFactory(_stream, _EquipTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IEquipTypeGetter>> _EquipTypesCache = new();
+        private IStarfieldGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocations != null ? _EquipTypesCache.Get(() => StarfieldGroupBinaryOverlay<IEquipTypeGetter>.StarfieldGroupFactory(_stream, _EquipTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new StarfieldGroup<EquipType>(this);
         #endregion
         #region Outfits
         private List<RangeInt64>? _OutfitsLocations;
-        private IStarfieldGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? StarfieldGroupBinaryOverlay<IOutfitGetter>.StarfieldGroupFactory(_stream, _OutfitsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IOutfitGetter>> _OutfitsCache = new();
+        private IStarfieldGroupGetter<IOutfitGetter>? _Outfits => _OutfitsLocations != null ? _OutfitsCache.Get(() => StarfieldGroupBinaryOverlay<IOutfitGetter>.StarfieldGroupFactory(_stream, _OutfitsLocations, _package)) : default;
         public IStarfieldGroupGetter<IOutfitGetter> Outfits => _Outfits ?? new StarfieldGroup<Outfit>(this);
         #endregion
         #region ArtObjects
         private List<RangeInt64>? _ArtObjectsLocations;
-        private IStarfieldGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? StarfieldGroupBinaryOverlay<IArtObjectGetter>.StarfieldGroupFactory(_stream, _ArtObjectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IArtObjectGetter>> _ArtObjectsCache = new();
+        private IStarfieldGroupGetter<IArtObjectGetter>? _ArtObjects => _ArtObjectsLocations != null ? _ArtObjectsCache.Get(() => StarfieldGroupBinaryOverlay<IArtObjectGetter>.StarfieldGroupFactory(_stream, _ArtObjectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IArtObjectGetter> ArtObjects => _ArtObjects ?? new StarfieldGroup<ArtObject>(this);
         #endregion
         #region MovementTypes
         private List<RangeInt64>? _MovementTypesLocations;
-        private IStarfieldGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? StarfieldGroupBinaryOverlay<IMovementTypeGetter>.StarfieldGroupFactory(_stream, _MovementTypesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMovementTypeGetter>> _MovementTypesCache = new();
+        private IStarfieldGroupGetter<IMovementTypeGetter>? _MovementTypes => _MovementTypesLocations != null ? _MovementTypesCache.Get(() => StarfieldGroupBinaryOverlay<IMovementTypeGetter>.StarfieldGroupFactory(_stream, _MovementTypesLocations, _package)) : default;
         public IStarfieldGroupGetter<IMovementTypeGetter> MovementTypes => _MovementTypes ?? new StarfieldGroup<MovementType>(this);
         #endregion
         #region CollisionLayers
         private List<RangeInt64>? _CollisionLayersLocations;
-        private IStarfieldGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? StarfieldGroupBinaryOverlay<ICollisionLayerGetter>.StarfieldGroupFactory(_stream, _CollisionLayersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICollisionLayerGetter>> _CollisionLayersCache = new();
+        private IStarfieldGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocations != null ? _CollisionLayersCache.Get(() => StarfieldGroupBinaryOverlay<ICollisionLayerGetter>.StarfieldGroupFactory(_stream, _CollisionLayersLocations, _package)) : default;
         public IStarfieldGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new StarfieldGroup<CollisionLayer>(this);
         #endregion
         #region Colors
         private List<RangeInt64>? _ColorsLocations;
-        private IStarfieldGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? StarfieldGroupBinaryOverlay<IColorRecordGetter>.StarfieldGroupFactory(_stream, _ColorsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IColorRecordGetter>> _ColorsCache = new();
+        private IStarfieldGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocations != null ? _ColorsCache.Get(() => StarfieldGroupBinaryOverlay<IColorRecordGetter>.StarfieldGroupFactory(_stream, _ColorsLocations, _package)) : default;
         public IStarfieldGroupGetter<IColorRecordGetter> Colors => _Colors ?? new StarfieldGroup<ColorRecord>(this);
         #endregion
         #region ReverbParameters
         private List<RangeInt64>? _ReverbParametersLocations;
-        private IStarfieldGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? StarfieldGroupBinaryOverlay<IReverbParametersGetter>.StarfieldGroupFactory(_stream, _ReverbParametersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IReverbParametersGetter>> _ReverbParametersCache = new();
+        private IStarfieldGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocations != null ? _ReverbParametersCache.Get(() => StarfieldGroupBinaryOverlay<IReverbParametersGetter>.StarfieldGroupFactory(_stream, _ReverbParametersLocations, _package)) : default;
         public IStarfieldGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new StarfieldGroup<ReverbParameters>(this);
         #endregion
         #region ReferenceGroups
         private List<RangeInt64>? _ReferenceGroupsLocations;
-        private IStarfieldGroupGetter<IReferenceGroupGetter>? _ReferenceGroups => _ReferenceGroupsLocations != null ? StarfieldGroupBinaryOverlay<IReferenceGroupGetter>.StarfieldGroupFactory(_stream, _ReferenceGroupsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IReferenceGroupGetter>> _ReferenceGroupsCache = new();
+        private IStarfieldGroupGetter<IReferenceGroupGetter>? _ReferenceGroups => _ReferenceGroupsLocations != null ? _ReferenceGroupsCache.Get(() => StarfieldGroupBinaryOverlay<IReferenceGroupGetter>.StarfieldGroupFactory(_stream, _ReferenceGroupsLocations, _package)) : default;
         public IStarfieldGroupGetter<IReferenceGroupGetter> ReferenceGroups => _ReferenceGroups ?? new StarfieldGroup<ReferenceGroup>(this);
         #endregion
         #region AimModels
         private List<RangeInt64>? _AimModelsLocations;
-        private IStarfieldGroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? StarfieldGroupBinaryOverlay<IAimModelGetter>.StarfieldGroupFactory(_stream, _AimModelsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAimModelGetter>> _AimModelsCache = new();
+        private IStarfieldGroupGetter<IAimModelGetter>? _AimModels => _AimModelsLocations != null ? _AimModelsCache.Get(() => StarfieldGroupBinaryOverlay<IAimModelGetter>.StarfieldGroupFactory(_stream, _AimModelsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAimModelGetter> AimModels => _AimModels ?? new StarfieldGroup<AimModel>(this);
         #endregion
         #region AimAssistModels
         private List<RangeInt64>? _AimAssistModelsLocations;
-        private IStarfieldGroupGetter<IAimAssistModelGetter>? _AimAssistModels => _AimAssistModelsLocations != null ? StarfieldGroupBinaryOverlay<IAimAssistModelGetter>.StarfieldGroupFactory(_stream, _AimAssistModelsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAimAssistModelGetter>> _AimAssistModelsCache = new();
+        private IStarfieldGroupGetter<IAimAssistModelGetter>? _AimAssistModels => _AimAssistModelsLocations != null ? _AimAssistModelsCache.Get(() => StarfieldGroupBinaryOverlay<IAimAssistModelGetter>.StarfieldGroupFactory(_stream, _AimAssistModelsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAimAssistModelGetter> AimAssistModels => _AimAssistModels ?? new StarfieldGroup<AimAssistModel>(this);
         #endregion
         #region MeleeAimAssistModels
         private List<RangeInt64>? _MeleeAimAssistModelsLocations;
-        private IStarfieldGroupGetter<IMeleeAimAssistModelGetter>? _MeleeAimAssistModels => _MeleeAimAssistModelsLocations != null ? StarfieldGroupBinaryOverlay<IMeleeAimAssistModelGetter>.StarfieldGroupFactory(_stream, _MeleeAimAssistModelsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMeleeAimAssistModelGetter>> _MeleeAimAssistModelsCache = new();
+        private IStarfieldGroupGetter<IMeleeAimAssistModelGetter>? _MeleeAimAssistModels => _MeleeAimAssistModelsLocations != null ? _MeleeAimAssistModelsCache.Get(() => StarfieldGroupBinaryOverlay<IMeleeAimAssistModelGetter>.StarfieldGroupFactory(_stream, _MeleeAimAssistModelsLocations, _package)) : default;
         public IStarfieldGroupGetter<IMeleeAimAssistModelGetter> MeleeAimAssistModels => _MeleeAimAssistModels ?? new StarfieldGroup<MeleeAimAssistModel>(this);
         #endregion
         #region Layers
         private List<RangeInt64>? _LayersLocations;
-        private IStarfieldGroupGetter<ILayerGetter>? _Layers => _LayersLocations != null ? StarfieldGroupBinaryOverlay<ILayerGetter>.StarfieldGroupFactory(_stream, _LayersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILayerGetter>> _LayersCache = new();
+        private IStarfieldGroupGetter<ILayerGetter>? _Layers => _LayersLocations != null ? _LayersCache.Get(() => StarfieldGroupBinaryOverlay<ILayerGetter>.StarfieldGroupFactory(_stream, _LayersLocations, _package)) : default;
         public IStarfieldGroupGetter<ILayerGetter> Layers => _Layers ?? new StarfieldGroup<Layer>(this);
         #endregion
         #region ConstructibleObjects
         private List<RangeInt64>? _ConstructibleObjectsLocations;
-        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IConstructibleObjectGetter>> _ConstructibleObjectsCache = new();
+        private IStarfieldGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocations != null ? _ConstructibleObjectsCache.Get(() => StarfieldGroupBinaryOverlay<IConstructibleObjectGetter>.StarfieldGroupFactory(_stream, _ConstructibleObjectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new StarfieldGroup<ConstructibleObject>(this);
         #endregion
         #region ObjectModifications
         private List<RangeInt64>? _ObjectModificationsLocations;
-        private IStarfieldGroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? StarfieldGroupBinaryOverlay<IAObjectModificationGetter>.StarfieldGroupFactory(_stream, _ObjectModificationsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAObjectModificationGetter>> _ObjectModificationsCache = new();
+        private IStarfieldGroupGetter<IAObjectModificationGetter>? _ObjectModifications => _ObjectModificationsLocations != null ? _ObjectModificationsCache.Get(() => StarfieldGroupBinaryOverlay<IAObjectModificationGetter>.StarfieldGroupFactory(_stream, _ObjectModificationsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAObjectModificationGetter> ObjectModifications => _ObjectModifications ?? new StarfieldGroup<AObjectModification>(this);
         #endregion
         #region Zooms
         private List<RangeInt64>? _ZoomsLocations;
-        private IStarfieldGroupGetter<IZoomGetter>? _Zooms => _ZoomsLocations != null ? StarfieldGroupBinaryOverlay<IZoomGetter>.StarfieldGroupFactory(_stream, _ZoomsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IZoomGetter>> _ZoomsCache = new();
+        private IStarfieldGroupGetter<IZoomGetter>? _Zooms => _ZoomsLocations != null ? _ZoomsCache.Get(() => StarfieldGroupBinaryOverlay<IZoomGetter>.StarfieldGroupFactory(_stream, _ZoomsLocations, _package)) : default;
         public IStarfieldGroupGetter<IZoomGetter> Zooms => _Zooms ?? new StarfieldGroup<Zoom>(this);
         #endregion
         #region InstanceNamingRules
         private List<RangeInt64>? _InstanceNamingRulesLocations;
-        private IStarfieldGroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? StarfieldGroupBinaryOverlay<IInstanceNamingRulesGetter>.StarfieldGroupFactory(_stream, _InstanceNamingRulesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IInstanceNamingRulesGetter>> _InstanceNamingRulesCache = new();
+        private IStarfieldGroupGetter<IInstanceNamingRulesGetter>? _InstanceNamingRules => _InstanceNamingRulesLocations != null ? _InstanceNamingRulesCache.Get(() => StarfieldGroupBinaryOverlay<IInstanceNamingRulesGetter>.StarfieldGroupFactory(_stream, _InstanceNamingRulesLocations, _package)) : default;
         public IStarfieldGroupGetter<IInstanceNamingRulesGetter> InstanceNamingRules => _InstanceNamingRules ?? new StarfieldGroup<InstanceNamingRules>(this);
         #endregion
         #region SoundKeywordMappings
         private List<RangeInt64>? _SoundKeywordMappingsLocations;
-        private IStarfieldGroupGetter<ISoundKeywordMappingGetter>? _SoundKeywordMappings => _SoundKeywordMappingsLocations != null ? StarfieldGroupBinaryOverlay<ISoundKeywordMappingGetter>.StarfieldGroupFactory(_stream, _SoundKeywordMappingsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISoundKeywordMappingGetter>> _SoundKeywordMappingsCache = new();
+        private IStarfieldGroupGetter<ISoundKeywordMappingGetter>? _SoundKeywordMappings => _SoundKeywordMappingsLocations != null ? _SoundKeywordMappingsCache.Get(() => StarfieldGroupBinaryOverlay<ISoundKeywordMappingGetter>.StarfieldGroupFactory(_stream, _SoundKeywordMappingsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISoundKeywordMappingGetter> SoundKeywordMappings => _SoundKeywordMappings ?? new StarfieldGroup<SoundKeywordMapping>(this);
         #endregion
         #region AttractionRules
         private List<RangeInt64>? _AttractionRulesLocations;
-        private IStarfieldGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? StarfieldGroupBinaryOverlay<IAttractionRuleGetter>.StarfieldGroupFactory(_stream, _AttractionRulesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAttractionRuleGetter>> _AttractionRulesCache = new();
+        private IStarfieldGroupGetter<IAttractionRuleGetter>? _AttractionRules => _AttractionRulesLocations != null ? _AttractionRulesCache.Get(() => StarfieldGroupBinaryOverlay<IAttractionRuleGetter>.StarfieldGroupFactory(_stream, _AttractionRulesLocations, _package)) : default;
         public IStarfieldGroupGetter<IAttractionRuleGetter> AttractionRules => _AttractionRules ?? new StarfieldGroup<AttractionRule>(this);
         #endregion
         #region SceneCollections
         private List<RangeInt64>? _SceneCollectionsLocations;
-        private IStarfieldGroupGetter<ISceneCollectionGetter>? _SceneCollections => _SceneCollectionsLocations != null ? StarfieldGroupBinaryOverlay<ISceneCollectionGetter>.StarfieldGroupFactory(_stream, _SceneCollectionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISceneCollectionGetter>> _SceneCollectionsCache = new();
+        private IStarfieldGroupGetter<ISceneCollectionGetter>? _SceneCollections => _SceneCollectionsLocations != null ? _SceneCollectionsCache.Get(() => StarfieldGroupBinaryOverlay<ISceneCollectionGetter>.StarfieldGroupFactory(_stream, _SceneCollectionsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISceneCollectionGetter> SceneCollections => _SceneCollections ?? new StarfieldGroup<SceneCollection>(this);
         #endregion
         #region AnimationSoundTagSets
         private List<RangeInt64>? _AnimationSoundTagSetsLocations;
-        private IStarfieldGroupGetter<IAnimationSoundTagSetGetter>? _AnimationSoundTagSets => _AnimationSoundTagSetsLocations != null ? StarfieldGroupBinaryOverlay<IAnimationSoundTagSetGetter>.StarfieldGroupFactory(_stream, _AnimationSoundTagSetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAnimationSoundTagSetGetter>> _AnimationSoundTagSetsCache = new();
+        private IStarfieldGroupGetter<IAnimationSoundTagSetGetter>? _AnimationSoundTagSets => _AnimationSoundTagSetsLocations != null ? _AnimationSoundTagSetsCache.Get(() => StarfieldGroupBinaryOverlay<IAnimationSoundTagSetGetter>.StarfieldGroupFactory(_stream, _AnimationSoundTagSetsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAnimationSoundTagSetGetter> AnimationSoundTagSets => _AnimationSoundTagSets ?? new StarfieldGroup<AnimationSoundTagSet>(this);
         #endregion
         #region Resources
         private List<RangeInt64>? _ResourcesLocations;
-        private IStarfieldGroupGetter<IResourceGetter>? _Resources => _ResourcesLocations != null ? StarfieldGroupBinaryOverlay<IResourceGetter>.StarfieldGroupFactory(_stream, _ResourcesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IResourceGetter>> _ResourcesCache = new();
+        private IStarfieldGroupGetter<IResourceGetter>? _Resources => _ResourcesLocations != null ? _ResourcesCache.Get(() => StarfieldGroupBinaryOverlay<IResourceGetter>.StarfieldGroupFactory(_stream, _ResourcesLocations, _package)) : default;
         public IStarfieldGroupGetter<IResourceGetter> Resources => _Resources ?? new StarfieldGroup<Resource>(this);
         #endregion
         #region Biomes
         private List<RangeInt64>? _BiomesLocations;
-        private IStarfieldGroupGetter<IBiomeGetter>? _Biomes => _BiomesLocations != null ? StarfieldGroupBinaryOverlay<IBiomeGetter>.StarfieldGroupFactory(_stream, _BiomesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IBiomeGetter>> _BiomesCache = new();
+        private IStarfieldGroupGetter<IBiomeGetter>? _Biomes => _BiomesLocations != null ? _BiomesCache.Get(() => StarfieldGroupBinaryOverlay<IBiomeGetter>.StarfieldGroupFactory(_stream, _BiomesLocations, _package)) : default;
         public IStarfieldGroupGetter<IBiomeGetter> Biomes => _Biomes ?? new StarfieldGroup<Biome>(this);
         #endregion
         #region NavigationMeshObstacleCoverManagers
         private List<RangeInt64>? _NavigationMeshObstacleCoverManagersLocations;
-        private IStarfieldGroupGetter<INavigationMeshObstacleCoverManagerGetter>? _NavigationMeshObstacleCoverManagers => _NavigationMeshObstacleCoverManagersLocations != null ? StarfieldGroupBinaryOverlay<INavigationMeshObstacleCoverManagerGetter>.StarfieldGroupFactory(_stream, _NavigationMeshObstacleCoverManagersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<INavigationMeshObstacleCoverManagerGetter>> _NavigationMeshObstacleCoverManagersCache = new();
+        private IStarfieldGroupGetter<INavigationMeshObstacleCoverManagerGetter>? _NavigationMeshObstacleCoverManagers => _NavigationMeshObstacleCoverManagersLocations != null ? _NavigationMeshObstacleCoverManagersCache.Get(() => StarfieldGroupBinaryOverlay<INavigationMeshObstacleCoverManagerGetter>.StarfieldGroupFactory(_stream, _NavigationMeshObstacleCoverManagersLocations, _package)) : default;
         public IStarfieldGroupGetter<INavigationMeshObstacleCoverManagerGetter> NavigationMeshObstacleCoverManagers => _NavigationMeshObstacleCoverManagers ?? new StarfieldGroup<NavigationMeshObstacleCoverManager>(this);
         #endregion
         #region LensFlares
         private List<RangeInt64>? _LensFlaresLocations;
-        private IStarfieldGroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? StarfieldGroupBinaryOverlay<ILensFlareGetter>.StarfieldGroupFactory(_stream, _LensFlaresLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILensFlareGetter>> _LensFlaresCache = new();
+        private IStarfieldGroupGetter<ILensFlareGetter>? _LensFlares => _LensFlaresLocations != null ? _LensFlaresCache.Get(() => StarfieldGroupBinaryOverlay<ILensFlareGetter>.StarfieldGroupFactory(_stream, _LensFlaresLocations, _package)) : default;
         public IStarfieldGroupGetter<ILensFlareGetter> LensFlares => _LensFlares ?? new StarfieldGroup<LensFlare>(this);
         #endregion
         #region ObjectVisibilityManagers
         private List<RangeInt64>? _ObjectVisibilityManagersLocations;
-        private IStarfieldGroupGetter<IObjectVisibilityManagerGetter>? _ObjectVisibilityManagers => _ObjectVisibilityManagersLocations != null ? StarfieldGroupBinaryOverlay<IObjectVisibilityManagerGetter>.StarfieldGroupFactory(_stream, _ObjectVisibilityManagersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IObjectVisibilityManagerGetter>> _ObjectVisibilityManagersCache = new();
+        private IStarfieldGroupGetter<IObjectVisibilityManagerGetter>? _ObjectVisibilityManagers => _ObjectVisibilityManagersLocations != null ? _ObjectVisibilityManagersCache.Get(() => StarfieldGroupBinaryOverlay<IObjectVisibilityManagerGetter>.StarfieldGroupFactory(_stream, _ObjectVisibilityManagersLocations, _package)) : default;
         public IStarfieldGroupGetter<IObjectVisibilityManagerGetter> ObjectVisibilityManagers => _ObjectVisibilityManagers ?? new StarfieldGroup<ObjectVisibilityManager>(this);
         #endregion
         #region SnapTemplateNodes
         private List<RangeInt64>? _SnapTemplateNodesLocations;
-        private IStarfieldGroupGetter<ISnapTemplateNodeGetter>? _SnapTemplateNodes => _SnapTemplateNodesLocations != null ? StarfieldGroupBinaryOverlay<ISnapTemplateNodeGetter>.StarfieldGroupFactory(_stream, _SnapTemplateNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISnapTemplateNodeGetter>> _SnapTemplateNodesCache = new();
+        private IStarfieldGroupGetter<ISnapTemplateNodeGetter>? _SnapTemplateNodes => _SnapTemplateNodesLocations != null ? _SnapTemplateNodesCache.Get(() => StarfieldGroupBinaryOverlay<ISnapTemplateNodeGetter>.StarfieldGroupFactory(_stream, _SnapTemplateNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<ISnapTemplateNodeGetter> SnapTemplateNodes => _SnapTemplateNodes ?? new StarfieldGroup<SnapTemplateNode>(this);
         #endregion
         #region SnapTemplates
         private List<RangeInt64>? _SnapTemplatesLocations;
-        private IStarfieldGroupGetter<ISnapTemplateGetter>? _SnapTemplates => _SnapTemplatesLocations != null ? StarfieldGroupBinaryOverlay<ISnapTemplateGetter>.StarfieldGroupFactory(_stream, _SnapTemplatesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISnapTemplateGetter>> _SnapTemplatesCache = new();
+        private IStarfieldGroupGetter<ISnapTemplateGetter>? _SnapTemplates => _SnapTemplatesLocations != null ? _SnapTemplatesCache.Get(() => StarfieldGroupBinaryOverlay<ISnapTemplateGetter>.StarfieldGroupFactory(_stream, _SnapTemplatesLocations, _package)) : default;
         public IStarfieldGroupGetter<ISnapTemplateGetter> SnapTemplates => _SnapTemplates ?? new StarfieldGroup<SnapTemplate>(this);
         #endregion
         #region GroundCovers
         private List<RangeInt64>? _GroundCoversLocations;
-        private IStarfieldGroupGetter<IGroundCoverGetter>? _GroundCovers => _GroundCoversLocations != null ? StarfieldGroupBinaryOverlay<IGroundCoverGetter>.StarfieldGroupFactory(_stream, _GroundCoversLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGroundCoverGetter>> _GroundCoversCache = new();
+        private IStarfieldGroupGetter<IGroundCoverGetter>? _GroundCovers => _GroundCoversLocations != null ? _GroundCoversCache.Get(() => StarfieldGroupBinaryOverlay<IGroundCoverGetter>.StarfieldGroupFactory(_stream, _GroundCoversLocations, _package)) : default;
         public IStarfieldGroupGetter<IGroundCoverGetter> GroundCovers => _GroundCovers ?? new StarfieldGroup<GroundCover>(this);
         #endregion
         #region MorphableObjects
         private List<RangeInt64>? _MorphableObjectsLocations;
-        private IStarfieldGroupGetter<IMorphableObjectGetter>? _MorphableObjects => _MorphableObjectsLocations != null ? StarfieldGroupBinaryOverlay<IMorphableObjectGetter>.StarfieldGroupFactory(_stream, _MorphableObjectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMorphableObjectGetter>> _MorphableObjectsCache = new();
+        private IStarfieldGroupGetter<IMorphableObjectGetter>? _MorphableObjects => _MorphableObjectsLocations != null ? _MorphableObjectsCache.Get(() => StarfieldGroupBinaryOverlay<IMorphableObjectGetter>.StarfieldGroupFactory(_stream, _MorphableObjectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IMorphableObjectGetter> MorphableObjects => _MorphableObjects ?? new StarfieldGroup<MorphableObject>(this);
         #endregion
         #region Traversals
         private List<RangeInt64>? _TraversalsLocations;
-        private IStarfieldGroupGetter<ITraversalGetter>? _Traversals => _TraversalsLocations != null ? StarfieldGroupBinaryOverlay<ITraversalGetter>.StarfieldGroupFactory(_stream, _TraversalsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ITraversalGetter>> _TraversalsCache = new();
+        private IStarfieldGroupGetter<ITraversalGetter>? _Traversals => _TraversalsLocations != null ? _TraversalsCache.Get(() => StarfieldGroupBinaryOverlay<ITraversalGetter>.StarfieldGroupFactory(_stream, _TraversalsLocations, _package)) : default;
         public IStarfieldGroupGetter<ITraversalGetter> Traversals => _Traversals ?? new StarfieldGroup<Traversal>(this);
         #endregion
         #region ResourceGenerationData
         private List<RangeInt64>? _ResourceGenerationDataLocations;
-        private IStarfieldGroupGetter<IResourceGenerationDataGetter>? _ResourceGenerationData => _ResourceGenerationDataLocations != null ? StarfieldGroupBinaryOverlay<IResourceGenerationDataGetter>.StarfieldGroupFactory(_stream, _ResourceGenerationDataLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IResourceGenerationDataGetter>> _ResourceGenerationDataCache = new();
+        private IStarfieldGroupGetter<IResourceGenerationDataGetter>? _ResourceGenerationData => _ResourceGenerationDataLocations != null ? _ResourceGenerationDataCache.Get(() => StarfieldGroupBinaryOverlay<IResourceGenerationDataGetter>.StarfieldGroupFactory(_stream, _ResourceGenerationDataLocations, _package)) : default;
         public IStarfieldGroupGetter<IResourceGenerationDataGetter> ResourceGenerationData => _ResourceGenerationData ?? new StarfieldGroup<ResourceGenerationData>(this);
         #endregion
         #region ObjectSwaps
         private List<RangeInt64>? _ObjectSwapsLocations;
-        private IStarfieldGroupGetter<IObjectSwapGetter>? _ObjectSwaps => _ObjectSwapsLocations != null ? StarfieldGroupBinaryOverlay<IObjectSwapGetter>.StarfieldGroupFactory(_stream, _ObjectSwapsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IObjectSwapGetter>> _ObjectSwapsCache = new();
+        private IStarfieldGroupGetter<IObjectSwapGetter>? _ObjectSwaps => _ObjectSwapsLocations != null ? _ObjectSwapsCache.Get(() => StarfieldGroupBinaryOverlay<IObjectSwapGetter>.StarfieldGroupFactory(_stream, _ObjectSwapsLocations, _package)) : default;
         public IStarfieldGroupGetter<IObjectSwapGetter> ObjectSwaps => _ObjectSwaps ?? new StarfieldGroup<ObjectSwap>(this);
         #endregion
         #region Atmospheres
         private List<RangeInt64>? _AtmospheresLocations;
-        private IStarfieldGroupGetter<IAtmosphereGetter>? _Atmospheres => _AtmospheresLocations != null ? StarfieldGroupBinaryOverlay<IAtmosphereGetter>.StarfieldGroupFactory(_stream, _AtmospheresLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAtmosphereGetter>> _AtmospheresCache = new();
+        private IStarfieldGroupGetter<IAtmosphereGetter>? _Atmospheres => _AtmospheresLocations != null ? _AtmospheresCache.Get(() => StarfieldGroupBinaryOverlay<IAtmosphereGetter>.StarfieldGroupFactory(_stream, _AtmospheresLocations, _package)) : default;
         public IStarfieldGroupGetter<IAtmosphereGetter> Atmospheres => _Atmospheres ?? new StarfieldGroup<Atmosphere>(this);
         #endregion
         #region LeveledSpaceCells
         private List<RangeInt64>? _LeveledSpaceCellsLocations;
-        private IStarfieldGroupGetter<ILeveledSpaceCellGetter>? _LeveledSpaceCells => _LeveledSpaceCellsLocations != null ? StarfieldGroupBinaryOverlay<ILeveledSpaceCellGetter>.StarfieldGroupFactory(_stream, _LeveledSpaceCellsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILeveledSpaceCellGetter>> _LeveledSpaceCellsCache = new();
+        private IStarfieldGroupGetter<ILeveledSpaceCellGetter>? _LeveledSpaceCells => _LeveledSpaceCellsLocations != null ? _LeveledSpaceCellsCache.Get(() => StarfieldGroupBinaryOverlay<ILeveledSpaceCellGetter>.StarfieldGroupFactory(_stream, _LeveledSpaceCellsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILeveledSpaceCellGetter> LeveledSpaceCells => _LeveledSpaceCells ?? new StarfieldGroup<LeveledSpaceCell>(this);
         #endregion
         #region SpeechChallenges
         private List<RangeInt64>? _SpeechChallengesLocations;
-        private IStarfieldGroupGetter<ISpeechChallengeGetter>? _SpeechChallenges => _SpeechChallengesLocations != null ? StarfieldGroupBinaryOverlay<ISpeechChallengeGetter>.StarfieldGroupFactory(_stream, _SpeechChallengesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISpeechChallengeGetter>> _SpeechChallengesCache = new();
+        private IStarfieldGroupGetter<ISpeechChallengeGetter>? _SpeechChallenges => _SpeechChallengesLocations != null ? _SpeechChallengesCache.Get(() => StarfieldGroupBinaryOverlay<ISpeechChallengeGetter>.StarfieldGroupFactory(_stream, _SpeechChallengesLocations, _package)) : default;
         public IStarfieldGroupGetter<ISpeechChallengeGetter> SpeechChallenges => _SpeechChallenges ?? new StarfieldGroup<SpeechChallenge>(this);
         #endregion
         #region AimAssistPoses
         private List<RangeInt64>? _AimAssistPosesLocations;
-        private IStarfieldGroupGetter<IAimAssistPoseGetter>? _AimAssistPoses => _AimAssistPosesLocations != null ? StarfieldGroupBinaryOverlay<IAimAssistPoseGetter>.StarfieldGroupFactory(_stream, _AimAssistPosesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAimAssistPoseGetter>> _AimAssistPosesCache = new();
+        private IStarfieldGroupGetter<IAimAssistPoseGetter>? _AimAssistPoses => _AimAssistPosesLocations != null ? _AimAssistPosesCache.Get(() => StarfieldGroupBinaryOverlay<IAimAssistPoseGetter>.StarfieldGroupFactory(_stream, _AimAssistPosesLocations, _package)) : default;
         public IStarfieldGroupGetter<IAimAssistPoseGetter> AimAssistPoses => _AimAssistPoses ?? new StarfieldGroup<AimAssistPose>(this);
         #endregion
         #region VolumetricLightings
         private List<RangeInt64>? _VolumetricLightingsLocations;
-        private IStarfieldGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? StarfieldGroupBinaryOverlay<IVolumetricLightingGetter>.StarfieldGroupFactory(_stream, _VolumetricLightingsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IVolumetricLightingGetter>> _VolumetricLightingsCache = new();
+        private IStarfieldGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocations != null ? _VolumetricLightingsCache.Get(() => StarfieldGroupBinaryOverlay<IVolumetricLightingGetter>.StarfieldGroupFactory(_stream, _VolumetricLightingsLocations, _package)) : default;
         public IStarfieldGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new StarfieldGroup<VolumetricLighting>(this);
         #endregion
         #region SurfaceBlocks
         private List<RangeInt64>? _SurfaceBlocksLocations;
-        private IStarfieldGroupGetter<ISurfaceBlockGetter>? _SurfaceBlocks => _SurfaceBlocksLocations != null ? StarfieldGroupBinaryOverlay<ISurfaceBlockGetter>.StarfieldGroupFactory(_stream, _SurfaceBlocksLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISurfaceBlockGetter>> _SurfaceBlocksCache = new();
+        private IStarfieldGroupGetter<ISurfaceBlockGetter>? _SurfaceBlocks => _SurfaceBlocksLocations != null ? _SurfaceBlocksCache.Get(() => StarfieldGroupBinaryOverlay<ISurfaceBlockGetter>.StarfieldGroupFactory(_stream, _SurfaceBlocksLocations, _package)) : default;
         public IStarfieldGroupGetter<ISurfaceBlockGetter> SurfaceBlocks => _SurfaceBlocks ?? new StarfieldGroup<SurfaceBlock>(this);
         #endregion
         #region SurfacePatternConfigs
         private List<RangeInt64>? _SurfacePatternConfigsLocations;
-        private IStarfieldGroupGetter<ISurfacePatternConfigGetter>? _SurfacePatternConfigs => _SurfacePatternConfigsLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternConfigGetter>.StarfieldGroupFactory(_stream, _SurfacePatternConfigsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISurfacePatternConfigGetter>> _SurfacePatternConfigsCache = new();
+        private IStarfieldGroupGetter<ISurfacePatternConfigGetter>? _SurfacePatternConfigs => _SurfacePatternConfigsLocations != null ? _SurfacePatternConfigsCache.Get(() => StarfieldGroupBinaryOverlay<ISurfacePatternConfigGetter>.StarfieldGroupFactory(_stream, _SurfacePatternConfigsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISurfacePatternConfigGetter> SurfacePatternConfigs => _SurfacePatternConfigs ?? new StarfieldGroup<SurfacePatternConfig>(this);
         #endregion
         #region SurfacePatterns
         private List<RangeInt64>? _SurfacePatternsLocations;
-        private IStarfieldGroupGetter<ISurfacePatternGetter>? _SurfacePatterns => _SurfacePatternsLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternGetter>.StarfieldGroupFactory(_stream, _SurfacePatternsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISurfacePatternGetter>> _SurfacePatternsCache = new();
+        private IStarfieldGroupGetter<ISurfacePatternGetter>? _SurfacePatterns => _SurfacePatternsLocations != null ? _SurfacePatternsCache.Get(() => StarfieldGroupBinaryOverlay<ISurfacePatternGetter>.StarfieldGroupFactory(_stream, _SurfacePatternsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISurfacePatternGetter> SurfacePatterns => _SurfacePatterns ?? new StarfieldGroup<SurfacePattern>(this);
         #endregion
         #region SurfaceTrees
         private List<RangeInt64>? _SurfaceTreesLocations;
-        private IStarfieldGroupGetter<ISurfaceTreeGetter>? _SurfaceTrees => _SurfaceTreesLocations != null ? StarfieldGroupBinaryOverlay<ISurfaceTreeGetter>.StarfieldGroupFactory(_stream, _SurfaceTreesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISurfaceTreeGetter>> _SurfaceTreesCache = new();
+        private IStarfieldGroupGetter<ISurfaceTreeGetter>? _SurfaceTrees => _SurfaceTreesLocations != null ? _SurfaceTreesCache.Get(() => StarfieldGroupBinaryOverlay<ISurfaceTreeGetter>.StarfieldGroupFactory(_stream, _SurfaceTreesLocations, _package)) : default;
         public IStarfieldGroupGetter<ISurfaceTreeGetter> SurfaceTrees => _SurfaceTrees ?? new StarfieldGroup<SurfaceTree>(this);
         #endregion
         #region PlanetContentManagerTrees
         private List<RangeInt64>? _PlanetContentManagerTreesLocations;
-        private IStarfieldGroupGetter<IPlanetContentManagerTreeGetter>? _PlanetContentManagerTrees => _PlanetContentManagerTreesLocations != null ? StarfieldGroupBinaryOverlay<IPlanetContentManagerTreeGetter>.StarfieldGroupFactory(_stream, _PlanetContentManagerTreesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPlanetContentManagerTreeGetter>> _PlanetContentManagerTreesCache = new();
+        private IStarfieldGroupGetter<IPlanetContentManagerTreeGetter>? _PlanetContentManagerTrees => _PlanetContentManagerTreesLocations != null ? _PlanetContentManagerTreesCache.Get(() => StarfieldGroupBinaryOverlay<IPlanetContentManagerTreeGetter>.StarfieldGroupFactory(_stream, _PlanetContentManagerTreesLocations, _package)) : default;
         public IStarfieldGroupGetter<IPlanetContentManagerTreeGetter> PlanetContentManagerTrees => _PlanetContentManagerTrees ?? new StarfieldGroup<PlanetContentManagerTree>(this);
         #endregion
         #region BoneModifiers
         private List<RangeInt64>? _BoneModifiersLocations;
-        private IStarfieldGroupGetter<IBoneModifierGetter>? _BoneModifiers => _BoneModifiersLocations != null ? StarfieldGroupBinaryOverlay<IBoneModifierGetter>.StarfieldGroupFactory(_stream, _BoneModifiersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IBoneModifierGetter>> _BoneModifiersCache = new();
+        private IStarfieldGroupGetter<IBoneModifierGetter>? _BoneModifiers => _BoneModifiersLocations != null ? _BoneModifiersCache.Get(() => StarfieldGroupBinaryOverlay<IBoneModifierGetter>.StarfieldGroupFactory(_stream, _BoneModifiersLocations, _package)) : default;
         public IStarfieldGroupGetter<IBoneModifierGetter> BoneModifiers => _BoneModifiers ?? new StarfieldGroup<BoneModifier>(this);
         #endregion
         #region SnapTemplateBehaviors
         private List<RangeInt64>? _SnapTemplateBehaviorsLocations;
-        private IStarfieldGroupGetter<ISnapTemplateBehaviorGetter>? _SnapTemplateBehaviors => _SnapTemplateBehaviorsLocations != null ? StarfieldGroupBinaryOverlay<ISnapTemplateBehaviorGetter>.StarfieldGroupFactory(_stream, _SnapTemplateBehaviorsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISnapTemplateBehaviorGetter>> _SnapTemplateBehaviorsCache = new();
+        private IStarfieldGroupGetter<ISnapTemplateBehaviorGetter>? _SnapTemplateBehaviors => _SnapTemplateBehaviorsLocations != null ? _SnapTemplateBehaviorsCache.Get(() => StarfieldGroupBinaryOverlay<ISnapTemplateBehaviorGetter>.StarfieldGroupFactory(_stream, _SnapTemplateBehaviorsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISnapTemplateBehaviorGetter> SnapTemplateBehaviors => _SnapTemplateBehaviors ?? new StarfieldGroup<SnapTemplateBehavior>(this);
         #endregion
         #region Planets
         private List<RangeInt64>? _PlanetsLocations;
-        private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPlanetGetter>> _PlanetsCache = new();
+        private IStarfieldGroupGetter<IPlanetGetter>? _Planets => _PlanetsLocations != null ? _PlanetsCache.Get(() => StarfieldGroupBinaryOverlay<IPlanetGetter>.StarfieldGroupFactory(_stream, _PlanetsLocations, _package)) : default;
         public IStarfieldGroupGetter<IPlanetGetter> Planets => _Planets ?? new StarfieldGroup<Planet>(this);
         #endregion
         #region ConditionRecords
         private List<RangeInt64>? _ConditionRecordsLocations;
-        private IStarfieldGroupGetter<IConditionRecordGetter>? _ConditionRecords => _ConditionRecordsLocations != null ? StarfieldGroupBinaryOverlay<IConditionRecordGetter>.StarfieldGroupFactory(_stream, _ConditionRecordsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IConditionRecordGetter>> _ConditionRecordsCache = new();
+        private IStarfieldGroupGetter<IConditionRecordGetter>? _ConditionRecords => _ConditionRecordsLocations != null ? _ConditionRecordsCache.Get(() => StarfieldGroupBinaryOverlay<IConditionRecordGetter>.StarfieldGroupFactory(_stream, _ConditionRecordsLocations, _package)) : default;
         public IStarfieldGroupGetter<IConditionRecordGetter> ConditionRecords => _ConditionRecords ?? new StarfieldGroup<ConditionRecord>(this);
         #endregion
         #region PlanetContentManagerBranchNodes
         private List<RangeInt64>? _PlanetContentManagerBranchNodesLocations;
-        private IStarfieldGroupGetter<IPlanetContentManagerBranchNodeGetter>? _PlanetContentManagerBranchNodes => _PlanetContentManagerBranchNodesLocations != null ? StarfieldGroupBinaryOverlay<IPlanetContentManagerBranchNodeGetter>.StarfieldGroupFactory(_stream, _PlanetContentManagerBranchNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPlanetContentManagerBranchNodeGetter>> _PlanetContentManagerBranchNodesCache = new();
+        private IStarfieldGroupGetter<IPlanetContentManagerBranchNodeGetter>? _PlanetContentManagerBranchNodes => _PlanetContentManagerBranchNodesLocations != null ? _PlanetContentManagerBranchNodesCache.Get(() => StarfieldGroupBinaryOverlay<IPlanetContentManagerBranchNodeGetter>.StarfieldGroupFactory(_stream, _PlanetContentManagerBranchNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<IPlanetContentManagerBranchNodeGetter> PlanetContentManagerBranchNodes => _PlanetContentManagerBranchNodes ?? new StarfieldGroup<PlanetContentManagerBranchNode>(this);
         #endregion
         #region PlanetContentManagerContentNodes
         private List<RangeInt64>? _PlanetContentManagerContentNodesLocations;
-        private IStarfieldGroupGetter<IPlanetContentManagerContentNodeGetter>? _PlanetContentManagerContentNodes => _PlanetContentManagerContentNodesLocations != null ? StarfieldGroupBinaryOverlay<IPlanetContentManagerContentNodeGetter>.StarfieldGroupFactory(_stream, _PlanetContentManagerContentNodesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPlanetContentManagerContentNodeGetter>> _PlanetContentManagerContentNodesCache = new();
+        private IStarfieldGroupGetter<IPlanetContentManagerContentNodeGetter>? _PlanetContentManagerContentNodes => _PlanetContentManagerContentNodesLocations != null ? _PlanetContentManagerContentNodesCache.Get(() => StarfieldGroupBinaryOverlay<IPlanetContentManagerContentNodeGetter>.StarfieldGroupFactory(_stream, _PlanetContentManagerContentNodesLocations, _package)) : default;
         public IStarfieldGroupGetter<IPlanetContentManagerContentNodeGetter> PlanetContentManagerContentNodes => _PlanetContentManagerContentNodes ?? new StarfieldGroup<PlanetContentManagerContentNode>(this);
         #endregion
         #region Stars
         private List<RangeInt64>? _StarsLocations;
-        private IStarfieldGroupGetter<IStarGetter>? _Stars => _StarsLocations != null ? StarfieldGroupBinaryOverlay<IStarGetter>.StarfieldGroupFactory(_stream, _StarsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IStarGetter>> _StarsCache = new();
+        private IStarfieldGroupGetter<IStarGetter>? _Stars => _StarsLocations != null ? _StarsCache.Get(() => StarfieldGroupBinaryOverlay<IStarGetter>.StarfieldGroupFactory(_stream, _StarsLocations, _package)) : default;
         public IStarfieldGroupGetter<IStarGetter> Stars => _Stars ?? new StarfieldGroup<Star>(this);
         #endregion
         #region WWiseEventDatas
         private List<RangeInt64>? _WWiseEventDatasLocations;
-        private IStarfieldGroupGetter<IWWiseEventDataGetter>? _WWiseEventDatas => _WWiseEventDatasLocations != null ? StarfieldGroupBinaryOverlay<IWWiseEventDataGetter>.StarfieldGroupFactory(_stream, _WWiseEventDatasLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWWiseEventDataGetter>> _WWiseEventDatasCache = new();
+        private IStarfieldGroupGetter<IWWiseEventDataGetter>? _WWiseEventDatas => _WWiseEventDatasLocations != null ? _WWiseEventDatasCache.Get(() => StarfieldGroupBinaryOverlay<IWWiseEventDataGetter>.StarfieldGroupFactory(_stream, _WWiseEventDatasLocations, _package)) : default;
         public IStarfieldGroupGetter<IWWiseEventDataGetter> WWiseEventDatas => _WWiseEventDatas ?? new StarfieldGroup<WWiseEventData>(this);
         #endregion
         #region ResearchProjects
         private List<RangeInt64>? _ResearchProjectsLocations;
-        private IStarfieldGroupGetter<IResearchProjectGetter>? _ResearchProjects => _ResearchProjectsLocations != null ? StarfieldGroupBinaryOverlay<IResearchProjectGetter>.StarfieldGroupFactory(_stream, _ResearchProjectsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IResearchProjectGetter>> _ResearchProjectsCache = new();
+        private IStarfieldGroupGetter<IResearchProjectGetter>? _ResearchProjects => _ResearchProjectsLocations != null ? _ResearchProjectsCache.Get(() => StarfieldGroupBinaryOverlay<IResearchProjectGetter>.StarfieldGroupFactory(_stream, _ResearchProjectsLocations, _package)) : default;
         public IStarfieldGroupGetter<IResearchProjectGetter> ResearchProjects => _ResearchProjects ?? new StarfieldGroup<ResearchProject>(this);
         #endregion
         #region AimOpticalSightMarkers
         private List<RangeInt64>? _AimOpticalSightMarkersLocations;
-        private IStarfieldGroupGetter<IAimOpticalSightMarkerGetter>? _AimOpticalSightMarkers => _AimOpticalSightMarkersLocations != null ? StarfieldGroupBinaryOverlay<IAimOpticalSightMarkerGetter>.StarfieldGroupFactory(_stream, _AimOpticalSightMarkersLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAimOpticalSightMarkerGetter>> _AimOpticalSightMarkersCache = new();
+        private IStarfieldGroupGetter<IAimOpticalSightMarkerGetter>? _AimOpticalSightMarkers => _AimOpticalSightMarkersLocations != null ? _AimOpticalSightMarkersCache.Get(() => StarfieldGroupBinaryOverlay<IAimOpticalSightMarkerGetter>.StarfieldGroupFactory(_stream, _AimOpticalSightMarkersLocations, _package)) : default;
         public IStarfieldGroupGetter<IAimOpticalSightMarkerGetter> AimOpticalSightMarkers => _AimOpticalSightMarkers ?? new StarfieldGroup<AimOpticalSightMarker>(this);
         #endregion
         #region AmbienceSets
         private List<RangeInt64>? _AmbienceSetsLocations;
-        private IStarfieldGroupGetter<IAmbienceSetGetter>? _AmbienceSets => _AmbienceSetsLocations != null ? StarfieldGroupBinaryOverlay<IAmbienceSetGetter>.StarfieldGroupFactory(_stream, _AmbienceSetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IAmbienceSetGetter>> _AmbienceSetsCache = new();
+        private IStarfieldGroupGetter<IAmbienceSetGetter>? _AmbienceSets => _AmbienceSetsLocations != null ? _AmbienceSetsCache.Get(() => StarfieldGroupBinaryOverlay<IAmbienceSetGetter>.StarfieldGroupFactory(_stream, _AmbienceSetsLocations, _package)) : default;
         public IStarfieldGroupGetter<IAmbienceSetGetter> AmbienceSets => _AmbienceSets ?? new StarfieldGroup<AmbienceSet>(this);
         #endregion
         #region WeaponBarrelModels
         private List<RangeInt64>? _WeaponBarrelModelsLocations;
-        private IStarfieldGroupGetter<IWeaponBarrelModelGetter>? _WeaponBarrelModels => _WeaponBarrelModelsLocations != null ? StarfieldGroupBinaryOverlay<IWeaponBarrelModelGetter>.StarfieldGroupFactory(_stream, _WeaponBarrelModelsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWeaponBarrelModelGetter>> _WeaponBarrelModelsCache = new();
+        private IStarfieldGroupGetter<IWeaponBarrelModelGetter>? _WeaponBarrelModels => _WeaponBarrelModelsLocations != null ? _WeaponBarrelModelsCache.Get(() => StarfieldGroupBinaryOverlay<IWeaponBarrelModelGetter>.StarfieldGroupFactory(_stream, _WeaponBarrelModelsLocations, _package)) : default;
         public IStarfieldGroupGetter<IWeaponBarrelModelGetter> WeaponBarrelModels => _WeaponBarrelModels ?? new StarfieldGroup<WeaponBarrelModel>(this);
         #endregion
         #region SurfacePatternStyles
         private List<RangeInt64>? _SurfacePatternStylesLocations;
-        private IStarfieldGroupGetter<ISurfacePatternStyleGetter>? _SurfacePatternStyles => _SurfacePatternStylesLocations != null ? StarfieldGroupBinaryOverlay<ISurfacePatternStyleGetter>.StarfieldGroupFactory(_stream, _SurfacePatternStylesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISurfacePatternStyleGetter>> _SurfacePatternStylesCache = new();
+        private IStarfieldGroupGetter<ISurfacePatternStyleGetter>? _SurfacePatternStyles => _SurfacePatternStylesLocations != null ? _SurfacePatternStylesCache.Get(() => StarfieldGroupBinaryOverlay<ISurfacePatternStyleGetter>.StarfieldGroupFactory(_stream, _SurfacePatternStylesLocations, _package)) : default;
         public IStarfieldGroupGetter<ISurfacePatternStyleGetter> SurfacePatternStyles => _SurfacePatternStyles ?? new StarfieldGroup<SurfacePatternStyle>(this);
         #endregion
         #region LayeredMaterialSwaps
         private List<RangeInt64>? _LayeredMaterialSwapsLocations;
-        private IStarfieldGroupGetter<ILayeredMaterialSwapGetter>? _LayeredMaterialSwaps => _LayeredMaterialSwapsLocations != null ? StarfieldGroupBinaryOverlay<ILayeredMaterialSwapGetter>.StarfieldGroupFactory(_stream, _LayeredMaterialSwapsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILayeredMaterialSwapGetter>> _LayeredMaterialSwapsCache = new();
+        private IStarfieldGroupGetter<ILayeredMaterialSwapGetter>? _LayeredMaterialSwaps => _LayeredMaterialSwapsLocations != null ? _LayeredMaterialSwapsCache.Get(() => StarfieldGroupBinaryOverlay<ILayeredMaterialSwapGetter>.StarfieldGroupFactory(_stream, _LayeredMaterialSwapsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILayeredMaterialSwapGetter> LayeredMaterialSwaps => _LayeredMaterialSwaps ?? new StarfieldGroup<LayeredMaterialSwap>(this);
         #endregion
         #region ForceDatas
         private List<RangeInt64>? _ForceDatasLocations;
-        private IStarfieldGroupGetter<IForceDataGetter>? _ForceDatas => _ForceDatasLocations != null ? StarfieldGroupBinaryOverlay<IForceDataGetter>.StarfieldGroupFactory(_stream, _ForceDatasLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IForceDataGetter>> _ForceDatasCache = new();
+        private IStarfieldGroupGetter<IForceDataGetter>? _ForceDatas => _ForceDatasLocations != null ? _ForceDatasCache.Get(() => StarfieldGroupBinaryOverlay<IForceDataGetter>.StarfieldGroupFactory(_stream, _ForceDatasLocations, _package)) : default;
         public IStarfieldGroupGetter<IForceDataGetter> ForceDatas => _ForceDatas ?? new StarfieldGroup<ForceData>(this);
         #endregion
         #region TerminalMenus
         private List<RangeInt64>? _TerminalMenusLocations;
-        private IStarfieldGroupGetter<ITerminalMenuGetter>? _TerminalMenus => _TerminalMenusLocations != null ? StarfieldGroupBinaryOverlay<ITerminalMenuGetter>.StarfieldGroupFactory(_stream, _TerminalMenusLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ITerminalMenuGetter>> _TerminalMenusCache = new();
+        private IStarfieldGroupGetter<ITerminalMenuGetter>? _TerminalMenus => _TerminalMenusLocations != null ? _TerminalMenusCache.Get(() => StarfieldGroupBinaryOverlay<ITerminalMenuGetter>.StarfieldGroupFactory(_stream, _TerminalMenusLocations, _package)) : default;
         public IStarfieldGroupGetter<ITerminalMenuGetter> TerminalMenus => _TerminalMenus ?? new StarfieldGroup<TerminalMenu>(this);
         #endregion
         #region EffectSequences
         private List<RangeInt64>? _EffectSequencesLocations;
-        private IStarfieldGroupGetter<IEffectSequenceGetter>? _EffectSequences => _EffectSequencesLocations != null ? StarfieldGroupBinaryOverlay<IEffectSequenceGetter>.StarfieldGroupFactory(_stream, _EffectSequencesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IEffectSequenceGetter>> _EffectSequencesCache = new();
+        private IStarfieldGroupGetter<IEffectSequenceGetter>? _EffectSequences => _EffectSequencesLocations != null ? _EffectSequencesCache.Get(() => StarfieldGroupBinaryOverlay<IEffectSequenceGetter>.StarfieldGroupFactory(_stream, _EffectSequencesLocations, _package)) : default;
         public IStarfieldGroupGetter<IEffectSequenceGetter> EffectSequences => _EffectSequences ?? new StarfieldGroup<EffectSequence>(this);
         #endregion
         #region SecondaryDamageLists
         private List<RangeInt64>? _SecondaryDamageListsLocations;
-        private IStarfieldGroupGetter<ISecondaryDamageListGetter>? _SecondaryDamageLists => _SecondaryDamageListsLocations != null ? StarfieldGroupBinaryOverlay<ISecondaryDamageListGetter>.StarfieldGroupFactory(_stream, _SecondaryDamageListsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISecondaryDamageListGetter>> _SecondaryDamageListsCache = new();
+        private IStarfieldGroupGetter<ISecondaryDamageListGetter>? _SecondaryDamageLists => _SecondaryDamageListsLocations != null ? _SecondaryDamageListsCache.Get(() => StarfieldGroupBinaryOverlay<ISecondaryDamageListGetter>.StarfieldGroupFactory(_stream, _SecondaryDamageListsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISecondaryDamageListGetter> SecondaryDamageLists => _SecondaryDamageLists ?? new StarfieldGroup<SecondaryDamageList>(this);
         #endregion
         #region MaterialPaths
         private List<RangeInt64>? _MaterialPathsLocations;
-        private IStarfieldGroupGetter<IMaterialPathGetter>? _MaterialPaths => _MaterialPathsLocations != null ? StarfieldGroupBinaryOverlay<IMaterialPathGetter>.StarfieldGroupFactory(_stream, _MaterialPathsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IMaterialPathGetter>> _MaterialPathsCache = new();
+        private IStarfieldGroupGetter<IMaterialPathGetter>? _MaterialPaths => _MaterialPathsLocations != null ? _MaterialPathsCache.Get(() => StarfieldGroupBinaryOverlay<IMaterialPathGetter>.StarfieldGroupFactory(_stream, _MaterialPathsLocations, _package)) : default;
         public IStarfieldGroupGetter<IMaterialPathGetter> MaterialPaths => _MaterialPaths ?? new StarfieldGroup<MaterialPath>(this);
         #endregion
         #region Clouds
         private List<RangeInt64>? _CloudsLocations;
-        private IStarfieldGroupGetter<ICloudsGetter>? _Clouds => _CloudsLocations != null ? StarfieldGroupBinaryOverlay<ICloudsGetter>.StarfieldGroupFactory(_stream, _CloudsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ICloudsGetter>> _CloudsCache = new();
+        private IStarfieldGroupGetter<ICloudsGetter>? _Clouds => _CloudsLocations != null ? _CloudsCache.Get(() => StarfieldGroupBinaryOverlay<ICloudsGetter>.StarfieldGroupFactory(_stream, _CloudsLocations, _package)) : default;
         public IStarfieldGroupGetter<ICloudsGetter> Clouds => _Clouds ?? new StarfieldGroup<Clouds>(this);
         #endregion
         #region FogVolumes
         private List<RangeInt64>? _FogVolumesLocations;
-        private IStarfieldGroupGetter<IFogVolumeGetter>? _FogVolumes => _FogVolumesLocations != null ? StarfieldGroupBinaryOverlay<IFogVolumeGetter>.StarfieldGroupFactory(_stream, _FogVolumesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFogVolumeGetter>> _FogVolumesCache = new();
+        private IStarfieldGroupGetter<IFogVolumeGetter>? _FogVolumes => _FogVolumesLocations != null ? _FogVolumesCache.Get(() => StarfieldGroupBinaryOverlay<IFogVolumeGetter>.StarfieldGroupFactory(_stream, _FogVolumesLocations, _package)) : default;
         public IStarfieldGroupGetter<IFogVolumeGetter> FogVolumes => _FogVolumes ?? new StarfieldGroup<FogVolume>(this);
         #endregion
         #region WWiseKeywordMappings
         private List<RangeInt64>? _WWiseKeywordMappingsLocations;
-        private IStarfieldGroupGetter<IWWiseKeywordMappingGetter>? _WWiseKeywordMappings => _WWiseKeywordMappingsLocations != null ? StarfieldGroupBinaryOverlay<IWWiseKeywordMappingGetter>.StarfieldGroupFactory(_stream, _WWiseKeywordMappingsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IWWiseKeywordMappingGetter>> _WWiseKeywordMappingsCache = new();
+        private IStarfieldGroupGetter<IWWiseKeywordMappingGetter>? _WWiseKeywordMappings => _WWiseKeywordMappingsLocations != null ? _WWiseKeywordMappingsCache.Get(() => StarfieldGroupBinaryOverlay<IWWiseKeywordMappingGetter>.StarfieldGroupFactory(_stream, _WWiseKeywordMappingsLocations, _package)) : default;
         public IStarfieldGroupGetter<IWWiseKeywordMappingGetter> WWiseKeywordMappings => _WWiseKeywordMappings ?? new StarfieldGroup<WWiseKeywordMapping>(this);
         #endregion
         #region LegendaryItems
         private List<RangeInt64>? _LegendaryItemsLocations;
-        private IStarfieldGroupGetter<ILegendaryItemGetter>? _LegendaryItems => _LegendaryItemsLocations != null ? StarfieldGroupBinaryOverlay<ILegendaryItemGetter>.StarfieldGroupFactory(_stream, _LegendaryItemsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ILegendaryItemGetter>> _LegendaryItemsCache = new();
+        private IStarfieldGroupGetter<ILegendaryItemGetter>? _LegendaryItems => _LegendaryItemsLocations != null ? _LegendaryItemsCache.Get(() => StarfieldGroupBinaryOverlay<ILegendaryItemGetter>.StarfieldGroupFactory(_stream, _LegendaryItemsLocations, _package)) : default;
         public IStarfieldGroupGetter<ILegendaryItemGetter> LegendaryItems => _LegendaryItems ?? new StarfieldGroup<LegendaryItem>(this);
         #endregion
         #region ParticleSystemDefineCollisions
         private List<RangeInt64>? _ParticleSystemDefineCollisionsLocations;
-        private IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter>? _ParticleSystemDefineCollisions => _ParticleSystemDefineCollisionsLocations != null ? StarfieldGroupBinaryOverlay<IParticleSystemDefineCollisionGetter>.StarfieldGroupFactory(_stream, _ParticleSystemDefineCollisionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter>> _ParticleSystemDefineCollisionsCache = new();
+        private IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter>? _ParticleSystemDefineCollisions => _ParticleSystemDefineCollisionsLocations != null ? _ParticleSystemDefineCollisionsCache.Get(() => StarfieldGroupBinaryOverlay<IParticleSystemDefineCollisionGetter>.StarfieldGroupFactory(_stream, _ParticleSystemDefineCollisionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> ParticleSystemDefineCollisions => _ParticleSystemDefineCollisions ?? new StarfieldGroup<ParticleSystemDefineCollision>(this);
         #endregion
         #region SunPresets
         private List<RangeInt64>? _SunPresetsLocations;
-        private IStarfieldGroupGetter<ISunPresetGetter>? _SunPresets => _SunPresetsLocations != null ? StarfieldGroupBinaryOverlay<ISunPresetGetter>.StarfieldGroupFactory(_stream, _SunPresetsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ISunPresetGetter>> _SunPresetsCache = new();
+        private IStarfieldGroupGetter<ISunPresetGetter>? _SunPresets => _SunPresetsLocations != null ? _SunPresetsCache.Get(() => StarfieldGroupBinaryOverlay<ISunPresetGetter>.StarfieldGroupFactory(_stream, _SunPresetsLocations, _package)) : default;
         public IStarfieldGroupGetter<ISunPresetGetter> SunPresets => _SunPresets ?? new StarfieldGroup<SunPreset>(this);
         #endregion
         #region PhotoModeFeatures
         private List<RangeInt64>? _PhotoModeFeaturesLocations;
-        private IStarfieldGroupGetter<IPhotoModeFeatureGetter>? _PhotoModeFeatures => _PhotoModeFeaturesLocations != null ? StarfieldGroupBinaryOverlay<IPhotoModeFeatureGetter>.StarfieldGroupFactory(_stream, _PhotoModeFeaturesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPhotoModeFeatureGetter>> _PhotoModeFeaturesCache = new();
+        private IStarfieldGroupGetter<IPhotoModeFeatureGetter>? _PhotoModeFeatures => _PhotoModeFeaturesLocations != null ? _PhotoModeFeaturesCache.Get(() => StarfieldGroupBinaryOverlay<IPhotoModeFeatureGetter>.StarfieldGroupFactory(_stream, _PhotoModeFeaturesLocations, _package)) : default;
         public IStarfieldGroupGetter<IPhotoModeFeatureGetter> PhotoModeFeatures => _PhotoModeFeatures ?? new StarfieldGroup<PhotoModeFeature>(this);
         #endregion
         #region GameplayOptions
         private List<RangeInt64>? _GameplayOptionsLocations;
-        private IStarfieldGroupGetter<IGameplayOptionGetter>? _GameplayOptions => _GameplayOptionsLocations != null ? StarfieldGroupBinaryOverlay<IGameplayOptionGetter>.StarfieldGroupFactory(_stream, _GameplayOptionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGameplayOptionGetter>> _GameplayOptionsCache = new();
+        private IStarfieldGroupGetter<IGameplayOptionGetter>? _GameplayOptions => _GameplayOptionsLocations != null ? _GameplayOptionsCache.Get(() => StarfieldGroupBinaryOverlay<IGameplayOptionGetter>.StarfieldGroupFactory(_stream, _GameplayOptionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IGameplayOptionGetter> GameplayOptions => _GameplayOptions ?? new StarfieldGroup<GameplayOption>(this);
         #endregion
         #region GameplayOptionsGroups
         private List<RangeInt64>? _GameplayOptionsGroupsLocations;
-        private IStarfieldGroupGetter<IGameplayOptionsGroupGetter>? _GameplayOptionsGroups => _GameplayOptionsGroupsLocations != null ? StarfieldGroupBinaryOverlay<IGameplayOptionsGroupGetter>.StarfieldGroupFactory(_stream, _GameplayOptionsGroupsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGameplayOptionsGroupGetter>> _GameplayOptionsGroupsCache = new();
+        private IStarfieldGroupGetter<IGameplayOptionsGroupGetter>? _GameplayOptionsGroups => _GameplayOptionsGroupsLocations != null ? _GameplayOptionsGroupsCache.Get(() => StarfieldGroupBinaryOverlay<IGameplayOptionsGroupGetter>.StarfieldGroupFactory(_stream, _GameplayOptionsGroupsLocations, _package)) : default;
         public IStarfieldGroupGetter<IGameplayOptionsGroupGetter> GameplayOptionsGroups => _GameplayOptionsGroups ?? new StarfieldGroup<GameplayOptionsGroup>(this);
         #endregion
         #region TimeOfDays
         private List<RangeInt64>? _TimeOfDaysLocations;
-        private IStarfieldGroupGetter<ITimeOfDayRecordGetter>? _TimeOfDays => _TimeOfDaysLocations != null ? StarfieldGroupBinaryOverlay<ITimeOfDayRecordGetter>.StarfieldGroupFactory(_stream, _TimeOfDaysLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<ITimeOfDayRecordGetter>> _TimeOfDaysCache = new();
+        private IStarfieldGroupGetter<ITimeOfDayRecordGetter>? _TimeOfDays => _TimeOfDaysLocations != null ? _TimeOfDaysCache.Get(() => StarfieldGroupBinaryOverlay<ITimeOfDayRecordGetter>.StarfieldGroupFactory(_stream, _TimeOfDaysLocations, _package)) : default;
         public IStarfieldGroupGetter<ITimeOfDayRecordGetter> TimeOfDays => _TimeOfDays ?? new StarfieldGroup<TimeOfDayRecord>(this);
         #endregion
         #region ActorValueModulations
         private List<RangeInt64>? _ActorValueModulationsLocations;
-        private IStarfieldGroupGetter<IActorValueModulationGetter>? _ActorValueModulations => _ActorValueModulationsLocations != null ? StarfieldGroupBinaryOverlay<IActorValueModulationGetter>.StarfieldGroupFactory(_stream, _ActorValueModulationsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IActorValueModulationGetter>> _ActorValueModulationsCache = new();
+        private IStarfieldGroupGetter<IActorValueModulationGetter>? _ActorValueModulations => _ActorValueModulationsLocations != null ? _ActorValueModulationsCache.Get(() => StarfieldGroupBinaryOverlay<IActorValueModulationGetter>.StarfieldGroupFactory(_stream, _ActorValueModulationsLocations, _package)) : default;
         public IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations => _ActorValueModulations ?? new StarfieldGroup<ActorValueModulation>(this);
         #endregion
         #region Challenges
         private List<RangeInt64>? _ChallengesLocations;
-        private IStarfieldGroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? StarfieldGroupBinaryOverlay<IChallengeGetter>.StarfieldGroupFactory(_stream, _ChallengesLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IChallengeGetter>> _ChallengesCache = new();
+        private IStarfieldGroupGetter<IChallengeGetter>? _Challenges => _ChallengesLocations != null ? _ChallengesCache.Get(() => StarfieldGroupBinaryOverlay<IChallengeGetter>.StarfieldGroupFactory(_stream, _ChallengesLocations, _package)) : default;
         public IStarfieldGroupGetter<IChallengeGetter> Challenges => _Challenges ?? new StarfieldGroup<Challenge>(this);
         #endregion
         #region FacialExpressions
         private List<RangeInt64>? _FacialExpressionsLocations;
-        private IStarfieldGroupGetter<IFacialExpressionGetter>? _FacialExpressions => _FacialExpressionsLocations != null ? StarfieldGroupBinaryOverlay<IFacialExpressionGetter>.StarfieldGroupFactory(_stream, _FacialExpressionsLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IFacialExpressionGetter>> _FacialExpressionsCache = new();
+        private IStarfieldGroupGetter<IFacialExpressionGetter>? _FacialExpressions => _FacialExpressionsLocations != null ? _FacialExpressionsCache.Get(() => StarfieldGroupBinaryOverlay<IFacialExpressionGetter>.StarfieldGroupFactory(_stream, _FacialExpressionsLocations, _package)) : default;
         public IStarfieldGroupGetter<IFacialExpressionGetter> FacialExpressions => _FacialExpressions ?? new StarfieldGroup<FacialExpression>(this);
         #endregion
         #region PERS
         private List<RangeInt64>? _PERSLocations;
-        private IStarfieldGroupGetter<IPERSGetter>? _PERS => _PERSLocations != null ? StarfieldGroupBinaryOverlay<IPERSGetter>.StarfieldGroupFactory(_stream, _PERSLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IPERSGetter>> _PERSCache = new();
+        private IStarfieldGroupGetter<IPERSGetter>? _PERS => _PERSLocations != null ? _PERSCache.Get(() => StarfieldGroupBinaryOverlay<IPERSGetter>.StarfieldGroupFactory(_stream, _PERSLocations, _package)) : default;
         public IStarfieldGroupGetter<IPERSGetter> PERS => _PERS ?? new StarfieldGroup<PERS>(this);
         #endregion
         #region GravityWielderEffectDatas
         private List<RangeInt64>? _GravityWielderEffectDatasLocations;
-        private IStarfieldGroupGetter<IGravityWielderEffectDataGetter>? _GravityWielderEffectDatas => _GravityWielderEffectDatasLocations != null ? StarfieldGroupBinaryOverlay<IGravityWielderEffectDataGetter>.StarfieldGroupFactory(_stream, _GravityWielderEffectDatasLocations, _package) : default;
+        private readonly GroupCache<IStarfieldGroupGetter<IGravityWielderEffectDataGetter>> _GravityWielderEffectDatasCache = new();
+        private IStarfieldGroupGetter<IGravityWielderEffectDataGetter>? _GravityWielderEffectDatas => _GravityWielderEffectDatasLocations != null ? _GravityWielderEffectDatasCache.Get(() => StarfieldGroupBinaryOverlay<IGravityWielderEffectDataGetter>.StarfieldGroupFactory(_stream, _GravityWielderEffectDatasLocations, _package)) : default;
         public IStarfieldGroupGetter<IGravityWielderEffectDataGetter> GravityWielderEffectDatas => _GravityWielderEffectDatas ?? new StarfieldGroup<GravityWielderEffectData>(this);
         #endregion
         protected StarfieldModBinaryOverlay(
