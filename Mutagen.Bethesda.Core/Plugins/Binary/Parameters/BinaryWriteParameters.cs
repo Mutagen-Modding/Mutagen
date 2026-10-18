@@ -31,7 +31,7 @@ public sealed record BinaryWriteParameters
     public MastersListContentOption MastersListContent { get; init; } = MastersListContentOption.Iterate;
     
     /// <summary>
-    /// A transformer function to take in the typical given masters, and transform them to provide the masters for actual use </br>
+    /// A transformer function to take in the typical given masters, and transform them to provide the masters for actual use <br />
     /// The masters given as input will be the results of the <see cref="MastersListContent" /> parameter <br />
     /// The results given by the override will be sorted by the sorting rules specified elsewhere
     /// </summary>
