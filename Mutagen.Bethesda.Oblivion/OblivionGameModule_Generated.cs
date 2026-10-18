@@ -7,6 +7,7 @@
 #nullable enable
 using Loqui;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Oblivion;
 
@@ -15,4 +16,9 @@ internal class OblivionGameModule : IGameModule
     public GameCategory Category => GameCategory.Oblivion;
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Oblivion();
+
+    public IInterfaceMapping CreateAspectInterfaceMapping() => new OblivionAspectInterfaceMapping();
+    public IInterfaceMapping CreateLinkInterfaceMapping() => new OblivionLinkInterfaceMapping();
+    public IInterfaceMapping CreateInheritingInterfaceMapping() => new OblivionInheritingInterfaceMapping();
+    public IInterfaceMapping CreateIsolatedAbstractInterfaceMapping() => new OblivionIsolatedAbstractInterfaceMapping();
 }

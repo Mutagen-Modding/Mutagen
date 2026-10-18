@@ -7,6 +7,7 @@
 #nullable enable
 using Loqui;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Fallout3;
 
@@ -15,4 +16,9 @@ internal class Fallout3GameModule : IGameModule
     public GameCategory Category => GameCategory.Fallout3;
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Fallout3();
+
+    public IInterfaceMapping CreateAspectInterfaceMapping() => new Fallout3AspectInterfaceMapping();
+    public IInterfaceMapping CreateLinkInterfaceMapping() => new Fallout3LinkInterfaceMapping();
+    public IInterfaceMapping CreateInheritingInterfaceMapping() => new Fallout3InheritingInterfaceMapping();
+    public IInterfaceMapping CreateIsolatedAbstractInterfaceMapping() => new Fallout3IsolatedAbstractInterfaceMapping();
 }

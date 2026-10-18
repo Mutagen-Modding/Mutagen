@@ -7,6 +7,7 @@
 #nullable enable
 using Loqui;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Starfield;
 
@@ -15,4 +16,9 @@ internal class StarfieldGameModule : IGameModule
     public GameCategory Category => GameCategory.Starfield;
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Starfield();
+
+    public IInterfaceMapping CreateAspectInterfaceMapping() => new StarfieldAspectInterfaceMapping();
+    public IInterfaceMapping CreateLinkInterfaceMapping() => new StarfieldLinkInterfaceMapping();
+    public IInterfaceMapping CreateInheritingInterfaceMapping() => new StarfieldInheritingInterfaceMapping();
+    public IInterfaceMapping CreateIsolatedAbstractInterfaceMapping() => new StarfieldIsolatedAbstractInterfaceMapping();
 }
