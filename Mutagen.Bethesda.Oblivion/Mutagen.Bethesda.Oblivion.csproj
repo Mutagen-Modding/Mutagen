@@ -920,6 +920,7 @@
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="OblivionMultiModOverlay_Generated.cs" />
+    <Compile Include="OblivionGameModule_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />
