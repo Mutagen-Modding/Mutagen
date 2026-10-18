@@ -12,7 +12,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Oblivion;
 
-internal class OblivionGameModule : IGameModule
+internal partial class OblivionGameModule : IGameModule
 {
     public GameCategory Category => GameCategory.Oblivion;
 

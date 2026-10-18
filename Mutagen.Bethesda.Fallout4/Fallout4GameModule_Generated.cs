@@ -12,7 +12,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Fallout4;
 
-internal class Fallout4GameModule : IGameModule
+internal partial class Fallout4GameModule : IGameModule
 {
     public GameCategory Category => GameCategory.Fallout4;
 
