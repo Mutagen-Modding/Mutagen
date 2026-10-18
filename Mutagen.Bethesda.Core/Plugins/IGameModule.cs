@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Plugins;
@@ -20,4 +21,6 @@ internal interface IGameModule
     IInterfaceMapping CreateInheritingInterfaceMapping();
 
     IInterfaceMapping CreateIsolatedAbstractInterfaceMapping();
+
+    IOverrideMaskRegistration CreateOverrideMaskRegistration();
 }
