@@ -12,7 +12,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Starfield;
 
-internal class StarfieldGameModule : IGameModule
+internal partial class StarfieldGameModule : IGameModule
 {
     public GameCategory Category => GameCategory.Starfield;
 

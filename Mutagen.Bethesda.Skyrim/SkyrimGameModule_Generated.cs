@@ -12,7 +12,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Skyrim;
 
-internal class SkyrimGameModule : IGameModule
+internal partial class SkyrimGameModule : IGameModule
 {
     public GameCategory Category => GameCategory.Skyrim;
 
