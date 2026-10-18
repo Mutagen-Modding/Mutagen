@@ -18,6 +18,8 @@ internal class Fallout3GameModule : IGameModule
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Fallout3();
 
+    public ILoquiRegistration ModRegistration => Fallout3Mod_Registration.Instance;
+
     public IInterfaceMapping CreateAspectInterfaceMapping() => new Fallout3AspectInterfaceMapping();
     public IInterfaceMapping CreateLinkInterfaceMapping() => new Fallout3LinkInterfaceMapping();
     public IInterfaceMapping CreateInheritingInterfaceMapping() => new Fallout3InheritingInterfaceMapping();

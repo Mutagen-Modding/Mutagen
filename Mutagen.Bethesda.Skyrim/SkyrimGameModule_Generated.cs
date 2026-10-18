@@ -18,6 +18,8 @@ internal class SkyrimGameModule : IGameModule
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Skyrim();
 
+    public ILoquiRegistration ModRegistration => SkyrimMod_Registration.Instance;
+
     public IInterfaceMapping CreateAspectInterfaceMapping() => new SkyrimAspectInterfaceMapping();
     public IInterfaceMapping CreateLinkInterfaceMapping() => new SkyrimLinkInterfaceMapping();
     public IInterfaceMapping CreateInheritingInterfaceMapping() => new SkyrimInheritingInterfaceMapping();
