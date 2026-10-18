@@ -7,6 +7,7 @@
 #nullable enable
 using Loqui;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Fallout4;
@@ -21,4 +22,6 @@ internal class Fallout4GameModule : IGameModule
     public IInterfaceMapping CreateLinkInterfaceMapping() => new Fallout4LinkInterfaceMapping();
     public IInterfaceMapping CreateInheritingInterfaceMapping() => new Fallout4InheritingInterfaceMapping();
     public IInterfaceMapping CreateIsolatedAbstractInterfaceMapping() => new Fallout4IsolatedAbstractInterfaceMapping();
+
+    public IOverrideMaskRegistration CreateOverrideMaskRegistration() => new Fallout4OverrideMaskRegistration();
 }
