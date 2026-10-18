@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Plugins;
 
@@ -11,4 +12,12 @@ internal interface IGameModule
 
     /// <summary>The game's Loqui protocol.</summary>
     IProtocolRegistration Protocol { get; }
+
+    IInterfaceMapping CreateAspectInterfaceMapping();
+
+    IInterfaceMapping CreateLinkInterfaceMapping();
+
+    IInterfaceMapping CreateInheritingInterfaceMapping();
+
+    IInterfaceMapping CreateIsolatedAbstractInterfaceMapping();
 }
