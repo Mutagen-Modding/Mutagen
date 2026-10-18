@@ -31,6 +31,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Papyrus.Syntax", "Mutagen.Bethesda.Papyrus.Syntax\Mutagen.Bethesda.Papyrus.Syntax.csproj", "{6DE6E848-74C5-4DD4-B213-0F2C4571D321}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Papyrus.Semantic", "Mutagen.Bethesda.Papyrus.Semantic\Mutagen.Bethesda.Papyrus.Semantic.csproj", "{79663D2D-89F6-411E-B2F4-82AA27A81C27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Papyrus.UnitTests", "Mutagen.Bethesda.Papyrus.UnitTests\Mutagen.Bethesda.Papyrus.UnitTests.csproj", "{F9370E36-D5CC-4272-B801-436AD67FF961}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,9 +79,22 @@ Global
 		{69E6BE96-A067-43EF-AF7D-0E450A21548F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69E6BE96-A067-43EF-AF7D-0E450A21548F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69E6BE96-A067-43EF-AF7D-0E450A21548F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE6E848-74C5-4DD4-B213-0F2C4571D321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE6E848-74C5-4DD4-B213-0F2C4571D321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE6E848-74C5-4DD4-B213-0F2C4571D321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE6E848-74C5-4DD4-B213-0F2C4571D321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79663D2D-89F6-411E-B2F4-82AA27A81C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79663D2D-89F6-411E-B2F4-82AA27A81C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79663D2D-89F6-411E-B2F4-82AA27A81C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79663D2D-89F6-411E-B2F4-82AA27A81C27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9370E36-D5CC-4272-B801-436AD67FF961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9370E36-D5CC-4272-B801-436AD67FF961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9370E36-D5CC-4272-B801-436AD67FF961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9370E36-D5CC-4272-B801-436AD67FF961}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{159FA529-5326-4283-B27C-5933962AF866} = {0B40425A-9B13-433B-BB38-EFB7FEB610BE}
 		{03874A25-3E45-474A-A48D-FF5AADBF66F8} = {0B40425A-9B13-433B-BB38-EFB7FEB610BE}
+		{F9370E36-D5CC-4272-B801-436AD67FF961} = {0B40425A-9B13-433B-BB38-EFB7FEB610BE}
 	EndGlobalSection
 EndGlobal
