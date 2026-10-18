@@ -18,6 +18,8 @@ internal class OblivionGameModule : IGameModule
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Oblivion();
 
+    public ILoquiRegistration ModRegistration => OblivionMod_Registration.Instance;
+
     public IInterfaceMapping CreateAspectInterfaceMapping() => new OblivionAspectInterfaceMapping();
     public IInterfaceMapping CreateLinkInterfaceMapping() => new OblivionLinkInterfaceMapping();
     public IInterfaceMapping CreateInheritingInterfaceMapping() => new OblivionInheritingInterfaceMapping();

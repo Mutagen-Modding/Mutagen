@@ -18,6 +18,8 @@ internal class Fallout4GameModule : IGameModule
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Fallout4();
 
+    public ILoquiRegistration ModRegistration => Fallout4Mod_Registration.Instance;
+
     public IInterfaceMapping CreateAspectInterfaceMapping() => new Fallout4AspectInterfaceMapping();
     public IInterfaceMapping CreateLinkInterfaceMapping() => new Fallout4LinkInterfaceMapping();
     public IInterfaceMapping CreateInheritingInterfaceMapping() => new Fallout4InheritingInterfaceMapping();

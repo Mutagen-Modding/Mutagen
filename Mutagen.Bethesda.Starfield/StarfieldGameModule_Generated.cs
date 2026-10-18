@@ -18,6 +18,8 @@ internal class StarfieldGameModule : IGameModule
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Starfield();
 
+    public ILoquiRegistration ModRegistration => StarfieldMod_Registration.Instance;
+
     public IInterfaceMapping CreateAspectInterfaceMapping() => new StarfieldAspectInterfaceMapping();
     public IInterfaceMapping CreateLinkInterfaceMapping() => new StarfieldLinkInterfaceMapping();
     public IInterfaceMapping CreateInheritingInterfaceMapping() => new StarfieldInheritingInterfaceMapping();
