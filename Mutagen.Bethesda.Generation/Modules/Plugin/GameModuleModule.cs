@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
 using Noggog.IO;
@@ -28,6 +29,7 @@ public class GameModuleModule : GenerationModule
         sb.AppendLine("#nullable enable");
         sb.AppendLine("using Loqui;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Cache.Internals;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins.Records.Mapping;");
         sb.AppendLine();
         using (sb.Namespace(proto.DefaultNamespace))
@@ -47,6 +49,8 @@ public class GameModuleModule : GenerationModule
                 {
                     sb.AppendLine($"public {nameof(IInterfaceMapping)} Create{mapping}InterfaceMapping() => new {game}{mapping}InterfaceMapping();");
                 }
+                sb.AppendLine();
+                sb.AppendLine($"public {nameof(IOverrideMaskRegistration)} CreateOverrideMaskRegistration() => new {game}OverrideMaskRegistration();");
             }
         }
 
