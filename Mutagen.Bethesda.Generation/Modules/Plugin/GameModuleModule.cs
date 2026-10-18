@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
 using Noggog.IO;
 using Noggog.StructuredStrings;
@@ -13,6 +14,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 /// </summary>
 public class GameModuleModule : GenerationModule
 {
+    // Prefixes of the interface mapping classes that other modules generate for each game.
+    private static readonly string[] InterfaceMappings = ["Aspect", "Link", "Inheriting", "IsolatedAbstract"];
+
     public override async Task FinalizeGeneration(ProtocolGeneration proto)
     {
         await base.FinalizeGeneration(proto);
@@ -24,6 +28,7 @@ public class GameModuleModule : GenerationModule
         sb.AppendLine("#nullable enable");
         sb.AppendLine("using Loqui;");
         sb.AppendLine("using Mutagen.Bethesda.Plugins;");
+        sb.AppendLine("using Mutagen.Bethesda.Plugins.Records.Mapping;");
         sb.AppendLine();
         using (sb.Namespace(proto.DefaultNamespace))
         {
@@ -37,6 +42,11 @@ public class GameModuleModule : GenerationModule
                 sb.AppendLine($"public {nameof(GameCategory)} Category => {nameof(GameCategory)}.{game};");
                 sb.AppendLine();
                 sb.AppendLine($"public {nameof(IProtocolRegistration)} Protocol {{ get; }} = new {proto.ProtocolDefinitionName}();");
+                sb.AppendLine();
+                foreach (var mapping in InterfaceMappings)
+                {
+                    sb.AppendLine($"public {nameof(IInterfaceMapping)} Create{mapping}InterfaceMapping() => new {game}{mapping}InterfaceMapping();");
+                }
             }
         }
 
