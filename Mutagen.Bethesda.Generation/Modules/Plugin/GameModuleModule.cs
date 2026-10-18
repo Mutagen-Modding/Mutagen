@@ -38,6 +38,8 @@ public class GameModuleModule : GenerationModule
             using (var c = sb.Class($"{game}GameModule"))
             {
                 c.AccessModifier = AccessModifier.Internal;
+                // Each game lists its hand-written asset types in its own part of the module.
+                c.Partial = true;
                 c.Interfaces.Add(nameof(IGameModule));
             }
             using (sb.CurlyBrace())
