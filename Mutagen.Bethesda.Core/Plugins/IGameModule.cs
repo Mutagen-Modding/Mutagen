@@ -14,6 +14,8 @@ internal interface IGameModule
     /// <summary>The game's Loqui protocol.</summary>
     IProtocolRegistration Protocol { get; }
 
+    ILoquiRegistration ModRegistration { get; }
+
     IInterfaceMapping CreateAspectInterfaceMapping();
 
     IInterfaceMapping CreateLinkInterfaceMapping();
