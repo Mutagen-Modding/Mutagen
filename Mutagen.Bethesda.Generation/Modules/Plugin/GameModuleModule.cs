@@ -7,6 +7,7 @@ using Noggog;
 using Noggog.IO;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
+using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin;
 
@@ -44,6 +45,9 @@ public class GameModuleModule : GenerationModule
                 sb.AppendLine($"public {nameof(GameCategory)} Category => {nameof(GameCategory)}.{game};");
                 sb.AppendLine();
                 sb.AppendLine($"public {nameof(IProtocolRegistration)} Protocol {{ get; }} = new {proto.ProtocolDefinitionName}();");
+                sb.AppendLine();
+                var mod = proto.ObjectGenerationsByName.Values.Single(o => o.GetObjectType() == ObjectType.Mod);
+                sb.AppendLine($"public {nameof(ILoquiRegistration)} ModRegistration => {mod.RegistrationName}.Instance;");
                 sb.AppendLine();
                 foreach (var mapping in InterfaceMappings)
                 {
