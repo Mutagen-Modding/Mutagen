@@ -85,6 +85,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Fallout4GameModule.cs" />
     <Compile Include="Plugins\Cache\Internals\Fallout4OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>

@@ -172,6 +172,7 @@
     </Compile>
     <Compile Include="Interfaces\Link\IStaticTarget_Generated.cs" />
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="StarfieldGameModule.cs" />
     <Compile Include="Plugins\Cache\Internal\StarfieldOverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\AComponent.cs">
       <DependentUpon>Component.xml</DependentUpon>

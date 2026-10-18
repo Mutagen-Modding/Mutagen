@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 
@@ -25,4 +26,6 @@ internal interface IGameModule
     IInterfaceMapping CreateIsolatedAbstractInterfaceMapping();
 
     IOverrideMaskRegistration CreateOverrideMaskRegistration();
+
+    IReadOnlyList<IAssetType> AssetTypes { get; }
 }
