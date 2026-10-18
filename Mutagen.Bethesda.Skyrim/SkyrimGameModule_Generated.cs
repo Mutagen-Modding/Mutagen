@@ -7,6 +7,7 @@
 #nullable enable
 using Loqui;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -15,4 +16,9 @@ internal class SkyrimGameModule : IGameModule
     public GameCategory Category => GameCategory.Skyrim;
 
     public IProtocolRegistration Protocol { get; } = new ProtocolDefinition_Skyrim();
+
+    public IInterfaceMapping CreateAspectInterfaceMapping() => new SkyrimAspectInterfaceMapping();
+    public IInterfaceMapping CreateLinkInterfaceMapping() => new SkyrimLinkInterfaceMapping();
+    public IInterfaceMapping CreateInheritingInterfaceMapping() => new SkyrimInheritingInterfaceMapping();
+    public IInterfaceMapping CreateIsolatedAbstractInterfaceMapping() => new SkyrimIsolatedAbstractInterfaceMapping();
 }
