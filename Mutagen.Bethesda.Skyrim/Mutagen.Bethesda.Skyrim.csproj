@@ -4759,6 +4759,7 @@
     <Compile Include="Records\Common Subrecords\ModelBodyTexture_Generated.cs">
       <DependentUpon>ModelBodyTexture.xml</DependentUpon>
     </Compile>
+    <Compile Include="SkyrimGameModule_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

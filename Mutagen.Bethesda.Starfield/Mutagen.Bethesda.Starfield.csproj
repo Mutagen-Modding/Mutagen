@@ -6907,5 +6907,6 @@
     <Compile Include="Records\Major Records\LegendaryItemLnamEntry_Generated.cs">
       <DependentUpon>LegendaryItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="StarfieldGameModule_Generated.cs" />
   </ItemGroup>
 </Project>

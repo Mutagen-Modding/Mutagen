@@ -1555,5 +1555,6 @@
     </Compile>
     <Compile Include="Interfaces\Link\IActorBase_Generated.cs" />
     <Compile Include="Interfaces\Link\IRecipeItem_Generated.cs" />
+    <Compile Include="Fallout3GameModule_Generated.cs" />
   </ItemGroup>
 </Project>
