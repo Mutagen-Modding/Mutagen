@@ -8449,7 +8449,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Size
         private int _SizeLocation => _DATALocation!.Value.Min + 0x40;
         private bool _Size_IsSet => _DATALocation.HasValue;
-        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default(Size);
         #endregion
         #region HeadBipedObject
         private int _HeadBipedObjectLocation => _DATALocation!.Value.Min + 0x44;

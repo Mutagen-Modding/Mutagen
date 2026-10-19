@@ -2995,7 +2995,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Ammunition.AmmoFlag Flags => _Flags_IsSet ? (Ammunition.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Ammunition.AmmoFlag Flags => _Flags_IsSet ? (Ammunition.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Ammunition.AmmoFlag);
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min + 0x8;
@@ -3005,7 +3005,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region ClipRounds
         private int _ClipRoundsLocation => _DATALocation!.Value.Min + 0xC;
         private bool _ClipRounds_IsSet => _DATALocation.HasValue;
-        public Byte ClipRounds => _ClipRounds_IsSet ? _recordData.Span[_ClipRoundsLocation] : default;
+        public Byte ClipRounds => _ClipRounds_IsSet ? _recordData.Span[_ClipRoundsLocation] : default(Byte);
         #endregion
         #region ExtraData
         partial void ExtraDataCustomParse(

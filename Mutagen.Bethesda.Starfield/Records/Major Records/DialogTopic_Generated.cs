@@ -3961,17 +3961,17 @@ namespace Mutagen.Bethesda.Starfield
         #region TopicFlags
         private int _TopicFlagsLocation => _DATALocation!.Value.Min;
         private bool _TopicFlags_IsSet => _DATALocation.HasValue;
-        public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_recordData.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default;
+        public DialogTopic.TopicFlag TopicFlags => _TopicFlags_IsSet ? (DialogTopic.TopicFlag)_recordData.Span.Slice(_TopicFlagsLocation, 0x1)[0] : default(DialogTopic.TopicFlag);
         #endregion
         #region Category
         private int _CategoryLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Category_IsSet => _DATALocation.HasValue;
-        public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_recordData.Span.Slice(_CategoryLocation, 0x1)[0] : default;
+        public DialogTopic.CategoryEnum Category => _Category_IsSet ? (DialogTopic.CategoryEnum)_recordData.Span.Slice(_CategoryLocation, 0x1)[0] : default(DialogTopic.CategoryEnum);
         #endregion
         #region Subtype
         private int _SubtypeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Subtype_IsSet => _DATALocation.HasValue;
-        public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SubtypeLocation, 0x2)) : default;
+        public DialogTopic.SubtypeEnum Subtype => _Subtype_IsSet ? (DialogTopic.SubtypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SubtypeLocation, 0x2)) : default(DialogTopic.SubtypeEnum);
         #endregion
         #region SubtypeName
         private int? _SubtypeNameLocation;

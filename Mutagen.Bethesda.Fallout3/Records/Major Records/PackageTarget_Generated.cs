@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public PackageTarget.VersioningBreaks Versioning { get; private set; }
         public Int32 CountOrDistance => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public Single Unknown => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
+        public Single Unknown => _structData.Length <= 0xC ? default(Single) : _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

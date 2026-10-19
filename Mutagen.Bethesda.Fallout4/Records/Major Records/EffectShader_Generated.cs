@@ -4585,7 +4585,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         int UnknownVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 106 ? -1 : 0;
         #endregion
         #region MembraneSourceBlendMode
@@ -4753,7 +4753,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown4
         private int _Unknown4Location => _DNAMLocation!.Value.Min + Unknown3VersioningOffset + 0x13D;
         private bool _Unknown4_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 106;
-        public Byte Unknown4 => _Unknown4_IsSet ? _recordData.Span[_Unknown4Location] : default;
+        public Byte Unknown4 => _Unknown4_IsSet ? _recordData.Span[_Unknown4Location] : default(Byte);
         int Unknown4VersioningOffset => Unknown3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 106 ? -1 : 0);
         #endregion
         #region FillColorKey1Scale
@@ -4795,7 +4795,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + Unknown5VersioningOffset + 0x17E;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(EffectShader.Flag);
         #endregion
         #region FillTextureScaleU
         private int _FillTextureScaleULocation => _DNAMLocation!.Value.Min + Unknown5VersioningOffset + 0x182;

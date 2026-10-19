@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Hazard.Flag);
         #endregion
         #region Spell
         private int _SpellLocation => _DATALocation!.Value.Min + 0x18;

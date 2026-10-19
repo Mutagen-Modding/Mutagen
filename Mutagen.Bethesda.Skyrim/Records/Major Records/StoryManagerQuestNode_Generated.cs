@@ -1948,12 +1948,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public AStoryManagerNode.Flag Flags => _Flags_IsSet ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public AStoryManagerNode.Flag Flags => _Flags_IsSet ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default(AStoryManagerNode.Flag);
         #endregion
         #region QuestFlags
         private int _QuestFlagsLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _QuestFlags_IsSet => _DNAMLocation.HasValue;
-        public StoryManagerQuestNode.QuestFlag QuestFlags => _QuestFlags_IsSet ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_QuestFlagsLocation, 0x2)) : default;
+        public StoryManagerQuestNode.QuestFlag QuestFlags => _QuestFlags_IsSet ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_QuestFlagsLocation, 0x2)) : default(StoryManagerQuestNode.QuestFlag);
         #endregion
         #region MaxConcurrentQuests
         private int? _MaxConcurrentQuestsLocation;

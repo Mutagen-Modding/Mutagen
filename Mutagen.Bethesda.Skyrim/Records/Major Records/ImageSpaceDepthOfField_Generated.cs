@@ -1445,7 +1445,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Strength => _structData.Slice(0x0, 0x4).Float();
         public Single Distance => _structData.Slice(0x4, 0x4).Float();
         public Single Range => _structData.Slice(0x8, 0x4).Float();
-        public Int16 Unknown => _structData.Length <= 0xC ? default : BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public Int16 Unknown => _structData.Length <= 0xC ? default(Int16) : BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0xC, 0x2));
         #region BlurRadius
         public partial Byte GetBlurRadiusCustom(int location);
         public Byte BlurRadius => GetBlurRadiusCustom(location: 0xE);

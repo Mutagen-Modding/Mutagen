@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single BashRecoilMult => _structData.Slice(0x10, 0x4).Float();
         public Single BashAttackMult => _structData.Slice(0x14, 0x4).Float();
         public Single BashPowerAttackMult => _structData.Slice(0x18, 0x4).Float();
-        public Single SpecialAttackMult => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
+        public Single SpecialAttackMult => _structData.Length <= 0x1C ? default(Single) : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

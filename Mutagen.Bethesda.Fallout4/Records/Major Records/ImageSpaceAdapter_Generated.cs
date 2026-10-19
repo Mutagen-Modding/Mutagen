@@ -12849,7 +12849,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DepthOfFieldFlags
         private int _DepthOfFieldFlagsLocation => _DNAMLocation!.Value.Min + 0xE0;
         private bool _DepthOfFieldFlags_IsSet => _DNAMLocation.HasValue;
-        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default;
+        public ImageSpaceAdapter.DepthOfFieldFlag DepthOfFieldFlags => _DepthOfFieldFlags_IsSet ? (ImageSpaceAdapter.DepthOfFieldFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_DepthOfFieldFlagsLocation, 0x4)) : default(ImageSpaceAdapter.DepthOfFieldFlag);
         #endregion
         #region Counts3
         private int _Counts3Location => _DNAMLocation!.Value.Min + 0xE4;

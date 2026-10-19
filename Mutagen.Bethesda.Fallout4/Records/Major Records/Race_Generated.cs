@@ -9451,7 +9451,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Size
         private int _SizeLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x2C;
         private bool _Size_IsSet => _DATALocation.HasValue;
-        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default(Size);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + DefaultWeightVersioningOffset + 0x30;
@@ -9529,12 +9529,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8A;
         private bool _SeverableDebrisCount_IsSet => _DATALocation.HasValue;
-        public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _recordData.Span[_SeverableDebrisCountLocation] : default;
+        public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _recordData.Span[_SeverableDebrisCountLocation] : default(Byte);
         #endregion
         #region SeverableDecalCount
         private int _SeverableDecalCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8B;
         private bool _SeverableDecalCount_IsSet => _DATALocation.HasValue;
-        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default;
+        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default(Byte);
         #endregion
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x8C;
@@ -9544,12 +9544,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region ExplodableDebrisCount
         private int _ExplodableDebrisCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x90;
         private bool _ExplodableDebrisCount_IsSet => _DATALocation.HasValue;
-        public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _recordData.Span[_ExplodableDebrisCountLocation] : default;
+        public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _recordData.Span[_ExplodableDebrisCountLocation] : default(Byte);
         #endregion
         #region ExplodableDecalCount
         private int _ExplodableDecalCountLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x91;
         private bool _ExplodableDecalCount_IsSet => _DATALocation.HasValue;
-        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
+        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default(Byte);
         #endregion
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _DATALocation!.Value.Min + BeardBipedObjectVersioningOffset + 0x92;
@@ -9590,13 +9590,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _DATALocation!.Value.Min + OnCrippleDebrisScaleVersioningOffset + 0xAE;
         private bool _OnCrippleDebrisCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default;
+        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default(Byte);
         int OnCrippleDebrisCountVersioningOffset => OnCrippleDebrisScaleVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -1 : 0);
         #endregion
         #region OnCrippleDecalCount
         private int _OnCrippleDecalCountLocation => _DATALocation!.Value.Min + OnCrippleDebrisCountVersioningOffset + 0xAF;
         private bool _OnCrippleDecalCount_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 96;
-        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default;
+        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default(Byte);
         int OnCrippleDecalCountVersioningOffset => OnCrippleDebrisCountVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 96 ? -1 : 0);
         #endregion
         #region OnCrippleExplosion

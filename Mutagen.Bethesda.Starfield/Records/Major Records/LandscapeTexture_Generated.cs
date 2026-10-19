@@ -1906,12 +1906,12 @@ namespace Mutagen.Bethesda.Starfield
         #region HavokFriction
         private int _HavokFrictionLocation => _HNAMLocation!.Value.Min;
         private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
-        public Byte HavokFriction => _HavokFriction_IsSet ? _recordData.Span[_HavokFrictionLocation] : default;
+        public Byte HavokFriction => _HavokFriction_IsSet ? _recordData.Span[_HavokFrictionLocation] : default(Byte);
         #endregion
         #region HavokRestitution
         private int _HavokRestitutionLocation => _HNAMLocation!.Value.Min + 0x1;
         private bool _HavokRestitution_IsSet => _HNAMLocation.HasValue;
-        public Byte HavokRestitution => _HavokRestitution_IsSet ? _recordData.Span[_HavokRestitutionLocation] : default;
+        public Byte HavokRestitution => _HavokRestitution_IsSet ? _recordData.Span[_HavokRestitutionLocation] : default(Byte);
         #endregion
         #region Dirtiness
         private int? _DirtinessLocation;

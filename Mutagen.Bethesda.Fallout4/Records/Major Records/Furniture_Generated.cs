@@ -4904,7 +4904,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region BenchType
         private int _BenchTypeLocation => _WBDTLocation!.Value.Min;
         private bool _BenchType_IsSet => _WBDTLocation.HasValue;
-        public Furniture.BenchTypes BenchType => _BenchType_IsSet ? (Furniture.BenchTypes)_recordData.Span.Slice(_BenchTypeLocation, 0x1)[0] : default;
+        public Furniture.BenchTypes BenchType => _BenchType_IsSet ? (Furniture.BenchTypes)_recordData.Span.Slice(_BenchTypeLocation, 0x1)[0] : default(Furniture.BenchTypes);
         #endregion
         #region UsesSkill
         private int _UsesSkillLocation => _WBDTLocation!.Value.Min + 0x1;

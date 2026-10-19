@@ -2472,7 +2472,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public AddonNode.Flag Flags => _Flags_IsSet ? (AddonNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public AddonNode.Flag Flags => _Flags_IsSet ? (AddonNode.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default(AddonNode.Flag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

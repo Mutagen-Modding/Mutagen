@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0);
-        public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Static.Flag);
         #endregion
         #region Unused
         private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x9;

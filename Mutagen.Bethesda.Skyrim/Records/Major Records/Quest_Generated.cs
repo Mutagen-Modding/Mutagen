@@ -3464,12 +3464,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public Quest.Flag Flags => _Flags_IsSet ? (Quest.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default(Quest.Flag);
         #endregion
         #region Priority
         private int _PriorityLocation => _DNAMLocation!.Value.Min + 0x2;
         private bool _Priority_IsSet => _DNAMLocation.HasValue;
-        public Byte Priority => _Priority_IsSet ? _recordData.Span[_PriorityLocation] : default;
+        public Byte Priority => _Priority_IsSet ? _recordData.Span[_PriorityLocation] : default(Byte);
         #endregion
         #region QuestFormVersion
         private int _QuestFormVersionLocation => _DNAMLocation!.Value.Min + 0x3;
@@ -3484,7 +3484,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Type
         private int _TypeLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _Type_IsSet => _DNAMLocation.HasValue;
-        public Quest.TypeEnum Type => _Type_IsSet ? (Quest.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public Quest.TypeEnum Type => _Type_IsSet ? (Quest.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(Quest.TypeEnum);
         #endregion
         #region Event
         private int? _EventLocation;

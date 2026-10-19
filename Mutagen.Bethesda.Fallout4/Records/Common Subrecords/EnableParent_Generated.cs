@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IPlacedGetter> Reference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public EnableParent.Flag Flags => _structData.Span.Length <= 0x4 ? default : (EnableParent.Flag)_structData.Span.Slice(0x4, 0x1)[0];
+        public EnableParent.Flag Flags => _structData.Span.Length <= 0x4 ? default(EnableParent.Flag) : (EnableParent.Flag)_structData.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0x5 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,

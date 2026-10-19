@@ -2777,7 +2777,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xC;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Light.LightFlag Flags => _Flags_IsSet ? (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Light.LightFlag Flags => _Flags_IsSet ? (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Light.LightFlag);
         #endregion
         #region FalloffExponent
         private int _FalloffExponentLocation => _DATALocation!.Value.Min + 0x10;

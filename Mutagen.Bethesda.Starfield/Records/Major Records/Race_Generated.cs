@@ -7311,7 +7311,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _DAT2Location!.Value.Min + 0x20;
         private bool _Flags_IsSet => _DAT2Location.HasValue;
-        public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadInt64LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x8)) : default;
+        public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadInt64LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x8)) : default(Race.Flag);
         #endregion
         #region AccelerationRate
         private int _AccelerationRateLocation => _DAT2Location!.Value.Min + 0x28;
@@ -7326,7 +7326,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Size
         private int _SizeLocation => _DAT2Location!.Value.Min + 0x30;
         private bool _Size_IsSet => _DAT2Location.HasValue;
-        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SizeLocation, 0x4)) : default(Size);
         #endregion
         #region DAT2Unknown1
         private int _DAT2Unknown1Location => _DAT2Location!.Value.Min + 0x34;

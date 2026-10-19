@@ -2353,7 +2353,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxTrainingLevel
         private int _MaxTrainingLevelLocation => _DATALocation!.Value.Min + 0x5;
         private bool _MaxTrainingLevel_IsSet => _DATALocation.HasValue;
-        public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _recordData.Span[_MaxTrainingLevelLocation] : default;
+        public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _recordData.Span[_MaxTrainingLevelLocation] : default(Byte);
         #endregion
         #region SkillWeights
         private int _SkillWeightsLocation => _DATALocation!.Value.Min + 0x6;
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value.Min + 0x23;
         private bool _Unknown2_IsSet => _DATALocation.HasValue;
-        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default;
+        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default(Byte);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

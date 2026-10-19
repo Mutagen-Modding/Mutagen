@@ -240,7 +240,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 if (data.IsAfterBreak)
                 {
-                    sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {structDataAccessor}.Span.Length <= {posStr} ? {typeGen.UnsetValue("default")} : {getType};");
+                    sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {structDataAccessor}.Span.Length <= {posStr} ? {typeGen.UnsetValue()} : {getType};");
                 }
                 else
                 {
@@ -249,7 +249,7 @@ public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
             }
             else
             {
-                sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : {typeGen.UnsetValue("default")};");
+                sb.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : {typeGen.UnsetValue()};");
             }
         }
 

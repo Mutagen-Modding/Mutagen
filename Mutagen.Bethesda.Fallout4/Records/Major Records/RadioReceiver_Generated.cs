@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single Frequency => _structData.Slice(0x4, 0x4).Float();
         public Single Volume => _structData.Slice(0x8, 0x4).Float();
         public Boolean StartsActive => _structData.Slice(0xC, 0x1)[0] >= 1;
-        public Boolean NoSignalStatic => _structData.Length <= 0xD ? default : _structData.Slice(0xD, 0x1)[0] >= 1;
+        public Boolean NoSignalStatic => _structData.Length <= 0xD ? default(Boolean) : _structData.Slice(0xD, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

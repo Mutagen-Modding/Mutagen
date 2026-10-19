@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Overlay
         private int _OverlayLocation => _ZNAMLocation!.Value.Min + 0x14;
         private bool _Overlay_IsSet => _ZNAMLocation.HasValue;
-        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)_recordData.Span.Slice(_OverlayLocation, 0x1)[0] : default;
+        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)_recordData.Span.Slice(_OverlayLocation, 0x1)[0] : default(Zoom.OverlayType);
         #endregion
         #region AdsDistanceFromCameraOffset
         private int _AdsDistanceFromCameraOffsetLocation => _ZNAMLocation!.Value.Min + 0x15;

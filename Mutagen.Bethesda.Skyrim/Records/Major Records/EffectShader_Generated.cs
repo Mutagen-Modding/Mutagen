@@ -8292,7 +8292,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x180;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(EffectShader.Flag);
         #endregion
         #region FillTextureScaleU
         private int _FillTextureScaleULocation => _DATALocation!.Value.Min + 0x184;

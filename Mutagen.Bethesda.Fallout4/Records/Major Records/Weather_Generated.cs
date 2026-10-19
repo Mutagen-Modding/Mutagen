@@ -8317,7 +8317,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Weather.Flag);
         #endregion
         #region LightningColor
         private int _LightningColorLocation => _DATALocation!.Value.Min + 0xC;

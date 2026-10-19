@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Percentage
         private int _PercentageLocation => _DATALocation!.Value.Min;
         private bool _Percentage_IsSet => _DATALocation.HasValue;
-        public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default;
+        public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default(Byte);
         #endregion
         #region ModelFilename
         public AssetLinkGetter<SkyrimModelAssetType> ModelFilename { get; private set; } = null!;
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => ModelFilenameEndingPos;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0);
-        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(DebrisModel.Flag);
         #endregion
         #region TextureFileHashes
         private int? _TextureFileHashesLocation;

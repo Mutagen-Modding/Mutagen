@@ -2989,22 +2989,22 @@ namespace Mutagen.Bethesda.Starfield
         #region MaxDensity
         private int _MaxDensityLocation => _DNAMLocation!.Value.Min + 0x1C;
         private bool _MaxDensity_IsSet => _DNAMLocation.HasValue;
-        public Byte MaxDensity => _MaxDensity_IsSet ? _recordData.Span[_MaxDensityLocation] : default;
+        public Byte MaxDensity => _MaxDensity_IsSet ? _recordData.Span[_MaxDensityLocation] : default(Byte);
         #endregion
         #region MinSlope
         private int _MinSlopeLocation => _DNAMLocation!.Value.Min + 0x1D;
         private bool _MinSlope_IsSet => _DNAMLocation.HasValue;
-        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default;
+        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default(Byte);
         #endregion
         #region MaxSlope
         private int _MaxSlopeLocation => _DNAMLocation!.Value.Min + 0x1E;
         private bool _MaxSlope_IsSet => _DNAMLocation.HasValue;
-        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default(Byte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x1F;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Grass.Flag);
         #endregion
         #region Coverage
         private int _CoverageLocation => _DNAMLocation!.Value.Min + 0x20;

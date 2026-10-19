@@ -14,11 +14,11 @@ public static class TypeGenerationExt
     /// <summary>
     /// What the class holds for the field when the record leaves it out.
     /// </summary>
-    public static string UnsetValue(this TypeGeneration typeGen, string fallback)
+    public static string UnsetValue(this TypeGeneration typeGen)
     {
         return typeGen is TypicalTypeGeneration { HasDefault: true, Nullable: false } typical
             ? $"{typeGen.ObjectGen.ObjectName}.{typical.DefaultValueMemberName}"
-            : fallback;
+            : typeGen.GetDefault(getter: true);
     }
 
     public static bool NeedsRecordConverter(this TypeGeneration typeGen)

@@ -2102,7 +2102,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDALocation!.Value.Min + 0x4;
         private bool _ResponseNumber_IsSet => _TRDALocation.HasValue;
-        public Byte ResponseNumber => _ResponseNumber_IsSet ? _recordData.Span[_ResponseNumberLocation] : default;
+        public Byte ResponseNumber => _ResponseNumber_IsSet ? _recordData.Span[_ResponseNumberLocation] : default(Byte);
         #endregion
         #region Sound
         private int _SoundLocation => _TRDALocation!.Value.Min + 0x5;
@@ -2112,7 +2112,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _TRDALocation!.Value.Min + 0x9;
         private bool _Unknown_IsSet => _TRDALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         #region InterruptPercentage
         private int _InterruptPercentageLocation => _TRDALocation!.Value.Min + 0xA;

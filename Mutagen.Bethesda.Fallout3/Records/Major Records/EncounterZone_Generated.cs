@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default(EncounterZone.Flag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

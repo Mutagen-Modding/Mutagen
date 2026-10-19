@@ -2627,17 +2627,17 @@ namespace Mutagen.Bethesda.Fallout4
         public Single LightFadeBegin => _structData.Slice(0x50, 0x4).Float();
         public Single LightFadeEnd => _structData.Slice(0x54, 0x4).Float();
         public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x58, 0x4));
-        public Single NearHeightMid => _structData.Length <= 0x5C ? default : _structData.Slice(0x5C, 0x4).Float();
-        public Single NearHeightRange => _structData.Length <= 0x60 ? default : _structData.Slice(0x60, 0x4).Float();
-        public Color ForColorHighNear => _structData.Length <= 0x64 ? default : _structData.Slice(0x64, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color ForColorHighFar => _structData.Length <= 0x68 ? default : _structData.Slice(0x68, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single HighDensityScale => _structData.Length <= 0x6C ? default : _structData.Slice(0x6C, 0x4).Float();
-        public Single FogNearScale => _structData.Length <= 0x70 ? default : _structData.Slice(0x70, 0x4).Float();
-        public Single FogFarScale => _structData.Length <= 0x74 ? default : _structData.Slice(0x74, 0x4).Float();
-        public Single FogHighNearScale => _structData.Length <= 0x78 ? default : _structData.Slice(0x78, 0x4).Float();
-        public Single FogHighFarScale => _structData.Length <= 0x7C ? default : _structData.Slice(0x7C, 0x4).Float();
-        public Single FarHeightMid => _structData.Length <= 0x80 ? default : _structData.Slice(0x80, 0x4).Float();
-        public Single FarHeightRange => _structData.Length <= 0x84 ? default : _structData.Slice(0x84, 0x4).Float();
+        public Single NearHeightMid => _structData.Length <= 0x5C ? default(Single) : _structData.Slice(0x5C, 0x4).Float();
+        public Single NearHeightRange => _structData.Length <= 0x60 ? default(Single) : _structData.Slice(0x60, 0x4).Float();
+        public Color ForColorHighNear => _structData.Length <= 0x64 ? default(Color) : _structData.Slice(0x64, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ForColorHighFar => _structData.Length <= 0x68 ? default(Color) : _structData.Slice(0x68, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single HighDensityScale => _structData.Length <= 0x6C ? default(Single) : _structData.Slice(0x6C, 0x4).Float();
+        public Single FogNearScale => _structData.Length <= 0x70 ? default(Single) : _structData.Slice(0x70, 0x4).Float();
+        public Single FogFarScale => _structData.Length <= 0x74 ? default(Single) : _structData.Slice(0x74, 0x4).Float();
+        public Single FogHighNearScale => _structData.Length <= 0x78 ? default(Single) : _structData.Slice(0x78, 0x4).Float();
+        public Single FogHighFarScale => _structData.Length <= 0x7C ? default(Single) : _structData.Slice(0x7C, 0x4).Float();
+        public Single FarHeightMid => _structData.Length <= 0x80 ? default(Single) : _structData.Slice(0x80, 0x4).Float();
+        public Single FarHeightRange => _structData.Length <= 0x84 ? default(Single) : _structData.Slice(0x84, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
