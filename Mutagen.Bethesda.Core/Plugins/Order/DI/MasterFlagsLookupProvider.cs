@@ -32,7 +32,7 @@ public class MasterFlagsLookupProvider : IMasterFlagsLookupProvider
         if (!GameConstants.Get(_gameReleaseContext.Release).SeparateMasterLoadOrders) return null;
 
         var keyedMasterStyles = listings
-            .Select(x => new ModPath(x.ModKey, _dataDirectoryProvider.Path.GetFile(x.ModKey.FileName).Path))
+            .Select(x => new ModPath(x.ModKey, _fileSystem.ResolveIgnoringCase(_dataDirectoryProvider.Path, x.ModKey.FileName)))
             .AsParallel()
             .Select(x =>
             {

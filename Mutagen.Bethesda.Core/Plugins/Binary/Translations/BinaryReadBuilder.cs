@@ -1588,7 +1588,7 @@ internal static class BinaryReadBuilderHelper
 
                 foreach (var master in loadOrder!)
                 {
-                    var modPath = Path.Combine(dataFolder.Value, master.ModKey.FileName);
+                    var modPath = fileSystem.ResolveIgnoringCase(dataFolder.Value, master.ModKey.FileName);
                     if (fileSystem.File.Exists(modPath))
                     {
                         var overlay = ModFactory<IModGetter>.Importer(

@@ -623,6 +623,7 @@
         <Compile Include="Extensions\IGroupMixIns.cs" />
         <Compile Include="Extensions\DuplicateFromMixIn.cs" />
         <Compile Include="Extensions\DirectoryExt.cs" />
+        <Compile Include="Extensions\FileSystemExt.cs" />
         <Compile Include="Extensions\EnumerableExt.cs" />
         <Compile Include="Extensions\FormLinkListMixIn.cs" />
         <Compile Include="Extensions\FormLinkMixIn.cs" />

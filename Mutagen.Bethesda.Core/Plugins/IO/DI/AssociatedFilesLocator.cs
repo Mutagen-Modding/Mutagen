@@ -45,7 +45,7 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
 
         if (categories.Value.HasFlag(AssociatedModFileCategory.RawStrings))
         {
-            var stringsFolder = Path.Combine(dir, "Strings");
+            var stringsFolder = _fileSystem.ResolveIgnoringCase(dir, "Strings");
             if (_fileSystem.Directory.Exists(stringsFolder))
             {
                 foreach (var stringsFile in _fileSystem.Directory.EnumerateFilesIgnoringCase(stringsFolder,

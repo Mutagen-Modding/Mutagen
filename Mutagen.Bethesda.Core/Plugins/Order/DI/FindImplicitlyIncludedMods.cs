@@ -56,7 +56,7 @@ public sealed class FindImplicitlyIncludedMods : IFindImplicitlyIncludedMods
                 yield return listing.ModKey;
             }
                 
-            var path = Path.Combine(DirectoryProvider.Path, listing.ModKey.FileName);
+            var path = _fileSystem.ResolveIgnoringCase(DirectoryProvider.Path, listing.ModKey.FileName);
             if (!_fileSystem.File.Exists(path))
             {
                 if (skipMissingMods) continue;
