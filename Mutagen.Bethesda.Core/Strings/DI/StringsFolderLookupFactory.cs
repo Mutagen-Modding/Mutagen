@@ -22,13 +22,6 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
     private readonly IGetApplicableArchivePaths _getApplicableArchivePaths;
     private readonly IFileSystem _fileSystem;
     private readonly StringsReadParameters? _readParameters;
-    private static readonly EnumerationOptions IgnoringCase = new()
-    {
-        MatchCasing = MatchCasing.CaseInsensitive,
-        MatchType = MatchType.Win32,
-        AttributesToSkip = 0,
-        IgnoreInaccessible = false,
-    };
 
     public StringsFolderLookupFactory(
         IGameReleaseContext gameRelease,
@@ -69,7 +62,7 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                     if (_fileSystem.Directory.Exists(stringsFolderPath.Value))
                     {
                         var stringsFilesEnumer = _fileSystem.Directory
-                            .EnumerateFiles(stringsFolderPath.Value, $"{modKey.Name}*{StringsUtility.StringsFileExtension}", IgnoringCase)
+                            .EnumerateFilesIgnoringCase(stringsFolderPath.Value, $"{modKey.Name}*{StringsUtility.StringsFileExtension}")
                             .Select(path => new FilePath(path));
                         foreach (var file in stringsFilesEnumer)
                         {
