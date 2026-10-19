@@ -3671,11 +3671,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MO3C:
                 case RecordTypeInts.MO2F:
                 case RecordTypeInts.MO3F:
+                {
+                    item.WorldModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
+                        frame: frame,
+                        femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
+                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.WorldModel);
+                    return (int)ArmorAddon_FieldIndex.WorldModel;
+                }
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 {
-                    if ((nextRecordType.TypeInt is RecordTypeInts.MOD2 or RecordTypeInts.MOD3 or RecordTypeInts.MO2T or RecordTypeInts.MO3T or RecordTypeInts.MLM1 or RecordTypeInts.MLM2 or RecordTypeInts.MO2C or RecordTypeInts.MO3C or RecordTypeInts.MO2F or RecordTypeInts.MO3F)
-                        || !lastParsed.ParsedIndex.HasValue
+                    if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.HealthBarOffset)
                     {
                         item.WorldModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
@@ -4155,11 +4163,21 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MO3C:
                 case RecordTypeInts.MO2F:
                 case RecordTypeInts.MO3F:
+                {
+                    _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
+                        package: _package,
+                        stream: stream,
+                        creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
+                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                        parseNonConvertedItems: true,
+                        existing: _WorldModelOverlay);
+                    return (int)ArmorAddon_FieldIndex.WorldModel;
+                }
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 {
-                    if ((type.TypeInt is RecordTypeInts.MOD2 or RecordTypeInts.MOD3 or RecordTypeInts.MO2T or RecordTypeInts.MO3T or RecordTypeInts.MLM1 or RecordTypeInts.MLM2 or RecordTypeInts.MO2C or RecordTypeInts.MO3C or RecordTypeInts.MO2F or RecordTypeInts.MO3F)
-                        || !lastParsed.ParsedIndex.HasValue
+                    if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.HealthBarOffset)
                     {
                         _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(

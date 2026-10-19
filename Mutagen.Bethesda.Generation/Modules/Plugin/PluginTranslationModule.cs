@@ -960,6 +960,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     }
                                 }
                             }
+                            else if (doubledToProcess != null && doubledToProcess.Length > 0 && nonDoubledKeys.Length > 0)
+                            {
+                                // A field's own record types go straight to its arm; only shared ones are routed
+                                foreach (var trigger in nonDoubledKeys)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
+                                await GenerateDirectArm();
+                                foreach (var trigger in doubledToProcess.Select(x => x.RecordType))
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
+                            }
                             else
                             {
                                 foreach (var trigger in nonDoubledKeys.And(doubledToProcess.EmptyIfNull()
@@ -969,7 +982,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            if (doubledToProcess == null && nonDoubledKeys.Length > 0)
+                            async Task GenerateDirectArm()
                             {
                                 using (sb.CurlyBrace())
                                 {
@@ -1009,6 +1022,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         });
                                 }
                             }
+
+                            if (doubledToProcess == null && nonDoubledKeys.Length > 0)
+                            {
+                                await GenerateDirectArm();
+                            }
                             else if (doubledToProcess != null && doubledToProcess.Length > 0)
                             {
                                 using (sb.CurlyBrace())
@@ -1028,13 +1046,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         {
                                             if (first)
                                             {
-                                                if (ReferenceEquals(doublesField.Field, field.Field)
-                                                    && nonDoubledKeys.Length > 0
-                                                    && field.Field is GenderedType
-                                                    && GenderedTypeBinaryTranslationGeneration.IsSplitPair(field.Field))
-                                                {
-                                                    i.Add($"(nextRecordType.TypeInt is {string.Join(" or ", nonDoubledKeys.Select(k => $"RecordTypeInts.{k.CheckedType}"))})");
-                                                }
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
@@ -1769,6 +1780,19 @@ public class PluginTranslationModule : BinaryTranslationModule
                                     }
                                 }
                             }
+                            else if (doubledToProcess != null && doubledToProcess.Length > 0 && nonDoubledKeys.Length > 0)
+                            {
+                                // A field's own record types go straight to its arm; only shared ones are routed
+                                foreach (var trigger in nonDoubledKeys)
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
+                                await GenerateDirectArm();
+                                foreach (var trigger in doubledToProcess.Select(x => x.RecordType))
+                                {
+                                    sb.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
+                                }
+                            }
                             else
                             {
                                 foreach (var trigger in nonDoubledKeys.And(doubledToProcess.EmptyIfNull()
@@ -1778,7 +1802,7 @@ public class PluginTranslationModule : BinaryTranslationModule
                                 }
                             }
 
-                            if (doubledToProcess == null && nonDoubledKeys.Length > 0)
+                            async Task GenerateDirectArm()
                             {
                                 using (sb.CurlyBrace())
                                 {
@@ -1811,6 +1835,11 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         });
                                 }
                             }
+
+                            if (doubledToProcess == null && nonDoubledKeys.Length > 0)
+                            {
+                                await GenerateDirectArm();
+                            }
                             else if (doubledToProcess != null && doubledToProcess.Length > 0)
                             {
                                 using (sb.CurlyBrace())
@@ -1832,13 +1861,6 @@ public class PluginTranslationModule : BinaryTranslationModule
                                         {
                                             if (first)
                                             {
-                                                if (ReferenceEquals(doublesField.Field, field.Field)
-                                                    && nonDoubledKeys.Length > 0
-                                                    && field.Field is GenderedType
-                                                    && GenderedTypeBinaryTranslationGeneration.IsSplitPair(field.Field))
-                                                {
-                                                    i.Add($"(type.TypeInt is {string.Join(" or ", nonDoubledKeys.Select(k => $"RecordTypeInts.{k.CheckedType}"))})");
-                                                }
                                                 i.Add("!lastParsed.ParsedIndex.HasValue");
                                                 first = false;
                                             }
