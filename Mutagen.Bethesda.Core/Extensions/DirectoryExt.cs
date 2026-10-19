@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using Noggog;
 
 namespace Mutagen.Bethesda;
 
@@ -14,8 +15,8 @@ internal static class DirectoryExt
         IgnoreInaccessible = false,
     };
 
-    public static IEnumerable<string> EnumerateFilesIgnoringCase(this IDirectory directory, string path, string searchPattern)
+    public static IEnumerable<FilePath> EnumerateFilesIgnoringCase(this IDirectory directory, string path, string searchPattern)
     {
-        return directory.EnumerateFiles(path, searchPattern, IgnoringCase);
+        return directory.EnumerateFiles(path, searchPattern, IgnoringCase).Select(x => new FilePath(x));
     }
 }
