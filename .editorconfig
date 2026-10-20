@@ -2,7 +2,6 @@ root = true
 
 [*]
 charset = utf-8
-end_of_line = crlf
 
 # Microsoft .NET properties
 csharp_indent_braces = false
