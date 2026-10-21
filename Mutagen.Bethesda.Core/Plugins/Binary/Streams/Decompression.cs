@@ -36,11 +36,8 @@ public static class Decompression
             BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength),
                 uncompressedLength);
             // Copy uncompressed data over
-            using (var stream = new ZLibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)),
-                       CompressionMode.Decompress))
-            {
-                stream.ReadExactly(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
-            }
+            Decompress(slice.Slice(majorMeta.HeaderLength + 4),
+                buf.AsSpan(majorMeta.HeaderLength, checked((int)uncompressedLength)));
 
             slice = new MemorySlice<byte>(buf);
         }
@@ -62,12 +59,8 @@ public static class Decompression
             BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength),
                 uncompressedLength);
             // Copy uncompressed data over
-            using (var compessionStream =
-                   new ZLibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)),
-                       CompressionMode.Decompress))
-            {
-                compessionStream.ReadExactly(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
-            }
+            Decompress(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4),
+                buf.AsSpan(majorMeta.HeaderLength, checked((int)uncompressedLength)));
 
             stream.Position += checked((int)majorMeta.TotalLength);
             stream = new OverlayStream(buf, stream.MetaData);
