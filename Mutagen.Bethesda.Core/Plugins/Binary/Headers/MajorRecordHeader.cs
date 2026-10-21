@@ -457,14 +457,14 @@ public readonly struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
 
     public MajorRecordFrame Decompress(out ReadOnlyMemorySlice<byte> rawDecompressedBytes)
     {
-        var resultLen = BinaryPrimitives.ReadUInt32LittleEndian(Content);
-        rawDecompressedBytes = Decompression.Decompress(Content.Slice(4), resultLen);
-        var resultBytes = new byte[HeaderData.Length + rawDecompressedBytes.Length];
+        var resultLen = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(Content));
+        var resultBytes = new byte[checked(HeaderData.Length + resultLen)];
         HeaderData.Span.CopyTo(resultBytes);
         BinaryPrimitives.WriteUInt32LittleEndian(
             resultBytes.AsSpan(4),
-            (uint)rawDecompressedBytes.Length);
-        rawDecompressedBytes.Span.CopyTo(resultBytes.AsSpan(HeaderData.Length));
+            (uint)resultLen);
+        Decompression.Decompress(Content.Slice(4), resultBytes.AsSpan(HeaderData.Length, resultLen));
+        rawDecompressedBytes = new ReadOnlyMemorySlice<byte>(resultBytes, HeaderData.Length, resultLen);
         return new MajorRecordFrame(
             Header.Meta, 
             resultBytes);
