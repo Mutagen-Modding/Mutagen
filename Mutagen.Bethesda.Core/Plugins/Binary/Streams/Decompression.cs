@@ -13,14 +13,14 @@ public static class Decompression
     public static byte[] Decompress(ReadOnlyMemorySlice<byte> bytes, uint uncompressedLength)
     {
         byte[] buf = new byte[checked((int)uncompressedLength)];
-        
-        using (var stream = new ZLibStream(new ByteMemorySliceStream(bytes),
-                   CompressionMode.Decompress))
-        {
-            stream.ReadExactly(buf, 0, checked((int)uncompressedLength));
-        }
-
+        Decompress(bytes, buf.AsSpan());
         return buf;
+    }
+    
+    public static void Decompress(ReadOnlyMemorySlice<byte> bytes, Span<byte> destination)
+    {
+        using var stream = new ZLibStream(new ByteMemorySliceStream(bytes), CompressionMode.Decompress);
+        stream.ReadExactly(destination);
     }
 
     internal static ReadOnlyMemorySlice<byte> DecompressMajorRecordSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
