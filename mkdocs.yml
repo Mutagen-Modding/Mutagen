@@ -164,3 +164,5 @@ nav:
     - Developing Mutagen:
       - Contributing/development/index.md
       - Code Generation: Contributing/development/Code-Generation.md
+      - Testing: Contributing/development/Testing.md
+      - Code Conventions: Contributing/development/Code-Conventions.md

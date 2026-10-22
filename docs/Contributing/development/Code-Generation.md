@@ -10,7 +10,14 @@ To change a record's structure, edit its xml and regenerate.  The `_Generated.cs
 The generation is built on top of [Loqui](https://github.com/Noggog/Loqui), a code generation library that is only really used by Mutagen.  Loqui provides the xml schema and the base generation of the classes, interfaces, masks, equality, and copying.  `Mutagen.Bethesda.Generation` layers the Bethesda specific pieces on top, such as binary translation and FormLink handling.
 
 ## Running the Generator
-`Mutagen.Bethesda.Generator.All` regenerates every game in one pass.  Run it after changing any xml definitions or generation code.
+Run the generator after changing any xml definitions or generation code, and commit the regenerated files along with your change.
+
+| Project | Regenerates |
+| --- | --- |
+| `Mutagen.Bethesda.Generator.All` | Every game |
+| `Mutagen.Bethesda.[Game].Generator` | A single game.  Faster while iterating on one game's definitions. |
+
+Changes to shared generation code, or to shared base types like `MajorRecord`, need the full generator.  It is also a good idea to run it once before committing, even when iterating with a single game.
 
 !!! note
     The generator locates the projects it writes to via paths relative to its working directory, so it must be run with its build output folder as the working directory.  IDEs do this by default.
