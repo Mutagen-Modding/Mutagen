@@ -25,7 +25,7 @@ public class LoadOrderImporterTests
 {
     [Theory, MutagenAutoData]
     public void Typical(
-        [Frozen]MockFileSystem fs,
+        MockFileSystem fs,
         IEnumerable<ModPath> modPaths,
         [Frozen] IModImporter<TestMod> importer,
         LoadOrderImporter<TestMod> sut)

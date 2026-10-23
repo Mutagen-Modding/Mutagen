@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using System.Reactive;
-using AutoFixture.Xunit2;
 using DynamicData;
 using Shouldly;
 using Microsoft.Reactive.Testing;
@@ -20,9 +19,9 @@ public class PluginLiveLoadOrderProviderTests
 {
     [Theory, MutagenAutoData]
     public void Integration(
-        [Frozen]FilePath pluginsTxt,
-        [Frozen]MockFileSystemWatcher watcher,
-        [Frozen]MockFileSystem fs)
+        FilePath pluginsTxt,
+        MockFileSystemWatcher watcher,
+        MockFileSystem fs)
     {
         fs.File.WriteAllLines(pluginsTxt,
         [
@@ -65,8 +64,8 @@ public class PluginLiveLoadOrderProviderTests
 
     [Theory, MutagenAutoData]
     public void QueriesOnceInitially(
-        [Frozen]FilePath pluginPath,
-        [Frozen]MockFileSystem fs)
+        FilePath pluginPath,
+        MockFileSystem fs)
     {
         var listings = Substitute.For<IPluginListingsProvider>();
         var list = new PluginLiveLoadOrderProvider(
@@ -81,9 +80,9 @@ public class PluginLiveLoadOrderProviderTests
 
     [Theory, MutagenAutoData]
     public void QueriesIfChanged(
-        [Frozen]FilePath pluginPath,
-        [Frozen]MockFileSystemWatcher modified,
-        [Frozen]MockFileSystem fs)
+        FilePath pluginPath,
+        MockFileSystemWatcher modified,
+        MockFileSystem fs)
     {
         var listings = Substitute.For<IPluginListingsProvider>();
         var list = new PluginLiveLoadOrderProvider(
@@ -101,9 +100,9 @@ public class PluginLiveLoadOrderProviderTests
 
     [Theory, MutagenAutoData]
     public void ReturnsNewListings(
-        [Frozen]FilePath pluginPath,
-        [Frozen]MockFileSystemWatcher modified,
-        [Frozen]MockFileSystem fs)
+        FilePath pluginPath,
+        MockFileSystemWatcher modified,
+        MockFileSystem fs)
     {
         LoadOrderListing[] listings =
         [
@@ -133,9 +132,9 @@ public class PluginLiveLoadOrderProviderTests
 
     [Theory, MutagenAutoData]
     public void NoErrors(
-        [Frozen]FilePath pluginPath,
-        [Frozen]MockFileSystemWatcher modified,
-        [Frozen]MockFileSystem fs)
+        FilePath pluginPath,
+        MockFileSystemWatcher modified,
+        MockFileSystem fs)
     {
         var listings = Substitute.For<IPluginListingsProvider>();
         new PluginLiveLoadOrderProvider(
@@ -158,9 +157,9 @@ public class PluginLiveLoadOrderProviderTests
 
     [Theory, MutagenAutoData]
     public void ErrorFlop(
-        [Frozen]FilePath pluginPath,
-        [Frozen]MockFileSystemWatcher modified,
-        [Frozen]MockFileSystem fs)
+        FilePath pluginPath,
+        MockFileSystemWatcher modified,
+        MockFileSystem fs)
     {
         TestScheduler scheduler = new();
         LoadOrderListing[] listings =
@@ -200,9 +199,9 @@ public class PluginLiveLoadOrderProviderTests
 
     [Theory, MutagenAutoData]
     public void Changed(
-        [Frozen]FilePath existingPluginPath,
-        [Frozen]MockFileSystemWatcher modified,
-        [Frozen]MockFileSystem fs)
+        FilePath existingPluginPath,
+        MockFileSystemWatcher modified,
+        MockFileSystem fs)
     {
         TestScheduler scheduler = new();
         var testableObs = scheduler.CreateObserver<Unit>();

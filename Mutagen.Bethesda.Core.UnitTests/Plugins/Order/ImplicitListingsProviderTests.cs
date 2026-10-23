@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -15,7 +14,7 @@ public class ImplicitListingsProviderTests
 {
     [Theory, MutagenAutoData]
     public void Typical(
-        [Frozen]MockFileSystem fs,
+        MockFileSystem fs,
         ImplicitListingsProvider sut)
     {
         sut.ListingModKeys.Listings.Returns(new List<ModKey>()
