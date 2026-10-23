@@ -61,8 +61,9 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                     var bundle = new StringsFolderLookupOverlay.DictionaryBundle();
                     if (_fileSystem.Directory.Exists(stringsFolderPath.Value))
                     {
-                        var stringsFilesEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}", fileSystem: _fileSystem);
-                        foreach (var file in stringsFilesEnumer)
+                        var stringsFiles = _fileSystem.Directory
+                            .EnumerateFilesIgnoringCase(stringsFolderPath.Value, $"{modKey.Name}*{StringsUtility.StringsFileExtension}");
+                        foreach (var file in stringsFiles)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
                                     languageFormat,
