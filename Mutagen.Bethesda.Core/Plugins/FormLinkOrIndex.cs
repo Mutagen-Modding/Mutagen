@@ -53,8 +53,10 @@ public class FormLinkOrIndexGetter<TMajorGetter> : IFormLinkOrIndexGetter<TMajor
 
     public void Print(StructuredStringBuilder sb, string? name = null)
     {
-        throw new NotImplementedException();
+        sb.AppendItem(ToString(), name);
     }
+
+    public override string ToString() => FormLinkOrIndex<TMajorGetter>.Describe(this);
 
     public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? other) => FormLinkOrIndex<TMajorGetter>.EqualityComparer.Equals(this, other);
 
@@ -152,7 +154,15 @@ public class FormLinkOrIndex<TMajorGetter> : IFormLinkOrIndex<TMajorGetter>
 
     public void Print(StructuredStringBuilder sb, string? name = null)
     {
-        throw new NotImplementedException();
+        sb.AppendItem(ToString(), name);
+    }
+
+    public override string ToString() => Describe(this);
+
+    internal static string Describe(IFormLinkOrIndexGetter<TMajorGetter> item)
+    {
+        if (item.UsesLink()) return item.Link.ToString()!;
+        return item.UsesAlias() ? $"Alias {item.Index}" : $"Package Data {item.Index}";
     }
 
     public bool Equals(IFormLinkOrIndexGetter<TMajorGetter>? other) => FormLinkOrIndex<TMajorGetter>.EqualityComparer.Equals(this, other);
