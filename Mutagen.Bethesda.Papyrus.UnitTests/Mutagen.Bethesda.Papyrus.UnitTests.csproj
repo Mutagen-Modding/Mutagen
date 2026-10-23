@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <RootNamespace>Mutagen.Bethesda.Papyrus.UnitTests</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Mutagen.Bethesda.Papyrus.Syntax\Mutagen.Bethesda.Papyrus.Syntax.csproj" />
+        <ProjectReference Include="..\Mutagen.Bethesda.Papyrus.Semantic\Mutagen.Bethesda.Papyrus.Semantic.csproj" />
+    </ItemGroup>
+
+</Project>
