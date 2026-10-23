@@ -1,10 +1,8 @@
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Internals;
 using Noggog;
-using System.Buffers.Binary;
 using System.Collections;
-using System.IO.Compression;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
@@ -34,23 +32,7 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
 
     private T ConstructWrapper(int pos)
     {
-        ReadOnlyMemorySlice<byte> slice = _data.Slice(pos);
-        var majorMeta = _package.MetaData.Constants.MajorRecordHeader(slice);
-        if (majorMeta.IsCompressed)
-        {
-            uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
-            byte[] buf = new byte[majorMeta.HeaderLength + checked((int)uncompressedLength)];
-            // Copy major meta bytes over
-            slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
-            // Set length bytes
-            BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
-            // Copy uncompressed data over
-            using (var stream = new ZLibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
-            {
-                stream.ReadExactly(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
-            }
-            slice = new MemorySlice<byte>(buf);
-        }
+        var slice = Decompression.DecompressMajorRecordSpan(_data.Slice(pos), _package.MetaData.Constants);
         return LoquiBinaryOverlayTranslation<T>.Create(
             stream: new OverlayStream(slice, _package),
             package: _package,
