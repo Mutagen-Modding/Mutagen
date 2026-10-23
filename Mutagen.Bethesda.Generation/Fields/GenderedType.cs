@@ -127,7 +127,12 @@ public class GenderedType : WrapperType
         sb.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
+            // Gendered items have no equality of their own, so compare their items the way the item type compares.
+            // Loqui types compare by reference with ==, while their Equals compares their fields.
+            var itemEquals = this.SubTypeGeneration is LoquiType
+                ? "object.Equals(l, r)"
+                : this.SubTypeGeneration.GenerateEqualsSnippet("l", "r");
+            sb.AppendLine($"if (!{nameof(GenderedItem)}.{nameof(GenderedItem.EqualsHelper)}({accessor}, {rhsAccessor}, (l, r) => {itemEquals})) return false;");
         }
     }
 

@@ -2146,15 +2146,15 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Voices, rhs.Voices, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairStyles) ?? true))
             {
-                if (!Equals(lhs.DefaultHairStyles, rhs.DefaultHairStyles)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultHairStyles, rhs.DefaultHairStyles, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
-                if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultHairColors, rhs.DefaultHairColors, (l, r) => l == r)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
             {
@@ -2170,11 +2170,11 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
             {
-                if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.HeadData, rhs.HeadData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BodyData, rhs.BodyData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
             {
-                if (!Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.FaceGenData, rhs.FaceGenData, (l, r) => object.Equals(l, r))) return false;
             }
             return true;
         }

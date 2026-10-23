@@ -123,6 +123,57 @@ public class EqualityTests
             .ShouldBeFalse();
     }
 
+    private ArmorAddon GetSomeArmorAddon()
+    {
+        return new ArmorAddon(TestConstants.Form1, SkyrimRelease.SkyrimSE)
+        {
+            Priority = new GenderedItem<byte>(1, 2),
+            WorldModel = new GenderedItem<Model?>(
+                new Model() { File = "Male.nif" },
+                new Model() { File = "Female.nif" }),
+        };
+    }
+
+    [Fact]
+    public void DuplicatedGenderedEquality()
+    {
+        var armorAddon = GetSomeArmorAddon();
+        var other = armorAddon.DeepCopy();
+
+        armorAddon.Equals(other)
+            .ShouldBeTrue();
+    }
+
+    [Fact]
+    public void DuplicatedGenderedInequality()
+    {
+        var armorAddon = GetSomeArmorAddon();
+        var other = armorAddon.DeepCopy();
+        other.WorldModel!.Female!.File = "Other.nif";
+
+        armorAddon.Equals(other)
+            .ShouldBeFalse();
+    }
+
+    [Fact]
+    public void OverlayGenderedEquality()
+    {
+        var armorAddon = GetSomeArmorAddon();
+        var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
+        mod.ArmorAddons.Add(armorAddon);
+        using var written = new MemoryStream();
+        mod.WriteToBinary(written);
+
+        using var lhs = SkyrimMod.CreateFromBinaryOverlay(new MemoryStream(written.ToArray()), SkyrimRelease.SkyrimSE, TestConstants.PluginModKey);
+        using var rhs = SkyrimMod.CreateFromBinaryOverlay(new MemoryStream(written.ToArray()), SkyrimRelease.SkyrimSE, TestConstants.PluginModKey);
+        var overlay = lhs.ArmorAddons.First();
+
+        overlay.Equals(rhs.ArmorAddons.First())
+            .ShouldBeTrue();
+        overlay.Equals(armorAddon)
+            .ShouldBeTrue();
+    }
+
     [Fact]
     public void DeepLoquiMasking()
     {

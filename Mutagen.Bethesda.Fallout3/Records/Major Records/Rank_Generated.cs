@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Name) ?? true))
             {
-                if (!Equals(lhs.Name, rhs.Name)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Name, rhs.Name, (l, r) => string.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
