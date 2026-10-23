@@ -4964,6 +4964,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
                 case RecordTypeInts.MODF:
+                {
+                    item.Model = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Projectile_FieldIndex.Model;
+                }
                 case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
@@ -5546,6 +5552,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
                 case RecordTypeInts.MODF:
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Projectile_FieldIndex.Model;
+                }
                 case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue

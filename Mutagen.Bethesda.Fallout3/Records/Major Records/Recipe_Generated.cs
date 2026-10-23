@@ -2211,6 +2211,15 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)Recipe_FieldIndex.SubCategory;
                 }
                 case RecordTypeInts.RCIL:
+                {
+                    item.Ingredients.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RecipeIngredient>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: RecipeIngredient_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: RecipeIngredient.TryCreateFromBinary));
+                    return (int)Recipe_FieldIndex.Ingredients;
+                }
                 case RecordTypeInts.RCQY:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
@@ -2459,6 +2468,14 @@ namespace Mutagen.Bethesda.Fallout3
                     return (int)Recipe_FieldIndex.SubCategory;
                 }
                 case RecordTypeInts.RCIL:
+                {
+                    this.Ingredients = this.ParseRepeatedTypelessSubrecord<IRecipeIngredientGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: RecipeIngredient_Registration.TriggerSpecs,
+                        factory: RecipeIngredientBinaryOverlay.RecipeIngredientFactory);
+                    return (int)Recipe_FieldIndex.Ingredients;
+                }
                 case RecordTypeInts.RCQY:
                 {
                     if (!lastParsed.ParsedIndex.HasValue

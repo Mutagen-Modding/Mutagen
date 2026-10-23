@@ -32,6 +32,7 @@ public class GenderedTests
             femaleMarker: RecordTypes.FNAM,
             marker: RecordTypes.NAM0,
             femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-            transl: HeadData.TryCreateFromBinary);
+            transl: HeadData.TryCreateFromBinary,
+            existing: null);
     }
 }
