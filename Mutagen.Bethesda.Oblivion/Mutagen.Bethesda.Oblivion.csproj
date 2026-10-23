@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Interfaces\Aspect\IPositionRotation.cs" />
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="OblivionGameModule.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
@@ -920,6 +921,7 @@
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="OblivionMultiModOverlay_Generated.cs" />
+    <Compile Include="OblivionGameModule_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />
