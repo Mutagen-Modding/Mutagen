@@ -46,12 +46,7 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
     {
         var languageFormat = GameConstants.Get(_gameRelease.Release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {_gameRelease.Release}", nameof(_gameRelease.Release));
         var encodings = _readParameters?.EncodingProvider ?? new MutagenEncodingProvider();
-        var stringsFolderPath = _readParameters?.StringsFolderOverride;
-        if (stringsFolderPath == null)
-        {
-            stringsFolderPath = Path.Combine(_dataDirectoryProvider.Path, "Strings");
-        }
-
+        var stringsFolderOverride = _readParameters?.StringsFolderOverride;
         var dataPath = _dataDirectoryProvider.Path;
 
         return new StringsFolderLookupOverlay(new Lazy<StringsFolderLookupOverlay.DictionaryBundle>(
@@ -59,10 +54,12 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                 valueFactory: () =>
                 {
                     var bundle = new StringsFolderLookupOverlay.DictionaryBundle();
-                    if (_fileSystem.Directory.Exists(stringsFolderPath.Value))
+                    var stringsFolderPath = stringsFolderOverride?.Path ?? _fileSystem.ResolveIgnoringCase(dataPath, "Strings");
+                    if (_fileSystem.Directory.Exists(stringsFolderPath))
                     {
-                        var stringsFilesEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}", fileSystem: _fileSystem);
-                        foreach (var file in stringsFilesEnumer)
+                        var stringsFiles = _fileSystem.Directory
+                            .EnumerateFilesIgnoringCase(stringsFolderPath, $"{modKey.Name}*{StringsUtility.StringsFileExtension}");
+                        foreach (var file in stringsFiles)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
                                     languageFormat,

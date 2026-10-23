@@ -45,10 +45,10 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
 
         if (categories.Value.HasFlag(AssociatedModFileCategory.RawStrings))
         {
-            var stringsFolder = Path.Combine(dir, "Strings");
+            var stringsFolder = _fileSystem.ResolveIgnoringCase(dir, "Strings");
             if (_fileSystem.Directory.Exists(stringsFolder))
             {
-                foreach (var stringsFile in _fileSystem.Directory.EnumerateFiles(stringsFolder,
+                foreach (var stringsFile in _fileSystem.Directory.EnumerateFilesIgnoringCase(stringsFolder,
                              $"{modPath.ModKey.Name}_*.*strings"))
                 {
                     yield return stringsFile;
@@ -81,7 +81,7 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
         var baseName = Path.GetFileNameWithoutExtension(modPath);
         var extension = Path.GetExtension(modPath);
         var searchPattern = $"{baseName}_*{extension}";
-        foreach (var file in _fileSystem.Directory.EnumerateFiles(dir, searchPattern))
+        foreach (var file in _fileSystem.Directory.EnumerateFilesIgnoringCase(dir, searchPattern))
         {
             var fileName = Path.GetFileNameWithoutExtension(file);
             if (MultiModFileAnalysis.IsSplitFileName(fileName, baseName))
@@ -96,12 +96,11 @@ public class AssociatedFilesLocator : IAssociatedFilesLocator
         ModKey modKey, 
         string bsaSuffix)
     {
-        var bsaPath = new FilePath(Path.Combine(dir, $"{modKey.Name}.{bsaSuffix}"));
-        if (_fileSystem.File.Exists(bsaPath))
+        foreach (var bsa in _fileSystem.Directory.EnumerateFilesIgnoringCase(dir, $"{modKey.Name}.{bsaSuffix}"))
         {
-            yield return bsaPath;
+            yield return bsa;
         }
-        foreach (var bsa in _fileSystem.Directory.EnumerateFiles(dir, $"{modKey.Name} - *.{bsaSuffix}"))
+        foreach (var bsa in _fileSystem.Directory.EnumerateFilesIgnoringCase(dir, $"{modKey.Name} - *.{bsaSuffix}"))
         {
             yield return bsa;
         }
