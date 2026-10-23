@@ -491,6 +491,49 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], []);
     }
 
+    void VoicesShouldEqual(VoiceContainer vc, Dictionary<FormKey, HashSet<FormKey>> expected)
+    {
+        vc.Voices.Keys.ShouldBe(expected.Keys);
+
+        foreach (var (voice, speakers) in vc.Voices)
+        {
+            var expectedSpeakers = expected[voice];
+            speakers.ShouldBe(expectedSpeakers);
+        }
+    }
+
+    [Theory, MutagenModAutoData]
+    public void IntersectLoseAll(
+        FormKey voice1, FormKey voice1Npc1, FormKey voice1Npc2,
+        FormKey voice2, FormKey voice2Npc1, FormKey voice2Npc2)
+    {
+        var speakerVoices = new Dictionary<FormKey, HashSet<FormKey>>
+        {
+            { voice1Npc1, [voice1] },
+            { voice1Npc2, [voice1] },
+            { voice2Npc1, [voice2] },
+            { voice2Npc2, [voice2] },
+        };
+
+        // We have some, but not all, NPCs of a voice type
+        var vc = new VoiceContainer([voice1Npc1], speakerVoices);
+        VoicesShouldEqual(vc, new Dictionary<FormKey, HashSet<FormKey>>
+        {
+            { voice1, [voice1Npc1] },
+        });
+
+        // Other has some npcs of voice type, but none overlap with the intersect target
+        // vc & other should be empty set
+        var other = new VoiceContainer([voice1Npc2], speakerVoices);
+        VoicesShouldEqual(other, new Dictionary<FormKey, HashSet<FormKey>>
+        {
+            { voice1, [voice1Npc2] },
+        });
+
+        vc.IntersectWith(other);
+        VoicesShouldEqual(vc, new Dictionary<FormKey, HashSet<FormKey>> { });
+    }
+
     [Theory, MutagenModAutoData]
     public void TestSpecificSpeaker(VoiceTypeAssetLookupTestFixture fixture)
     {
@@ -539,6 +582,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.Topic.EditorID = "DialogueGenericHello";
         var npc = fixture.CreateSpeaker("MaleEvenToned");
 
+        // Specific form ID as it is included in path
         var response = new DialogResponses(FormKey.Factory("0142C2:Skyrim.esm"), SkyrimRelease.SkyrimSE);
         response.Responses.Add(new() { ResponseNumber = 1 });
         fixture.Topic.Responses.Add(response);
@@ -554,6 +598,64 @@ public class VoiceTypeAssetLookupTestSkyrim
         response.ResponseData.SetTo(sharedInfo);
         fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBeEmpty();
     }
+
+    [Theory, MutagenModAutoData]
+    public void TestConditionsAndUnique(VoiceTypeAssetLookupTestFixture fixture, uint aliasId)
+    {
+        // If both are present, conditions apply to a unique actor alias being filled at all. They do not allow a different actor to take their place
+        fixture.CreateSpeaker("dummy");
+        var unique = fixture.CreateSpeaker("unique");
+
+        fixture.Quest.Aliases.Add(new()
+        {
+            UniqueActor = unique.ToNullableLink(), ID = aliasId,
+            // E.g., an epilogue quest that uses different aliases depending on ending
+            Conditions = [ConditionFactory.Create(new GetStageConditionData(), 1)]
+        });
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(new GetIsAliasRefConditionData() { ReferenceAliasIndex = (int)aliasId }, 1)],
+            [unique]);
+    }
+
+    // TODO: Implement fix for this
+    //[Theory, MutagenModAutoData]
+    //public void TestOnlySome(VoiceTypeAssetLookupTestFixture fixture, Race khajiit, Race nord, LeveledNpc leveledNpc)
+    //{
+    //    fixture.Quest.EditorID = "CYRGenericDialogueR01";
+    //    fixture.Topic.EditorID = "CYRTaunt";
+
+    //    var khajiitNpc = fixture.CreateSpeaker("CYRR01MaleKhajiitMercurial");
+    //    khajiitNpc.Race.SetTo(khajiit);
+    //    var nordNpc = fixture.CreateSpeaker("CYRR01MaleNord");
+    //    nordNpc.Race.SetTo(nord);
+    //    leveledNpc.Entries = [
+    //        new() { Data = new() { Reference = khajiitNpc.ToLink() } },
+    //        new() { Data = new() { Reference = nordNpc.ToLink() } }
+    //    ];
+
+    //    var derived = fixture.CreateSpeaker("derived");
+    //    derived.Template.SetTo(leveledNpc);
+    //    derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
+
+    //    // Specific form ID as it is included in path
+    //    var response = new DialogResponses(FormKey.Factory("05BB0B:BSHeartland.esm"), SkyrimRelease.SkyrimSE);
+    //    response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1));
+    //    response.Responses.Add(new() { ResponseNumber = 1 });
+
+    //    // If a line is only valid for some of an NPC's potential voice types, it should only be exported for those voices
+    //    // E.g. 05BB0B:BSHeartland.esm should only be exported Khajiit voice types
+
+    //    fixture.Topic.Responses.Add(response);
+    //    // Derived may be a Khajiit from template
+    //    fixture.AssertSpeakersEqual(response.Conditions, [khajiitNpc, derived]);
+    //    // If derived is a Khajiit, they do not have a Nord voice
+    //    fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([
+    //        @"Sound\Voice\BSHeartland.esm\CYRR01MaleKhajiitMercurial\CYRGeneric_CYRTaunt_0005BB0B_1.fuz"
+    //    ]);
+
+
+    //    // Factions and classes should still consider inherited traits, as they are a different flag
+    //}
 
     [Theory, MutagenModAutoData]
     public void TestInheritedTraits(
