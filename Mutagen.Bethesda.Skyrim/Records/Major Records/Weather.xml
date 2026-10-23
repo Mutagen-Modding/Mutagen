@@ -81,9 +81,7 @@
         <FormLink refName="Static" recordType="TNAM" />
       </List>
       <RefDirect name="ImageSpaces" refName="WeatherImageSpaces" />
-      <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting">
-        <Versioning formVersion="43" />
-      </RefDirect>
+      <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" />
       <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" binary="Custom" />
       <ByteArray name="NAM2" recordType="NAM2" />
       <ByteArray name="NAM3" recordType="NAM3" />

@@ -6023,15 +6023,12 @@ namespace Mutagen.Bethesda.Skyrim
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (writer.MetaData.FormVersion!.Value >= 43)
+            if (item.VolumetricLighting is {} VolumetricLightingItem)
             {
-                if (item.VolumetricLighting is {} VolumetricLightingItem)
-                {
-                    ((WeatherVolumetricLightingBinaryWriteTranslation)((IBinaryItem)VolumetricLightingItem).BinaryWriteTranslator).Write(
-                        item: VolumetricLightingItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
+                ((WeatherVolumetricLightingBinaryWriteTranslation)((IBinaryItem)VolumetricLightingItem).BinaryWriteTranslator).Write(
+                    item: VolumetricLightingItem,
+                    writer: writer,
+                    translationParams: translationParams);
             }
             WeatherBinaryWriteTranslation.WriteBinaryDirectionalAmbientLightingColors(
                 writer: writer,
@@ -6480,10 +6477,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    if (frame.MetaData.FormVersion!.Value >= 43)
-                    {
-                        item.VolumetricLighting = Mutagen.Bethesda.Skyrim.WeatherVolumetricLighting.CreateFromBinary(frame: frame);
-                    }
+                    item.VolumetricLighting = Mutagen.Bethesda.Skyrim.WeatherVolumetricLighting.CreateFromBinary(frame: frame);
                     return (int)Weather_FieldIndex.VolumetricLighting;
                 }
                 case RecordTypeInts.DALC:
