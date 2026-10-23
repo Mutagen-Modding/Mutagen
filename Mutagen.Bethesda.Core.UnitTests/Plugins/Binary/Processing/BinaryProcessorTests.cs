@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Plugins.Binary.Processing;
 using Noggog;
+using Shouldly;
 using Xunit;
 using MemoryStream = System.IO.MemoryStream;
 
@@ -59,7 +60,35 @@ public class BinaryProcessorTests
         Assert.Equal(sourceBuf, outputBuf);
     }
 
+    /// <summary>Advances to the requested position despite short source reads.</summary>
+    [Fact]
+    public void Position_ShortReads()
+    {
+        using var proc = new BinaryFileProcessor(
+            new ShortReadStream(GetBuffer(8)),
+            new BinaryFileProcessor.Config());
+
+        proc.Position = 6;
+
+        proc.ReadByte().ShouldBe(6);
+    }
+
     #region Single Substitutions
+    /// <summary>Applies substitutions at the correct source offsets despite short reads.</summary>
+    [Fact]
+    public void Substitutions_ShortReads()
+    {
+        var sourceBuf = GetBuffer(8);
+        var expectedBuf = new byte[] { 0, 1, 2, 3, 75, 5, 6, 7 };
+        BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+        config.SetSubstitution(4, 75);
+        using var proc = new BinaryFileProcessor(new ShortReadStream(sourceBuf), config, bufferLen: BUFFER_SIZE);
+
+        var outputBuf = GetBytes(proc, sourceBuf.Length);
+
+        outputBuf.ShouldBe(expectedBuf);
+    }
+
     [Fact]
     public void Substitutions_FirstPass()
     {
@@ -172,6 +201,21 @@ public class BinaryProcessorTests
     #endregion
 
     #region Moves
+    /// <summary>Moves a section completely even when it exhausts a short source buffer.</summary>
+    [Fact]
+    public void Move_ShortReads()
+    {
+        var sourceBuf = GetBuffer(8);
+        var expectedBuf = new byte[] { 5, 0, 1, 2, 3, 4, 6, 7 };
+        BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+        config.SetMove(new RangeInt64(0, 4), 6);
+        using var proc = new BinaryFileProcessor(new ShortReadStream(sourceBuf), config, bufferLen: BUFFER_SIZE);
+
+        var outputBuf = GetBytes(proc, sourceBuf.Length);
+
+        outputBuf.ShouldBe(expectedBuf);
+    }
+
     [Fact]
     public void Move_Inside_FirstPass()
     {
@@ -450,4 +494,20 @@ public class BinaryProcessorTests
         Assert.Equal(expectedBuf, outputBuf);
     }
     #endregion
+
+    /// <summary>A source stream that returns at most two bytes on each read.</summary>
+    private sealed class ShortReadStream(byte[] data) : MemoryStream(data)
+    {
+        /// <summary>Returns at most two bytes through the array overload.</summary>
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return base.Read(buffer, offset, Math.Min(count, 2));
+        }
+
+        /// <summary>Returns at most two bytes through the span overload.</summary>
+        public override int Read(Span<byte> buffer)
+        {
+            return base.Read(buffer[..Math.Min(buffer.Length, 2)]);
+        }
+    }
 }
