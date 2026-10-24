@@ -6527,37 +6527,55 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QuestType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.QuestType;
                 }
                 case RecordTypeInts.FTYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QuestFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.QuestFaction;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.Location;
                 }
                 case RecordTypeInts.QTLM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestTimeLimit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QuestTimeLimit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.QuestTimeLimit;
                 }
                 case RecordTypeInts.QSRC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SourceQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SourceQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.SourceQuest;
                 }
                 case RecordTypeInts.QDUP:
@@ -6646,7 +6664,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QuestGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.QuestGroup;
                 }
                 case RecordTypeInts.SNAM:
@@ -6661,7 +6682,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QMTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MissionTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MissionTypeKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Quest_FieldIndex.MissionTypeKeyword;
                 }
                 case RecordTypeInts.QMSU:
@@ -7009,32 +7033,50 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QTYP:
                 {
-                    _QuestTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.QuestType;
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    _QuestFactionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestFactionLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.QuestFaction;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EventLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EventLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.Location;
                 }
                 case RecordTypeInts.QTLM:
                 {
-                    _QuestTimeLimitLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestTimeLimitLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.QuestTimeLimit;
                 }
                 case RecordTypeInts.QSRC:
                 {
-                    _SourceQuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SourceQuestLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.SourceQuest;
                 }
                 case RecordTypeInts.QDUP:
@@ -7119,7 +7161,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _QuestGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestGroupLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.QuestGroup;
                 }
                 case RecordTypeInts.SNAM:
@@ -7129,7 +7174,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QMTY:
                 {
-                    _MissionTypeKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MissionTypeKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.MissionTypeKeyword;
                 }
                 case RecordTypeInts.QMSU:

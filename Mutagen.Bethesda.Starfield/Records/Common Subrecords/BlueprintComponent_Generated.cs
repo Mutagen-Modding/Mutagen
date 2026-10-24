@@ -1514,13 +1514,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BLUF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BLUF = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.BLUF = frame.ReadUInt8();
+                    }
                     return (int)BlueprintComponent_FieldIndex.BLUF;
                 }
                 case RecordTypeInts.BOID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextPartID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NextPartID = frame.ReadUInt32();
+                    }
                     return (int)BlueprintComponent_FieldIndex.NextPartID;
                 }
                 default:
@@ -1678,12 +1684,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BLUF:
                 {
-                    _BLUFLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _BLUFLocation = (stream.Position - offset);
+                    }
                     return (int)BlueprintComponent_FieldIndex.BLUF;
                 }
                 case RecordTypeInts.BOID:
                 {
-                    _NextPartIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NextPartIDLocation = (stream.Position - offset);
+                    }
                     return (int)BlueprintComponent_FieldIndex.NextPartID;
                 }
                 default:

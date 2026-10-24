@@ -2590,7 +2590,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LongRangeStrafeMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LongRangeStrafeMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:
@@ -2841,7 +2844,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CSLR:
                 {
-                    _LongRangeStrafeMultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LongRangeStrafeMultLocation = (stream.Position - offset);
+                    }
                     return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:

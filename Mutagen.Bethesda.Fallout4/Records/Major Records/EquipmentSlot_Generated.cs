@@ -1082,7 +1082,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Slot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Slot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Slot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)EquipmentSlot_FieldIndex.Slot;
                 }
                 case RecordTypeInts.ZNAM:
@@ -1238,7 +1241,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.ShortCircuit((int)EquipmentSlot_FieldIndex.Slot, translationParams)) return ParseResult.Stop;
-                    _SlotLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SlotLocation = (stream.Position - offset);
+                    }
                     return (int)EquipmentSlot_FieldIndex.Slot;
                 }
                 case RecordTypeInts.ZNAM:

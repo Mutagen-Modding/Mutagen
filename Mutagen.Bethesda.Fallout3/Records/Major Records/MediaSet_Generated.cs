@@ -3187,73 +3187,109 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopBattleDayOuterDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopBattleDayOuterDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.LoopBattleDayOuterDb;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExploreDayMiddleDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ExploreDayMiddleDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.ExploreDayMiddleDb;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SuspenseDayInnerDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.SuspenseDayInnerDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.SuspenseDayInnerDb;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightOuterDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NightOuterDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NightOuterDb;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightMiddleDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NightMiddleDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NightMiddleDb;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightInnerDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NightInnerDb = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NightInnerDb;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DayOuterBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DayOuterBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.DayOuterBoundaryPercent;
                 }
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DayMiddleBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DayMiddleBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.DayMiddleBoundaryPercent;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DayInnerBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DayInnerBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.DayInnerBoundaryPercent;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightOuterBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NightOuterBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NightOuterBoundaryPercent;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightMiddleBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NightMiddleBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NightMiddleBoundaryPercent;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NightInnerBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NightInnerBoundaryPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NightInnerBoundaryPercent;
                 }
                 case RecordTypeInts.PNAM:
@@ -3267,37 +3303,55 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaitTimeMinTimeOnDaytimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.WaitTimeMinTimeOnDaytimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.WaitTimeMinTimeOnDaytimeMin;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopFadeOutCrossfadeOverlapNighttimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopFadeOutCrossfadeOverlapNighttimeMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.LoopFadeOutCrossfadeOverlapNighttimeMin;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RecoveryTimeCrossfadeTimeDaytimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.RecoveryTimeCrossfadeTimeDaytimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.RecoveryTimeCrossfadeTimeDaytimeMax;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NighttimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NighttimeMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MediaSet_FieldIndex.NighttimeMax;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IntroDaytime.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.IntroDaytime.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MediaSet_FieldIndex.IntroDaytime;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OutroNighttime.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OutroNighttime.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MediaSet_FieldIndex.OutroNighttime;
                 }
                 case RecordTypeInts.DATA:
@@ -3596,62 +3650,98 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _LoopBattleDayOuterDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopBattleDayOuterDbLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.LoopBattleDayOuterDb;
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    _ExploreDayMiddleDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExploreDayMiddleDbLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.ExploreDayMiddleDb;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _SuspenseDayInnerDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SuspenseDayInnerDbLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.SuspenseDayInnerDb;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _NightOuterDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightOuterDbLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NightOuterDb;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _NightMiddleDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightMiddleDbLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NightMiddleDb;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _NightInnerDbLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightInnerDbLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NightInnerDb;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _DayOuterBoundaryPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DayOuterBoundaryPercentLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.DayOuterBoundaryPercent;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _DayMiddleBoundaryPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DayMiddleBoundaryPercentLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.DayMiddleBoundaryPercent;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _DayInnerBoundaryPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DayInnerBoundaryPercentLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.DayInnerBoundaryPercent;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _NightOuterBoundaryPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightOuterBoundaryPercentLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NightOuterBoundaryPercent;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _NightMiddleBoundaryPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightMiddleBoundaryPercentLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NightMiddleBoundaryPercent;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _NightInnerBoundaryPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NightInnerBoundaryPercentLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NightInnerBoundaryPercent;
                 }
                 case RecordTypeInts.PNAM:
@@ -3661,32 +3751,50 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _WaitTimeMinTimeOnDaytimeMinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaitTimeMinTimeOnDaytimeMinLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.WaitTimeMinTimeOnDaytimeMin;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _LoopFadeOutCrossfadeOverlapNighttimeMinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopFadeOutCrossfadeOverlapNighttimeMinLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.LoopFadeOutCrossfadeOverlapNighttimeMin;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _RecoveryTimeCrossfadeTimeDaytimeMaxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RecoveryTimeCrossfadeTimeDaytimeMaxLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.RecoveryTimeCrossfadeTimeDaytimeMax;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _NighttimeMaxLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NighttimeMaxLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.NighttimeMax;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _IntroDaytimeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IntroDaytimeLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.IntroDaytime;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _OutroNighttimeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OutroNighttimeLocation = (stream.Position - offset);
+                    }
                     return (int)MediaSet_FieldIndex.OutroNighttime;
                 }
                 case RecordTypeInts.DATA:

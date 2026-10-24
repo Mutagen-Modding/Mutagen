@@ -3640,7 +3640,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
@@ -3814,19 +3817,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNDD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootstepSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FootstepSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BodyPartData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)ArmorAddon_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.MNAM:
@@ -4145,7 +4157,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _RaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RaceLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
@@ -4340,17 +4355,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNDD:
                 {
-                    _FootstepSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FootstepSoundLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _ArtObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ArtObjectLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _BodyPartDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BodyPartDataLocation = (stream.Position - offset);
+                    }
                     return (int)ArmorAddon_FieldIndex.BodyPartData;
                 }
                 case RecordTypeInts.MNAM:

@@ -1195,32 +1195,44 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Index = frame.ReadUInt16();
+                    }
                     return (int)TintLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINC:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Color, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)TintLayer_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.InterpolationValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InterpolationValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt,
-                        multiplier: null,
-                        divisor: 100f);
+                    if (contentLength >= 4)
+                    {
+                        item.InterpolationValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt,
+                            multiplier: null,
+                            divisor: 100f);
+                    }
                     return (int)TintLayer_FieldIndex.InterpolationValue;
                 }
                 case RecordTypeInts.TIAS:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Preset, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Preset = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Preset = frame.ReadInt16();
+                    }
                     return (int)TintLayer_FieldIndex.Preset;
                 }
                 default:
@@ -1373,25 +1385,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TINI:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)TintLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINC:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Color, translationParams)) return ParseResult.Stop;
-                    _ColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorLocation = (stream.Position - offset);
+                    }
                     return (int)TintLayer_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.InterpolationValue, translationParams)) return ParseResult.Stop;
-                    _InterpolationValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InterpolationValueLocation = (stream.Position - offset);
+                    }
                     return (int)TintLayer_FieldIndex.InterpolationValue;
                 }
                 case RecordTypeInts.TIAS:
                 {
                     if (lastParsed.ShortCircuit((int)TintLayer_FieldIndex.Preset, translationParams)) return ParseResult.Stop;
-                    _PresetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _PresetLocation = (stream.Position - offset);
+                    }
                     return (int)TintLayer_FieldIndex.Preset;
                 }
                 default:

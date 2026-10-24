@@ -1228,20 +1228,29 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ID = frame.ReadUInt32();
+                    }
                     return (int)CollectionAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALMI:
                 {
                     if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.MaxInitialFillCount, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxInitialFillCount = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.MaxInitialFillCount = frame.ReadUInt8();
+                    }
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
                 }
                 case RecordTypeInts.ALAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ALAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ALAM = frame.ReadInt32();
+                    }
                     return (int)CollectionAlias_FieldIndex.ALAM;
                 }
                 case RecordTypeInts.ALST:
@@ -1402,18 +1411,27 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALCS:
                 {
                     if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.ID, translationParams)) return ParseResult.Stop;
-                    _IDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IDLocation = (stream.Position - offset);
+                    }
                     return (int)CollectionAlias_FieldIndex.ID;
                 }
                 case RecordTypeInts.ALMI:
                 {
                     if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.MaxInitialFillCount, translationParams)) return ParseResult.Stop;
-                    _MaxInitialFillCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _MaxInitialFillCountLocation = (stream.Position - offset);
+                    }
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
                 }
                 case RecordTypeInts.ALAM:
                 {
-                    _ALAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ALAMLocation = (stream.Position - offset);
+                    }
                     return (int)CollectionAlias_FieldIndex.ALAM;
                 }
                 case RecordTypeInts.ALST:

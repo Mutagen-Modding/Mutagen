@@ -1157,7 +1157,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.QNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
@@ -1319,7 +1322,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.ShortCircuit((int)DialogResponsesUnknownData_FieldIndex.QNAM, translationParams)) return ParseResult.Stop;
-                    _QNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QNAMLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:

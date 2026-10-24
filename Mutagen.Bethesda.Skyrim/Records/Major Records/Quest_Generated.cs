@@ -3283,7 +3283,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.QTGL:
@@ -3342,7 +3345,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextAliasID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NextAliasID = frame.ReadUInt32();
+                    }
                     return (int)Quest_FieldIndex.NextAliasID;
                 }
                 case RecordTypeInts.ALST:
@@ -3611,7 +3617,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _EventLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EventLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.QTGL:
@@ -3670,7 +3679,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _NextAliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NextAliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)Quest_FieldIndex.NextAliasID;
                 }
                 case RecordTypeInts.ALST:

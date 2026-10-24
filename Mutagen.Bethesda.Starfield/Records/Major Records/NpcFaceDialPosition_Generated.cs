@@ -1059,13 +1059,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)NpcFaceDialPosition_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)NpcFaceDialPosition_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Position = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Position = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)NpcFaceDialPosition_FieldIndex.Position;
                 }
                 default:
@@ -1210,12 +1216,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FMSI:
                 {
                     if (lastParsed.ShortCircuit((int)NpcFaceDialPosition_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)NpcFaceDialPosition_FieldIndex.Index;
                 }
                 case RecordTypeInts.FMRS:
                 {
-                    _PositionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PositionLocation = (stream.Position - offset);
+                    }
                     return (int)NpcFaceDialPosition_FieldIndex.Position;
                 }
                 default:

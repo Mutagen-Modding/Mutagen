@@ -1129,7 +1129,10 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)SceneActor_FieldIndex.ID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ID = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ID = frame.ReadUInt32();
+                    }
                     return (int)SceneActor_FieldIndex.ID;
                 }
                 case RecordTypeInts.LNAM:
@@ -1294,7 +1297,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ALID:
                 {
                     if (lastParsed.ShortCircuit((int)SceneActor_FieldIndex.ID, translationParams)) return ParseResult.Stop;
-                    _IDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IDLocation = (stream.Position - offset);
+                    }
                     return (int)SceneActor_FieldIndex.ID;
                 }
                 case RecordTypeInts.LNAM:

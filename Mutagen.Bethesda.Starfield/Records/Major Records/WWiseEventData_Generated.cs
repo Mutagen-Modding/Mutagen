@@ -1641,19 +1641,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.WSED:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Start = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 16)
+                    {
+                        item.Start = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)WWiseEventData_FieldIndex.Start;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Condition.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Condition.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)WWiseEventData_FieldIndex.Condition;
                 }
                 case RecordTypeInts.WTED:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.End = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 16)
+                    {
+                        item.End = GuidBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)WWiseEventData_FieldIndex.End;
                 }
                 case RecordTypeInts.XXXX:
@@ -1819,17 +1828,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.WSED:
                 {
-                    _StartLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 16)
+                    {
+                        _StartLocation = (stream.Position - offset);
+                    }
                     return (int)WWiseEventData_FieldIndex.Start;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _ConditionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ConditionLocation = (stream.Position - offset);
+                    }
                     return (int)WWiseEventData_FieldIndex.Condition;
                 }
                 case RecordTypeInts.WTED:
                 {
-                    _EndLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 16)
+                    {
+                        _EndLocation = (stream.Position - offset);
+                    }
                     return (int)WWiseEventData_FieldIndex.End;
                 }
                 case RecordTypeInts.XXXX:

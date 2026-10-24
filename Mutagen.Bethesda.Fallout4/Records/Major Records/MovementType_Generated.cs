@@ -3579,13 +3579,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FloatHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FloatHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MovementType_FieldIndex.FloatHeight;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FlightAngleGain = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FlightAngleGain = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MovementType_FieldIndex.FlightAngleGain;
                 }
                 default:
@@ -3907,12 +3913,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _FloatHeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FloatHeightLocation = (stream.Position - offset);
+                    }
                     return (int)MovementType_FieldIndex.FloatHeight;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _FlightAngleGainLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FlightAngleGainLocation = (stream.Position - offset);
+                    }
                     return (int)MovementType_FieldIndex.FlightAngleGain;
                 }
                 default:

@@ -2081,7 +2081,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxCount = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.MaxCount = frame.ReadUInt8();
+                    }
                     return (int)LeveledSpaceCell_FieldIndex.MaxCount;
                 }
                 case RecordTypeInts.LVLF:
@@ -2105,7 +2108,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UseGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledSpaceCell_FieldIndex.UseGlobal;
                 }
                 case RecordTypeInts.LVLO:
@@ -2308,7 +2314,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVLM:
                 {
-                    _MaxCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _MaxCountLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledSpaceCell_FieldIndex.MaxCount;
                 }
                 case RecordTypeInts.LVLF:
@@ -2333,7 +2342,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVLG:
                 {
-                    _UseGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledSpaceCell_FieldIndex.UseGlobal;
                 }
                 case RecordTypeInts.LVLO:

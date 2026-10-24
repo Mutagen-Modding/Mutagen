@@ -1340,7 +1340,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.TNAM = frame.ReadInt32();
+                    }
                     return (int)TimelineSceneAction_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.SNAM:
@@ -1360,7 +1363,10 @@ namespace Mutagen.Bethesda.Starfield
                     else if (lastParsed.ParsedIndex.Value <= (int)TimelineSceneAction_FieldIndex.TNAM)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SNAM = frame.ReadInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.SNAM = frame.ReadInt32();
+                        }
                         return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, nextRecordType);
                     }
                     else
@@ -1378,7 +1384,10 @@ namespace Mutagen.Bethesda.Starfield
                                     translationParams: translationParams.WithNoConverter());
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.SNAM = frame.ReadInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.SNAM = frame.ReadInt32();
+                                }
                                 return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -1388,19 +1397,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UNAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.UNAM = frame.ReadInt32();
+                    }
                     return (int)TimelineSceneAction_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.LNAM = frame.ReadInt32();
+                    }
                     return (int)TimelineSceneAction_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.CNAM = frame.ReadInt32();
+                    }
                     return (int)TimelineSceneAction_FieldIndex.CNAM;
                 }
                 default:
@@ -1544,7 +1562,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TNAMLocation = (stream.Position - offset);
+                    }
                     return (int)TimelineSceneAction_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.SNAM:
@@ -1563,7 +1584,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)TimelineSceneAction_FieldIndex.TNAM)
                     {
-                        _SNAMLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _SNAMLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, type);
                     }
                     else
@@ -1583,7 +1607,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 1:
                             {
-                                _SNAMLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _SNAMLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)TimelineSceneAction_FieldIndex.SNAM, type);
                             }
                             default:
@@ -1593,17 +1620,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _UNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UNAMLocation = (stream.Position - offset);
+                    }
                     return (int)TimelineSceneAction_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LNAMLocation = (stream.Position - offset);
+                    }
                     return (int)TimelineSceneAction_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CNAMLocation = (stream.Position - offset);
+                    }
                     return (int)TimelineSceneAction_FieldIndex.CNAM;
                 }
                 default:

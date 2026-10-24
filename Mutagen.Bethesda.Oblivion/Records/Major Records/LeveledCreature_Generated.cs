@@ -1725,9 +1725,12 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.ByteHundred);
+                    if (contentLength >= 1)
+                    {
+                        item.ChanceNone = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.ByteHundred);
+                    }
                     return (int)LeveledCreature_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1751,13 +1754,19 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledCreature_FieldIndex.Script;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LeveledCreature_FieldIndex.Template;
                 }
                 default:
@@ -1907,7 +1916,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.LVLD:
                 {
-                    _ChanceNoneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _ChanceNoneLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledCreature_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1932,12 +1944,18 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.SCRI:
                 {
-                    _ScriptLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ScriptLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledCreature_FieldIndex.Script;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TemplateLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateLocation = (stream.Position - offset);
+                    }
                     return (int)LeveledCreature_FieldIndex.Template;
                 }
                 default:

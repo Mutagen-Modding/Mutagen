@@ -1715,7 +1715,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SurfacePatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SurfacePatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SurfacePatternConfig_FieldIndex.SurfacePatternStyle;
                 }
                 case RecordTypeInts.BNAM:
@@ -1875,7 +1878,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ENAM:
                 {
-                    _SurfacePatternStyleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SurfacePatternStyleLocation = (stream.Position - offset);
+                    }
                     return (int)SurfacePatternConfig_FieldIndex.SurfacePatternStyle;
                 }
                 case RecordTypeInts.BNAM:

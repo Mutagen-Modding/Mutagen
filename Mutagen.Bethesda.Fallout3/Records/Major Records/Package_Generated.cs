@@ -3854,7 +3854,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Package_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.PKED:
@@ -3865,13 +3868,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PKE2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EscortDistance = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EscortDistance = frame.ReadUInt32();
+                    }
                     return (int)Package_FieldIndex.EscortDistance;
                 }
                 case RecordTypeInts.PKFD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FollowStartLocationTriggerRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FollowStartLocationTriggerRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Package_FieldIndex.FollowStartLocationTriggerRadius;
                 }
                 case RecordTypeInts.PKPT:
@@ -4251,7 +4260,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CombatStyleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CombatStyleLocation = (stream.Position - offset);
+                    }
                     return (int)Package_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.PKED:
@@ -4261,12 +4273,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PKE2:
                 {
-                    _EscortDistanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EscortDistanceLocation = (stream.Position - offset);
+                    }
                     return (int)Package_FieldIndex.EscortDistance;
                 }
                 case RecordTypeInts.PKFD:
                 {
-                    _FollowStartLocationTriggerRadiusLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FollowStartLocationTriggerRadiusLocation = (stream.Position - offset);
+                    }
                     return (int)Package_FieldIndex.FollowStartLocationTriggerRadius;
                 }
                 case RecordTypeInts.PKPT:

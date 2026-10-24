@@ -2218,13 +2218,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SPWI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestStageOnWin = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.QuestStageOnWin = frame.ReadInt16();
+                    }
                     return (int)SpeechChallenge_FieldIndex.QuestStageOnWin;
                 }
                 case RecordTypeInts.SPLO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QuestStageOnLoss = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.QuestStageOnLoss = frame.ReadInt16();
+                    }
                     return (int)SpeechChallenge_FieldIndex.QuestStageOnLoss;
                 }
                 case RecordTypeInts.SRAN:
@@ -2240,7 +2246,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SPQU:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SpeechChallenge_FieldIndex.Quest;
                 }
                 case RecordTypeInts.KSIZ:
@@ -2452,12 +2461,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPWI:
                 {
-                    _QuestStageOnWinLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _QuestStageOnWinLocation = (stream.Position - offset);
+                    }
                     return (int)SpeechChallenge_FieldIndex.QuestStageOnWin;
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    _QuestStageOnLossLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _QuestStageOnLossLocation = (stream.Position - offset);
+                    }
                     return (int)SpeechChallenge_FieldIndex.QuestStageOnLoss;
                 }
                 case RecordTypeInts.SRAN:
@@ -2472,7 +2487,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SPQU:
                 {
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)SpeechChallenge_FieldIndex.Quest;
                 }
                 case RecordTypeInts.KSIZ:

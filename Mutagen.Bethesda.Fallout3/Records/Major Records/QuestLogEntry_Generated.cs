@@ -1460,7 +1460,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NextQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.NextQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
                 }
                 default:
@@ -1651,7 +1654,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _NextQuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NextQuestLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLogEntry_FieldIndex.NextQuest;
                 }
                 default:

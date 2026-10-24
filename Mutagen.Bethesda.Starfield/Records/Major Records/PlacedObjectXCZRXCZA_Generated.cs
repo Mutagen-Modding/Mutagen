@@ -1095,7 +1095,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)PlacedObjectXCZRXCZA_FieldIndex.XCZR, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.XCZR.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlacedObjectXCZRXCZA_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:
@@ -1247,7 +1250,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCZR:
                 {
                     if (lastParsed.ShortCircuit((int)PlacedObjectXCZRXCZA_FieldIndex.XCZR, translationParams)) return ParseResult.Stop;
-                    _XCZRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XCZRLocation = (stream.Position - offset);
+                    }
                     return (int)PlacedObjectXCZRXCZA_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:

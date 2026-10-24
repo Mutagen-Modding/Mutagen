@@ -1346,13 +1346,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.RLDM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodDisplayDistanceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.LodDisplayDistanceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)RegionGrasses_FieldIndex.LodDisplayDistanceMultiplier;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OcclusionAccuracyDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.OcclusionAccuracyDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)RegionGrasses_FieldIndex.OcclusionAccuracyDist;
                 }
                 default:
@@ -1496,12 +1502,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RLDM:
                 {
-                    _LodDisplayDistanceMultiplierLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LodDisplayDistanceMultiplierLocation = (stream.Position - offset);
+                    }
                     return (int)RegionGrasses_FieldIndex.LodDisplayDistanceMultiplier;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _OcclusionAccuracyDistLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OcclusionAccuracyDistLocation = (stream.Position - offset);
+                    }
                     return (int)RegionGrasses_FieldIndex.OcclusionAccuracyDist;
                 }
                 default:

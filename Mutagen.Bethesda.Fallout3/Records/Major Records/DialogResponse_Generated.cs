@@ -1406,13 +1406,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeakerAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpeakerAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.SpeakerAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ListenerAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ListenerAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponse_FieldIndex.ListenerAnimation;
                 }
                 default:
@@ -1606,12 +1612,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SpeakerAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.SpeakerAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _ListenerAnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ListenerAnimationLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponse_FieldIndex.ListenerAnimation;
                 }
                 default:

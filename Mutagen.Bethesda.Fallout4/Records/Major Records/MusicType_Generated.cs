@@ -1728,7 +1728,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FadeDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MusicType_FieldIndex.FadeDuration;
                 }
                 case RecordTypeInts.TNAM:
@@ -1894,7 +1897,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _FadeDurationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FadeDurationLocation = (stream.Position - offset);
+                    }
                     return (int)MusicType_FieldIndex.FadeDuration;
                 }
                 case RecordTypeInts.TNAM:

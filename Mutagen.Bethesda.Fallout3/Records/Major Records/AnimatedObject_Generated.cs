@@ -1509,7 +1509,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Animation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Animation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AnimatedObject_FieldIndex.Animation;
                 }
                 default:
@@ -1659,7 +1662,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _AnimationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AnimationLocation = (stream.Position - offset);
+                    }
                     return (int)AnimatedObject_FieldIndex.Animation;
                 }
                 default:

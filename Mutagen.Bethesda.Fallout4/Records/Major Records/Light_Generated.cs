@@ -3873,7 +3873,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Light_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.MODL:
@@ -3990,7 +3993,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FadeValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Light_FieldIndex.FadeValue;
                 }
                 case RecordTypeInts.NAM0:
@@ -4005,19 +4011,28 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Lens.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Lens.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Light_FieldIndex.Lens;
                 }
                 case RecordTypeInts.WGDR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GodRays.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GodRays.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Light_FieldIndex.GodRays;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Light_FieldIndex.Sound;
                 }
                 case RecordTypeInts.XXXX:
@@ -4308,7 +4323,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.MODL:
@@ -4385,7 +4403,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FadeValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FadeValueLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.FadeValue;
                 }
                 case RecordTypeInts.NAM0:
@@ -4395,17 +4416,26 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LensLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LensLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.Lens;
                 }
                 case RecordTypeInts.WGDR:
                 {
-                    _GodRaysLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GodRaysLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.GodRays;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)Light_FieldIndex.Sound;
                 }
                 case RecordTypeInts.XXXX:

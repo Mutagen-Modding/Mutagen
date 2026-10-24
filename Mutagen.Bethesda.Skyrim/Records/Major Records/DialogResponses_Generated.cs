@@ -2965,13 +2965,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviousDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousDialog;
                 }
                 case RecordTypeInts.CNAM:
@@ -2994,7 +3000,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResponseData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ResponseData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.ResponseData;
                 }
                 case RecordTypeInts.TRDT:
@@ -3043,19 +3052,28 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TWAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WalkAwayTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WalkAwayTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.WalkAwayTopic;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AudioOutputOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AudioOutputOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
                 case RecordTypeInts.XXXX:
@@ -3265,12 +3283,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TPIC:
                 {
-                    _TopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TopicLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PreviousDialogLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviousDialogLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.PreviousDialog;
                 }
                 case RecordTypeInts.CNAM:
@@ -3294,7 +3318,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _ResponseDataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ResponseDataLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.ResponseData;
                 }
                 case RecordTypeInts.TRDT:
@@ -3339,17 +3366,26 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _SpeakerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TWAT:
                 {
-                    _WalkAwayTopicLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WalkAwayTopicLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.WalkAwayTopic;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _AudioOutputOverrideLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AudioOutputOverrideLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
                 case RecordTypeInts.XXXX:

@@ -1188,7 +1188,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)CreateReferenceToObject_FieldIndex.Object, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }
                 case RecordTypeInts.ALCA:
@@ -1365,7 +1368,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ALCO:
                 {
                     if (lastParsed.ShortCircuit((int)CreateReferenceToObject_FieldIndex.Object, translationParams)) return ParseResult.Stop;
-                    _ObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectLocation = (stream.Position - offset);
+                    }
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }
                 case RecordTypeInts.ALCA:

@@ -2024,13 +2024,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)CollisionLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DebugColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.DebugColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)CollisionLayer_FieldIndex.DebugColor;
                 }
                 case RecordTypeInts.GNAM:
@@ -2246,12 +2252,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)CollisionLayer_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _DebugColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DebugColorLocation = (stream.Position - offset);
+                    }
                     return (int)CollisionLayer_FieldIndex.DebugColor;
                 }
                 case RecordTypeInts.GNAM:

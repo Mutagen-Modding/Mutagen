@@ -1773,7 +1773,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ONAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ONAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)NavigationMesh_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.NNAM:
@@ -1952,7 +1955,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _ONAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ONAMLocation = (stream.Position - offset);
+                    }
                     return (int)NavigationMesh_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.NNAM:

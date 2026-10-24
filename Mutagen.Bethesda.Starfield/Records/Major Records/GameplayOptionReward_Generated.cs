@@ -1256,7 +1256,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)GameplayOptionReward_FieldIndex.SettingValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SettingValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.SettingValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)GameplayOptionReward_FieldIndex.SettingValue;
                 }
                 case RecordTypeInts.RESN:
@@ -1275,7 +1278,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)GameplayOptionReward_FieldIndex.RewardValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RewardValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.RewardValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)GameplayOptionReward_FieldIndex.RewardValue;
                 }
                 default:
@@ -1442,7 +1448,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VORV:
                 {
                     if (lastParsed.ShortCircuit((int)GameplayOptionReward_FieldIndex.SettingValue, translationParams)) return ParseResult.Stop;
-                    _SettingValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SettingValueLocation = (stream.Position - offset);
+                    }
                     return (int)GameplayOptionReward_FieldIndex.SettingValue;
                 }
                 case RecordTypeInts.RESN:
@@ -1454,7 +1463,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VORN:
                 {
                     if (lastParsed.ShortCircuit((int)GameplayOptionReward_FieldIndex.RewardValue, translationParams)) return ParseResult.Stop;
-                    _RewardValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RewardValueLocation = (stream.Position - offset);
+                    }
                     return (int)GameplayOptionReward_FieldIndex.RewardValue;
                 }
                 default:

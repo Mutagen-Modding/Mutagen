@@ -1344,14 +1344,20 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)Attack_FieldIndex.WeaponSlot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WeaponSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WeaponSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Attack_FieldIndex.WeaponSlot;
                 }
                 case RecordTypeInts.ATKS:
                 {
                     if (lastParsed.ShortCircuit((int)Attack_FieldIndex.RequiredSlot, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RequiredSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.RequiredSlot.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Attack_FieldIndex.RequiredSlot;
                 }
                 case RecordTypeInts.ATKT:
@@ -1531,13 +1537,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ATKW:
                 {
                     if (lastParsed.ShortCircuit((int)Attack_FieldIndex.WeaponSlot, translationParams)) return ParseResult.Stop;
-                    _WeaponSlotLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeaponSlotLocation = (stream.Position - offset);
+                    }
                     return (int)Attack_FieldIndex.WeaponSlot;
                 }
                 case RecordTypeInts.ATKS:
                 {
                     if (lastParsed.ShortCircuit((int)Attack_FieldIndex.RequiredSlot, translationParams)) return ParseResult.Stop;
-                    _RequiredSlotLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RequiredSlotLocation = (stream.Position - offset);
+                    }
                     return (int)Attack_FieldIndex.RequiredSlot;
                 }
                 case RecordTypeInts.ATKT:

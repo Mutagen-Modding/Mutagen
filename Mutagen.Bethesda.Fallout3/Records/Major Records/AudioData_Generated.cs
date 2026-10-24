@@ -1279,30 +1279,42 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.Location, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AudioData_FieldIndex.Location;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.UseControllerValues, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseControllerValues = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        byteLength: 4);
+                    if (contentLength >= 4)
+                    {
+                        item.UseControllerValues = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            byteLength: 4);
+                    }
                     return (int)AudioData_FieldIndex.UseControllerValues;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.Layer2TriggerPercent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Layer2TriggerPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Layer2TriggerPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AudioData_FieldIndex.Layer2TriggerPercent;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.Layer3TriggerPercent, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Layer3TriggerPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Layer3TriggerPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)AudioData_FieldIndex.Layer3TriggerPercent;
                 }
                 default:
@@ -1466,25 +1478,37 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.Location, translationParams)) return ParseResult.Stop;
-                    _LocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LocationLocation = (stream.Position - offset);
+                    }
                     return (int)AudioData_FieldIndex.Location;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.UseControllerValues, translationParams)) return ParseResult.Stop;
-                    _UseControllerValuesLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseControllerValuesLocation = (stream.Position - offset);
+                    }
                     return (int)AudioData_FieldIndex.UseControllerValues;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.Layer2TriggerPercent, translationParams)) return ParseResult.Stop;
-                    _Layer2TriggerPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Layer2TriggerPercentLocation = (stream.Position - offset);
+                    }
                     return (int)AudioData_FieldIndex.Layer2TriggerPercent;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     if (lastParsed.ShortCircuit((int)AudioData_FieldIndex.Layer3TriggerPercent, translationParams)) return ParseResult.Stop;
-                    _Layer3TriggerPercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Layer3TriggerPercentLocation = (stream.Position - offset);
+                    }
                     return (int)AudioData_FieldIndex.Layer3TriggerPercent;
                 }
                 default:

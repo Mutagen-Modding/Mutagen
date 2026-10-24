@@ -1081,14 +1081,20 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Number, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Number = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Number = frame.ReadInt32();
+                    }
                     return (int)HeadPartReference_FieldIndex.Number;
                 }
                 case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Head, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Head.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Head.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)HeadPartReference_FieldIndex.Head;
                 }
                 default:
@@ -1234,13 +1240,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Number, translationParams)) return ParseResult.Stop;
-                    _NumberLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NumberLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPartReference_FieldIndex.Number;
                 }
                 case RecordTypeInts.HEAD:
                 {
                     if (lastParsed.ShortCircuit((int)HeadPartReference_FieldIndex.Head, translationParams)) return ParseResult.Stop;
-                    _HeadLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HeadLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPartReference_FieldIndex.Head;
                 }
                 default:

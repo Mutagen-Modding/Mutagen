@@ -1085,13 +1085,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SecondaryDamageItem_FieldIndex.DamageType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DamageType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DamageType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SecondaryDamageItem_FieldIndex.DamageType;
                 }
                 case RecordTypeInts.ACTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SecondaryDamageItem_FieldIndex.ActorValue;
                 }
                 default:
@@ -1237,12 +1243,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DAMA:
                 {
                     if (lastParsed.ShortCircuit((int)SecondaryDamageItem_FieldIndex.DamageType, translationParams)) return ParseResult.Stop;
-                    _DamageTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DamageTypeLocation = (stream.Position - offset);
+                    }
                     return (int)SecondaryDamageItem_FieldIndex.DamageType;
                 }
                 case RecordTypeInts.ACTV:
                 {
-                    _ActorValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorValueLocation = (stream.Position - offset);
+                    }
                     return (int)SecondaryDamageItem_FieldIndex.ActorValue;
                 }
                 default:

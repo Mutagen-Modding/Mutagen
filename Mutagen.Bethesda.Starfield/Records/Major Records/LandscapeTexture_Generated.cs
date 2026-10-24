@@ -1802,7 +1802,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
@@ -1818,9 +1821,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Dirtiness = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.Dirtiness = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)LandscapeTexture_FieldIndex.Dirtiness;
                 }
                 case RecordTypeInts.XXXX:
@@ -2003,7 +2009,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
@@ -2013,7 +2022,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _DirtinessLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessLocation = (stream.Position - offset);
+                    }
                     return (int)LandscapeTexture_FieldIndex.Dirtiness;
                 }
                 case RecordTypeInts.XXXX:

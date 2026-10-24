@@ -1793,7 +1793,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Playable = frame.ReadBoolean();
+                    if (contentLength >= 1)
+                    {
+                        item.Playable = frame.ReadBoolean();
+                    }
                     return (int)HeadPart_FieldIndex.Playable;
                 }
                 case RecordTypeInts.HNAM:
@@ -1970,7 +1973,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _PlayableLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _PlayableLocation = (stream.Position - offset);
+                    }
                     return (int)HeadPart_FieldIndex.Playable;
                 }
                 case RecordTypeInts.HNAM:

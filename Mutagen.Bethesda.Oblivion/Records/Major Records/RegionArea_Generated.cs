@@ -1176,7 +1176,10 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EdgeFallOff = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EdgeFallOff = frame.ReadUInt32();
+                    }
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
@@ -1329,7 +1332,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.RPLI:
                 {
                     if (lastParsed.ShortCircuit((int)RegionArea_FieldIndex.EdgeFallOff, translationParams)) return ParseResult.Stop;
-                    _EdgeFallOffLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EdgeFallOffLocation = (stream.Position - offset);
+                    }
                     return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:

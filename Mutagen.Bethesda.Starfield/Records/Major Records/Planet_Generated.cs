@@ -3527,7 +3527,10 @@ namespace Mutagen.Bethesda.Starfield
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Biomes)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SurfaceTree.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.SurfaceTree.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                         return new ParseResult((int)Planet_FieldIndex.SurfaceTree, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitalData)
@@ -3541,7 +3544,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.SurfaceTree.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                if (contentLength >= 4)
+                                {
+                                    item.SurfaceTree.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                                }
                                 return new ParseResult((int)Planet_FieldIndex.SurfaceTree, nextRecordType);
                             case 1:
                                 item.OrbitedData = Mutagen.Bethesda.Starfield.OrbitedData.CreateFromBinary(frame: frame);
@@ -3557,7 +3563,10 @@ namespace Mutagen.Bethesda.Starfield
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.SurfaceTree)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.ScanWorldspaceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        if (contentLength >= 4)
+                        {
+                            item.ScanWorldspaceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        }
                         return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitedData)
@@ -3571,7 +3580,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.ScanWorldspaceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                if (contentLength >= 4)
+                                {
+                                    item.ScanWorldspaceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                }
                                 return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, nextRecordType);
                             case 1:
                                 item.GalaxyData = Mutagen.Bethesda.Starfield.GalaxyData.CreateFromBinary(frame: frame);
@@ -3645,25 +3657,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TEMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Temperature = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Temperature = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Planet_FieldIndex.Temperature;
                 }
                 case RecordTypeInts.DENS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Planet_FieldIndex.Density;
                 }
                 case RecordTypeInts.PHLA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PerihelionAngleDegrees = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.PerihelionAngleDegrees = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Planet_FieldIndex.PerihelionAngleDegrees;
                 }
                 case RecordTypeInts.RSCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResourceCreationSeed = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ResourceCreationSeed = frame.ReadInt32();
+                    }
                     return (int)Planet_FieldIndex.ResourceCreationSeed;
                 }
                 default:
@@ -3949,7 +3973,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Biomes)
                     {
-                        _SurfaceTreeLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _SurfaceTreeLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Planet_FieldIndex.SurfaceTree, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitalData)
@@ -3963,7 +3990,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                _SurfaceTreeLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _SurfaceTreeLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Planet_FieldIndex.SurfaceTree, type);
                             }
                             case 1:
@@ -3981,7 +4011,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.SurfaceTree)
                     {
-                        _ScanWorldspaceMultiplierLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _ScanWorldspaceMultiplierLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitedData)
@@ -3995,7 +4028,10 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                _ScanWorldspaceMultiplierLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _ScanWorldspaceMultiplierLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, type);
                             }
                             case 1:
@@ -4060,22 +4096,34 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TEMP:
                 {
-                    _TemperatureLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemperatureLocation = (stream.Position - offset);
+                    }
                     return (int)Planet_FieldIndex.Temperature;
                 }
                 case RecordTypeInts.DENS:
                 {
-                    _DensityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DensityLocation = (stream.Position - offset);
+                    }
                     return (int)Planet_FieldIndex.Density;
                 }
                 case RecordTypeInts.PHLA:
                 {
-                    _PerihelionAngleDegreesLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PerihelionAngleDegreesLocation = (stream.Position - offset);
+                    }
                     return (int)Planet_FieldIndex.PerihelionAngleDegrees;
                 }
                 case RecordTypeInts.RSCS:
                 {
-                    _ResourceCreationSeedLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ResourceCreationSeedLocation = (stream.Position - offset);
+                    }
                     return (int)Planet_FieldIndex.ResourceCreationSeed;
                 }
                 default:

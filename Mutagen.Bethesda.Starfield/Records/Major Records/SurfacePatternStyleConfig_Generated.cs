@@ -1078,7 +1078,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SurfacePatternStyleConfig_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)SurfacePatternStyleConfig_FieldIndex.Weight;
                 }
                 default:
@@ -1229,7 +1232,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     if (lastParsed.ShortCircuit((int)SurfacePatternStyleConfig_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
-                    _WeightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WeightLocation = (stream.Position - offset);
+                    }
                     return (int)SurfacePatternStyleConfig_FieldIndex.Weight;
                 }
                 default:

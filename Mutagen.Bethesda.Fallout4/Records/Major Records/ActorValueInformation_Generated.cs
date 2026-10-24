@@ -1762,7 +1762,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.DefaultValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)ActorValueInformation_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.AVFL:
@@ -1957,7 +1960,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _DefaultValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultValueLocation = (stream.Position - offset);
+                    }
                     return (int)ActorValueInformation_FieldIndex.DefaultValue;
                 }
                 case RecordTypeInts.AVFL:

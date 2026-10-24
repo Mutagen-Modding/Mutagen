@@ -1943,13 +1943,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ALFI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasIDToForceIntoWhenFilled = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)QuestLocationAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFA:
@@ -1989,7 +1995,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ALCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ClosestToAlias = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ClosestToAlias = frame.ReadInt32();
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ClosestToAlias;
                 }
                 case RecordTypeInts.ALED: // End Marker
@@ -2150,12 +2159,18 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALFI:
                 {
-                    _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDToForceIntoWhenFilledLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.AliasIDToForceIntoWhenFilled;
                 }
                 case RecordTypeInts.ALFL:
                 {
-                    _SpecificLocationLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpecificLocationLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFA:
@@ -2202,7 +2217,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ALCC:
                 {
-                    _ClosestToAliasLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ClosestToAliasLocation = (stream.Position - offset);
+                    }
                     return (int)QuestLocationAlias_FieldIndex.ClosestToAlias;
                 }
                 case RecordTypeInts.ALED: // End Marker

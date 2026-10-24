@@ -2749,25 +2749,37 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)Activator_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActivationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActivationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.ActivationSound;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.WaterType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.WaterType;
                 }
                 case RecordTypeInts.RNAM:
@@ -2792,7 +2804,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteractionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InteractionKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Activator_FieldIndex.InteractionKeyword;
                 }
                 case RecordTypeInts.XXXX:
@@ -3040,22 +3055,34 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _MarkerColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MarkerColorLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _ActivationSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActivationSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.ActivationSound;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WaterTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WaterTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.WaterType;
                 }
                 case RecordTypeInts.RNAM:
@@ -3070,7 +3097,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _InteractionKeywordLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InteractionKeywordLocation = (stream.Position - offset);
+                    }
                     return (int)Activator_FieldIndex.InteractionKeyword;
                 }
                 case RecordTypeInts.XXXX:

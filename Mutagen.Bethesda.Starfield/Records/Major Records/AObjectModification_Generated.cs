@@ -3384,13 +3384,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LooseMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.LooseMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AObjectModification_FieldIndex.LooseMod;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.Priority = frame.ReadUInt8();
+                    }
                     return (int)AObjectModification_FieldIndex.Priority;
                 }
                 case RecordTypeInts.FLTR:
@@ -3616,12 +3622,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LooseModLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LooseModLocation = (stream.Position - offset);
+                    }
                     return (int)AObjectModification_FieldIndex.LooseMod;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _PriorityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _PriorityLocation = (stream.Position - offset);
+                    }
                     return (int)AObjectModification_FieldIndex.Priority;
                 }
                 case RecordTypeInts.FLTR:

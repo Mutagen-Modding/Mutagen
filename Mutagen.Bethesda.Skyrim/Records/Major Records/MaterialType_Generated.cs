@@ -1719,7 +1719,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MaterialType_FieldIndex.Parent;
                 }
                 case RecordTypeInts.MNAM:
@@ -1734,13 +1737,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HavokDisplayColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    if (contentLength >= 12)
+                    {
+                        item.HavokDisplayColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
+                    }
                     return (int)MaterialType_FieldIndex.HavokDisplayColor;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Buoyancy = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Buoyancy = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)MaterialType_FieldIndex.Buoyancy;
                 }
                 case RecordTypeInts.FNAM:
@@ -1754,7 +1763,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HavokImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.HavokImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MaterialType_FieldIndex.HavokImpactDataSet;
                 }
                 default:
@@ -1915,7 +1927,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.PNAM:
                 {
-                    _ParentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ParentLocation = (stream.Position - offset);
+                    }
                     return (int)MaterialType_FieldIndex.Parent;
                 }
                 case RecordTypeInts.MNAM:
@@ -1925,12 +1940,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _HavokDisplayColorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _HavokDisplayColorLocation = (stream.Position - offset);
+                    }
                     return (int)MaterialType_FieldIndex.HavokDisplayColor;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BuoyancyLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BuoyancyLocation = (stream.Position - offset);
+                    }
                     return (int)MaterialType_FieldIndex.Buoyancy;
                 }
                 case RecordTypeInts.FNAM:
@@ -1940,7 +1961,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HavokImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _HavokImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)MaterialType_FieldIndex.HavokImpactDataSet;
                 }
                 default:

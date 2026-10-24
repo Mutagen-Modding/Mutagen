@@ -4171,7 +4171,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.PTRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PreviewTransform.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -4188,7 +4191,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.MOD2:
@@ -4228,37 +4234,55 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.BlockBashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.BlockBashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.Race;
                 }
                 case RecordTypeInts.KSIZ:
@@ -4288,7 +4312,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.INRD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.InstanceNaming.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.InstanceNaming;
                 }
                 case RecordTypeInts.INDX:
@@ -4340,7 +4367,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TemplateArmor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.TemplateArmor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Armor_FieldIndex.TemplateArmor;
                 }
                 case RecordTypeInts.APPR:
@@ -4639,7 +4669,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.PTRN:
                 {
-                    _PreviewTransformLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PreviewTransformLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.PreviewTransform;
                 }
                 case RecordTypeInts.FULL:
@@ -4649,7 +4682,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.EITM:
                 {
-                    _ObjectEffectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ObjectEffectLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.MOD2:
@@ -4690,32 +4726,50 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _PickUpSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PickUpSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
-                    _PutDownSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PutDownSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.ETYP:
                 {
-                    _EquipmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EquipmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
-                    _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _BlockBashImpactDataSetLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.BlockBashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
-                    _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AlternateBlockMaterialLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _RaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RaceLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.Race;
                 }
                 case RecordTypeInts.KSIZ:
@@ -4738,7 +4792,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INRD:
                 {
-                    _InstanceNamingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _InstanceNamingLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.InstanceNaming;
                 }
                 case RecordTypeInts.INDX:
@@ -4773,7 +4830,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TemplateArmorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TemplateArmorLocation = (stream.Position - offset);
+                    }
                     return (int)Armor_FieldIndex.TemplateArmor;
                 }
                 case RecordTypeInts.APPR:

@@ -1609,13 +1609,19 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.ColorInfluence = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.ColorInfluence;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FadeDistanceRadiusScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
                 }
                 case RecordTypeInts.LFSP:
@@ -1769,12 +1775,18 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.CNAM:
                 {
-                    _ColorInfluenceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ColorInfluenceLocation = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.ColorInfluence;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FadeDistanceRadiusScaleLocation = (stream.Position - offset);
+                    }
                     return (int)LensFlare_FieldIndex.FadeDistanceRadiusScale;
                 }
                 case RecordTypeInts.LFSP:

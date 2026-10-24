@@ -1664,7 +1664,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxConcurrentQuests = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MaxConcurrentQuests = frame.ReadUInt32();
+                    }
                     return (int)StoryManagerEventNode_FieldIndex.MaxConcurrentQuests;
                 }
                 case RecordTypeInts.ENAM:
@@ -1821,7 +1824,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _MaxConcurrentQuestsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxConcurrentQuestsLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerEventNode_FieldIndex.MaxConcurrentQuests;
                 }
                 case RecordTypeInts.ENAM:

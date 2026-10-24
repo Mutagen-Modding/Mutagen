@@ -1943,7 +1943,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.RandomChancePercent = frame.ReadUInt8();
+                        if (contentLength >= 1)
+                        {
+                            item.RandomChancePercent = frame.ReadUInt8();
+                        }
                     }
                     return (int)Sound_FieldIndex.RandomChancePercent;
                 }
@@ -1971,13 +1974,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReverbAttenuationControl = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.ReverbAttenuationControl = frame.ReadInt16();
+                    }
                     return (int)Sound_FieldIndex.ReverbAttenuationControl;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Priority = frame.ReadInt32();
+                    }
                     return (int)Sound_FieldIndex.Priority;
                 }
                 default:
@@ -2163,7 +2172,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _RandomChancePercentLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _RandomChancePercentLocation = (stream.Position - offset);
+                    }
                     return (int)Sound_FieldIndex.RandomChancePercent;
                 }
                 case RecordTypeInts.SNDX:
@@ -2185,12 +2197,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _ReverbAttenuationControlLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _ReverbAttenuationControlLocation = (stream.Position - offset);
+                    }
                     return (int)Sound_FieldIndex.ReverbAttenuationControl;
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _PriorityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PriorityLocation = (stream.Position - offset);
+                    }
                     return (int)Sound_FieldIndex.Priority;
                 }
                 default:

@@ -1193,7 +1193,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.Index = frame.ReadInt16();
+                    }
                     return (int)QuestStage_FieldIndex.Index;
                 }
                 case RecordTypeInts.QSDT:
@@ -1349,7 +1352,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.INDX:
                 {
                     if (lastParsed.ShortCircuit((int)QuestStage_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)QuestStage_FieldIndex.Index;
                 }
                 case RecordTypeInts.QSDT:

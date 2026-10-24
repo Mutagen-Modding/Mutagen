@@ -1786,7 +1786,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EditorWidth = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.EditorWidth = frame.ReadUInt32();
+                    }
                     return (int)ScenePhase_FieldIndex.EditorWidth;
                 }
                 default:
@@ -2071,7 +2074,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _EditorWidthLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EditorWidthLocation = (stream.Position - offset);
+                    }
                     return (int)ScenePhase_FieldIndex.EditorWidth;
                 }
                 default:

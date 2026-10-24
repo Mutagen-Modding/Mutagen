@@ -1966,7 +1966,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PhotoModeFeature_FieldIndex.ImageSpace;
                 }
                 default:
@@ -2170,7 +2173,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _ImageSpaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceLocation = (stream.Position - offset);
+                    }
                     return (int)PhotoModeFeature_FieldIndex.ImageSpace;
                 }
                 default:

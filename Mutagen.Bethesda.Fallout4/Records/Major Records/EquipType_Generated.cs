@@ -1639,10 +1639,13 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ConditionActorValue.SetTo(
-                        FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            maxIsNone: true));
+                    if (contentLength >= 4)
+                    {
+                        item.ConditionActorValue.SetTo(
+                            FormLinkBinaryTranslation.Instance.Parse(
+                                reader: frame,
+                                maxIsNone: true));
+                    }
                     return (int)EquipType_FieldIndex.ConditionActorValue;
                 }
                 default:
@@ -1799,7 +1802,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ConditionActorValueLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ConditionActorValueLocation = (stream.Position - offset);
+                    }
                     return (int)EquipType_FieldIndex.ConditionActorValue;
                 }
                 default:

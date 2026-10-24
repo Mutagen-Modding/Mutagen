@@ -1189,7 +1189,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RunOnTabIndex = frame.ReadInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.RunOnTabIndex = frame.ReadInt8();
+                    }
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:
@@ -1342,7 +1345,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PRKC:
                 {
                     if (lastParsed.ShortCircuit((int)PerkCondition_FieldIndex.RunOnTabIndex, translationParams)) return ParseResult.Stop;
-                    _RunOnTabIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _RunOnTabIndexLocation = (stream.Position - offset);
+                    }
                     return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:

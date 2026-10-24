@@ -1253,7 +1253,10 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     if (lastParsed.ShortCircuit((int)QuestObjective_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadInt32();
+                    }
                     return (int)QuestObjective_FieldIndex.Index;
                 }
                 case RecordTypeInts.NNAM:
@@ -1419,7 +1422,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.QOBJ:
                 {
                     if (lastParsed.ShortCircuit((int)QuestObjective_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)QuestObjective_FieldIndex.Index;
                 }
                 case RecordTypeInts.NNAM:

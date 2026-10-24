@@ -1538,7 +1538,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Data = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Data = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)GlobalFloat_FieldIndex.Data;
                 }
                 default:
@@ -1674,7 +1677,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.FLTV:
                 {
-                    _DataLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DataLocation = (stream.Position - offset);
+                    }
                     return (int)GlobalFloat_FieldIndex.Data;
                 }
                 default:

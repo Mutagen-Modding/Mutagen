@@ -2144,55 +2144,82 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ZNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.ZNAM = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.YNAM = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.YNAM = frame.ReadUInt8();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.XNAM = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.WNAM = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VNAM = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.VNAM = frame.ReadUInt8();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.UNAM = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.NAM1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Global;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM3 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM3 = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
@@ -2204,31 +2231,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM5 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM5 = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM6 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM6 = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM7 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM7 = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM8 = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.NAM8 = frame.ReadUInt8();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM9 = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NAM9 = frame.ReadUInt32();
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9;
                 }
                 case RecordTypeInts.CTDA:
@@ -2428,47 +2470,74 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ZNAM:
                 {
-                    _ZNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ZNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.ZNAM;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _YNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _YNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.YNAM;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _XNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _XNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.XNAM;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _WNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.WNAM;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _VNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.VNAM;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _UNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UNAMLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _NAM1Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM1Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM1;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _GlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GlobalLocation = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.Global;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _NAM3Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM3Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.NAM4:
@@ -2478,27 +2547,42 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM5:
                 {
-                    _NAM5Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM5Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM5;
                 }
                 case RecordTypeInts.NAM6:
                 {
-                    _NAM6Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM6Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM6;
                 }
                 case RecordTypeInts.NAM7:
                 {
-                    _NAM7Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM7Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM7;
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _NAM8Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _NAM8Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM8;
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    _NAM9Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NAM9Location = (stream.Position - offset);
+                    }
                     return (int)PlanetContentManagerContentPropertiesComponent_FieldIndex.NAM9;
                 }
                 case RecordTypeInts.CTDA:

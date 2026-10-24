@@ -3334,13 +3334,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SharedDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.SharedDialog;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.DialogGroup.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.DialogGroup;
                 }
                 case RecordTypeInts.TRDA:
@@ -3377,13 +3383,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TSCE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.StartScene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.StartScene;
                 }
                 case RecordTypeInts.INTV:
@@ -3415,7 +3427,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODQ:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResetGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ResetGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.ResetGlobal;
                 }
                 case RecordTypeInts.INAM:
@@ -3434,19 +3449,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AffinityEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AffinityEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.AffinityEvent;
                 }
                 case RecordTypeInts.SCSP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeechChallenge.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SpeechChallenge.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.SpeechChallenge;
                 }
                 case RecordTypeInts.PERK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)DialogResponses_FieldIndex.Perk;
                 }
                 case RecordTypeInts.XXXX:
@@ -3689,12 +3713,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _SharedDialogLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SharedDialogLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.SharedDialog;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _DialogGroupLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DialogGroupLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.DialogGroup;
                 }
                 case RecordTypeInts.TRDA:
@@ -3728,12 +3758,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _SpeakerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeakerLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TSCE:
                 {
-                    _StartSceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _StartSceneLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.StartScene;
                 }
                 case RecordTypeInts.INTV:
@@ -3762,7 +3798,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MODQ:
                 {
-                    _ResetGlobalLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ResetGlobalLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.ResetGlobal;
                 }
                 case RecordTypeInts.INAM:
@@ -3777,17 +3816,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _AffinityEventLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AffinityEventLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.AffinityEvent;
                 }
                 case RecordTypeInts.SCSP:
                 {
-                    _SpeechChallengeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpeechChallengeLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.SpeechChallenge;
                 }
                 case RecordTypeInts.PERK:
                 {
-                    _PerkLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PerkLocation = (stream.Position - offset);
+                    }
                     return (int)DialogResponses_FieldIndex.Perk;
                 }
                 case RecordTypeInts.XXXX:

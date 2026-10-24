@@ -1065,13 +1065,19 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AliasID = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.AliasID = frame.ReadInt32();
+                    }
                     return (int)CollectionAlias_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.ALMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxInitialFillCount = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.MaxInitialFillCount = frame.ReadUInt8();
+                    }
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
                 }
                 default:
@@ -1216,12 +1222,18 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ALCS:
                 {
                     if (lastParsed.ShortCircuit((int)CollectionAlias_FieldIndex.AliasID, translationParams)) return ParseResult.Stop;
-                    _AliasIDLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AliasIDLocation = (stream.Position - offset);
+                    }
                     return (int)CollectionAlias_FieldIndex.AliasID;
                 }
                 case RecordTypeInts.ALMI:
                 {
-                    _MaxInitialFillCountLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _MaxInitialFillCountLocation = (stream.Position - offset);
+                    }
                     return (int)CollectionAlias_FieldIndex.MaxInitialFillCount;
                 }
                 default:

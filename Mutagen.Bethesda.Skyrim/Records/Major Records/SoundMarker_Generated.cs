@@ -1662,7 +1662,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.SDSC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundDescriptor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SoundDescriptor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:
@@ -1827,7 +1830,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SDSC:
                 {
-                    _SoundDescriptorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundDescriptorLocation = (stream.Position - offset);
+                    }
                     return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:

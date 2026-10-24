@@ -1332,7 +1332,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Index = frame.ReadUInt32();
+                    }
                     return (int)MorphPreset_FieldIndex.Index;
                 }
                 case RecordTypeInts.MPPN:
@@ -1361,7 +1364,10 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)MorphPreset_FieldIndex.Texture;
                 }
                 case RecordTypeInts.MPPF:
@@ -1534,7 +1540,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPI:
                 {
                     if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Index, translationParams)) return ParseResult.Stop;
-                    _IndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IndexLocation = (stream.Position - offset);
+                    }
                     return (int)MorphPreset_FieldIndex.Index;
                 }
                 case RecordTypeInts.MPPN:
@@ -1552,7 +1561,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MPPT:
                 {
                     if (lastParsed.ShortCircuit((int)MorphPreset_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
-                    _TextureLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TextureLocation = (stream.Position - offset);
+                    }
                     return (int)MorphPreset_FieldIndex.Texture;
                 }
                 case RecordTypeInts.MPPF:

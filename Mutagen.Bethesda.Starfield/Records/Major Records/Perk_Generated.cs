@@ -2515,7 +2515,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Restriction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Restriction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Perk_FieldIndex.Restriction;
                 }
                 case RecordTypeInts.GNAM:
@@ -2527,7 +2530,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Training.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Training.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Perk_FieldIndex.Training;
                 }
                 case RecordTypeInts.PRRK:
@@ -2770,7 +2776,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _RestrictionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RestrictionLocation = (stream.Position - offset);
+                    }
                     return (int)Perk_FieldIndex.Restriction;
                 }
                 case RecordTypeInts.GNAM:
@@ -2780,7 +2789,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _TrainingLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _TrainingLocation = (stream.Position - offset);
+                    }
                     return (int)Perk_FieldIndex.Training;
                 }
                 case RecordTypeInts.PRRK:

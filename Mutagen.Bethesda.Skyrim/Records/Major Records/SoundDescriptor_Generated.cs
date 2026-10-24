@@ -2418,13 +2418,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Category.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Category.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundDescriptor_FieldIndex.Category;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateSoundFor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AlternateSoundFor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
                 }
                 case RecordTypeInts.ANAM:
@@ -2444,7 +2450,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OutputModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OutputModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SoundDescriptor_FieldIndex.OutputModel;
                 }
                 case RecordTypeInts.FNAM:
@@ -2681,12 +2690,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _CategoryLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CategoryLocation = (stream.Position - offset);
+                    }
                     return (int)SoundDescriptor_FieldIndex.Category;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _AlternateSoundForLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AlternateSoundForLocation = (stream.Position - offset);
+                    }
                     return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
                 }
                 case RecordTypeInts.ANAM:
@@ -2705,7 +2720,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _OutputModelLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OutputModelLocation = (stream.Position - offset);
+                    }
                     return (int)SoundDescriptor_FieldIndex.OutputModel;
                 }
                 case RecordTypeInts.FNAM:

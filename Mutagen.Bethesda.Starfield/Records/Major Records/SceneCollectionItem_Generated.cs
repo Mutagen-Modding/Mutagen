@@ -1082,13 +1082,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)SceneCollectionItem_FieldIndex.Scene, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Scene.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SceneCollectionItem_FieldIndex.Scene;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XNAM = frame.ReadUInt64();
+                    if (contentLength >= 8)
+                    {
+                        item.XNAM = frame.ReadUInt64();
+                    }
                     return (int)SceneCollectionItem_FieldIndex.XNAM;
                 }
                 default:
@@ -1234,12 +1240,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNAM:
                 {
                     if (lastParsed.ShortCircuit((int)SceneCollectionItem_FieldIndex.Scene, translationParams)) return ParseResult.Stop;
-                    _SceneLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SceneLocation = (stream.Position - offset);
+                    }
                     return (int)SceneCollectionItem_FieldIndex.Scene;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _XNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 8)
+                    {
+                        _XNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SceneCollectionItem_FieldIndex.XNAM;
                 }
                 default:

@@ -1744,7 +1744,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (frame.MetaData.ModHeaderVersion!.Value >= 1.32f)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        if (contentLength >= 4)
+                        {
+                            item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                        }
                     }
                     return (int)Static_FieldIndex.LoopingSound;
                 }
@@ -1914,7 +1917,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _LoopingSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LoopingSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Static_FieldIndex.LoopingSound;
                 }
                 default:

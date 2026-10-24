@@ -1834,7 +1834,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SceneCollection_FieldIndex.Quest;
                 }
                 case RecordTypeInts.SNAM:
@@ -1853,13 +1856,19 @@ namespace Mutagen.Bethesda.Fallout4
                         || lastParsed.ParsedIndex.Value <= (int)SceneCollection_FieldIndex.Scenes)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.VNAM = frame.ReadInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.VNAM = frame.ReadInt32();
+                        }
                         return new ParseResult((int)SceneCollection_FieldIndex.VNAM, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneCollection_FieldIndex.XNAMs)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.VNAM2 = frame.ReadInt32();
+                        if (contentLength >= 4)
+                        {
+                            item.VNAM2 = frame.ReadInt32();
+                        }
                         return new ParseResult((int)SceneCollection_FieldIndex.VNAM2, nextRecordType);
                     }
                     else
@@ -1868,11 +1877,17 @@ namespace Mutagen.Bethesda.Fallout4
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.VNAM = frame.ReadInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.VNAM = frame.ReadInt32();
+                                }
                                 return new ParseResult((int)SceneCollection_FieldIndex.VNAM, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.VNAM2 = frame.ReadInt32();
+                                if (contentLength >= 4)
+                                {
+                                    item.VNAM2 = frame.ReadInt32();
+                                }
                                 return new ParseResult((int)SceneCollection_FieldIndex.VNAM2, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -2032,7 +2047,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 case RecordTypeInts.QNAM:
                 {
-                    _QuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _QuestLocation = (stream.Position - offset);
+                    }
                     return (int)SceneCollection_FieldIndex.Quest;
                 }
                 case RecordTypeInts.SNAM:
@@ -2049,12 +2067,18 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)SceneCollection_FieldIndex.Scenes)
                     {
-                        _VNAMLocation = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _VNAMLocation = (stream.Position - offset);
+                        }
                         return new ParseResult((int)SceneCollection_FieldIndex.VNAM, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)SceneCollection_FieldIndex.XNAMs)
                     {
-                        _VNAM2Location = (stream.Position - offset);
+                        if (stream.GetSubrecordHeader().ContentLength >= 4)
+                        {
+                            _VNAM2Location = (stream.Position - offset);
+                        }
                         return new ParseResult((int)SceneCollection_FieldIndex.VNAM2, type);
                     }
                     else
@@ -2063,12 +2087,18 @@ namespace Mutagen.Bethesda.Fallout4
                         {
                             case 0:
                             {
-                                _VNAMLocation = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _VNAMLocation = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)SceneCollection_FieldIndex.VNAM, type);
                             }
                             case 1:
                             {
-                                _VNAM2Location = (stream.Position - offset);
+                                if (stream.GetSubrecordHeader().ContentLength >= 4)
+                                {
+                                    _VNAM2Location = (stream.Position - offset);
+                                }
                                 return new ParseResult((int)SceneCollection_FieldIndex.VNAM2, type);
                             }
                             default:

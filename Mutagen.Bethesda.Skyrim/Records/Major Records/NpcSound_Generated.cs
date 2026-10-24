@@ -1081,14 +1081,20 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)NpcSound_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.SoundChance, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundChance = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.SoundChance = frame.ReadUInt8();
+                    }
                     return (int)NpcSound_FieldIndex.SoundChance;
                 }
                 default:
@@ -1234,13 +1240,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CSDI:
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.Sound, translationParams)) return ParseResult.Stop;
-                    _SoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SoundLocation = (stream.Position - offset);
+                    }
                     return (int)NpcSound_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
                     if (lastParsed.ShortCircuit((int)NpcSound_FieldIndex.SoundChance, translationParams)) return ParseResult.Stop;
-                    _SoundChanceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _SoundChanceLocation = (stream.Position - offset);
+                    }
                     return (int)NpcSound_FieldIndex.SoundChance;
                 }
                 default:

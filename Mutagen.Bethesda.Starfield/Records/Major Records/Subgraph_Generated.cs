@@ -1724,7 +1724,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Subgraph_FieldIndex.Race;
                 }
                 case RecordTypeInts.SAKD:
@@ -1935,7 +1938,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SADD:
                 {
                     if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
-                    _RaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _RaceLocation = (stream.Position - offset);
+                    }
                     return (int)Subgraph_FieldIndex.Race;
                 }
                 case RecordTypeInts.SAKD:

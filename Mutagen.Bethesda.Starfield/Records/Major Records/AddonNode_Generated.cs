@@ -2311,9 +2311,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)AddonNode_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.BFCB:
@@ -2342,13 +2345,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NodeIndex = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.NodeIndex = frame.ReadUInt32();
+                    }
                     return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AddonNode_FieldIndex.Light;
                 }
                 case RecordTypeInts.PSDF:
@@ -2560,7 +2569,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)AddonNode_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.BFCB:
@@ -2588,12 +2600,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _NodeIndexLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _NodeIndexLocation = (stream.Position - offset);
+                    }
                     return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    _LightLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _LightLocation = (stream.Position - offset);
+                    }
                     return (int)AddonNode_FieldIndex.Light;
                 }
                 case RecordTypeInts.PSDF:

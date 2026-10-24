@@ -3069,13 +3069,19 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Older.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Older.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.Older;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Younger.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Younger.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Race_FieldIndex.Younger;
                 }
                 case RecordTypeInts.NAM2:
@@ -3115,19 +3121,28 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnusedATTR = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.UnusedATTR = frame.ReadUInt16();
+                    }
                     return (int)Race_FieldIndex.UnusedATTR;
                 }
                 case RecordTypeInts.NAM0:
@@ -3441,12 +3456,18 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _OlderLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OlderLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.Older;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _YoungerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _YoungerLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.Younger;
                 }
                 case RecordTypeInts.NAM2:
@@ -3471,17 +3492,26 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _FacegenMainClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FacegenMainClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _FacegenFaceClampLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FacegenFaceClampLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATTR:
                 {
-                    _UnusedATTRLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _UnusedATTRLocation = (stream.Position - offset);
+                    }
                     return (int)Race_FieldIndex.UnusedATTR;
                 }
                 case RecordTypeInts.NAM0:

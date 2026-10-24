@@ -3745,7 +3745,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.IDLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Unknown4 = frame.ReadInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.Unknown4 = frame.ReadInt32();
+                    }
                     return (int)Package_FieldIndex.Unknown4;
                 }
                 case RecordTypeInts.IDLF:
@@ -3758,13 +3761,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Package_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Package_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.PKCU:
@@ -4099,7 +4108,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.IDLB:
                 {
-                    _Unknown4Location = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _Unknown4Location = (stream.Position - offset);
+                    }
                     return (int)Package_FieldIndex.Unknown4;
                 }
                 case RecordTypeInts.IDLF:
@@ -4112,12 +4124,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CombatStyleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CombatStyleLocation = (stream.Position - offset);
+                    }
                     return (int)Package_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _OwnerQuestLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OwnerQuestLocation = (stream.Position - offset);
+                    }
                     return (int)Package_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.PKCU:

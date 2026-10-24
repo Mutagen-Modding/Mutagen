@@ -5452,7 +5452,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Opacity = frame.ReadUInt8();
+                    if (contentLength >= 1)
+                    {
+                        item.Opacity = frame.ReadUInt8();
+                    }
                     return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
@@ -5472,31 +5475,46 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.Material;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OpenSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.Spell;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ImageSpace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Water_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DamagePerSecond = frame.ReadUInt16();
+                    if (contentLength >= 2)
+                    {
+                        item.DamagePerSecond = frame.ReadUInt16();
+                    }
                     return (int)Water_FieldIndex.DamagePerSecond;
                 }
                 case RecordTypeInts.DNAM:
@@ -5616,13 +5634,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LinearVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.LinearVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 12)
+                    {
+                        item.AngularVelocity = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
@@ -6124,7 +6148,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _OpacityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 1)
+                    {
+                        _OpacityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
@@ -6139,27 +6166,42 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _MaterialLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaterialLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.Material;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _OpenSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OpenSoundLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _SpellLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SpellLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.Spell;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _ImageSpaceLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ImageSpaceLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DamagePerSecondLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 2)
+                    {
+                        _DamagePerSecondLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.DamagePerSecond;
                 }
                 case RecordTypeInts.DNAM:
@@ -6179,12 +6221,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _LinearVelocityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _LinearVelocityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    _AngularVelocityLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 12)
+                    {
+                        _AngularVelocityLocation = (stream.Position - offset);
+                    }
                     return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:

@@ -2793,9 +2793,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.BFCB:
@@ -2837,19 +2840,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = frame.ReadColor(ColorBinaryType.Alpha);
+                    if (contentLength >= 4)
+                    {
+                        item.CNAM = frame.ReadColor(ColorBinaryType.Alpha);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.FNAM = frame.ReadUInt32();
+                    }
                     return (int)SnapTemplateNode_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.SNST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SNST = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.SNST = frame.ReadUInt32();
+                    }
                     return (int)SnapTemplateNode_FieldIndex.SNST;
                 }
                 case RecordTypeInts.NNAM:
@@ -2873,7 +2885,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)SnapTemplateNode_FieldIndex.ArtObject;
                 }
                 case RecordTypeInts.XXXX:
@@ -3066,7 +3081,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.BFCB:
@@ -3107,17 +3125,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _CNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FNAMLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.SNST:
                 {
-                    _SNSTLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SNSTLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.SNST;
                 }
                 case RecordTypeInts.NNAM:
@@ -3150,7 +3177,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ArtObjectLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ArtObjectLocation = (stream.Position - offset);
+                    }
                     return (int)SnapTemplateNode_FieldIndex.ArtObject;
                 }
                 case RecordTypeInts.XXXX:

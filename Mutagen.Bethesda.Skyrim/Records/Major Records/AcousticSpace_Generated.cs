@@ -1632,19 +1632,28 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbientSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AmbientSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.AmbientSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 default:
@@ -1799,17 +1808,26 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _AmbientSoundLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AmbientSoundLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.AmbientSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
-                    _UseSoundFromRegionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _UseSoundFromRegionLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _EnvironmentTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _EnvironmentTypeLocation = (stream.Position - offset);
+                    }
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 default:

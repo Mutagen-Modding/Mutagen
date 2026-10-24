@@ -2566,9 +2566,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DirtinessScale = PercentBinaryTranslation.Parse(
-                        reader: frame,
-                        integerType: FloatIntegerType.UInt);
+                    if (contentLength >= 4)
+                    {
+                        item.DirtinessScale = PercentBinaryTranslation.Parse(
+                            reader: frame,
+                            integerType: FloatIntegerType.UInt);
+                    }
                     return (int)IdleMarker_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.KSIZ:
@@ -2602,7 +2605,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.IDLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.IdleTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:
@@ -2629,19 +2635,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorAction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ActorAction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)IdleMarker_FieldIndex.ActorAction;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationFlavor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AnimationFlavor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)IdleMarker_FieldIndex.AnimationFlavor;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.AnimationArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)IdleMarker_FieldIndex.AnimationArchetype;
                 }
                 case RecordTypeInts.XXXX:
@@ -2860,7 +2875,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _DirtinessScaleLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DirtinessScaleLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.KSIZ:
@@ -2890,7 +2908,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.IDLT:
                 {
-                    _IdleTimerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _IdleTimerLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:
@@ -2919,17 +2940,26 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ActorActionLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ActorActionLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.ActorAction;
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _AnimationFlavorLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AnimationFlavorLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.AnimationFlavor;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _AnimationArchetypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _AnimationArchetypeLocation = (stream.Position - offset);
+                    }
                     return (int)IdleMarker_FieldIndex.AnimationArchetype;
                 }
                 case RecordTypeInts.XXXX:

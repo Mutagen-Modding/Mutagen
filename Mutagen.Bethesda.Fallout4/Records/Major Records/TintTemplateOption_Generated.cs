@@ -1967,7 +1967,10 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TTED:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Default = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    if (contentLength >= 4)
+                    {
+                        item.Default = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    }
                     return (int)TintTemplateOption_FieldIndex.Default;
                 }
                 default:
@@ -2202,7 +2205,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TTED:
                 {
-                    _DefaultLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _DefaultLocation = (stream.Position - offset);
+                    }
                     return (int)TintTemplateOption_FieldIndex.Default;
                 }
                 default:

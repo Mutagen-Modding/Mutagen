@@ -2929,37 +2929,55 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.JAIL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExteriorJailMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.ExteriorJailMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FollowerWaitMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.FollowerWaitMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StolenGoodsContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.StolenGoodsContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PlayerInventoryContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.PlayerInventoryContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedCrimeFactionList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.SharedCrimeFactionList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JailOutfit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.JailOutfit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
@@ -2983,13 +3001,19 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.VEND:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
@@ -3232,32 +3256,50 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.JAIL:
                 {
-                    _ExteriorJailMarkerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _ExteriorJailMarkerLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
-                    _FollowerWaitMarkerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _FollowerWaitMarkerLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
-                    _StolenGoodsContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _StolenGoodsContainerLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
-                    _PlayerInventoryContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _PlayerInventoryContainerLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
-                    _SharedCrimeFactionListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _SharedCrimeFactionListLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
-                    _JailOutfitLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _JailOutfitLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
@@ -3279,12 +3321,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.VEND:
                 {
-                    _VendorBuySellListLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _VendorBuySellListLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
-                    _MerchantContainerLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MerchantContainerLocation = (stream.Position - offset);
+                    }
                     return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:

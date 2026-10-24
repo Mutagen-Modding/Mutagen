@@ -2413,13 +2413,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GoreEffectsBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.GoreEffectsBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.GoreEffectsBloodImpactMaterialType;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OnCrippleBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (contentLength >= 4)
+                    {
+                        item.OnCrippleBloodImpactMaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    }
                     return (int)BodyPart_FieldIndex.OnCrippleBloodImpactMaterialType;
                 }
                 case RecordTypeInts.DNAM:
@@ -2712,12 +2718,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _GoreEffectsBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _GoreEffectsBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.GoreEffectsBloodImpactMaterialType;
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _OnCrippleBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _OnCrippleBloodImpactMaterialTypeLocation = (stream.Position - offset);
+                    }
                     return (int)BodyPart_FieldIndex.OnCrippleBloodImpactMaterialType;
                 }
                 case RecordTypeInts.DNAM:

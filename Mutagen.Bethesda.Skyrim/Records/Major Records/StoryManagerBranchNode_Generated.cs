@@ -1555,7 +1555,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaxConcurrentQuests = frame.ReadUInt32();
+                    if (contentLength >= 4)
+                    {
+                        item.MaxConcurrentQuests = frame.ReadUInt32();
+                    }
                     return (int)StoryManagerBranchNode_FieldIndex.MaxConcurrentQuests;
                 }
                 default:
@@ -1700,7 +1703,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    _MaxConcurrentQuestsLocation = (stream.Position - offset);
+                    if (stream.GetSubrecordHeader().ContentLength >= 4)
+                    {
+                        _MaxConcurrentQuestsLocation = (stream.Position - offset);
+                    }
                     return (int)StoryManagerBranchNode_FieldIndex.MaxConcurrentQuests;
                 }
                 default:
