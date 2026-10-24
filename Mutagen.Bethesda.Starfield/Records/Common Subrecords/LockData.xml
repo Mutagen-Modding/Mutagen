@@ -5,6 +5,7 @@
       <Enum name="Level" enumName="LockLevel" byteLength="4" />
       <FormLink name="Key" refName="Key" />
       <Enum name="Flags" enumName="LockData.Flag" byteLength="4" />
+      <Break />
       <Int32 name="Unused" unknown="true" />
     </Fields>
   </Object>
