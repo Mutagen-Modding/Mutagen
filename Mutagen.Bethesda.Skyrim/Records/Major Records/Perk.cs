@@ -445,16 +445,9 @@ partial class PerkBinaryWriteTranslation
                         writer.Write((byte)paramType);
                     }
                 }
-                        
+                WriteFunctionParameters(writer, effect);
                 if (effect is PerkEntryPointAddActivateChoice choice)
                 {
-                    if (choice.ButtonLabel != null)
-                    {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
-                        {
-                            StringBinaryTranslation.Instance.Write(writer, choice.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
-                        }
-                    }
                     choice.Flags.WriteToBinary(writer);
                 }
                 switch (effect)
@@ -523,7 +516,22 @@ partial class PerkBinaryWriteTranslation
                         throw new NotImplementedException();
                 }
             }
+            else
+            {
+                WriteFunctionParameters(writer, effect);
+            }
             using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { }
+        }
+    }
+
+    private static void WriteFunctionParameters(MutagenWriter writer, IAPerkEffectGetter effect)
+    {
+        if (effect.ButtonLabel != null)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
+            {
+                StringBinaryTranslation.Instance.Write(writer, effect.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
+            }
         }
     }
 }
