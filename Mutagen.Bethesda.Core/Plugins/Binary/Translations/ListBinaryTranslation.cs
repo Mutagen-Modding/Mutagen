@@ -771,6 +771,14 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             reader.Position += subHeader.TotalLength;
             return [];
         }
+        else if (endMarker == null)
+        {
+            return Parse(
+                reader,
+                transl,
+                triggeringRecord,
+                translationParams);
+        }
         else
         { 
             return Parse( 
@@ -792,9 +800,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         if (amount == 0 && nullIfZero) return []; 
         translationParams = translationParams.ShortCircuit(); 
         var ret = new ExtendedList<T>(); 
-        var startingPos = reader.Position; 
-        for (int i = 0; i < amount; i++) 
+        // Plugins can count fewer entries than follow. An entry that can open with any of several subrecords
+        // would read as two if its subrecords were out of order, so only a single-trigger list reads on.
+        var readPastCount = triggeringRecord?.TriggeringRecordTypes.Count == 1;
+        for (int i = 0; i < amount || (readPastCount && !reader.Complete); i++)
         { 
+            var startingPos = reader.Position;
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader); 
             if (endMarker == nextRecord)
             {
