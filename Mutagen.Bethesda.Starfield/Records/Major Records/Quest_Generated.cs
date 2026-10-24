@@ -3501,6 +3501,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.INFO,
                 RecordTypes.TPIC,
                 RecordTypes.TRDA,
+                RecordTypes.TROI,
                 RecordTypes.TROT,
                 RecordTypes.NAM4,
                 RecordTypes.NAM9,
