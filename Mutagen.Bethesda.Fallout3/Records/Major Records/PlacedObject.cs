@@ -131,14 +131,14 @@ partial class PlacedObjectBinaryWriteTranslation
     {
         var linkedRooms = item.LinkedRooms;
         var unknown = item.Unknown;
-        if (linkedRooms.Count == 0 && unknown == 0)
+        if (linkedRooms.Count == 0 && unknown == null)
         {
             return;
         }
         using (HeaderExport.Subrecord(writer, RecordTypes.XRMR))
         {
             writer.Write((short)item.LinkedRooms.Count);
-            writer.Write(item.Unknown);
+            writer.Write(unknown ?? default);
         }
         foreach (var room in linkedRooms)
         {
@@ -151,7 +151,7 @@ partial class PlacedObjectBinaryOverlay
 {
     int? _boundDataLoc;
 
-    public short Unknown => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_boundDataLoc.Value + 8)) : default(short);
+    public short? Unknown => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_boundDataLoc.Value + 8)) : null;
 
     public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
 
