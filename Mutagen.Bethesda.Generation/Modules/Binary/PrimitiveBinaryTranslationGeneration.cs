@@ -271,6 +271,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
             }
             if (dataType == null)
             {
+                var structDataSlice = $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})";
                 if (typeGen.Nullable)
                 {
                     if (!typeGen.CanBeNullable(getter: true))
@@ -282,12 +283,12 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     else
                     {
                         string passed = int.TryParse(passedLengthAccessor.TrimStart("0x", StringComparison.Ordinal), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expectedLen.Value).ToString() : $"({passedLengthAccessor} + {expectedLen.Value})";
-                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {structDataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {structDataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")} : {typeGen.GetDefault(getter: true)};");
                     }
                 }
                 else if (data.IsAfterBreak)
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? default : {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? default : {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")};");
                 }
                 else if (data.HasVersioning || data.HasModHeaderVersioning)
                 {
@@ -300,11 +301,11 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     {
                         checks.Add(VersioningModule.GetModHeaderVersionIfCheck(data, "_package.MetaData.ModHeaderVersion!.Value"));
                     }
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {string.Join(" && ", checks)} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {string.Join(" && ", checks)} ? {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")} : {typeGen.GetDefault(getter: true)};");
                 }
                 else
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{structDataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")};");
                 }
             }
             else
