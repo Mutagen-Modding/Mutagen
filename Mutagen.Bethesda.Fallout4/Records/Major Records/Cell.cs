@@ -55,12 +55,12 @@ partial class CellBinaryCreateTranslation
             throw new MalformedDataException($"{RecordTypes.XCRI} reference count must be even");
         }
         referencesCount /= 2;
-        item.CombinedMeshes.Clear();
+        item.CombinedMeshes = new ExtendedList<uint>();
         for (int i = 0; i < meshCount; i++)
         {
             item.CombinedMeshes.Add(frame.ReadUInt32());
         }
-        item.CombinedMeshReferences.Clear();
+        item.CombinedMeshReferences = new ExtendedList<CellCombinedMeshReference>();
         for (int i = 0; i < referencesCount; i++)
         {
             item.CombinedMeshReferences.Add(CellCombinedMeshReference.CreateFromBinary(frame));
@@ -283,16 +283,16 @@ partial class CellBinaryWriteTranslation
     {
         var meshes = item.CombinedMeshes;
         var references = item.CombinedMeshReferences;
-        if (meshes.Count == 0 && references.Count == 0) return;
+        if (meshes == null && references == null) return;
         using (HeaderExport.Subrecord(writer, RecordTypes.XCRI, overflowRecord: RecordTypes.XXXX, writerToUse: out var writerToUse))
         {
-            writerToUse.Write(meshes.Count);
-            writerToUse.Write(references.Count * 2);
-            foreach (var mesh in meshes)
+            writerToUse.Write(meshes?.Count ?? 0);
+            writerToUse.Write((references?.Count ?? 0) * 2);
+            foreach (var mesh in meshes.EmptyIfNull())
             {
                 writerToUse.Write(mesh);
             }
-            foreach (var mesh in references)
+            foreach (var mesh in references.EmptyIfNull())
             {
                 mesh.WriteToBinary(writerToUse);
             }
@@ -411,9 +411,9 @@ partial class CellBinaryOverlay
 
     public int TemporaryUnknownGroupData => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_temporaryLocation.Value + 20)) : 0;
 
-    public IReadOnlyList<uint> CombinedMeshes { get; private set; } = [];
+    public IReadOnlyList<uint>? CombinedMeshes { get; private set; }
 
-    public IReadOnlyList<ICellCombinedMeshReferenceGetter> CombinedMeshReferences { get; private set; } = [];
+    public IReadOnlyList<ICellCombinedMeshReferenceGetter>? CombinedMeshReferences { get; private set; }
 
     public partial ParseResult CombinedMeshLogicCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
