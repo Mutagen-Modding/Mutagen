@@ -370,6 +370,9 @@
     <Compile Include="Records\Major Records\GlobalInt.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -2465,6 +2468,9 @@
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GlobalBool_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalUnknown_Generated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\NavmeshCover_Generated.cs">

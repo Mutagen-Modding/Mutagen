@@ -46,8 +46,10 @@ public partial class Global : GlobalCustomParsing.IGlobalCommon
                         ret.OutputChar = true;
                         return ret;
                     }
-                    default:
+                    case null:
                         return GlobalFloat.CreateFromBinary(f);
+                    default:
+                        return GlobalUnknown.CreateFromBinary(f);
                 }
             });
     }
@@ -113,8 +115,12 @@ abstract partial class GlobalBinaryOverlay
                 return GlobalBoolBinaryOverlay.GlobalBoolFactory(
                     stream,
                     package);
-            default:
+            case null:
                 return GlobalFloatBinaryOverlay.GlobalFloatFactory(
+                    stream,
+                    package);
+            default:
+                return GlobalUnknownBinaryOverlay.GlobalUnknownFactory(
                     stream,
                     package);
         }
