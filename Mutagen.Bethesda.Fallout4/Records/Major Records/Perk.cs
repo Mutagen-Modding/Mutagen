@@ -469,33 +469,7 @@ partial class PerkBinaryWriteTranslation
                         writer.Write((byte)paramType);
                     }
                 }
-            }
-            if (effect.PerkEntryID is { } id)
-            {
-                using (HeaderExport.Subrecord(writer, RecordTypes.EPFB))
-                {
-                    writer.Write(id);
-                }
-            }
-            if (effect.ButtonLabel != null)
-            {
-                using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
-                {
-                    StringBinaryTranslation.Instance.Write(writer, effect.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
-                }
-            }
-            if (effect.Flags is { } flags)
-            {
-                using (HeaderExport.Subrecord(writer, RecordTypes.EPF3))
-                {
-                    EnumBinaryTranslation<APerkEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer,
-                        flags,
-                        2);
-                }
-            }
-            if (effect is APerkEntryPointEffect)
-            {
+                WriteFunctionParameters(writer, effect);
                 switch (effect)
                 {
                     case PerkEntryPointModifyValue modVal:
@@ -562,7 +536,39 @@ partial class PerkBinaryWriteTranslation
                         throw new NotImplementedException();
                 }
             }
+            else
+            {
+                WriteFunctionParameters(writer, effect);
+            }
             using (HeaderExport.Subrecord(writer, RecordTypes.PRKF)) { }
+        }
+    }
+
+    private static void WriteFunctionParameters(MutagenWriter writer, IAPerkEffectGetter effect)
+    {
+        if (effect.PerkEntryID is { } id)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.EPFB))
+            {
+                writer.Write(id);
+            }
+        }
+        if (effect.ButtonLabel != null)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.EPF2))
+            {
+                StringBinaryTranslation.Instance.Write(writer, effect.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
+            }
+        }
+        if (effect.Flags is { } flags)
+        {
+            using (HeaderExport.Subrecord(writer, RecordTypes.EPF3))
+            {
+                EnumBinaryTranslation<APerkEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    flags,
+                    2);
+            }
         }
     }
 }
