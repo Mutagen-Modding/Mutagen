@@ -122,7 +122,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
             sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
-        using (fieldData.HasTrigger ? await ContentLengthGuard(sb, objGen, typeGen, "contentLength") : null)
+        using (await ContentLengthGuard(sb, objGen, typeGen, "contentLength", readsOwnSubrecord: fieldData.HasTrigger))
         {
             await GenerateCopyInRead(sb, objGen, typeGen, fieldData, frameAccessor, itemAccessor, errorMaskAccessor);
         }

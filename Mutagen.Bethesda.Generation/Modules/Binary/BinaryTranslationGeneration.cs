@@ -27,9 +27,9 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
 
     public virtual Task<int?> ShortestReadableContent(ObjectGeneration objGen, TypeGeneration typeGen) => Task.FromResult<int?>(null);
 
-    protected async Task<IDisposable> ContentLengthGuard(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor contentLengthAccessor)
+    protected async Task<IDisposable> ContentLengthGuard(StructuredStringBuilder sb, ObjectGeneration objGen, TypeGeneration typeGen, Accessor contentLengthAccessor, bool readsOwnSubrecord = true)
     {
-        var length = await ShortestReadableContent(objGen, typeGen);
+        var length = readsOwnSubrecord ? await ShortestReadableContent(objGen, typeGen) : null;
         if (length != null)
         {
             sb.AppendLine($"if ({contentLengthAccessor} >= {length})");

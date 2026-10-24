@@ -116,7 +116,7 @@ public class FormLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGen
             sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
         }
 
-        using (data.RecordType.HasValue ? await ContentLengthGuard(sb, objGen, typeGen, "contentLength") : null)
+        using (await ContentLengthGuard(sb, objGen, typeGen, "contentLength", readsOwnSubrecord: data.RecordType.HasValue))
         using (var args = sb.Call(
                    $"{itemAccessor}.SetTo"))
         {
