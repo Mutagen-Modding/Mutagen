@@ -20,6 +20,8 @@ partial class MaterialSwap
 partial class MaterialSwapBinaryCreateTranslation
 {
     public const int NewFormVersion = 112;
+
+    public static bool SubstitutionFnamIsTreeFolder(ushort? formVersion) => formVersion < NewFormVersion;
     
     public static partial void FillBinaryFNAMParsingCustom(
         MutagenFrame frame,
@@ -185,7 +187,7 @@ partial class MaterialSubstitutionBinaryCreateTranslation
         IMaterialSubstitution item,
         PreviousParse lastParsed)
     {
-        if (frame.MetaData.FormVersion < MaterialSwapBinaryCreateTranslation.NewFormVersion) return; // Before this form version, the FNAM is the record's TreeFolder
+        if (MaterialSwapBinaryCreateTranslation.SubstitutionFnamIsTreeFolder(frame.MetaData.FormVersion)) return;
         var header = frame.ReadSubrecordHeader();
         item.ObsoleteTreeFolder = StringBinaryTranslation.Instance.Parse(
             reader: frame.SpawnWithLength(header.ContentLength),
@@ -200,7 +202,7 @@ partial class MaterialSubstitutionBinaryWriteTranslation
         MutagenWriter writer,
         IMaterialSubstitutionGetter item)
     {
-        if (writer.MetaData.FormVersion < MaterialSwapBinaryCreateTranslation.NewFormVersion) return; // Before this form version, the FNAM is the record's TreeFolder
+        if (MaterialSwapBinaryCreateTranslation.SubstitutionFnamIsTreeFolder(writer.MetaData.FormVersion)) return;
         StringBinaryTranslation.Instance.WriteNullable(
             writer: writer,
             item: item.ObsoleteTreeFolder,
@@ -218,7 +220,7 @@ partial class MaterialSubstitutionBinaryOverlay
         int finalPos,
         int offset)
     {
-        if (_package.FormVersion?.FormVersion < MaterialSwapBinaryCreateTranslation.NewFormVersion) return; // Before this form version, the FNAM is the record's TreeFolder
+        if (MaterialSwapBinaryCreateTranslation.SubstitutionFnamIsTreeFolder(_package.FormVersion?.FormVersion)) return;
         _obsoleteTreeFolderLocation = stream.Position - offset;
     }
 
