@@ -1900,22 +1900,22 @@ namespace Mutagen.Bethesda.Starfield
         #region HealthPercent
         private int _HealthPercentLocation => _DSTDLocation!.Value.Min;
         private bool _HealthPercent_IsSet => _DSTDLocation.HasValue;
-        public Byte HealthPercent => _HealthPercent_IsSet ? _recordData.Span[_HealthPercentLocation] : default;
+        public Byte HealthPercent => _HealthPercent_IsSet ? _recordData.Span[_HealthPercentLocation] : default(Byte);
         #endregion
         #region Index
         private int _IndexLocation => _DSTDLocation!.Value.Min + 0x1;
         private bool _Index_IsSet => _DSTDLocation.HasValue;
-        public Byte Index => _Index_IsSet ? _recordData.Span[_IndexLocation] : default;
+        public Byte Index => _Index_IsSet ? _recordData.Span[_IndexLocation] : default(Byte);
         #endregion
         #region ModelDamageStage
         private int _ModelDamageStageLocation => _DSTDLocation!.Value.Min + 0x2;
         private bool _ModelDamageStage_IsSet => _DSTDLocation.HasValue;
-        public Byte ModelDamageStage => _ModelDamageStage_IsSet ? _recordData.Span[_ModelDamageStageLocation] : default;
+        public Byte ModelDamageStage => _ModelDamageStage_IsSet ? _recordData.Span[_ModelDamageStageLocation] : default(Byte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DSTDLocation!.Value.Min + 0x3;
         private bool _Flags_IsSet => _DSTDLocation.HasValue;
-        public Destructible.DestructionStageDataFlag Flags => _Flags_IsSet ? (Destructible.DestructionStageDataFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Destructible.DestructionStageDataFlag Flags => _Flags_IsSet ? (Destructible.DestructionStageDataFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Destructible.DestructionStageDataFlag);
         #endregion
         #region SelfDamagePerSecond
         private int _SelfDamagePerSecondLocation => _DSTDLocation!.Value.Min + 0x4;

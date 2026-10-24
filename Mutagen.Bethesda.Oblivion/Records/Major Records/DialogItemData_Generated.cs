@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public DialogItemData.VersioningBreaks Versioning { get; private set; }
         public DialogType DialogType => (DialogType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
-        public DialogItem.Flag Flags => _structData.Span.Length <= 0x2 ? default : (DialogItem.Flag)_structData.Span.Slice(0x2, 0x1)[0];
+        public DialogItem.Flag Flags => _structData.Span.Length <= 0x2 ? default(DialogItem.Flag) : (DialogItem.Flag)_structData.Span.Slice(0x2, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -3973,12 +3973,12 @@ namespace Mutagen.Bethesda.Starfield
         #region MalePriority
         private int _MalePriorityLocation => _DNAMLocation!.Value.Min + 0x4;
         private bool _MalePriority_IsSet => _DNAMLocation.HasValue;
-        public Byte MalePriority => _MalePriority_IsSet ? _recordData.Span[_MalePriorityLocation] : default;
+        public Byte MalePriority => _MalePriority_IsSet ? _recordData.Span[_MalePriorityLocation] : default(Byte);
         #endregion
         #region FemalePriority
         private int _FemalePriorityLocation => _DNAMLocation!.Value.Min + 0x5;
         private bool _FemalePriority_IsSet => _DNAMLocation.HasValue;
-        public Byte FemalePriority => _FemalePriority_IsSet ? _recordData.Span[_FemalePriorityLocation] : default;
+        public Byte FemalePriority => _FemalePriority_IsSet ? _recordData.Span[_FemalePriorityLocation] : default(Byte);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x6;
@@ -3988,7 +3988,7 @@ namespace Mutagen.Bethesda.Starfield
         #region DetectionSoundValue
         private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x8;
         private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
-        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default;
+        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default(Byte);
         #endregion
         #region HealthBarOffset
         private int _HealthBarOffsetLocation => _DNAMLocation!.Value.Min + 0x9;

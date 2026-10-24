@@ -3806,7 +3806,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + HdrSkinDimmerVersioningOffset + 0x94;
         private bool _Flags_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(ImageSpace.DNAMDataType.Break1);
-        public ImageSpace.Flag Flags => _Flags_IsSet ? (ImageSpace.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public ImageSpace.Flag Flags => _Flags_IsSet ? (ImageSpace.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(ImageSpace.Flag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

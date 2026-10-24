@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public QuestAdapter.VersioningBreaks Versioning { get; private set; }
-        public Byte ExtraBindDataVersion => _structData.Length <= ScriptsEndingPos + 0x0 ? default : _structData.Span[ScriptsEndingPos + 0x0];
+        public Byte ExtraBindDataVersion => _structData.Length <= ScriptsEndingPos + 0x0 ? QuestAdapter.ExtraBindDataVersionDefault : _structData.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
         partial void FragmentCountCustomParse(
             OverlayStream stream,

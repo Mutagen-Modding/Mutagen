@@ -4585,23 +4585,23 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _DNAMLocation!.Value.Min;
         private bool _Unknown_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 106;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         int UnknownVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 106 ? -1 : 0;
         #endregion
         #region MembraneSourceBlendMode
         private int _MembraneSourceBlendModeLocation => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0x1;
         private bool _MembraneSourceBlendMode_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.BlendMode MembraneSourceBlendMode => _MembraneSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneSourceBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode MembraneSourceBlendMode => _MembraneSourceBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneSourceBlendModeLocation, 0x4)) : EffectShader.MembraneSourceBlendModeDefault;
         #endregion
         #region MembraneBlendOperation
         private int _MembraneBlendOperationLocation => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0x5;
         private bool _MembraneBlendOperation_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.BlendOperation MembraneBlendOperation => _MembraneBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneBlendOperationLocation, 0x4)) : default;
+        public EffectShader.BlendOperation MembraneBlendOperation => _MembraneBlendOperation_IsSet ? (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneBlendOperationLocation, 0x4)) : EffectShader.MembraneBlendOperationDefault;
         #endregion
         #region MembraneZTest
         private int _MembraneZTestLocation => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0x9;
         private bool _MembraneZTest_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.ZTest MembraneZTest => _MembraneZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneZTestLocation, 0x4)) : default;
+        public EffectShader.ZTest MembraneZTest => _MembraneZTest_IsSet ? (EffectShader.ZTest)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneZTestLocation, 0x4)) : EffectShader.MembraneZTestDefault;
         #endregion
         #region FillColorKey1
         private int _FillColorKey1Location => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0xD;
@@ -4701,7 +4701,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MembraneDestBlendMode
         private int _MembraneDestBlendModeLocation => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0x59;
         private bool _MembraneDestBlendMode_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.BlendMode MembraneDestBlendMode => _MembraneDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneDestBlendModeLocation, 0x4)) : default;
+        public EffectShader.BlendMode MembraneDestBlendMode => _MembraneDestBlendMode_IsSet ? (EffectShader.BlendMode)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_MembraneDestBlendModeLocation, 0x4)) : EffectShader.MembraneDestBlendModeDefault;
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DNAMLocation!.Value.Min + UnknownVersioningOffset + 0x5D;
@@ -4753,7 +4753,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown4
         private int _Unknown4Location => _DNAMLocation!.Value.Min + Unknown3VersioningOffset + 0x13D;
         private bool _Unknown4_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 106;
-        public Byte Unknown4 => _Unknown4_IsSet ? _recordData.Span[_Unknown4Location] : default;
+        public Byte Unknown4 => _Unknown4_IsSet ? _recordData.Span[_Unknown4Location] : default(Byte);
         int Unknown4VersioningOffset => Unknown3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 106 ? -1 : 0);
         #endregion
         #region FillColorKey1Scale
@@ -4795,7 +4795,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + Unknown5VersioningOffset + 0x17E;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(EffectShader.Flag);
         #endregion
         #region FillTextureScaleU
         private int _FillTextureScaleULocation => _DNAMLocation!.Value.Min + Unknown5VersioningOffset + 0x182;

@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public SplineConnection.VersioningBreaks Versioning { get; private set; }
         public IFormLinkGetter<IPlacedSimpleGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public Int32 Unknown => _structData.Length <= 0x4 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public Int32 Unknown => _structData.Length <= 0x4 ? default(Int32) : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

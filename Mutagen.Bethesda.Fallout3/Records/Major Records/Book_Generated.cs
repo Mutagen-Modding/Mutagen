@@ -2611,7 +2611,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Book.BookFlag Flags => _Flags_IsSet ? (Book.BookFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Book.BookFlag Flags => _Flags_IsSet ? (Book.BookFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Book.BookFlag);
         #endregion
         #region Skill
         private int _SkillLocation => _DATALocation!.Value.Min + 0x1;

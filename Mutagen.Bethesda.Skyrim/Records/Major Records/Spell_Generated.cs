@@ -2823,12 +2823,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _SPITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _SPITLocation.HasValue;
-        public SpellDataFlag Flags => _Flags_IsSet ? (SpellDataFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public SpellDataFlag Flags => _Flags_IsSet ? (SpellDataFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(SpellDataFlag);
         #endregion
         #region Type
         private int _TypeLocation => _SPITLocation!.Value.Min + 0x8;
         private bool _Type_IsSet => _SPITLocation.HasValue;
-        public SpellType Type => _Type_IsSet ? (SpellType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public SpellType Type => _Type_IsSet ? (SpellType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(SpellType);
         #endregion
         #region ChargeTime
         private int _ChargeTimeLocation => _SPITLocation!.Value.Min + 0xC;
@@ -2838,12 +2838,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region CastType
         private int _CastTypeLocation => _SPITLocation!.Value.Min + 0x10;
         private bool _CastType_IsSet => _SPITLocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default(CastType);
         #endregion
         #region TargetType
         private int _TargetTypeLocation => _SPITLocation!.Value.Min + 0x14;
         private bool _TargetType_IsSet => _SPITLocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default(TargetType);
         #endregion
         #region CastDuration
         private int _CastDurationLocation => _SPITLocation!.Value.Min + 0x18;

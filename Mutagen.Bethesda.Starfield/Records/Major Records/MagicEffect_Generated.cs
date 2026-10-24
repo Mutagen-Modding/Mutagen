@@ -5318,17 +5318,17 @@ namespace Mutagen.Bethesda.Starfield
         #region CastingSoundLevel
         private int _CastingSoundLevelLocation => _DATALocation!.Value.Min + 0x60;
         private bool _CastingSoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
+        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value.Min + 0x64;
         private bool _CastType_IsSet => _DATALocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)_recordData.Span.Slice(_CastTypeLocation, 0x1)[0] : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)_recordData.Span.Slice(_CastTypeLocation, 0x1)[0] : default(CastType);
         #endregion
         #region TargetType
         private int _TargetTypeLocation => _DATALocation!.Value.Min + 0x65;
         private bool _TargetType_IsSet => _DATALocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)_recordData.Span.Slice(_TargetTypeLocation, 0x1)[0] : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)_recordData.Span.Slice(_TargetTypeLocation, 0x1)[0] : default(TargetType);
         #endregion
         #region DualCastingScale
         private int _DualCastingScaleLocation => _DATALocation!.Value.Min + 0x66;
@@ -5338,7 +5338,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x6A;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(MagicEffect.Flag);
         #endregion
         #region MinimumSkillLevel
         private int _MinimumSkillLevelLocation => _DATALocation!.Value.Min + 0x6E;

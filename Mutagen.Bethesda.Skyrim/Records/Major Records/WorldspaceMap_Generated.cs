@@ -1408,9 +1408,9 @@ namespace Mutagen.Bethesda.Skyrim
         public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0x8));
         public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4));
         public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4));
-        public Single CameraMinHeight => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).Float();
-        public Single CameraMaxHeight => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).Float();
-        public Single CameraInitialPitch => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).Float();
+        public Single CameraMinHeight => _structData.Length <= 0x10 ? default(Single) : _structData.Slice(0x10, 0x4).Float();
+        public Single CameraMaxHeight => _structData.Length <= 0x14 ? default(Single) : _structData.Slice(0x14, 0x4).Float();
+        public Single CameraInitialPitch => _structData.Length <= 0x18 ? default(Single) : _structData.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

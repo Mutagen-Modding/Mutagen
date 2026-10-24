@@ -1546,13 +1546,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public CombatStyleFlight.VersioningBreaks Versioning { get; private set; }
         public Single HoverChance => _structData.Slice(0x0, 0x4).Float();
-        public Single DiveBombChance => _structData.Length <= 0x4 ? default : _structData.Slice(0x4, 0x4).Float();
-        public Single GroundAttackChance => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x4).Float();
-        public Single HoverTime => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
-        public Single GroundAttackTime => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).Float();
-        public Single PerchAttackChance => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).Float();
-        public Single PerchAttackTime => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).Float();
-        public Single FlyingAttackChance => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
+        public Single DiveBombChance => _structData.Length <= 0x4 ? default(Single) : _structData.Slice(0x4, 0x4).Float();
+        public Single GroundAttackChance => _structData.Length <= 0x8 ? default(Single) : _structData.Slice(0x8, 0x4).Float();
+        public Single HoverTime => _structData.Length <= 0xC ? default(Single) : _structData.Slice(0xC, 0x4).Float();
+        public Single GroundAttackTime => _structData.Length <= 0x10 ? default(Single) : _structData.Slice(0x10, 0x4).Float();
+        public Single PerchAttackChance => _structData.Length <= 0x14 ? default(Single) : _structData.Slice(0x14, 0x4).Float();
+        public Single PerchAttackTime => _structData.Length <= 0x18 ? default(Single) : _structData.Slice(0x18, 0x4).Float();
+        public Single FlyingAttackChance => _structData.Length <= 0x1C ? default(Single) : _structData.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -3775,32 +3775,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _PKDTLocation!.Value.Min;
         private bool _Flags_IsSet => _PKDTLocation.HasValue;
-        public Package.Flag Flags => _Flags_IsSet ? (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Package.Flag Flags => _Flags_IsSet ? (Package.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Package.Flag);
         #endregion
         #region Type
         private int _TypeLocation => _PKDTLocation!.Value.Min + 0x4;
         private bool _Type_IsSet => _PKDTLocation.HasValue;
-        public Package.Types Type => _Type_IsSet ? (Package.Types)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public Package.Types Type => _Type_IsSet ? (Package.Types)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default(Package.Types);
         #endregion
         #region InterruptOverride
         private int _InterruptOverrideLocation => _PKDTLocation!.Value.Min + 0x5;
         private bool _InterruptOverride_IsSet => _PKDTLocation.HasValue;
-        public Package.Interrupt InterruptOverride => _InterruptOverride_IsSet ? (Package.Interrupt)_recordData.Span.Slice(_InterruptOverrideLocation, 0x1)[0] : default;
+        public Package.Interrupt InterruptOverride => _InterruptOverride_IsSet ? (Package.Interrupt)_recordData.Span.Slice(_InterruptOverrideLocation, 0x1)[0] : default(Package.Interrupt);
         #endregion
         #region PreferredSpeed
         private int _PreferredSpeedLocation => _PKDTLocation!.Value.Min + 0x6;
         private bool _PreferredSpeed_IsSet => _PKDTLocation.HasValue;
-        public Package.Speed PreferredSpeed => _PreferredSpeed_IsSet ? (Package.Speed)_recordData.Span.Slice(_PreferredSpeedLocation, 0x1)[0] : default;
+        public Package.Speed PreferredSpeed => _PreferredSpeed_IsSet ? (Package.Speed)_recordData.Span.Slice(_PreferredSpeedLocation, 0x1)[0] : default(Package.Speed);
         #endregion
         #region Unknown
         private int _UnknownLocation => _PKDTLocation!.Value.Min + 0x7;
         private bool _Unknown_IsSet => _PKDTLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         #region InterruptFlags
         private int _InterruptFlagsLocation => _PKDTLocation!.Value.Min + 0x8;
         private bool _InterruptFlags_IsSet => _PKDTLocation.HasValue;
-        public Package.InterruptFlag InterruptFlags => _InterruptFlags_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_InterruptFlagsLocation, 0x2)) : default;
+        public Package.InterruptFlag InterruptFlags => _InterruptFlags_IsSet ? (Package.InterruptFlag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_InterruptFlagsLocation, 0x2)) : default(Package.InterruptFlag);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _PKDTLocation!.Value.Min + 0xA;
@@ -3816,12 +3816,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region ScheduleDayOfWeek
         private int _ScheduleDayOfWeekLocation => _PSDTLocation!.Value.Min + 0x1;
         private bool _ScheduleDayOfWeek_IsSet => _PSDTLocation.HasValue;
-        public Package.DayOfWeek ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? (Package.DayOfWeek)_recordData.Span.Slice(_ScheduleDayOfWeekLocation, 0x1)[0] : default;
+        public Package.DayOfWeek ScheduleDayOfWeek => _ScheduleDayOfWeek_IsSet ? (Package.DayOfWeek)_recordData.Span.Slice(_ScheduleDayOfWeekLocation, 0x1)[0] : default(Package.DayOfWeek);
         #endregion
         #region ScheduleDate
         private int _ScheduleDateLocation => _PSDTLocation!.Value.Min + 0x2;
         private bool _ScheduleDate_IsSet => _PSDTLocation.HasValue;
-        public Byte ScheduleDate => _ScheduleDate_IsSet ? _recordData.Span[_ScheduleDateLocation] : default;
+        public Byte ScheduleDate => _ScheduleDate_IsSet ? _recordData.Span[_ScheduleDateLocation] : default(Byte);
         #endregion
         #region ScheduleHour
         private int _ScheduleHourLocation => _PSDTLocation!.Value.Min + 0x3;

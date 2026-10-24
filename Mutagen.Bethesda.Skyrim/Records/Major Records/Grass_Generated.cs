@@ -2418,22 +2418,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Density
         private int _DensityLocation => _DATALocation!.Value.Min;
         private bool _Density_IsSet => _DATALocation.HasValue;
-        public Byte Density => _Density_IsSet ? _recordData.Span[_DensityLocation] : default;
+        public Byte Density => _Density_IsSet ? _recordData.Span[_DensityLocation] : default(Byte);
         #endregion
         #region MinSlope
         private int _MinSlopeLocation => _DATALocation!.Value.Min + 0x1;
         private bool _MinSlope_IsSet => _DATALocation.HasValue;
-        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default;
+        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default(Byte);
         #endregion
         #region MaxSlope
         private int _MaxSlopeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _MaxSlope_IsSet => _DATALocation.HasValue;
-        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default(Byte);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         #region UnitsFromWater
         private int _UnitsFromWaterLocation => _DATALocation!.Value.Min + 0x4;
@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region UnitsFromWaterType
         private int _UnitsFromWaterTypeLocation => _DATALocation!.Value.Min + 0x8;
         private bool _UnitsFromWaterType_IsSet => _DATALocation.HasValue;
-        public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType => _UnitsFromWaterType_IsSet ? (Grass.UnitsFromWaterTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_UnitsFromWaterTypeLocation, 0x4)) : default;
+        public Grass.UnitsFromWaterTypeEnum UnitsFromWaterType => _UnitsFromWaterType_IsSet ? (Grass.UnitsFromWaterTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_UnitsFromWaterTypeLocation, 0x4)) : default(Grass.UnitsFromWaterTypeEnum);
         #endregion
         #region PositionRange
         private int _PositionRangeLocation => _DATALocation!.Value.Min + 0xC;
@@ -2473,7 +2473,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Grass.Flag);
         #endregion
         #region Unknown3
         private int _Unknown3Location => _DATALocation!.Value.Min + 0x1D;

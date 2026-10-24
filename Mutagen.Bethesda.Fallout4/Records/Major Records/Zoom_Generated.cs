@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Overlay
         private int _OverlayLocation => _GNAMLocation!.Value.Min + 0x4;
         private bool _Overlay_IsSet => _GNAMLocation.HasValue;
-        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OverlayLocation, 0x4)) : default;
+        public Zoom.OverlayType Overlay => _Overlay_IsSet ? (Zoom.OverlayType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OverlayLocation, 0x4)) : default(Zoom.OverlayType);
         #endregion
         #region ImagespaceModifier
         private int _ImagespaceModifierLocation => _GNAMLocation!.Value.Min + 0x8;

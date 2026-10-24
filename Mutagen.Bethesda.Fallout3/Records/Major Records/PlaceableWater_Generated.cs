@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public PlaceableWater.WaterFlag Flags => _Flags_IsSet ? (PlaceableWater.WaterFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public PlaceableWater.WaterFlag Flags => _Flags_IsSet ? (PlaceableWater.WaterFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(PlaceableWater.WaterFlag);
         #endregion
         #region Water
         private int _WaterLocation => _DNAMLocation!.Value.Min + 0x4;

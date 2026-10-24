@@ -1321,12 +1321,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Type
         private int _TypeLocation => _TNAMLocation!.Value.Min;
         private bool _Type_IsSet => _TNAMLocation.HasValue;
-        public PlacedObjectMapMarker.Types Type => _Type_IsSet ? (PlacedObjectMapMarker.Types)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public PlacedObjectMapMarker.Types Type => _Type_IsSet ? (PlacedObjectMapMarker.Types)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default(PlacedObjectMapMarker.Types);
         #endregion
         #region Unknown
         private int _UnknownLocation => _TNAMLocation!.Value.Min + 0x1;
         private bool _Unknown_IsSet => _TNAMLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

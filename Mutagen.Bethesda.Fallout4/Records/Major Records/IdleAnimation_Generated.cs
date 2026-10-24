@@ -2250,22 +2250,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region LoopingSecondsMin
         private int _LoopingSecondsMinLocation => _DATALocation!.Value.Min;
         private bool _LoopingSecondsMin_IsSet => _DATALocation.HasValue;
-        public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _recordData.Span[_LoopingSecondsMinLocation] : default;
+        public Byte LoopingSecondsMin => _LoopingSecondsMin_IsSet ? _recordData.Span[_LoopingSecondsMinLocation] : default(Byte);
         #endregion
         #region LoopingSecondsMax
         private int _LoopingSecondsMaxLocation => _DATALocation!.Value.Min + 0x1;
         private bool _LoopingSecondsMax_IsSet => _DATALocation.HasValue;
-        public Byte LoopingSecondsMax => _LoopingSecondsMax_IsSet ? _recordData.Span[_LoopingSecondsMaxLocation] : default;
+        public Byte LoopingSecondsMax => _LoopingSecondsMax_IsSet ? _recordData.Span[_LoopingSecondsMaxLocation] : default(Byte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public IdleAnimation.Flag Flags => _Flags_IsSet ? (IdleAnimation.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public IdleAnimation.Flag Flags => _Flags_IsSet ? (IdleAnimation.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(IdleAnimation.Flag);
         #endregion
         #region AnimationGroupSection
         private int _AnimationGroupSectionLocation => _DATALocation!.Value.Min + 0x3;
         private bool _AnimationGroupSection_IsSet => _DATALocation.HasValue;
-        public Byte AnimationGroupSection => _AnimationGroupSection_IsSet ? _recordData.Span[_AnimationGroupSectionLocation] : default;
+        public Byte AnimationGroupSection => _AnimationGroupSection_IsSet ? _recordData.Span[_AnimationGroupSectionLocation] : default(Byte);
         #endregion
         #region ReplayDelay
         private int _ReplayDelayLocation => _DATALocation!.Value.Min + 0x4;

@@ -11,6 +11,13 @@ public static class TypeGenerationExt
         return typeGen.CustomData.GetOrAdd(Mutagen.Bethesda.Generation.Constants.DataKey, () => new MutagenFieldData(typeGen)) as MutagenFieldData;
     }
 
+    public static string ValueWhenAbsent(this TypeGeneration typeGen)
+    {
+        return typeGen is TypicalTypeGeneration { HasDefault: true, Nullable: false } typical
+            ? $"{typeGen.ObjectGen.ObjectName}.{typical.DefaultValueMemberName}"
+            : typeGen.GetDefault(getter: true);
+    }
+
     public static bool NeedsRecordConverter(this TypeGeneration typeGen)
     {
         return typeGen is LoquiType loqui

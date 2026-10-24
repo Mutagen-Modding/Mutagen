@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Orientation_IsSet => _DATALocation.HasValue;
-        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OrientationLocation, 0x4)) : default;
+        public Impact.OrientationType Orientation => _Orientation_IsSet ? (Impact.OrientationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OrientationLocation, 0x4)) : default(Impact.OrientationType);
         #endregion
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value.Min + 0x8;
@@ -2207,7 +2207,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x10;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         #region NoDecalData
         private int _NoDecalDataLocation => _DATALocation!.Value.Min + 0x14;

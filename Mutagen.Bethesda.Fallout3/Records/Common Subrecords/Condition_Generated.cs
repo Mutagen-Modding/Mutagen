@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Condition.FunctionEnum Function => (Condition.FunctionEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x10, 0x4));
-        public Condition.RunOn RunOnType => _structData.Span.Length <= 0x14 ? default : (Condition.RunOn)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x14, 0x4));
+        public Condition.RunOn RunOnType => _structData.Span.Length <= 0x14 ? default(Condition.RunOn) : (Condition.RunOn)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x14, 0x4));
         public IFormLinkGetter<IPlacedGetter> Reference => _structData.Length <= 0x18 ? FormLink<IPlacedGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x18, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

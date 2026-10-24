@@ -2643,22 +2643,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Categroy
         private int _CategroyLocation => _DATALocation!.Value.Min;
         private bool _Categroy_IsSet => _DATALocation.HasValue;
-        public PerkCategory Categroy => _Categroy_IsSet ? (PerkCategory)_recordData.Span.Slice(_CategroyLocation, 0x1)[0] : default;
+        public PerkCategory Categroy => _Categroy_IsSet ? (PerkCategory)_recordData.Span.Slice(_CategroyLocation, 0x1)[0] : default(PerkCategory);
         #endregion
         #region SkillGroup
         private int _SkillGroupLocation => _DATALocation!.Value.Min + 0x1;
         private bool _SkillGroup_IsSet => _DATALocation.HasValue;
-        public PerkSkillGroup SkillGroup => _SkillGroup_IsSet ? (PerkSkillGroup)_recordData.Span.Slice(_SkillGroupLocation, 0x1)[0] : default;
+        public PerkSkillGroup SkillGroup => _SkillGroup_IsSet ? (PerkSkillGroup)_recordData.Span.Slice(_SkillGroupLocation, 0x1)[0] : default(PerkSkillGroup);
         #endregion
         #region CrewAssignment
         private int _CrewAssignmentLocation => _DATALocation!.Value.Min + 0x2;
         private bool _CrewAssignment_IsSet => _DATALocation.HasValue;
-        public Perk.PerkCrewAssignment CrewAssignment => _CrewAssignment_IsSet ? (Perk.PerkCrewAssignment)_recordData.Span.Slice(_CrewAssignmentLocation, 0x1)[0] : default;
+        public Perk.PerkCrewAssignment CrewAssignment => _CrewAssignment_IsSet ? (Perk.PerkCrewAssignment)_recordData.Span.Slice(_CrewAssignmentLocation, 0x1)[0] : default(Perk.PerkCrewAssignment);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Perk.Flag Flags => _Flags_IsSet ? (Perk.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Perk.Flag Flags => _Flags_IsSet ? (Perk.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Perk.Flag);
         #endregion
         #region Restriction
         private int? _RestrictionLocation;

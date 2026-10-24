@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public LocationTargetRadius.VersioningBreaks Versioning { get; private set; }
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public UInt32 CollectionIndex => _structData.Length <= 0xC ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public UInt32 CollectionIndex => _structData.Length <= 0xC ? default(UInt32) : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

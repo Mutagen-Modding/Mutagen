@@ -2305,7 +2305,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public ShaderParticleGeometry.TypeEnum Type => _Type_IsSet ? (ShaderParticleGeometry.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public ShaderParticleGeometry.TypeEnum Type => _Type_IsSet ? (ShaderParticleGeometry.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(ShaderParticleGeometry.TypeEnum);
         #endregion
         #region BoxSize
         private int _BoxSizeLocation => _DATALocation!.Value.Min + 0x28;

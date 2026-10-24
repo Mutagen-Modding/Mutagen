@@ -2303,22 +2303,22 @@ namespace Mutagen.Bethesda.Fallout3
         #region Density
         private int _DensityLocation => _DATALocation!.Value.Min;
         private bool _Density_IsSet => _DATALocation.HasValue;
-        public Byte Density => _Density_IsSet ? _recordData.Span[_DensityLocation] : default;
+        public Byte Density => _Density_IsSet ? _recordData.Span[_DensityLocation] : default(Byte);
         #endregion
         #region MinSlope
         private int _MinSlopeLocation => _DATALocation!.Value.Min + 0x1;
         private bool _MinSlope_IsSet => _DATALocation.HasValue;
-        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default;
+        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default(Byte);
         #endregion
         #region MaxSlope
         private int _MaxSlopeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _MaxSlope_IsSet => _DATALocation.HasValue;
-        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default(Byte);
         #endregion
         #region Unused
         private int _UnusedLocation => _DATALocation!.Value.Min + 0x3;
         private bool _Unused_IsSet => _DATALocation.HasValue;
-        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
+        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default(Byte);
         #endregion
         #region UnitFromWaterAmount
         private int _UnitFromWaterAmountLocation => _DATALocation!.Value.Min + 0x4;
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region UnitFromWaterMode
         private int _UnitFromWaterModeLocation => _DATALocation!.Value.Min + 0x8;
         private bool _UnitFromWaterMode_IsSet => _DATALocation.HasValue;
-        public Grass.UnitFromWaterType UnitFromWaterMode => _UnitFromWaterMode_IsSet ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_UnitFromWaterModeLocation, 0x4)) : default;
+        public Grass.UnitFromWaterType UnitFromWaterMode => _UnitFromWaterMode_IsSet ? (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_UnitFromWaterModeLocation, 0x4)) : default(Grass.UnitFromWaterType);
         #endregion
         #region PositionRange
         private int _PositionRangeLocation => _DATALocation!.Value.Min + 0xC;
@@ -2358,7 +2358,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x1C;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Grass.GrassFlag Flags => _Flags_IsSet ? (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Grass.GrassFlag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

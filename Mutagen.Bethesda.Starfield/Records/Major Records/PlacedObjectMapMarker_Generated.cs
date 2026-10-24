@@ -1532,7 +1532,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         private int _UnknownLocation => _TNAMLocation!.Value.Min + 0x1;
         private bool _Unknown_IsSet => _TNAMLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         #region VNAM
         private int? _VNAMLocation;

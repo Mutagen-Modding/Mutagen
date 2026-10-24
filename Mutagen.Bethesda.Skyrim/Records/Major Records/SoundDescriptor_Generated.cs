@@ -2593,12 +2593,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Priority
         private int _PriorityLocation => _BNAMLocation!.Value.Min + 0x2;
         private bool _Priority_IsSet => _BNAMLocation.HasValue;
-        public Byte Priority => _Priority_IsSet ? _recordData.Span[_PriorityLocation] : default;
+        public Byte Priority => _Priority_IsSet ? _recordData.Span[_PriorityLocation] : default(Byte);
         #endregion
         #region Variance
         private int _VarianceLocation => _BNAMLocation!.Value.Min + 0x3;
         private bool _Variance_IsSet => _BNAMLocation.HasValue;
-        public Byte Variance => _Variance_IsSet ? _recordData.Span[_VarianceLocation] : default;
+        public Byte Variance => _Variance_IsSet ? _recordData.Span[_VarianceLocation] : default(Byte);
         #endregion
         #region StaticAttenuation
         private int _StaticAttenuationLocation => _BNAMLocation!.Value.Min + 0x4;
