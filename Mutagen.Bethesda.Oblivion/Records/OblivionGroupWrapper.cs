@@ -131,8 +131,9 @@ internal class OblivionGroupWrapper<TMajor> : IOblivionGroupGetter<TMajor>
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
         IAssetLinkCache? linkCache = null, 
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
-        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType);
+        return _groupMerge.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords);
     }
 }

@@ -87,9 +87,9 @@ public class CreationClubLiveListingsFileReaderTests
 
     [Theory, MutagenAutoData]
     public void FileIsCreated(
-        [Frozen]FilePath path,
-        [Frozen]MockFileSystemWatcher fileChanges,
-        [Frozen]MockFileSystem fs)
+        FilePath path,
+        MockFileSystemWatcher fileChanges,
+        MockFileSystem fs)
     {
         var listingA = new LoadOrderListing("ModA.esp", true);
         var reader = Substitute.For<ICreationClubRawListingsReader>();
@@ -117,9 +117,9 @@ public class CreationClubLiveListingsFileReaderTests
 
     [Theory, MutagenAutoData]
     public void FileIsDeleted(
-        [Frozen]FilePath path,
-        [Frozen]MockFileSystemWatcher fileChanges,
-        [Frozen]MockFileSystem fs)
+        FilePath path,
+        MockFileSystemWatcher fileChanges,
+        MockFileSystem fs)
     {
         fs.File.WriteAllText(path, string.Empty);
         var listingA = new LoadOrderListing("ModA.esp", true);
@@ -148,9 +148,9 @@ public class CreationClubLiveListingsFileReaderTests
 
     [Theory, MutagenAutoData]
     public void FileIsUpdated(
-        [Frozen]FilePath path,
-        [Frozen]MockFileSystemWatcher fileChanges,
-        [Frozen]MockFileSystem fs)
+        FilePath path,
+        MockFileSystemWatcher fileChanges,
+        MockFileSystem fs)
     {
         fs.File.WriteAllText(path, string.Empty);
         var listingA = new LoadOrderListing("ModA.esp", true);

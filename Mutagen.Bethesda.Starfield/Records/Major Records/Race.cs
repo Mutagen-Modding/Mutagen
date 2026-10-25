@@ -118,7 +118,8 @@ partial class RaceBinaryCreateTranslation
             frame: frame,
             maleMarker: RecordTypes.MNAM,
             femaleMarker: RecordTypes.FNAM,
-            transl: SkeletalModel.TryCreateFromBinary);
+            transl: SkeletalModel.TryCreateFromBinary,
+            existing: item.SkeletalModel);
         return (int)Race_FieldIndex.SkeletalModel;
     }
 
@@ -211,7 +212,8 @@ partial class RaceBinaryOverlay
             male: RecordTypes.MNAM,
             female: RecordTypes.FNAM,
             stream: stream,
-            creator: SkeletalModelBinaryOverlay.SkeletalModelFactory);
+            creator: SkeletalModelBinaryOverlay.SkeletalModelFactory,
+            existing: SkeletalModel);
         return (int)Race_FieldIndex.SkeletalModel;
     }
 

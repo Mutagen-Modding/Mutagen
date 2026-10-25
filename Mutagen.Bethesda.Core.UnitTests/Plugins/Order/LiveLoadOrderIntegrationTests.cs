@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using System.IO.Abstractions.TestingHelpers;
 using System.Reactive.Concurrency;
-using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
@@ -20,13 +19,13 @@ public class LiveLoadOrderIntegrationTests
 {
     [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void LiveLoadOrder(
-        [Frozen]IScheduler scheduler,
-        [Frozen]MockFileSystemWatcher watcher,
-        [Frozen]MockFileSystem fs,
-        [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathContext pluginPath,
-        [Frozen]IDataDirectoryProvider dataDir,
-        [Frozen]ICreationClubListingsPathProvider cccPath)
+        IScheduler scheduler,
+        MockFileSystemWatcher watcher,
+        MockFileSystem fs,
+        ILiveLoadOrderTimings timings, 
+        IPluginListingsPathContext pluginPath,
+        IDataDirectoryProvider dataDir,
+        ICreationClubListingsPathProvider cccPath)
     {
         var implicitKey = Implicits.Get(GameRelease.SkyrimSE).Listings.First();
         var lightMasterPath = Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName);
@@ -134,13 +133,13 @@ public class LiveLoadOrderIntegrationTests
 
     [Theory, MutagenAutoData(ConfigureMembers: true)]
     public void LiveLoadOrder_EnsureReaddRetainsOrder(
-        [Frozen]IScheduler scheduler,
-        [Frozen]MockFileSystemWatcher watcher,
-        [Frozen]MockFileSystem fs,
-        [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathContext pluginPath,
-        [Frozen]IDataDirectoryProvider dataDir,
-        [Frozen]ICreationClubListingsPathProvider cccPath)
+        IScheduler scheduler,
+        MockFileSystemWatcher watcher,
+        MockFileSystem fs,
+        ILiveLoadOrderTimings timings, 
+        IPluginListingsPathContext pluginPath,
+        IDataDirectoryProvider dataDir,
+        ICreationClubListingsPathProvider cccPath)
     {
         var implicitKey = Implicits.Get(GameRelease.SkyrimSE).Listings.First();
         fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName), string.Empty);
@@ -219,14 +218,14 @@ public class LiveLoadOrderIntegrationTests
     // This ensures that is respected
     [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void LiveLoadOrder_PluginsCCListingReorders(
-        [Frozen]IScheduler scheduler,
-        [Frozen]MockFileSystemWatcher watcher,
-        [Frozen]MockFileSystem fs,
-        [Frozen]IImplicitListingModKeyProvider implicitListingsProvider,
-        [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathContext pluginPath,
-        [Frozen]IDataDirectoryProvider dataDir,
-        [Frozen]ICreationClubListingsPathProvider cccPath)
+        IScheduler scheduler,
+        MockFileSystemWatcher watcher,
+        MockFileSystem fs,
+        IImplicitListingModKeyProvider implicitListingsProvider,
+        ILiveLoadOrderTimings timings, 
+        IPluginListingsPathContext pluginPath,
+        IDataDirectoryProvider dataDir,
+        ICreationClubListingsPathProvider cccPath)
     {
         var implicitKeys = implicitListingsProvider.Listings.ToArray();
         foreach (var implicitListing in implicitKeys)
@@ -302,12 +301,12 @@ public class LiveLoadOrderIntegrationTests
 
     [Theory, MutagenAutoData(ConfigureMembers: false)]
     public void LiveLoadOrder_DontReorderPluginsFile(
-        [Frozen]IScheduler scheduler,
-        [Frozen]MockFileSystem fs,
-        [Frozen]ILiveLoadOrderTimings timings, 
-        [Frozen]IPluginListingsPathContext pluginPath,
-        [Frozen]IDataDirectoryProvider dataDir,
-        [Frozen]ICreationClubListingsPathProvider cccPath)
+        IScheduler scheduler,
+        MockFileSystem fs,
+        ILiveLoadOrderTimings timings, 
+        IPluginListingsPathContext pluginPath,
+        IDataDirectoryProvider dataDir,
+        ICreationClubListingsPathProvider cccPath)
     {
         fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.Skyrim.FileName), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, TestConstants.LightModKey.FileName), string.Empty);

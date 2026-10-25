@@ -20,6 +20,7 @@ public partial class Cell
     {
         NoPreVis = 0x0000_0080,
         Persistent = 0x0000_0400,
+        PartialForm = 0x0000_4000,
         OffLimits = 0x0002_0000,
         CantWait = 0x0008_0000,
     }

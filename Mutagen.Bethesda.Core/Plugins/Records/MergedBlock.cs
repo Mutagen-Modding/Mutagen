@@ -83,11 +83,11 @@ public class MergedBlock<TBlock, TSubBlock> : ILoquiObject, IBinaryItem, IFormLi
     }
 
     // IAssetLinkContainerGetter
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
     {
         foreach (var block in _sourceBlocks)
         {
-            foreach (var link in block.EnumerateAssetLinks(queryCategories, linkCache, assetType))
+            foreach (var link in block.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return link;
             }

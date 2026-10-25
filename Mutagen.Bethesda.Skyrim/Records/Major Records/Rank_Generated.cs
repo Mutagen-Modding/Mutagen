@@ -1178,7 +1178,8 @@ namespace Mutagen.Bethesda.Skyrim
                                 binaryType: StringBinaryType.NullTerminate,
                                 eager: true,
                                 source: StringsSource.Normal);
-                        });
+                        },
+                        existing: item.Title);
                     return (int)Rank_FieldIndex.Title;
                 }
                 case RecordTypeInts.INAM:
@@ -1349,7 +1350,8 @@ namespace Mutagen.Bethesda.Skyrim
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: static (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, parsingBundle: p.MetaData, eager: false));
+                        creator: static (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, parsingBundle: p.MetaData, eager: false),
+                        existing: _TitleOverlay);
                     return (int)Rank_FieldIndex.Title;
                 }
                 case RecordTypeInts.INAM:

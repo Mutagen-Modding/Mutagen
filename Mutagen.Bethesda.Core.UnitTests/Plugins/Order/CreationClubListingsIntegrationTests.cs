@@ -1,6 +1,5 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using AutoFixture.Xunit2;
 using DynamicData;
 using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
@@ -20,8 +19,8 @@ public class CreationClubListingsIntegrationTests
 {
     [Theory, MutagenAutoData]
     public void FromCreationClubPathMissing(
-        [Frozen]IDataDirectoryProvider dataDirectoryProvider,
-        [Frozen]IFileSystem fs)
+        IDataDirectoryProvider dataDirectoryProvider,
+        IFileSystem fs)
     {
         var missingPath = Path.Combine(dataDirectoryProvider.Path, "Skyrim.ccc");
         Action a = () =>
@@ -34,10 +33,10 @@ public class CreationClubListingsIntegrationTests
 
     [Theory, MutagenAutoData]
     public void FromCreationClubPath(
-        [Frozen]MockFileSystem fs,
-        [Frozen]ModPath existingModPath,
-        [Frozen]IDataDirectoryProvider dataDir,
-        [Frozen]ICreationClubListingsPathProvider cccPath)
+        MockFileSystem fs,
+        ModPath existingModPath,
+        IDataDirectoryProvider dataDir,
+        ICreationClubListingsPathProvider cccPath)
     {
         fs.File.WriteAllLines(cccPath.Path!,
             new string[]
@@ -57,8 +56,8 @@ public class CreationClubListingsIntegrationTests
     [Theory, MutagenAutoData]
     public async Task LiveLoadOrder(
         IDataDirectoryProvider dataFolder,
-        [Frozen]MockFileSystemWatcher modified,
-        [Frozen]MockFileSystem fs)
+        MockFileSystemWatcher modified,
+        MockFileSystem fs)
     {
         var ccPath = Path.Combine(dataFolder.Path, "Skyrim.ccc");
         fs.File.WriteAllText(Path.Combine(dataFolder.Path, TestConstants.PluginModKey.FileName), string.Empty);

@@ -11,6 +11,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary;
 
 public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGeneration
 {
+    public static bool IsSplitPair(TypeGeneration typeGen)
+    {
+        var data = typeGen.GetFieldData();
+        return data.HasTrigger && !data.RecordType.HasValue;
+    }
+
     public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
     {
         GenderedType gender = typeGen as GenderedType;
@@ -68,6 +74,13 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
         {
             parseSuffix = "Required";
         }
+
+        // Parses that read both halves in one entry take no existing pair
+        var takesExisting = !(parseSuffix == "MarkerWithinItem"
+            || (parseSuffix == "Required" && !gender.MaleMarker.HasValue && !gender.GenderEnumRecord.HasValue)
+            || (parseSuffix == string.Empty
+                && gender.SubTypeGeneration.GetFieldData().RecordType.HasValue
+                && !(gender.SubTypeGeneration is LoquiType)));
 
         using (var args = sb.Call(
                    $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{parseSuffix}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
@@ -171,6 +184,11 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
             if (notNull)
             {
                 args.Add($"fallback: {gender.SubTypeGeneration.GetDefault(getter: false)}");
+            }
+
+            if (takesExisting)
+            {
+                args.Add($"existing: {itemAccessor}");
             }
         }
     }
@@ -634,6 +652,8 @@ public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGenerati
                         {
                             args.Add($"fallback: {gendered.SubTypeGeneration.GetDefault(getter: false)}");
                         }
+
+                        args.Add($"existing: _{typeGen.Name}Overlay");
                     }
                 }
                 else

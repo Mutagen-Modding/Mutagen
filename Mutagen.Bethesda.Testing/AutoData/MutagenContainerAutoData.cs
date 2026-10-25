@@ -1,6 +1,4 @@
-﻿using System.IO.Abstractions;
-using Autofac;
-using Autofac.Core;
+﻿using Autofac;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using Noggog.Testing.AutoFixture;
@@ -18,11 +16,8 @@ public class MutagenContainerAutoData : AutoDataAttribute
             fixture.Customize(new MutagenBaseCustomization());
             fixture.Customize(new MutagenReleaseCustomization(Release));
             fixture.Customize(new DefaultCustomization(FileSystem));
-            fixture.Customize(new ContainerAutoDataCustomization(
-                new MutagenTestModule(
-                    Release,
-                    fixture.Create<IFileSystem>(),
-                    [])));
+            fixture.Customize(new MutagenConcreteModsCustomization(release: Release, configureMembers: false));
+            fixture.Customize(new MutagenContainerCustomization(Release));
             return fixture;
         })
     {
@@ -41,11 +36,8 @@ public class MutagenContainerAutoData<TModule> : AutoDataAttribute
             fixture.Customize(new MutagenBaseCustomization());
             fixture.Customize(new MutagenReleaseCustomization(Release));
             fixture.Customize(new DefaultCustomization(FileSystem));
-            fixture.Customize(new ContainerAutoDataCustomization(
-                new MutagenTestModule(
-                    Release,
-                    fixture.Create<IFileSystem>(),
-                    [new TModule()])));
+            fixture.Customize(new MutagenConcreteModsCustomization(release: Release, configureMembers: false));
+            fixture.Customize(new MutagenContainerCustomization(Release, new TModule()));
             return fixture;
         })
     {

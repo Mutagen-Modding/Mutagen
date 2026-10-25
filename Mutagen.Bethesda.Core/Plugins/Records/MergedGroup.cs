@@ -104,13 +104,13 @@ public class MergedGroup<TMod, TModGetter> : ILoquiObject, IGroupGetter<TModGett
     public Type ContainedRecordType => typeof(TModGetter);
 
     // IAssetLinkContainerGetter
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
     {
         foreach (var record in Cache.Values)
         {
             if (record is IAssetLinkContainerGetter assetContainer)
             {
-                foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))
+                foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords))
                 {
                     yield return link;
                 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="Fallout4MajorRecord" customBinaryEnd="Normal">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="Fallout4MajorRecord" majorFlag="true" customBinaryEnd="Normal">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Float name="Priority" recordType="PNAM" nullable="False" default="50" />

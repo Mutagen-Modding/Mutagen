@@ -181,12 +181,12 @@ class BA2DX10Entry : IArchiveFile
 
             if (!isCompressed)
             {
-                br.BaseStream.Read(full, 0, full.Length);
+                br.BaseStream.ReadExactly(full);
             }
             else
             {
                 byte[] compressed = new byte[chunk._packSz];
-                br.BaseStream.Read(compressed, 0, compressed.Length);
+                br.BaseStream.ReadExactly(compressed);
                 var inflater = new Inflater();
                 inflater.SetInput(compressed);
                 inflater.Inflate(full);
@@ -430,7 +430,7 @@ class BA2FileEntry : IArchiveFile
     {
         using var s = AsStream();
         byte[] ret = new byte[s.Remaining()];
-        s.Read(ret);
+        s.ReadExactly(ret);
         return ret;
     }
 

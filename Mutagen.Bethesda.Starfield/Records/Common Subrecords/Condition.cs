@@ -24,7 +24,7 @@ public partial class Condition
     internal const int ParametersUsePackData = 0x08;
 
     /// <summary>
-    /// ParametersUseAliases and ParametersUsePackData exist on ConditionData object instead </ br>
+    /// ParametersUseAliases and ParametersUsePackData exist on ConditionData object instead <br />
     /// UseGlobal is implicit depending on the class type used for the Condition
     /// </summary>
     [Flags]

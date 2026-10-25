@@ -479,8 +479,8 @@ internal class Fallout3MultiModOverlay : IFallout3ModDisposableGetter
     IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite =>
         new BinaryModdedWriteBuilderTargetChoice<IFallout3ModGetter>(this, Fallout3Mod.Fallout3WriteBuilderInstantiator.Instance);
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => Fallout3ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => Fallout3ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => Fallout3ModCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
@@ -849,12 +849,12 @@ internal class MergedGroup<TGetter> : IFallout3GroupGetter<TGetter>, IReadOnlyCa
     public ILoquiRegistration ContainedRecordRegistration => _sourceGroups.First().ContainedRecordRegistration;
     public Type ContainedRecordType => typeof(TGetter);
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
     {
         foreach (var record in EnumerateMajorRecords())
         {
             if (record is not IAssetLinkContainerGetter assetContainer) continue;
-            foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))
+            foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return link;
             }
@@ -1047,8 +1047,8 @@ internal class MergedListGroup : IFallout3ListGroupGetter<ICellBlockGetter>
     public object? CommonSetterInstance(Type type) => GenericCommonInstanceGetter.Get(Fallout3ListGroupSetterCommon<ICellBlock>.Instance, typeof(ICellBlockGetter), type);
     public object CommonSetterTranslationInstance() => Fallout3ListGroupSetterTranslationCommon.Instance;
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => Fallout3ListGroupCommon<ICellBlockGetter>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => Fallout3ListGroupCommon<ICellBlockGetter>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     object IBinaryItem.BinaryWriteTranslator => Fallout3ListGroupBinaryWriteTranslation.Instance;
     void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)
@@ -1127,8 +1127,8 @@ internal class MergedCellBlock : ICellBlockGetter
     void IBinaryItem.WriteToBinary(MutagenWriter writer, TypedWriteParams translationParams)
         => CellBlockBinaryWriteTranslation.Instance.Write(writer: writer, item: this, translationParams: translationParams);
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => CellBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => CellBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => CellBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
@@ -1205,8 +1205,8 @@ internal class MergedCellSubBlock : ICellSubBlockGetter
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => CellSubBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => CellSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
         => CellSubBlockCommon.Instance.EnumerateMajorRecords(this);
@@ -1329,8 +1329,8 @@ internal class MergedWorldspace : IWorldspaceGetter
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => WorldspaceCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => WorldspaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
         => WorldspaceCommon.Instance.EnumerateMajorRecords(this);
@@ -1396,8 +1396,8 @@ internal class MergedWorldspaceBlock : IWorldspaceBlockGetter
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => WorldspaceBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => WorldspaceBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => WorldspaceBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
         => WorldspaceBlockCommon.Instance.EnumerateMajorRecords(this);
@@ -1462,8 +1462,8 @@ internal class MergedWorldspaceSubBlock : IWorldspaceSubBlockGetter
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => WorldspaceSubBlockCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
 
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => WorldspaceSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => WorldspaceSubBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
         => WorldspaceSubBlockCommon.Instance.EnumerateMajorRecords(this);
@@ -1555,8 +1555,8 @@ internal class MergedWorldspaceCell : ICellGetter
 
     public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)
         => CellCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
-        => CellCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
+        => CellCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
 
     public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords()
         => CellCommon.Instance.EnumerateMajorRecords(this);

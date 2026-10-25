@@ -1248,8 +1248,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(IRace);
 
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
-        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => RaceSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => RaceSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
         public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
@@ -1762,22 +1762,22 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Eyes?.RemapLinks(mapping);
         }
         
-        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRace obj)
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRace obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
                 {
                     yield return item;
                 }
             }
             if (obj.BodyData is {} BodyDataItem)
             {
-                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
                 {
                     yield return item;
                 }
@@ -2334,22 +2334,22 @@ namespace Mutagen.Bethesda.Fallout3
             yield break;
         }
         
-        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return item;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
                 {
                     yield return item;
                 }
             }
             if (obj.BodyData is {} BodyDataItem)
             {
-                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in BodyDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
                 {
                     yield return item;
                 }
@@ -3137,7 +3137,8 @@ namespace Mutagen.Bethesda.Fallout3
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: HeadData.TryCreateFromBinary);
+                        transl: HeadData.TryCreateFromBinary,
+                        existing: item.HeadData);
                     return (int)Race_FieldIndex.HeadData;
                 }
                 case RecordTypeInts.NAM1:
@@ -3147,7 +3148,8 @@ namespace Mutagen.Bethesda.Fallout3
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: BodyData.TryCreateFromBinary);
+                        transl: BodyData.TryCreateFromBinary,
+                        existing: item.BodyData);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -3177,7 +3179,8 @@ namespace Mutagen.Bethesda.Fallout3
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: FaceGenData.TryCreateFromBinary);
+                        transl: FaceGenData.TryCreateFromBinary,
+                        existing: item.FaceGenData);
                     return (int)Race_FieldIndex.FaceGenData;
                 }
                 default:
@@ -3225,7 +3228,7 @@ namespace Mutagen.Bethesda.Fallout3
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
-        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3490,7 +3493,8 @@ namespace Mutagen.Bethesda.Fallout3
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _HeadDataOverlay);
                     return (int)Race_FieldIndex.HeadData;
                 }
                 case RecordTypeInts.NAM1:
@@ -3502,7 +3506,8 @@ namespace Mutagen.Bethesda.Fallout3
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _BodyDataOverlay);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -3534,7 +3539,8 @@ namespace Mutagen.Bethesda.Fallout3
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => FaceGenDataBinaryOverlay.FaceGenDataFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _FaceGenDataOverlay);
                     return (int)Race_FieldIndex.FaceGenData;
                 }
                 default:

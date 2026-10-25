@@ -3271,7 +3271,8 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: BodyData.TryCreateFromBinary);
+                        transl: BodyData.TryCreateFromBinary,
+                        existing: item.BodyData);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:
@@ -3614,7 +3615,8 @@ namespace Mutagen.Bethesda.Oblivion
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _BodyDataOverlay);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.HNAM:

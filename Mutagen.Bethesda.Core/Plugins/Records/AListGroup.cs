@@ -89,7 +89,7 @@ public abstract class AListGroup<TObject> : IListGroup<TObject>
     public abstract void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery query, IAssetLinkCache? linkCache);
     
     /// <inheritdoc />
-    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+    public abstract IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true);
 
     /// <inheritdoc />
     public void Add(TObject item) => ProtectedList.Add(item);
@@ -113,5 +113,6 @@ public abstract class AListGroup<TObject> : IListGroup<TObject>
     /// <inheritdoc />
     public abstract IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories,
         IAssetLinkCache? linkCache = null,
-        Type? assetType = null);
+        Type? assetType = null,
+        bool iterateNestedRecords = true);
 }

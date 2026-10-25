@@ -204,10 +204,10 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine($"public object CommonSetterTranslationInstance() => {gameName}ListGroupSetterTranslationCommon.Instance;");
             sb.AppendLine();
 
-            sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+            sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)");
             using (sb.IncreaseDepth())
             {
-                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+                sb.AppendLine($"=> {gameName}ListGroupCommon<ICellBlockGetter>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);");
             }
             sb.AppendLine();
 
@@ -337,10 +337,10 @@ public class MultiModOverlayModule : GenerationModule
             }
             sb.AppendLine();
 
-            sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+            sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)");
             using (sb.IncreaseDepth())
             {
-                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+                sb.AppendLine("=> CellBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);");
             }
             sb.AppendLine();
 
@@ -561,14 +561,14 @@ public class MultiModOverlayModule : GenerationModule
 
             // IAssetLinkContainerGetter - walk EnumerateMajorRecords (dedup across sources at
             // the leaf FormKey) so nested records under shared-FormKey parents are preserved.
-            sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+            sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)");
             using (sb.CurlyBrace())
             {
                 sb.AppendLine("foreach (var record in EnumerateMajorRecords())");
                 using (sb.CurlyBrace())
                 {
                     sb.AppendLine("if (record is not IAssetLinkContainerGetter assetContainer) continue;");
-                    sb.AppendLine("foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType))");
+                    sb.AppendLine("foreach (var link in assetContainer.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords))");
                     using (sb.CurlyBrace())
                     {
                         sb.AppendLine("yield return link;");
@@ -910,10 +910,10 @@ public class MultiModOverlayModule : GenerationModule
         // EnumerateAssetLinks - delegate to Common; it handles the mod-level Inferred
         // branch and iterates each group, which reaches MergedGroup.EnumerateAssetLinks
         // (which itself walks EnumerateMajorRecords for correct cross-source coverage).
-        sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+        sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)");
         using (sb.IncreaseDepth())
         {
-            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+            sb.AppendLine($"=> {gameName}ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);");
         }
         sb.AppendLine();
 
@@ -1597,8 +1597,8 @@ public class MultiModOverlayModule : GenerationModule
         // Form links and asset links
         sb.AppendLine($"public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true)");
         sb.AppendLine($"    => {recordTypeName}Common.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
-        sb.AppendLine($"public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
-        sb.AppendLine($"    => {recordTypeName}Common.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+        sb.AppendLine($"public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)");
+        sb.AppendLine($"    => {recordTypeName}Common.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);");
         sb.AppendLine();
     }
 
@@ -1629,10 +1629,10 @@ public class MultiModOverlayModule : GenerationModule
             sb.AppendLine($"=> {typeName}Common.Instance.EnumerateFormLinks(this, iterateNestedRecords);");
         }
         sb.AppendLine();
-        sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)");
+        sb.AppendLine("public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)");
         using (sb.IncreaseDepth())
         {
-            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);");
+            sb.AppendLine($"=> {typeName}Common.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);");
         }
         sb.AppendLine();
 

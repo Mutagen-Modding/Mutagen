@@ -15,7 +15,7 @@ public class BaseEnvironmentBuilder : ISpecimenBuilder
 {
     private readonly GameRelease _release;
     public static readonly DirectoryPath GameDirectory = $"{PathingUtil.DrivePrefix}GameDirectory";
-    private bool _requestedFileSystem;
+    private IDataDirectoryProvider? _dataDirectoryProvider;
 
     public BaseEnvironmentBuilder(GameRelease release)
     {
@@ -48,13 +48,14 @@ public class BaseEnvironmentBuilder : ISpecimenBuilder
         }
         else if (t == typeof(IDataDirectoryProvider))
         {
+            if (_dataDirectoryProvider != null) return _dataDirectoryProvider;
             var dir = context.Create<IGameDirectoryProvider>();
-            var ret = Substitute.For<IDataDirectoryProvider>();
-            ret.Path.Returns(x =>
+            _dataDirectoryProvider = Substitute.For<IDataDirectoryProvider>();
+            _dataDirectoryProvider.Path.Returns(x =>
             {
                 return new DirectoryPath(Path.Combine(dir.Path, "Data"));
             });
-            return ret;
+            return _dataDirectoryProvider;
         }
         else if (t == typeof(IFileSystemEnvironmentInstructions))
         {

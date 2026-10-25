@@ -8935,7 +8935,8 @@ namespace Mutagen.Bethesda.Fallout4
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         translationParams: Race_Registration.SkeletalModelConverter,
-                        transl: SimpleModel.TryCreateFromBinary);
+                        transl: SimpleModel.TryCreateFromBinary,
+                        existing: item.SkeletalModel);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
@@ -9015,7 +9016,8 @@ namespace Mutagen.Bethesda.Fallout4
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: BodyData.TryCreateFromBinary);
+                        transl: BodyData.TryCreateFromBinary,
+                        existing: item.BodyData);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.GNAM:
@@ -9031,7 +9033,8 @@ namespace Mutagen.Bethesda.Fallout4
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: Model.TryCreateFromBinary);
+                        transl: Model.TryCreateFromBinary,
+                        existing: item.BehaviorGraph);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -9166,7 +9169,8 @@ namespace Mutagen.Bethesda.Fallout4
                         femaleMarker: RecordTypes.FNAM,
                         marker: RecordTypes.NAM0,
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-                        transl: HeadData.TryCreateFromBinary);
+                        transl: HeadData.TryCreateFromBinary,
+                        existing: item.HeadData);
                     return (int)Race_FieldIndex.HeadData;
                 }
                 case RecordTypeInts.NAM8:
@@ -9978,7 +9982,8 @@ namespace Mutagen.Bethesda.Fallout4
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => SimpleModelBinaryOverlay.SimpleModelFactory(s, p, r),
-                        translationParams: Race_Registration.SkeletalModelConverter);
+                        translationParams: Race_Registration.SkeletalModelConverter,
+                        existing: _SkeletalModelOverlay);
                     return (int)Race_FieldIndex.SkeletalModel;
                 }
                 case RecordTypeInts.MTNM:
@@ -10047,7 +10052,8 @@ namespace Mutagen.Bethesda.Fallout4
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => BodyDataBinaryOverlay.BodyDataFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _BodyDataOverlay);
                     return (int)Race_FieldIndex.BodyData;
                 }
                 case RecordTypeInts.GNAM:
@@ -10064,7 +10070,8 @@ namespace Mutagen.Bethesda.Fallout4
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: static (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
-                        translationParams: translationParams);
+                        translationParams: translationParams,
+                        existing: _BehaviorGraphOverlay);
                     return (int)Race_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.NAM4:
@@ -10183,7 +10190,8 @@ namespace Mutagen.Bethesda.Fallout4
                         marker: RecordTypes.NAM0,
                         stream: stream,
                         creator: static (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
-                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
+                        femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
+                        existing: _HeadDataOverlay);
                     return (int)Race_FieldIndex.HeadData;
                 }
                 case RecordTypeInts.NAM8:

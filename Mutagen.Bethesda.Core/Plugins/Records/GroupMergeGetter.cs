@@ -47,9 +47,10 @@ internal sealed class GroupMergeGetter<TGroup, TMajor> : IGroupGetter<TMajor>, I
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed,
         IAssetLinkCache? linkCache = null,
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
-        return SubGroups.SelectMany(x => x.EnumerateAssetLinks(queryCategories, linkCache, assetType));
+        return SubGroups.SelectMany(x => x.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords));
     }
 
     private TMajor Get(FormKey key)

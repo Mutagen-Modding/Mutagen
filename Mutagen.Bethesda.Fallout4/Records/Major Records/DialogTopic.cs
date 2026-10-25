@@ -15,6 +15,12 @@ namespace Mutagen.Bethesda.Fallout4;
 partial class DialogTopic
 {
     [Flags]
+    public enum MajorFlag
+    {
+        PartialForm = 0x4000,
+    }
+
+    [Flags]
     public enum TopicFlag
     {
         DoAllBeforeRepeating = 0x1

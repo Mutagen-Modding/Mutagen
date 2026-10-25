@@ -129,11 +129,11 @@ public class MergedListGroup<TBlock, TListGroup> : ILoquiObject, IListGroupGette
     }
 
     // IAssetLinkContainerGetter
-    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null)
+    public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories = AssetLinkQuery.Listed, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true)
     {
         foreach (var block in Cache)
         {
-            foreach (var link in block.EnumerateAssetLinks(queryCategories, linkCache, assetType))
+            foreach (var link in block.EnumerateAssetLinks(queryCategories, linkCache, assetType, iterateNestedRecords))
             {
                 yield return link;
             }

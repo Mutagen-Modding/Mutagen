@@ -25,7 +25,8 @@ public interface IAssetLinkContainer : IAssetLinkContainerGetter
     /// <summary>
     /// Enumerates only AssetLinks that are explicitly listed in the record and can be modified directly.
     /// </summary>
-    new IEnumerable<IAssetLink> EnumerateListedAssetLinks();
+    /// <param name="iterateNestedRecords">If true, recurse into nested major records. If false, only return links from this record's own fields and sub-records.</param>
+    new IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true);
 }
 
 public static class AssetLinkContainerExt
@@ -59,10 +60,12 @@ public static class AssetLinkContainerExt
 /// </summary>
 public interface IAssetLinkContainerGetter
 {
+    /// <param name="iterateNestedRecords">If true, recurse into nested major records. If false, only return links from this record's own fields and sub-records.</param>
     IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories, 
         IAssetLinkCache? linkCache = null, 
-        Type? assetType = null);
+        Type? assetType = null,
+        bool iterateNestedRecords = true);
 }
 
 public static class AssetLinkContainerGetterExt
@@ -70,78 +73,91 @@ public static class AssetLinkContainerGetterExt
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         AssetLinkQuery queryCategories,
-        IAssetLinkCache? linkCache = null)
+        IAssetLinkCache? linkCache = null,
+        bool iterateNestedRecords = true)
         where TAsset : IAssetType
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(queryCategories, linkCache, typeof(TAsset))
+        return assetLinkContainerGetter.EnumerateAssetLinks(queryCategories, linkCache, typeof(TAsset), iterateNestedRecords: iterateNestedRecords)
             .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateListedAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Listed, linkCache: null, assetType);
+        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Listed, linkCache: null, assetType, iterateNestedRecords: iterateNestedRecords);
     }
     
-    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateListedAssetLinks<TAsset>(this IAssetLinkContainerGetter assetLinkContainerGetter)
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateListedAssetLinks<TAsset>(
+        this IAssetLinkContainerGetter assetLinkContainerGetter,
+        bool iterateNestedRecords = true)
         where TAsset : IAssetType
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Listed, linkCache: null, typeof(TAsset))
+        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Listed, linkCache: null, typeof(TAsset), iterateNestedRecords: iterateNestedRecords)
             .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateInferredAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Inferred, linkCache: null, assetType);
+        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Inferred, linkCache: null, assetType, iterateNestedRecords: iterateNestedRecords);
     }
     
-    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateInferredAssetLinks<TAsset>(this IAssetLinkContainerGetter assetLinkContainerGetter)
+    public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateInferredAssetLinks<TAsset>(
+        this IAssetLinkContainerGetter assetLinkContainerGetter,
+        bool iterateNestedRecords = true)
         where TAsset : IAssetType
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Inferred, linkCache: null, typeof(TAsset))
+        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Inferred, linkCache: null, typeof(TAsset), iterateNestedRecords: iterateNestedRecords)
             .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateResolvedAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         IAssetLinkCache linkCache,
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, assetType);
+        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, assetType, iterateNestedRecords: iterateNestedRecords);
     }
     
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateResolvedAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache linkCache)
+        IAssetLinkCache linkCache,
+        bool iterateNestedRecords = true)
         where TAsset : IAssetType
     {
-        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, typeof(TAsset))
+        return assetLinkContainerGetter.EnumerateAssetLinks(AssetLinkQuery.Resolved, linkCache: linkCache, typeof(TAsset), iterateNestedRecords: iterateNestedRecords)
             .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
     
     public static IEnumerable<IAssetLinkGetter> EnumerateAllAssetLinks(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
         IAssetLinkCache linkCache,
-        Type? assetType = null)
+        Type? assetType = null,
+        bool iterateNestedRecords = true)
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
             AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Listed, 
             linkCache: linkCache,
-            assetType);
+            assetType,
+            iterateNestedRecords: iterateNestedRecords);
     }
     
     public static IEnumerable<IAssetLinkGetter<TAsset>> EnumerateAllAssetLinks<TAsset>(
         this IAssetLinkContainerGetter assetLinkContainerGetter,
-        IAssetLinkCache linkCache)
+        IAssetLinkCache linkCache,
+        bool iterateNestedRecords = true)
         where TAsset : IAssetType
     {
         return assetLinkContainerGetter.EnumerateAssetLinks(
                 AssetLinkQuery.Resolved | AssetLinkQuery.Inferred | AssetLinkQuery.Listed, 
                 linkCache: linkCache, 
-                typeof(TAsset))
+                typeof(TAsset),
+                iterateNestedRecords: iterateNestedRecords)
             .WhereCastable<IAssetLinkGetter, IAssetLinkGetter<TAsset>>();
     }
 }

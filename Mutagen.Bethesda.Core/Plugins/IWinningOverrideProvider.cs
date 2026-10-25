@@ -39,6 +39,11 @@ public interface IWinningOverrideProvider
     IEnumerable<IMajorRecordGetter> WinningOverrides(Type type, bool includeDeletedRecords = false);
 }
 
+/// <summary>
+/// Provides winning record contexts for the specified mod types
+/// </summary>
+/// <typeparam name="TMod">Setter Mod type to target</typeparam>
+/// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
 public interface IWinningOverrideProvider<TMod, TModGetter> : IWinningOverrideProvider
     where TModGetter : class, IModGetter
     where TMod : class, TModGetter, IMod
@@ -52,8 +57,6 @@ public interface IWinningOverrideProvider<TMod, TModGetter> : IWinningOverridePr
     /// <br />
     /// This system is overkill for simpler top-level records.
     /// </summary>
-    /// <typeparam name="TMod">Setter Mod type to target</typeparam>
-    /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
     /// <typeparam name="TSetter">
     /// Setter interface type of record to search for and iterate.
     /// </typeparam>
@@ -78,8 +81,6 @@ public interface IWinningOverrideProvider<TMod, TModGetter> : IWinningOverridePr
     /// <br />
     /// This system is overkill for simpler top-level records.
     /// </summary>
-    /// <typeparam name="TMod">Setter Mod type to target</typeparam>
-    /// <typeparam name="TModGetter">Getter Mod type to target</typeparam>
     /// <param name="linkCache">LinkCache to use when creating parent objects</param>
     /// <param name="type">
     /// Type of record to search for and iterate. <br/>

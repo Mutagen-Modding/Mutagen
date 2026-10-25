@@ -11,7 +11,7 @@ partial class FootstepSetBinaryCreateTranslation
 {
     public static partial ParseResult FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item, PreviousParse lastParsed)
     {
-        var counts = GetListCounts(frame);
+        var counts = GetListCounts(frame, frame.Length, out var dataEnd);
 
         IEnumerable<IFormLinkGetter<Footstep>> ReadIn(int count)
         {
@@ -26,11 +26,17 @@ partial class FootstepSetBinaryCreateTranslation
         item.WalkForwardAlternateFootsteps.SetTo(ReadIn(counts[2]));
         item.RunForwardAlternateFootsteps.SetTo(ReadIn(counts[3]));
         item.WalkForwardAlternateFootsteps2.SetTo(ReadIn(counts[4]));
+        frame.Position = dataEnd;
 
         return null;
     }
 
     public static int[] GetListCounts(IMutagenReadStream frame)
+    {
+        return GetListCounts(frame, frame.Length, out _);
+    }
+
+    internal static int[] GetListCounts(IMutagenReadStream frame, long finalPos, out long dataEnd)
     {
         var subFrame = frame.ReadSubrecordHeader(RecordTypes.XCNT);
         if (subFrame.ContentLength != 20)
@@ -48,9 +54,14 @@ partial class FootstepSetBinaryCreateTranslation
 
         var dataHeader = frame.ReadSubrecordHeader(RecordTypes.DATA);
         var expectedLen = formIDCount * 4;
-        if (dataHeader.ContentLength != expectedLen)
+        if (dataHeader.ContentLength < expectedLen)
         {
             throw new ArgumentException($"DATA record had unexpected length that did not match previous counts {dataHeader.ContentLength} != {expectedLen}");
+        }
+        dataEnd = frame.Position + dataHeader.ContentLength;
+        if (dataEnd > finalPos)
+        {
+            throw new ArgumentException($"DATA record had unexpected length that ran past the end of its record {dataEnd} > {finalPos}");
         }
         return ret;
     }
@@ -108,7 +119,7 @@ partial class FootstepSetBinaryOverlay
 
     public partial ParseResult CountCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
     {
-        int[] counts = FootstepSetBinaryCreateTranslation.GetListCounts(stream);
+        int[] counts = FootstepSetBinaryCreateTranslation.GetListCounts(stream, offset + _recordData.Length, out var dataEnd);
 
         IReadOnlyList<IFormLinkGetter<IFootstepGetter>> Get(int index)
         {
@@ -127,6 +138,7 @@ partial class FootstepSetBinaryOverlay
         WalkForwardAlternateFootsteps = Get(2);
         RunForwardAlternateFootsteps = Get(3);
         WalkForwardAlternateFootsteps2 = Get(4);
+        stream.Position = checked((int)dataEnd);
 
         return null;
     }
