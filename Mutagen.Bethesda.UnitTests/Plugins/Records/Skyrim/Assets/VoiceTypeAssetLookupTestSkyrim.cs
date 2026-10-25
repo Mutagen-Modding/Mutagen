@@ -75,24 +75,24 @@ public class VoiceTypeAssetLookupTestFixture
         Topic.Subtype = DialogTopic.SubtypeEnum.Scene;
         response.Conditions.AddRange(conditions);
 
-        AssertSpeakersEqualImpl(response, expectedSpeakers, expectedVoices);
+        AssertSpeakersEqualImpl(GetLookup(), response, expectedSpeakers, expectedVoices);
     }
 
-    public void AssertSpeakersEqual(IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices)
+    public void AssertSpeakersEqual(IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices, VoiceTypeAssetLookup? lookup = null)
     {
         var response = CreateResponses();
         response.Conditions.AddRange(conditions);
 
-        AssertSpeakersEqualImpl(response, expectedSpeakers, expectedVoices);
+        AssertSpeakersEqualImpl(lookup ?? GetLookup(), response, expectedSpeakers, expectedVoices);
     }
 
-    void AssertSpeakersEqualImpl(DialogResponses response, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices)
+    void AssertSpeakersEqualImpl(VoiceTypeAssetLookup lookup, DialogResponses response, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices)
     {
         // We compare against a resolved list to provide more context in errors
-        var actualSpeakers = GetLookup().GetSpeakers(response).Select(s => s.Resolve(LinkCache));
+        var actualSpeakers = lookup.GetSpeakers(response).Select(s => s.Resolve(LinkCache));
         actualSpeakers.ShouldBe(expectedSpeakers, ignoreOrder: true);
 
-        var actualVoices = GetLookup().GetVoiceTypes(response).Select(v => v.Resolve(LinkCache));
+        var actualVoices = lookup.GetVoiceTypes(response).Select(v => v.Resolve(LinkCache));
         actualVoices.ShouldBe(expectedVoices.Select(v => v.Resolve(LinkCache)), ignoreOrder: true);
     }
 }
@@ -101,7 +101,6 @@ public class VoiceTypeAssetLookupTestSkyrim
 {
     public static class ConditionFactory
     {
-        // TODO: Test for combining with OR and AND
         public static ConditionFloat Create(ConditionData data, float compareValue, CompareOperator op = CompareOperator.EqualTo, bool or = false)
         {
             return new ConditionFloat
@@ -432,10 +431,25 @@ public class VoiceTypeAssetLookupTestSkyrim
         npc1.Race.SetTo(race1);
         var npc2 = fixture.CreateSpeaker("npc2");
         npc2.Race.SetTo(race2);
+        var npc3 = fixture.CreateSpeaker("npc3");
+        npc3.Race.SetTo(race2);
+
+        var lookup = fixture.GetLookup();
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsRace(race1), 1)],
-            [npc1], [npc1.Voice]);
+            [npc1], [npc1.Voice], lookup);
+
+        // The lookup should not be mutated during GetSpeakers. VoiceContainer is intentionally lazy in cloning _voices.
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(race2), 1)],
+            [npc2, npc3], [npc2.Voice, npc3.Voice], lookup);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(race2), 1), ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)],
+            [npc2], [npc2.Voice], lookup);
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(race2), 1)],
+            [npc2, npc3], [npc2.Voice, npc3.Voice], lookup);
     }
 
     [Theory, MutagenModAutoData]

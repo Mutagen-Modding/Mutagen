@@ -12,6 +12,8 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     /// </summary>
     private Dictionary<FormKey, HashSet<FormKey>> _voices = new();
     public IReadOnlyDictionary<FormKey, HashSet<FormKey>> Voices => _voices;
+    // If false, we need to deep copy _voices before mutation
+    private bool _usesSharedDictionary;
 
     #region Constructors
     public VoiceContainer()
@@ -21,6 +23,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public VoiceContainer(FormKey npc, IEnumerable<FormKey> voiceTypes)
     {
+        _usesSharedDictionary = false;
         foreach (var voiceType in voiceTypes)
         {
             _voices.Add(voiceType, [npc]);
@@ -29,11 +32,13 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public VoiceContainer(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
     {
-        _voices = voiceSpeakers.ToDictionary();
+        _usesSharedDictionary = true;
+        _voices = voiceSpeakers;
     }
 
     public VoiceContainer(IEnumerable<FormKey> npcs, Dictionary<FormKey, HashSet<FormKey>> speakerVoices)
     {
+        _usesSharedDictionary = false;
         foreach (var npc in npcs)
         {
             if (!speakerVoices.TryGetValue(npc, out var voices))
@@ -47,11 +52,13 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public VoiceContainer(FormKey voiceType)
     {
+        _usesSharedDictionary = false;
         _voices.Add(voiceType, []);
     }
 
     public VoiceContainer(IEnumerable<FormKey> voiceTypes)
     {
+        _usesSharedDictionary = false;
         foreach (var voiceType in voiceTypes)
         {
             _voices.Add(voiceType, []);
@@ -59,9 +66,25 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     }
     #endregion
 
+    private void CloneDictionaryIfShared()
+    {
+        if (!_usesSharedDictionary)
+            return;
+        _usesSharedDictionary = false;
+
+        var shared = _voices;
+        _voices = [];
+        foreach (var voice in shared)
+        {
+            _voices[voice.Key] = voice.Value.ToHashSet();
+        }
+    }
+
     #region BinaryOperators
     public void Invert(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
     {
+        // We don't mutate originalVoices, so safe to run on a shared dictionary
+        _usesSharedDictionary = false;
         var originalVoices = _voices;
         _voices = [];
         foreach (var (voice, allSpeakers) in voiceSpeakers)
@@ -88,6 +111,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     {
         // If the other is default, we can stay as we are
         if (other == null) return;
+        CloneDictionaryIfShared();
 
         // If both are non-default, we need to intersect the voice types and their NPCs
         var removeVoiceTypes = new List<FormKey>();
@@ -129,6 +153,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public void Insert(VoiceContainer other)
     {
+        CloneDictionaryIfShared();
         foreach (var (voiceType, npcs) in other._voices)
         {
             if (_voices.TryGetValue(voiceType, out var otherNpcs))
@@ -160,6 +185,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     #region Mutation
     public void AddSpeaker(FormKey speaker, HashSet<FormKey> voices)
     {
+        CloneDictionaryIfShared();
         foreach (var voice in voices)
         {
             _voices.GetOrAdd(voice).Add(speaker);
@@ -168,6 +194,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     // Add all NPCs with a voice type
     public void AddFullVoice(FormKey voice)
     {
+        CloneDictionaryIfShared();
         _voices[voice] = [];
     }
     #endregion
