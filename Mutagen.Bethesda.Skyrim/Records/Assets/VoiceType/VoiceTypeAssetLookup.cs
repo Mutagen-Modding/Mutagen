@@ -24,6 +24,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     // Databases. These aren't good candidates for usage caches as data here can be inherited
     private HashSet<FormKey> _usedVoiceTypes = null!;
+
+    // Needs more memory compared to retrieving voices on lookup, but we already walk LoadOrder.Npcs during prep to build other databases
     private readonly Dictionary<FormKey, HashSet<FormKey>> _speakerVoices = new();
 
     // Inverse lookup of voice type -> speakers for GetIsVoiceType conditions and inversions
@@ -35,9 +37,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private readonly Dictionary<FormKey, HashSet<FormKey>> _potentialFactionNPCs = [];
 
     private readonly Dictionary<FormKey, HashSet<FormKey>> _classNPCs = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _raceNPCs = new();
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _keywordNPCs = new();
-    private readonly Dictionary<MaleFemaleGender, HashSet<FormKey>> _genderNPCs = new();
+
+    // Traits are always inherited along with voice type, so we need to track VoiceSpeakers for each
+    private readonly Dictionary<FormKey, Dictionary<FormKey, HashSet<FormKey>>> _raceVoiceSpeakers = new();
+    private readonly Dictionary<FormKey, Dictionary<FormKey, HashSet<FormKey>>> _keywordVoiceSpeakers = new();
+    private readonly Dictionary<MaleFemaleGender, Dictionary<FormKey, HashSet<FormKey>>> _genderVoiceSpeakers = new();
     private HashSet<FormKey> _childNPCs = null!;
 
     //Caches
@@ -52,32 +56,6 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         _formLinkCache = linkCache.FormLinkCache;
         _usageCache = usageCache;
 
-        foreach (var quest in _formLinkCache.WinningOverrides<IQuestGetter>())
-        {
-            foreach (var alias in quest.Aliases)
-            {
-                var uniqueActor = alias.UniqueActor.FormKey;
-                if (uniqueActor.IsNull) continue;
-
-                foreach (var faction in alias.Factions)
-                {
-                    if (!faction.IsNull)
-                    {
-                        _potentialFactionNPCs
-                            .GetOrAdd(faction.FormKey)
-                            .Add(uniqueActor);
-                    }
-                }
-                if (alias.Keywords != null)
-                {
-                    foreach (var keyword in alias.Keywords)
-                    {
-                        _keywordNPCs.GetOrAdd(keyword.FormKey).Add(uniqueActor);
-                    }
-                }
-            }
-        }
-
         foreach (var npc in _formLinkCache.WinningOverrides<INpcGetter>())
         {
             // The traits flag is used for multiple filters we're interested in, no need to loop multiple times
@@ -89,16 +67,16 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 voices.Add(voice);
                 _voiceSpeakers.GetOrAdd(voice).Add(npc.FormKey);
 
-                _genderNPCs.GetOrAdd(female ? MaleFemaleGender.Female : MaleFemaleGender.Male).Add(npc.FormKey);
+                _genderVoiceSpeakers.GetOrAdd(female ? MaleFemaleGender.Female : MaleFemaleGender.Male).GetOrAdd(traits.Voice.FormKey).Add(npc.FormKey);
 
                 if (!traits.Race.IsNull)
                 {
-                    _raceNPCs.GetOrAdd(traits.Race.FormKey).Add(npc.FormKey);
+                    _raceVoiceSpeakers.GetOrAdd(traits.Race.FormKey).GetOrAdd(voice).Add(npc.FormKey);
                     if (traits.Race.TryResolve(_formLinkCache, out var race) && race.Keywords != null)
                     {
                         foreach (var keyword in race.Keywords)
                         {
-                            _keywordNPCs.GetOrAdd(keyword.FormKey).Add(npc.FormKey);
+                            _keywordVoiceSpeakers.GetOrAdd(keyword.FormKey).GetOrAdd(voice).Add(npc.FormKey);
                         }
                     }
                 }
@@ -127,7 +105,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
             foreach (var keyword in GetDirectKeywords(npc))
             {
-                _keywordNPCs.GetOrAdd(keyword.FormKey).Add(npc.FormKey);
+                var keywordMap = _keywordVoiceSpeakers.GetOrAdd(keyword.FormKey);
+                foreach (var voice in voices)
+                {
+                    keywordMap.GetOrAdd(voice).Add(npc.FormKey);
+                }
             }
         }
 
@@ -137,9 +119,39 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 _speakerVoices.Add(talkingActivator.FormKey, [talkingActivator.Voice.FormKey]);
         }
 
+        foreach (var quest in _formLinkCache.WinningOverrides<IQuestGetter>())
+        {
+            foreach (var alias in quest.Aliases)
+            {
+                var uniqueActor = alias.UniqueActor.FormKey;
+                if (uniqueActor.IsNull) continue;
+
+                foreach (var faction in alias.Factions)
+                {
+                    if (!faction.IsNull)
+                    {
+                        _potentialFactionNPCs
+                            .GetOrAdd(faction.FormKey)
+                            .Add(uniqueActor);
+                    }
+                }
+                if (alias.Keywords != null && _speakerVoices.TryGetValue(uniqueActor, out var voices))
+                {
+                    foreach (var keyword in alias.Keywords)
+                    {
+                        var keywordMap = _keywordVoiceSpeakers.GetOrAdd(keyword.FormKey);
+                        foreach (var voice in voices)
+                        {
+                            keywordMap.GetOrAdd(voice).Add(uniqueActor);
+                        }
+                    }
+                }
+            }
+        }
+
         // Build caches
-        _childNPCs = _raceNPCs.Where(raceNpcs => _formLinkCache.TryResolve<IRaceGetter>(raceNpcs.Key, out var race) && race.Flags.HasFlag(Race.Flag.Child))
-            .SelectMany(raceNpcs => raceNpcs.Value)
+        _childNPCs = _raceVoiceSpeakers.Where(raceNpcs => _formLinkCache.TryResolve<IRaceGetter>(raceNpcs.Key, out var race) && race.Flags.HasFlag(Race.Flag.Child))
+            .SelectMany(raceNpcs => raceNpcs.Value).SelectMany(voiceSpeakers => voiceSpeakers.Value)
             .ToHashSet();
 
         _usedVoiceTypes = _voiceSpeakers.Keys.ToHashSet();
@@ -526,22 +538,22 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
                 break;
             case IHasKeywordConditionDataGetter hasKeyword:
-                if (_keywordNPCs.TryGetValue(hasKeyword.Keyword.Link.FormKey, out var keywordNpcs))
+                if (_keywordVoiceSpeakers.TryGetValue(hasKeyword.Keyword.Link.FormKey, out var keywordNpcs))
                 {
-                    return new VoiceContainer(keywordNpcs, _speakerVoices);
+                    return new VoiceContainer(keywordNpcs);
                 }
                 break;
             case IGetIsRaceConditionDataGetter getIsRace:
-                if (getIsRace.Race.UsesLink() && _raceNPCs.TryGetValue(getIsRace.Race.Link.FormKey, out var raceNpcFormKeys))
+                if (getIsRace.Race.UsesLink() && _raceVoiceSpeakers.TryGetValue(getIsRace.Race.Link.FormKey, out var raceNpcFormKeys))
                 {
-                    return new VoiceContainer(raceNpcFormKeys, _speakerVoices);
+                    return new VoiceContainer(raceNpcFormKeys);
                 }
 
                 break;
             case IGetIsSexConditionDataGetter sexConditionDataGetter:
-                if (_genderNPCs.TryGetValue(sexConditionDataGetter.MaleFemaleGender, out var genderNpcFormKeys))
+                if (_genderVoiceSpeakers.TryGetValue(sexConditionDataGetter.MaleFemaleGender, out var genderNpcFormKeys))
                 {
-                    return new VoiceContainer(genderNpcFormKeys, _speakerVoices);
+                    return new VoiceContainer(genderNpcFormKeys);
                 }
 
                 break;

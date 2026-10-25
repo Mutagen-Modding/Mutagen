@@ -27,6 +27,11 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         }
     }
 
+    public VoiceContainer(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
+    {
+        _voices = voiceSpeakers.ToDictionary();
+    }
+
     public VoiceContainer(IEnumerable<FormKey> npcs, Dictionary<FormKey, HashSet<FormKey>> speakerVoices)
     {
         foreach (var npc in npcs)

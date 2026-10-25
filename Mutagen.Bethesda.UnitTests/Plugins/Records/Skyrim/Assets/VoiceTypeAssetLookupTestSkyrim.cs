@@ -814,7 +814,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         // Voices may be inherited without inheriting keywords
         derived.Configuration.TemplateFlags = NpcConfiguration.TemplateFlag.Traits;
         derived.Keywords = [derivedKeyword.ToLink()];
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.HasKeyword(derivedKeyword), 1)], [derived], [base1.Voice, base2.Voice]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.HasKeyword(derivedKeyword), 1)], [derived], [base1.Voice, base2.Voice, raceBase.Voice]);
     }
 
     [Theory, MutagenModAutoData]
