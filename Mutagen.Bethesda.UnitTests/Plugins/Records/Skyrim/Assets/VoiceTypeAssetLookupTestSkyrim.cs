@@ -635,88 +635,6 @@ public class VoiceTypeAssetLookupTestSkyrim
             [unique], [unique.Voice]);
     }
 
-    // Traits inheritance needs special handling of voices as it defines the voice type plus race, gender, and race keywords which could be filtered on
-    // E.g., if Derived may be a Khajiit, then they should have lines that filter on being Khajiit, but voice types should only be exported for voices they may have when a Khajiit.
-    [Theory, MutagenModAutoData]
-    public void TestInheritedTraitsRaceVoices(VoiceTypeAssetLookupTestFixture fixture, Race khajiit, Race nord, LeveledNpc leveledNpc)
-    {
-        var khajiitNpc = fixture.CreateSpeaker("CYRR01MaleKhajiitMercurial");
-        khajiitNpc.Race.SetTo(khajiit);
-        var nordNpc = fixture.CreateSpeaker("CYRR01MaleNord");
-        nordNpc.Race.SetTo(nord);
-        leveledNpc.Entries = [
-            new() { Data = new() { Reference = khajiitNpc.ToLink() } },
-            new() { Data = new() { Reference = nordNpc.ToLink() } }
-        ];
-
-        var derived = fixture.CreateSpeaker("derived");
-        derived.Template.SetTo(leveledNpc);
-        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
-
-        // Specific form ID as it is included in path
-        Condition[] conditions = [ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1)];
-
-        // If a line is only valid for some of an NPC's potential voice types, it should only be exported for those voices
-        // E.g. 05BB0B:BSHeartland.esm should only be exported Khajiit voice types
-
-        // Derived may be a Khajiit from template
-        // If derived is a Khajiit, they do not have a Nord voice
-        fixture.AssertSpeakersEqual(conditions, [khajiitNpc, derived], [khajiitNpc.Voice]);
-
-        // Should have no voices since no NPC can be a Khajiit and have a Nord voice
-        fixture.AssertSpeakersEqual(
-            [ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(nordNpc.Voice), 1)],
-            [], []);
-
-        // TODO: Implement test for this
-        // Factions and classes should still consider inherited traits, as they are a different flag
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestInheritedTraitsGenderVoices(VoiceTypeAssetLookupTestFixture fixture, LeveledNpc leveledNpc)
-    {
-        var male = fixture.CreateSpeaker("male");
-        var female = fixture.CreateSpeaker("female");
-        female.Configuration.Flags |= NpcConfiguration.Flag.Female;
-
-        var derived = fixture.CreateSpeaker("derived");
-        leveledNpc.Entries = [
-            new() { Data = new() { Reference = male.ToLink() } },
-            new() { Data = new() { Reference = female.ToLink() } }
-        ];
-        derived.Template.SetTo(leveledNpc);
-        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
-
-        // May be derived as derived is potentially female, but will only be female voice
-        Condition[] genderConditions = [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Female }, 1)];
-        fixture.AssertSpeakersEqual(genderConditions, [female, derived], [female.Voice]);
-    }
-
-    [Theory, MutagenModAutoData]
-    public void TestInheritedTraitsKeywordVoices(VoiceTypeAssetLookupTestFixture fixture, LeveledNpc leveledNpc, Race race1, Race race2, Keyword race1Keyword)
-    {
-        var race1Npc = fixture.CreateSpeaker("race1");
-        race1Npc.Race.SetTo(race1);
-        race1.Keywords = [race1Keyword.ToLink()];
-        
-        var race2Npc = fixture.CreateSpeaker("race2");
-        race2Npc.Race.SetTo(race2);
-
-
-        var derived = fixture.CreateSpeaker("derived");
-        leveledNpc.Entries = [
-            new() { Data = new() { Reference = race1Npc.ToLink() } },
-            new() { Data = new() { Reference = race2Npc.ToLink() } }
-        ];
-        derived.Template.SetTo(leveledNpc);
-        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
-
-        Condition[] conditions = [ConditionFactory.Create(ConditionFactory.HasKeyword(race1Keyword), 1)];
-        fixture.AssertSpeakersEqual(conditions, [race1Npc, derived], [race1Npc.Voice]);
-    }
-
-    // TODO: Factions, classes, and keywords may or may not be inherited from the same template as the voice
-
     [Theory, MutagenModAutoData]
     public void TestInheritedTraits(
         VoiceTypeAssetLookupTestFixture fixture,
@@ -850,6 +768,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         LeveledNpc leveledNpc,
         Keyword keyword1,
         Keyword keyword2,
+        Keyword derivedKeyword,
         Race race,
         Keyword raceKeyword)
     {
@@ -891,6 +810,11 @@ public class VoiceTypeAssetLookupTestSkyrim
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
             [raceBase, derived], [raceBase.Voice]);
+
+        // Voices may be inherited without inheriting keywords
+        derived.Configuration.TemplateFlags = NpcConfiguration.TemplateFlag.Traits;
+        derived.Keywords = [derivedKeyword.ToLink()];
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.HasKeyword(derivedKeyword), 1)], [derived], [base1.Voice, base2.Voice]);
     }
 
     [Theory, MutagenModAutoData]
