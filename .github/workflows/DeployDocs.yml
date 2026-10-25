@@ -36,4 +36,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy Docs
-        run: properdocs gh-deploy --force
+        run: properdocs gh-deploy --force --no-history
