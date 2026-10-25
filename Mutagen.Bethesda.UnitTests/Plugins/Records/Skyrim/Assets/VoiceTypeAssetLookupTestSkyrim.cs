@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals.Implementations;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -25,7 +26,7 @@ public class VoiceTypeAssetLookupTestFixture
     {
         var assetCache = LinkCache.CreateImmutableAssetLinkCache();
         var lookup = new VoiceTypeAssetLookup();
-        lookup.Prep(assetCache);
+        lookup.Prep(assetCache, new ImmutableLoadOrderLinkUsageCache(LinkCache));
         return lookup;
     }
 
@@ -64,7 +65,7 @@ public class VoiceTypeAssetLookupTestFixture
         return response;
     }
 
-    public void AssertSceneSpeakersEqual(uint aliasId, IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers)
+    public void AssertSceneSpeakersEqual(uint aliasId, IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices)
     {
         var scene = _fixture.Create<Scene>();
         scene.Actors.Add(new() { ID = aliasId });
@@ -74,22 +75,25 @@ public class VoiceTypeAssetLookupTestFixture
         Topic.Subtype = DialogTopic.SubtypeEnum.Scene;
         response.Conditions.AddRange(conditions);
 
-        AssertSpeakersEqualImpl(response, expectedSpeakers);
+        AssertSpeakersEqualImpl(response, expectedSpeakers, expectedVoices);
     }
 
-    public void AssertSpeakersEqual(IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers)
+    public void AssertSpeakersEqual(IEnumerable<Condition> conditions, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices)
     {
         var response = CreateResponses();
         response.Conditions.AddRange(conditions);
 
-        AssertSpeakersEqualImpl(response, expectedSpeakers);
+        AssertSpeakersEqualImpl(response, expectedSpeakers, expectedVoices);
     }
 
-    void AssertSpeakersEqualImpl(DialogResponses response, IEnumerable<Npc> expectedSpeakers)
+    void AssertSpeakersEqualImpl(DialogResponses response, IEnumerable<Npc> expectedSpeakers, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>> expectedVoices)
     {
         // We compare against a resolved list to provide more context in errors
-        var actual = GetLookup().GetSpeakers(response).Select(s => s.Resolve(LinkCache));
-        actual.ShouldBe(expectedSpeakers, ignoreOrder: true);
+        var actualSpeakers = GetLookup().GetSpeakers(response).Select(s => s.Resolve(LinkCache));
+        actualSpeakers.ShouldBe(expectedSpeakers, ignoreOrder: true);
+
+        var actualVoices = GetLookup().GetVoiceTypes(response).Select(v => v.Resolve(LinkCache));
+        actualVoices.ShouldBe(expectedVoices.Select(v => v.Resolve(LinkCache)), ignoreOrder: true);
     }
 }
 
@@ -167,10 +171,10 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 1)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 0)],
-            [npc2]);
+            [npc2], [npc2.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -181,18 +185,31 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc1.Voice), 1)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
 
         // A form list can be used to check for any voice in a list
         list.Items.AddRange(npc1.Voice, npc2.Voice);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1)],
-            [npc1, npc2]);
+            [npc1, npc2], [npc1.Voice, npc2.Voice]);
 
         // (Voice1 || Voice2) && !Voice1
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 0)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
+    }
+
+    // An unused voice type should be excluded from exports
+    [Theory, MutagenModAutoData]
+    public void TestUnusedVoice(
+        VoiceTypeAssetLookupTestFixture fixture,
+        VoiceType voice)
+    {
+        Condition[] conditions = [ConditionFactory.Create(ConditionFactory.GetIsVoice(voice.ToLink()), 1)];
+        var npc = fixture.CreateSpeaker("npc");
+        fixture.AssertSpeakersEqual(conditions, [], []);
+        npc.Voice.SetTo(voice);
+        fixture.AssertSpeakersEqual(conditions, [npc], [voice.ToLink()]);
     }
 
     [Theory, MutagenModAutoData]
@@ -217,14 +234,14 @@ public class VoiceTypeAssetLookupTestSkyrim
         // Race voices should only be used as a fallback
         male.Voice.ShouldNotBeNull();
         female.Voice.ShouldNotBeNull();
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(maleVoice.ToLink()), 1)], []);
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(femaleVoice.ToLink()), 1)], []);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(maleVoice.ToLink()), 1)], [], []);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(femaleVoice.ToLink()), 1)], [], []);
 
         // If no explicit voice is provided, fall back to the race's default for the NPCs gender
         male.Voice.SetToNull();
         female.Voice.SetToNull();
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(maleVoice.ToLink()), 1)], [male]);
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(femaleVoice.ToLink()), 1)], [female]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(maleVoice.ToLink()), 1)], [male], [race.Voices.Male]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetIsVoice(femaleVoice.ToLink()), 1)], [female], [race.Voices.Female]);
     }
 
     [Theory, MutagenModAutoData]
@@ -243,13 +260,13 @@ public class VoiceTypeAssetLookupTestSkyrim
         var npc1 = fixture.CreateSpeaker("npc");
         var npc2 = fixture.CreateSpeaker("npc2");
 
-        void CheckAlias(QuestAlias alias, IEnumerable<Npc>? speakers = null)
+        void CheckAlias(QuestAlias alias, IEnumerable<Npc>? speakers = null, IEnumerable<IFormLinkGetter<IVoiceTypeGetter>>? voices = null)
         {
             alias.ID = aliasId;
             fixture.Quest.Aliases.Add(alias);
             fixture.AssertSpeakersEqual(
                 [ConditionFactory.Create(new GetIsAliasRefConditionData() { ReferenceAliasIndex = (int)aliasId }, 1)],
-                speakers ?? [npc1]);
+                speakers ?? [npc1], voices ?? [npc1.Voice]);
             fixture.Quest.Aliases.Clear();
         }
 
@@ -290,16 +307,16 @@ public class VoiceTypeAssetLookupTestSkyrim
         CheckAlias(new() { External = new() { AliasID = (int)externalAliasId, Quest = externalQuest.ToNullableLink() } });
 
         // Matching ref from event doesn't provide enough context for filtering
-        CheckAlias(new() { FindMatchingRefFromEvent = new() }, [npc1, npc2]);
+        CheckAlias(new() { FindMatchingRefFromEvent = new() }, [npc1, npc2], [npc1.Voice, npc2.Voice]);
         // Matching ref near alias event would require knowing every ref linked to every possible value of the other alias
-        CheckAlias(new() { FindMatchingRefNearAlias = new() }, [npc1, npc2]);
+        CheckAlias(new() { FindMatchingRefNearAlias = new() }, [npc1, npc2], [npc1.Voice, npc2.Voice]);
 
         // If conditions are present, they are applied as an intersection before additional voices
         CheckAlias(new()
         {
             FindMatchingRefFromEvent = new(),
             Conditions = [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 1)]
-        }, [npc2]);
+        }, [npc2], [npc2.Voice]);
 
         // Additional voices are applied as a union after additional voices
         additionalVoices.Items.AddRange(npc1.ToLink(), npc2.ToLink());
@@ -308,7 +325,7 @@ public class VoiceTypeAssetLookupTestSkyrim
             FindMatchingRefFromEvent = new(),
             VoiceTypes = additionalVoices.ToNullableLink(),
             Conditions = [ConditionFactory.Create(ConditionFactory.GetIsVoice(npc2.Voice), 1)]
-        }, [npc1, npc2]);
+        }, [npc1, npc2], [npc1.Voice, npc2.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -328,7 +345,7 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)],
-            [member, questmember]);
+            [member, questmember], [member.Voice, questmember.Voice]);
 
     }
 
@@ -343,7 +360,7 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsClass(npcClass.ToLink()), 1)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -359,14 +376,14 @@ public class VoiceTypeAssetLookupTestSkyrim
         // npc1 || npc2
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsId(npc1), 1, or: true), ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)],
-            [npc1, npc2]);
+            [npc1, npc2], [npc1.Voice, npc2.Voice]);
 
         // AND is combined as the intersection
         // (npc1 || npc2 || npc3) && !npc3
         list.Items.AddRange(npc1.Voice, npc2.Voice, npc3.Voice);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(list.ToLink()), 1, or: false), ConditionFactory.Create(ConditionFactory.GetIsVoice(npc3.Voice), 0, or: false)],
-            [npc1, npc2]);
+            [npc1, npc2], [npc1.Voice, npc2.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -394,15 +411,15 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(actorKeyword), 1)],
-            [actorKey]);
+            [actorKey], [actorKey.Voice]);
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
-            [raceKey]);
+            [raceKey], [raceKey.Voice]);
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(questKeyword), 1)],
-            [questKey]);
+            [questKey], [questKey.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -418,7 +435,7 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsRace(race1), 1)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -431,10 +448,10 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Male }, 1)],
-            [male]);
+            [male], [male.Voice]);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Female }, 1)],
-            [female]);
+            [female], [female.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -446,7 +463,8 @@ public class VoiceTypeAssetLookupTestSkyrim
         list.Items.Add(npc1.ToLink());
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.IsInList(list), 1)],
-            [npc1]);
+            [npc1],
+            [npc1.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -464,8 +482,8 @@ public class VoiceTypeAssetLookupTestSkyrim
         var adultNpc = fixture.CreateSpeaker("adult");
         adultNpc.Race.SetTo(adult);
 
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(new IsChildConditionData(), 1)], [childNpc]);
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(new IsChildConditionData(), 0)], [adultNpc]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(new IsChildConditionData(), 1)], [childNpc], [childNpc.Voice]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(new IsChildConditionData(), 0)], [adultNpc], [adultNpc.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -477,7 +495,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         // The AllowDefaultDialog flag is not used at runtime
         npc1.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
         npc2.Voice.Resolve<IVoiceType>(fixture.LinkCache).Flags &= ~VoiceType.Flag.AllowDefaultDialog;
-        fixture.AssertSpeakersEqual([], [npc1, npc2]);
+        fixture.AssertSpeakersEqual([], [npc1, npc2], [npc1.Voice, npc2.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -487,8 +505,8 @@ public class VoiceTypeAssetLookupTestSkyrim
         var npc2 = fixture.CreateSpeaker("npc2");
         fixture.Quest.Aliases.Add(new() { ID = aliasId, UniqueActor = npc1.ToNullableLink() });
 
-        fixture.AssertSceneSpeakersEqual(aliasId, [], [npc1]);
-        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], []);
+        fixture.AssertSceneSpeakersEqual(aliasId, [], [npc1], [npc1.Voice]);
+        fixture.AssertSceneSpeakersEqual(aliasId, [ConditionFactory.Create(ConditionFactory.GetIsId(npc2), 1)], [], []);
     }
 
     void VoicesShouldEqual(VoiceContainer vc, Dictionary<FormKey, HashSet<FormKey>> expected)
@@ -557,11 +575,11 @@ public class VoiceTypeAssetLookupTestSkyrim
         var data = ConditionFactory.GetIsId(npc1);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(data, 1, CompareOperator.EqualTo)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(data, 1, CompareOperator.NotEqualTo)],
-            [npc2]);
+            [npc2], [npc2.Voice]);
 
         var conditionGlobal = new ConditionGlobal()
         {
@@ -569,9 +587,9 @@ public class VoiceTypeAssetLookupTestSkyrim
             ComparisonValue = global.ToLink()
         };
         global.Data = 1;
-        fixture.AssertSpeakersEqual([conditionGlobal], [npc1]);
+        fixture.AssertSpeakersEqual([conditionGlobal], [npc1], [npc1.Voice]);
         global.Data = 0;
-        fixture.AssertSpeakersEqual([conditionGlobal], [npc2]);
+        fixture.AssertSpeakersEqual([conditionGlobal], [npc2], [npc2.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -614,48 +632,90 @@ public class VoiceTypeAssetLookupTestSkyrim
         });
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(new GetIsAliasRefConditionData() { ReferenceAliasIndex = (int)aliasId }, 1)],
-            [unique]);
+            [unique], [unique.Voice]);
     }
 
-    // TODO: Implement fix for this
-    //[Theory, MutagenModAutoData]
-    //public void TestOnlySome(VoiceTypeAssetLookupTestFixture fixture, Race khajiit, Race nord, LeveledNpc leveledNpc)
-    //{
-    //    fixture.Quest.EditorID = "CYRGenericDialogueR01";
-    //    fixture.Topic.EditorID = "CYRTaunt";
+    // Traits inheritance needs special handling of voices as it defines the voice type plus race, gender, and race keywords which could be filtered on
+    // E.g., if Derived may be a Khajiit, then they should have lines that filter on being Khajiit, but voice types should only be exported for voices they may have when a Khajiit.
+    [Theory, MutagenModAutoData]
+    public void TestInheritedTraitsRaceVoices(VoiceTypeAssetLookupTestFixture fixture, Race khajiit, Race nord, LeveledNpc leveledNpc)
+    {
+        var khajiitNpc = fixture.CreateSpeaker("CYRR01MaleKhajiitMercurial");
+        khajiitNpc.Race.SetTo(khajiit);
+        var nordNpc = fixture.CreateSpeaker("CYRR01MaleNord");
+        nordNpc.Race.SetTo(nord);
+        leveledNpc.Entries = [
+            new() { Data = new() { Reference = khajiitNpc.ToLink() } },
+            new() { Data = new() { Reference = nordNpc.ToLink() } }
+        ];
 
-    //    var khajiitNpc = fixture.CreateSpeaker("CYRR01MaleKhajiitMercurial");
-    //    khajiitNpc.Race.SetTo(khajiit);
-    //    var nordNpc = fixture.CreateSpeaker("CYRR01MaleNord");
-    //    nordNpc.Race.SetTo(nord);
-    //    leveledNpc.Entries = [
-    //        new() { Data = new() { Reference = khajiitNpc.ToLink() } },
-    //        new() { Data = new() { Reference = nordNpc.ToLink() } }
-    //    ];
+        var derived = fixture.CreateSpeaker("derived");
+        derived.Template.SetTo(leveledNpc);
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
 
-    //    var derived = fixture.CreateSpeaker("derived");
-    //    derived.Template.SetTo(leveledNpc);
-    //    derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
+        // Specific form ID as it is included in path
+        Condition[] conditions = [ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1)];
 
-    //    // Specific form ID as it is included in path
-    //    var response = new DialogResponses(FormKey.Factory("05BB0B:BSHeartland.esm"), SkyrimRelease.SkyrimSE);
-    //    response.Conditions.Add(ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1));
-    //    response.Responses.Add(new() { ResponseNumber = 1 });
+        // If a line is only valid for some of an NPC's potential voice types, it should only be exported for those voices
+        // E.g. 05BB0B:BSHeartland.esm should only be exported Khajiit voice types
 
-    //    // If a line is only valid for some of an NPC's potential voice types, it should only be exported for those voices
-    //    // E.g. 05BB0B:BSHeartland.esm should only be exported Khajiit voice types
+        // Derived may be a Khajiit from template
+        // If derived is a Khajiit, they do not have a Nord voice
+        fixture.AssertSpeakersEqual(conditions, [khajiitNpc, derived], [khajiitNpc.Voice]);
 
-    //    fixture.Topic.Responses.Add(response);
-    //    // Derived may be a Khajiit from template
-    //    fixture.AssertSpeakersEqual(response.Conditions, [khajiitNpc, derived]);
-    //    // If derived is a Khajiit, they do not have a Nord voice
-    //    fixture.GetLookup().GetVoiceLineFilePaths(response).ShouldBe([
-    //        @"Sound\Voice\BSHeartland.esm\CYRR01MaleKhajiitMercurial\CYRGeneric_CYRTaunt_0005BB0B_1.fuz"
-    //    ]);
+        // Should have no voices since no NPC can be a Khajiit and have a Nord voice
+        fixture.AssertSpeakersEqual(
+            [ConditionFactory.Create(ConditionFactory.GetIsRace(khajiit), 1), ConditionFactory.Create(ConditionFactory.GetIsVoice(nordNpc.Voice), 1)],
+            [], []);
+
+        // TODO: Implement test for this
+        // Factions and classes should still consider inherited traits, as they are a different flag
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestInheritedTraitsGenderVoices(VoiceTypeAssetLookupTestFixture fixture, LeveledNpc leveledNpc)
+    {
+        var male = fixture.CreateSpeaker("male");
+        var female = fixture.CreateSpeaker("female");
+        female.Configuration.Flags |= NpcConfiguration.Flag.Female;
+
+        var derived = fixture.CreateSpeaker("derived");
+        leveledNpc.Entries = [
+            new() { Data = new() { Reference = male.ToLink() } },
+            new() { Data = new() { Reference = female.ToLink() } }
+        ];
+        derived.Template.SetTo(leveledNpc);
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
+
+        // May be derived as derived is potentially female, but will only be female voice
+        Condition[] genderConditions = [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Female }, 1)];
+        fixture.AssertSpeakersEqual(genderConditions, [female, derived], [female.Voice]);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestInheritedTraitsKeywordVoices(VoiceTypeAssetLookupTestFixture fixture, LeveledNpc leveledNpc, Race race1, Race race2, Keyword race1Keyword)
+    {
+        var race1Npc = fixture.CreateSpeaker("race1");
+        race1Npc.Race.SetTo(race1);
+        race1.Keywords = [race1Keyword.ToLink()];
+        
+        var race2Npc = fixture.CreateSpeaker("race2");
+        race2Npc.Race.SetTo(race2);
 
 
-    //    // Factions and classes should still consider inherited traits, as they are a different flag
-    //}
+        var derived = fixture.CreateSpeaker("derived");
+        leveledNpc.Entries = [
+            new() { Data = new() { Reference = race1Npc.ToLink() } },
+            new() { Data = new() { Reference = race2Npc.ToLink() } }
+        ];
+        derived.Template.SetTo(leveledNpc);
+        derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
+
+        Condition[] conditions = [ConditionFactory.Create(ConditionFactory.HasKeyword(race1Keyword), 1)];
+        fixture.AssertSpeakersEqual(conditions, [race1Npc, derived], [race1Npc.Voice]);
+    }
+
+    // TODO: Factions, classes, and keywords may or may not be inherited from the same template as the voice
 
     [Theory, MutagenModAutoData]
     public void TestInheritedTraits(
@@ -683,34 +743,34 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(base1.Voice), 1)],
-            [base1]);
+            [base1], [base1.Voice]);
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(base1.Voice), 1)],
-            [base1, derived]);
+            [base1, derived], [base1.Voice]);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsRace(race2), 1)],
-            [base2, derived]);
+            [base2, derived], [base2.Voice]);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(new GetIsSexConditionData() { MaleFemaleGender = MaleFemaleGender.Male }, 1)],
-            [base1, derived]);
+            [base1, derived], [base1.Voice]);
 
         // Derived data should be disregarded if a template is used
         derived.Race.SetTo(dummyRace);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsRace(dummyRace), 1)],
-            []);
+            [], []);
         derived.Voice.ShouldNotBeNull();
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(derived.Voice), 1)],
-            []);
+            [], []);
 
         // Template flags should be ignored if template is null
         derived.Template.SetToNull();
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsRace(dummyRace), 1)],
-            [derived]);
+            [derived], [derived.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -735,24 +795,24 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsClass(base1.Class), 1)],
-            [base1]);
+            [base1], [base1.Voice]);
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Stats;
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsClass(base1.Class), 1)],
-            [base1, derived]);
+            [base1, derived], [base1.Voice, derived.Voice]);
 
         // Derived data should be disregarded if a template is used
         derived.Class.SetTo(dummyClass);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsClass(dummyClass.ToLink()), 1)],
-            []);
+            [], []);
 
         // Template flags should be ignored if template is null
         derived.Template.SetToNull();
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsClass(dummyClass.ToLink()), 1)],
-            [derived]);
+            [derived], [derived.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -776,12 +836,12 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetInFaction(faction1), 1)],
-            [base1]);
+            [base1], [base1.Voice]);
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Factions;
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetInFaction(faction1), 1)],
-            [base1, derived]);
+            [base1, derived], [base1.Voice, derived.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -811,24 +871,26 @@ public class VoiceTypeAssetLookupTestSkyrim
 
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(keyword1), 1)],
-            [base1]);
+            [base1], [base1.Voice]);
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
-            [raceBase]);
+            [raceBase], [raceBase.Voice]);
 
 
         // Keywords are inherited via the UseKeywords flag
+        // If base1 is selected for keywords, but UseTraits is unset, then NPC will use derived's voice
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Keywords;
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(keyword1), 1)],
-            [base1, derived]);
+            [base1, derived], [base1.Voice, derived.Voice]);
 
         // They can also be inheited via the race, this time with UseTraits
+        // If keywords are inherited via race, then the NPC will be using the template's voice
         derived.Configuration.TemplateFlags &= ~NpcConfiguration.TemplateFlag.Keywords;
         derived.Configuration.TemplateFlags |= NpcConfiguration.TemplateFlag.Traits;
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.HasKeyword(raceKeyword), 1)],
-            [raceBase, derived]);
+            [raceBase, derived], [raceBase.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -888,7 +950,7 @@ public class VoiceTypeAssetLookupTestSkyrim
         // such as in patchless integration of follower mods
         fixture.AssertSpeakersEqual(
             [ConditionFactory.Create(ConditionFactory.GetIsVoice(voice1.ToLink()), 1)],
-            [npc1]);
+            [npc1], [npc1.Voice]);
     }
 
     [Theory, MutagenModAutoData]
@@ -920,11 +982,11 @@ public class VoiceTypeAssetLookupTestSkyrim
 
 
         // Positive conditions should include, as the NPC may join
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)], [npcAlways, npcBasePotential, npcQuest]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 1)], [npcAlways, npcBasePotential, npcQuest], [npcAlways.Voice, npcBasePotential.Voice, npcQuest.Voice]);
         // Negative conditions should not exclude, as the NPC is not initially a member
         // Base actor members should still be excluded (though edge cases exist for both methods)
         // Vanilla example: DialogueFavorGenericFollow uses CurrentFollowerFaction == 0 && PotentialFollowerFaction == 1
-        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 0)], [npcBasePotential, npcQuest]);
+        fixture.AssertSpeakersEqual([ConditionFactory.Create(ConditionFactory.GetInFaction(faction), 0)], [npcBasePotential, npcQuest], [npcBasePotential.Voice, npcQuest.Voice]);
     }
 
     private readonly ILinkCache _linkCache;
