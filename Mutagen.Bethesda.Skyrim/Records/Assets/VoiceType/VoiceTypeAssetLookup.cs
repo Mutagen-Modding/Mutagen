@@ -23,9 +23,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     private ILinkUsageCache _usageCache = null!;
 
     // Databases. These aren't good candidates for usage caches as data here can be inherited
-    private HashSet<FormKey> _allVoiceTypes = null!;
-    // TODO: Is this necessary? Can we look up when retrieving speakers?
-    // TOOD: Most unique NPCs have only one voice. Is an enumerable faster?
+    private HashSet<FormKey> _usedVoiceTypes = null!;
     private readonly Dictionary<FormKey, HashSet<FormKey>> _speakerVoices = new();
 
     // Inverse lookup of voice type -> speakers for GetIsVoiceType conditions and inversions
@@ -144,9 +142,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             .SelectMany(raceNpcs => raceNpcs.Value)
             .ToHashSet();
 
-        _allVoiceTypes = _formLinkCache.WinningOverrides<IVoiceTypeGetter>()
-            .Select(v => v.FormKey)
-            .ToHashSet();
+        _usedVoiceTypes = _voiceSpeakers.Keys.ToHashSet();
     }
 
     /// <summary>
@@ -238,6 +234,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     /// <summary>
     /// Get all voice types for a given dialog that can speak it based on the conditions of the dialog.
+    /// Excludes unused voice types, even when using GetIsVoiceType conditions.
     /// </summary>
     /// <param name="responses">Dialog responses to get speakers for</param>
     /// <returns>List of voice types</returns>
@@ -257,7 +254,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return GetVoiceContainer(responses).Voices.SelectMany(x =>
         {
             // A subset of speakers is used
-            if (x.Value.Count > 0) return x.Value as IEnumerable<FormKey>;
+            if (x.Value.Count > 0) return x.Value;
 
             // The whole voice type is used
             return _voiceSpeakers.GetOrDefault(x.Key) ?? [];
@@ -429,7 +426,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         // If there is no filtering from scene or conditions, response is valid for any speaker
         if (voices == null)
         {
-            voices = new VoiceContainer(_allVoiceTypes);
+            voices = new VoiceContainer(_usedVoiceTypes);
         }
 
         return voices;
@@ -497,9 +494,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 switch (voiceTypeRecord)
                 {
                     case IVoiceTypeGetter voiceType:
-                        return new VoiceContainer(voiceType.FormKey);
+                        return _usedVoiceTypes.Contains(voiceType.FormKey) ? new VoiceContainer(voiceType.FormKey) : VoiceContainer.Empty;
                     case IFormListGetter formList:
-                        return new VoiceContainer(formList.Items.Select(i => i.FormKey).Where(_allVoiceTypes.Contains));
+                        return new VoiceContainer(formList.Items.Select(i => i.FormKey).Where(_usedVoiceTypes.Contains));
                 }
                 break;
             case IGetIsAliasRefConditionDataGetter aliasRef:
