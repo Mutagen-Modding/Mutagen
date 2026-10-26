@@ -5,7 +5,7 @@
       <UInt32 name="NavmeshVersion" default="17" />
       <UInt32 name="CrcHash" default="0xA5E9A03C" />
       <RefDirect name="Parent" refName="ANavmeshParent" binary="Custom" byteLength="8" />
-      <RefList name="Vertices" counterLength="4" refName="NavmeshVertex" binaryOverlay="Custom" />
+      <RefList name="Vertices" counterLength="4" refName="NavmeshVertex" />
       <RefList name="Triangles" refName="NavmeshTriangle" counterLength="4" binaryOverlay="Custom" />
       <RefList name="EdgeLinks" refName="EdgeLink" counterLength="4" />
       <RefList name="DoorTriangles" refName="DoorTriangle" counterLength="4" />

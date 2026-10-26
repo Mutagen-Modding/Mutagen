@@ -3004,8 +3004,17 @@ namespace Mutagen.Bethesda.Starfield
         public IANavmeshParentGetter Parent => GetParentCustom(location: 0x8);
         #endregion
         #region Vertices
+        private static int VerticesItemLength(BinaryOverlayFactoryPackage package)
+        {
+            var length = 12;
+            if (package.FormVersion!.FormVersion!.Value >= 493)
+            {
+                length += 4;
+            }
+            return length;
+        }
+        public IReadOnlyList<INavmeshVertexGetter> Vertices => BinaryOverlayList.FactoryByCountLength<INavmeshVertexGetter>(_structData.Slice(0x10), _package, VerticesItemLength(_package), countLength: 4, (s, p) => NavmeshVertexBinaryOverlay.NavmeshVertexFactory(s, p));
         protected int VerticesEndingPos;
-        partial void CustomVerticesEndPos();
         #endregion
         #region Triangles
         protected int TrianglesEndingPos;
@@ -3060,7 +3069,7 @@ namespace Mutagen.Bethesda.Starfield
             NavmeshGeometryBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
-            ret.CustomVerticesEndPos();
+            ret.VerticesEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * VerticesItemLength(ret._package) + 4;
             ret.CustomTrianglesEndPos();
             ret.EdgeLinksEndingPos = ret.TrianglesEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TrianglesEndingPos)) * 11 + 4;
             ret.DoorTrianglesEndingPos = ret.EdgeLinksEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.EdgeLinksEndingPos)) * 10 + 4;

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Starfield;
 
 public class NavmeshVertexFormVersionTests
 {
-    private const ushort VertexUnknownFormVersion = NavmeshGeometryBinaryOverlay.VertexUnknownFormVersion;
+    private const ushort VertexUnknownFormVersion = 493;
     private const ushort FormVersionBeforeVertexUnknown = VertexUnknownFormVersion - 1;
 
     private static byte[] Navmesh(ModKey modKey, ushort formVersion, IReadOnlyCollection<P3Float> points, int? unknown)

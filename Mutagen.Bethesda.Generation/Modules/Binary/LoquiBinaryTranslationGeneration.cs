@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 using ObjectType = Mutagen.Bethesda.Plugins.Meta.ObjectType;
@@ -570,6 +571,51 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         }
 
         return sum;
+    }
+
+    public async Task<(int FixedLength, IReadOnlyList<(string Check, int Length)> Versioned)?> VersionedLengths(TypeGeneration typeGen, Accessor packageAccessor)
+    {
+        if (typeGen.GetFieldData().Length.HasValue) return null;
+        var target = ((LoquiType)typeGen).TargetObjectGeneration;
+        if (target == null) return null;
+        var len = await ExpectedLength(target, typeGen);
+        if (len == null) return null;
+
+        if (target.Abstract
+            && (await target.InheritingObjects()).Any(o => o.IterateFields(includeBaseClass: true).Any(IsVersioned)))
+        {
+            throw new NotImplementedException();
+        }
+
+        var versioned = new List<(string Check, int Length)>();
+        foreach (var item in target.IterateFields(includeBaseClass: true))
+        {
+            if (!IsVersioned(item)) continue;
+            if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
+            var fieldData = item.GetFieldData();
+            if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+            var itemLen = (await gen.ExpectedLength(target, item))!.Value;
+            var checks = new List<string>();
+            if (fieldData.HasVersioning)
+            {
+                checks.Add(VersioningModule.GetVersionIfCheck(fieldData, $"{packageAccessor}.FormVersion!.FormVersion!.Value"));
+            }
+            if (fieldData.HasModHeaderVersioning)
+            {
+                checks.Add(VersioningModule.GetModHeaderVersionIfCheck(fieldData, $"{packageAccessor}.MetaData.ModHeaderVersion!.Value"));
+            }
+            len -= itemLen;
+            versioned.Add((string.Join(" && ", checks), itemLen));
+        }
+
+        if (versioned.Count == 0) return null;
+        return (len.Value, versioned);
+    }
+
+    private static bool IsVersioned(TypeGeneration field)
+    {
+        var data = field.GetFieldData();
+        return data.HasVersioning || data.HasModHeaderVersioning;
     }
 
     private string GetLocationObjectString(ObjectGeneration obj) => obj.GetObjectType() == ObjectType.Mod ? nameof(RangeInt64) : nameof(RangeInt32);

@@ -643,6 +643,35 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
         });
     }
 
+    private static string ItemLengthFunctionName(ListType list) => $"{list.Name}ItemLength";
+
+    private async Task<(int FixedLength, IReadOnlyList<(string Check, int Length)> Versioned)?> GetVersionedLengths(ListType list)
+    {
+        if (list.SubTypeGeneration is not LoquiType) return null;
+        if (this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType()) is not LoquiBinaryTranslationGeneration loquiGen) return null;
+        return await loquiGen.VersionedLengths(list.SubTypeGeneration, "package");
+    }
+
+    private async Task<bool> GenerateItemLengthFunction(StructuredStringBuilder sb, ListType list)
+    {
+        if (await GetVersionedLengths(list) is not { } lengths) return false;
+        sb.AppendLine($"private static int {ItemLengthFunctionName(list)}({nameof(BinaryOverlayFactoryPackage)} package)");
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine($"var length = {lengths.FixedLength};");
+            foreach (var versioned in lengths.Versioned)
+            {
+                sb.AppendLine($"if ({versioned.Check})");
+                using (sb.CurlyBrace())
+                {
+                    sb.AppendLine($"length += {versioned.Length};");
+                }
+            }
+            sb.AppendLine("return length;");
+        }
+        return true;
+    }
+
     public override async Task GenerateWrapperFields(
         StructuredStringBuilder sb,
         ObjectGeneration objGen,
@@ -701,7 +730,8 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             expectedLengthLengthAccessor = $", expectedLengthLength: {expectedLenLen}";
                         }
 
-                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({accessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}{expectedLengthLengthAccessor}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        var itemLength = await GenerateItemLengthFunction(sb, list) ? $"{ItemLengthFunctionName(list)}(_package)" : expLen.ToString();
+                        sb.AppendLine($"public {list.ListTypeName(getter: true, internalInterface: true)}{typeGen.NullChar} {typeGen.Name} => BinaryOverlayList.FactoryByCountLength<{typeName}>({accessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {itemLength}, countLength: {(byte)list.CustomData[CounterByteLength]}{expectedLengthLengthAccessor}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                     }
                     else
                     {
@@ -1267,7 +1297,8 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                         default:
                             throw new NotImplementedException();
                     }
-                    sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{readStr} * {subExpLen.Value} + {len}{(expectedLengthLength == 0 ? null : $" + {expectedLengthLength}")};");
+                    var itemLength = await GetVersionedLengths(list) != null ? $"{ItemLengthFunctionName(list)}(ret._package)" : subExpLen.Value.ToString();
+                    sb.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}{readStr} * {itemLength} + {len}{(expectedLengthLength == 0 ? null : $" + {expectedLengthLength}")};");
                 }
                 else if (list.SubTypeGeneration is StringType strType && strType.BinaryType == StringBinaryType.PrependLengthUShort)
                 {
