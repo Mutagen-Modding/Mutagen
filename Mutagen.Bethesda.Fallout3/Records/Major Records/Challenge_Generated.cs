@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public Challenge.ChallengeType Type => _Type_IsSet ? (Challenge.ChallengeType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public Challenge.ChallengeType Type => _Type_IsSet ? (Challenge.ChallengeType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(Challenge.ChallengeType);
         #endregion
         #region Threshold
         private int _ThresholdLocation => _DATALocation!.Value.Min + 0x4;
@@ -2385,7 +2385,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Challenge.ChallengeFlag Flags => _Flags_IsSet ? (Challenge.ChallengeFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Challenge.ChallengeFlag Flags => _Flags_IsSet ? (Challenge.ChallengeFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Challenge.ChallengeFlag);
         #endregion
         #region Interval
         private int _IntervalLocation => _DATALocation!.Value.Min + 0xC;

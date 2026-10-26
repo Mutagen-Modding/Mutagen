@@ -3126,12 +3126,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0x2C;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break1);
-        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Explosion.Flag);
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value.Min + 0x30;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break2);
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -6436,7 +6436,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NAM5
         private int? _NAM5Location;
-        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : default(UInt16);
+        public UInt16 NAM5 => _NAM5Location.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM5Location.Value, _package.MetaData.Constants)) : Npc.NAM5Default;
         #endregion
         #region Height
         private int? _HeightLocation;

@@ -2136,12 +2136,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region ReflectDelayMS
         private int _ReflectDelayMSLocation => _DATALocation!.Value.Min + 0x9;
         private bool _ReflectDelayMS_IsSet => _DATALocation.HasValue;
-        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _recordData.Span[_ReflectDelayMSLocation] : default;
+        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _recordData.Span[_ReflectDelayMSLocation] : default(Byte);
         #endregion
         #region ReverbDelayMS
         private int _ReverbDelayMSLocation => _DATALocation!.Value.Min + 0xA;
         private bool _ReverbDelayMS_IsSet => _DATALocation.HasValue;
-        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _recordData.Span[_ReverbDelayMSLocation] : default;
+        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _recordData.Span[_ReverbDelayMSLocation] : default(Byte);
         #endregion
         #region DiffusionPercent
         private int _DiffusionPercentLocation => _DATALocation!.Value.Min + 0xB;
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xD;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         #region ReverbClass
         private int? _ReverbClassLocation;

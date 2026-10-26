@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         #region Opacity
         private int? _OpacityLocation;
-        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpacityLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte Opacity => _OpacityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _OpacityLocation.Value, _package.MetaData.Constants)[0] : Water.OpacityDefault;
         #endregion
         #region Flags
         private int? _FlagsLocation;

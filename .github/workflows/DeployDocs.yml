@@ -1,0 +1,39 @@
+name: DeployDocs
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'docs/**'
+      - 'properdocs.yml'
+      - '.github/workflows/DeployDocs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy Docs
+        run: properdocs gh-deploy --force --no-history

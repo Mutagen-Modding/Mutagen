@@ -2876,7 +2876,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min + 0x48;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public ShaderParticleGeometry.ShaderParticleType Type => _Type_IsSet ? (ShaderParticleGeometry.ShaderParticleType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public ShaderParticleGeometry.ShaderParticleType Type => _Type_IsSet ? (ShaderParticleGeometry.ShaderParticleType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(ShaderParticleGeometry.ShaderParticleType);
         #endregion
         #region Unknown10
         private int _Unknown10Location => _DATALocation!.Value.Min + 0x4C;

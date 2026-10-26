@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region InheritScale
         private int _InheritScaleLocation => _DATALocation!.Value.Min + 0x14;
         private bool _InheritScale_IsSet => _DATALocation.HasValue;
-        public DualCastData.InheritScaleType InheritScale => _InheritScale_IsSet ? (DualCastData.InheritScaleType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_InheritScaleLocation, 0x4)) : default;
+        public DualCastData.InheritScaleType InheritScale => _InheritScale_IsSet ? (DualCastData.InheritScaleType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_InheritScaleLocation, 0x4)) : default(DualCastData.InheritScaleType);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2512,7 +2512,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Container.ContainerFlag Flags => _Flags_IsSet ? (Container.ContainerFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Container.ContainerFlag Flags => _Flags_IsSet ? (Container.ContainerFlag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Container.ContainerFlag);
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value.Min + 0x1;

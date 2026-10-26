@@ -3435,12 +3435,12 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default;
+        public Projectile.Flag Flags => _Flags_IsSet ? (Projectile.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x2)) : default(Projectile.Flag);
         #endregion
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min + 0x2;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public Projectile.TypeEnum Type => _Type_IsSet ? (Projectile.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x2)) : default;
+        public Projectile.TypeEnum Type => _Type_IsSet ? (Projectile.TypeEnum)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x2)) : default(Projectile.TypeEnum);
         #endregion
         #region Gravity
         private int _GravityLocation => _DATALocation!.Value.Min + 0x4;

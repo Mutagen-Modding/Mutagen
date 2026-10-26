@@ -4934,7 +4934,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(MagicEffect.Flag);
         #endregion
         #region BaseCost
         private int _BaseCostLocation => _DATALocation!.Value.Min + 0x4;
@@ -5036,12 +5036,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value.Min + 0x50;
         private bool _CastType_IsSet => _DATALocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default(CastType);
         #endregion
         #region TargetType
         private int _TargetTypeLocation => _DATALocation!.Value.Min + 0x54;
         private bool _TargetType_IsSet => _DATALocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default(TargetType);
         #endregion
         #region SecondActorValue
         private int _SecondActorValueLocation => _DATALocation!.Value.Min + 0x58;
@@ -5111,7 +5111,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CastingSoundLevel
         private int _CastingSoundLevelLocation => _DATALocation!.Value.Min + 0x8C;
         private bool _CastingSoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
+        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         #region ScriptEffectAIScore
         private int _ScriptEffectAIScoreLocation => _DATALocation!.Value.Min + 0x90;

@@ -1766,17 +1766,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue;
-        public Relationship.RankType Rank => _Rank_IsSet ? (Relationship.RankType)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_RankLocation, 0x2)) : default;
+        public Relationship.RankType Rank => _Rank_IsSet ? (Relationship.RankType)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_RankLocation, 0x2)) : default(Relationship.RankType);
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default(Byte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Relationship.Flag Flags => _Flags_IsSet ? (Relationship.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Relationship.Flag Flags => _Flags_IsSet ? (Relationship.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Relationship.Flag);
         #endregion
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value.Min + 0xC;

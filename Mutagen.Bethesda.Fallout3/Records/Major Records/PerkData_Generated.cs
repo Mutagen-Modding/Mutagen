@@ -1344,7 +1344,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Byte MinLevel => _structData.Span[0x1];
         public Byte NumRanks => _structData.Span[0x2];
         public Boolean IsPlayable => _structData.Slice(0x3, 0x1)[0] >= 1;
-        public Boolean IsHidden => _structData.Length <= 0x4 ? default : _structData.Slice(0x4, 0x1)[0] >= 1;
+        public Boolean IsHidden => _structData.Length <= 0x4 ? default(Boolean) : _structData.Slice(0x4, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

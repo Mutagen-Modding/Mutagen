@@ -7199,7 +7199,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnHit
         private int _OnHitLocation => _DNAMLocation!.Value.Min + 0x24;
         private bool _OnHit_IsSet => _DNAMLocation.HasValue;
-        public Weapon.HitBehavior OnHit => _OnHit_IsSet ? (Weapon.HitBehavior)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OnHitLocation, 0x4)) : default;
+        public Weapon.HitBehavior OnHit => _OnHit_IsSet ? (Weapon.HitBehavior)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OnHitLocation, 0x4)) : default(Weapon.HitBehavior);
         #endregion
         #region Skill
         private int _SkillLocation => _DNAMLocation!.Value.Min + 0x28;
@@ -7214,7 +7214,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x30;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public Weapon.Flag Flags => _Flags_IsSet ? (Weapon.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Weapon.Flag Flags => _Flags_IsSet ? (Weapon.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Weapon.Flag);
         #endregion
         #region Capacity
         private int _CapacityLocation => _DNAMLocation!.Value.Min + 0x34;
@@ -7224,7 +7224,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AnimationType
         private int _AnimationTypeLocation => _DNAMLocation!.Value.Min + 0x36;
         private bool _AnimationType_IsSet => _DNAMLocation.HasValue;
-        public Weapon.AnimationTypes AnimationType => _AnimationType_IsSet ? (Weapon.AnimationTypes)_recordData.Span.Slice(_AnimationTypeLocation, 0x1)[0] : default;
+        public Weapon.AnimationTypes AnimationType => _AnimationType_IsSet ? (Weapon.AnimationTypes)_recordData.Span.Slice(_AnimationTypeLocation, 0x1)[0] : default(Weapon.AnimationTypes);
         #endregion
         #region SecondaryDamage
         private int _SecondaryDamageLocation => _DNAMLocation!.Value.Min + 0x37;
@@ -7249,7 +7249,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region SoundLevel
         private int _SoundLevelLocation => _DNAMLocation!.Value.Min + 0x45;
         private bool _SoundLevel_IsSet => _DNAMLocation.HasValue;
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         #region AttackSound
         private int _AttackSoundLocation => _DNAMLocation!.Value.Min + 0x49;
@@ -7294,7 +7294,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AccuracyBonus
         private int _AccuracyBonusLocation => _DNAMLocation!.Value.Min + 0x69;
         private bool _AccuracyBonus_IsSet => _DNAMLocation.HasValue;
-        public Byte AccuracyBonus => _AccuracyBonus_IsSet ? _recordData.Span[_AccuracyBonusLocation] : default;
+        public Byte AccuracyBonus => _AccuracyBonus_IsSet ? _recordData.Span[_AccuracyBonusLocation] : default(Byte);
         #endregion
         #region AnimationAttackSeconds
         private int _AnimationAttackSecondsLocation => _DNAMLocation!.Value.Min + 0x6A;
@@ -7324,7 +7324,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Stagger
         private int _StaggerLocation => _DNAMLocation!.Value.Min + 0x7C;
         private bool _Stagger_IsSet => _DNAMLocation.HasValue;
-        public Stagger Stagger => _Stagger_IsSet ? (Stagger)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StaggerLocation, 0x4)) : default;
+        public Stagger Stagger => _Stagger_IsSet ? (Stagger)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StaggerLocation, 0x4)) : default(Stagger);
         #endregion
         #region Unknown3
         private int _Unknown3Location => _DNAMLocation!.Value.Min + 0x80;

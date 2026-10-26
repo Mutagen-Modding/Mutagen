@@ -2919,12 +2919,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region DetectionSoundValue
         private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
-        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default;
+        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default(Byte);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DNAMLocation!.Value.Min + 0x7;
         private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
-        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default;
+        public Byte Unknown2 => _Unknown2_IsSet ? _recordData.Span[_Unknown2Location] : default(Byte);
         #endregion
         #region WeaponAdjust
         private int _WeaponAdjustLocation => _DNAMLocation!.Value.Min + 0x8;

@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.Testing.Fakes;
 using Noggog;
 using Noggog.Testing.Extensions;
+using NSubstitute;
 using Xunit;
 using Path = System.IO.Path;
 
@@ -109,6 +110,22 @@ public class GetApplicableArchivePathsTests
         ]);
     }
     
+    [Fact]
+    public void UpperCaseExtension()
+    {
+        using var dataDir = TestPathing.GetTempFolder(nameof(GetApplicableArchivePathsTests));
+        var archive = Path.Combine(dataDir.Dir.Path, $"{TestConstants.MasterModKey2.Name} - Main.BSA");
+        File.WriteAllText(archive, string.Empty);
+        var extension = new ArchiveExtensionProvider(new GameReleaseInjection(GameRelease.SkyrimSE));
+        var sut = new GetApplicableArchivePaths(
+            new FileSystem(),
+            new CheckArchiveApplicability(extension),
+            new DataDirectoryInjection(dataDir.Dir.Path),
+            extension,
+            Substitute.For<IArchiveListingDetailsProvider>());
+        sut.Get(TestConstants.MasterModKey2).ShouldBe([new FilePath(archive)]);
+    }
+
     [Theory, MutagenContainerAutoData]
     public void SuffixNaming(
         IFileSystem fs,

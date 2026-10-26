@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Slot
         private int _SlotLocation => _TETILocation!.Value.Min;
         private bool _Slot_IsSet => _TETILocation.HasValue;
-        public TintTemplateOption.TintSlot Slot => _Slot_IsSet ? (TintTemplateOption.TintSlot)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SlotLocation, 0x2)) : default;
+        public TintTemplateOption.TintSlot Slot => _Slot_IsSet ? (TintTemplateOption.TintSlot)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_SlotLocation, 0x2)) : default(TintTemplateOption.TintSlot);
         #endregion
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;

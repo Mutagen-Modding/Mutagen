@@ -183,6 +183,7 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             GlobalFloat_Registration.Instance,
             GlobalInt_Registration.Instance,
             GlobalShort_Registration.Instance,
+            GlobalUnknown_Registration.Instance,
             GodRays_Registration.Instance,
             Grass_Registration.Instance,
             Hazard_Registration.Instance,

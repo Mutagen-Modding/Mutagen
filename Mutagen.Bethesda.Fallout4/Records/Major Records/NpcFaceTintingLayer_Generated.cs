@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DataType
         private int _DataTypeLocation => _TETILocation!.Value.Min;
         private bool _DataType_IsSet => _TETILocation.HasValue;
-        public NpcFaceTintingLayer.Type DataType => _DataType_IsSet ? (NpcFaceTintingLayer.Type)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_DataTypeLocation, 0x2)) : default;
+        public NpcFaceTintingLayer.Type DataType => _DataType_IsSet ? (NpcFaceTintingLayer.Type)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_DataTypeLocation, 0x2)) : default(NpcFaceTintingLayer.Type);
         #endregion
         #region Index
         private int _IndexLocation => _TETILocation!.Value.Min + 0x2;

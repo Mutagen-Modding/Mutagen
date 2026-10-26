@@ -2378,7 +2378,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public LoadScreenType.LoadScreenTypeEnum Type => _Type_IsSet ? (LoadScreenType.LoadScreenTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenTypeEnum Type => _Type_IsSet ? (LoadScreenType.LoadScreenTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(LoadScreenType.LoadScreenTypeEnum);
         #endregion
         #region X
         private int _XLocation => _DATALocation!.Value.Min + 0x4;
@@ -2408,7 +2408,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Font
         private int _FontLocation => _DATALocation!.Value.Min + 0x18;
         private bool _Font_IsSet => _DATALocation.HasValue;
-        public LoadScreenType.LoadScreenItemEnum Font => _Font_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FontLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenItemEnum Font => _Font_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FontLocation, 0x4)) : default(LoadScreenType.LoadScreenItemEnum);
         #endregion
         #region FontColorR
         private int _FontColorRLocation => _DATALocation!.Value.Min + 0x1C;
@@ -2428,7 +2428,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Alignment
         private int _AlignmentLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Alignment_IsSet => _DATALocation.HasValue;
-        public LoadScreenType.LoadScreenAlignment Alignment => _Alignment_IsSet ? (LoadScreenType.LoadScreenAlignment)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_AlignmentLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenAlignment Alignment => _Alignment_IsSet ? (LoadScreenType.LoadScreenAlignment)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_AlignmentLocation, 0x4)) : default(LoadScreenType.LoadScreenAlignment);
         #endregion
         #region Unknown1
         private int _Unknown1Location => _DATALocation!.Value.Min + 0x2C;
@@ -2438,7 +2438,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Font2
         private int _Font2Location => _DATALocation!.Value.Min + 0x40;
         private bool _Font2_IsSet => _DATALocation.HasValue;
-        public LoadScreenType.LoadScreenItemEnum Font2 => _Font2_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_Font2Location, 0x4)) : default;
+        public LoadScreenType.LoadScreenItemEnum Font2 => _Font2_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_Font2Location, 0x4)) : default(LoadScreenType.LoadScreenItemEnum);
         #endregion
         #region Font2ColorR
         private int _Font2ColorRLocation => _DATALocation!.Value.Min + 0x44;
@@ -2463,7 +2463,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Stats
         private int _StatsLocation => _DATALocation!.Value.Min + 0x54;
         private bool _Stats_IsSet => _DATALocation.HasValue;
-        public LoadScreenType.LoadScreenItemEnum Stats => _Stats_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StatsLocation, 0x4)) : default;
+        public LoadScreenType.LoadScreenItemEnum Stats => _Stats_IsSet ? (LoadScreenType.LoadScreenItemEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StatsLocation, 0x4)) : default(LoadScreenType.LoadScreenItemEnum);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

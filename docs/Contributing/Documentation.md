@@ -3,7 +3,7 @@ Mutagen's documentation itself is able to be contributed to and improved.
 
 The files driving the documentation are [located here](https://github.com/Mutagen-Modding/Mutagen/tree/dev/docs)
 
-They use a system called [Material For MkDocs](https://squidfunk.github.io/mkdocs-material/)
+They use a system called [ProperDocs](https://properdocs.org/) with the [Material For MkDocs](https://squidfunk.github.io/mkdocs-material/) theme
 
 ## One Off Improvements
 If there's something small like a typo or a single sentence to improve, these can often be done straight from Github's website.
@@ -21,7 +21,7 @@ This involves:
 
 - Downloading the documentation to your computer
 
-- Installing and running MkDocs locally to see the results as you edit the documentation
+- Installing and running ProperDocs locally to see the results as you edit the documentation
 
 - Committing the final results and initiating a PR
 
@@ -41,28 +41,28 @@ This step downloads (clones) the fork you just made to your local computer.
 
 ![Cloning](../images/cloning.png){ width="350" }
 
-### Installing MkDocs
-This is the documentation system Mutagen uses, so you have to install it, along with the GLightbox plugin, so it can display the docs as you edit them.
+### Installing ProperDocs
+This is the documentation system Mutagen uses, so you have to install it, along with the Material theme and the plugins, so it can display the docs as you edit them.
 
 [Installing Material for MkDocs](https://squidfunk.github.io/mkdocs-material/getting-started/)
 
 [Installing MkDocs GLightbox](https://blueswen.github.io/mkdocs-glightbox/)
 
-TLDR: `pip install mkdocs-material mkdocs-glightbox` in a command line
+TLDR: `pip install -r docs/requirements.txt` in a command line from the root of the repository
 
-### Running MkDocs
-Running `mkdocs serve` on your cloned Mutagen repository 
+### Running ProperDocs
+Running `properdocs serve` on your cloned Mutagen repository 
 
-This step runs MkDocs and tells it to watch Mutagen's documentation and display the changes.   
+This step runs ProperDocs and tells it to watch Mutagen's documentation and display the changes.   
 
 Control-Click on the "Serving On" address to open it in your browser and see the docs as you write them.
 
-![Running MkDocs](../images/mkdocs-serve.png){ width="350" }
+![Running ProperDocs](../images/mkdocs-serve.png){ width="350" }
 
 
 ### Edit Documentation
 
-Use the [MkDocs guide](https://squidfunk.github.io/mkdocs-material/reference/) for all the neat things you can do.
+Use the [Material for MkDocs guide](https://squidfunk.github.io/mkdocs-material/reference/) for all the neat things you can do.
 
 ### Commit, Push
 

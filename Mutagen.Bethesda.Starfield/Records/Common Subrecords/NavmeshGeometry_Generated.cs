@@ -3048,7 +3048,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<INavmeshGridArrayGetter> GridArrays => BinaryOverlayList.FactoryByLazyParse<INavmeshGridArrayGetter>(_structData.Slice(WaypointsEndingPos + 0x24), _package, (s, p) => NavmeshGridArrayBinaryOverlay.NavmeshGridArrayFactory(s, p));
         protected int GridArraysEndingPos;
         #endregion
-        public Int32 Unknown3 => _structData.Length <= GridArraysEndingPos + 0x0 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(GridArraysEndingPos + 0x0, 0x4));
+        public Int32 Unknown3 => _structData.Length <= GridArraysEndingPos + 0x0 ? default(Int32) : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(GridArraysEndingPos + 0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

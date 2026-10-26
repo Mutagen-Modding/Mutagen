@@ -10301,7 +10301,7 @@ namespace Mutagen.Bethesda.Starfield
         #region UseTemplateActors
         private int _UseTemplateActorsLocation => _ACBSLocation!.Value.Min + 0xE;
         private bool _UseTemplateActors_IsSet => _ACBSLocation.HasValue;
-        public Npc.TemplateActorType UseTemplateActors => _UseTemplateActors_IsSet ? (Npc.TemplateActorType)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_UseTemplateActorsLocation, 0x2)) : default;
+        public Npc.TemplateActorType UseTemplateActors => _UseTemplateActors_IsSet ? (Npc.TemplateActorType)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_UseTemplateActorsLocation, 0x2)) : default(Npc.TemplateActorType);
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = [];
         #region DeathItem
@@ -10361,37 +10361,37 @@ namespace Mutagen.Bethesda.Starfield
         #region Aggression
         private int _AggressionLocation => _AIDTLocation!.Value.Min;
         private bool _Aggression_IsSet => _AIDTLocation.HasValue;
-        public Npc.AggressionType Aggression => _Aggression_IsSet ? (Npc.AggressionType)_recordData.Span.Slice(_AggressionLocation, 0x1)[0] : default;
+        public Npc.AggressionType Aggression => _Aggression_IsSet ? (Npc.AggressionType)_recordData.Span.Slice(_AggressionLocation, 0x1)[0] : default(Npc.AggressionType);
         #endregion
         #region Confidence
         private int _ConfidenceLocation => _AIDTLocation!.Value.Min + 0x1;
         private bool _Confidence_IsSet => _AIDTLocation.HasValue;
-        public Npc.ConfidenceType Confidence => _Confidence_IsSet ? (Npc.ConfidenceType)_recordData.Span.Slice(_ConfidenceLocation, 0x1)[0] : default;
+        public Npc.ConfidenceType Confidence => _Confidence_IsSet ? (Npc.ConfidenceType)_recordData.Span.Slice(_ConfidenceLocation, 0x1)[0] : default(Npc.ConfidenceType);
         #endregion
         #region EnergyLevel
         private int _EnergyLevelLocation => _AIDTLocation!.Value.Min + 0x2;
         private bool _EnergyLevel_IsSet => _AIDTLocation.HasValue;
-        public Byte EnergyLevel => _EnergyLevel_IsSet ? _recordData.Span[_EnergyLevelLocation] : default;
+        public Byte EnergyLevel => _EnergyLevel_IsSet ? _recordData.Span[_EnergyLevelLocation] : default(Byte);
         #endregion
         #region Responsibility
         private int _ResponsibilityLocation => _AIDTLocation!.Value.Min + 0x3;
         private bool _Responsibility_IsSet => _AIDTLocation.HasValue;
-        public Npc.ResponsibilityType Responsibility => _Responsibility_IsSet ? (Npc.ResponsibilityType)_recordData.Span.Slice(_ResponsibilityLocation, 0x1)[0] : default;
+        public Npc.ResponsibilityType Responsibility => _Responsibility_IsSet ? (Npc.ResponsibilityType)_recordData.Span.Slice(_ResponsibilityLocation, 0x1)[0] : default(Npc.ResponsibilityType);
         #endregion
         #region Mood
         private int _MoodLocation => _AIDTLocation!.Value.Min + 0x4;
         private bool _Mood_IsSet => _AIDTLocation.HasValue;
-        public Npc.MoodType Mood => _Mood_IsSet ? (Npc.MoodType)_recordData.Span.Slice(_MoodLocation, 0x1)[0] : default;
+        public Npc.MoodType Mood => _Mood_IsSet ? (Npc.MoodType)_recordData.Span.Slice(_MoodLocation, 0x1)[0] : default(Npc.MoodType);
         #endregion
         #region Assistance
         private int _AssistanceLocation => _AIDTLocation!.Value.Min + 0x5;
         private bool _Assistance_IsSet => _AIDTLocation.HasValue;
-        public Npc.AssistanceType Assistance => _Assistance_IsSet ? (Npc.AssistanceType)_recordData.Span.Slice(_AssistanceLocation, 0x1)[0] : default;
+        public Npc.AssistanceType Assistance => _Assistance_IsSet ? (Npc.AssistanceType)_recordData.Span.Slice(_AssistanceLocation, 0x1)[0] : default(Npc.AssistanceType);
         #endregion
         #region UnknownAIDT
         private int _UnknownAIDTLocation => _AIDTLocation!.Value.Min + 0x6;
         private bool _UnknownAIDT_IsSet => _AIDTLocation.HasValue;
-        public Byte UnknownAIDT => _UnknownAIDT_IsSet ? _recordData.Span[_UnknownAIDTLocation] : default;
+        public Byte UnknownAIDT => _UnknownAIDT_IsSet ? _recordData.Span[_UnknownAIDTLocation] : default(Byte);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>> Packages { get; private set; } = [];
         #region FLEE
@@ -10448,12 +10448,12 @@ namespace Mutagen.Bethesda.Starfield
         #region GearedUpWeapons
         private int _GearedUpWeaponsLocation => _DNAMLocation!.Value.Min + 0x6;
         private bool _GearedUpWeapons_IsSet => _DNAMLocation.HasValue;
-        public Byte GearedUpWeapons => _GearedUpWeapons_IsSet ? _recordData.Span[_GearedUpWeaponsLocation] : default;
+        public Byte GearedUpWeapons => _GearedUpWeapons_IsSet ? _recordData.Span[_GearedUpWeaponsLocation] : default(Byte);
         #endregion
         #region Unused
         private int _UnusedLocation => _DNAMLocation!.Value.Min + 0x7;
         private bool _Unused_IsSet => _DNAMLocation.HasValue;
-        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default;
+        public Byte Unused => _Unused_IsSet ? _recordData.Span[_UnusedLocation] : default(Byte);
         #endregion
         #region HCLR
         private int? _HCLRLocation;

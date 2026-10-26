@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         public IFormLinkGetter<ISpellGetter> Effect => _structData.Length <= Unused3VersioningOffset + 0x10 ? FormLink<ISpellGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(Unused3VersioningOffset + 0x10, 0x4));
         #region Unused4
-        public Int32 Unused4 => _structData.Length <= Unused3VersioningOffset + 0x14 ? default : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(Unused3VersioningOffset + 0x14, 0x4));
+        public Int32 Unused4 => _structData.Length <= Unused3VersioningOffset + 0x14 ? default(Int32) : BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(Unused3VersioningOffset + 0x14, 0x4));
         int Unused4VersioningOffset => Unused3VersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(

@@ -1997,11 +1997,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single FogClipDistance => _structData.Slice(0x20, 0x4).Float();
         public Single FogPower => _structData.Slice(0x24, 0x4).Float();
         public IAmbientColorsGetter AmbientColors => AmbientColorsBinaryOverlay.AmbientColorsFactory(_structData.Slice(0x28).Slice(0, _structData.Length - 0x28), _package, default(TypedParseParams));
-        public Color FogFarColor => _structData.Length <= 0x48 ? default : _structData.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogMax => _structData.Length <= 0x4C ? default : _structData.Slice(0x4C, 0x4).Float();
-        public Single LightFadeBegin => _structData.Length <= 0x50 ? default : _structData.Slice(0x50, 0x4).Float();
-        public Single LightFadeEnd => _structData.Length <= 0x54 ? default : _structData.Slice(0x54, 0x4).Float();
-        public CellLighting.Inherit Inherits => _structData.Span.Length <= 0x58 ? default : (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x58, 0x4));
+        public Color FogFarColor => _structData.Length <= 0x48 ? default(Color) : _structData.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single FogMax => _structData.Length <= 0x4C ? default(Single) : _structData.Slice(0x4C, 0x4).Float();
+        public Single LightFadeBegin => _structData.Length <= 0x50 ? default(Single) : _structData.Slice(0x50, 0x4).Float();
+        public Single LightFadeEnd => _structData.Length <= 0x54 ? default(Single) : _structData.Slice(0x54, 0x4).Float();
+        public CellLighting.Inherit Inherits => _structData.Span.Length <= 0x58 ? default(CellLighting.Inherit) : (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x58, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

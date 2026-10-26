@@ -1,2 +1,4 @@
+properdocs
+mkdocs-material
 mkdocs-redirects
 mkdocs-glightbox

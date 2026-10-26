@@ -2685,12 +2685,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Level
         private int _LevelLocation => _DATALocation!.Value.Min + 0x1;
         private bool _Level_IsSet => _DATALocation.HasValue;
-        public Byte Level => _Level_IsSet ? _recordData.Span[_LevelLocation] : default;
+        public Byte Level => _Level_IsSet ? _recordData.Span[_LevelLocation] : default(Byte);
         #endregion
         #region NumRanks
         private int _NumRanksLocation => _DATALocation!.Value.Min + 0x2;
         private bool _NumRanks_IsSet => _DATALocation.HasValue;
-        public Byte NumRanks => _NumRanks_IsSet ? _recordData.Span[_NumRanksLocation] : default;
+        public Byte NumRanks => _NumRanks_IsSet ? _recordData.Span[_NumRanksLocation] : default(Byte);
         #endregion
         #region Playable
         private int _PlayableLocation => _DATALocation!.Value.Min + 0x3;

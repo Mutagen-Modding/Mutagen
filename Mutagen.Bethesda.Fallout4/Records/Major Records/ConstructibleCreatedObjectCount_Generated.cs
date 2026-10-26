@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public ConstructibleCreatedObjectCount.VersioningBreaks Versioning { get; private set; }
         public UInt16 Count => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
-        public UInt16 Priority => _structData.Length <= 0x2 ? default : BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
+        public UInt16 Priority => _structData.Length <= 0x2 ? default(UInt16) : BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

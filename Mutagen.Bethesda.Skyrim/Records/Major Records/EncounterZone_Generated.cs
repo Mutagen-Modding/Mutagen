@@ -1859,22 +1859,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public Byte Rank => _Rank_IsSet ? _recordData.Span[_RankLocation] : default;
+        public Byte Rank => _Rank_IsSet ? _recordData.Span[_RankLocation] : default(Byte);
         #endregion
         #region MinLevel
         private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
         private bool _MinLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public Byte MinLevel => _MinLevel_IsSet ? _recordData.Span[_MinLevelLocation] : default;
+        public Byte MinLevel => _MinLevel_IsSet ? _recordData.Span[_MinLevelLocation] : default(Byte);
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(EncounterZone.Flag);
         #endregion
         #region MaxLevel
         private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
         private bool _MaxLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
-        public Byte MaxLevel => _MaxLevel_IsSet ? _recordData.Span[_MaxLevelLocation] : default;
+        public Byte MaxLevel => _MaxLevel_IsSet ? _recordData.Span[_MaxLevelLocation] : default(Byte);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

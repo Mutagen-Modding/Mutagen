@@ -2529,12 +2529,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _BPD2Location!.Value.Min + 0x4;
         private bool _Flags_IsSet => _BPD2Location.HasValue;
-        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(BodyPart.Flag);
         #endregion
         #region Type
         private int _TypeLocation => _BPD2Location!.Value.Min + 0x5;
         private bool _Type_IsSet => _BPD2Location.HasValue;
-        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default(BodyPart.PartType);
         #endregion
         #region HealthPercent
         private int _HealthPercentLocation => _BPD2Location!.Value.Min + 0x6;
@@ -2579,12 +2579,12 @@ namespace Mutagen.Bethesda.Starfield
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _BPD2Location!.Value.Min + 0x20;
         private bool _OnCrippleDebrisCount_IsSet => _BPD2Location.HasValue;
-        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default;
+        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default(Byte);
         #endregion
         #region OnCrippleDecalCount
         private int _OnCrippleDecalCountLocation => _BPD2Location!.Value.Min + 0x21;
         private bool _OnCrippleDecalCount_IsSet => _BPD2Location.HasValue;
-        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default;
+        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default(Byte);
         #endregion
         #region GoreTargetBone
         private int? _GoreTargetBoneLocation;

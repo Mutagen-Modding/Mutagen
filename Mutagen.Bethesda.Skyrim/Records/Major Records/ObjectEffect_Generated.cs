@@ -2453,12 +2453,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _ENITLocation.HasValue;
-        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(ObjectEffect.Flag);
         #endregion
         #region CastType
         private int _CastTypeLocation => _ENITLocation!.Value.Min + 0x8;
         private bool _CastType_IsSet => _ENITLocation.HasValue;
-        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_CastTypeLocation, 0x4)) : default(CastType);
         #endregion
         #region EnchantmentAmount
         private int _EnchantmentAmountLocation => _ENITLocation!.Value.Min + 0xC;
@@ -2468,12 +2468,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region TargetType
         private int _TargetTypeLocation => _ENITLocation!.Value.Min + 0x10;
         private bool _TargetType_IsSet => _ENITLocation.HasValue;
-        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TargetTypeLocation, 0x4)) : default(TargetType);
         #endregion
         #region EnchantType
         private int _EnchantTypeLocation => _ENITLocation!.Value.Min + 0x14;
         private bool _EnchantType_IsSet => _ENITLocation.HasValue;
-        public ObjectEffect.EnchantTypeEnum EnchantType => _EnchantType_IsSet ? (ObjectEffect.EnchantTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EnchantTypeLocation, 0x4)) : default;
+        public ObjectEffect.EnchantTypeEnum EnchantType => _EnchantType_IsSet ? (ObjectEffect.EnchantTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EnchantTypeLocation, 0x4)) : default(ObjectEffect.EnchantTypeEnum);
         #endregion
         #region ChargeTime
         private int _ChargeTimeLocation => _ENITLocation!.Value.Min + 0x18;

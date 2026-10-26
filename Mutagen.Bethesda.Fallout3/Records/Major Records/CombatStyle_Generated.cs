@@ -5581,27 +5581,27 @@ namespace Mutagen.Bethesda.Fallout3
         #region StandardMeleeDecisionPowerAttackNormal
         private int _StandardMeleeDecisionPowerAttackNormalLocation => _CSTDLocation!.Value.Min + 0x40;
         private bool _StandardMeleeDecisionPowerAttackNormal_IsSet => _CSTDLocation.HasValue;
-        public Byte StandardMeleeDecisionPowerAttackNormal => _StandardMeleeDecisionPowerAttackNormal_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackNormalLocation] : default;
+        public Byte StandardMeleeDecisionPowerAttackNormal => _StandardMeleeDecisionPowerAttackNormal_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackNormalLocation] : default(Byte);
         #endregion
         #region StandardMeleeDecisionPowerAttackForward
         private int _StandardMeleeDecisionPowerAttackForwardLocation => _CSTDLocation!.Value.Min + 0x41;
         private bool _StandardMeleeDecisionPowerAttackForward_IsSet => _CSTDLocation.HasValue;
-        public Byte StandardMeleeDecisionPowerAttackForward => _StandardMeleeDecisionPowerAttackForward_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackForwardLocation] : default;
+        public Byte StandardMeleeDecisionPowerAttackForward => _StandardMeleeDecisionPowerAttackForward_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackForwardLocation] : default(Byte);
         #endregion
         #region StandardMeleeDecisionPowerAttackBack
         private int _StandardMeleeDecisionPowerAttackBackLocation => _CSTDLocation!.Value.Min + 0x42;
         private bool _StandardMeleeDecisionPowerAttackBack_IsSet => _CSTDLocation.HasValue;
-        public Byte StandardMeleeDecisionPowerAttackBack => _StandardMeleeDecisionPowerAttackBack_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackBackLocation] : default;
+        public Byte StandardMeleeDecisionPowerAttackBack => _StandardMeleeDecisionPowerAttackBack_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackBackLocation] : default(Byte);
         #endregion
         #region StandardMeleeDecisionPowerAttackLeft
         private int _StandardMeleeDecisionPowerAttackLeftLocation => _CSTDLocation!.Value.Min + 0x43;
         private bool _StandardMeleeDecisionPowerAttackLeft_IsSet => _CSTDLocation.HasValue;
-        public Byte StandardMeleeDecisionPowerAttackLeft => _StandardMeleeDecisionPowerAttackLeft_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackLeftLocation] : default;
+        public Byte StandardMeleeDecisionPowerAttackLeft => _StandardMeleeDecisionPowerAttackLeft_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackLeftLocation] : default(Byte);
         #endregion
         #region StandardMeleeDecisionPowerAttackRight
         private int _StandardMeleeDecisionPowerAttackRightLocation => _CSTDLocation!.Value.Min + 0x44;
         private bool _StandardMeleeDecisionPowerAttackRight_IsSet => _CSTDLocation.HasValue;
-        public Byte StandardMeleeDecisionPowerAttackRight => _StandardMeleeDecisionPowerAttackRight_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackRightLocation] : default;
+        public Byte StandardMeleeDecisionPowerAttackRight => _StandardMeleeDecisionPowerAttackRight_IsSet ? _recordData.Span[_StandardMeleeDecisionPowerAttackRightLocation] : default(Byte);
         #endregion
         #region StandardUnused4
         private int _StandardUnused4Location => _CSTDLocation!.Value.Min + 0x45;
@@ -5621,7 +5621,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region StandardFlags
         private int _StandardFlagsLocation => _CSTDLocation!.Value.Min + 0x50;
         private bool _StandardFlags_IsSet => _CSTDLocation.HasValue;
-        public CombatStyle.Flag StandardFlags => _StandardFlags_IsSet ? (CombatStyle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_StandardFlagsLocation, 0x2)) : default;
+        public CombatStyle.Flag StandardFlags => _StandardFlags_IsSet ? (CombatStyle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Span.Slice(_StandardFlagsLocation, 0x2)) : default(CombatStyle.Flag);
         #endregion
         #region StandardUnused5
         private int _StandardUnused5Location => _CSTDLocation!.Value.Min + 0x52;
@@ -5808,7 +5808,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region SimpleWeaponRestrictions
         private int _SimpleWeaponRestrictionsLocation => _CSSDLocation!.Value.Min + 0x28;
         private bool _SimpleWeaponRestrictions_IsSet => _CSSDLocation.HasValue;
-        public CombatStyle.WeaponRestriction SimpleWeaponRestrictions => _SimpleWeaponRestrictions_IsSet ? (CombatStyle.WeaponRestriction)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SimpleWeaponRestrictionsLocation, 0x4)) : default;
+        public CombatStyle.WeaponRestriction SimpleWeaponRestrictions => _SimpleWeaponRestrictions_IsSet ? (CombatStyle.WeaponRestriction)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SimpleWeaponRestrictionsLocation, 0x4)) : default(CombatStyle.WeaponRestriction);
         #endregion
         #region SimpleRangedWeaponRangeMultMax
         private int _SimpleRangedWeaponRangeMultMaxLocation => _CSSDLocation!.Value.Min + 0x2C;

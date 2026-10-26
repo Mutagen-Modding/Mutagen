@@ -1578,8 +1578,8 @@ namespace Mutagen.Bethesda.Fallout3
         public Byte LoopingMax => _structData.Span[0x2];
         public Byte Unused1 => _structData.Span[0x3];
         public Int16 ReplayDelay => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x4, 0x2));
-        public Boolean NoAttacking => _structData.Length <= 0x6 ? default : _structData.Slice(0x6, 0x1)[0] >= 1;
-        public Byte Unused2 => _structData.Length <= 0x7 ? default : _structData.Span[0x7];
+        public Boolean NoAttacking => _structData.Length <= 0x6 ? default(Boolean) : _structData.Slice(0x6, 0x1)[0] >= 1;
+        public Byte Unused2 => _structData.Length <= 0x7 ? default(Byte) : _structData.Span[0x7];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

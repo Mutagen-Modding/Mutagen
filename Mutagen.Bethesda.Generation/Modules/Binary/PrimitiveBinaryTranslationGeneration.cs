@@ -260,7 +260,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         {
             if (dataType != null) throw new ArgumentException();
             recordDataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)})";
-            sb.AppendLine($"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, recordDataAccessor, "_package")} : {typeGen.GetDefault(getter: true)};");
+            sb.AppendLine($"public {typeGen.OverrideStr}{typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, recordDataAccessor, "_package")} : {typeGen.ValueWhenAbsent()};");
         }
         else
         {
@@ -283,12 +283,12 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     else
                     {
                         string passed = int.TryParse(passedLengthAccessor.TrimStart("0x", StringComparison.Ordinal), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expectedLen.Value).ToString() : $"({passedLengthAccessor} + {expectedLen.Value})";
-                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {structDataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")} : {typeGen.GetDefault(getter: true)};");
+                        sb.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {structDataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")} : {typeGen.ValueWhenAbsent()};");
                     }
                 }
                 else if (data.IsAfterBreak)
                 {
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? default : {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {structDataAccessor}.Length <= {passedLengthAccessor} ? {typeGen.ValueWhenAbsent()} : {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")};");
                 }
                 else if (data.HasVersioning || data.HasModHeaderVersioning)
                 {
@@ -301,7 +301,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                     {
                         checks.Add(VersioningModule.GetModHeaderVersionIfCheck(data, "_package.MetaData.ModHeaderVersion!.Value"));
                     }
-                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {string.Join(" && ", checks)} ? {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")} : {typeGen.GetDefault(getter: true)};");
+                    sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {string.Join(" && ", checks)} ? {GenerateForTypicalWrapper(objGen, typeGen, structDataSlice, "_package")} : {typeGen.ValueWhenAbsent()};");
                 }
                 else
                 {
@@ -311,7 +311,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
             else
             {
                 DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(sb, dataType, objGen, typeGen, passedLengthAccessor);
-                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{recordDataAccessor}.Slice(_{typeGen.Name}Location{(expectedLen.HasValue ? $", {expectedLen.Value}" : null)})", "_package")} : {typeGen.GetDefault(getter: true)};");
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{recordDataAccessor}.Slice(_{typeGen.Name}Location{(expectedLen.HasValue ? $", {expectedLen.Value}" : null)})", "_package")} : {typeGen.ValueWhenAbsent()};");
             }
         }
     }

@@ -5509,27 +5509,27 @@ namespace Mutagen.Bethesda.Fallout3
         public Single ColorKey1ColorKeyTime => _structData.Slice(0xD4, 0x4).Float();
         public Single ColorKey2ColorKeyTime => _structData.Slice(0xD8, 0x4).Float();
         public Single ColorKey3ColorKeyTime => _structData.Slice(0xDC, 0x4).Float();
-        public Single ParticleShaderInitialSpeedAlongNormalVariance => _structData.Length <= 0xE0 ? default : _structData.Slice(0xE0, 0x4).Float();
-        public Single ParticleShaderInitialRotation => _structData.Length <= 0xE4 ? default : _structData.Slice(0xE4, 0x4).Float();
-        public Single ParticleShaderInitialRotationVariance => _structData.Length <= 0xE8 ? default : _structData.Slice(0xE8, 0x4).Float();
-        public Single ParticleShaderRotationSpeed => _structData.Length <= 0xEC ? default : _structData.Slice(0xEC, 0x4).Float();
-        public Single ParticleShaderRotationSpeedVariance => _structData.Length <= 0xF0 ? default : _structData.Slice(0xF0, 0x4).Float();
+        public Single ParticleShaderInitialSpeedAlongNormalVariance => _structData.Length <= 0xE0 ? default(Single) : _structData.Slice(0xE0, 0x4).Float();
+        public Single ParticleShaderInitialRotation => _structData.Length <= 0xE4 ? default(Single) : _structData.Slice(0xE4, 0x4).Float();
+        public Single ParticleShaderInitialRotationVariance => _structData.Length <= 0xE8 ? default(Single) : _structData.Slice(0xE8, 0x4).Float();
+        public Single ParticleShaderRotationSpeed => _structData.Length <= 0xEC ? default(Single) : _structData.Slice(0xEC, 0x4).Float();
+        public Single ParticleShaderRotationSpeedVariance => _structData.Length <= 0xF0 ? default(Single) : _structData.Slice(0xF0, 0x4).Float();
         public IFormLinkGetter<IDebrisGetter> AddonModels => _structData.Length <= 0xF4 ? FormLink<IDebrisGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _structData.Span.Slice(0xF4, 0x4));
-        public Single HolesStartTime => _structData.Length <= 0xF8 ? default : _structData.Slice(0xF8, 0x4).Float();
-        public Single HolesEndTime => _structData.Length <= 0xFC ? default : _structData.Slice(0xFC, 0x4).Float();
-        public Single HolesStartValue => _structData.Length <= 0x100 ? default : _structData.Slice(0x100, 0x4).Float();
-        public Single HolesEndValue => _structData.Length <= 0x104 ? default : _structData.Slice(0x104, 0x4).Float();
-        public Single EdgeWidth => _structData.Length <= 0x108 ? default : _structData.Slice(0x108, 0x4).Float();
-        public Color EdgeColor => _structData.Length <= 0x10C ? default : _structData.Slice(0x10C, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single ExplosionWindSpeed => _structData.Length <= 0x110 ? default : _structData.Slice(0x110, 0x4).Float();
-        public UInt32 TextureCountU => _structData.Length <= 0x114 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x114, 0x4));
-        public UInt32 TextureCountV => _structData.Length <= 0x118 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x118, 0x4));
-        public Single AddonModelsFadeInTime => _structData.Length <= 0x11C ? default : _structData.Slice(0x11C, 0x4).Float();
-        public Single AddonModelsFadeOutTime => _structData.Length <= 0x120 ? default : _structData.Slice(0x120, 0x4).Float();
-        public Single AddonModelsScaleStart => _structData.Length <= 0x124 ? default : _structData.Slice(0x124, 0x4).Float();
-        public Single AddonModelsScaleEnd => _structData.Length <= 0x128 ? default : _structData.Slice(0x128, 0x4).Float();
-        public Single AddonModelsScaleInTime => _structData.Length <= 0x12C ? default : _structData.Slice(0x12C, 0x4).Float();
-        public Single AddonModelsScaleOutTime => _structData.Length <= 0x130 ? default : _structData.Slice(0x130, 0x4).Float();
+        public Single HolesStartTime => _structData.Length <= 0xF8 ? default(Single) : _structData.Slice(0xF8, 0x4).Float();
+        public Single HolesEndTime => _structData.Length <= 0xFC ? default(Single) : _structData.Slice(0xFC, 0x4).Float();
+        public Single HolesStartValue => _structData.Length <= 0x100 ? default(Single) : _structData.Slice(0x100, 0x4).Float();
+        public Single HolesEndValue => _structData.Length <= 0x104 ? default(Single) : _structData.Slice(0x104, 0x4).Float();
+        public Single EdgeWidth => _structData.Length <= 0x108 ? default(Single) : _structData.Slice(0x108, 0x4).Float();
+        public Color EdgeColor => _structData.Length <= 0x10C ? default(Color) : _structData.Slice(0x10C, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Single ExplosionWindSpeed => _structData.Length <= 0x110 ? default(Single) : _structData.Slice(0x110, 0x4).Float();
+        public UInt32 TextureCountU => _structData.Length <= 0x114 ? default(UInt32) : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x114, 0x4));
+        public UInt32 TextureCountV => _structData.Length <= 0x118 ? default(UInt32) : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x118, 0x4));
+        public Single AddonModelsFadeInTime => _structData.Length <= 0x11C ? default(Single) : _structData.Slice(0x11C, 0x4).Float();
+        public Single AddonModelsFadeOutTime => _structData.Length <= 0x120 ? default(Single) : _structData.Slice(0x120, 0x4).Float();
+        public Single AddonModelsScaleStart => _structData.Length <= 0x124 ? default(Single) : _structData.Slice(0x124, 0x4).Float();
+        public Single AddonModelsScaleEnd => _structData.Length <= 0x128 ? default(Single) : _structData.Slice(0x128, 0x4).Float();
+        public Single AddonModelsScaleInTime => _structData.Length <= 0x12C ? default(Single) : _structData.Slice(0x12C, 0x4).Float();
+        public Single AddonModelsScaleOutTime => _structData.Length <= 0x130 ? default(Single) : _structData.Slice(0x130, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
