@@ -2879,7 +2879,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x5D;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(EffectShader.Flag);
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(

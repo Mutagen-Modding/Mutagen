@@ -2354,7 +2354,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Skill
         private int _SkillLocation => _DATALocation!.Value.Min;
         private bool _Skill_IsSet => _DATALocation.HasValue;
-        public ActorValue Skill => _Skill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SkillLocation, 0x4)) : default;
+        public ActorValue Skill => _Skill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SkillLocation, 0x4)) : default(ActorValue);
         #endregion
         #region Level
         private int _LevelLocation => _DATALocation!.Value.Min + 0x4;

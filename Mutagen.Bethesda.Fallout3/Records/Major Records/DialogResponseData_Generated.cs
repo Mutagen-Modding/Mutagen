@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Fallout3
         public Byte ResponseNumber => _structData.Span[0xC];
         public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0xD, 0x3).ToArray();
         public IFormLinkGetter<ISoundGetter> ResponseSound => _structData.Length <= 0x10 ? FormLink<ISoundGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _structData.Span.Slice(0x10, 0x4));
-        public Boolean UseEmotionAnimation => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x1)[0] >= 1;
+        public Boolean UseEmotionAnimation => _structData.Length <= 0x14 ? default(Boolean) : _structData.Slice(0x14, 0x1)[0] >= 1;
         public ReadOnlyMemorySlice<Byte> Unused3 => _structData.Span.Length <= 0x15 ? UtilityTranslation.Zeros.Slice(3) : _structData.Span.Slice(0x15, 0x3).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1240,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout4
         public SoundRepeat.VersioningBreaks Versioning { get; private set; }
         public Single MinTime => _structData.Slice(0x0, 0x4).Float();
         public Single MaxTime => _structData.Slice(0x4, 0x4).Float();
-        public Boolean Stackable => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x1)[0] >= 1;
+        public Boolean Stackable => _structData.Length <= 0x8 ? default(Boolean) : _structData.Slice(0x8, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

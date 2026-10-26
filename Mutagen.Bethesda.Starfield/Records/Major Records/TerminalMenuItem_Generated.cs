@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _ISETLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _ISETLocation.HasValue;
-        public TerminalMenuItem.Flag Flags => _Flags_IsSet ? (TerminalMenuItem.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public TerminalMenuItem.Flag Flags => _Flags_IsSet ? (TerminalMenuItem.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(TerminalMenuItem.Flag);
         #endregion
         #region UnusedISET2
         private int _UnusedISET2Location => _ISETLocation!.Value.Min + 0x5;

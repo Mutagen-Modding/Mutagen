@@ -4265,12 +4265,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _BPNDLocation!.Value.Min + 0x40;
         private bool _Flags_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(BodyPart.Flag);
         #endregion
         #region Type
         private int _TypeLocation => _BPNDLocation!.Value.Min + 0x41;
         private bool _Type_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default(BodyPart.PartType);
         #endregion
         #region HealthPercent
         private int _HealthPercentLocation => _BPNDLocation!.Value.Min + 0x42;
@@ -4300,27 +4300,27 @@ namespace Mutagen.Bethesda.Fallout4
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x4A;
         private bool _SeverableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _recordData.Span[_SeverableDebrisCountLocation] : default;
+        public Byte SeverableDebrisCount => _SeverableDebrisCount_IsSet ? _recordData.Span[_SeverableDebrisCountLocation] : default(Byte);
         #endregion
         #region ExplodableDebrisCount
         private int _ExplodableDebrisCountLocation => _BPNDLocation!.Value.Min + 0x4B;
         private bool _ExplodableDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _recordData.Span[_ExplodableDebrisCountLocation] : default;
+        public Byte ExplodableDebrisCount => _ExplodableDebrisCount_IsSet ? _recordData.Span[_ExplodableDebrisCountLocation] : default(Byte);
         #endregion
         #region SeverableDecalCount
         private int _SeverableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4C;
         private bool _SeverableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default;
+        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default(Byte);
         #endregion
         #region ExplodableDecalCount
         private int _ExplodableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4D;
         private bool _ExplodableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
+        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default(Byte);
         #endregion
         #region GeometrySegmentIndex
         private int _GeometrySegmentIndexLocation => _BPNDLocation!.Value.Min + 0x4E;
         private bool _GeometrySegmentIndex_IsSet => _BPNDLocation.HasValue;
-        public Byte GeometrySegmentIndex => _GeometrySegmentIndex_IsSet ? _recordData.Span[_GeometrySegmentIndexLocation] : default;
+        public Byte GeometrySegmentIndex => _GeometrySegmentIndex_IsSet ? _recordData.Span[_GeometrySegmentIndexLocation] : default(Byte);
         #endregion
         #region OnCrippleArtObject
         private int _OnCrippleArtObjectLocation => _BPNDLocation!.Value.Min + 0x4F;
@@ -4350,12 +4350,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _BPNDLocation!.Value.Min + 0x63;
         private bool _OnCrippleDebrisCount_IsSet => _BPNDLocation.HasValue;
-        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default;
+        public Byte OnCrippleDebrisCount => _OnCrippleDebrisCount_IsSet ? _recordData.Span[_OnCrippleDebrisCountLocation] : default(Byte);
         #endregion
         #region OnCrippleDecalCount
         private int _OnCrippleDecalCountLocation => _BPNDLocation!.Value.Min + 0x64;
         private bool _OnCrippleDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default;
+        public Byte OnCrippleDecalCount => _OnCrippleDecalCount_IsSet ? _recordData.Span[_OnCrippleDecalCountLocation] : default(Byte);
         #endregion
         #region LimbReplacementModel
         private int? _LimbReplacementModelLocation;

@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region PowerAttackAnimationOverride
         public static readonly Weapon.PowerAttackAnim PowerAttackAnimationOverrideDefault = Weapon.PowerAttackAnim.Default;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Weapon.PowerAttackAnim _PowerAttackAnimationOverride;
+        private Weapon.PowerAttackAnim _PowerAttackAnimationOverride = PowerAttackAnimationOverrideDefault;
         public Weapon.PowerAttackAnim PowerAttackAnimationOverride
         {
             get => this._PowerAttackAnimationOverride;
@@ -10571,14 +10571,14 @@ namespace Mutagen.Bethesda.Fallout3
         #region ClipSize
         private int _ClipSizeLocation => _DATALocation!.Value.Min + 0xE;
         private bool _ClipSize_IsSet => _DATALocation.HasValue;
-        public Byte ClipSize => _ClipSize_IsSet ? _recordData.Span[_ClipSizeLocation] : default;
+        public Byte ClipSize => _ClipSize_IsSet ? _recordData.Span[_ClipSizeLocation] : default(Byte);
         #endregion
         private RangeInt32? _DNAMLocation;
         public Weapon.DNAMDataType DNAMDataTypeState { get; private set; }
         #region AnimationType
         private int _AnimationTypeLocation => _DNAMLocation!.Value.Min;
         private bool _AnimationType_IsSet => _DNAMLocation.HasValue;
-        public Weapon.WeaponAnimationType AnimationType => _AnimationType_IsSet ? (Weapon.WeaponAnimationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_AnimationTypeLocation, 0x4)) : default;
+        public Weapon.WeaponAnimationType AnimationType => _AnimationType_IsSet ? (Weapon.WeaponAnimationType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_AnimationTypeLocation, 0x4)) : default(Weapon.WeaponAnimationType);
         #endregion
         #region AnimationMultiplier
         private int _AnimationMultiplierLocation => _DNAMLocation!.Value.Min + 0x4;
@@ -10598,17 +10598,17 @@ namespace Mutagen.Bethesda.Fallout3
         #region GripAnimation
         private int _GripAnimationLocation => _DNAMLocation!.Value.Min + 0xD;
         private bool _GripAnimation_IsSet => _DNAMLocation.HasValue;
-        public Byte GripAnimation => _GripAnimation_IsSet ? _recordData.Span[_GripAnimationLocation] : default;
+        public Byte GripAnimation => _GripAnimation_IsSet ? _recordData.Span[_GripAnimationLocation] : default(Byte);
         #endregion
         #region AmmoUse
         private int _AmmoUseLocation => _DNAMLocation!.Value.Min + 0xE;
         private bool _AmmoUse_IsSet => _DNAMLocation.HasValue;
-        public Byte AmmoUse => _AmmoUse_IsSet ? _recordData.Span[_AmmoUseLocation] : default;
+        public Byte AmmoUse => _AmmoUse_IsSet ? _recordData.Span[_AmmoUseLocation] : default(Byte);
         #endregion
         #region ReloadAnimation
         private int _ReloadAnimationLocation => _DNAMLocation!.Value.Min + 0xF;
         private bool _ReloadAnimation_IsSet => _DNAMLocation.HasValue;
-        public Weapon.ReloadAnim ReloadAnimation => _ReloadAnimation_IsSet ? (Weapon.ReloadAnim)_recordData.Span.Slice(_ReloadAnimationLocation, 0x1)[0] : default;
+        public Weapon.ReloadAnim ReloadAnimation => _ReloadAnimation_IsSet ? (Weapon.ReloadAnim)_recordData.Span.Slice(_ReloadAnimationLocation, 0x1)[0] : default(Weapon.ReloadAnim);
         #endregion
         #region MinSpread
         private int _MinSpreadLocation => _DNAMLocation!.Value.Min + 0x10;
@@ -10643,22 +10643,22 @@ namespace Mutagen.Bethesda.Fallout3
         #region BaseVatsToHitChance
         private int _BaseVatsToHitChanceLocation => _DNAMLocation!.Value.Min + 0x28;
         private bool _BaseVatsToHitChance_IsSet => _DNAMLocation.HasValue;
-        public Byte BaseVatsToHitChance => _BaseVatsToHitChance_IsSet ? _recordData.Span[_BaseVatsToHitChanceLocation] : default;
+        public Byte BaseVatsToHitChance => _BaseVatsToHitChance_IsSet ? _recordData.Span[_BaseVatsToHitChanceLocation] : default(Byte);
         #endregion
         #region AttackAnimation
         private int _AttackAnimationLocation => _DNAMLocation!.Value.Min + 0x29;
         private bool _AttackAnimation_IsSet => _DNAMLocation.HasValue;
-        public Weapon.AttackAnim AttackAnimation => _AttackAnimation_IsSet ? (Weapon.AttackAnim)_recordData.Span.Slice(_AttackAnimationLocation, 0x1)[0] : default;
+        public Weapon.AttackAnim AttackAnimation => _AttackAnimation_IsSet ? (Weapon.AttackAnim)_recordData.Span.Slice(_AttackAnimationLocation, 0x1)[0] : default(Weapon.AttackAnim);
         #endregion
         #region ProjectileCount
         private int _ProjectileCountLocation => _DNAMLocation!.Value.Min + 0x2A;
         private bool _ProjectileCount_IsSet => _DNAMLocation.HasValue;
-        public Byte ProjectileCount => _ProjectileCount_IsSet ? _recordData.Span[_ProjectileCountLocation] : default;
+        public Byte ProjectileCount => _ProjectileCount_IsSet ? _recordData.Span[_ProjectileCountLocation] : default(Byte);
         #endregion
         #region EmbeddedWeaponActorValue
         private int _EmbeddedWeaponActorValueLocation => _DNAMLocation!.Value.Min + 0x2B;
         private bool _EmbeddedWeaponActorValue_IsSet => _DNAMLocation.HasValue;
-        public Weapon.EmbeddedWeaponAV EmbeddedWeaponActorValue => _EmbeddedWeaponActorValue_IsSet ? (Weapon.EmbeddedWeaponAV)_recordData.Span.Slice(_EmbeddedWeaponActorValueLocation, 0x1)[0] : default;
+        public Weapon.EmbeddedWeaponAV EmbeddedWeaponActorValue => _EmbeddedWeaponActorValue_IsSet ? (Weapon.EmbeddedWeaponAV)_recordData.Span.Slice(_EmbeddedWeaponActorValueLocation, 0x1)[0] : default(Weapon.EmbeddedWeaponAV);
         #endregion
         #region MinRange
         private int _MinRangeLocation => _DNAMLocation!.Value.Min + 0x2C;
@@ -10673,7 +10673,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region OnHit
         private int _OnHitLocation => _DNAMLocation!.Value.Min + 0x34;
         private bool _OnHit_IsSet => _DNAMLocation.HasValue;
-        public Weapon.WeaponOnHit OnHit => _OnHit_IsSet ? (Weapon.WeaponOnHit)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OnHitLocation, 0x4)) : default;
+        public Weapon.WeaponOnHit OnHit => _OnHit_IsSet ? (Weapon.WeaponOnHit)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OnHitLocation, 0x4)) : default(Weapon.WeaponOnHit);
         #endregion
         #region Flags2
         private int _Flags2Location => _DNAMLocation!.Value.Min + 0x38;
@@ -10745,7 +10745,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region RumblePattern
         private int _RumblePatternLocation => _DNAMLocation!.Value.Min + 0x6C;
         private bool _RumblePattern_IsSet => _DNAMLocation.HasValue;
-        public Weapon.WeaponRumblePattern RumblePattern => _RumblePattern_IsSet ? (Weapon.WeaponRumblePattern)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_RumblePatternLocation, 0x4)) : default;
+        public Weapon.WeaponRumblePattern RumblePattern => _RumblePattern_IsSet ? (Weapon.WeaponRumblePattern)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_RumblePatternLocation, 0x4)) : default(Weapon.WeaponRumblePattern);
         #endregion
         #region RumbleWavelength
         private int _RumbleWavelengthLocation => _DNAMLocation!.Value.Min + 0x70;
@@ -10785,17 +10785,17 @@ namespace Mutagen.Bethesda.Fallout3
         #region EffectMod1
         private int _EffectMod1Location => _DNAMLocation!.Value.Min + 0x8C;
         private bool _EffectMod1_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break2);
-        public Weapon.ModEffect EffectMod1 => _EffectMod1_IsSet ? (Weapon.ModEffect)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EffectMod1Location, 0x4)) : default;
+        public Weapon.ModEffect EffectMod1 => _EffectMod1_IsSet ? (Weapon.ModEffect)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EffectMod1Location, 0x4)) : default(Weapon.ModEffect);
         #endregion
         #region EffectMod2
         private int _EffectMod2Location => _DNAMLocation!.Value.Min + 0x90;
         private bool _EffectMod2_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break2);
-        public Weapon.ModEffect EffectMod2 => _EffectMod2_IsSet ? (Weapon.ModEffect)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EffectMod2Location, 0x4)) : default;
+        public Weapon.ModEffect EffectMod2 => _EffectMod2_IsSet ? (Weapon.ModEffect)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EffectMod2Location, 0x4)) : default(Weapon.ModEffect);
         #endregion
         #region EffectMod3
         private int _EffectMod3Location => _DNAMLocation!.Value.Min + 0x94;
         private bool _EffectMod3_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break2);
-        public Weapon.ModEffect EffectMod3 => _EffectMod3_IsSet ? (Weapon.ModEffect)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EffectMod3Location, 0x4)) : default;
+        public Weapon.ModEffect EffectMod3 => _EffectMod3_IsSet ? (Weapon.ModEffect)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EffectMod3Location, 0x4)) : default(Weapon.ModEffect);
         #endregion
         #region ValueAMod1
         private int _ValueAMod1Location => _DNAMLocation!.Value.Min + 0x98;
@@ -10815,7 +10815,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region PowerAttackAnimationOverride
         private int _PowerAttackAnimationOverrideLocation => _DNAMLocation!.Value.Min + 0xA4;
         private bool _PowerAttackAnimationOverride_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break3);
-        public Weapon.PowerAttackAnim PowerAttackAnimationOverride => _PowerAttackAnimationOverride_IsSet ? (Weapon.PowerAttackAnim)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PowerAttackAnimationOverrideLocation, 0x4)) : default;
+        public Weapon.PowerAttackAnim PowerAttackAnimationOverride => _PowerAttackAnimationOverride_IsSet ? (Weapon.PowerAttackAnim)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_PowerAttackAnimationOverrideLocation, 0x4)) : Weapon.PowerAttackAnimationOverrideDefault;
         #endregion
         #region StrengthReq
         private int _StrengthReqLocation => _DNAMLocation!.Value.Min + 0xA8;
@@ -10825,12 +10825,12 @@ namespace Mutagen.Bethesda.Fallout3
         #region DnamUnknown1
         private int _DnamUnknown1Location => _DNAMLocation!.Value.Min + 0xAC;
         private bool _DnamUnknown1_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break4);
-        public Byte DnamUnknown1 => _DnamUnknown1_IsSet ? _recordData.Span[_DnamUnknown1Location] : default;
+        public Byte DnamUnknown1 => _DnamUnknown1_IsSet ? _recordData.Span[_DnamUnknown1Location] : default(Byte);
         #endregion
         #region ReloadAnimationMod
         private int _ReloadAnimationModLocation => _DNAMLocation!.Value.Min + 0xAD;
         private bool _ReloadAnimationMod_IsSet => _DNAMLocation.HasValue && !DNAMDataTypeState.HasFlag(Weapon.DNAMDataType.Break4);
-        public Weapon.ReloadAnim ReloadAnimationMod => _ReloadAnimationMod_IsSet ? (Weapon.ReloadAnim)_recordData.Span.Slice(_ReloadAnimationModLocation, 0x1)[0] : default;
+        public Weapon.ReloadAnim ReloadAnimationMod => _ReloadAnimationMod_IsSet ? (Weapon.ReloadAnim)_recordData.Span.Slice(_ReloadAnimationModLocation, 0x1)[0] : default(Weapon.ReloadAnim);
         #endregion
         #region DnamUnknown2
         private int _DnamUnknown2Location => _DNAMLocation!.Value.Min + 0xAE;

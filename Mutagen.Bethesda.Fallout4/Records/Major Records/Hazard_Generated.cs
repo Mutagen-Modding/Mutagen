@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _DNAMLocation.HasValue;
-        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Hazard.Flag);
         #endregion
         #region Effect
         private int _EffectLocation => _DNAMLocation!.Value.Min + 0x18;

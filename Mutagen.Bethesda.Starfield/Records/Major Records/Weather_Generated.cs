@@ -7696,52 +7696,52 @@ namespace Mutagen.Bethesda.Starfield
         #region FogDistanceDayNearHeightMid
         private int _FogDistanceDayNearHeightMidLocation => _FNAMLocation!.Value.Min + 0x20;
         private bool _FogDistanceDayNearHeightMid_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayNearHeightMid => _FogDistanceDayNearHeightMid_IsSet ? _recordData.Slice(_FogDistanceDayNearHeightMidLocation, 4).Float() : default(Single);
+        public Single FogDistanceDayNearHeightMid => _FogDistanceDayNearHeightMid_IsSet ? _recordData.Slice(_FogDistanceDayNearHeightMidLocation, 4).Float() : Weather.FogDistanceDayNearHeightMidDefault;
         #endregion
         #region FogDistanceDayNearHeightRange
         private int _FogDistanceDayNearHeightRangeLocation => _FNAMLocation!.Value.Min + 0x24;
         private bool _FogDistanceDayNearHeightRange_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayNearHeightRange => _FogDistanceDayNearHeightRange_IsSet ? _recordData.Slice(_FogDistanceDayNearHeightRangeLocation, 4).Float() : default(Single);
+        public Single FogDistanceDayNearHeightRange => _FogDistanceDayNearHeightRange_IsSet ? _recordData.Slice(_FogDistanceDayNearHeightRangeLocation, 4).Float() : Weather.FogDistanceDayNearHeightRangeDefault;
         #endregion
         #region FogDistanceNightNearHeightMid
         private int _FogDistanceNightNearHeightMidLocation => _FNAMLocation!.Value.Min + 0x28;
         private bool _FogDistanceNightNearHeightMid_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightNearHeightMid => _FogDistanceNightNearHeightMid_IsSet ? _recordData.Slice(_FogDistanceNightNearHeightMidLocation, 4).Float() : default(Single);
+        public Single FogDistanceNightNearHeightMid => _FogDistanceNightNearHeightMid_IsSet ? _recordData.Slice(_FogDistanceNightNearHeightMidLocation, 4).Float() : Weather.FogDistanceNightNearHeightMidDefault;
         #endregion
         #region FogDistanceNightNearHeightRange
         private int _FogDistanceNightNearHeightRangeLocation => _FNAMLocation!.Value.Min + 0x2C;
         private bool _FogDistanceNightNearHeightRange_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightNearHeightRange => _FogDistanceNightNearHeightRange_IsSet ? _recordData.Slice(_FogDistanceNightNearHeightRangeLocation, 4).Float() : default(Single);
+        public Single FogDistanceNightNearHeightRange => _FogDistanceNightNearHeightRange_IsSet ? _recordData.Slice(_FogDistanceNightNearHeightRangeLocation, 4).Float() : Weather.FogDistanceNightNearHeightRangeDefault;
         #endregion
         #region FogDistanceDayHighDensityScale
         private int _FogDistanceDayHighDensityScaleLocation => _FNAMLocation!.Value.Min + 0x30;
         private bool _FogDistanceDayHighDensityScale_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayHighDensityScale => _FogDistanceDayHighDensityScale_IsSet ? _recordData.Slice(_FogDistanceDayHighDensityScaleLocation, 4).Float() : default(Single);
+        public Single FogDistanceDayHighDensityScale => _FogDistanceDayHighDensityScale_IsSet ? _recordData.Slice(_FogDistanceDayHighDensityScaleLocation, 4).Float() : Weather.FogDistanceDayHighDensityScaleDefault;
         #endregion
         #region FogDistanceNightHighDensityScale
         private int _FogDistanceNightHighDensityScaleLocation => _FNAMLocation!.Value.Min + 0x34;
         private bool _FogDistanceNightHighDensityScale_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightHighDensityScale => _FogDistanceNightHighDensityScale_IsSet ? _recordData.Slice(_FogDistanceNightHighDensityScaleLocation, 4).Float() : default(Single);
+        public Single FogDistanceNightHighDensityScale => _FogDistanceNightHighDensityScale_IsSet ? _recordData.Slice(_FogDistanceNightHighDensityScaleLocation, 4).Float() : Weather.FogDistanceNightHighDensityScaleDefault;
         #endregion
         #region FogDistanceDayFarHeightMid
         private int _FogDistanceDayFarHeightMidLocation => _FNAMLocation!.Value.Min + 0x38;
         private bool _FogDistanceDayFarHeightMid_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayFarHeightMid => _FogDistanceDayFarHeightMid_IsSet ? _recordData.Slice(_FogDistanceDayFarHeightMidLocation, 4).Float() : default(Single);
+        public Single FogDistanceDayFarHeightMid => _FogDistanceDayFarHeightMid_IsSet ? _recordData.Slice(_FogDistanceDayFarHeightMidLocation, 4).Float() : Weather.FogDistanceDayFarHeightMidDefault;
         #endregion
         #region FogDistanceDayFarHeightRange
         private int _FogDistanceDayFarHeightRangeLocation => _FNAMLocation!.Value.Min + 0x3C;
         private bool _FogDistanceDayFarHeightRange_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayFarHeightRange => _FogDistanceDayFarHeightRange_IsSet ? _recordData.Slice(_FogDistanceDayFarHeightRangeLocation, 4).Float() : default(Single);
+        public Single FogDistanceDayFarHeightRange => _FogDistanceDayFarHeightRange_IsSet ? _recordData.Slice(_FogDistanceDayFarHeightRangeLocation, 4).Float() : Weather.FogDistanceDayFarHeightRangeDefault;
         #endregion
         #region FogDistanceNightFarHeightMid
         private int _FogDistanceNightFarHeightMidLocation => _FNAMLocation!.Value.Min + 0x40;
         private bool _FogDistanceNightFarHeightMid_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightFarHeightMid => _FogDistanceNightFarHeightMid_IsSet ? _recordData.Slice(_FogDistanceNightFarHeightMidLocation, 4).Float() : default(Single);
+        public Single FogDistanceNightFarHeightMid => _FogDistanceNightFarHeightMid_IsSet ? _recordData.Slice(_FogDistanceNightFarHeightMidLocation, 4).Float() : Weather.FogDistanceNightFarHeightMidDefault;
         #endregion
         #region FogDistanceNightFarHeightRange
         private int _FogDistanceNightFarHeightRangeLocation => _FNAMLocation!.Value.Min + 0x44;
         private bool _FogDistanceNightFarHeightRange_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightFarHeightRange => _FogDistanceNightFarHeightRange_IsSet ? _recordData.Slice(_FogDistanceNightFarHeightRangeLocation, 4).Float() : default(Single);
+        public Single FogDistanceNightFarHeightRange => _FogDistanceNightFarHeightRange_IsSet ? _recordData.Slice(_FogDistanceNightFarHeightRangeLocation, 4).Float() : Weather.FogDistanceNightFarHeightRangeDefault;
         #endregion
         private RangeInt32? _DATALocation;
         #region WindSpeed
@@ -7797,7 +7797,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xB;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public Weather.Flag Flags => _Flags_IsSet ? (Weather.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(Weather.Flag);
         #endregion
         #region LightningColor
         private int _LightningColorLocation => _DATALocation!.Value.Min + 0xC;

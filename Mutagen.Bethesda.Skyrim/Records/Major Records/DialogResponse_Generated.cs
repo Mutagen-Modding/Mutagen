@@ -1857,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Emotion
         private int _EmotionLocation => _TRDTLocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
-        public Emotion Emotion => _Emotion_IsSet ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EmotionLocation, 0x4)) : default;
+        public Emotion Emotion => _Emotion_IsSet ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_EmotionLocation, 0x4)) : default(Emotion);
         #endregion
         #region EmotionValue
         private int _EmotionValueLocation => _TRDTLocation!.Value.Min + 0x4;
@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDTLocation!.Value.Min + 0xC;
         private bool _ResponseNumber_IsSet => _TRDTLocation.HasValue;
-        public Byte ResponseNumber => _ResponseNumber_IsSet ? _recordData.Span[_ResponseNumberLocation] : default;
+        public Byte ResponseNumber => _ResponseNumber_IsSet ? _recordData.Span[_ResponseNumberLocation] : default(Byte);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _TRDTLocation!.Value.Min + 0xD;
@@ -1887,7 +1887,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         private int _FlagsLocation => _TRDTLocation!.Value.Min + 0x14;
         private bool _Flags_IsSet => _TRDTLocation.HasValue;
-        public DialogResponse.Flag Flags => _Flags_IsSet ? (DialogResponse.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public DialogResponse.Flag Flags => _Flags_IsSet ? (DialogResponse.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(DialogResponse.Flag);
         #endregion
         #region Unknown3
         private int _Unknown3Location => _TRDTLocation!.Value.Min + 0x15;

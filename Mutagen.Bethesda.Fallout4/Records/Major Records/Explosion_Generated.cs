@@ -3161,12 +3161,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x30;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Explosion.Flag);
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x34;
         private bool _SoundLevel_IsSet => _DATALocation.HasValue;
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         #region PlacedObjectAutoFadeDelay
         private int _PlacedObjectAutoFadeDelayLocation => _DATALocation!.Value.Min + InnerRadiusVersioningOffset + 0x38;
@@ -3177,7 +3177,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Stagger
         private int _StaggerLocation => _DATALocation!.Value.Min + PlacedObjectAutoFadeDelayVersioningOffset + 0x3C;
         private bool _Stagger_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 91;
-        public Explosion.StaggerAmount Stagger => _Stagger_IsSet ? (Explosion.StaggerAmount)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StaggerLocation, 0x4)) : default;
+        public Explosion.StaggerAmount Stagger => _Stagger_IsSet ? (Explosion.StaggerAmount)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StaggerLocation, 0x4)) : default(Explosion.StaggerAmount);
         int StaggerVersioningOffset => PlacedObjectAutoFadeDelayVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 91 ? -4 : 0);
         #endregion
         #region SpawnPosition

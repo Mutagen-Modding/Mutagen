@@ -1518,7 +1518,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single NearClip => _structData.Slice(0x10, 0x4).Float();
         public Single VolumetricIntensity => _structData.Slice(0x14, 0x4).Float();
         public UInt32 Unknown1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x18, 0x4));
-        public UInt32 Unknown2 => _structData.Length <= 0x1C ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
+        public UInt32 Unknown2 => _structData.Length <= 0x1C ? default(UInt32) : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

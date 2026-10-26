@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Type
         private int _TypeLocation => _ENITLocation!.Value.Min;
         private bool _Type_IsSet => _ENITLocation.HasValue;
-        public ObjectEffect.EnchantmentType Type => _Type_IsSet ? (ObjectEffect.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public ObjectEffect.EnchantmentType Type => _Type_IsSet ? (ObjectEffect.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(ObjectEffect.EnchantmentType);
         #endregion
         #region Unused1
         private int _Unused1Location => _ENITLocation!.Value.Min + 0x4;
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value.Min + 0xC;
         private bool _Flags_IsSet => _ENITLocation.HasValue;
-        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(ObjectEffect.Flag);
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = [];
         partial void CustomFactoryEnd(

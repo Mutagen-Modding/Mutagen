@@ -2977,12 +2977,12 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _BPNDLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        public BodyPart.Flag Flags => _Flags_IsSet ? (BodyPart.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default(BodyPart.Flag);
         #endregion
         #region Type
         private int _TypeLocation => _BPNDLocation!.Value.Min + 0x5;
         private bool _Type_IsSet => _BPNDLocation.HasValue;
-        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public BodyPart.PartType Type => _Type_IsSet ? (BodyPart.PartType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default(BodyPart.PartType);
         #endregion
         #region HealthPercent
         private int _HealthPercentLocation => _BPNDLocation!.Value.Min + 0x6;
@@ -2992,7 +2992,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region ActorValue
         private int _ActorValueLocation => _BPNDLocation!.Value.Min + 0x7;
         private bool _ActorValue_IsSet => _BPNDLocation.HasValue;
-        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_recordData.Span.Slice(_ActorValueLocation, 0x1)[0] : default;
+        public ActorValue ActorValue => _ActorValue_IsSet ? (ActorValue)_recordData.Span.Slice(_ActorValueLocation, 0x1)[0] : default(ActorValue);
         #endregion
         #region ToHitChance
         private int _ToHitChanceLocation => _BPNDLocation!.Value.Min + 0x8;
@@ -3072,12 +3072,12 @@ namespace Mutagen.Bethesda.Fallout3
         #region SeverableDecalCount
         private int _SeverableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4C;
         private bool _SeverableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default;
+        public Byte SeverableDecalCount => _SeverableDecalCount_IsSet ? _recordData.Span[_SeverableDecalCountLocation] : default(Byte);
         #endregion
         #region ExplodableDecalCount
         private int _ExplodableDecalCountLocation => _BPNDLocation!.Value.Min + 0x4D;
         private bool _ExplodableDecalCount_IsSet => _BPNDLocation.HasValue;
-        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default;
+        public Byte ExplodableDecalCount => _ExplodableDecalCount_IsSet ? _recordData.Span[_ExplodableDecalCountLocation] : default(Byte);
         #endregion
         #region Unused
         private int _UnusedLocation => _BPNDLocation!.Value.Min + 0x4E;

@@ -1445,9 +1445,9 @@ namespace Mutagen.Bethesda.Fallout3
         public Single DialogueFOV => _structData.Slice(0x0, 0x4).Float();
         public IFormLinkGetter<IDialogTopicGetter> DialogueTopic => FormLinkBinaryTranslation.Instance.OverlayFactory<IDialogTopicGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Package.DialogueFlag DialogueFlags => (Package.DialogueFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x8, 0x4));
-        public UInt32 Unused => _structData.Length <= 0xC ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
-        public Package.DialogueType DialogueType => _structData.Span.Length <= 0x10 ? default : (Package.DialogueType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
-        public UInt32 Unknown => _structData.Length <= 0x14 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public UInt32 Unused => _structData.Length <= 0xC ? default(UInt32) : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public Package.DialogueType DialogueType => _structData.Span.Length <= 0x10 ? default(Package.DialogueType) : (Package.DialogueType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x10, 0x4));
+        public UInt32 Unknown => _structData.Length <= 0x14 ? default(UInt32) : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

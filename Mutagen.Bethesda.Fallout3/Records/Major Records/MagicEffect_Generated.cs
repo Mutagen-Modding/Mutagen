@@ -2996,7 +2996,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min;
         private bool _Flags_IsSet => _DATALocation.HasValue;
-        public MagicEffect.MagicFlag Flags => _Flags_IsSet ? (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public MagicEffect.MagicFlag Flags => _Flags_IsSet ? (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(MagicEffect.MagicFlag);
         #endregion
         #region BaseCost
         private int _BaseCostLocation => _DATALocation!.Value.Min + 0x4;
@@ -3018,7 +3018,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Resistance
         private int _ResistanceLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Resistance_IsSet => _DATALocation.HasValue;
-        public ActorValue Resistance => _Resistance_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ResistanceLocation, 0x4)) : default;
+        public ActorValue Resistance => _Resistance_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_ResistanceLocation, 0x4)) : default(ActorValue);
         #endregion
         #region CounterEffectCount
         private int _CounterEffectCountLocation => _DATALocation!.Value.Min + 0x14;

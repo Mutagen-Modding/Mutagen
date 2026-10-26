@@ -1502,10 +1502,10 @@ namespace Mutagen.Bethesda.Fallout4
         public Color Day => _structData.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color Sunset => _structData.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color Night => _structData.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color EarlySunrise => _structData.Length <= 0x10 ? default : _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color LateSunrise => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color EarlySunset => _structData.Length <= 0x18 ? default : _structData.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Color LateSunset => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color EarlySunrise => _structData.Length <= 0x10 ? default(Color) : _structData.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color LateSunrise => _structData.Length <= 0x14 ? default(Color) : _structData.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color EarlySunset => _structData.Length <= 0x18 ? default(Color) : _structData.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color LateSunset => _structData.Length <= 0x1C ? default(Color) : _structData.Slice(0x1C, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

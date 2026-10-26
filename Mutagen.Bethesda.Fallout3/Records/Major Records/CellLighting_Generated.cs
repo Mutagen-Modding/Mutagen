@@ -1649,9 +1649,9 @@ namespace Mutagen.Bethesda.Fallout3
         public Single FogFar => _structData.Slice(0x10, 0x4).Float();
         public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
         public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x18, 0x4));
-        public Single DirectionalFade => _structData.Length <= 0x1C ? default : _structData.Slice(0x1C, 0x4).Float();
-        public Single FogClipDistance => _structData.Length <= 0x20 ? default : _structData.Slice(0x20, 0x4).Float();
-        public Single FogPower => _structData.Length <= 0x24 ? default : _structData.Slice(0x24, 0x4).Float();
+        public Single DirectionalFade => _structData.Length <= 0x1C ? default(Single) : _structData.Slice(0x1C, 0x4).Float();
+        public Single FogClipDistance => _structData.Length <= 0x20 ? default(Single) : _structData.Slice(0x20, 0x4).Float();
+        public Single FogPower => _structData.Length <= 0x24 ? default(Single) : _structData.Slice(0x24, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

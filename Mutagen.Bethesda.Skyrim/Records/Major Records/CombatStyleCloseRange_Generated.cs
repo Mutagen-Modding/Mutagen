@@ -1297,8 +1297,8 @@ namespace Mutagen.Bethesda.Skyrim
         public CombatStyleCloseRange.VersioningBreaks Versioning { get; private set; }
         public Single CircleMult => _structData.Slice(0x0, 0x4).Float();
         public Single FallbackMult => _structData.Slice(0x4, 0x4).Float();
-        public Single FlankDistance => _structData.Length <= 0x8 ? default : _structData.Slice(0x8, 0x4).Float();
-        public Single StalkTime => _structData.Length <= 0xC ? default : _structData.Slice(0xC, 0x4).Float();
+        public Single FlankDistance => _structData.Length <= 0x8 ? default(Single) : _structData.Slice(0x8, 0x4).Float();
+        public Single StalkTime => _structData.Length <= 0xC ? default(Single) : _structData.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

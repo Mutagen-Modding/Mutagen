@@ -2318,7 +2318,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single Unknown17 => _structData.Slice(0x48, 0x4).Float();
         public Single Unknown18 => _structData.Slice(0x4C, 0x4).Float();
         public SByte Unknown19 => (sbyte)_structData.Slice(0x50, 0x1)[0];
-        public Single Unknown20 => _structData.Length <= 0x51 ? default : _structData.Slice(0x51, 0x4).Float();
+        public Single Unknown20 => _structData.Length <= 0x51 ? default(Single) : _structData.Slice(0x51, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

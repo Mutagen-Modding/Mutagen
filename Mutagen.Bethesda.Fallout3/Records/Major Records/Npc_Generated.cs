@@ -5557,37 +5557,37 @@ namespace Mutagen.Bethesda.Fallout3
         #region Strength
         private int _StrengthLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Strength_IsSet => _DATALocation.HasValue;
-        public Byte Strength => _Strength_IsSet ? _recordData.Span[_StrengthLocation] : default;
+        public Byte Strength => _Strength_IsSet ? _recordData.Span[_StrengthLocation] : default(Byte);
         #endregion
         #region Perception
         private int _PerceptionLocation => _DATALocation!.Value.Min + 0x5;
         private bool _Perception_IsSet => _DATALocation.HasValue;
-        public Byte Perception => _Perception_IsSet ? _recordData.Span[_PerceptionLocation] : default;
+        public Byte Perception => _Perception_IsSet ? _recordData.Span[_PerceptionLocation] : default(Byte);
         #endregion
         #region Endurance
         private int _EnduranceLocation => _DATALocation!.Value.Min + 0x6;
         private bool _Endurance_IsSet => _DATALocation.HasValue;
-        public Byte Endurance => _Endurance_IsSet ? _recordData.Span[_EnduranceLocation] : default;
+        public Byte Endurance => _Endurance_IsSet ? _recordData.Span[_EnduranceLocation] : default(Byte);
         #endregion
         #region Charisma
         private int _CharismaLocation => _DATALocation!.Value.Min + 0x7;
         private bool _Charisma_IsSet => _DATALocation.HasValue;
-        public Byte Charisma => _Charisma_IsSet ? _recordData.Span[_CharismaLocation] : default;
+        public Byte Charisma => _Charisma_IsSet ? _recordData.Span[_CharismaLocation] : default(Byte);
         #endregion
         #region Intelligence
         private int _IntelligenceLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Intelligence_IsSet => _DATALocation.HasValue;
-        public Byte Intelligence => _Intelligence_IsSet ? _recordData.Span[_IntelligenceLocation] : default;
+        public Byte Intelligence => _Intelligence_IsSet ? _recordData.Span[_IntelligenceLocation] : default(Byte);
         #endregion
         #region Agility
         private int _AgilityLocation => _DATALocation!.Value.Min + 0x9;
         private bool _Agility_IsSet => _DATALocation.HasValue;
-        public Byte Agility => _Agility_IsSet ? _recordData.Span[_AgilityLocation] : default;
+        public Byte Agility => _Agility_IsSet ? _recordData.Span[_AgilityLocation] : default(Byte);
         #endregion
         #region Luck
         private int _LuckLocation => _DATALocation!.Value.Min + 0xA;
         private bool _Luck_IsSet => _DATALocation.HasValue;
-        public Byte Luck => _Luck_IsSet ? _recordData.Span[_LuckLocation] : default;
+        public Byte Luck => _Luck_IsSet ? _recordData.Span[_LuckLocation] : default(Byte);
         #endregion
         #region Unused1
         private int _Unused1Location => _DATALocation!.Value.Min + 0xB;

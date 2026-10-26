@@ -3864,9 +3864,9 @@ namespace Mutagen.Bethesda.Fallout3
         public Single NoiseLayerOneUVScale => _structData.Slice(0xAC, 0x4).Float();
         public Single NoiseLayerTwoUVScale => _structData.Slice(0xB0, 0x4).Float();
         public Single NoiseLayerThreeUVScale => _structData.Slice(0xB4, 0x4).Float();
-        public Single NoiseLayerOneAmplitudeScale => _structData.Length <= 0xB8 ? default : _structData.Slice(0xB8, 0x4).Float();
-        public Single NoiseLayerTwoAmplitudeScale => _structData.Length <= 0xBC ? default : _structData.Slice(0xBC, 0x4).Float();
-        public Single NoiseLayerThreeAmplitudeScale => _structData.Length <= 0xC0 ? default : _structData.Slice(0xC0, 0x4).Float();
+        public Single NoiseLayerOneAmplitudeScale => _structData.Length <= 0xB8 ? default(Single) : _structData.Slice(0xB8, 0x4).Float();
+        public Single NoiseLayerTwoAmplitudeScale => _structData.Length <= 0xBC ? default(Single) : _structData.Slice(0xBC, 0x4).Float();
+        public Single NoiseLayerThreeAmplitudeScale => _structData.Length <= 0xC0 ? default(Single) : _structData.Slice(0xC0, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

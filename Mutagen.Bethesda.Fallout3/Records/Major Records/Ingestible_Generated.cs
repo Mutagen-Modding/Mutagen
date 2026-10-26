@@ -2959,7 +2959,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Flags
         private int _FlagsLocation => _ENITLocation!.Value.Min + 0x4;
         private bool _Flags_IsSet => _ENITLocation.HasValue;
-        public Ingestible.IngestibleFlag Flags => _Flags_IsSet ? (Ingestible.IngestibleFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Ingestible.IngestibleFlag Flags => _Flags_IsSet ? (Ingestible.IngestibleFlag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Ingestible.IngestibleFlag);
         #endregion
         #region WithdrawalEffect
         private int _WithdrawalEffectLocation => _ENITLocation!.Value.Min + 0x8;

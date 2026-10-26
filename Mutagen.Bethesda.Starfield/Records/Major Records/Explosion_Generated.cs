@@ -4101,12 +4101,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _ENAMLocation!.Value.Min + 0x7C;
         private bool _Flags_IsSet => _ENAMLocation.HasValue;
-        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Explosion.Flag Flags => _Flags_IsSet ? (Explosion.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Explosion.Flag);
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _ENAMLocation!.Value.Min + 0x80;
         private bool _SoundLevel_IsSet => _ENAMLocation.HasValue;
-        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default;
+        public SoundLevel SoundLevel => _SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_SoundLevelLocation, 0x4)) : default(SoundLevel);
         #endregion
         #region PlacedObjectAutofadeDelay
         private int _PlacedObjectAutofadeDelayLocation => _ENAMLocation!.Value.Min + 0x84;
@@ -4116,7 +4116,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Stagger
         private int _StaggerLocation => _ENAMLocation!.Value.Min + 0x88;
         private bool _Stagger_IsSet => _ENAMLocation.HasValue;
-        public Stagger Stagger => _Stagger_IsSet ? (Stagger)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StaggerLocation, 0x4)) : default;
+        public Stagger Stagger => _Stagger_IsSet ? (Stagger)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_StaggerLocation, 0x4)) : default(Stagger);
         #endregion
         #region SpawnPoint
         private int _SpawnPointLocation => _ENAMLocation!.Value.Min + 0x8C;

@@ -1668,12 +1668,12 @@ namespace Mutagen.Bethesda.Fallout3
         #region Type
         private int _TypeLocation => _DATALocation!.Value.Min;
         private bool _Type_IsSet => _DATALocation.HasValue;
-        public AmmoEffect.AmmoEffectType Type => _Type_IsSet ? (AmmoEffect.AmmoEffectType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default;
+        public AmmoEffect.AmmoEffectType Type => _Type_IsSet ? (AmmoEffect.AmmoEffectType)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_TypeLocation, 0x4)) : default(AmmoEffect.AmmoEffectType);
         #endregion
         #region Operation
         private int _OperationLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Operation_IsSet => _DATALocation.HasValue;
-        public AmmoEffect.AmmoEffectOperation Operation => _Operation_IsSet ? (AmmoEffect.AmmoEffectOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OperationLocation, 0x4)) : default;
+        public AmmoEffect.AmmoEffectOperation Operation => _Operation_IsSet ? (AmmoEffect.AmmoEffectOperation)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_OperationLocation, 0x4)) : default(AmmoEffect.AmmoEffectOperation);
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min + 0x8;

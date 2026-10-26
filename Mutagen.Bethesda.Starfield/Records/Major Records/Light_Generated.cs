@@ -5225,17 +5225,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Flags
         private int _FlagsLocation => _DAT2Location!.Value.Min + 0xC;
         private bool _Flags_IsSet => _DAT2Location.HasValue;
-        public Light.Flag Flags => _Flags_IsSet ? (Light.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public Light.Flag Flags => _Flags_IsSet ? (Light.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default(Light.Flag);
         #endregion
         #region FalloffExponent
         private int _FalloffExponentLocation => _DAT2Location!.Value.Min + 0x10;
         private bool _FalloffExponent_IsSet => _DAT2Location.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : default(Single);
+        public Single FalloffExponent => _FalloffExponent_IsSet ? _recordData.Slice(_FalloffExponentLocation, 4).Float() : Light.FalloffExponentDefault;
         #endregion
         #region FOV
         private int _FOVLocation => _DAT2Location!.Value.Min + 0x14;
         private bool _FOV_IsSet => _DAT2Location.HasValue;
-        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : default(Single);
+        public Single FOV => _FOV_IsSet ? _recordData.Slice(_FOVLocation, 4).Float() : Light.FOVDefault;
         #endregion
         #region NearClip
         private int _NearClipLocation => _DAT2Location!.Value.Min + 0x18;
@@ -5280,12 +5280,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Type
         private int _TypeLocation => _DAT2Location!.Value.Min + 0x38;
         private bool _Type_IsSet => _DAT2Location.HasValue;
-        public Light.LightType Type => _Type_IsSet ? (Light.LightType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        public Light.LightType Type => _Type_IsSet ? (Light.LightType)_recordData.Span.Slice(_TypeLocation, 0x1)[0] : default(Light.LightType);
         #endregion
         #region FlickerEffect
         private int _FlickerEffectLocation => _DAT2Location!.Value.Min + 0x39;
         private bool _FlickerEffect_IsSet => _DAT2Location.HasValue;
-        public Light.FlickerEffectOption FlickerEffect => _FlickerEffect_IsSet ? (Light.FlickerEffectOption)_recordData.Span.Slice(_FlickerEffectLocation, 0x1)[0] : default;
+        public Light.FlickerEffectOption FlickerEffect => _FlickerEffect_IsSet ? (Light.FlickerEffectOption)_recordData.Span.Slice(_FlickerEffectLocation, 0x1)[0] : default(Light.FlickerEffectOption);
         #endregion
         #region UseAdaptiveLighting
         private int _UseAdaptiveLightingLocation => _DAT2Location!.Value.Min + 0x3A;
