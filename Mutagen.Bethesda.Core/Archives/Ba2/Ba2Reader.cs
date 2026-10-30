@@ -10,7 +10,13 @@ namespace Mutagen.Bethesda.Archives.Ba2;
 
 class Ba2Reader : IArchiveReader
 {
+    private const int InitialNameBufferLength = 256;
     private readonly ulong _nameTableOffset;
+    private readonly uint _numFiles;
+    private readonly Ba2EntryType _entryType;
+    private readonly long _entriesOffset;
+    private readonly Lazy<List<IArchiveFile>> _files;
+    private int _nameTableScanned;
     internal Func<Stream> _streamFactory;
     public bool UseATIFourCC { get; set; } = false;
 
@@ -37,12 +43,12 @@ class Ba2Reader : IArchiveReader
 
         string fourcc = Encoding.ASCII.GetString(reader.ReadBytes(4));
 
-        if (!Enum.TryParse(fourcc, out Ba2EntryType entryType))
+        if (!Enum.TryParse(fourcc, out _entryType))
         {
             throw new InvalidDataException($"Can't parse entry types of {fourcc}");
         }
 
-        var numFiles = reader.ReadUInt32();
+        _numFiles = reader.ReadUInt32();
         _nameTableOffset = reader.ReadUInt64();
 
         if (Version > 1 && Version <= 7)
@@ -50,10 +56,21 @@ class Ba2Reader : IArchiveReader
             var unknown = reader.ReadUInt32();
         }
 
+        _entriesOffset = reader.BaseStream.Position;
+        _files = new Lazy<List<IArchiveFile>>(
+            isThreadSafe: true,
+            valueFactory: LoadFiles);
+    }
+
+    private List<IArchiveFile> LoadFiles()
+    {
+        using var reader = new BinaryReader(_streamFactory(), Encoding.UTF8);
+        reader.BaseStream.Seek(_entriesOffset, SeekOrigin.Begin);
+
         var files = new List<IArchiveFile>();
-        for (var idx = 0; idx < numFiles; idx += 1)
+        for (var idx = 0; idx < _numFiles; idx += 1)
         {
-            switch (entryType)
+            switch (_entryType)
             {
                 case Ba2EntryType.GNRL:
                     files.Add(new BA2FileEntry(this, Version, idx, reader));
@@ -86,17 +103,56 @@ class Ba2Reader : IArchiveReader
 
             }
         }
-        Files = files;
+        return files;
     }
 
-    public IEnumerable<IArchiveFile> Files { get; private set; }
+    public IEnumerable<IArchiveFile> Files => _files.Value;
 
     public bool TryGetFolder(string path, [MaybeNullWhen(false)] out IArchiveFolder folder)
     {
+        // Only the first lookup scans the name table, so a reader that is kept and reused never rescans it
+        if (!_files.IsValueCreated
+            && Interlocked.Exchange(ref _nameTableScanned, 1) == 0
+            && !NameTableMightContain(path))
+        {
+            folder = new Ba2FolderWrapper(path, Array.Empty<IArchiveFile>());
+            return false;
+        }
         folder = new Ba2FolderWrapper(
             path,
             Files.Where(f => f.Path.ToString().StartsWith(path, StringComparison.OrdinalIgnoreCase)));
         return folder.Files.Count > 0;
+    }
+
+    // Returns true whenever the table can't be scanned, so the full parse decides and throws as before
+    private bool NameTableMightContain(string prefix)
+    {
+        if (!HasNameTable) return true;
+        try
+        {
+            using var reader = new BinaryReader(_streamFactory(), Encoding.UTF8);
+            reader.BaseStream.Seek((long)_nameTableOffset, SeekOrigin.Begin);
+            var bytes = new byte[InitialNameBufferLength];
+            var chars = new char[Encoding.UTF8.GetMaxCharCount(bytes.Length)];
+            for (var idx = 0; idx < _numFiles; idx += 1)
+            {
+                var length = reader.ReadInt16();
+                if (length < 0) return true;
+                if (length > bytes.Length)
+                {
+                    bytes = new byte[length];
+                    chars = new char[Encoding.UTF8.GetMaxCharCount(length)];
+                }
+                reader.BaseStream.ReadExactly(bytes, 0, length);
+                var charCount = Encoding.UTF8.GetChars(bytes, 0, length, chars, 0);
+                if (chars.AsSpan(0, charCount).StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+            return false;
+        }
+        catch (EndOfStreamException)
+        {
+            return true;
+        }
     }
 }
 
