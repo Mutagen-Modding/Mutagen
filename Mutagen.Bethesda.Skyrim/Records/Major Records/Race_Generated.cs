@@ -5680,11 +5680,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
-                if (!Equals(lhs.Height, rhs.Height)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Height, rhs.Height, (l, r) => l.EqualsWithin(r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
             {
-                if (!Equals(lhs.Weight, rhs.Weight)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Weight, rhs.Weight, (l, r) => l.EqualsWithin(r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
@@ -5772,7 +5772,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
-                if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.SkeletalModel, rhs.SkeletalModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
@@ -5780,15 +5780,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Voices, rhs.Voices, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
             {
-                if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DecapitateArmors, rhs.DecapitateArmors, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
-                if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultHairColors, rhs.DefaultHairColors, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
@@ -5812,7 +5812,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BodyData, rhs.BodyData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
@@ -5828,7 +5828,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
             {
-                if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BehaviorGraph, rhs.BehaviorGraph, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
             {
@@ -5904,7 +5904,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
             {
-                if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.HeadData, rhs.HeadData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
