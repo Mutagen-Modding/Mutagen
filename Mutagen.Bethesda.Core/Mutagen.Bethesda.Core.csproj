@@ -586,6 +586,8 @@
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
         <Compile Include="Plugins\Utility\ModCompaction.cs" />
         <Compile Include="Plugins\Utility\MutagenStrongInjectModule.cs" />
+        <Compile Include="Plugins\GameRuntime.cs" />
+        <Compile Include="Plugins\IGameModule.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>

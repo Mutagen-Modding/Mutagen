@@ -71,6 +71,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Fallout3GameModule.cs" />
     <Compile Include="Records\Common Subrecords\Decal.cs">
       <DependentUpon>Decal.xml</DependentUpon>
     </Compile>
@@ -1555,5 +1556,6 @@
     </Compile>
     <Compile Include="Interfaces\Link\IActorBase_Generated.cs" />
     <Compile Include="Interfaces\Link\IRecipeItem_Generated.cs" />
+    <Compile Include="Fallout3GameModule_Generated.cs" />
   </ItemGroup>
 </Project>
