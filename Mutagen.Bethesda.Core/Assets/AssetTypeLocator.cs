@@ -30,6 +30,9 @@ public class AssetTypeLocator
 				case "Fallout4.Assets":
 					gameCategory = GameCategory.Fallout4;
 					break;
+				case "Starfield.Assets":
+					gameCategory = GameCategory.Starfield;
+					break;
 				default:
 					continue;
 			}
