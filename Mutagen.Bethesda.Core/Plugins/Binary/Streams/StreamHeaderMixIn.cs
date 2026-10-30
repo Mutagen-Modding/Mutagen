@@ -206,7 +206,8 @@ public static class StreamHeaderMixIn
             frame = default;
             return false;
         }
-        frame = new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        // The header may alias the stream's buffer, so the frame reparses it from its own bytes.
+        frame = new ModHeaderFrame(constants, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
         return true;
     }
 
@@ -230,7 +231,8 @@ public static class StreamHeaderMixIn
             frame = default;
             return false;
         }
-        frame = new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        // The header may alias the stream's buffer, so the frame reparses it from its own bytes.
+        frame = new ModHeaderFrame(constants, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
         return true;
     }
 
@@ -356,8 +358,10 @@ public static class StreamHeaderMixIn
             frame = default;
             return false;
         }
+        // The header may alias the stream's buffer, so the frame reparses it from its own bytes.
         frame = new GroupPinFrame(
-            new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe)),
+            constants,
+            stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe),
             pinLocation: stream.Position);
         return true;
     }
@@ -439,8 +443,10 @@ public static class StreamHeaderMixIn
             return false;
         }
 
+        // The header may alias the stream's buffer, so the frame reparses it from its own bytes.
         frame = new GroupPinFrame(
-            new GroupFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe)),
+            constants,
+            stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe),
             pinLocation: loc);
         return true;
     }
