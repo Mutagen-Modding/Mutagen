@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <RootNamespace>Mutagen.Bethesda.Papyrus.Syntax</RootNamespace>
+        <Description>Lossless syntax trees, lexer, and parser for Papyrus scripts</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Noggog.CSharpExt" />
+    </ItemGroup>
+
+    <!-- The semantic layer attaches bound-expression data to syntax expression nodes. -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="Mutagen.Bethesda.Papyrus.Semantic" />
+    </ItemGroup>
+
+</Project>
