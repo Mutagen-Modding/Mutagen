@@ -94,7 +94,7 @@ public static class StreamHeaderMixIn
             header = default;
             return false;
         }
-        header = new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
+        header = new ModHeader(constants, stream.GetMemory(constants.ModHeaderLength, readSafe: readSafe));
         return true;
     }
 

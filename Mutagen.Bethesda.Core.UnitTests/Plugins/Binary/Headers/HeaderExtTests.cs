@@ -132,6 +132,24 @@ public class HeaderExtTests
     }
 
     [Fact]
+    public void TryGetModHeaderFrame()
+    {
+        using var stream = GetModStream();
+        stream.TryGetModHeaderFrame(out var frame).ShouldBeTrue();
+        frame.TotalLength.ShouldBe(0x45);
+        stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
+    public void TryReadModHeaderFrame()
+    {
+        using var stream = GetModStream();
+        stream.TryReadModHeaderFrame(out var frame).ShouldBeTrue();
+        frame.TotalLength.ShouldBe(0x45);
+        stream.Position.ShouldBe(0x45);
+    }
+
+    [Fact]
     public void TryReadGroup()
     {
         using var stream = GetModStream();
