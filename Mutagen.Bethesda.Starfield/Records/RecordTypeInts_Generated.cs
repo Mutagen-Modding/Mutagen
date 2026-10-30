@@ -1076,6 +1076,7 @@ public partial class RecordTypeInts
     public const int TREX = 0x58455254;
     public const int TRNS = 0x534E5254;
     public const int TRNV = 0x564E5254;
+    public const int TROI = 0x494F5254;
     public const int TROT = 0x544F5254;
     public const int TSCE = 0x45435354;
     public const int TX00 = 0x30305854;
