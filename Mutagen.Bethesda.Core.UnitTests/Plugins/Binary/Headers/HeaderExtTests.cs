@@ -169,6 +169,17 @@ public class HeaderExtTests
     }
 
     [Fact]
+    public void TryGetGroupWithOffset()
+    {
+        using var stream = GetModStream();
+        stream.ReadModHeaderFrame();
+        stream.TryGetGroup(out var group, offset: 0x2E).ShouldBeTrue();
+        group.ContainedRecordType.ShouldBe(RecordTypes.WEAP);
+        group.EnumerateMajorRecords().Select(x => x.FormID.Raw).ShouldBe(new uint[] { 0x00123456, 0x00123457 });
+        stream.Position.ShouldBe(0x45);
+    }
+
+    [Fact]
     public void EnumerateRecords()
     {
         using var stream = GetModStream();

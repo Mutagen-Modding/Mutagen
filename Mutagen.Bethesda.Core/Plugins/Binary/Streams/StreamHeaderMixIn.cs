@@ -357,7 +357,7 @@ public static class StreamHeaderMixIn
             return false;
         }
         frame = new GroupPinFrame(
-            new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe)),
+            new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe)),
             pinLocation: stream.Position);
         return true;
     }
