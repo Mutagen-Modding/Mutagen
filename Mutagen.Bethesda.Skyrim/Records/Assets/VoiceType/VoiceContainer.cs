@@ -5,61 +5,60 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 
 public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 {
+    public static VoiceContainer Empty => new VoiceContainer();
+
     /// <summary>
     /// Voice type names mapped to form keys of npcs or talking activators using that voice type 
     /// </summary>
-    private readonly Dictionary<FormKey, HashSet<FormKey>> _voices = new();
+    private Dictionary<FormKey, HashSet<FormKey>> _voices = new();
     public IReadOnlyDictionary<FormKey, HashSet<FormKey>> Voices => _voices;
-    public bool IsDefault { get; private set; }
+    // If false, we need to deep copy _voices before mutation
+    private bool _usesSharedDictionary;
 
     #region Constructors
-    public VoiceContainer(bool isDefault = false)
+    public VoiceContainer()
     {
-        IsDefault = isDefault;
+        
     }
 
     public VoiceContainer(FormKey npc, IEnumerable<FormKey> voiceTypes)
     {
+        _usesSharedDictionary = false;
         foreach (var voiceType in voiceTypes)
         {
             _voices.Add(voiceType, [npc]);
         }
     }
 
-    public VoiceContainer(Dictionary<FormKey, IEnumerable<FormKey>> npcVoices)
+    public VoiceContainer(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
     {
-        foreach (var (npc, voiceTypes) in npcVoices)
-        {
-            foreach (var voiceType in voiceTypes)
-            {
-                _voices
-                    .GetOrAdd(voiceType)
-                    .Add(npc);
-            }
-        }
+        _usesSharedDictionary = true;
+        _voices = voiceSpeakers;
     }
 
-    public VoiceContainer(Dictionary<FormKey, HashSet<FormKey>> npcVoices)
+    public VoiceContainer(IEnumerable<FormKey> npcs, Dictionary<FormKey, HashSet<FormKey>> speakerVoices)
     {
-        foreach (var (npc, voiceTypes) in npcVoices)
+        _usesSharedDictionary = false;
+        foreach (var npc in npcs)
         {
-            foreach (var voiceType in voiceTypes)
+            if (!speakerVoices.TryGetValue(npc, out var voices))
+                continue;
+            foreach (var voice in voices)
             {
-                
-                _voices
-                    .GetOrAdd(voiceType)
-                    .Add(npc);
+                _voices.GetOrAdd(voice).Add(npc);
             }
         }
     }
 
     public VoiceContainer(FormKey voiceType)
     {
+        _usesSharedDictionary = false;
         _voices.Add(voiceType, []);
     }
 
     public VoiceContainer(IEnumerable<FormKey> voiceTypes)
     {
+        _usesSharedDictionary = false;
         foreach (var voiceType in voiceTypes)
         {
             _voices.Add(voiceType, []);
@@ -67,38 +66,55 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
     }
     #endregion
 
-    #region ExplicitOperators
-    public void InvertVoiceTypes(HashSet<FormKey> voiceTypesToKeep)
+    private void CloneDictionaryIfShared()
     {
-        var voiceTypes = new List<FormKey>(_voices.Keys);
+        if (!_usesSharedDictionary)
+            return;
+        _usesSharedDictionary = false;
 
-        foreach (var voiceType in voiceTypes.Where(voiceType => !voiceTypesToKeep.Contains(voiceType)))
+        var shared = _voices;
+        _voices = [];
+        foreach (var voice in shared)
         {
-            _voices.Remove(voiceType);
+            _voices[voice.Key] = voice.Value.ToHashSet();
         }
     }
-    #endregion
 
     #region BinaryOperators
-    public void IntersectWith(VoiceContainer other)
+    public void Invert(Dictionary<FormKey, HashSet<FormKey>> voiceSpeakers)
+    {
+        // We don't mutate originalVoices, so safe to run on a shared dictionary
+        _usesSharedDictionary = false;
+        var originalVoices = _voices;
+        _voices = [];
+        foreach (var (voice, allSpeakers) in voiceSpeakers)
+        {
+            // Had none of these speakers, gain all of them
+            if (!originalVoices.TryGetValue(voice, out var previousSpeakers))
+            {
+                _voices.Add(voice, []);
+            }
+            // Had all of these speakers, lose the whole voice
+            else if (previousSpeakers.Count == 0 || previousSpeakers.Count >= allSpeakers.Count)
+            {
+                // Do nothing
+            }
+            // Invert set of speakers
+            else
+            {
+                _voices.Add(voice, allSpeakers.Except(previousSpeakers).ToHashSet());
+            }
+        }
+    }
+
+    public void IntersectWith(VoiceContainer? other)
     {
         // If the other is default, we can stay as we are
-        if (other.IsDefault) return;
-
-        // If we are default, but the other is not, we become non-default and take over all voices
-        if (IsDefault)
-        {
-            //If other is not default, we become non-default and take over all voices
-            IsDefault = false;
-            foreach (var (voiceType, npcs) in other.Voices)
-            {
-                _voices.Add(voiceType, [..npcs]);
-            }
-            return;
-        }
+        if (other == null) return;
+        CloneDictionaryIfShared();
 
         // If both are non-default, we need to intersect the voice types and their NPCs
-        var removeVoiceTypes = new HashSet<FormKey>();
+        var removeVoiceTypes = new List<FormKey>();
 
         foreach (var (voiceType, npcs) in _voices)
         {
@@ -106,11 +122,16 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
             {
                 if (npcs.Count > 0)
                 {
-                    //We don't have all NPCs of this voice type
+                    // We don't have all NPCs of this voice type
+                    // If other doesn't have all NPCs, intersect, otherwise it stays the same
                     if (otherNpcs.Count > 0)
                     {
-                        //Only intersect if other doesn't have all NPCs, otherwise it stays the same
                         npcs.IntersectWith(otherNpcs);
+                        // If we lose all speakers here, lose the voice since an empty set is treated as having all speakers
+                        if (npcs.Count == 0)
+                        {
+                            removeVoiceTypes.Add(voiceType);
+                        }
                     }
                 } else
                 {
@@ -128,19 +149,11 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         {
             _voices.Remove(removeVoiceType);
         }
-
-        IsDefault = false;
     }
 
     public void Insert(VoiceContainer other)
     {
-        if (IsDefault || other.IsDefault)
-        {
-            IsDefault = true;
-            _voices.Clear();
-            return;
-        }
-
+        CloneDictionaryIfShared();
         foreach (var (voiceType, npcs) in other._voices)
         {
             if (_voices.TryGetValue(voiceType, out var otherNpcs))
@@ -165,57 +178,30 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
                 _voices.Add(voiceType, [..npcs]);
             }
         }
-
-        IsDefault = false;
     }
 
-    /// <summary>
-    /// Only possible for non-default voice containers sets
-    /// </summary>
-    /// <param name="other"></param>
-    public void Remove(VoiceContainer other)
+    #endregion
+
+    #region Mutation
+    public void AddSpeaker(FormKey speaker, HashSet<FormKey> voices)
     {
-        if (other.IsEmpty()) return;
-
-        var removeVoiceTypes = new HashSet<FormKey>();
-
-        foreach (var (voiceType, npcs) in _voices)
+        CloneDictionaryIfShared();
+        foreach (var voice in voices)
         {
-            if (other._voices.TryGetValue(voiceType, out var otherNpcs))
-            {
-                if (otherNpcs.Count == 0)
-                {
-                    //Other covers whole voice type => remove it
-                    removeVoiceTypes.Add(voiceType);
-                } else
-                {
-                    //Remove all npcs
-                    foreach (var otherNpc in otherNpcs)
-                    {
-                        npcs.Remove(otherNpc);
-                    }
-
-                    //If all npcs are gone, remove the voice type
-                    if (npcs.Count == 0)
-                    {
-                        removeVoiceTypes.Add(voiceType);
-                    }
-                }
-            }
+            _voices.GetOrAdd(voice).Add(speaker);
         }
-
-        foreach (var removeVoiceType in removeVoiceTypes)
-        {
-            _voices.Remove(removeVoiceType);
-        }
-
-        IsDefault = false;
+    }
+    // Add all NPCs with a voice type
+    public void AddFullVoice(FormKey voice)
+    {
+        CloneDictionaryIfShared();
+        _voices[voice] = [];
     }
     #endregion
 
-    public IEnumerable<FormKey> GetVoiceTypes(HashSet<FormKey> allVoices)
+    public IEnumerable<FormKey> GetVoiceTypes()
     {
-        return IsDefault ? allVoices : _voices.Keys;
+        return _voices.Keys;
     }
 
     public bool IsEmpty()
@@ -225,10 +211,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 
     public object Clone()
     {
-        var clone = new VoiceContainer
-        {
-            IsDefault = IsDefault
-        };
+        var clone = new VoiceContainer();
 
         foreach (var (voice, npcs) in _voices)
         {
@@ -238,7 +221,7 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         return clone;
     }
 
-    public bool Equals(VoiceContainer? other) => other != null && IsDefault == other.IsDefault && _voices.Count == other._voices.Count && _voices.Keys.All(voiceType => other._voices.ContainsKey(voiceType));
+    public bool Equals(VoiceContainer? other) => other != null && _voices.Count == other._voices.Count && _voices.Keys.All(voiceType => other._voices.ContainsKey(voiceType));
 
     public override string ToString()
     {
@@ -246,7 +229,6 @@ public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
         voices.Sort();
 
         StringBuilder sb = new();
-        sb.Append($"IsDefault: {IsDefault}: ");
         foreach (var voiceType in voices)
         {
             sb.Append(voiceType);
