@@ -20,6 +20,8 @@ partial class MaterialSwap
 partial class MaterialSwapBinaryCreateTranslation
 {
     public const int NewFormVersion = 112;
+
+    public static bool SubstitutionFnamIsTreeFolder(ushort? formVersion) => formVersion < NewFormVersion;
     
     public static partial void FillBinaryFNAMParsingCustom(
         MutagenFrame frame,
@@ -180,34 +182,52 @@ partial class MaterialSwapBinaryOverlay
 
 partial class MaterialSubstitutionBinaryCreateTranslation
 {
-    public static partial ParseResult FillBinaryFNAMParsingCustom(
-        MutagenFrame frame, 
-        IMaterialSubstitution item, 
+    public static partial void FillBinaryObsoleteTreeFolderCustom(
+        MutagenFrame frame,
+        IMaterialSubstitution item,
         PreviousParse lastParsed)
     {
-        // Handled in parent
-        return (int)MaterialSubstitution_FieldIndex.ReplacementMaterial;
+        if (MaterialSwapBinaryCreateTranslation.SubstitutionFnamIsTreeFolder(frame.MetaData.FormVersion)) return;
+        var header = frame.ReadSubrecordHeader();
+        item.ObsoleteTreeFolder = StringBinaryTranslation.Instance.Parse(
+            reader: frame.SpawnWithLength(header.ContentLength),
+            parseWhole: true,
+            stringBinaryType: StringBinaryType.NullTerminate);
     }
 }
 
 partial class MaterialSubstitutionBinaryWriteTranslation
 {
-    public static partial void WriteBinaryFNAMParsingCustom(
-        MutagenWriter writer, 
+    public static partial void WriteBinaryObsoleteTreeFolderCustom(
+        MutagenWriter writer,
         IMaterialSubstitutionGetter item)
     {
-        // Handled in parent
+        if (MaterialSwapBinaryCreateTranslation.SubstitutionFnamIsTreeFolder(writer.MetaData.FormVersion)) return;
+        StringBinaryTranslation.Instance.WriteNullable(
+            writer: writer,
+            item: item.ObsoleteTreeFolder,
+            header: RecordTypes.FNAM,
+            binaryType: StringBinaryType.NullTerminate);
     }
 }
 
 partial class MaterialSubstitutionBinaryOverlay
 {
-    public partial ParseResult FNAMParsingCustomParse(
+    private int? _obsoleteTreeFolderLocation;
+
+    partial void ObsoleteTreeFolderCustomParse(
         OverlayStream stream,
-        int offset,
-        PreviousParse lastParsed)
+        int finalPos,
+        int offset)
     {
-        // Handled in parent
-        return (int)MaterialSubstitution_FieldIndex.ReplacementMaterial;
+        if (MaterialSwapBinaryCreateTranslation.SubstitutionFnamIsTreeFolder(_package.FormVersion?.FormVersion)) return;
+        _obsoleteTreeFolderLocation = stream.Position - offset;
+    }
+
+    public partial String? GetObsoleteTreeFolderCustom()
+    {
+        return _obsoleteTreeFolderLocation.HasValue
+            ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _obsoleteTreeFolderLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)
+            : null;
     }
 }

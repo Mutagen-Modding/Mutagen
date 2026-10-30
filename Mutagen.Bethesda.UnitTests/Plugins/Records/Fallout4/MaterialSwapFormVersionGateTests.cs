@@ -137,18 +137,18 @@ public class MaterialSwapFormVersionGateTests
     }
 
     [Fact]
-    public void Overlay_NewFormVersionNoTopFnam_WritesNoFnam()
+    public void Overlay_NewFormVersionNoTopFnam_WritesOnlyTheSubstitutionsFnam()
     {
         var written = Write(ParseOverlay(BuildMswpBytes(NewFormVersion, topFnam: null)));
-        CountFnam(written).ShouldBe(0);
+        CountFnam(written).ShouldBe(1);
         ParseOverlay(written).TreeFolder.ShouldBeNull();
     }
 
     [Fact]
-    public void Overlay_NewFormVersionTopFnam_WritesOneFnam()
+    public void Overlay_NewFormVersionTopFnam_WritesBothFnams()
     {
         var written = Write(ParseOverlay(BuildMswpBytes(NewFormVersion, topFnam: "materials")));
-        CountFnam(written).ShouldBe(1);
+        CountFnam(written).ShouldBe(2);
         ParseOverlay(written).TreeFolder.ShouldBe("materials");
     }
 }
