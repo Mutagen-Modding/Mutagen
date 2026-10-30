@@ -79,7 +79,9 @@
   <Object name="NavmeshVertex" objType="Subrecord">
     <Fields>
       <P3Float name="Point" />
-      <Int32 name="Unknown" />
+      <Int32 name="Unknown">
+        <Versioning formVersion="493" action="Add" />
+      </Int32>
     </Fields>
   </Object>
   <Object name="NavmeshCover" objType="Subrecord">

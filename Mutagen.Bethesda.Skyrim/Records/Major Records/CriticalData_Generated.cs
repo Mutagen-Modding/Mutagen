@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Skyrim
         public CriticalData.Flag Flags => (CriticalData.Flag)_structData.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _structData.Span.Slice(0x9, 0x3).ToArray();
         #region Unused3
-        public Int32 Unused3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public Int32 Unused3 => _package.FormVersion!.FormVersion!.Value >= 44 ? BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4)) : default(Int32);
         int Unused3VersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         public IFormLinkGetter<ISpellGetter> Effect => _structData.Length <= Unused3VersioningOffset + 0x10 ? FormLink<ISpellGetter>.Null : FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(Unused3VersioningOffset + 0x10, 0x4));
