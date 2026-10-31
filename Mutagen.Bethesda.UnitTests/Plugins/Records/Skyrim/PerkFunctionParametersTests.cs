@@ -21,6 +21,55 @@ public class PerkFunctionParametersTests
         {
             ButtonLabel = buttonLabel,
         });
+
+        using var reread = WriteAndReread(fileSystem, modPath, mod);
+
+        SingleEffect(reread)
+            .ShouldBeAssignableTo<IPerkAbilityEffectGetter>().ShouldNotBeNull()
+            .ButtonLabel.ShouldNotBeNull().String.ShouldBe(buttonLabel);
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void AbilityWithFlags_RereadsThem(
+        IFileSystem fileSystem,
+        ModPath modPath,
+        SkyrimMod mod,
+        Perk perk,
+        ushort fragmentIndex)
+    {
+        perk.Effects.Add(new PerkAbilityEffect
+        {
+            Flags = new PerkScriptFlag
+            {
+                Flags = PerkScriptFlag.Flag.ReplaceDefault,
+                FragmentIndex = fragmentIndex,
+            },
+        });
+
+        using var reread = WriteAndReread(fileSystem, modPath, mod);
+
+        var flags = SingleEffect(reread).Flags.ShouldNotBeNull();
+
+        flags.Flags.ShouldBe(PerkScriptFlag.Flag.ReplaceDefault);
+        flags.FragmentIndex.ShouldBe(fragmentIndex);
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void AbilityWithoutFlags_RereadsNone(
+        IFileSystem fileSystem,
+        ModPath modPath,
+        SkyrimMod mod,
+        Perk perk)
+    {
+        perk.Effects.Add(new PerkAbilityEffect());
+
+        using var reread = WriteAndReread(fileSystem, modPath, mod);
+
+        SingleEffect(reread).Flags.ShouldBeNull();
+    }
+
+    private static ISkyrimModDisposableGetter WriteAndReread(IFileSystem fileSystem, ModPath modPath, SkyrimMod mod)
+    {
         mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
@@ -28,13 +77,12 @@ public class PerkFunctionParametersTests
             .WithFileSystem(fileSystem)
             .Write();
 
-        using var reread = SkyrimMod.Create(mod.SkyrimRelease)
+        return SkyrimMod.Create(mod.SkyrimRelease)
             .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();
-
-        reread.Perks.ShouldHaveSingleItem().Effects.ShouldHaveSingleItem()
-            .ShouldBeAssignableTo<IPerkAbilityEffectGetter>().ShouldNotBeNull()
-            .ButtonLabel.ShouldNotBeNull().String.ShouldBe(buttonLabel);
     }
+
+    private static IAPerkEffectGetter SingleEffect(ISkyrimModGetter mod) =>
+        mod.Perks.ShouldHaveSingleItem().Effects.ShouldHaveSingleItem();
 }

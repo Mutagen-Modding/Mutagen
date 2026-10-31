@@ -446,10 +446,6 @@ partial class PerkBinaryWriteTranslation
                     }
                 }
                 WriteFunctionParameters(writer, effect);
-                if (effect is PerkEntryPointAddActivateChoice choice)
-                {
-                    choice.Flags.WriteToBinary(writer);
-                }
                 switch (effect)
                 {
                     case PerkEntryPointModifyValue modVal:
@@ -533,6 +529,7 @@ partial class PerkBinaryWriteTranslation
                 StringBinaryTranslation.Instance.Write(writer, effect.ButtonLabel, StringBinaryType.NullTerminate, StringsSource.Normal);
             }
         }
+        effect.Flags?.WriteToBinary(writer);
     }
 }
 
