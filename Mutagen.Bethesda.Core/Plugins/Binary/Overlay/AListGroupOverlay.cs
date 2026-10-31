@@ -77,11 +77,11 @@ internal sealed class GroupListOverlay<T> : IReadOnlyList<T>
             {
                 var majorMeta = package.MetaData.Constants.MajorRecordHeader(stream.RemainingMemory);
                 var formKey = FormKey.Factory(package.MetaData.MasterReferences, majorMeta.FormID, reference: false);
-                throw new RecordException(formKey: formKey, recordType: null, modKey: package.MetaData.ModKey, edid: null, message: "Unexpected type encountered when parsing group locations: " + majorMeta.RecordType);
+                throw new ModGroupsMalformedException(package.MetaData.ModKey, $"Unexpected type encountered when parsing group locations: {majorMeta.RecordType} {formKey}");
             }
             if (groupHeader.TotalLength < groupHeader.HeaderLength)
             {
-                throw new MalformedDataException($"Group length {groupHeader.TotalLength} is shorter than its header");
+                throw new ModGroupsMalformedException(package.MetaData.ModKey, $"Group length {groupHeader.TotalLength} is shorter than its header");
             }
             locations.Add(checked((int)stream.Position - offset));
             stream.Position += checked((int)groupHeader.TotalLength);

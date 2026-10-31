@@ -352,6 +352,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             var varMeta = stream.MetaData.Constants.GetVariableHeader(stream, constants);
             var recType = translationParams.ConvertToStandard(varMeta.RecordType);
             if (recType != trigger) break;
+            if (varMeta.TotalLength < varMeta.HeaderLength)
+            {
+                throw new ModGroupsMalformedException(stream.MetaData.ModKey, $"Group length {varMeta.TotalLength} is shorter than its header");
+            }
             if (skipHeader)
             {
                 stream.Position += varMeta.HeaderLength;

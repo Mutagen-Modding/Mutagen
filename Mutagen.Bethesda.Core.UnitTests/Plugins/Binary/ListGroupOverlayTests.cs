@@ -19,26 +19,39 @@ public abstract class AListGroupOverlayTests
 
     private GameConstants Constants => GameConstants.Get(Release);
 
-    private byte[] ListGroupHolding(Action<MutagenWriter> writeEntry)
+    private byte[] Written(Action<MutagenWriter> write)
     {
         var stream = new MemoryStream();
         using (var writer = new MutagenWriter(stream, Constants))
         {
-            using (HeaderExport.Group(writer, RecordTypes.GRUP))
-            {
-                writer.WriteZeros(Constants.GroupConstants.LengthAfterLength);
-                writeEntry(writer);
-            }
+            write(writer);
         }
         return stream.ToArray();
     }
 
+    private byte[] ListGroupHolding(Action<MutagenWriter> writeEntry) => Written(writer =>
+    {
+        using (HeaderExport.Group(writer, RecordTypes.GRUP))
+        {
+            writer.WriteZeros(Constants.GroupConstants.LengthAfterLength);
+            writeEntry(writer);
+        }
+    });
+
+    private void WriteGroupShorterThanItsHeader(MutagenWriter writer)
+    {
+        writer.Write(RecordTypes.GRUP.TypeInt);
+        writer.WriteZeros(Constants.GroupConstants.LengthAfterType);
+    }
+
+    private ParsingMeta Meta(ModKey modKey) => new(
+        Constants,
+        modKey,
+        SeparatedMasterPackage.NotSeparate(new MasterReferenceCollection(modKey)));
+
     private IReadOnlyList<IMajorRecordGetter> ParseLocations(byte[] listGroup, ModKey modKey)
     {
-        var meta = new ParsingMeta(
-            Constants,
-            modKey,
-            SeparatedMasterPackage.NotSeparate(new MasterReferenceCollection(modKey)));
+        var meta = Meta(modKey);
         var stream = new OverlayStream(listGroup, meta);
         stream.Position = Constants.GroupConstants.HeaderLength;
         return GroupListOverlay<IMajorRecordGetter>.Factory(
@@ -46,6 +59,15 @@ public abstract class AListGroupOverlayTests
             listGroup,
             new BinaryOverlayFactoryPackage(meta),
             offset: 0);
+    }
+
+    private IReadOnlyList<int> ParseSubBlockLocations(byte[] subBlocks, ModKey modKey)
+    {
+        return PluginBinaryOverlay.ParseRecordLocations(
+            new OverlayStream(subBlocks, Meta(modKey)),
+            trigger: RecordTypes.GRUP,
+            constants: Constants.GroupConstants,
+            skipHeader: false);
     }
 
     [Theory, MutagenAutoData]
@@ -59,20 +81,24 @@ public abstract class AListGroupOverlayTests
             }
         });
 
-        Should.Throw<RecordException>(() => ParseLocations(listGroup, modKey))
+        Should.Throw<ModGroupsMalformedException>(() => ParseLocations(listGroup, modKey))
             .Message.ShouldContain(RecordTypes.MISC.Type);
     }
 
     [Theory, MutagenAutoData]
     public void GroupShorterThanItsHeader_ThrowsAsMalformed(ModKey modKey)
     {
-        var listGroup = ListGroupHolding(writer =>
-        {
-            writer.Write(RecordTypes.GRUP.TypeInt);
-            writer.WriteZeros(Constants.GroupConstants.LengthAfterType);
-        });
+        var listGroup = ListGroupHolding(WriteGroupShorterThanItsHeader);
 
-        Should.Throw<MalformedDataException>(() => ParseLocations(listGroup, modKey));
+        Should.Throw<ModGroupsMalformedException>(() => ParseLocations(listGroup, modKey));
+    }
+
+    [Theory, MutagenAutoData]
+    public void SubBlockShorterThanItsHeader_ThrowsAsMalformed(ModKey modKey)
+    {
+        var subBlocks = Written(WriteGroupShorterThanItsHeader);
+
+        Should.Throw<ModGroupsMalformedException>(() => ParseSubBlockLocations(subBlocks, modKey));
     }
 
     [Theory, MutagenAutoData]
