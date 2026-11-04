@@ -83,9 +83,15 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter? IAPerkEffectGetter.ButtonLabel => this.ButtonLabel;
         #endregion
         #region Flags
-        public PerkScriptFlag Flags { get; set; } = new PerkScriptFlag();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPerkScriptFlagGetter IAPerkEffectGetter.Flags => Flags;
+        private PerkScriptFlag? _Flags;
+        public PerkScriptFlag? Flags
+        {
+            get => _Flags;
+            set => _Flags = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPerkScriptFlagGetter? IAPerkEffectGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -624,7 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte Priority { get; set; }
         new ExtendedList<PerkCondition> Conditions { get; }
         new TranslatedString? ButtonLabel { get; set; }
-        new PerkScriptFlag Flags { get; set; }
+        new PerkScriptFlag? Flags { get; set; }
     }
 
     /// <summary>
@@ -647,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
         Byte Priority { get; }
         IReadOnlyList<IPerkConditionGetter> Conditions { get; }
         ITranslatedStringGetter? ButtonLabel { get; }
-        IPerkScriptFlagGetter Flags { get; }
+        IPerkScriptFlagGetter? Flags { get; }
 
     }
 
@@ -925,7 +931,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.Priority = default(Byte);
             item.Conditions.Clear();
             item.ButtonLabel = default;
-            item.Flags.Clear();
+            item.Flags = null;
         }
         
         #region Mutagen
@@ -983,7 +989,11 @@ namespace Mutagen.Bethesda.Skyrim
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.ButtonLabel = object.Equals(item.ButtonLabel, rhs.ButtonLabel);
-            ret.Flags = MaskItemExt.Factory(item.Flags.GetEqualsMask(rhs.Flags, include), include);
+            ret.Flags = EqualsMaskHelper.EqualsHelper(
+                item.Flags,
+                rhs.Flags,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string Print(
@@ -1055,9 +1065,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(ButtonLabelItem, "ButtonLabel");
             }
-            if (printMask?.Flags?.Overall ?? true)
+            if ((printMask?.Flags?.Overall ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                item.Flags?.Print(sb, "Flags");
+                FlagsItem?.Print(sb, "Flags");
             }
         }
         
@@ -1105,7 +1116,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 hash.Add(ButtonLabelitem);
             }
-            hash.Add(item.Flags);
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1183,11 +1197,15 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask?.PushIndex((int)APerkEffect_FieldIndex.Flags);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Flags) ?? true))
+                    if(rhs.Flags is {} rhsFlags)
                     {
-                        item.Flags = rhs.Flags.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Flags),
-                            errorMask: errorMask);
+                        item.Flags = rhsFlags.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Flags));
+                    }
+                    else
+                    {
+                        item.Flags = default;
                     }
                 }
                 catch (Exception ex)

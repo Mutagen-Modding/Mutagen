@@ -13,7 +13,7 @@ partial class APerkEffectBinaryOverlay
 
     public IReadOnlyList<IPerkConditionGetter> Conditions => throw new NotImplementedException();
     public ITranslatedStringGetter? ButtonLabel => throw new NotImplementedException();
-    public IPerkScriptFlagGetter Flags => throw new NotImplementedException();
+    public IPerkScriptFlagGetter? Flags => throw new NotImplementedException();
 }
 
 partial class APerkEffectBinaryCreateTranslation
