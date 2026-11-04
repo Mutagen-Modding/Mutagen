@@ -2,7 +2,6 @@ using System.Collections;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -64,8 +63,7 @@ partial class SkyrimListGroupBinaryOverlay<T> : AListGroupBinaryOverlay<T>
             stream,
             _recordData,
             _package,
-            offset: offset,
-            objectType: ObjectType.Group);
+            offset: offset);
     }
 
     public IEnumerator<T> GetEnumerator() => Records.GetEnumerator();
