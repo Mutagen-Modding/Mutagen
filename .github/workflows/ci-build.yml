@@ -41,6 +41,18 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    - name: Enlarge swap
+      if: runner.os == 'Linux'
+      run: |
+        SWAP=/swapfile
+        [ -d /mnt ] && SWAP=/mnt/ci-swapfile
+        sudo swapoff -a
+        sudo rm -f /swapfile /mnt/swapfile
+        sudo fallocate -l 10G $SWAP
+        sudo chmod 600 $SWAP
+        sudo mkswap $SWAP
+        sudo swapon $SWAP
+        free -h
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -50,7 +62,7 @@ jobs:
         dotnet clean ${{ matrix.sln }} -c Release && dotnet nuget locals all --clear
         dotnet restore ${{ matrix.sln }}
     - name: Build
-      run: dotnet build ${{ matrix.sln }} -c Release --no-restore /p:GeneratePackageOnBuild=false
+      run: dotnet build ${{ matrix.sln }} -c Release --no-restore /p:GeneratePackageOnBuild=false ${{ runner.os == 'Linux' && '-m:2' || '' }}
     - name: Test
       run: dotnet test ${{ matrix.sln }} -c Release --no-build
 
