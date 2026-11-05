@@ -1,6 +1,11 @@
 # Testing
 
-Mutagen's tests are written with [xUnit](https://xunit.net/), [AutoFixture](https://github.com/AutoFixture/AutoFixture), [NSubstitute](https://nsubstitute.github.io/), and [Shouldly](https://docs.shouldly.org/).  
+Mutagen has two kinds of tests:
+
+- Unit tests, covered on this page, which check specific behavior and edge cases.  These run in CI.
+- [Passthrough tests](Passthrough-Tests.md), which read the games' own plugins and write them back out, to confirm nothing is lost along the way.  These need the games installed, so they are run locally.
+
+Mutagen's unit tests are written with [xUnit](https://xunit.net/), [AutoFixture](https://github.com/AutoFixture/AutoFixture), [NSubstitute](https://nsubstitute.github.io/), and [Shouldly](https://docs.shouldly.org/).  
 
 ## AutoData Attributes
 These attributes tie in AutoFixture mechanisms which handle a lot of the arrange phase lifting.
@@ -216,3 +221,5 @@ var header = new byte[GameConstants.Fallout4.MajorConstants.HeaderLength];
 
 ## Bug Fixes
 Every bug fix should come with a test that fails without the fix.  If a bug applies to several games, cover each one, typically by passing a different `GameRelease` to the AutoData attribute.
+
+This includes bugs found by a [passthrough](Passthrough-Tests.md).  The passthrough only covers what's in the games' plugins, and isn't run in CI, so a unit test keeps the fix from regressing.

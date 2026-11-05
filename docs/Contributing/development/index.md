@@ -2,6 +2,7 @@
 
 - [Code Generation](Code-Generation.md) covers how the record classes are generated, and how to change them
 - [Testing](Testing.md) covers how tests are written
+- [Passthrough Tests](Passthrough-Tests.md) covers checking Mutagen against the games' own plugins, and how to run them
 - [Code Conventions](Code-Conventions.md) covers conventions to follow when writing code
 - [Binary Overlay Design](Binary-Overlay-Design.md) covers the principles and tradeoffs behind Binary Overlays
 

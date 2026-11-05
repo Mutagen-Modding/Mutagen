@@ -157,13 +157,14 @@ nav:
     - Game Constants: lowlevel/Game-Constants.md
     - Binary Streams: lowlevel/Binary-Streams.md
     - Binary Utility: lowlevel/Binary-Utility.md
-  - Correctness: Correctness.md
   - Contributing:
     - Contributing/index.md
     - Documentation: Contributing/Documentation.md
     - Developing Mutagen:
       - Contributing/development/index.md
       - Code Generation: Contributing/development/Code-Generation.md
-      - Testing: Contributing/development/Testing.md
+      - Testing:
+        - Writing Tests: Contributing/development/Testing.md
+        - Passthrough Tests: Contributing/development/Passthrough-Tests.md
       - Code Conventions: Contributing/development/Code-Conventions.md
       - Binary Overlay Design: Contributing/development/Binary-Overlay-Design.md
