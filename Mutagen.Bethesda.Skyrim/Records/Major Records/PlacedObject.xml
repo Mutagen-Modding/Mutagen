@@ -13,7 +13,7 @@
       <RefList name="Portals" refName="Portal" recordType="XPOD" />
       <RefDirect name="RoomPortal" refName="Bounding" recordType="XPTL" />
       <CustomLogic name="BoundData" recordType="XRMR" />
-      <Int16 name="Unknown" binary="NoGeneration" />
+      <Int16 name="Unknown" binary="NoGeneration" nullable="True" />
       <FormLink name="LightingTemplate" recordType="LNAM" refName="LightingTemplate" binary="NoGeneration" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="INAM" binary="NoGeneration" />
       <List name="LinkedRooms" binary="NoGeneration">

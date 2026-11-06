@@ -150,7 +150,9 @@ namespace Mutagen.Bethesda.Fallout4
         IBoundingGetter? IPlacedObjectGetter.OcclusionPlane => this.OcclusionPlane;
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default(Int16);
+        public Int16? Unknown { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int16? IPlacedObjectGetter.Unknown => this.Unknown;
         #endregion
         #region LightingTemplate
         private readonly IFormLinkNullable<ILightingTemplateGetter> _LightingTemplate = new FormLinkNullable<ILightingTemplateGetter>();
@@ -4012,7 +4014,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Bounding? RoomPortal { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
         new Bounding? OcclusionPlane { get; set; }
-        new Int16 Unknown { get; set; }
+        new Int16? Unknown { get; set; }
         new IFormLinkNullable<ILightingTemplateGetter> LightingTemplate { get; set; }
         new IFormLinkNullable<IImageSpaceGetter> ImageSpace { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
@@ -4117,7 +4119,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBoundingGetter? RoomPortal { get; }
         ReadOnlyMemorySlice<Byte>? XORD { get; }
         IBoundingGetter? OcclusionPlane { get; }
-        Int16 Unknown { get; }
+        Int16? Unknown { get; }
         IFormLinkNullableGetter<ILightingTemplateGetter> LightingTemplate { get; }
         IFormLinkNullableGetter<IImageSpaceGetter> ImageSpace { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
@@ -4601,7 +4603,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.RoomPortal = null;
             item.XORD = default;
             item.OcclusionPlane = null;
-            item.Unknown = default(Int16);
+            item.Unknown = default;
             item.LightingTemplate.Clear();
             item.ImageSpace.Clear();
             item.LinkedRooms.Clear();
@@ -5055,9 +5057,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 OcclusionPlaneItem?.Print(sb, "OcclusionPlane");
             }
-            if (printMask?.Unknown ?? true)
+            if ((printMask?.Unknown ?? true)
+                && item.Unknown is {} UnknownItem)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(UnknownItem, "Unknown");
             }
             if (printMask?.LightingTemplate ?? true)
             {
@@ -5898,7 +5901,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(OcclusionPlaneitem);
             }
-            hash.Add(item.Unknown);
+            if (item.Unknown is {} Unknownitem)
+            {
+                hash.Add(Unknownitem);
+            }
             hash.Add(item.LightingTemplate);
             hash.Add(item.ImageSpace);
             hash.Add(item.LinkedRooms);

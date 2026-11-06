@@ -207,11 +207,11 @@ partial class PlacedObjectBinaryWriteTranslation
         var lightingTemplate = item.LightingTemplate;
         var imageSpace = item.ImageSpace;
         var linkedRooms = item.LinkedRooms;
-        var unknown2 = item.Unknown;
+        var unknown = item.Unknown;
         if (lightingTemplate.FormKeyNullable == null
             && imageSpace.FormKeyNullable == null
             && linkedRooms.Count == 0
-            && unknown2 == 0)
+            && unknown == null)
         {
             return;
         }
@@ -228,7 +228,7 @@ partial class PlacedObjectBinaryWriteTranslation
                 flags = Enums.SetFlag(flags, PlacedObjectBinaryCreateTranslation.HasImageSpaceFlag, true);
             }
             writer.Write(flags);
-            writer.Write(unknown2);
+            writer.Write(unknown ?? default);
         }
         FormKeyBinaryTranslation.Instance.Write(writer, lightingTemplate, RecordTypes.LNAM);
         FormKeyBinaryTranslation.Instance.Write(writer, imageSpace, RecordTypes.INAM);
@@ -243,7 +243,7 @@ partial class PlacedObjectBinaryOverlay
 {
     int? _boundDataLoc;
 
-    public short Unknown => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_boundDataLoc.Value + 8)) : default(short);
+    public short? Unknown => _boundDataLoc.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_boundDataLoc.Value + 8)) : null;
 
     public IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; private set; } = Array.Empty<IFormLinkGetter<IPlacedObjectGetter>>();
 

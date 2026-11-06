@@ -61,7 +61,7 @@
       <RefDirect name="PortalRoom" refName="Bounding" recordType="XPTL" />
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
       <CustomLogic name="BoundData" recordType="XRMR" />
-      <Int16 name="Unknown" binary="NoGeneration" />
+      <Int16 name="Unknown" binary="NoGeneration" nullable="True" />
       <List name="LinkedRooms" binary="NoGeneration">
         <FormLink recordType="XLRM" refName="PlacedObject" />
       </List>
