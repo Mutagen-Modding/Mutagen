@@ -2026,6 +2026,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.GNAM,
                 RecordTypes.TRDA,
                 RecordTypes.TROT,
+                RecordTypes.TROI,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2,
                 RecordTypes.NAM3,

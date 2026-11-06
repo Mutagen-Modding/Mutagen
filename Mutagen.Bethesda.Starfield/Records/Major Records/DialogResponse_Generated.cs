@@ -84,6 +84,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region TROI
+        private readonly IFormLinkNullable<IDialogResponsesGetter> _TROI = new FormLinkNullable<IDialogResponsesGetter>();
+        public IFormLinkNullable<IDialogResponsesGetter> TROI
+        {
+            get => _TROI;
+            set => _TROI.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IDialogResponsesGetter> IDialogResponseGetter.TROI => this.TROI;
+        #endregion
         #region ResponseText
         public TranslatedString ResponseText { get; set; } = string.Empty;
         ITranslatedStringGetter IDialogResponseGetter.ResponseText => this.ResponseText;
@@ -184,6 +194,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WEMFile = initialValue;
                 this.EmotionOut = initialValue;
                 this.TROTs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>(initialValue, []);
+                this.TROI = initialValue;
                 this.ResponseText = initialValue;
                 this.ScriptNotes = initialValue;
                 this.Edits = initialValue;
@@ -199,6 +210,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem WEMFile,
                 TItem EmotionOut,
                 TItem TROTs,
+                TItem TROI,
                 TItem ResponseText,
                 TItem ScriptNotes,
                 TItem Edits,
@@ -212,6 +224,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.WEMFile = WEMFile;
                 this.EmotionOut = EmotionOut;
                 this.TROTs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>(TROTs, []);
+                this.TROI = TROI;
                 this.ResponseText = ResponseText;
                 this.ScriptNotes = ScriptNotes;
                 this.Edits = Edits;
@@ -235,6 +248,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem WEMFile;
             public TItem EmotionOut;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DialogResponseTROT.Mask<TItem>?>>?>? TROTs;
+            public TItem TROI;
             public TItem ResponseText;
             public TItem ScriptNotes;
             public TItem Edits;
@@ -259,6 +273,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.WEMFile, rhs.WEMFile)) return false;
                 if (!object.Equals(this.EmotionOut, rhs.EmotionOut)) return false;
                 if (!object.Equals(this.TROTs, rhs.TROTs)) return false;
+                if (!object.Equals(this.TROI, rhs.TROI)) return false;
                 if (!object.Equals(this.ResponseText, rhs.ResponseText)) return false;
                 if (!object.Equals(this.ScriptNotes, rhs.ScriptNotes)) return false;
                 if (!object.Equals(this.Edits, rhs.Edits)) return false;
@@ -276,6 +291,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.WEMFile);
                 hash.Add(this.EmotionOut);
                 hash.Add(this.TROTs);
+                hash.Add(this.TROI);
                 hash.Add(this.ResponseText);
                 hash.Add(this.ScriptNotes);
                 hash.Add(this.Edits);
@@ -307,6 +323,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.TROI)) return false;
                 if (!eval(this.ResponseText)) return false;
                 if (!eval(this.ScriptNotes)) return false;
                 if (!eval(this.Edits)) return false;
@@ -349,6 +366,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.TROI)) return true;
                 if (eval(this.ResponseText)) return true;
                 if (eval(this.ScriptNotes)) return true;
                 if (eval(this.Edits)) return true;
@@ -401,6 +419,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.TROI = eval(this.TROI);
                 obj.ResponseText = eval(this.ResponseText);
                 obj.ScriptNotes = eval(this.ScriptNotes);
                 obj.Edits = eval(this.Edits);
@@ -457,6 +476,10 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
+                    }
+                    if (printMask?.TROI ?? true)
+                    {
+                        sb.AppendItem(TROI, "TROI");
                     }
                     if (printMask?.ResponseText ?? true)
                     {
@@ -518,6 +541,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? WEMFile;
             public Exception? EmotionOut;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponseTROT.ErrorMask?>>?>? TROTs;
+            public Exception? TROI;
             public Exception? ResponseText;
             public Exception? ScriptNotes;
             public Exception? Edits;
@@ -542,6 +566,8 @@ namespace Mutagen.Bethesda.Starfield
                         return EmotionOut;
                     case DialogResponse_FieldIndex.TROTs:
                         return TROTs;
+                    case DialogResponse_FieldIndex.TROI:
+                        return TROI;
                     case DialogResponse_FieldIndex.ResponseText:
                         return ResponseText;
                     case DialogResponse_FieldIndex.ScriptNotes:
@@ -579,6 +605,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case DialogResponse_FieldIndex.TROTs:
                         this.TROTs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponseTROT.ErrorMask?>>?>(ex, null);
+                        break;
+                    case DialogResponse_FieldIndex.TROI:
+                        this.TROI = ex;
                         break;
                     case DialogResponse_FieldIndex.ResponseText:
                         this.ResponseText = ex;
@@ -626,6 +655,9 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponse_FieldIndex.TROTs:
                         this.TROTs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponseTROT.ErrorMask?>>?>)obj;
                         break;
+                    case DialogResponse_FieldIndex.TROI:
+                        this.TROI = (Exception?)obj;
+                        break;
                     case DialogResponse_FieldIndex.ResponseText:
                         this.ResponseText = (Exception?)obj;
                         break;
@@ -662,6 +694,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (WEMFile != null) return true;
                 if (EmotionOut != null) return true;
                 if (TROTs != null) return true;
+                if (TROI != null) return true;
                 if (ResponseText != null) return true;
                 if (ScriptNotes != null) return true;
                 if (Edits != null) return true;
@@ -723,6 +756,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
+                    sb.AppendItem(TROI, "TROI");
+                }
+                {
                     sb.AppendItem(ResponseText, "ResponseText");
                 }
                 {
@@ -752,6 +788,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.WEMFile = this.WEMFile.Combine(rhs.WEMFile);
                 ret.EmotionOut = this.EmotionOut.Combine(rhs.EmotionOut);
                 ret.TROTs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DialogResponseTROT.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.TROTs?.Overall, rhs.TROTs?.Overall), Noggog.ExceptionExt.Combine(this.TROTs?.Specific, rhs.TROTs?.Specific));
+                ret.TROI = this.TROI.Combine(rhs.TROI);
                 ret.ResponseText = this.ResponseText.Combine(rhs.ResponseText);
                 ret.ScriptNotes = this.ScriptNotes.Combine(rhs.ScriptNotes);
                 ret.Edits = this.Edits.Combine(rhs.Edits);
@@ -787,6 +824,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool WEMFile;
             public bool EmotionOut;
             public DialogResponseTROT.TranslationMask? TROTs;
+            public bool TROI;
             public bool ResponseText;
             public bool ScriptNotes;
             public bool Edits;
@@ -807,6 +845,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Emotion = defaultOn;
                 this.WEMFile = defaultOn;
                 this.EmotionOut = defaultOn;
+                this.TROI = defaultOn;
                 this.ResponseText = defaultOn;
                 this.ScriptNotes = defaultOn;
                 this.Edits = defaultOn;
@@ -831,6 +870,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((WEMFile, null));
                 ret.Add((EmotionOut, null));
                 ret.Add((TROTs == null ? DefaultOn : !TROTs.GetCrystal().CopyNothing, TROTs?.GetCrystal()));
+                ret.Add((TROI, null));
                 ret.Add((ResponseText, null));
                 ret.Add((ScriptNotes, null));
                 ret.Add((Edits, null));
@@ -921,6 +961,7 @@ namespace Mutagen.Bethesda.Starfield
         new UInt32 WEMFile { get; set; }
         new Single EmotionOut { get; set; }
         new ExtendedList<DialogResponseTROT> TROTs { get; }
+        new IFormLinkNullable<IDialogResponsesGetter> TROI { get; set; }
         new TranslatedString ResponseText { get; set; }
         new String ScriptNotes { get; set; }
         new String Edits { get; set; }
@@ -948,6 +989,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt32 WEMFile { get; }
         Single EmotionOut { get; }
         IReadOnlyList<IDialogResponseTROTGetter> TROTs { get; }
+        IFormLinkNullableGetter<IDialogResponsesGetter> TROI { get; }
         ITranslatedStringGetter ResponseText { get; }
         String ScriptNotes { get; }
         String Edits { get; }
@@ -1129,14 +1171,15 @@ namespace Mutagen.Bethesda.Starfield
         WEMFile = 1,
         EmotionOut = 2,
         TROTs = 3,
-        ResponseText = 4,
-        ScriptNotes = 5,
-        Edits = 6,
-        AlternateLipText = 7,
-        TextHash = 8,
-        Animation = 9,
-        HeadTracking = 10,
-        RVSH = 11,
+        TROI = 4,
+        ResponseText = 5,
+        ScriptNotes = 6,
+        Edits = 7,
+        AlternateLipText = 8,
+        TextHash = 9,
+        Animation = 10,
+        HeadTracking = 11,
+        RVSH = 12,
     }
     #endregion
 
@@ -1147,9 +1190,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(DialogResponse.Mask<>);
 
@@ -1183,6 +1226,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.TRDA,
                 RecordTypes.TROT,
+                RecordTypes.TROI,
                 RecordTypes.NAM1,
                 RecordTypes.NAM2,
                 RecordTypes.NAM3,
@@ -1239,6 +1283,7 @@ namespace Mutagen.Bethesda.Starfield
             item.WEMFile = default(UInt32);
             item.EmotionOut = default(Single);
             item.TROTs.Clear();
+            item.TROI.Clear();
             item.ResponseText.Clear();
             item.ScriptNotes = string.Empty;
             item.Edits = string.Empty;
@@ -1254,6 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             obj.Emotion.Relink(mapping);
             obj.TROTs.RemapLinks(mapping);
+            obj.TROI.Relink(mapping);
             obj.Animation?.RemapLinks(mapping);
             obj.RVSH?.RemapLinks(mapping);
         }
@@ -1307,6 +1353,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.TROTs,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.TROI = item.TROI.Equals(rhs.TROI);
             ret.ResponseText = object.Equals(item.ResponseText, rhs.ResponseText);
             ret.ScriptNotes = string.Equals(item.ScriptNotes, rhs.ScriptNotes);
             ret.Edits = string.Equals(item.Edits, rhs.Edits);
@@ -1397,6 +1444,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.TROI ?? true)
+            {
+                sb.AppendItem(item.TROI.FormKeyNullable, "TROI");
+            }
             if (printMask?.ResponseText ?? true)
             {
                 sb.AppendItem(item.ResponseText, "ResponseText");
@@ -1458,6 +1509,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.TROTs.SequenceEqual(rhs.TROTs, (l, r) => ((DialogResponseTROTCommon)((IDialogResponseTROTGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)DialogResponse_FieldIndex.TROTs)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TROI) ?? true))
+            {
+                if (!lhs.TROI.Equals(rhs.TROI)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
                 if (!object.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
@@ -1512,6 +1567,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.WEMFile);
             hash.Add(item.EmotionOut);
             hash.Add(item.TROTs);
+            hash.Add(item.TROI);
             hash.Add(item.ResponseText);
             hash.Add(item.ScriptNotes);
             hash.Add(item.Edits);
@@ -1550,6 +1606,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in obj.TROTs.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            if (FormLinkInformation.TryFactory(obj.TROI, out var TROIInfo))
+            {
+                yield return TROIInfo;
             }
             if (obj.Animation is {} AnimationItems)
             {
@@ -1618,6 +1678,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.TROI) ?? true))
+            {
+                item.TROI.SetTo(rhs.TROI.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
             {
@@ -1854,6 +1918,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TROI,
+                header: translationParams.ConvertToCustom(RecordTypes.TROI));
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ResponseText,
@@ -1970,6 +2038,12 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams,
                             transl: DialogResponseTROT.TryCreateFromBinary));
                     return (int)DialogResponse_FieldIndex.TROTs;
+                }
+                case RecordTypeInts.TROI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TROI.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponse_FieldIndex.TROI;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -2121,6 +2195,10 @@ namespace Mutagen.Bethesda.Starfield
         public Single EmotionOut => _EmotionOut_IsSet ? _recordData.Slice(_EmotionOutLocation, 4).Float() : default(Single);
         #endregion
         public IReadOnlyList<IDialogResponseTROTGetter> TROTs { get; private set; } = [];
+        #region TROI
+        private int? _TROILocation;
+        public IFormLinkNullableGetter<IDialogResponsesGetter> TROI => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _TROILocation);
+        #endregion
         #region ResponseText
         private int? _ResponseTextLocation;
         public ITranslatedStringGetter ResponseText => _ResponseTextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResponseTextLocation.Value, _package.MetaData.Constants), StringsSource.IL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
@@ -2227,6 +2305,11 @@ namespace Mutagen.Bethesda.Starfield
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
                     return (int)DialogResponse_FieldIndex.TROTs;
+                }
+                case RecordTypeInts.TROI:
+                {
+                    _TROILocation = (stream.Position - offset);
+                    return (int)DialogResponse_FieldIndex.TROI;
                 }
                 case RecordTypeInts.NAM1:
                 {

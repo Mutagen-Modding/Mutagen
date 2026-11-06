@@ -1078,6 +1078,7 @@ public partial class RecordTypes
     public static readonly RecordType TREX = new(0x58455254);
     public static readonly RecordType TRNS = new(0x534E5254);
     public static readonly RecordType TRNV = new(0x564E5254);
+    public static readonly RecordType TROI = new(0x494F5254);
     public static readonly RecordType TROT = new(0x544F5254);
     public static readonly RecordType TSCE = new(0x45435354);
     public static readonly RecordType TX00 = new(0x30305854);
