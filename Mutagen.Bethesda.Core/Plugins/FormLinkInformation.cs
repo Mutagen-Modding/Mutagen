@@ -80,12 +80,12 @@ public sealed record FormLinkInformation(FormKey FormKey, Type Type) : IFormLink
 
         if (str.StartsWith("Mutagen."))
         {
-            str = str.Slice(0, "Mutagen.".Length);
+            str = str.Slice("Mutagen.".Length);
         }
 
         if (str.StartsWith("Bethesda."))
         {
-            str = str.Slice(0, "Bethesda.".Length);
+            str = str.Slice("Bethesda.".Length);
         }
 
         var splitIndex = str.IndexOf(".");

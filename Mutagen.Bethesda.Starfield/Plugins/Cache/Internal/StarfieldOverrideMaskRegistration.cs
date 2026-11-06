@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins.Cache.Internals;
 
 namespace Mutagen.Bethesda.Starfield;
 
-internal class SkyrimOverrideMaskRegistration : IOverrideMaskRegistration
+internal class StarfieldOverrideMaskRegistration : IOverrideMaskRegistration
 {
     public IEnumerable<(ILoquiRegistration, object)> Masks
     {

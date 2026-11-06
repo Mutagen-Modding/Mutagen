@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
 
@@ -127,19 +128,9 @@ internal static class ToModRegistrationHelper
 
     static ToModRegistrationHelper()
     {
-        foreach (var category in Enums<GameCategory>.Values)
+        foreach (var module in GameRuntime.Modules)
         {
-            var modType = Type.GetType(
-                $"Mutagen.Bethesda.{category}.{category}Mod, Mutagen.Bethesda.{category}");
-            if (modType == null) continue;
-            var regisProp = modType.GetProperty("StaticRegistration", 
-                System.Reflection.BindingFlags.Static
-                | System.Reflection.BindingFlags.NonPublic
-                | System.Reflection.BindingFlags.Public);
-            if (regisProp == null) continue;
-            var regis = regisProp.GetValue(null) as ILoquiRegistration;
-            if (regis == null) continue;
-            _registrations[category] = regis;
+            _registrations[module.Category] = module.ModRegistration;
         }
     }
 

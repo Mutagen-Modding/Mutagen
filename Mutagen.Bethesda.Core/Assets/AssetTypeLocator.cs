@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Noggog;
 namespace Mutagen.Bethesda.Assets; 
@@ -11,37 +11,16 @@ public class AssetTypeLocator
 	{
 		Types = new Dictionary<GameCategory, Dictionary<string,Dictionary<string,IAssetType>>>();
 
-		foreach (var type in typeof(IAssetType).GetInheritingFromInterface())
+		foreach (var module in GameRuntime.Modules)
 		{
-			if (type.Namespace == null) continue;
-
-			GameCategory gameCategory;
-			switch (type.Namespace.TrimStart("Mutagen.Bethesda.", StringComparison.Ordinal))
+			foreach (var assetType in module.AssetTypes)
 			{
-				case "Oblivion.Assets":
-					gameCategory = GameCategory.Oblivion;
-					break;
-				case "Skyrim.Assets":
-					gameCategory = GameCategory.Skyrim;
-					break;
-				case "Fallout3.Assets":
-					gameCategory = GameCategory.Fallout3;
-					break;
-				case "Fallout4.Assets":
-					gameCategory = GameCategory.Fallout4;
-					break;
-				default:
-					continue;
-			}
-
-			var instanceProperty = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-			if (instanceProperty?.GetValue(null) is not IAssetType assetType) continue;
-
-			var gameTypes = Types.GetOrAdd(gameCategory);
-			foreach (var extension in assetType.FileExtensions)
-			{
-				var baseFolders = gameTypes.GetOrAdd(extension, () => new Dictionary<string, IAssetType>());
-				baseFolders.TryAdd(assetType.BaseFolder, assetType);
+				var gameTypes = Types.GetOrAdd(module.Category);
+				foreach (var extension in assetType.FileExtensions)
+				{
+					var baseFolders = gameTypes.GetOrAdd(extension, () => new Dictionary<string, IAssetType>());
+					baseFolders.TryAdd(assetType.BaseFolder, assetType);
+				}
 			}
 		}
 	}
