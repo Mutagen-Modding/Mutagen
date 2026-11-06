@@ -112,7 +112,7 @@ public class HeaderExtTests
             .ShouldEqualEnumerable("Dawnguard.esm");
     }
 
-    private MutagenBinaryReadStream GetModStream()
+    private MutagenBinaryReadStream GetModStream(int bufferSize = 4096)
     {
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.SmallOblivionMod);
         return new MutagenBinaryReadStream(
@@ -120,7 +120,8 @@ public class HeaderExtTests
             new ParsingMeta(
                 GameConstants.Get(GameRelease.Oblivion),
                 ModKey.FromNameAndExtension("SmallOblivionMod.esp"),
-                SeparatedMasterPackage.EmptyNull));
+                SeparatedMasterPackage.EmptyNull),
+            bufferSize: bufferSize);
     }
 
     [Fact]
@@ -128,6 +129,24 @@ public class HeaderExtTests
     {
         using var stream = GetModStream();
         stream.ReadModHeaderFrame();
+        stream.Position.ShouldBe(0x45);
+    }
+
+    [Fact]
+    public void TryGetModHeaderFrame()
+    {
+        using var stream = GetModStream();
+        stream.TryGetModHeaderFrame(out var frame).ShouldBeTrue();
+        frame.TotalLength.ShouldBe(0x45);
+        stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
+    public void TryReadModHeaderFrame()
+    {
+        using var stream = GetModStream();
+        stream.TryReadModHeaderFrame(out var frame).ShouldBeTrue();
+        frame.TotalLength.ShouldBe(0x45);
         stream.Position.ShouldBe(0x45);
     }
 
@@ -148,6 +167,49 @@ public class HeaderExtTests
             RecordTypes.WEAP,
             RecordTypes.NPC_,
         });
+    }
+
+    [Fact]
+    public void TryReadGroupAcrossBufferBoundary()
+    {
+        // A 0x60 buffer ends partway through the RACE group, forcing a refill mid-read.
+        using var stream = GetModStream(bufferSize: 0x60);
+        stream.ReadModHeaderFrame();
+        List<(RecordType Type, long Length)> groups = new();
+        while (stream.TryReadGroup(out var g))
+        {
+            groups.Add((g.ContainedRecordType, g.TotalLength));
+        }
+
+        groups.ShouldBe(new[]
+        {
+            (RecordTypes.RACE, 0x2EL),
+            (RecordTypes.WEAP, 0x3CL),
+            (RecordTypes.NPC_, 0x32L),
+        });
+    }
+
+    [Fact]
+    public void TryGetGroupAcrossBufferBoundary()
+    {
+        // A 0x60 buffer ends partway through the RACE group, forcing a refill mid-read.
+        using var stream = GetModStream(bufferSize: 0x60);
+        stream.ReadModHeaderFrame();
+        stream.TryGetGroup(out var group).ShouldBeTrue();
+        group.ContainedRecordType.ShouldBe(RecordTypes.RACE);
+        group.TotalLength.ShouldBe(0x2E);
+        stream.Position.ShouldBe(0x45);
+    }
+
+    [Fact]
+    public void TryGetGroupWithOffset()
+    {
+        using var stream = GetModStream();
+        stream.ReadModHeaderFrame();
+        stream.TryGetGroup(out var group, offset: 0x2E).ShouldBeTrue();
+        group.ContainedRecordType.ShouldBe(RecordTypes.WEAP);
+        group.EnumerateMajorRecords().Select(x => x.FormID.Raw).ShouldBe(new uint[] { 0x00123456, 0x00123457 });
+        stream.Position.ShouldBe(0x45);
     }
 
     [Fact]
