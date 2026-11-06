@@ -350,7 +350,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         var modImporter = new ModImporter(fs, Release);
         foreach (var listing in listingsToUse)
         {
-            var modPath = new ModPath(listing.ModKey, dataDirectory.Path.GetFile(listing.ModKey.FileName).Path);
+            var modPath = new ModPath(listing.ModKey, fs.ResolveIgnoringCase(dataDirectory.Path, listing.ModKey.FileName));
             if (fs.File.Exists(modPath.Path))
             {
                 try
@@ -743,7 +743,7 @@ public sealed record GameEnvironmentBuilder
         var modImporter = new ModImporter(fs, Release);
         foreach (var listing in listingsToUse)
         {
-            var modPath = new ModPath(listing.ModKey, dataDirectory.Path.GetFile(listing.ModKey.FileName).Path);
+            var modPath = new ModPath(listing.ModKey, fs.ResolveIgnoringCase(dataDirectory.Path, listing.ModKey.FileName));
             if (fs.File.Exists(modPath.Path))
             {
                 try

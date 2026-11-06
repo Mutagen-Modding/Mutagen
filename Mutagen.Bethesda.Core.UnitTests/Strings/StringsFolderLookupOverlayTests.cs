@@ -426,4 +426,28 @@ public class StringsFolderLookupOverlayTests
         factory.InternalFactory(modKey).TryLookup(StringsSource.Normal, Language.English, id, out var str).ShouldBeTrue();
         str.ShouldBe("Hello");
     }
+
+    [Fact]
+    public void StringsFolderNamedInAnotherCase()
+    {
+        using var dataDir = TestPathing.GetTempFolder(nameof(StringsFolderLookupOverlayTests));
+        var fileSystem = new FileSystem();
+        var modKey = ModKey.FromFileName("MyMod.esp");
+        uint id;
+        using (var writer = new StringsWriter(GameRelease.SkyrimSE, modKey, Path.Combine(dataDir.Dir.Path, "strings"), new MutagenEncodingProvider(), fileSystem))
+        {
+            id = writer.Register("Hello", Language.English, StringsSource.Normal);
+        }
+        var gameRelease = Substitute.For<IGameReleaseContext>();
+        gameRelease.Release.Returns(GameRelease.SkyrimSE);
+        var factory = new StringsFolderLookupFactory(
+            gameRelease,
+            new DataDirectoryInjection(dataDir.Dir.Path),
+            Substitute.For<IGetApplicableArchivePaths>(),
+            fileSystem,
+            null);
+
+        factory.InternalFactory(modKey).TryLookup(StringsSource.Normal, Language.English, id, out var str).ShouldBeTrue();
+        str.ShouldBe("Hello");
+    }
 }

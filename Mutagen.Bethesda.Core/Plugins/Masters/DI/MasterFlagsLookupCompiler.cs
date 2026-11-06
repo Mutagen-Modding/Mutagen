@@ -37,7 +37,7 @@ public class MasterFlagsLookupCompiler : IMasterFlagsLookupCompiler
             masterFlagsLookup = new Noggog.Cache<IModMasterStyledGetter, ModKey>(x => x.ModKey);
             foreach (var master in header.Masters(path.ModKey).Select(x => x.Master))
             {
-                var otherPath = Path.Combine(dataDirectoryPath, master.FileName);
+                var otherPath = _fileSystem.ResolveIgnoringCase(dataDirectoryPath, master.FileName);
                 var otherHeader = ModHeaderFrame.FromPath(otherPath, _gameReleaseContext.Release, _fileSystem);
                 masterFlagsLookup.Add(new KeyedMasterStyle(master, otherHeader.MasterStyle));
             }

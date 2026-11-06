@@ -89,7 +89,7 @@ public sealed class TimestampAligner : ITimestampAligner
         var list = new List<(bool Enabled, ModKey ModKey, DateTime Write)>();
         foreach (var key in incomingLoadOrder)
         {
-            ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ModKey.FileName));
+            ModPath modPath = new ModPath(key.ModKey, _FileSystem.ResolveIgnoringCase(dataPath.Path, key.ModKey.FileName));
             if (!_FileSystem.File.Exists(modPath.Path))
             {
                 if (throwOnMissingMods) throw new MissingModException(modPath);
@@ -123,7 +123,7 @@ public sealed class TimestampAligner : ITimestampAligner
         interval ??= TimeSpan.FromMinutes(1);
         foreach (var mod in loadOrder)
         {
-            ModPath modPath = new ModPath(mod, Path.Combine(dataPath.Path, mod.FileName));
+            ModPath modPath = new ModPath(mod, _FileSystem.ResolveIgnoringCase(dataPath.Path, mod.FileName));
             if (!modPath.Path.Exists)
             {
                 if (throwOnMissingMods) throw new MissingModException(modPath);

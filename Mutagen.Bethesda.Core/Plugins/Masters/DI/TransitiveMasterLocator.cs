@@ -76,7 +76,7 @@ public class TransitiveMasterLocator : ITransitiveMasterLocator
             }
             else
             {
-                var modPath = new ModPath(Path.Combine(_dataDirectoryProvider.Path, master.FileName));
+                var modPath = new ModPath(_fileSystem.ResolveIgnoringCase(_dataDirectoryProvider.Path, master.FileName));
                 var header = ModHeaderFrame.FromPath(modPath, _gameReleaseContext.Release, fileSystem: _fileSystem);
                 mastersOfMod = header.Masters(master).Select(x => x.Master).ToArray();
             }
