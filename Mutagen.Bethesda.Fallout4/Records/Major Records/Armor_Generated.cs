@@ -3023,7 +3023,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
             {
-                if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.WorldModel, rhs.WorldModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.BipedBodyTemplate) ?? true))
             {

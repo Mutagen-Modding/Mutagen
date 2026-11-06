@@ -1873,11 +1873,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
             {
-                if (!Equals(lhs.Priority, rhs.Priority)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Priority, rhs.Priority, (l, r) => l == r)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
             {
-                if (!Equals(lhs.WeightSliderEnabled, rhs.WeightSliderEnabled)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.WeightSliderEnabled, rhs.WeightSliderEnabled, (l, r) => l == r)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
             {
@@ -1897,19 +1897,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
             {
-                if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.WorldModel, rhs.WorldModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
             {
-                if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.FirstPersonModel, rhs.FirstPersonModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
             {
-                if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.SkinTexture, rhs.SkinTexture, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
             {
-                if (!Equals(lhs.TextureSwapList, rhs.TextureSwapList)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.TextureSwapList, rhs.TextureSwapList, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
             {

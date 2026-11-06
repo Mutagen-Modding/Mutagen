@@ -2254,11 +2254,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Voices, rhs.Voices, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHair) ?? true))
             {
-                if (!Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultHair, rhs.DefaultHair, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColor) ?? true))
             {
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.RaceStats) ?? true))
             {
-                if (!Equals(lhs.RaceStats, rhs.RaceStats)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.RaceStats, rhs.RaceStats, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FaceData) ?? true))
             {
@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BodyData, rhs.BodyData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {

@@ -141,6 +141,16 @@ namespace Mutagen.Bethesda.Plugins.Records
             sb.AppendLine("]");
         }
 
+        public static bool EqualsHelper<TItem>(
+            IGenderedItemGetter<TItem>? lhs,
+            IGenderedItemGetter<TItem>? rhs,
+            Func<TItem, TItem, bool> itemEquals)
+        {
+            if (ReferenceEquals(lhs, rhs)) return true;
+            if (lhs == null || rhs == null) return false;
+            return itemEquals(lhs.Male, rhs.Male) && itemEquals(lhs.Female, rhs.Female);
+        }
+
         public static GenderedItem<Exception?>? Combine(GenderedItem<Exception?>? lhs, GenderedItem<Exception?>? rhs)
         {
             if (lhs == null) return rhs;

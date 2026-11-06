@@ -6402,11 +6402,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
-                if (!Equals(lhs.Height, rhs.Height)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Height, rhs.Height, (l, r) => l.EqualsWithin(r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultWeight) ?? true))
             {
-                if (!Equals(lhs.DefaultWeight, rhs.DefaultWeight)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultWeight, rhs.DefaultWeight, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
@@ -6558,7 +6558,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
-                if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.SkeletalModel, rhs.SkeletalModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
@@ -6566,11 +6566,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Voices, rhs.Voices, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
             {
-                if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultHairColors, rhs.DefaultHairColors, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
@@ -6594,7 +6594,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BodyData, rhs.BodyData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
             {
@@ -6602,7 +6602,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
             {
-                if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BehaviorGraph, rhs.BehaviorGraph, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ImpactMaterialType) ?? true))
             {
@@ -6678,7 +6678,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
             {
-                if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.HeadData, rhs.HeadData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
             {
@@ -6730,7 +6730,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BoneData) ?? true))
             {
-                if (!Equals(lhs.BoneData, rhs.BoneData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BoneData, rhs.BoneData, (l, r) => l.SequenceEqualNullable(r))) return false;
             }
             return true;
         }

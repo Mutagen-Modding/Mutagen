@@ -1071,11 +1071,11 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)AssociationType_FieldIndex.ParentTitle) ?? true))
             {
-                if (!Equals(lhs.ParentTitle, rhs.ParentTitle)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.ParentTitle, rhs.ParentTitle, (l, r) => string.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AssociationType_FieldIndex.Title) ?? true))
             {
-                if (!Equals(lhs.Title, rhs.Title)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Title, rhs.Title, (l, r) => string.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AssociationType_FieldIndex.IsFamily) ?? true))
             {

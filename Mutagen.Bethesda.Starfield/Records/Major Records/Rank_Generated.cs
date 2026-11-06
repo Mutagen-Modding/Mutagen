@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Title) ?? true))
             {
-                if (!Equals(lhs.Title, rhs.Title)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Title, rhs.Title, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
