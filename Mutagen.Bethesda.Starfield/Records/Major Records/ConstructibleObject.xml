@@ -7,7 +7,7 @@
       <String name="Description" recordType="DESC" translated="DL" />
       <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
       <RefList name="Conditions" refName="Condition" />
-      <RefList name="ConstructableComponents" recordType="FVPA" refName="ConstructibleObjectComponent" />
+      <RefList name="ConstructibleComponents" recordType="FVPA" refName="ConstructibleObjectComponent" />
       <RefList name="RequiredPerks" refName="ConstructibleRequiredPerk" recordType="RQPK" />
       <FormLink name="CreatedObject" recordType="CNAM">
         <Interface>IConstructibleObjectTarget</Interface>

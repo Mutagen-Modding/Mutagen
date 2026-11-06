@@ -122,17 +122,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region ConstructableComponents
+        #region ConstructibleComponents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ConstructibleObjectComponent>? _ConstructableComponents;
-        public ExtendedList<ConstructibleObjectComponent>? ConstructableComponents
+        private ExtendedList<ConstructibleObjectComponent>? _ConstructibleComponents;
+        public ExtendedList<ConstructibleObjectComponent>? ConstructibleComponents
         {
-            get => this._ConstructableComponents;
-            set => this._ConstructableComponents = value;
+            get => this._ConstructibleComponents;
+            set => this._ConstructibleComponents = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConstructibleObjectComponentGetter>? IConstructibleObjectGetter.ConstructableComponents => _ConstructableComponents;
+        IReadOnlyList<IConstructibleObjectComponentGetter>? IConstructibleObjectGetter.ConstructibleComponents => _ConstructibleComponents;
         #endregion
 
         #endregion
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = initialValue;
                 this.WorkbenchKeyword = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
-                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.ConstructibleComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, []);
                 this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(initialValue, []);
                 this.CreatedObject = initialValue;
                 this.AmountProduced = initialValue;
@@ -368,7 +368,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Description,
                 TItem WorkbenchKeyword,
                 TItem Conditions,
-                TItem ConstructableComponents,
+                TItem ConstructibleComponents,
                 TItem RequiredPerks,
                 TItem CreatedObject,
                 TItem AmountProduced,
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Description = Description;
                 this.WorkbenchKeyword = WorkbenchKeyword;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
-                this.ConstructableComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(ConstructableComponents, []);
+                this.ConstructibleComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(ConstructibleComponents, []);
                 this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, []);
                 this.CreatedObject = CreatedObject;
                 this.AmountProduced = AmountProduced;
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Description;
             public TItem WorkbenchKeyword;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>? ConstructableComponents;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>? ConstructibleComponents;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleRequiredPerk.Mask<TItem>?>>?>? RequiredPerks;
             public TItem CreatedObject;
             public TItem AmountProduced;
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.WorkbenchKeyword, rhs.WorkbenchKeyword)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.ConstructableComponents, rhs.ConstructableComponents)) return false;
+                if (!object.Equals(this.ConstructibleComponents, rhs.ConstructibleComponents)) return false;
                 if (!object.Equals(this.RequiredPerks, rhs.RequiredPerks)) return false;
                 if (!object.Equals(this.CreatedObject, rhs.CreatedObject)) return false;
                 if (!object.Equals(this.AmountProduced, rhs.AmountProduced)) return false;
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Description);
                 hash.Add(this.WorkbenchKeyword);
                 hash.Add(this.Conditions);
-                hash.Add(this.ConstructableComponents);
+                hash.Add(this.ConstructibleComponents);
                 hash.Add(this.RequiredPerks);
                 hash.Add(this.CreatedObject);
                 hash.Add(this.AmountProduced);
@@ -567,12 +567,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.ConstructableComponents != null)
+                if (this.ConstructibleComponents != null)
                 {
-                    if (!eval(this.ConstructableComponents.Overall)) return false;
-                    if (this.ConstructableComponents.Specific != null)
+                    if (!eval(this.ConstructibleComponents.Overall)) return false;
+                    if (this.ConstructibleComponents.Specific != null)
                     {
-                        foreach (var item in this.ConstructableComponents.Specific)
+                        foreach (var item in this.ConstructibleComponents.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -681,12 +681,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.ConstructableComponents != null)
+                if (this.ConstructibleComponents != null)
                 {
-                    if (eval(this.ConstructableComponents.Overall)) return true;
-                    if (this.ConstructableComponents.Specific != null)
+                    if (eval(this.ConstructibleComponents.Overall)) return true;
+                    if (this.ConstructibleComponents.Specific != null)
                     {
-                        foreach (var item in this.ConstructableComponents.Specific)
+                        foreach (var item in this.ConstructibleComponents.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -804,14 +804,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (ConstructableComponents != null)
+                if (ConstructibleComponents != null)
                 {
-                    obj.ConstructableComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.ConstructableComponents.Overall), []);
-                    if (ConstructableComponents.Specific != null)
+                    obj.ConstructibleComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.ConstructibleComponents.Overall), []);
+                    if (ConstructibleComponents.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
-                        obj.ConstructableComponents.Specific = l;
-                        foreach (var item in ConstructableComponents.Specific)
+                        obj.ConstructibleComponents.Specific = l;
+                        foreach (var item in ConstructibleComponents.Specific)
                         {
                             MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -947,16 +947,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.ConstructableComponents?.Overall ?? true)
-                        && ConstructableComponents is {} ConstructableComponentsItem)
+                    if ((printMask?.ConstructibleComponents?.Overall ?? true)
+                        && ConstructibleComponents is {} ConstructibleComponentsItem)
                     {
-                        sb.AppendLine("ConstructableComponents =>");
+                        sb.AppendLine("ConstructibleComponents =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ConstructableComponentsItem.Overall);
-                            if (ConstructableComponentsItem.Specific != null)
+                            sb.AppendItem(ConstructibleComponentsItem.Overall);
+                            if (ConstructibleComponentsItem.Specific != null)
                             {
-                                foreach (var subItem in ConstructableComponentsItem.Specific)
+                                foreach (var subItem in ConstructibleComponentsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Description;
             public Exception? WorkbenchKeyword;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>? ConstructableComponents;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>? ConstructibleComponents;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>? RequiredPerks;
             public Exception? CreatedObject;
             public Exception? AmountProduced;
@@ -1143,8 +1143,8 @@ namespace Mutagen.Bethesda.Starfield
                         return WorkbenchKeyword;
                     case ConstructibleObject_FieldIndex.Conditions:
                         return Conditions;
-                    case ConstructibleObject_FieldIndex.ConstructableComponents:
-                        return ConstructableComponents;
+                    case ConstructibleObject_FieldIndex.ConstructibleComponents:
+                        return ConstructibleComponents;
                     case ConstructibleObject_FieldIndex.RequiredPerks:
                         return RequiredPerks;
                     case ConstructibleObject_FieldIndex.CreatedObject:
@@ -1208,8 +1208,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
-                    case ConstructibleObject_FieldIndex.ConstructableComponents:
-                        this.ConstructableComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ex, null);
+                    case ConstructibleObject_FieldIndex.ConstructibleComponents:
+                        this.ConstructibleComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ex, null);
                         break;
                     case ConstructibleObject_FieldIndex.RequiredPerks:
                         this.RequiredPerks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>(ex, null);
@@ -1294,8 +1294,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case ConstructibleObject_FieldIndex.ConstructableComponents:
-                        this.ConstructableComponents = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>)obj;
+                    case ConstructibleObject_FieldIndex.ConstructibleComponents:
+                        this.ConstructibleComponents = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>)obj;
                         break;
                     case ConstructibleObject_FieldIndex.RequiredPerks:
                         this.RequiredPerks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>)obj;
@@ -1368,7 +1368,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Description != null) return true;
                 if (WorkbenchKeyword != null) return true;
                 if (Conditions != null) return true;
-                if (ConstructableComponents != null) return true;
+                if (ConstructibleComponents != null) return true;
                 if (RequiredPerks != null) return true;
                 if (CreatedObject != null) return true;
                 if (AmountProduced != null) return true;
@@ -1457,15 +1457,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (ConstructableComponents is {} ConstructableComponentsItem)
+                if (ConstructibleComponents is {} ConstructibleComponentsItem)
                 {
-                    sb.AppendLine("ConstructableComponents =>");
+                    sb.AppendLine("ConstructibleComponents =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ConstructableComponentsItem.Overall);
-                        if (ConstructableComponentsItem.Specific != null)
+                        sb.AppendItem(ConstructibleComponentsItem.Overall);
+                        if (ConstructibleComponentsItem.Specific != null)
                         {
-                            foreach (var subItem in ConstructableComponentsItem.Specific)
+                            foreach (var subItem in ConstructibleComponentsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.ConstructableComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ConstructableComponents?.Overall, rhs.ConstructableComponents?.Overall), Noggog.ExceptionExt.Combine(this.ConstructableComponents?.Specific, rhs.ConstructableComponents?.Specific));
+                ret.ConstructibleComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ConstructibleComponents?.Overall, rhs.ConstructibleComponents?.Overall), Noggog.ExceptionExt.Combine(this.ConstructibleComponents?.Specific, rhs.ConstructibleComponents?.Specific));
                 ret.RequiredPerks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleRequiredPerk.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RequiredPerks?.Overall, rhs.RequiredPerks?.Overall), Noggog.ExceptionExt.Combine(this.RequiredPerks?.Specific, rhs.RequiredPerks?.Specific));
                 ret.CreatedObject = this.CreatedObject.Combine(rhs.CreatedObject);
                 ret.AmountProduced = this.AmountProduced.Combine(rhs.AmountProduced);
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Description;
             public bool WorkbenchKeyword;
             public Condition.TranslationMask? Conditions;
-            public ConstructibleObjectComponent.TranslationMask? ConstructableComponents;
+            public ConstructibleObjectComponent.TranslationMask? ConstructibleComponents;
             public ConstructibleRequiredPerk.TranslationMask? RequiredPerks;
             public bool CreatedObject;
             public bool AmountProduced;
@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Description, null));
                 ret.Add((WorkbenchKeyword, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((ConstructableComponents == null ? DefaultOn : !ConstructableComponents.GetCrystal().CopyNothing, ConstructableComponents?.GetCrystal()));
+                ret.Add((ConstructibleComponents == null ? DefaultOn : !ConstructibleComponents.GetCrystal().CopyNothing, ConstructibleComponents?.GetCrystal()));
                 ret.Add((RequiredPerks == null ? DefaultOn : !RequiredPerks.GetCrystal().CopyNothing, RequiredPerks?.GetCrystal()));
                 ret.Add((CreatedObject, null));
                 ret.Add((AmountProduced, null));
@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Starfield
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<ConstructibleObjectComponent>? ConstructableComponents { get; set; }
+        new ExtendedList<ConstructibleObjectComponent>? ConstructibleComponents { get; set; }
         new ExtendedList<ConstructibleRequiredPerk>? RequiredPerks { get; set; }
         new IFormLinkNullable<IConstructibleObjectTargetGetter> CreatedObject { get; set; }
         new UInt16 AmountProduced { get; set; }
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructableComponents { get; }
+        IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructibleComponents { get; }
         IReadOnlyList<IConstructibleRequiredPerkGetter>? RequiredPerks { get; }
         IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject { get; }
         UInt16 AmountProduced { get; }
@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Starfield
         Description = 9,
         WorkbenchKeyword = 10,
         Conditions = 11,
-        ConstructableComponents = 12,
+        ConstructibleComponents = 12,
         RequiredPerks = 13,
         CreatedObject = 14,
         AmountProduced = 15,
@@ -2286,7 +2286,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Description = default;
             item.WorkbenchKeyword.Clear();
             item.Conditions.Clear();
-            item.ConstructableComponents = null;
+            item.ConstructibleComponents = null;
             item.RequiredPerks = null;
             item.CreatedObject.Clear();
             item.AmountProduced = default(UInt16);
@@ -2327,7 +2327,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.RemapLinks(mapping);
             obj.WorkbenchKeyword.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.ConstructableComponents?.RemapLinks(mapping);
+            obj.ConstructibleComponents?.RemapLinks(mapping);
             obj.RequiredPerks?.RemapLinks(mapping);
             obj.CreatedObject.Relink(mapping);
             obj.CraftingSound?.RemapLinks(mapping);
@@ -2447,8 +2447,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ConstructableComponents = item.ConstructableComponents.CollectionEqualsHelper(
-                rhs.ConstructableComponents,
+            ret.ConstructibleComponents = item.ConstructibleComponents.CollectionEqualsHelper(
+                rhs.ConstructibleComponents,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.RequiredPerks = item.RequiredPerks.CollectionEqualsHelper(
@@ -2582,13 +2582,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ConstructableComponents?.Overall ?? true)
-                && item.ConstructableComponents is {} ConstructableComponentsItem)
+            if ((printMask?.ConstructibleComponents?.Overall ?? true)
+                && item.ConstructibleComponents is {} ConstructibleComponentsItem)
             {
-                sb.AppendLine("ConstructableComponents =>");
+                sb.AppendLine("ConstructibleComponents =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ConstructableComponentsItem)
+                    foreach (var subItem in ConstructibleComponentsItem)
                     {
                         using (sb.Brace())
                         {
@@ -2785,9 +2785,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.ConstructableComponents) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.ConstructibleComponents) ?? true))
             {
-                if (!lhs.ConstructableComponents.SequenceEqualNullable(rhs.ConstructableComponents, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.ConstructableComponents)))) return false;
+                if (!lhs.ConstructibleComponents.SequenceEqualNullable(rhs.ConstructibleComponents, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.ConstructibleComponents)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RequiredPerks) ?? true))
             {
@@ -2916,7 +2916,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.WorkbenchKeyword);
             hash.Add(item.Conditions);
-            hash.Add(item.ConstructableComponents);
+            hash.Add(item.ConstructibleComponents);
             hash.Add(item.RequiredPerks);
             hash.Add(item.CreatedObject);
             hash.Add(item.AmountProduced);
@@ -3000,9 +3000,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ConstructableComponents is {} ConstructableComponentsItem)
+            if (obj.ConstructibleComponents is {} ConstructibleComponentsItem)
             {
-                foreach (var item in ConstructableComponentsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+                foreach (var item in ConstructibleComponentsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -3269,15 +3269,15 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.ConstructableComponents) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.ConstructibleComponents) ?? true))
             {
-                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.ConstructableComponents);
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.ConstructibleComponents);
                 try
                 {
-                    if ((rhs.ConstructableComponents != null))
+                    if ((rhs.ConstructibleComponents != null))
                     {
-                        item.ConstructableComponents = 
-                            rhs.ConstructableComponents
+                        item.ConstructibleComponents = 
+                            rhs.ConstructibleComponents
                             .Select(r =>
                             {
                                 return r.DeepCopy(
@@ -3288,7 +3288,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     else
                     {
-                        item.ConstructableComponents = null;
+                        item.ConstructibleComponents = null;
                     }
                 }
                 catch (Exception ex)
@@ -3732,7 +3732,7 @@ namespace Mutagen.Bethesda.Starfield
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConstructibleObjectComponentGetter>.Instance.Write(
                 writer: writer,
-                items: item.ConstructableComponents,
+                items: item.ConstructibleComponents,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FVPA),
                 transl: (MutagenWriter subWriter, IConstructibleObjectComponentGetter subItem, TypedWriteParams conv) =>
                 {
@@ -3975,12 +3975,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FVPA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ConstructableComponents = 
+                    item.ConstructibleComponents = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ConstructibleObjectComponent>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: ConstructibleObjectComponent.TryCreateFromBinary)
                         .CastExtendedList<ConstructibleObjectComponent>();
-                    return (int)ConstructibleObject_FieldIndex.ConstructableComponents;
+                    return (int)ConstructibleObject_FieldIndex.ConstructibleComponents;
                 }
                 case RecordTypeInts.RQPK:
                 {
@@ -4194,7 +4194,7 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
-        public IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructableComponents { get; private set; }
+        public IReadOnlyList<IConstructibleObjectComponentGetter>? ConstructibleComponents { get; private set; }
         public IReadOnlyList<IConstructibleRequiredPerkGetter>? RequiredPerks { get; private set; }
         #region CreatedObject
         private int? _CreatedObjectLocation;
@@ -4368,13 +4368,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FVPA:
                 {
-                    this.ConstructableComponents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleObjectComponentGetter>(
+                    this.ConstructibleComponents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleObjectComponentGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
-                    return (int)ConstructibleObject_FieldIndex.ConstructableComponents;
+                    return (int)ConstructibleObject_FieldIndex.ConstructibleComponents;
                 }
                 case RecordTypeInts.RQPK:
                 {
