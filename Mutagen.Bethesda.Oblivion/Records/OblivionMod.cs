@@ -543,6 +543,10 @@ partial class OblivionModCommon
             .Sum();
 
         // Tally Worldspace Group Counts
+        count += (uint)item.Worldspaces.Count(wrld => wrld.Road != null || wrld.TopCell != null || (wrld.SubCells?.Count ?? 0) > 0); // World Children
+        count += (uint)item.Worldspaces
+            .Select(wrld => wrld.TopCell)
+            .Sum(topCell => topCell == null ? 0 : cellSubGroupCount(topCell)); // Top cell sub groups
         count += (uint)item.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
         count += (uint)item.Worldspaces
             .SelectMany(wrld => wrld.SubCells)
@@ -554,7 +558,7 @@ partial class OblivionModCommon
             .Sum(cellSubGroupCount); // Cell sub groups
 
         // Tally Dialog Group Counts
-        count += (uint)item.DialogTopics.RecordCache.Count;
+        count += (uint)item.DialogTopics.Count(topic => (topic.Items?.Count ?? 0) > 0);
         
         // Set count
         setter(count);
