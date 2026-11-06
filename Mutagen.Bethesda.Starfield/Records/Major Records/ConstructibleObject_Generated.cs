@@ -93,6 +93,42 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IConstructibleObjectGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
         #region Description
         public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -330,6 +366,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, []);
+                this.Name = initialValue;
                 this.Description = initialValue;
                 this.WorkbenchKeyword = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, []);
@@ -365,6 +402,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem Components,
+                TItem Name,
                 TItem Description,
                 TItem WorkbenchKeyword,
                 TItem Conditions,
@@ -399,6 +437,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, []);
+                this.Name = Name;
                 this.Description = Description;
                 this.WorkbenchKeyword = WorkbenchKeyword;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, []);
@@ -435,6 +474,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem Name;
             public TItem Description;
             public TItem WorkbenchKeyword;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
@@ -473,6 +513,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.WorkbenchKeyword, rhs.WorkbenchKeyword)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
@@ -503,6 +544,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.Components);
+                hash.Add(this.Name);
                 hash.Add(this.Description);
                 hash.Add(this.WorkbenchKeyword);
                 hash.Add(this.Conditions);
@@ -553,6 +595,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.WorkbenchKeyword)) return false;
                 if (this.Conditions != null)
@@ -667,6 +710,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.Name)) return true;
                 if (eval(this.Description)) return true;
                 if (eval(this.WorkbenchKeyword)) return true;
                 if (this.Conditions != null)
@@ -787,6 +831,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
                 obj.WorkbenchKeyword = eval(this.WorkbenchKeyword);
                 if (Conditions != null)
@@ -919,6 +964,10 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
                     }
                     if (printMask?.Description ?? true)
                     {
@@ -1102,6 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? Name;
             public Exception? Description;
             public Exception? WorkbenchKeyword;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
@@ -1137,6 +1187,8 @@ namespace Mutagen.Bethesda.Starfield
                         return VirtualMachineAdapter;
                     case ConstructibleObject_FieldIndex.Components:
                         return Components;
+                    case ConstructibleObject_FieldIndex.Name:
+                        return Name;
                     case ConstructibleObject_FieldIndex.Description:
                         return Description;
                     case ConstructibleObject_FieldIndex.WorkbenchKeyword:
@@ -1198,6 +1250,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ConstructibleObject_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.Name:
+                        this.Name = ex;
                         break;
                     case ConstructibleObject_FieldIndex.Description:
                         this.Description = ex;
@@ -1285,6 +1340,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
+                    case ConstructibleObject_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
                     case ConstructibleObject_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
@@ -1365,6 +1423,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (Components != null) return true;
+                if (Name != null) return true;
                 if (Description != null) return true;
                 if (WorkbenchKeyword != null) return true;
                 if (Conditions != null) return true;
@@ -1432,6 +1491,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                }
+                {
+                    sb.AppendItem(Name, "Name");
                 }
                 {
                     sb.AppendItem(Description, "Description");
@@ -1583,6 +1645,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
@@ -1630,6 +1693,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public AComponent.TranslationMask? Components;
+            public bool Name;
             public bool Description;
             public bool WorkbenchKeyword;
             public Condition.TranslationMask? Conditions;
@@ -1661,6 +1725,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.WorkbenchKeyword = defaultOn;
                 this.CreatedObject = defaultOn;
@@ -1686,6 +1751,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((WorkbenchKeyword, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
@@ -1866,16 +1932,24 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
+        INamed,
+        INamedRequired,
         IResearchResourceTarget,
         IResourceTarget,
         IScripted,
-        IStarfieldMajorRecordInternal
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         /// <summary>
         /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<AComponent> Components { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1922,9 +1996,13 @@ namespace Mutagen.Bethesda.Starfield
         IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
         IResearchResourceTargetGetter,
         IResourceTargetGetter,
-        IScriptedGetter
+        IScriptedGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
         #region VirtualMachineAdapter
@@ -1934,6 +2012,12 @@ namespace Mutagen.Bethesda.Starfield
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         IReadOnlyList<IAComponentGetter> Components { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -2139,29 +2223,30 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         VirtualMachineAdapter = 7,
         Components = 8,
-        Description = 9,
-        WorkbenchKeyword = 10,
-        Conditions = 11,
-        ConstructableComponents = 12,
-        RequiredPerks = 13,
-        CreatedObject = 14,
-        AmountProduced = 15,
-        MenuSortOrder = 16,
-        Tier = 17,
-        CraftingSound = 18,
-        PickupSound = 19,
-        DropdownSound = 20,
-        RepairComponents = 21,
-        LearnMethod = 22,
-        Value = 23,
-        MenuArtObject = 24,
-        LearnedFrom = 25,
-        BaseReturnScaleTable = 26,
-        LearnChance = 27,
-        MaxBuildCountGlobal = 28,
-        RecipeFilters = 29,
-        InstantiationFilterKeyword = 30,
-        Flags = 31,
+        Name = 9,
+        Description = 10,
+        WorkbenchKeyword = 11,
+        Conditions = 12,
+        ConstructableComponents = 13,
+        RequiredPerks = 14,
+        CreatedObject = 15,
+        AmountProduced = 16,
+        MenuSortOrder = 17,
+        Tier = 18,
+        CraftingSound = 19,
+        PickupSound = 20,
+        DropdownSound = 21,
+        RepairComponents = 22,
+        LearnMethod = 23,
+        Value = 24,
+        MenuArtObject = 25,
+        LearnedFrom = 26,
+        BaseReturnScaleTable = 27,
+        LearnChance = 28,
+        MaxBuildCountGlobal = 29,
+        RecipeFilters = 30,
+        InstantiationFilterKeyword = 31,
+        Flags = 32,
     }
     #endregion
 
@@ -2172,9 +2257,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 25;
+        public const ushort AdditionalFieldCount = 26;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -2211,6 +2296,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
+                RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.BNAM,
                 RecordTypes.CTDA,
@@ -2283,6 +2369,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Components.Clear();
+            item.Name = default;
             item.Description = default;
             item.WorkbenchKeyword.Clear();
             item.Conditions.Clear();
@@ -2441,6 +2528,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
@@ -2558,6 +2646,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
@@ -2773,6 +2866,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Components)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
@@ -2910,6 +3007,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.Components);
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
             if (item.Description is {} Descriptionitem)
             {
                 hash.Add(Descriptionitem);
@@ -3236,6 +3337,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Description) ?? true))
             {
@@ -3711,6 +3816,12 @@ namespace Mutagen.Bethesda.Starfield
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
@@ -3944,6 +4055,17 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams,
                             transl: AComponent.TryCreateFromBinary));
                     return (int)ConstructibleObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)ConstructibleObject_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -4185,6 +4307,18 @@ namespace Mutagen.Bethesda.Starfield
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = [];
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
         #region Description
         private int? _DescriptionLocation;
         public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -4340,6 +4474,11 @@ namespace Mutagen.Bethesda.Starfield
                         trigger: AComponent_Registration.TriggerSpecs,
                         factory: AComponentBinaryOverlay.AComponentFactory);
                     return (int)ConstructibleObject_FieldIndex.Components;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {

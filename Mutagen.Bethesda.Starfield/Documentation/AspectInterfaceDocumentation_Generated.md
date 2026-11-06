@@ -261,6 +261,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Cell
 - Class
 - CollisionLayer
+- ConstructibleObject
 - Container
 - ContainerModification
 - DamageType
@@ -684,6 +685,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### ConstructibleObject
 - IHaveVirtualMachineAdapter
+- INamed
 - IScripted
 ### Container
 - IHasDestructible
