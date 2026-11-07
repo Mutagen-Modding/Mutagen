@@ -25,6 +25,8 @@ public class CountedListShortCountTests
 {
     private const int PerksListed = 2;
     private static readonly RecordType PerkCount = new("PRKZ");
+    private const int SpellsListed = 2;
+    private static readonly RecordType SpellCount = new("SPCT");
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
     public void Skyrim_ACountBelowThePerksListed_ReadsEveryPerk(
@@ -42,8 +44,8 @@ public class CountedListShortCountTests
             .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
-        OverwritePerkCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, 1);
-        OverwritePerkCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, 0);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, PerkCount, 1);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, PerkCount, 0);
 
         var reimport = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
             .FromPath(modPath)
@@ -70,8 +72,8 @@ public class CountedListShortCountTests
             .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
-        OverwritePerkCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, 1);
-        OverwritePerkCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, 0);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, PerkCount, 1);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, PerkCount, 0);
 
         var reimport = Fallout4Mod.Create(Fallout4Release.Fallout4)
             .FromPath(modPath)
@@ -98,8 +100,8 @@ public class CountedListShortCountTests
             .WithNoLoadOrder()
             .WithFileSystem(fileSystem)
             .Write();
-        OverwritePerkCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, 1);
-        OverwritePerkCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, 0);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, PerkCount, 1);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, PerkCount, 0);
 
         var reimport = StarfieldMod.Create(StarfieldRelease.Starfield)
             .FromPath(modPath)
@@ -111,24 +113,90 @@ public class CountedListShortCountTests
         reimport.Npcs[countsNone.FormKey].Perks.ShouldNotBeNull().Count.ShouldBe(PerksListed);
     }
 
+    // Spells are a counted list of single FormLink subrecords (SPCT + SPLO), which parse through the
+    // sub-parse-delegate counted overload rather than the trigger-spec one the perk tests cover.
+    [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
+    public void Skyrim_ACountBelowTheSpellsListed_ReadsEverySpell(
+        IFileSystem fileSystem,
+        SkyrimMod mod,
+        SkyrimNpc countsOne,
+        SkyrimNpc countsNone,
+        DirectoryPath existingDirectory)
+    {
+        countsOne.ActorEffect = SpellsOf<Mutagen.Bethesda.Skyrim.ISpellRecordGetter>(mod.ModKey);
+        countsNone.ActorEffect = SpellsOf<Mutagen.Bethesda.Skyrim.ISpellRecordGetter>(mod.ModKey);
+        var modPath = PathFor(mod, existingDirectory);
+        mod.BeginWrite
+            .ToPath(modPath)
+            .WithNoLoadOrder()
+            .WithFileSystem(fileSystem)
+            .Write();
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, SpellCount, 1);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, SpellCount, 0);
+
+        var reimport = SkyrimMod.Create(SkyrimRelease.SkyrimSE)
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Mutable()
+            .Construct();
+        reimport.Npcs[countsOne.FormKey].ActorEffect.ShouldNotBeNull().Count.ShouldBe(SpellsListed);
+        reimport.Npcs[countsNone.FormKey].ActorEffect.ShouldNotBeNull().Count.ShouldBe(SpellsListed);
+    }
+
+    [Theory, MutagenModAutoData(GameRelease.Fallout4)]
+    public void Fallout4_ACountBelowTheSpellsListed_ReadsEverySpell(
+        IFileSystem fileSystem,
+        Fallout4Mod mod,
+        Fallout4Npc countsOne,
+        Fallout4Npc countsNone,
+        DirectoryPath existingDirectory)
+    {
+        countsOne.ActorEffect = SpellsOf<Mutagen.Bethesda.Fallout4.ISpellRecordGetter>(mod.ModKey);
+        countsNone.ActorEffect = SpellsOf<Mutagen.Bethesda.Fallout4.ISpellRecordGetter>(mod.ModKey);
+        var modPath = PathFor(mod, existingDirectory);
+        mod.BeginWrite
+            .ToPath(modPath)
+            .WithNoLoadOrder()
+            .WithFileSystem(fileSystem)
+            .Write();
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsOne.FormKey, SpellCount, 1);
+        OverwriteCount(fileSystem, modPath, mod.GameRelease, countsNone.FormKey, SpellCount, 0);
+
+        var reimport = Fallout4Mod.Create(Fallout4Release.Fallout4)
+            .FromPath(modPath)
+            .WithFileSystem(fileSystem)
+            .Mutable()
+            .Construct();
+        reimport.Npcs[countsOne.FormKey].ActorEffect.ShouldNotBeNull().Count.ShouldBe(SpellsListed);
+        reimport.Npcs[countsNone.FormKey].ActorEffect.ShouldNotBeNull().Count.ShouldBe(SpellsListed);
+    }
+
     private static ExtendedList<T> PerksOf<T>()
         where T : new()
     {
         return new ExtendedList<T>(Enumerable.Range(0, PerksListed).Select(_ => new T()));
     }
 
+    private static ExtendedList<IFormLinkGetter<TSpell>> SpellsOf<TSpell>(ModKey modKey)
+        where TSpell : class, IMajorRecordGetter
+    {
+        return new ExtendedList<IFormLinkGetter<TSpell>>(
+            Enumerable.Range(0, SpellsListed)
+                .Select(i => (IFormLinkGetter<TSpell>)new FormLink<TSpell>(new FormKey(modKey, 0x900 + (uint)i))));
+    }
+
     private static ModPath PathFor(IModGetter mod, DirectoryPath directory) =>
         new(mod.ModKey, Path.Combine(directory, mod.ModKey.FileName));
 
-    private static void OverwritePerkCount(IFileSystem fileSystem, ModPath modPath, GameRelease release, FormKey npc, uint count)
+    private static void OverwriteCount(IFileSystem fileSystem, ModPath modPath, GameRelease release, FormKey record, RecordType counter, uint count)
     {
         var bytes = fileSystem.File.ReadAllBytes(modPath);
         var recordStart = checked((int)RecordLocator.GetLocations(modPath, release, loadOrder: null, fileSystem: fileSystem)
-            .GetRecord(npc).Location.Min);
-        var perkCount = GameConstants.Get(release)
+            .GetRecord(record).Location.Min);
+        var countSubrecord = GameConstants.Get(release)
             .MajorRecord(new ReadOnlyMemorySlice<byte>(bytes).Slice(recordStart))
-            .FindSubrecord(PerkCount);
-        BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(recordStart + perkCount.ContentLocation), count);
+            .FindSubrecord(counter);
+        BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(recordStart + countSubrecord.ContentLocation), count);
         fileSystem.File.WriteAllBytes(modPath, bytes);
     }
 }
