@@ -585,120 +585,45 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         MutagenFrame reader, 
         int amount, 
         RecordType triggeringRecord, 
-        BinaryMasterParseDelegate<T> transl, 
-        TypedParseParams translationParams = default) 
-    { 
-        translationParams = translationParams.ShortCircuit(); 
-        var ret = new ExtendedList<T>(); 
-        if (amount == 0) return ret; 
-        var startingPos = reader.Position; 
-        for (int i = 0; i < amount; i++) 
-        { 
-            var subHeader = reader.GetSubrecordHeader(); 
-            if (subHeader.RecordType != triggeringRecord) 
-            { 
-                // Unexpected, but shouldn't throw if we can help it 
-                // Analyzers should be the ones complaining about count not being accurate 
-                break; 
-            } 
-            if (!IsLoqui) 
-            { 
-                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
-            } 
-            if (transl(reader, out var subIitem, translationParams)) 
-            { 
-                ret.Add(subIitem); 
-            } 
-        } 
-        if (reader.Position == startingPos) 
-        { 
-            throw SubrecordException.Enrich( 
-                new MalformedDataException($"Parsed item on the list consumed no data."), 
-                triggeringRecord); 
-        } 
-        return ret; 
-    } 
- 
-    public ExtendedList<T> ParsePerItem( 
-        MutagenFrame reader, 
-        RecordType triggeringRecord, 
-        RecordType countRecord, 
-        int countLengthLength, 
-        BinaryMasterParseDelegate<T> transl, 
-        TypedParseParams translationParams = default) 
-    { 
-        translationParams = translationParams.ShortCircuit(); 
-        var subHeader = reader.GetSubrecord(); 
-        var recType = subHeader.RecordType; 
-        if (recType == countRecord) 
-        { 
-            var count = countLengthLength switch 
-            { 
-                1 => subHeader.Content[0], 
-                2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content), 
-                4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)), 
-                _ => throw new NotImplementedException(), 
-            }; 
-            reader.Position += subHeader.TotalLength; 
-            return ParsePerItem( 
-                reader, 
-                count, 
-                triggeringRecord, 
-                transl, 
-                translationParams); 
-        } 
-        else 
-        { 
-            return Parse( 
-                reader, 
-                triggeringRecord, 
-                transl, 
-                translationParams); 
-        } 
-    } 
- 
-    public ExtendedList<T> ParsePerItem( 
-        MutagenFrame reader, 
-        int amount, 
-        RecordType triggeringRecord, 
         BinarySubParseDelegate<MutagenFrame, T> transl) 
     { 
-        var ret = new ExtendedList<T>(); 
-        if (amount == 0) return ret; 
-        var startingPos = reader.Position; 
-        for (int i = 0; i < amount; i++) 
-        { 
-            var subHeader = reader.GetSubrecordHeader(); 
-            if (subHeader.RecordType != triggeringRecord) 
-            { 
-                throw SubrecordException.Enrich( 
-                    new MalformedDataException($"Unexpected record encountered: {subHeader.RecordType}"), 
-                    triggeringRecord); 
-            } 
-            if (!IsLoqui) 
-            { 
+        var ret = new ExtendedList<T>();
+        // Plugins can count fewer entries than follow, so read on past the count while entries follow.
+        for (int i = 0; i < amount || !reader.Complete; i++)
+        {
+            var startingPos = reader.Position;
+            var subHeader = reader.GetSubrecordHeader();
+            if (subHeader.RecordType != triggeringRecord)
+            {
+                if (i >= amount) break;
+                throw SubrecordException.Enrich(
+                    new MalformedDataException($"Unexpected record encountered: {subHeader.RecordType}"),
+                    triggeringRecord);
+            }
+            if (!IsLoqui)
+            {
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
-                if (transl(reader.SpawnWithLength(subHeader.ContentLength), out var subIitem)) 
-                { 
-                    ret.Add(subIitem); 
-                } 
+                if (transl(reader.SpawnWithLength(subHeader.ContentLength), out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
             }
             else
             {
-                if (transl(reader, out var subIitem)) 
-                { 
-                    ret.Add(subIitem); 
-                } 
+                if (transl(reader, out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
             }
-        } 
-        if (reader.Position == startingPos) 
-        { 
-            throw SubrecordException.Enrich( 
-                new MalformedDataException($"Parsed item on the list consumed no data."), 
-                triggeringRecord); 
-        } 
-        return ret; 
-    } 
+            if (reader.Position == startingPos)
+            {
+                throw SubrecordException.Enrich(
+                    new MalformedDataException($"Parsed item on the list consumed no data."),
+                    triggeringRecord);
+            }
+        }
+        return ret;
+    }
  
     public ExtendedList<T> ParsePerItem( 
         MutagenFrame reader, 
@@ -771,6 +696,14 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             reader.Position += subHeader.TotalLength;
             return [];
         }
+        else if (endMarker == null)
+        {
+            return Parse(
+                reader,
+                transl,
+                triggeringRecord,
+                translationParams);
+        }
         else
         { 
             return Parse( 
@@ -792,9 +725,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         if (amount == 0 && nullIfZero) return []; 
         translationParams = translationParams.ShortCircuit(); 
         var ret = new ExtendedList<T>(); 
-        var startingPos = reader.Position; 
-        for (int i = 0; i < amount; i++) 
+        // Plugins can count fewer entries than follow. An entry that can open with any of several subrecords
+        // would read as two if its subrecords were out of order, so only a single-trigger list reads on.
+        var readPastCount = triggeringRecord?.TriggeringRecordTypes.Count == 1;
+        for (int i = 0; i < amount || (readPastCount && !reader.Complete); i++)
         { 
+            var startingPos = reader.Position;
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader); 
             if (endMarker == nextRecord)
             {
