@@ -246,8 +246,6 @@ public class Fallout3Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var sizeChange = 0;
-
         if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec))
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
@@ -344,24 +342,6 @@ public class Fallout3Processor : Processor
                 ProcessFormIDOverflow(sub, fileOffset);
             }
         }
-
-        // Mutagen skips XRMR (BoundData) entirely when LinkedRoomsCount and Unknown are both zero.
-        // Mirror that by removing a fully-zero XRMR subrecord from the reference.
-        if (majorFrame.TryFindSubrecord(RecordTypes.XRMR, out var xrmrRec)
-            && xrmrRec.ContentLength == 4
-            && xrmrRec.AsInt32() == 0)
-        {
-            Instructions.SetRemove(
-                RangeInt64.FromLength(
-                    fileOffset + xrmrRec.Location,
-                    xrmrRec.TotalLength));
-            sizeChange -= (int)xrmrRec.TotalLength;
-        }
-
-        ProcessLengths(
-            majorFrame,
-            sizeChange,
-            fileOffset);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
