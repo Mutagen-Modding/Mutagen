@@ -22,6 +22,16 @@ public class FormLinkInformationTests
         fk.Type.ShouldBe(typeof(Npc));
     }
 
+    [Theory]
+    [InlineData("123456:Skyrim.esm<Mutagen.Bethesda.Skyrim.Npc>")]
+    [InlineData("123456:Skyrim.esm<Bethesda.Skyrim.Npc>")]
+    public void FromStringWithNamespacePrefix(string str)
+    {
+        var fk = FormLinkInformation.Factory(str);
+        fk.FormKey.ShouldBe(FormKey.Factory("123456:Skyrim.esm"));
+        fk.Type.ShouldBe(typeof(Npc));
+    }
+
     [Fact]
     public void TryToStandardizedIdentifier()
     {
