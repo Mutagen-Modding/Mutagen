@@ -290,6 +290,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> INpcGetter.AttackRace => this.AttackRace;
         #endregion
+        #region Attacks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public ExtendedList<Attack> Attacks
+        {
+            get => this._Attacks;
+            init => this._Attacks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAttackGetter> INpcGetter.Attacks => _Attacks;
+        #endregion
+
+        #endregion
         #region SpectatorOverridePackageList
         private readonly IFormLinkNullable<IFormListGetter> _SpectatorOverridePackageList = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList
@@ -891,6 +905,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, []);
                 this.Skin = initialValue;
                 this.AttackRace = initialValue;
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(initialValue, []);
                 this.SpectatorOverridePackageList = initialValue;
                 this.CombatOverridePackageList = initialValue;
                 this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(initialValue, []);
@@ -989,6 +1004,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ActorEffect,
                 TItem Skin,
                 TItem AttackRace,
+                TItem Attacks,
                 TItem SpectatorOverridePackageList,
                 TItem CombatOverridePackageList,
                 TItem Perks,
@@ -1086,6 +1102,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, []);
                 this.Skin = Skin;
                 this.AttackRace = AttackRace;
+                this.Attacks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>(Attacks, []);
                 this.SpectatorOverridePackageList = SpectatorOverridePackageList;
                 this.CombatOverridePackageList = CombatOverridePackageList;
                 this.Perks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>(Perks, []);
@@ -1185,6 +1202,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ActorEffect;
             public TItem Skin;
             public TItem AttackRace;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Attack.Mask<TItem>?>>?>? Attacks;
             public TItem SpectatorOverridePackageList;
             public TItem CombatOverridePackageList;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkPlacement.Mask<TItem>?>>?>? Perks;
@@ -1286,6 +1304,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ActorEffect, rhs.ActorEffect)) return false;
                 if (!object.Equals(this.Skin, rhs.Skin)) return false;
                 if (!object.Equals(this.AttackRace, rhs.AttackRace)) return false;
+                if (!object.Equals(this.Attacks, rhs.Attacks)) return false;
                 if (!object.Equals(this.SpectatorOverridePackageList, rhs.SpectatorOverridePackageList)) return false;
                 if (!object.Equals(this.CombatOverridePackageList, rhs.CombatOverridePackageList)) return false;
                 if (!object.Equals(this.Perks, rhs.Perks)) return false;
@@ -1379,6 +1398,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ActorEffect);
                 hash.Add(this.Skin);
                 hash.Add(this.AttackRace);
+                hash.Add(this.Attacks);
                 hash.Add(this.SpectatorOverridePackageList);
                 hash.Add(this.CombatOverridePackageList);
                 hash.Add(this.Perks);
@@ -1533,6 +1553,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.Skin)) return false;
                 if (!eval(this.AttackRace)) return false;
+                if (this.Attacks != null)
+                {
+                    if (!eval(this.Attacks.Overall)) return false;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.SpectatorOverridePackageList)) return false;
                 if (!eval(this.CombatOverridePackageList)) return false;
                 if (this.Perks != null)
@@ -1857,6 +1889,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.Skin)) return true;
                 if (eval(this.AttackRace)) return true;
+                if (this.Attacks != null)
+                {
+                    if (eval(this.Attacks.Overall)) return true;
+                    if (this.Attacks.Specific != null)
+                    {
+                        foreach (var item in this.Attacks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.SpectatorOverridePackageList)) return true;
                 if (eval(this.CombatOverridePackageList)) return true;
                 if (this.Perks != null)
@@ -2173,6 +2217,21 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.Skin = eval(this.Skin);
                 obj.AttackRace = eval(this.AttackRace);
+                if (Attacks != null)
+                {
+                    obj.Attacks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Attack.Mask<R>?>>?>(eval(this.Attacks.Overall), []);
+                    if (Attacks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Attack.Mask<R>?>>();
+                        obj.Attacks.Specific = l;
+                        foreach (var item in Attacks.Specific)
+                        {
+                            MaskItemIndexed<R, Attack.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Attack.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.SpectatorOverridePackageList = eval(this.SpectatorOverridePackageList);
                 obj.CombatOverridePackageList = eval(this.CombatOverridePackageList);
                 if (Perks != null)
@@ -2608,6 +2667,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.AttackRace ?? true)
                     {
                         sb.AppendItem(AttackRace, "AttackRace");
+                    }
+                    if ((printMask?.Attacks?.Overall ?? true)
+                        && Attacks is {} AttacksItem)
+                    {
+                        sb.AppendLine("Attacks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AttacksItem.Overall);
+                            if (AttacksItem.Specific != null)
+                            {
+                                foreach (var subItem in AttacksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.SpectatorOverridePackageList ?? true)
                     {
@@ -3129,6 +3207,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ActorEffect;
             public Exception? Skin;
             public Exception? AttackRace;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>? Attacks;
             public Exception? SpectatorOverridePackageList;
             public Exception? CombatOverridePackageList;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>? Perks;
@@ -3251,6 +3330,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Skin;
                     case Npc_FieldIndex.AttackRace:
                         return AttackRace;
+                    case Npc_FieldIndex.Attacks:
+                        return Attacks;
                     case Npc_FieldIndex.SpectatorOverridePackageList:
                         return SpectatorOverridePackageList;
                     case Npc_FieldIndex.CombatOverridePackageList:
@@ -3462,6 +3543,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Npc_FieldIndex.AttackRace:
                         this.AttackRace = ex;
+                        break;
+                    case Npc_FieldIndex.Attacks:
+                        this.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(ex, null);
                         break;
                     case Npc_FieldIndex.SpectatorOverridePackageList:
                         this.SpectatorOverridePackageList = ex;
@@ -3738,6 +3822,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.AttackRace:
                         this.AttackRace = (Exception?)obj;
                         break;
+                    case Npc_FieldIndex.Attacks:
+                        this.Attacks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>)obj;
+                        break;
                     case Npc_FieldIndex.SpectatorOverridePackageList:
                         this.SpectatorOverridePackageList = (Exception?)obj;
                         break;
@@ -3959,6 +4046,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ActorEffect != null) return true;
                 if (Skin != null) return true;
                 if (AttackRace != null) return true;
+                if (Attacks != null) return true;
                 if (SpectatorOverridePackageList != null) return true;
                 if (CombatOverridePackageList != null) return true;
                 if (Perks != null) return true;
@@ -4159,6 +4247,24 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 {
                     sb.AppendItem(AttackRace, "AttackRace");
+                }
+                if (Attacks is {} AttacksItem)
+                {
+                    sb.AppendLine("Attacks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AttacksItem.Overall);
+                        if (AttacksItem.Specific != null)
+                        {
+                            foreach (var subItem in AttacksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 {
                     sb.AppendItem(SpectatorOverridePackageList, "SpectatorOverridePackageList");
@@ -4609,6 +4715,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.AttackRace = this.AttackRace.Combine(rhs.AttackRace);
+                ret.Attacks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Attack.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Attacks?.Overall, rhs.Attacks?.Overall), Noggog.ExceptionExt.Combine(this.Attacks?.Specific, rhs.Attacks?.Specific));
                 ret.SpectatorOverridePackageList = this.SpectatorOverridePackageList.Combine(rhs.SpectatorOverridePackageList);
                 ret.CombatOverridePackageList = this.CombatOverridePackageList.Combine(rhs.CombatOverridePackageList);
                 ret.Perks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkPlacement.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Perks?.Overall, rhs.Perks?.Overall), Noggog.ExceptionExt.Combine(this.Perks?.Specific, rhs.Perks?.Specific));
@@ -4719,6 +4826,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool ActorEffect;
             public bool Skin;
             public bool AttackRace;
+            public Attack.TranslationMask? Attacks;
             public bool SpectatorOverridePackageList;
             public bool CombatOverridePackageList;
             public PerkPlacement.TranslationMask? Perks;
@@ -4889,6 +4997,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ActorEffect, null));
                 ret.Add((Skin, null));
                 ret.Add((AttackRace, null));
+                ret.Add((Attacks == null ? DefaultOn : !Attacks.GetCrystal().CopyNothing, Attacks?.GetCrystal()));
                 ret.Add((SpectatorOverridePackageList, null));
                 ret.Add((CombatOverridePackageList, null));
                 ret.Add((Perks == null ? DefaultOn : !Perks.GetCrystal().CopyNothing, Perks?.GetCrystal()));
@@ -5155,6 +5264,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; }
         new IFormLinkNullable<IArmorGetter> Skin { get; set; }
         new IFormLinkNullable<IRaceGetter> AttackRace { get; set; }
+        new ExtendedList<Attack> Attacks { get; }
         new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; set; }
         new IFormLinkNullable<IFormListGetter> CombatOverridePackageList { get; set; }
         new ExtendedList<PerkPlacement>? Perks { get; set; }
@@ -5297,6 +5407,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; }
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }
+        IReadOnlyList<IAttackGetter> Attacks { get; }
         IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList { get; }
         IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList { get; }
         IReadOnlyList<IPerkPlacementGetter>? Perks { get; }
@@ -5575,68 +5686,69 @@ namespace Mutagen.Bethesda.Starfield
         ActorEffect = 30,
         Skin = 31,
         AttackRace = 32,
-        SpectatorOverridePackageList = 33,
-        CombatOverridePackageList = 34,
-        Perks = 35,
-        Properties = 36,
-        ForcedLocations = 37,
-        NativeTerminal = 38,
-        Items = 39,
-        Aggression = 40,
-        Confidence = 41,
-        EnergyLevel = 42,
-        Responsibility = 43,
-        Mood = 44,
-        Assistance = 45,
-        UnknownAIDT = 46,
-        Packages = 47,
-        FLEE = 48,
-        RDSAs = 49,
-        Keywords = 50,
-        AttachParentSlots = 51,
-        ObjectTemplates = 52,
-        Class = 53,
-        Name = 54,
-        ShortName = 55,
-        LongName = 56,
-        CalculatedHealth = 57,
-        CalculatedActionPoints = 58,
-        FarAwayModelDistance = 59,
-        GearedUpWeapons = 60,
-        Unused = 61,
-        HCLR = 62,
-        BCLR = 63,
-        HeadParts = 64,
-        CombatStyle = 65,
-        NAM5 = 66,
-        HeightMin = 67,
-        HeightMax = 68,
-        Weight = 69,
-        Sounds = 70,
-        InheritsSoundsFrom = 71,
-        CompanionInfoQuest = 72,
-        CompanionInfoDialogue = 73,
-        DefaultOutfit = 74,
-        SpaceOutfit = 75,
-        DefaultPackageList = 76,
-        CrimeFaction = 77,
-        FormationFaction = 78,
-        Tints = 79,
-        BodyMorphRegionValues = 80,
-        FaceDialPositions = 81,
-        FaceMorphs = 82,
-        MorphBlends = 83,
-        ActivateTextOverride = 84,
-        SkinToneIndex = 85,
-        EYEC = 86,
-        HairColor = 87,
-        FacialHairColor = 88,
-        EyebrowColor = 89,
-        EyeColor = 90,
-        JewelryColor = 91,
-        TeethColor = 92,
-        Pronoun = 93,
-        ONA2 = 94,
+        Attacks = 33,
+        SpectatorOverridePackageList = 34,
+        CombatOverridePackageList = 35,
+        Perks = 36,
+        Properties = 37,
+        ForcedLocations = 38,
+        NativeTerminal = 39,
+        Items = 40,
+        Aggression = 41,
+        Confidence = 42,
+        EnergyLevel = 43,
+        Responsibility = 44,
+        Mood = 45,
+        Assistance = 46,
+        UnknownAIDT = 47,
+        Packages = 48,
+        FLEE = 49,
+        RDSAs = 50,
+        Keywords = 51,
+        AttachParentSlots = 52,
+        ObjectTemplates = 53,
+        Class = 54,
+        Name = 55,
+        ShortName = 56,
+        LongName = 57,
+        CalculatedHealth = 58,
+        CalculatedActionPoints = 59,
+        FarAwayModelDistance = 60,
+        GearedUpWeapons = 61,
+        Unused = 62,
+        HCLR = 63,
+        BCLR = 64,
+        HeadParts = 65,
+        CombatStyle = 66,
+        NAM5 = 67,
+        HeightMin = 68,
+        HeightMax = 69,
+        Weight = 70,
+        Sounds = 71,
+        InheritsSoundsFrom = 72,
+        CompanionInfoQuest = 73,
+        CompanionInfoDialogue = 74,
+        DefaultOutfit = 75,
+        SpaceOutfit = 76,
+        DefaultPackageList = 77,
+        CrimeFaction = 78,
+        FormationFaction = 79,
+        Tints = 80,
+        BodyMorphRegionValues = 81,
+        FaceDialPositions = 82,
+        FaceMorphs = 83,
+        MorphBlends = 84,
+        ActivateTextOverride = 85,
+        SkinToneIndex = 86,
+        EYEC = 87,
+        HairColor = 88,
+        FacialHairColor = 89,
+        EyebrowColor = 90,
+        EyeColor = 91,
+        JewelryColor = 92,
+        TeethColor = 93,
+        Pronoun = 94,
+        ONA2 = 95,
     }
     #endregion
 
@@ -5647,9 +5759,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 88;
+        public const ushort AdditionalFieldCount = 89;
 
-        public const ushort FieldCount = 95;
+        public const ushort FieldCount = 96;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -5704,6 +5816,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SPLO,
                 RecordTypes.WNAM,
                 RecordTypes.ATKR,
+                RecordTypes.ATKD,
+                RecordTypes.ATKE,
+                RecordTypes.ATKW,
+                RecordTypes.ATKS,
+                RecordTypes.ATKT,
                 RecordTypes.SPOR,
                 RecordTypes.ECOR,
                 RecordTypes.PRKR,
@@ -5846,6 +5963,7 @@ namespace Mutagen.Bethesda.Starfield
             item.ActorEffect.Clear();
             item.Skin.Clear();
             item.AttackRace.Clear();
+            item.Attacks.Clear();
             item.SpectatorOverridePackageList.Clear();
             item.CombatOverridePackageList.Clear();
             item.Perks = null;
@@ -5940,6 +6058,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ActorEffect.RemapLinks(mapping);
             obj.Skin.Relink(mapping);
             obj.AttackRace.Relink(mapping);
+            obj.Attacks.RemapLinks(mapping);
             obj.SpectatorOverridePackageList.Relink(mapping);
             obj.CombatOverridePackageList.Relink(mapping);
             obj.Perks?.RemapLinks(mapping);
@@ -6107,6 +6226,10 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.Skin = item.Skin.Equals(rhs.Skin);
             ret.AttackRace = item.AttackRace.Equals(rhs.AttackRace);
+            ret.Attacks = item.Attacks.CollectionEqualsHelper(
+                rhs.Attacks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.SpectatorOverridePackageList = item.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList);
             ret.CombatOverridePackageList = item.CombatOverridePackageList.Equals(rhs.CombatOverridePackageList);
             ret.Perks = item.Perks.CollectionEqualsHelper(
@@ -6413,6 +6536,20 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.AttackRace ?? true)
             {
                 sb.AppendItem(item.AttackRace.FormKeyNullable, "AttackRace");
+            }
+            if (printMask?.Attacks?.Overall ?? true)
+            {
+                sb.AppendLine("Attacks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Attacks)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if (printMask?.SpectatorOverridePackageList ?? true)
             {
@@ -7020,6 +7157,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
+            {
+                if (!lhs.Attacks.SequenceEqual(rhs.Attacks, (l, r) => ((AttackCommon)((IAttackGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.Attacks)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
                 if (!lhs.SpectatorOverridePackageList.Equals(rhs.SpectatorOverridePackageList)) return false;
@@ -7349,6 +7490,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ActorEffect);
             hash.Add(item.Skin);
             hash.Add(item.AttackRace);
+            hash.Add(item.Attacks);
             hash.Add(item.SpectatorOverridePackageList);
             hash.Add(item.CombatOverridePackageList);
             hash.Add(item.Perks);
@@ -7566,6 +7708,10 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.AttackRace, out var AttackRaceInfo))
             {
                 yield return AttackRaceInfo;
+            }
+            foreach (var item in obj.Attacks.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             if (FormLinkInformation.TryFactory(obj.SpectatorOverridePackageList, out var SpectatorOverridePackageListInfo))
             {
@@ -8090,6 +8236,30 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AttackRace) ?? true))
             {
                 item.AttackRace.SetTo(rhs.AttackRace.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Attacks) ?? true))
+            {
+                errorMask?.PushIndex((int)Npc_FieldIndex.Attacks);
+                try
+                {
+                    item.Attacks.SetTo(
+                        rhs.Attacks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.SpectatorOverridePackageList) ?? true))
             {
@@ -9070,6 +9240,17 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.AttackRace,
                 header: translationParams.ConvertToCustom(RecordTypes.ATKR));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAttackGetter>.Instance.Write(
+                writer: writer,
+                items: item.Attacks,
+                transl: (MutagenWriter subWriter, IAttackGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpectatorOverridePackageList,
@@ -9688,6 +9869,20 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttackRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Npc_FieldIndex.AttackRace;
+                }
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
+                case RecordTypeInts.ATKW:
+                case RecordTypeInts.ATKS:
+                case RecordTypeInts.ATKT:
+                {
+                    item.Attacks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Attack_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Attack.TryCreateFromBinary));
+                    return (int)Npc_FieldIndex.Attacks;
                 }
                 case RecordTypeInts.SPOR:
                 {
@@ -10341,6 +10536,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _AttackRaceLocation;
         public IFormLinkNullableGetter<IRaceGetter> AttackRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _AttackRaceLocation);
         #endregion
+        public IReadOnlyList<IAttackGetter> Attacks { get; private set; } = [];
         #region SpectatorOverridePackageList
         private int? _SpectatorOverridePackageListLocation;
         public IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SpectatorOverridePackageListLocation);
@@ -10762,6 +10958,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _AttackRaceLocation = (stream.Position - offset);
                     return (int)Npc_FieldIndex.AttackRace;
+                }
+                case RecordTypeInts.ATKD:
+                case RecordTypeInts.ATKE:
+                case RecordTypeInts.ATKW:
+                case RecordTypeInts.ATKS:
+                case RecordTypeInts.ATKT:
+                {
+                    this.Attacks = this.ParseRepeatedTypelessSubrecord<IAttackGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: Attack_Registration.TriggerSpecs,
+                        factory: AttackBinaryOverlay.AttackFactory);
+                    return (int)Npc_FieldIndex.Attacks;
                 }
                 case RecordTypeInts.SPOR:
                 {
