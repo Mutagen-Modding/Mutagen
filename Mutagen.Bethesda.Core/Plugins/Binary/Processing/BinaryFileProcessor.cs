@@ -76,6 +76,7 @@ public sealed class BinaryFileProcessor : Stream
     private readonly List<byte> _expandableBuffer = new List<byte>();
     private int bufferPos;
     private int bufferEnd;
+    private int sourceBufferLength;
     private int extraRead;
     private long _position;
     private bool done;
@@ -125,15 +126,12 @@ public sealed class BinaryFileProcessor : Stream
         {
             throw new ArgumentException("Get next buffer called when current buffer was not fully used.");
         }
-        if (bufferEnd != 0
-            || _position != 0)
-        {
-            _position += _buffer.Length + extraRead;
-        }
+        _position += sourceBufferLength + extraRead;
         bufferPos = 0;
         var prevExtraRead = extraRead;
         extraRead = 0;
-        bufferEnd = source.Read(_buffer, 0, _buffer.Length);
+        sourceBufferLength = source.Read(_buffer, 0, _buffer.Length);
+        bufferEnd = sourceBufferLength;
         _expandableBuffer.Clear();
         if (bufferEnd == 0)
         {
@@ -240,7 +238,8 @@ public sealed class BinaryFileProcessor : Stream
                     length: len);
                 if (len < moveRange.Width)
                 {
-                    extraRead += source.Read(moveContents, len, (int)(moveRange.Width - len));
+                    source.ReadExactly(moveContents.AsSpan(len));
+                    extraRead += moveContents.Length - len;
                 }
 
                 var moveLoc = config._moves[moveRange];
@@ -400,7 +399,7 @@ public sealed class BinaryFileProcessor : Stream
             throw new NotImplementedException("Need to upgrade to move large positions");
         }
         byte[] trash = new byte[diff];
-        Read(trash, offset: 0, count: (int)diff);
+        ReadExactly(trash);
     }
 
     #region N/A
