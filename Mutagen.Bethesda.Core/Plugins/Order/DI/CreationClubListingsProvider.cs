@@ -60,7 +60,7 @@ public sealed class CreationClubListingsProvider : ICreationClubListingsProvider
         }
 
         return Reader.Read(_fileSystem.File.OpenRead(path.Value))
-            .Where(x => _fileSystem.File.Exists(Path.Combine(DirectoryProvider.Path, x.ModKey.FileName)))
+            .Where(x => _fileSystem.File.Exists(_fileSystem.ResolveIgnoringCase(DirectoryProvider.Path, x.ModKey.FileName)))
             .Select(x => x.ToModListing(modExists: true))
             .ToList();
     }
