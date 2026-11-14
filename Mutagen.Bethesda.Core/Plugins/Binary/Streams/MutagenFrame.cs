@@ -257,14 +257,15 @@ public readonly struct MutagenFrame : IMutagenReadStream
 
     /// <summary>
     /// Decompresses frame content into a new backing stream.
-    /// Will read an integer to determine how large the compressed data is, and will read that amount.
+    /// Reads the uncompressed length, then decompresses the remaining frame content.
     /// </summary>
     /// <returns>New frame with a new backing stream with uncompressed content</returns>
     public MutagenFrame Decompress()
     {
         var resultLen = Reader.ReadUInt32();
-        var bytes = Reader.ReadBytes((int)Remaining);
-        var res = Decompression.Decompress(bytes, resultLen);
+        var bytes = Reader.ReadMemory(checked((int)Remaining), readSafe: false);
+        var res = new byte[checked((int)resultLen)];
+        Decompression.Decompress(bytes, res.AsSpan());
         return new MutagenFrame(
             new MutagenMemoryReadStream(res, MetaData));
     }
