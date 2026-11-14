@@ -2638,15 +2638,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
             {
-                if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.WorldModel, rhs.WorldModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
             {
-                if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.FirstPersonModel, rhs.FirstPersonModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AltSkeleton) ?? true))
             {
-                if (!Equals(lhs.AltSkeleton, rhs.AltSkeleton)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.AltSkeleton, rhs.AltSkeleton, (l, r) => string.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ExtraLightLayers) ?? true))
             {
@@ -2654,11 +2654,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
             {
-                if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.SkinTexture, rhs.SkinTexture, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Morphs) ?? true))
             {
-                if (!Equals(lhs.Morphs, rhs.Morphs)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Morphs, rhs.Morphs, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
             {
@@ -2694,7 +2694,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BoneDataModifiers) ?? true))
             {
-                if (!Equals(lhs.BoneDataModifiers, rhs.BoneDataModifiers)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BoneDataModifiers, rhs.BoneDataModifiers, (l, r) => l.SequenceEqualNullable(r))) return false;
             }
             return true;
         }

@@ -1339,11 +1339,11 @@ namespace Mutagen.Bethesda.Fallout3
             }
             if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
             {
-                if (!Equals(lhs.Height, rhs.Height)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Height, rhs.Height, (l, r) => l.EqualsWithin(r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
             {
-                if (!Equals(lhs.Weight, rhs.Weight)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Weight, rhs.Weight, (l, r) => l.EqualsWithin(r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
