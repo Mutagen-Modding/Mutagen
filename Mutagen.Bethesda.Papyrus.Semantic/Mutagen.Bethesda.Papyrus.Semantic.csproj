@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <RootNamespace>Mutagen.Bethesda.Papyrus.Semantic</RootNamespace>
+        <Description>Symbols, binder, and semantic model for Papyrus scripts</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Mutagen.Bethesda.Papyrus.Syntax\Mutagen.Bethesda.Papyrus.Syntax.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Symbols\StateSymbol.cs">
+        <DependentUpon>IStateSymbol.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Symbols\ScriptSymbol.cs">
+        <DependentUpon>IScriptSymbol.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Symbols\PropertySymbol.cs">
+        <DependentUpon>IPropertySymbol.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Symbols\ParameterSymbol.cs">
+        <DependentUpon>IParameterSymbol.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Symbols\VariableSymbol.cs">
+        <DependentUpon>IVariableSymbol.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Symbols\FunctionSymbol.cs">
+        <DependentUpon>IFunctionSymbol.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Symbols\EventSymbol.cs">
+        <DependentUpon>IEventSymbol.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
