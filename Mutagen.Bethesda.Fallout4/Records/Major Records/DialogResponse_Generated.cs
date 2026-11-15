@@ -1930,7 +1930,10 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Emotion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Emotion.SetTo(
+                        FormLinkBinaryTranslation.Instance.Parse(
+                            reader: frame,
+                            maxIsNone: true));
                     if (dataFrame.Remaining < 1) return null;
                     item.ResponseNumber = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 4) return null;
@@ -2097,7 +2100,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Emotion
         private int _EmotionLocation => _TRDALocation!.Value.Min;
         private bool _Emotion_IsSet => _TRDALocation.HasValue;
-        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_EmotionLocation, 0x4), isSet: _Emotion_IsSet) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Emotion => _Emotion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_EmotionLocation, 0x4), isSet: _Emotion_IsSet, maxIsNull: true) : FormLink<IKeywordGetter>.Null;
         #endregion
         #region ResponseNumber
         private int _ResponseNumberLocation => _TRDALocation!.Value.Min + 0x4;
