@@ -216,8 +216,7 @@
           <P3Float name="Position" />
           <P3Float name="Rotation" />
           <Float name="Scale" />
-          <Float name="Unknown1" />
-          <Float name="Unknown2" />
+          <ByteArray name="Unknown" byteLength="8" nullable="False" />
         </Fields>
       </Data>
     </Fields>
