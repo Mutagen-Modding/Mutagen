@@ -3,17 +3,17 @@
   <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <String name="Diffuse" recordType="TX00" />
-      <String name="NormalOrGloss" recordType="TX01" />
-      <String name="Glow" recordType="TX03" />
-      <String name="Height" recordType="TX04" />
-      <String name="Environment" recordType="TX05" />
-      <String name="Wrinkles" recordType="TX02" />
-      <String name="Multilayer" recordType="TX06" />
-      <String name="SmoothSpec" recordType="TX07" />
+      <AssetLink name="Diffuse" recordType="TX00" assetType="Fallout4Texture" />
+      <AssetLink name="NormalOrGloss" recordType="TX01" assetType="Fallout4Texture" />
+      <AssetLink name="Glow" recordType="TX03" assetType="Fallout4Texture" />
+      <AssetLink name="Height" recordType="TX04" assetType="Fallout4Texture" />
+      <AssetLink name="Environment" recordType="TX05" assetType="Fallout4Texture" />
+      <AssetLink name="Wrinkles" recordType="TX02" assetType="Fallout4Texture" />
+      <AssetLink name="Multilayer" recordType="TX06" assetType="Fallout4Texture" />
+      <AssetLink name="SmoothSpec" recordType="TX07" assetType="Fallout4Texture" />
       <RefDirect name="Decal" refName="Decal" />
       <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" nullable="false" />
-      <String name="Material" recordType="MNAM" />
+      <AssetLink name="Material" recordType="MNAM" assetType="Fallout4Material" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IPlaceableObject</LinkInterface>

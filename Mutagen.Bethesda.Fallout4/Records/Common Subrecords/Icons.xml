@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Icons" objType="Subrecord">
     <Fields>
-      <String name="InventoryImage" recordType="ICON" />
-      <String name="MessageIcon" recordType="MICO" />
+      <AssetLink name="InventoryImage" recordType="ICON" assetType="Fallout4Texture" />
+      <AssetLink name="MessageIcon" recordType="MICO" assetType="Fallout4Texture" />
     </Fields>
   </Object>
 </Loqui>

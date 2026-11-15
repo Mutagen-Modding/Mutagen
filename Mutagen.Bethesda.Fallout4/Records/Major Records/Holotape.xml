@@ -44,7 +44,7 @@
   </Object>
   <Object name="HolotapeProgram" objType="Subrecord" baseClass="AHolotapeData">
     <Fields>
-      <String name="File" nullable="True" />
+      <AssetLink name="File" nullable="True" assetType="Fallout4Program" />
     </Fields>
   </Object>
   <Object name="HolotapeTerminal" objType="Subrecord" baseClass="AHolotapeData">

@@ -11,8 +11,8 @@
   </Object>
   <Object name="MaterialSubstitution" objType="Subrecord">
     <Fields>
-      <String name="OriginalMaterial" recordType="BNAM" />
-      <String name="ReplacementMaterial" recordType="SNAM" />
+      <AssetLink name="OriginalMaterial" recordType="BNAM" assetType="Fallout4Material" />
+      <AssetLink name="ReplacementMaterial" recordType="SNAM" assetType="Fallout4Material" />
       <String name="ObsoleteTreeFolder" recordType="FNAM" binary="Custom" />
       <Float name="ColorRemappingIndex" recordType="CNAM" />
     </Fields>

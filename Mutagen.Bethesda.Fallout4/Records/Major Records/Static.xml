@@ -32,7 +32,7 @@
   </Object>
   <Object name="DistantLod" objType="Subrecord">
     <Fields>
-      <String name="Mesh" maxLength="259" binary="Custom" />
+      <AssetLink name="Mesh" maxLength="259" binary="Custom" assetType="Fallout4Model" />
     </Fields>
   </Object>
 </Loqui>

@@ -8,7 +8,7 @@
       <Float name="Buoyancy" recordType="BNAM" />
       <Enum name="Flags" enumName="MaterialType.Flag" recordType="FNAM" />
       <FormLink name="HavokImpactDataSet" recordType="HNAM" refName="ImpactDataSet" />
-      <String name="BreakableFX" recordType="ANAM" />
+      <AssetLink name="BreakableFX" recordType="ANAM" assetType="Fallout4Model" />
       <ByteArray name="ModelData" recordType="MODT" />
     </Fields>
   </Object>

@@ -11,6 +11,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -281,9 +282,9 @@ namespace Mutagen.Bethesda.Fallout4
         ICellExteriorLodGetter? ICellGetter.ExteriorLod => this.ExteriorLod;
         #endregion
         #region WaterEnvironmentMap
-        public String? WaterEnvironmentMap { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? WaterEnvironmentMap { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICellGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
+        AssetLinkGetter<Fallout4TextureAssetType>? ICellGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
         #endregion
         #region SkyAndWeatherFromRegion
         private readonly IFormLinkNullable<IRegionGetter> _SkyAndWeatherFromRegion = new FormLinkNullable<IRegionGetter>();
@@ -2688,7 +2689,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Int32? FactionRank { get; set; }
         new IFormLinkNullable<ILockListGetter> LockList { get; set; }
         new CellExteriorLod? ExteriorLod { get; set; }
-        new String? WaterEnvironmentMap { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? WaterEnvironmentMap { get; set; }
         new IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; set; }
         new IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
@@ -2764,7 +2765,7 @@ namespace Mutagen.Bethesda.Fallout4
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<ILockListGetter> LockList { get; }
         ICellExteriorLodGetter? ExteriorLod { get; }
-        String? WaterEnvironmentMap { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? WaterEnvironmentMap { get; }
         IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion { get; }
         IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
@@ -3638,6 +3639,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            if (obj.WaterEnvironmentMap != null)
+            {
+                yield return obj.WaterEnvironmentMap;
+            }
             if (iterateNestedRecords)
             {
                 foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainer>()
@@ -3666,6 +3671,10 @@ namespace Mutagen.Bethesda.Fallout4
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.WaterEnvironmentMap?.Relink(mapping);
+            }
         }
         
         #endregion
@@ -3785,7 +3794,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.ExteriorLod,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
+            ret.WaterEnvironmentMap = object.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
             ret.SkyAndWeatherFromRegion = item.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion);
             ret.AcousticSpace = item.AcousticSpace.Equals(rhs.AcousticSpace);
             ret.EncounterZone = item.EncounterZone.Equals(rhs.EncounterZone);
@@ -4299,7 +4308,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
             {
-                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+                if (!object.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
             {
@@ -5316,6 +5325,13 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.WaterEnvironmentMap != null)
+                {
+                    yield return obj.WaterEnvironmentMap;
+                }
+            }
             if (iterateNestedRecords)
             {
                 foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
@@ -5685,10 +5701,7 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
-            {
-                item.WaterEnvironmentMap = rhs.WaterEnvironmentMap;
-            }
+            item.WaterEnvironmentMap = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
             {
                 item.SkyAndWeatherFromRegion.SetTo(rhs.SkyAndWeatherFromRegion.FormKeyNullable);
@@ -6211,7 +6224,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterEnvironmentMap,
+                item: item.WaterEnvironmentMap?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -6495,10 +6508,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XWEM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterEnvironmentMap = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.WaterEnvironmentMap = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Cell_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.XCCM:
@@ -6734,7 +6744,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
-        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region SkyAndWeatherFromRegion
         private int? _SkyAndWeatherFromRegionLocation;

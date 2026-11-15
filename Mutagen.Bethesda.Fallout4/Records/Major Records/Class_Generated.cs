@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -98,9 +101,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter IClassGetter.Description => this.Description;
         #endregion
         #region Icon
-        public String? Icon { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClassGetter.Icon => this.Icon;
+        AssetLinkGetter<Fallout4TextureAssetType>? IClassGetter.Icon => this.Icon;
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -674,6 +677,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IClass);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ClassCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => ClassSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ClassSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClassSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -753,6 +760,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IClass :
+        IAssetLinkContainer,
         IClassGetter,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -767,7 +775,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new String? Icon { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Icon { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new Int32 Unknown { get; set; }
         new Single BleedoutDefault { get; set; }
@@ -783,6 +791,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.CLAS)]
     public partial interface IClassGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IClassGetter>,
@@ -800,7 +809,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter Description { get; }
-        String? Icon { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Icon { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         Int32 Unknown { get; }
         Single BleedoutDefault { get; }
@@ -1106,6 +1115,32 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Properties?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IClass obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Icon != null)
+            {
+                yield return obj.Icon;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IClass obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Icon?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1173,7 +1208,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Icon = string.Equals(item.Icon, rhs.Icon);
+            ret.Icon = object.Equals(item.Icon, rhs.Icon);
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1326,7 +1361,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+                if (!object.Equals(lhs.Icon, rhs.Icon)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
             {
@@ -1414,6 +1449,22 @@ namespace Mutagen.Bethesda.Fallout4
                 foreach (var item in PropertiesItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IClassGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Icon != null)
+                {
+                    yield return obj.Icon;
                 }
             }
             yield break;
@@ -1520,10 +1571,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Description = rhs.Description.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
-            {
-                item.Icon = rhs.Icon;
-            }
+            item.Icon = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Icon, rhs.Icon);
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Properties);
@@ -1747,7 +1795,7 @@ namespace Mutagen.Bethesda.Fallout4
                 source: StringsSource.DL);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Icon,
+                item: item.Icon?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
@@ -1862,10 +1910,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Icon = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Class_FieldIndex.Icon;
                 }
                 case RecordTypeInts.PRPS:
@@ -1933,6 +1978,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ClassCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ClassCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClassBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1965,7 +2011,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Icon => _IconLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         private RangeInt32? _DATALocation;

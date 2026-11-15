@@ -8,10 +8,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -117,9 +120,9 @@ namespace Mutagen.Bethesda.Fallout4
         ILoadScreenZoomGetter? ILoadScreenGetter.Zoom => this.Zoom;
         #endregion
         #region CameraPath
-        public String? CameraPath { get; set; }
+        public AssetLink<Fallout4ModelAssetType>? CameraPath { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILoadScreenGetter.CameraPath => this.CameraPath;
+        AssetLinkGetter<Fallout4ModelAssetType>? ILoadScreenGetter.CameraPath => this.CameraPath;
         #endregion
 
         #region To String
@@ -718,6 +721,10 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => LoadScreenCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => LoadScreenSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LoadScreenSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LoadScreenSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -797,6 +804,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILoadScreen :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoadScreenGetter,
@@ -808,7 +816,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ITransformGetter> Transform { get; set; }
         new LoadScreenRotation? Rotation { get; set; }
         new LoadScreenZoom? Zoom { get; set; }
-        new String? CameraPath { get; set; }
+        new AssetLink<Fallout4ModelAssetType>? CameraPath { get; set; }
         #region Mutagen
         new LoadScreen.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -825,6 +833,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.LSCR)]
     public partial interface ILoadScreenGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ILoadScreenGetter>,
@@ -837,7 +846,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ITransformGetter> Transform { get; }
         ILoadScreenRotationGetter? Rotation { get; }
         ILoadScreenZoomGetter? Zoom { get; }
-        String? CameraPath { get; }
+        AssetLinkGetter<Fallout4ModelAssetType>? CameraPath { get; }
 
         #region Mutagen
         LoadScreen.MajorFlag MajorFlags { get; }
@@ -1152,6 +1161,32 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Transform.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILoadScreen obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.CameraPath != null)
+            {
+                yield return obj.CameraPath;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILoadScreen obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.CameraPath?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1234,7 +1269,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Zoom,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.CameraPath = string.Equals(item.CameraPath, rhs.CameraPath);
+            ret.CameraPath = object.Equals(item.CameraPath, rhs.CameraPath);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1409,7 +1444,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
             {
-                if (!string.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
+                if (!object.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
             }
             return true;
         }
@@ -1493,6 +1528,22 @@ namespace Mutagen.Bethesda.Fallout4
             if (FormLinkInformation.TryFactory(obj.Transform, out var TransformInfo))
             {
                 yield return TransformInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILoadScreenGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.CameraPath != null)
+                {
+                    yield return obj.CameraPath;
+                }
             }
             yield break;
         }
@@ -1678,10 +1729,7 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
-            {
-                item.CameraPath = rhs.CameraPath;
-            }
+            item.CameraPath = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.CameraPath, rhs.CameraPath);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1898,7 +1946,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CameraPath,
+                item: item.CameraPath?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MOD2),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2017,10 +2065,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraPath = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.CameraPath = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:
@@ -2068,6 +2113,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LoadScreenCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => LoadScreenCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2100,7 +2146,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ILoadScreenZoomGetter? Zoom { get; private set; }
         #region CameraPath
         private int? _CameraPathLocation;
-        public String? CameraPath => _CameraPathLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4ModelAssetType>? CameraPath => _CameraPathLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraPathLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4ModelAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

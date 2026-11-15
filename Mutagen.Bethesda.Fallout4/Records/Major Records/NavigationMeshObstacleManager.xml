@@ -12,7 +12,7 @@
         <UInt64 recordType="DATA" />
       </List>
       <ByteArray name="INTV" recordType="INTV" />
-      <String name="Model" recordType="NAM1" />
+      <AssetLink name="Model" recordType="NAM1" assetType="Fallout4Model" />
     </Fields>
   </Object>
 </Loqui>

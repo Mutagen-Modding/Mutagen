@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -119,9 +122,9 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? IMessageGetter.DisplayTime => this.DisplayTime;
         #endregion
         #region Swf
-        public String? Swf { get; set; }
+        public AssetLink<Fallout4InterfaceAssetType>? Swf { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMessageGetter.Swf => this.Swf;
+        AssetLinkGetter<Fallout4InterfaceAssetType>? IMessageGetter.Swf => this.Swf;
         #endregion
         #region ShortTitle
         public TranslatedString? ShortTitle { get; set; }
@@ -784,6 +787,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IMessage);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MessageCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => MessageSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MessageSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MessageSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -863,6 +870,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMessage :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IMessageInternal>,
@@ -881,7 +889,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
-        new String? Swf { get; set; }
+        new AssetLink<Fallout4InterfaceAssetType>? Swf { get; set; }
         new TranslatedString? ShortTitle { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }
     }
@@ -896,6 +904,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.MESG)]
     public partial interface IMessageGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMessageGetter>,
@@ -917,7 +926,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IQuestGetter> OwnerQuest { get; }
         Message.Flag Flags { get; }
         UInt32? DisplayTime { get; }
-        String? Swf { get; }
+        AssetLinkGetter<Fallout4InterfaceAssetType>? Swf { get; }
         ITranslatedStringGetter? ShortTitle { get; }
         IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
 
@@ -1236,6 +1245,32 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MenuButtons.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMessage obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Swf != null)
+            {
+                yield return obj.Swf;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMessage obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Swf?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1307,7 +1342,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.OwnerQuest = item.OwnerQuest.Equals(rhs.OwnerQuest);
             ret.Flags = item.Flags == rhs.Flags;
             ret.DisplayTime = item.DisplayTime == rhs.DisplayTime;
-            ret.Swf = string.Equals(item.Swf, rhs.Swf);
+            ret.Swf = object.Equals(item.Swf, rhs.Swf);
             ret.ShortTitle = object.Equals(item.ShortTitle, rhs.ShortTitle);
             ret.MenuButtons = item.MenuButtons.CollectionEqualsHelper(
                 rhs.MenuButtons,
@@ -1488,7 +1523,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.Swf) ?? true))
             {
-                if (!string.Equals(lhs.Swf, rhs.Swf)) return false;
+                if (!object.Equals(lhs.Swf, rhs.Swf)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Message_FieldIndex.ShortTitle) ?? true))
             {
@@ -1584,6 +1619,22 @@ namespace Mutagen.Bethesda.Fallout4
                 .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMessageGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Swf != null)
+                {
+                    yield return obj.Swf;
+                }
             }
             yield break;
         }
@@ -1705,10 +1756,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DisplayTime = rhs.DisplayTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Swf) ?? true))
-            {
-                item.Swf = rhs.Swf;
-            }
+            item.Swf = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Swf, rhs.Swf);
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.ShortTitle) ?? true))
             {
                 item.ShortTitle = rhs.ShortTitle?.DeepCopy();
@@ -1937,7 +1985,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Swf,
+                item: item.Swf?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
@@ -2076,10 +2124,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Swf = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Swf = AssetLinkBinaryTranslation.Instance.Parse<Fallout4InterfaceAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Message_FieldIndex.Swf;
                 }
                 case RecordTypeInts.NNAM:
@@ -2149,6 +2194,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MessageCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MessageCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MessageBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2197,7 +2243,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Swf
         private int? _SwfLocation;
-        public String? Swf => _SwfLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4InterfaceAssetType>? Swf => _SwfLocation.HasValue ? new AssetLinkGetter<Fallout4InterfaceAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4InterfaceAssetType>?);
         #endregion
         #region ShortTitle
         private int? _ShortTitleLocation;

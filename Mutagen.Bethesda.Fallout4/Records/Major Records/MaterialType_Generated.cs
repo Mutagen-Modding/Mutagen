@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -111,9 +114,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IImpactDataSetGetter> IMaterialTypeGetter.HavokImpactDataSet => this.HavokImpactDataSet;
         #endregion
         #region BreakableFX
-        public String? BreakableFX { get; set; }
+        public AssetLink<Fallout4ModelAssetType>? BreakableFX { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMaterialTypeGetter.BreakableFX => this.BreakableFX;
+        AssetLinkGetter<Fallout4ModelAssetType>? IMaterialTypeGetter.BreakableFX => this.BreakableFX;
         #endregion
         #region ModelData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -673,6 +676,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IMaterialType);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MaterialTypeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => MaterialTypeSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MaterialTypeSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MaterialTypeSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -752,6 +759,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMaterialType :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IMaterialTypeInternal>,
@@ -768,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single? Buoyancy { get; set; }
         new MaterialType.Flag? Flags { get; set; }
         new IFormLinkNullable<IImpactDataSetGetter> HavokImpactDataSet { get; set; }
-        new String? BreakableFX { get; set; }
+        new AssetLink<Fallout4ModelAssetType>? BreakableFX { get; set; }
         new MemorySlice<Byte>? ModelData { get; set; }
     }
 
@@ -782,6 +790,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.MATT)]
     public partial interface IMaterialTypeGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMaterialTypeGetter>,
@@ -801,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single? Buoyancy { get; }
         MaterialType.Flag? Flags { get; }
         IFormLinkNullableGetter<IImpactDataSetGetter> HavokImpactDataSet { get; }
-        String? BreakableFX { get; }
+        AssetLinkGetter<Fallout4ModelAssetType>? BreakableFX { get; }
         ReadOnlyMemorySlice<Byte>? ModelData { get; }
 
     }
@@ -1113,6 +1122,32 @@ namespace Mutagen.Bethesda.Fallout4
             obj.HavokImpactDataSet.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMaterialType obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.BreakableFX != null)
+            {
+                yield return obj.BreakableFX;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMaterialType obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.BreakableFX?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1184,7 +1219,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Buoyancy = item.Buoyancy.EqualsWithin(rhs.Buoyancy);
             ret.Flags = item.Flags == rhs.Flags;
             ret.HavokImpactDataSet = item.HavokImpactDataSet.Equals(rhs.HavokImpactDataSet);
-            ret.BreakableFX = string.Equals(item.BreakableFX, rhs.BreakableFX);
+            ret.BreakableFX = object.Equals(item.BreakableFX, rhs.BreakableFX);
             ret.ModelData = MemorySliceExt.SequenceEqual(item.ModelData, rhs.ModelData);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1349,7 +1384,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
             {
-                if (!string.Equals(lhs.BreakableFX, rhs.BreakableFX)) return false;
+                if (!object.Equals(lhs.BreakableFX, rhs.BreakableFX)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
             {
@@ -1445,6 +1480,22 @@ namespace Mutagen.Bethesda.Fallout4
             if (FormLinkInformation.TryFactory(obj.HavokImpactDataSet, out var HavokImpactDataSetInfo))
             {
                 yield return HavokImpactDataSetInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMaterialTypeGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.BreakableFX != null)
+                {
+                    yield return obj.BreakableFX;
+                }
             }
             yield break;
         }
@@ -1566,10 +1617,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.HavokImpactDataSet.SetTo(rhs.HavokImpactDataSet.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.BreakableFX) ?? true))
-            {
-                item.BreakableFX = rhs.BreakableFX;
-            }
+            item.BreakableFX = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.BreakableFX, rhs.BreakableFX);
             if ((copyMask?.GetShouldTranslate((int)MaterialType_FieldIndex.ModelData) ?? true))
             {
                 if(rhs.ModelData is {} ModelDatarhs)
@@ -1779,7 +1827,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.HNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BreakableFX,
+                item: item.BreakableFX?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -1898,10 +1946,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BreakableFX = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.BreakableFX = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MaterialType_FieldIndex.BreakableFX;
                 }
                 case RecordTypeInts.MODT:
@@ -1955,6 +2000,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MaterialTypeCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MaterialTypeCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1999,7 +2045,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region BreakableFX
         private int? _BreakableFXLocation;
-        public String? BreakableFX => _BreakableFXLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BreakableFXLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4ModelAssetType>? BreakableFX => _BreakableFXLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BreakableFXLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4ModelAssetType>?);
         #endregion
         #region ModelData
         private int? _ModelDataLocation;

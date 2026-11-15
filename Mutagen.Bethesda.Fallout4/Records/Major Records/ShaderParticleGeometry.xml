@@ -30,7 +30,7 @@
           <Float name="Unknown12" />
         </Fields>
       </Data>
-      <String name="ParticleTexture" recordType="MNAM" />
+      <AssetLink name="ParticleTexture" recordType="MNAM" assetType="Fallout4Material" />
     </Fields>
   </Object>
 </Loqui>

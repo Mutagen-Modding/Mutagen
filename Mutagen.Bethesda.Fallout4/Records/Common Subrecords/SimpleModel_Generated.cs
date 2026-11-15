@@ -8,9 +8,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -56,9 +59,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region File
-        public String? File { get; set; }
+        public AssetLink<Fallout4ModelAssetType>? File { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISimpleModelGetter.File => this.File;
+        AssetLinkGetter<Fallout4ModelAssetType>? ISimpleModelGetter.File => this.File;
         #endregion
         #region ColorRemappingIndex
         public Single? ColorRemappingIndex { get; set; }
@@ -477,6 +480,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SimpleModelCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => SimpleModelSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SimpleModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SimpleModelSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -541,11 +548,12 @@ namespace Mutagen.Bethesda.Fallout4
     /// Implemented by: [Model]
     /// </summary>
     public partial interface ISimpleModel :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ISimpleModel>,
         ISimpleModelGetter
     {
-        new String? File { get; set; }
+        new AssetLink<Fallout4ModelAssetType>? File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
         new MemorySlice<Byte>? Data { get; set; }
         new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
@@ -556,6 +564,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface ISimpleModelGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISimpleModelGetter>
@@ -567,7 +576,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SimpleModel_Registration.Instance;
-        String? File { get; }
+        AssetLinkGetter<Fallout4ModelAssetType>? File { get; }
         Single? ColorRemappingIndex { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
         IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
@@ -844,6 +853,27 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MaterialSwap.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISimpleModel obj, bool iterateNestedRecords = true)
+        {
+            if (obj.File != null)
+            {
+                yield return obj.File;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISimpleModel obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.File?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -886,7 +916,7 @@ namespace Mutagen.Bethesda.Fallout4
             SimpleModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.File = string.Equals(item.File, rhs.File);
+            ret.File = object.Equals(item.File, rhs.File);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
             ret.Data = MemorySliceExt.SequenceEqual(item.Data, rhs.Data);
             ret.MaterialSwap = item.MaterialSwap.Equals(rhs.MaterialSwap);
@@ -964,7 +994,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((equalsMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.File) ?? true))
             {
-                if (!string.Equals(lhs.File, rhs.File)) return false;
+                if (!object.Equals(lhs.File, rhs.File)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.ColorRemappingIndex) ?? true))
             {
@@ -1018,6 +1048,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISimpleModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.File != null)
+                {
+                    yield return obj.File;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1033,10 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.File) ?? true))
-            {
-                item.File = rhs.File;
-            }
+            item.File = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.File, rhs.File);
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.ColorRemappingIndex) ?? true))
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
@@ -1167,7 +1206,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.File,
+                item: item.File?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL),
                 binaryType: StringBinaryType.NullTerminate);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1228,10 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)SimpleModel_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.File = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)SimpleModel_FieldIndex.File;
                 }
                 case RecordTypeInts.MODC:
@@ -1310,6 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SimpleModelCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => SimpleModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => SimpleModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1326,7 +1363,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region File
         private int? _FileLocation;
-        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4ModelAssetType>? File => _FileLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4ModelAssetType>?);
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;

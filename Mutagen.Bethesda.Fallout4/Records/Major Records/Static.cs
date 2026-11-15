@@ -1,4 +1,6 @@
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -103,7 +105,7 @@ partial class StaticBinaryCreateTranslation
         frame.ReadBytes(260 - str.Length - 1);
         return new DistantLod()
         {
-            Mesh = str,
+            Mesh = new AssetLink<Fallout4ModelAssetType>(str),
         };
     }
 }

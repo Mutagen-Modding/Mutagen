@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -71,14 +74,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region SunTexture
-        public String? SunTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? SunTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClimateGetter.SunTexture => this.SunTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IClimateGetter.SunTexture => this.SunTexture;
         #endregion
         #region SunGlareTexture
-        public String? SunGlareTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? SunGlareTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IClimateGetter.SunGlareTexture => this.SunGlareTexture;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -827,6 +830,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IClimate);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ClimateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => ClimateSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ClimateSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -906,6 +913,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IClimate :
+        IAssetLinkContainer,
         IClimateGetter,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -913,8 +921,8 @@ namespace Mutagen.Bethesda.Fallout4
         IModeled
     {
         new ExtendedList<WeatherType>? Weathers { get; set; }
-        new String? SunTexture { get; set; }
-        new String? SunGlareTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? SunTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? SunGlareTexture { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -938,6 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.CLMT)]
     public partial interface IClimateGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IClimateGetter>,
@@ -946,8 +955,8 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration StaticRegistration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
-        String? SunTexture { get; }
-        String? SunGlareTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? SunTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? SunGlareTexture { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1277,6 +1286,45 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Model?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IClimate obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.SunTexture != null)
+            {
+                yield return obj.SunTexture;
+            }
+            if (obj.SunGlareTexture != null)
+            {
+                yield return obj.SunGlareTexture;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IClimate obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.SunTexture?.Relink(mapping);
+                obj.SunGlareTexture?.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1346,8 +1394,8 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Weathers,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SunTexture = string.Equals(item.SunTexture, rhs.SunTexture);
-            ret.SunGlareTexture = string.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
+            ret.SunTexture = object.Equals(item.SunTexture, rhs.SunTexture);
+            ret.SunGlareTexture = object.Equals(item.SunGlareTexture, rhs.SunGlareTexture);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1523,11 +1571,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
             {
-                if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
+                if (!object.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
             {
-                if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
+                if (!object.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {
@@ -1652,6 +1700,33 @@ namespace Mutagen.Bethesda.Fallout4
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateFormLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IClimateGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.SunTexture != null)
+                {
+                    yield return obj.SunTexture;
+                }
+                if (obj.SunGlareTexture != null)
+                {
+                    yield return obj.SunGlareTexture;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -1784,14 +1859,8 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
-            {
-                item.SunTexture = rhs.SunTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
-            {
-                item.SunGlareTexture = rhs.SunGlareTexture;
-            }
+            item.SunTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SunTexture, rhs.SunTexture);
+            item.SunGlareTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SunGlareTexture, rhs.SunGlareTexture);
             if ((copyMask?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)Climate_FieldIndex.Model);
@@ -2029,12 +2098,12 @@ namespace Mutagen.Bethesda.Fallout4
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunTexture,
+                item: item.SunTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunGlareTexture,
+                item: item.SunGlareTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model is {} ModelItem)
@@ -2209,19 +2278,13 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.SunTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Climate_FieldIndex.SunTexture;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SunGlareTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.SunGlareTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Climate_FieldIndex.SunGlareTexture;
                 }
                 case RecordTypeInts.MODL:
@@ -2322,6 +2385,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ClimateCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ClimateCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ClimateBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2339,11 +2403,11 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IWeatherTypeGetter>? Weathers { get; private set; }
         #region SunTexture
         private int? _SunTextureLocation;
-        public String? SunTexture => _SunTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? SunTexture => _SunTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region SunGlareTexture
         private int? _SunGlareTextureLocation;
-        public String? SunGlareTexture => _SunGlareTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? SunGlareTexture => _SunGlareTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         public IModelGetter? Model { get; private set; }
         private RangeInt32? _TNAMLocation;

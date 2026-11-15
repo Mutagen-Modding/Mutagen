@@ -2,11 +2,11 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="EffectShader" recordType="EFSH" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
-      <String name="FillTexture" recordType="ICON" />
-      <String name="ParticleShaderTexture" recordType="ICO2" />
-      <String name="HolesTexture" recordType="NAM7" />
-      <String name="MembranePaletteTexture" recordType="NAM8" />
-      <String name="ParticlePaletteTexture" recordType="NAM9" />
+      <AssetLink name="FillTexture" recordType="ICON" assetType="Fallout4Texture" />
+      <AssetLink name="ParticleShaderTexture" recordType="ICO2" assetType="Fallout4Texture" />
+      <AssetLink name="HolesTexture" recordType="NAM7" assetType="Fallout4Texture" />
+      <AssetLink name="MembranePaletteTexture" recordType="NAM8" assetType="Fallout4Texture" />
+      <AssetLink name="ParticlePaletteTexture" recordType="NAM9" assetType="Fallout4Texture" />
       <ByteArray name="DATA" recordType="DATA" />
       <Data recordType="DNAM">
         <Fields>

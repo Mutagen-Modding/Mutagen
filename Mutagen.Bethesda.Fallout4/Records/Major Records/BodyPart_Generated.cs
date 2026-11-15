@@ -8,10 +8,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -279,7 +282,8 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte OnCrippleDecalCount { get; set; } = default(Byte);
         #endregion
         #region LimbReplacementModel
-        public String LimbReplacementModel { get; set; } = string.Empty;
+        public AssetLink<Fallout4ModelAssetType> LimbReplacementModel { get; set; } = new AssetLink<Fallout4ModelAssetType>();
+        AssetLinkGetter<Fallout4ModelAssetType> IBodyPartGetter.LimbReplacementModel => this.LimbReplacementModel;
         #endregion
         #region GoreTargetBone
         public String GoreTargetBone { get; set; } = string.Empty;
@@ -2101,6 +2105,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BodyPartCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BodyPartSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => BodyPartCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => BodyPartSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => BodyPartSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => BodyPartSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -2162,6 +2170,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IBodyPart :
+        IAssetLinkContainer,
         IBodyPartGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IBodyPart>,
@@ -2211,7 +2220,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single OnCrippleDebrisScale { get; set; }
         new Byte OnCrippleDebrisCount { get; set; }
         new Byte OnCrippleDecalCount { get; set; }
-        new String LimbReplacementModel { get; set; }
+        new AssetLink<Fallout4ModelAssetType> LimbReplacementModel { get; set; }
         new String GoreTargetBone { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new String? HitReactionStart { get; set; }
@@ -2226,6 +2235,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IBodyPartGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IBodyPartGetter>,
@@ -2284,7 +2294,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single OnCrippleDebrisScale { get; }
         Byte OnCrippleDebrisCount { get; }
         Byte OnCrippleDecalCount { get; }
-        String LimbReplacementModel { get; }
+        AssetLinkGetter<Fallout4ModelAssetType> LimbReplacementModel { get; }
         String GoreTargetBone { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         String? HitReactionStart { get; }
@@ -2655,7 +2665,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.OnCrippleDebrisScale = default(Single);
             item.OnCrippleDebrisCount = default(Byte);
             item.OnCrippleDecalCount = default(Byte);
-            item.LimbReplacementModel = string.Empty;
+            item.LimbReplacementModel.SetToNull();
             item.GoreTargetBone = string.Empty;
             item.TextureFilesHashes = default;
             item.HitReactionStart = default;
@@ -2687,6 +2697,24 @@ namespace Mutagen.Bethesda.Fallout4
             obj.OnCrippleBloodImpactMaterialType.Relink(mapping);
             obj.MeatCapTextureSet.Relink(mapping);
             obj.CollarTextureSet.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IBodyPart obj, bool iterateNestedRecords = true)
+        {
+            yield return obj.LimbReplacementModel;
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IBodyPart obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.LimbReplacementModel.Relink(mapping);
+            }
         }
         
         #endregion
@@ -2769,7 +2797,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.OnCrippleDebrisScale = item.OnCrippleDebrisScale.EqualsWithin(rhs.OnCrippleDebrisScale);
             ret.OnCrippleDebrisCount = item.OnCrippleDebrisCount == rhs.OnCrippleDebrisCount;
             ret.OnCrippleDecalCount = item.OnCrippleDecalCount == rhs.OnCrippleDecalCount;
-            ret.LimbReplacementModel = string.Equals(item.LimbReplacementModel, rhs.LimbReplacementModel);
+            ret.LimbReplacementModel = object.Equals(item.LimbReplacementModel, rhs.LimbReplacementModel);
             ret.GoreTargetBone = string.Equals(item.GoreTargetBone, rhs.GoreTargetBone);
             ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.HitReactionStart = string.Equals(item.HitReactionStart, rhs.HitReactionStart);
@@ -3188,7 +3216,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementModel) ?? true))
             {
-                if (!string.Equals(lhs.LimbReplacementModel, rhs.LimbReplacementModel)) return false;
+                if (!object.Equals(lhs.LimbReplacementModel, rhs.LimbReplacementModel)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreTargetBone) ?? true))
             {
@@ -3344,6 +3372,15 @@ namespace Mutagen.Bethesda.Fallout4
             if (FormLinkInformation.TryFactory(obj.CollarTextureSet, out var CollarTextureSetInfo))
             {
                 yield return CollarTextureSetInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IBodyPartGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.LimbReplacementModel;
             }
             yield break;
         }
@@ -3515,10 +3552,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.OnCrippleDecalCount = rhs.OnCrippleDecalCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.LimbReplacementModel) ?? true))
-            {
-                item.LimbReplacementModel = rhs.LimbReplacementModel;
-            }
+            item.LimbReplacementModel.GivenPath = rhs.LimbReplacementModel.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)BodyPart_FieldIndex.GoreTargetBone) ?? true))
             {
                 item.GoreTargetBone = rhs.GoreTargetBone;
@@ -3797,7 +3831,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LimbReplacementModel,
+                item: item.LimbReplacementModel.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.Write(
@@ -4014,7 +4048,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LimbReplacementModel = StringBinaryTranslation.Instance.Parse(
+                    item.LimbReplacementModel.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
@@ -4147,6 +4181,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => BodyPartCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => BodyPartCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => BodyPartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4359,7 +4394,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LimbReplacementModel
         private int? _LimbReplacementModelLocation;
-        public String LimbReplacementModel => _LimbReplacementModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LimbReplacementModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public AssetLinkGetter<Fallout4ModelAssetType> LimbReplacementModel => _LimbReplacementModelLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LimbReplacementModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<Fallout4ModelAssetType>.Null;
         #endregion
         #region GoreTargetBone
         private int? _GoreTargetBoneLocation;

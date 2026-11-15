@@ -75,7 +75,7 @@
       <Float name="AmplitudeScale" binary="NoGeneration" />
       <Float name="UvScale" binary="NoGeneration" />
       <Float name="NoiseFalloff" binary="NoGeneration" />
-      <String name="Texture" nullable="True" binary="NoGeneration" />
+      <AssetLink name="Texture" nullable="True" binary="NoGeneration" assetType="Fallout4Texture" />
     </Fields>
   </Object>
 </Loqui>

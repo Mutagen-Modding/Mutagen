@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SimpleModel" objType="Subrecord">
     <Fields>
-      <String name="File" recordType="MODL" />
+      <AssetLink name="File" recordType="MODL" assetType="Fallout4Model" />
       <Float name="ColorRemappingIndex" recordType="MODC" />
       <ByteArray name="Data" recordType="MODT" />
       <FormLink name="MaterialSwap" recordType="MODS" refName="MaterialSwap" />

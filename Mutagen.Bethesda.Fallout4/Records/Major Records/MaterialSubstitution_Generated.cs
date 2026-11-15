@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -52,14 +56,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region OriginalMaterial
-        public String? OriginalMaterial { get; set; }
+        public AssetLink<Fallout4MaterialAssetType>? OriginalMaterial { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMaterialSubstitutionGetter.OriginalMaterial => this.OriginalMaterial;
+        AssetLinkGetter<Fallout4MaterialAssetType>? IMaterialSubstitutionGetter.OriginalMaterial => this.OriginalMaterial;
         #endregion
         #region ReplacementMaterial
-        public String? ReplacementMaterial { get; set; }
+        public AssetLink<Fallout4MaterialAssetType>? ReplacementMaterial { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMaterialSubstitutionGetter.ReplacementMaterial => this.ReplacementMaterial;
+        AssetLinkGetter<Fallout4MaterialAssetType>? IMaterialSubstitutionGetter.ReplacementMaterial => this.ReplacementMaterial;
         #endregion
         #region ObsoleteTreeFolder
         public String? ObsoleteTreeFolder { get; set; }
@@ -459,6 +463,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MaterialSubstitutionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => MaterialSubstitutionSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MaterialSubstitutionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MaterialSubstitutionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MaterialSubstitutionBinaryWriteTranslation.Instance;
@@ -518,17 +529,19 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMaterialSubstitution :
+        IAssetLinkContainer,
         ILoquiObjectSetter<IMaterialSubstitution>,
         IMaterialSubstitutionGetter
     {
-        new String? OriginalMaterial { get; set; }
-        new String? ReplacementMaterial { get; set; }
+        new AssetLink<Fallout4MaterialAssetType>? OriginalMaterial { get; set; }
+        new AssetLink<Fallout4MaterialAssetType>? ReplacementMaterial { get; set; }
         new String? ObsoleteTreeFolder { get; set; }
         new Single? ColorRemappingIndex { get; set; }
     }
 
     public partial interface IMaterialSubstitutionGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IMaterialSubstitutionGetter>
     {
@@ -539,8 +552,8 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => MaterialSubstitution_Registration.Instance;
-        String? OriginalMaterial { get; }
-        String? ReplacementMaterial { get; }
+        AssetLinkGetter<Fallout4MaterialAssetType>? OriginalMaterial { get; }
+        AssetLinkGetter<Fallout4MaterialAssetType>? ReplacementMaterial { get; }
         String? ObsoleteTreeFolder { get; }
         Single? ColorRemappingIndex { get; }
 
@@ -815,6 +828,32 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMaterialSubstitution obj, bool iterateNestedRecords = true)
+        {
+            if (obj.OriginalMaterial != null)
+            {
+                yield return obj.OriginalMaterial;
+            }
+            if (obj.ReplacementMaterial != null)
+            {
+                yield return obj.ReplacementMaterial;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMaterialSubstitution obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.OriginalMaterial?.Relink(mapping);
+                obj.ReplacementMaterial?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -857,8 +896,8 @@ namespace Mutagen.Bethesda.Fallout4
             MaterialSubstitution.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.OriginalMaterial = string.Equals(item.OriginalMaterial, rhs.OriginalMaterial);
-            ret.ReplacementMaterial = string.Equals(item.ReplacementMaterial, rhs.ReplacementMaterial);
+            ret.OriginalMaterial = object.Equals(item.OriginalMaterial, rhs.OriginalMaterial);
+            ret.ReplacementMaterial = object.Equals(item.ReplacementMaterial, rhs.ReplacementMaterial);
             ret.ObsoleteTreeFolder = string.Equals(item.ObsoleteTreeFolder, rhs.ObsoleteTreeFolder);
             ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
         }
@@ -936,11 +975,11 @@ namespace Mutagen.Bethesda.Fallout4
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((equalsMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.OriginalMaterial) ?? true))
             {
-                if (!string.Equals(lhs.OriginalMaterial, rhs.OriginalMaterial)) return false;
+                if (!object.Equals(lhs.OriginalMaterial, rhs.OriginalMaterial)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ReplacementMaterial) ?? true))
             {
-                if (!string.Equals(lhs.ReplacementMaterial, rhs.ReplacementMaterial)) return false;
+                if (!object.Equals(lhs.ReplacementMaterial, rhs.ReplacementMaterial)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder) ?? true))
             {
@@ -989,6 +1028,22 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMaterialSubstitutionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.OriginalMaterial != null)
+                {
+                    yield return obj.OriginalMaterial;
+                }
+                if (obj.ReplacementMaterial != null)
+                {
+                    yield return obj.ReplacementMaterial;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1004,14 +1059,8 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.OriginalMaterial) ?? true))
-            {
-                item.OriginalMaterial = rhs.OriginalMaterial;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ReplacementMaterial) ?? true))
-            {
-                item.ReplacementMaterial = rhs.ReplacementMaterial;
-            }
+            item.OriginalMaterial = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.OriginalMaterial, rhs.OriginalMaterial);
+            item.ReplacementMaterial = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ReplacementMaterial, rhs.ReplacementMaterial);
             if ((copyMask?.GetShouldTranslate((int)MaterialSubstitution_FieldIndex.ObsoleteTreeFolder) ?? true))
             {
                 item.ObsoleteTreeFolder = rhs.ObsoleteTreeFolder;
@@ -1131,12 +1180,12 @@ namespace Mutagen.Bethesda.Fallout4
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.OriginalMaterial,
+                item: item.OriginalMaterial?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ReplacementMaterial,
+                item: item.ReplacementMaterial?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             MaterialSubstitutionBinaryWriteTranslation.WriteBinaryObsoleteTreeFolder(
@@ -1205,20 +1254,14 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.OriginalMaterial, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OriginalMaterial = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.OriginalMaterial = AssetLinkBinaryTranslation.Instance.Parse<Fallout4MaterialAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MaterialSubstitution_FieldIndex.OriginalMaterial;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     if (lastParsed.ShortCircuit((int)MaterialSubstitution_FieldIndex.ReplacementMaterial, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReplacementMaterial = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.ReplacementMaterial = AssetLinkBinaryTranslation.Instance.Parse<Fallout4MaterialAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MaterialSubstitution_FieldIndex.ReplacementMaterial;
                 }
                 case RecordTypeInts.FNAM:
@@ -1296,6 +1339,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MaterialSubstitutionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => MaterialSubstitutionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1312,11 +1356,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region OriginalMaterial
         private int? _OriginalMaterialLocation;
-        public String? OriginalMaterial => _OriginalMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OriginalMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4MaterialAssetType>? OriginalMaterial => _OriginalMaterialLocation.HasValue ? new AssetLinkGetter<Fallout4MaterialAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OriginalMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4MaterialAssetType>?);
         #endregion
         #region ReplacementMaterial
         private int? _ReplacementMaterialLocation;
-        public String? ReplacementMaterial => _ReplacementMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReplacementMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4MaterialAssetType>? ReplacementMaterial => _ReplacementMaterialLocation.HasValue ? new AssetLinkGetter<Fallout4MaterialAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReplacementMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4MaterialAssetType>?);
         #endregion
         #region ObsoleteTreeFolder
         partial void ObsoleteTreeFolderCustomParse(

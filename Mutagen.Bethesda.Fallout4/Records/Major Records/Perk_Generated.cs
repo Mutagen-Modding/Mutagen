@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -116,9 +119,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter IPerkGetter.Description => this.Description;
         #endregion
         #region Icon
-        public String? Icon { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Icon { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPerkGetter.Icon => this.Icon;
+        AssetLinkGetter<Fallout4TextureAssetType>? IPerkGetter.Icon => this.Icon;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -170,9 +173,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IPerkGetter> IPerkGetter.NextPerk => this.NextPerk;
         #endregion
         #region Swf
-        public String? Swf { get; set; }
+        public AssetLink<Fallout4InterfaceAssetType>? Swf { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPerkGetter.Swf => this.Swf;
+        AssetLinkGetter<Fallout4InterfaceAssetType>? IPerkGetter.Swf => this.Swf;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1055,6 +1058,10 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => PerkCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => PerkSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PerkSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PerkSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1134,6 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IPerk :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IFurnitureAssociation,
@@ -1154,7 +1162,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new String? Icon { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Icon { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new Boolean Trait { get; set; }
         new Byte Level { get; set; }
@@ -1163,7 +1171,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Boolean Hidden { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
         new IFormLinkNullable<IPerkGetter> NextPerk { get; set; }
-        new String? Swf { get; set; }
+        new AssetLink<Fallout4InterfaceAssetType>? Swf { get; set; }
         new ExtendedList<APerkEffect> Effects { get; }
         #region Mutagen
         new Perk.MajorFlag MajorFlags { get; set; }
@@ -1181,6 +1189,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.PERK)]
     public partial interface IPerkGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
@@ -1206,7 +1215,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter Description { get; }
-        String? Icon { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Icon { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         Boolean Trait { get; }
         Byte Level { get; }
@@ -1215,7 +1224,7 @@ namespace Mutagen.Bethesda.Fallout4
         Boolean Hidden { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         IFormLinkNullableGetter<IPerkGetter> NextPerk { get; }
-        String? Swf { get; }
+        AssetLinkGetter<Fallout4InterfaceAssetType>? Swf { get; }
         IReadOnlyList<IAPerkEffectGetter> Effects { get; }
 
         #region Mutagen
@@ -1557,6 +1566,37 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Effects.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPerk obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Icon != null)
+            {
+                yield return obj.Icon;
+            }
+            if (obj.Swf != null)
+            {
+                yield return obj.Swf;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IPerk obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Icon?.Relink(mapping);
+                obj.Swf?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1629,7 +1669,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Icon = string.Equals(item.Icon, rhs.Icon);
+            ret.Icon = object.Equals(item.Icon, rhs.Icon);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1641,7 +1681,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Hidden = item.Hidden == rhs.Hidden;
             ret.Sound = item.Sound.Equals(rhs.Sound);
             ret.NextPerk = item.NextPerk.Equals(rhs.NextPerk);
-            ret.Swf = string.Equals(item.Swf, rhs.Swf);
+            ret.Swf = object.Equals(item.Swf, rhs.Swf);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1843,7 +1883,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Icon) ?? true))
             {
-                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+                if (!object.Equals(lhs.Icon, rhs.Icon)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
             {
@@ -1879,7 +1919,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Swf) ?? true))
             {
-                if (!string.Equals(lhs.Swf, rhs.Swf)) return false;
+                if (!object.Equals(lhs.Swf, rhs.Swf)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {
@@ -1992,6 +2032,26 @@ namespace Mutagen.Bethesda.Fallout4
                 .SelectMany((f) => f.EnumerateFormLinks(iterateNestedRecords)))
             {
                 yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPerkGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Icon != null)
+                {
+                    yield return obj.Icon;
+                }
+                if (obj.Swf != null)
+                {
+                    yield return obj.Swf;
+                }
             }
             yield break;
         }
@@ -2123,10 +2183,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Description = rhs.Description.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Icon) ?? true))
-            {
-                item.Icon = rhs.Icon;
-            }
+            item.Icon = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Icon, rhs.Icon);
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
             {
                 errorMask?.PushIndex((int)Perk_FieldIndex.Conditions);
@@ -2179,10 +2236,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.NextPerk.SetTo(rhs.NextPerk.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Swf) ?? true))
-            {
-                item.Swf = rhs.Swf;
-            }
+            item.Swf = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Swf, rhs.Swf);
             if ((copyMask?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
             {
                 errorMask?.PushIndex((int)Perk_FieldIndex.Effects);
@@ -2397,7 +2451,7 @@ namespace Mutagen.Bethesda.Fallout4
                 source: StringsSource.DL);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Icon,
+                item: item.Icon?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
@@ -2429,7 +2483,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Swf,
+                item: item.Swf?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             PerkBinaryWriteTranslation.WriteBinaryEffects(
@@ -2548,10 +2602,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Icon = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Perk_FieldIndex.Icon;
                 }
                 case RecordTypeInts.CTDA:
@@ -2595,10 +2646,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Swf = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Swf = AssetLinkBinaryTranslation.Instance.Parse<Fallout4InterfaceAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Perk_FieldIndex.Swf;
                 }
                 case RecordTypeInts.PRKE:
@@ -2664,6 +2712,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => PerkCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => PerkCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2703,7 +2752,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Icon => _IconLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         private RangeInt32? _DATALocation;
@@ -2742,7 +2791,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Swf
         private int? _SwfLocation;
-        public String? Swf => _SwfLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4InterfaceAssetType>? Swf => _SwfLocation.HasValue ? new AssetLinkGetter<Fallout4InterfaceAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4InterfaceAssetType>?);
         #endregion
         #region Effects
         partial void EffectsCustomParse(

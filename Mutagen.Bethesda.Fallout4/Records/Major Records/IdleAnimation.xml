@@ -3,7 +3,7 @@
   <Object name="IdleAnimation" recordType="IDLE" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefList name="Conditions" refName="Condition" />
-      <String name="BehaviorGraph" recordType="DNAM" />
+      <AssetLink name="BehaviorGraph" recordType="DNAM" assetType="Fallout4Behavior" />
       <String name="AnimationEvent" recordType="ENAM" />
       <List name="RelatedIdles" recordType="ANAM" nullable="False">
         <FormLink>

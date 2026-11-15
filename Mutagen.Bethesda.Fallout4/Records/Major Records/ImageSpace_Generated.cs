@@ -8,14 +8,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -143,9 +147,9 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
         #region Lut
-        public String? Lut { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Lut { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IImageSpaceGetter.Lut => this.Lut;
+        AssetLinkGetter<Fallout4TextureAssetType>? IImageSpaceGetter.Lut => this.Lut;
         #endregion
         #region DNAMDataTypeState
         public ImageSpace.DNAMDataType DNAMDataTypeState { get; set; } = default(ImageSpace.DNAMDataType);
@@ -1180,6 +1184,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             Break0 = 1
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ImageSpaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => ImageSpaceSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ImageSpaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ImageSpaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1259,6 +1267,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IImageSpace :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IImageSpaceGetter,
         ILoquiObjectSetter<IImageSpaceInternal>
@@ -1285,7 +1294,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Boolean DepthOfFieldSky { get; set; }
         new Single DepthOfFieldVignetteRadius { get; set; }
         new Single DepthOfFieldVignetteStrength { get; set; }
-        new String? Lut { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Lut { get; set; }
         new ImageSpace.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -1299,6 +1308,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.IMGS)]
     public partial interface IImageSpaceGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IImageSpaceGetter>,
         IMapsToGetter<IImageSpaceGetter>
@@ -1326,7 +1336,7 @@ namespace Mutagen.Bethesda.Fallout4
         Boolean DepthOfFieldSky { get; }
         Single DepthOfFieldVignetteRadius { get; }
         Single DepthOfFieldVignetteStrength { get; }
-        String? Lut { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Lut { get; }
         ImageSpace.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -1666,6 +1676,32 @@ namespace Mutagen.Bethesda.Fallout4
             base.RemapLinks(obj, mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IImageSpace obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Lut != null)
+            {
+                yield return obj.Lut;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IImageSpace obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Lut?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1753,7 +1789,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.DepthOfFieldSky = item.DepthOfFieldSky == rhs.DepthOfFieldSky;
             ret.DepthOfFieldVignetteRadius = item.DepthOfFieldVignetteRadius.EqualsWithin(rhs.DepthOfFieldVignetteRadius);
             ret.DepthOfFieldVignetteStrength = item.DepthOfFieldVignetteStrength.EqualsWithin(rhs.DepthOfFieldVignetteStrength);
-            ret.Lut = string.Equals(item.Lut, rhs.Lut);
+            ret.Lut = object.Equals(item.Lut, rhs.Lut);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2041,7 +2077,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
             {
-                if (!string.Equals(lhs.Lut, rhs.Lut)) return false;
+                if (!object.Equals(lhs.Lut, rhs.Lut)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -2130,6 +2166,22 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IImageSpaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Lut != null)
+                {
+                    yield return obj.Lut;
+                }
             }
             yield break;
         }
@@ -2315,10 +2367,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DepthOfFieldVignetteStrength = rhs.DepthOfFieldVignetteStrength;
             }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
-            {
-                item.Lut = rhs.Lut;
-            }
+            item.Lut = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Lut, rhs.Lut);
             if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAMDataTypeState) ?? true))
             {
                 item.DNAMDataTypeState = rhs.DNAMDataTypeState;
@@ -2598,7 +2647,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Lut,
+                item: item.Lut?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2802,10 +2851,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Lut = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Lut = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)ImageSpace_FieldIndex.Lut;
                 }
                 default:
@@ -2865,6 +2911,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ImageSpaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ImageSpaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3002,7 +3049,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Lut
         private int? _LutLocation;
-        public String? Lut => _LutLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LutLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Lut => _LutLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LutLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

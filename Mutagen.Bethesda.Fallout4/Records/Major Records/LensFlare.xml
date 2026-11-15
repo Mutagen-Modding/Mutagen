@@ -10,7 +10,7 @@
   <Object name="LensFlareSprite" objType="Subrecord">
     <Fields>
       <String name="LensFlareSpriteId" recordType="DNAM" />
-      <String name="Texture" recordType="FNAM" />
+      <AssetLink name="Texture" recordType="FNAM" assetType="Fallout4Texture" />
       <RefDirect name="Data" refName="LensFlareSpriteData" />
     </Fields>
   </Object>

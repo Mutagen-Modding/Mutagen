@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -58,29 +61,29 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region FillTexture
-        public String? FillTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? FillTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEffectShaderGetter.FillTexture => this.FillTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IEffectShaderGetter.FillTexture => this.FillTexture;
         #endregion
         #region ParticleShaderTexture
-        public String? ParticleShaderTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? ParticleShaderTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IEffectShaderGetter.ParticleShaderTexture => this.ParticleShaderTexture;
         #endregion
         #region HolesTexture
-        public String? HolesTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? HolesTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEffectShaderGetter.HolesTexture => this.HolesTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IEffectShaderGetter.HolesTexture => this.HolesTexture;
         #endregion
         #region MembranePaletteTexture
-        public String? MembranePaletteTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? MembranePaletteTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEffectShaderGetter.MembranePaletteTexture => this.MembranePaletteTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IEffectShaderGetter.MembranePaletteTexture => this.MembranePaletteTexture;
         #endregion
         #region ParticlePaletteTexture
-        public String? ParticlePaletteTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? ParticlePaletteTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEffectShaderGetter.ParticlePaletteTexture => this.ParticlePaletteTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IEffectShaderGetter.ParticlePaletteTexture => this.ParticlePaletteTexture;
         #endregion
         #region DATA
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2153,6 +2156,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IEffectShader);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => EffectShaderCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => EffectShaderSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => EffectShaderSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => EffectShaderSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -2232,17 +2239,18 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IEffectShader :
+        IAssetLinkContainer,
         IEffectShaderGetter,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IEffectShaderInternal>,
         IModeled
     {
-        new String? FillTexture { get; set; }
-        new String? ParticleShaderTexture { get; set; }
-        new String? HolesTexture { get; set; }
-        new String? MembranePaletteTexture { get; set; }
-        new String? ParticlePaletteTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? FillTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? ParticleShaderTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? HolesTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? MembranePaletteTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? ParticlePaletteTexture { get; set; }
         new MemorySlice<Byte>? DATA { get; set; }
         new Byte Unknown { get; set; }
         new EffectShader.BlendMode MembraneSourceBlendMode { get; set; }
@@ -2305,6 +2313,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.EFSH)]
     public partial interface IEffectShaderGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IEffectShaderGetter>,
@@ -2312,11 +2321,11 @@ namespace Mutagen.Bethesda.Fallout4
         IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
-        String? FillTexture { get; }
-        String? ParticleShaderTexture { get; }
-        String? HolesTexture { get; }
-        String? MembranePaletteTexture { get; }
-        String? ParticlePaletteTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? FillTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? ParticleShaderTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? HolesTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? MembranePaletteTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? ParticlePaletteTexture { get; }
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         Byte Unknown { get; }
         EffectShader.BlendMode MembraneSourceBlendMode { get; }
@@ -2770,6 +2779,60 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Model?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IEffectShader obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.FillTexture != null)
+            {
+                yield return obj.FillTexture;
+            }
+            if (obj.ParticleShaderTexture != null)
+            {
+                yield return obj.ParticleShaderTexture;
+            }
+            if (obj.HolesTexture != null)
+            {
+                yield return obj.HolesTexture;
+            }
+            if (obj.MembranePaletteTexture != null)
+            {
+                yield return obj.MembranePaletteTexture;
+            }
+            if (obj.ParticlePaletteTexture != null)
+            {
+                yield return obj.ParticlePaletteTexture;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IEffectShader obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.FillTexture?.Relink(mapping);
+                obj.ParticleShaderTexture?.Relink(mapping);
+                obj.HolesTexture?.Relink(mapping);
+                obj.MembranePaletteTexture?.Relink(mapping);
+                obj.ParticlePaletteTexture?.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2835,11 +2898,11 @@ namespace Mutagen.Bethesda.Fallout4
             EffectShader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FillTexture = string.Equals(item.FillTexture, rhs.FillTexture);
-            ret.ParticleShaderTexture = string.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
-            ret.HolesTexture = string.Equals(item.HolesTexture, rhs.HolesTexture);
-            ret.MembranePaletteTexture = string.Equals(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
-            ret.ParticlePaletteTexture = string.Equals(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
+            ret.FillTexture = object.Equals(item.FillTexture, rhs.FillTexture);
+            ret.ParticleShaderTexture = object.Equals(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
+            ret.HolesTexture = object.Equals(item.HolesTexture, rhs.HolesTexture);
+            ret.MembranePaletteTexture = object.Equals(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
+            ret.ParticlePaletteTexture = object.Equals(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
             ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.MembraneSourceBlendMode = item.MembraneSourceBlendMode == rhs.MembraneSourceBlendMode;
@@ -3207,23 +3270,23 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
             {
-                if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
+                if (!object.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
             {
-                if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+                if (!object.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
             {
-                if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
+                if (!object.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
             {
-                if (!string.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
+                if (!object.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
             {
-                if (!string.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
+                if (!object.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATA) ?? true))
             {
@@ -3558,6 +3621,45 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IEffectShaderGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.FillTexture != null)
+                {
+                    yield return obj.FillTexture;
+                }
+                if (obj.ParticleShaderTexture != null)
+                {
+                    yield return obj.ParticleShaderTexture;
+                }
+                if (obj.HolesTexture != null)
+                {
+                    yield return obj.HolesTexture;
+                }
+                if (obj.MembranePaletteTexture != null)
+                {
+                    yield return obj.MembranePaletteTexture;
+                }
+                if (obj.ParticlePaletteTexture != null)
+                {
+                    yield return obj.ParticlePaletteTexture;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public EffectShader Duplicate(
             IEffectShaderGetter item,
@@ -3651,26 +3753,11 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
-            {
-                item.FillTexture = rhs.FillTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
-            {
-                item.ParticleShaderTexture = rhs.ParticleShaderTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
-            {
-                item.HolesTexture = rhs.HolesTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
-            {
-                item.MembranePaletteTexture = rhs.MembranePaletteTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
-            {
-                item.ParticlePaletteTexture = rhs.ParticlePaletteTexture;
-            }
+            item.FillTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FillTexture, rhs.FillTexture);
+            item.ParticleShaderTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ParticleShaderTexture, rhs.ParticleShaderTexture);
+            item.HolesTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HolesTexture, rhs.HolesTexture);
+            item.MembranePaletteTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.MembranePaletteTexture, rhs.MembranePaletteTexture);
+            item.ParticlePaletteTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ParticlePaletteTexture, rhs.ParticlePaletteTexture);
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DATA) ?? true))
             {
                 if(rhs.DATA is {} DATArhs)
@@ -4059,27 +4146,27 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FillTexture,
+                item: item.FillTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParticleShaderTexture,
+                item: item.ParticleShaderTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HolesTexture,
+                item: item.HolesTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM7),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MembranePaletteTexture,
+                item: item.MembranePaletteTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM8),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParticlePaletteTexture,
+                item: item.ParticlePaletteTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM9),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -4319,46 +4406,31 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FillTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.FillTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticleShaderTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.ParticleShaderTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HolesTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.HolesTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.HolesTexture;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MembranePaletteTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.MembranePaletteTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.MembranePaletteTexture;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParticlePaletteTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.ParticlePaletteTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)EffectShader_FieldIndex.ParticlePaletteTexture;
                 }
                 case RecordTypeInts.DATA:
@@ -4543,6 +4615,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => EffectShaderCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => EffectShaderCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => EffectShaderBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -4559,23 +4632,23 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region FillTexture
         private int? _FillTextureLocation;
-        public String? FillTexture => _FillTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? FillTexture => _FillTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FillTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region ParticleShaderTexture
         private int? _ParticleShaderTextureLocation;
-        public String? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? ParticleShaderTexture => _ParticleShaderTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticleShaderTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region HolesTexture
         private int? _HolesTextureLocation;
-        public String? HolesTexture => _HolesTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? HolesTexture => _HolesTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HolesTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region MembranePaletteTexture
         private int? _MembranePaletteTextureLocation;
-        public String? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? MembranePaletteTexture => _MembranePaletteTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MembranePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region ParticlePaletteTexture
         private int? _ParticlePaletteTextureLocation;
-        public String? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? ParticlePaletteTexture => _ParticlePaletteTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ParticlePaletteTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region DATA
         private int? _DATALocation;

@@ -17,6 +17,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Fallout4BehaviorAssetType.cs" />
+    <Compile Include="Assets\Fallout4DeformedModelAssetType.cs" />
+    <Compile Include="Assets\Fallout4InterfaceAssetType.cs" />
+    <Compile Include="Assets\Fallout4MaterialAssetType.cs" />
+    <Compile Include="Assets\Fallout4ModelAssetType.cs" />
+    <Compile Include="Assets\Fallout4MusicAssetType.cs" />
+    <Compile Include="Assets\Fallout4ProgramAssetType.cs" />
+    <Compile Include="Assets\Fallout4SoundAssetType.cs" />
+    <Compile Include="Assets\Fallout4TextureAssetType.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\ArmorType.cs" />

@@ -46,7 +46,7 @@
         </Fields>
         <Versioning formVersion="16" action="Add" />
       </Data>
-      <String name="Lut" recordType="TX00" />
+      <AssetLink name="Lut" recordType="TX00" assetType="Fallout4Texture" />
     </Fields>
   </Object>
 </Loqui>

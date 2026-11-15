@@ -8,9 +8,11 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -320,6 +322,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AHolotapeDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AHolotapeDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => AHolotapeDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public virtual IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => AHolotapeDataSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public virtual void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AHolotapeDataSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public virtual void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AHolotapeDataSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -359,6 +365,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface IAHolotapeData :
         IAHolotapeDataGetter,
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IAHolotapeData>
     {
@@ -369,6 +376,7 @@ namespace Mutagen.Bethesda.Fallout4
     /// </summary>
     public partial interface IAHolotapeDataGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAHolotapeDataGetter>
@@ -634,6 +642,19 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAHolotapeData obj, bool iterateNestedRecords = true)
+        {
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAHolotapeData obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -743,6 +764,11 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAHolotapeDataGetter obj, bool iterateNestedRecords = true)
+        {
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAHolotapeDataGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
             yield break;
         }
@@ -940,6 +966,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public virtual IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AHolotapeDataCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public virtual IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => AHolotapeDataCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AHolotapeDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
