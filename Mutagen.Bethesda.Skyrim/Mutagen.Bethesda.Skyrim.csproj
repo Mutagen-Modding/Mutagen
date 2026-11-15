@@ -150,6 +150,7 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="SkyrimGameModule.cs" />
     <Compile Include="Plugins\Cache\Internals\OverrideMaskRegistration.cs" />
     <Compile Include="Records\Assets\VoiceType\VoiceContainer.cs" />
     <Compile Include="Records\Assets\VoiceType\VoiceContainerExtension.cs" />
@@ -4759,6 +4760,7 @@
     <Compile Include="Records\Common Subrecords\ModelBodyTexture_Generated.cs">
       <DependentUpon>ModelBodyTexture.xml</DependentUpon>
     </Compile>
+    <Compile Include="SkyrimGameModule_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />

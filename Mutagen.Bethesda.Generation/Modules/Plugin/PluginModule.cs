@@ -52,6 +52,7 @@ public class PluginModule : GenerationModule
         SubModules.Add(new CircularHandlingModule());
         SubModules.Add(new PartialFormModule());
         SubModules.Add(new MultiModOverlayModule());
+        SubModules.Add(new GameModuleModule());
     }
 
     public bool FieldFilter(TypeGeneration field)
