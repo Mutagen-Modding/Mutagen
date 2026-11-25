@@ -304,3 +304,6 @@ ParseReports/
 
 # Claude Code files
 .claude
+
+# BenchmarkDotNet results
+BenchmarkDotNet.Artifacts/
