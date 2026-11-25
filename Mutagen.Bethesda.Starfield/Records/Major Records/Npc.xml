@@ -40,6 +40,7 @@
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
       <FormLink name="AttackRace" refName="Race" recordType="ATKR" />
+      <RefList name="Attacks" refName="Attack" />
       <FormLink name="SpectatorOverridePackageList" refName="FormList" recordType="SPOR" />
       <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
       <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
