@@ -143,4 +143,24 @@ public class LoadOrderImporterTests
                     .Skip(1)
                     .Select(x => importer.Import(x)));
     }
+
+    [Fact]
+    public void ImportsAModStoredUnderAnotherCase()
+    {
+        using var dataDir = TestPathing.GetTempFolder(nameof(LoadOrderImporterTests));
+        var modKey = ModKey.FromFileName("MyMod.esp");
+        File.WriteAllText(Path.Combine(dataDir.Dir.Path, "mymod.esp"), string.Empty);
+        var mod = new TestMod(modKey);
+        var importer = Substitute.For<IModImporter<TestMod>>();
+        importer.Import(Arg.Any<ModPath>(), Arg.Any<BinaryReadParameters>()).Returns(mod);
+        new LoadOrderImporter<TestMod>(
+                new FileSystem(),
+                new DataDirectoryInjection(dataDir.Dir.Path),
+                new LoadOrderListingsInjection(modKey),
+                importer,
+                Substitute.For<IMasterFlagsLookupProvider>())
+            .Import()
+            .Select(x => x.Value.Mod)
+            .ShouldBe([mod]);
+    }
 }

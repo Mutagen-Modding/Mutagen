@@ -31,7 +31,7 @@ public sealed class ImplicitListingsProvider : IImplicitListingsProvider
     public IEnumerable<IModListingGetter> Get()
     {
         return ListingModKeys.Listings
-            .Where(x => _fileSystem.File.Exists(Path.Combine(DataFolder.Path, x.FileName.String)))
+            .Where(x => _fileSystem.File.Exists(_fileSystem.ResolveIgnoringCase(DataFolder.Path, x.FileName.String)))
             .Select(x => new ModListing(x, enabled: true, modExists: true));
     }
 

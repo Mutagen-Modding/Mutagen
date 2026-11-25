@@ -65,7 +65,7 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
             {
                 try
                 {
-                    var modPath = new ModPath(listing.ModKey, _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
+                    var modPath = new ModPath(listing.ModKey, _fileSystem.ResolveIgnoringCase(_dataDirectoryProvider.Path, listing.ModKey.FileName));
                     if (!_fileSystem.File.Exists(modPath.Path))
                     {
                         results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
@@ -147,7 +147,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                     .Select(listing =>
                     {
                         var modPath = new ModPath(listing.ModKey,
-                            _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
+                            _fileSystem.ResolveIgnoringCase(_dataDirectoryProvider.Path, listing.ModKey.FileName));
                         if (!_fileSystem.File.Exists(modPath)) return null;
                         return _keyedMasterStyleReader.ReadFrom(modPath);
                     })
@@ -160,7 +160,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
             {
                 try
                 {
-                    var modPath = new ModPath(listing.ModKey, _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
+                    var modPath = new ModPath(listing.ModKey, _fileSystem.ResolveIgnoringCase(_dataDirectoryProvider.Path, listing.ModKey.FileName));
                     if (!_fileSystem.File.Exists(modPath.Path))
                     {
                         results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<IModGetter>.Failure, listing.Enabled);
