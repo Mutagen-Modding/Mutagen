@@ -40,7 +40,7 @@
     <Fields>
       <Data recordType="TRDA">
         <Fields>
-          <FormLink name="Emotion" refName="Keyword" />
+          <FormLink name="Emotion" refName="Keyword" maxIsNone="true" />
           <UInt8 name="ResponseNumber" />
           <FormLink name="Sound" refName="SoundDescriptor" />
           <UInt8 name="Unknown" />
