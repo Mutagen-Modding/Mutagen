@@ -4858,11 +4858,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
             {
-                if (!Equals(lhs.Height, rhs.Height)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Height, rhs.Height, (l, r) => l.EqualsWithin(r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultWeight) ?? true))
             {
-                if (!Equals(lhs.DefaultWeight, rhs.DefaultWeight)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.DefaultWeight, rhs.DefaultWeight, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
             {
@@ -4926,7 +4926,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
-                if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.SkeletalModel, rhs.SkeletalModel, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
@@ -4934,7 +4934,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
-                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.Voices, rhs.Voices, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
             {
@@ -4950,7 +4950,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
             {
-                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.BodyData, rhs.BodyData, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.AimAssistPose) ?? true))
             {
@@ -5010,7 +5010,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ChargenAndSkintones) ?? true))
             {
-                if (!Equals(lhs.ChargenAndSkintones, rhs.ChargenAndSkintones)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.ChargenAndSkintones, rhs.ChargenAndSkintones, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
             {
@@ -5038,7 +5038,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HeadPartsAndBoneModifiers) ?? true))
             {
-                if (!Equals(lhs.HeadPartsAndBoneModifiers, rhs.HeadPartsAndBoneModifiers)) return false;
+                if (!GenderedItem.EqualsHelper(lhs.HeadPartsAndBoneModifiers, rhs.HeadPartsAndBoneModifiers, (l, r) => object.Equals(l, r))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.MannequinSkinSwaps) ?? true))
             {
