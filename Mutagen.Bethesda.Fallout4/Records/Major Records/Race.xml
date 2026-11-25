@@ -178,8 +178,8 @@
       <Float name="IdleChatterTimeMax" recordType="NTOP" />
       <RefList name="MorphValues" refName="MorphValue" binary="Custom" />
       <Int32 name="MorphValuesLastIndex" recordType="MLSI" />
-      <String name="HairColorLookupTexture" recordType="HNAM" />
-      <String name="HairColorExtendedLookupTexture" recordType="HLTX" />
+      <AssetLink name="HairColorLookupTexture" recordType="HNAM" assetType="Fallout4Texture" />
+      <AssetLink name="HairColorExtendedLookupTexture" recordType="HLTX" assetType="Fallout4Texture" />
       <FormLink name="DialogueQuest" refName="Quest" recordType="QSTI" />
       <CustomLogic name="BoneDataParse" recordType="BSMP" />
       <Gendered name="BoneData" nullable="false" binary="NoGeneration">
@@ -367,7 +367,7 @@
       <Enum name="Flags" enumName="TintTemplateOption.Flag" byteLength="2" recordType="TTEF" />
       <RefList name="Conditions" refName="Condition" />
       <List name="Textures">
-        <String recordType="TTET" />
+        <AssetLink recordType="TTET" assetType="Fallout4Texture" />
       </List>
       <Enum name="BlendOperation" enumName="BlendOperation" byteLength="4" recordType="TTEB" />
       <RefList name="TemplateColors" refName="TintTemplateColor" recordType="TTEC" />
@@ -407,7 +407,7 @@
   </Object>
   <Object name="Subgraph" objType="Subrecord" shortCircuitToLastRequired="true">
     <Fields>
-      <String name="BehaviorGraph" recordType="SGNM" />
+      <AssetLink name="BehaviorGraph" recordType="SGNM" assetType="Fallout4Behavior" />
       <List name="ActorKeywords">
         <FormLink recordType="SAKD" refName="Keyword" />
       </List>

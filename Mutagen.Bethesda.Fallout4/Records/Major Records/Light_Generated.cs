@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -326,9 +329,9 @@ namespace Mutagen.Bethesda.Fallout4
         public Single FadeValue { get; set; } = default(Single);
         #endregion
         #region Gobo
-        public String? Gobo { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Gobo { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILightGetter.Gobo => this.Gobo;
+        AssetLinkGetter<Fallout4TextureAssetType>? ILightGetter.Gobo => this.Gobo;
         #endregion
         #region Lens
         private readonly IFormLinkNullable<ILensFlareGetter> _Lens = new FormLinkNullable<ILensFlareGetter>();
@@ -1768,6 +1771,10 @@ namespace Mutagen.Bethesda.Fallout4
             Break0 = 1,
             Break1 = 2
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => LightCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => LightSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LightSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LightSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1847,6 +1854,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILight :
+        IAssetLinkContainer,
         IConstructible,
         IConstructibleObjectTarget,
         IEmittance,
@@ -1920,7 +1928,7 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single FadeValue { get; set; }
-        new String? Gobo { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Gobo { get; set; }
         new IFormLinkNullable<ILensFlareGetter> Lens { get; set; }
         new IFormLinkNullable<IGodRaysGetter> GodRays { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
@@ -1941,6 +1949,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.LIGH)]
     public partial interface ILightGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleGetter,
         IConstructibleObjectTargetGetter,
@@ -2029,7 +2038,7 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32 Value { get; }
         Single Weight { get; }
         Single FadeValue { get; }
-        String? Gobo { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Gobo { get; }
         IFormLinkNullableGetter<ILensFlareGetter> Lens { get; }
         IFormLinkNullableGetter<IGodRaysGetter> GodRays { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
@@ -2416,6 +2425,56 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Sound.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILight obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Gobo != null)
+            {
+                yield return obj.Gobo;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILight obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Gobo?.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Icons?.RemapAssetLinks(mapping, queryCategories, linkCache);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2529,7 +2588,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.FadeValue = item.FadeValue.EqualsWithin(rhs.FadeValue);
-            ret.Gobo = string.Equals(item.Gobo, rhs.Gobo);
+            ret.Gobo = object.Equals(item.Gobo, rhs.Gobo);
             ret.Lens = item.Lens.Equals(rhs.Lens);
             ret.GodRays = item.GodRays.Equals(rhs.GodRays);
             ret.Sound = item.Sound.Equals(rhs.Sound);
@@ -2911,7 +2970,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
             {
-                if (!string.Equals(lhs.Gobo, rhs.Gobo)) return false;
+                if (!object.Equals(lhs.Gobo, rhs.Gobo)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
             {
@@ -3085,6 +3144,43 @@ namespace Mutagen.Bethesda.Fallout4
             if (FormLinkInformation.TryFactory(obj.Sound, out var SoundInfo))
             {
                 yield return SoundInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILightGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Gobo != null)
+                {
+                    yield return obj.Gobo;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Icons is {} IconsItems)
+            {
+                foreach (var item in IconsItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -3443,10 +3539,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FadeValue = rhs.FadeValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Gobo) ?? true))
-            {
-                item.Gobo = rhs.Gobo;
-            }
+            item.Gobo = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Gobo, rhs.Gobo);
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Lens) ?? true))
             {
                 item.Lens.SetTo(rhs.Lens.FormKeyNullable);
@@ -3766,7 +3859,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Gobo,
+                item: item.Gobo?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM0),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -3996,10 +4089,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Gobo = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Gobo = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Light_FieldIndex.Gobo;
                 }
                 case RecordTypeInts.LNAM:
@@ -4070,6 +4160,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => LightCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => LightCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LightBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -4208,7 +4299,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Gobo
         private int? _GoboLocation;
-        public String? Gobo => _GoboLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoboLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Gobo => _GoboLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoboLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Lens
         private int? _LensLocation;

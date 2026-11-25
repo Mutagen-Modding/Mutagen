@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -52,7 +56,8 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mesh
-        public String Mesh { get; set; } = string.Empty;
+        public AssetLink<Fallout4ModelAssetType> Mesh { get; set; } = new AssetLink<Fallout4ModelAssetType>();
+        AssetLinkGetter<Fallout4ModelAssetType> IDistantLodGetter.Mesh => this.Mesh;
         #endregion
 
         #region To String
@@ -346,6 +351,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DistantLodCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => DistantLodSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DistantLodSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DistantLodSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DistantLodBinaryWriteTranslation.Instance;
@@ -405,14 +417,16 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IDistantLod :
+        IAssetLinkContainer,
         IDistantLodGetter,
         ILoquiObjectSetter<IDistantLod>
     {
-        new String Mesh { get; set; }
+        new AssetLink<Fallout4ModelAssetType> Mesh { get; set; }
     }
 
     public partial interface IDistantLodGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IDistantLodGetter>
     {
@@ -423,7 +437,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DistantLod_Registration.Instance;
-        String Mesh { get; }
+        AssetLinkGetter<Fallout4ModelAssetType> Mesh { get; }
 
     }
 
@@ -672,12 +686,30 @@ namespace Mutagen.Bethesda.Fallout4
         public void Clear(IDistantLod item)
         {
             ClearPartial();
-            item.Mesh = string.Empty;
+            item.Mesh.SetToNull();
         }
         
         #region Mutagen
         public void RemapLinks(IDistantLod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDistantLod obj, bool iterateNestedRecords = true)
+        {
+            yield return obj.Mesh;
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IDistantLod obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Mesh.Relink(mapping);
+            }
         }
         
         #endregion
@@ -722,7 +754,7 @@ namespace Mutagen.Bethesda.Fallout4
             DistantLod.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Mesh = string.Equals(item.Mesh, rhs.Mesh);
+            ret.Mesh = object.Equals(item.Mesh, rhs.Mesh);
         }
         
         public string Print(
@@ -782,7 +814,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((equalsMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
             {
-                if (!string.Equals(lhs.Mesh, rhs.Mesh)) return false;
+                if (!object.Equals(lhs.Mesh, rhs.Mesh)) return false;
             }
             return true;
         }
@@ -808,6 +840,15 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDistantLodGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.Mesh;
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -823,10 +864,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)DistantLod_FieldIndex.Mesh) ?? true))
-            {
-                item.Mesh = rhs.Mesh;
-            }
+            item.Mesh.GivenPath = rhs.Mesh.GivenPath;
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1042,6 +1080,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DistantLodCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DistantLodBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1057,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mesh
-        public String Mesh { get; private set; } = string.Empty;
+        public AssetLinkGetter<Fallout4ModelAssetType> Mesh { get; private set; } = null!;
         protected int MeshEndingPos;
         partial void CustomMeshEndPos();
         #endregion

@@ -7,7 +7,7 @@
       <FormLink name="Category" refName="SoundCategory" recordType="GNAM" />
       <FormLink name="AlternateSoundFor" recordType="SNAM" refName="SoundDescriptor" />
       <List name="SoundFiles">
-        <String recordType="ANAM" />
+        <AssetLink recordType="ANAM" assetType="Fallout4Sound" />
       </List>
       <FormLink name="OutputModel" recordType="ONAM" refName="SoundOutputModel" />
       <RefList name="Conditions" refName="Condition" />
@@ -51,7 +51,7 @@
     <Fields>
       <Marker name="ITMS" recordType="ITMS" />
       <UInt32 name="RotationsPerMinute" recordType="INTV" />
-      <String name="File" recordType="FNAM" />
+      <AssetLink name="File" recordType="FNAM" assetType="Fallout4Sound" />
     </Fields>
   </Object>
 </Loqui>

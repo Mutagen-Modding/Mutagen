@@ -32,14 +32,14 @@ public class GenderedSplitPairTests
         {
             arma.WorldModel.ShouldNotBeNull();
             arma.WorldModel.Male.ShouldNotBeNull();
-            arma.WorldModel.Male.File.ShouldBe("male.nif");
+            arma.WorldModel.Male.File.GivenPath.ShouldBe("male.nif");
             arma.WorldModel.Female.ShouldNotBeNull();
-            arma.WorldModel.Female.File.ShouldBe("female.nif");
+            arma.WorldModel.Female.File.GivenPath.ShouldBe("female.nif");
             arma.FirstPersonModel.ShouldNotBeNull();
             arma.FirstPersonModel.Male.ShouldNotBeNull();
-            arma.FirstPersonModel.Male.File.ShouldBe("male1st.nif");
+            arma.FirstPersonModel.Male.File.GivenPath.ShouldBe("male1st.nif");
             arma.FirstPersonModel.Female.ShouldNotBeNull();
-            arma.FirstPersonModel.Female.File.ShouldBe("female1st.nif");
+            arma.FirstPersonModel.Female.File.GivenPath.ShouldBe("female1st.nif");
         }
     }
 }

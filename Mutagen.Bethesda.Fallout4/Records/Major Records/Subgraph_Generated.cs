@@ -8,9 +8,12 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -53,9 +56,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region BehaviorGraph
-        public String? BehaviorGraph { get; set; }
+        public AssetLink<Fallout4BehaviorAssetType>? BehaviorGraph { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISubgraphGetter.BehaviorGraph => this.BehaviorGraph;
+        AssetLinkGetter<Fallout4BehaviorAssetType>? ISubgraphGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region ActorKeywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -757,6 +760,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SubgraphCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SubgraphSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => SubgraphCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => SubgraphSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SubgraphSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SubgraphSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -818,11 +825,12 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ISubgraph :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ISubgraph>,
         ISubgraphGetter
     {
-        new String? BehaviorGraph { get; set; }
+        new AssetLink<Fallout4BehaviorAssetType>? BehaviorGraph { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>> ActorKeywords { get; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>> TargetKeywords { get; }
         new ExtendedList<String> AnimationPaths { get; }
@@ -832,6 +840,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ISubgraphGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ISubgraphGetter>
@@ -843,7 +852,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Subgraph_Registration.Instance;
-        String? BehaviorGraph { get; }
+        AssetLinkGetter<Fallout4BehaviorAssetType>? BehaviorGraph { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>> ActorKeywords { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>> TargetKeywords { get; }
         IReadOnlyList<String> AnimationPaths { get; }
@@ -1128,6 +1137,27 @@ namespace Mutagen.Bethesda.Fallout4
             obj.TargetKeywords.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISubgraph obj, bool iterateNestedRecords = true)
+        {
+            if (obj.BehaviorGraph != null)
+            {
+                yield return obj.BehaviorGraph;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISubgraph obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.BehaviorGraph?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1171,7 +1201,7 @@ namespace Mutagen.Bethesda.Fallout4
             Subgraph.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.BehaviorGraph = string.Equals(item.BehaviorGraph, rhs.BehaviorGraph);
+            ret.BehaviorGraph = object.Equals(item.BehaviorGraph, rhs.BehaviorGraph);
             ret.ActorKeywords = item.ActorKeywords.CollectionEqualsHelper(
                 rhs.ActorKeywords,
                 (l, r) => object.Equals(l, r),
@@ -1296,7 +1326,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.BehaviorGraph) ?? true))
             {
-                if (!string.Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+                if (!object.Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Subgraph_FieldIndex.ActorKeywords) ?? true))
             {
@@ -1358,6 +1388,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISubgraphGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.BehaviorGraph != null)
+                {
+                    yield return obj.BehaviorGraph;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1373,10 +1415,7 @@ namespace Mutagen.Bethesda.Fallout4
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)Subgraph_FieldIndex.BehaviorGraph) ?? true))
-            {
-                item.BehaviorGraph = rhs.BehaviorGraph;
-            }
+            item.BehaviorGraph = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.BehaviorGraph, rhs.BehaviorGraph);
             if ((copyMask?.GetShouldTranslate((int)Subgraph_FieldIndex.ActorKeywords) ?? true))
             {
                 errorMask?.PushIndex((int)Subgraph_FieldIndex.ActorKeywords);
@@ -1557,7 +1596,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BehaviorGraph,
+                item: item.BehaviorGraph?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.SGNM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
@@ -1656,10 +1695,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)Subgraph_FieldIndex.Role, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BehaviorGraph = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.BehaviorGraph = AssetLinkBinaryTranslation.Instance.Parse<Fallout4BehaviorAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Subgraph_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.SAKD:
@@ -1761,6 +1797,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => SubgraphCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => SubgraphCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SubgraphBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1777,7 +1814,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region BehaviorGraph
         private int? _BehaviorGraphLocation;
-        public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4BehaviorAssetType>? BehaviorGraph => _BehaviorGraphLocation.HasValue ? new AssetLinkGetter<Fallout4BehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4BehaviorAssetType>?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> ActorKeywords { get; private set; } = [];
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> TargetKeywords { get; private set; } = [];

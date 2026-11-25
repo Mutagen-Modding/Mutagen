@@ -3,8 +3,8 @@
   <Object name="Climate" recordType="CLMT" objType="Record" baseClass="Fallout4MajorRecord">
     <Fields>
       <RefList name="Weathers" refName="WeatherType" recordType="WLST" />
-      <String name="SunTexture" recordType="FNAM" />
-      <String name="SunGlareTexture" recordType="GNAM" />
+      <AssetLink name="SunTexture" recordType="FNAM" assetType="Fallout4Texture" />
+      <AssetLink name="SunGlareTexture" recordType="GNAM" assetType="Fallout4Texture" />
       <RefDirect name="Model" refName="Model" />
       <Data recordType="TNAM">
         <Fields>

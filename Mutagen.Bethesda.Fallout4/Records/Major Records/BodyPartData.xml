@@ -50,7 +50,7 @@
           <UInt8 name="OnCrippleDecalCount" />
         </Fields>
       </Data>
-      <String name="LimbReplacementModel" recordType="NAM1" nullable="False" />
+      <AssetLink name="LimbReplacementModel" recordType="NAM1" nullable="False" assetType="Fallout4Model" />
       <String name="GoreTargetBone" recordType="NAM4" nullable="False" />
       <ByteArray name="TextureFilesHashes" recordType="NAM5" />
       <String name="HitReactionStart" recordType="ENAM" />

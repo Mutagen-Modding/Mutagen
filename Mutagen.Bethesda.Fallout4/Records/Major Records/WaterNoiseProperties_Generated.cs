@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -67,9 +71,9 @@ namespace Mutagen.Bethesda.Fallout4
         public Single NoiseFalloff { get; set; } = default(Single);
         #endregion
         #region Texture
-        public String? Texture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Texture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWaterNoisePropertiesGetter.Texture => this.Texture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IWaterNoisePropertiesGetter.Texture => this.Texture;
         #endregion
 
         #region To String
@@ -519,6 +523,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => WaterNoisePropertiesCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => WaterNoisePropertiesSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WaterNoisePropertiesSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WaterNoisePropertiesSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WaterNoisePropertiesBinaryWriteTranslation.Instance;
@@ -578,6 +589,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IWaterNoiseProperties :
+        IAssetLinkContainer,
         ILoquiObjectSetter<IWaterNoiseProperties>,
         IWaterNoisePropertiesGetter
     {
@@ -586,11 +598,12 @@ namespace Mutagen.Bethesda.Fallout4
         new Single AmplitudeScale { get; set; }
         new Single UvScale { get; set; }
         new Single NoiseFalloff { get; set; }
-        new String? Texture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Texture { get; set; }
     }
 
     public partial interface IWaterNoisePropertiesGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IWaterNoisePropertiesGetter>
     {
@@ -606,7 +619,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single AmplitudeScale { get; }
         Single UvScale { get; }
         Single NoiseFalloff { get; }
-        String? Texture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Texture { get; }
 
     }
 
@@ -873,6 +886,27 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWaterNoiseProperties obj, bool iterateNestedRecords = true)
+        {
+            if (obj.Texture != null)
+            {
+                yield return obj.Texture;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IWaterNoiseProperties obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Texture?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -920,7 +954,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.AmplitudeScale = item.AmplitudeScale.EqualsWithin(rhs.AmplitudeScale);
             ret.UvScale = item.UvScale.EqualsWithin(rhs.UvScale);
             ret.NoiseFalloff = item.NoiseFalloff.EqualsWithin(rhs.NoiseFalloff);
-            ret.Texture = string.Equals(item.Texture, rhs.Texture);
+            ret.Texture = object.Equals(item.Texture, rhs.Texture);
         }
         
         public string Print(
@@ -1021,7 +1055,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.Texture) ?? true))
             {
-                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+                if (!object.Equals(lhs.Texture, rhs.Texture)) return false;
             }
             return true;
         }
@@ -1052,6 +1086,18 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IWaterNoisePropertiesGetter obj, bool iterateNestedRecords = true)
         {
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWaterNoisePropertiesGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Texture != null)
+                {
+                    yield return obj.Texture;
+                }
+            }
             yield break;
         }
         
@@ -1090,10 +1136,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.NoiseFalloff = rhs.NoiseFalloff;
             }
-            if ((copyMask?.GetShouldTranslate((int)WaterNoiseProperties_FieldIndex.Texture) ?? true))
-            {
-                item.Texture = rhs.Texture;
-            }
+            item.Texture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Texture, rhs.Texture);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1286,6 +1329,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => WaterNoisePropertiesCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WaterNoisePropertiesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

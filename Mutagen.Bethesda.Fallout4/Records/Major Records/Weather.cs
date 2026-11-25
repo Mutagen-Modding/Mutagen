@@ -1,6 +1,8 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -38,7 +40,7 @@ partial class WeatherBinaryCreateTranslation
         return (b - 127) / 127f / 10f;
     }
 
-    public static void FillCloudTexture(IMutagenReadStream stream, RecordType nextRecordType, string?[] textures)
+    public static void FillCloudTexture(IMutagenReadStream stream, RecordType nextRecordType, IAssetLink<Fallout4TextureAssetType>?[] textures)
     {
         int layer = nextRecordType.TypeInt - TextureIntBase;
         if (layer > 29 || layer < 0)
@@ -46,7 +48,8 @@ partial class WeatherBinaryCreateTranslation
             throw new ArgumentException();
         }
         var subRec = stream.ReadSubrecord();
-        textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated);
+        textures[layer] = new AssetLink<Fallout4TextureAssetType>(
+            BinaryStringUtility.ProcessWholeToZString(subRec.Content, stream.MetaData.Encodings.NonTranslated));
     }
 
     public static partial ParseResult FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item, PreviousParse lastParsed)
@@ -220,12 +223,12 @@ partial class WeatherBinaryWriteTranslation
     public static partial void WriteBinaryCloudTexturesParseCustom(MutagenWriter writer, IWeatherGetter item)
     {
         var cloudTex = item.CloudTextures;
-        for (int i = 0; i < cloudTex.Length; i++)
+        for (int i = 0; i < cloudTex.Count; i++)
         {
             if (cloudTex[i] is not { } tex) continue;
             using (HeaderExport.Subrecord(writer, new RecordType(WeatherBinaryCreateTranslation.TextureIntBase + i)))
             {
-                writer.Write(tex, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
+                writer.Write(tex.GivenPath, StringBinaryType.NullTerminate, writer.MetaData.Encodings.NonTranslated);
             }
         }
     }
@@ -418,8 +421,8 @@ partial class WeatherBinaryWriteTranslation
 
 partial class WeatherBinaryOverlay
 {
-    private readonly string?[] _cloudTextures = new string?[29];
-    public ReadOnlyMemorySlice<string?> CloudTextures => _cloudTextures;
+    private readonly IAssetLink<Fallout4TextureAssetType>?[] _cloudTextures = new IAssetLink<Fallout4TextureAssetType>?[29];
+    public IReadOnlyList<IAssetLinkGetter<Fallout4TextureAssetType>?> CloudTextures => _cloudTextures;
 
     private readonly CloudLayer[] _clouds = ArrayExt.Create(WeatherBinaryCreateTranslation.NumLayersNew, (i) => new CloudLayer());
     public IReadOnlyList<ICloudLayerGetter> Clouds => _clouds;

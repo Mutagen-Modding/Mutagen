@@ -3,7 +3,7 @@
   <Object name="Weather" recordType="WTHR" objType="Record" customRecordFallback="true" baseClass="Fallout4MajorRecord">
     <Fields>
       <Array name="CloudTextures" fixedSize="29" binary="NoGeneration">
-        <String nullable="True" />
+        <AssetLink nullable="True" assetType="Fallout4Texture" />
       </Array>
       <CustomLogic name="CloudTexturesParse" isUntypedRecordType="true" />
       <ByteArray name="LNAM" recordType="LNAM" />

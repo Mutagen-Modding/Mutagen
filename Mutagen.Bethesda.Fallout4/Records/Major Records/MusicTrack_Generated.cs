@@ -8,10 +8,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -69,14 +72,14 @@ namespace Mutagen.Bethesda.Fallout4
         Single? IMusicTrackGetter.FadeOut => this.FadeOut;
         #endregion
         #region TrackFilename
-        public String? TrackFilename { get; set; }
+        public AssetLink<Fallout4MusicAssetType>? TrackFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMusicTrackGetter.TrackFilename => this.TrackFilename;
+        AssetLinkGetter<Fallout4MusicAssetType>? IMusicTrackGetter.TrackFilename => this.TrackFilename;
         #endregion
         #region FinaleFilename
-        public String? FinaleFilename { get; set; }
+        public AssetLink<Fallout4MusicAssetType>? FinaleFilename { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
+        AssetLinkGetter<Fallout4MusicAssetType>? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
         #endregion
         #region LoopData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -912,6 +915,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IMusicTrack);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MusicTrackCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => MusicTrackSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MusicTrackSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MusicTrackSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -991,6 +998,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IMusicTrack :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IMusicTrackInternal>,
@@ -999,8 +1007,8 @@ namespace Mutagen.Bethesda.Fallout4
         new MusicTrack.TypeEnum Type { get; set; }
         new Single? Duration { get; set; }
         new Single? FadeOut { get; set; }
-        new String? TrackFilename { get; set; }
-        new String? FinaleFilename { get; set; }
+        new AssetLink<Fallout4MusicAssetType>? TrackFilename { get; set; }
+        new AssetLink<Fallout4MusicAssetType>? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
         new ExtendedList<Single>? CuePoints { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
@@ -1017,6 +1025,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.MUST)]
     public partial interface IMusicTrackGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IMusicTrackGetter>,
@@ -1026,8 +1035,8 @@ namespace Mutagen.Bethesda.Fallout4
         MusicTrack.TypeEnum Type { get; }
         Single? Duration { get; }
         Single? FadeOut { get; }
-        String? TrackFilename { get; }
-        String? FinaleFilename { get; }
+        AssetLinkGetter<Fallout4MusicAssetType>? TrackFilename { get; }
+        AssetLinkGetter<Fallout4MusicAssetType>? FinaleFilename { get; }
         IMusicTrackLoopDataGetter? LoopData { get; }
         IReadOnlyList<Single>? CuePoints { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
@@ -1348,6 +1357,37 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Tracks?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMusicTrack obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.TrackFilename != null)
+            {
+                yield return obj.TrackFilename;
+            }
+            if (obj.FinaleFilename != null)
+            {
+                yield return obj.FinaleFilename;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMusicTrack obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.TrackFilename?.Relink(mapping);
+                obj.FinaleFilename?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1416,8 +1456,8 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Type = item.Type == rhs.Type;
             ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
             ret.FadeOut = item.FadeOut.EqualsWithin(rhs.FadeOut);
-            ret.TrackFilename = string.Equals(item.TrackFilename, rhs.TrackFilename);
-            ret.FinaleFilename = string.Equals(item.FinaleFilename, rhs.FinaleFilename);
+            ret.TrackFilename = object.Equals(item.TrackFilename, rhs.TrackFilename);
+            ret.FinaleFilename = object.Equals(item.FinaleFilename, rhs.FinaleFilename);
             ret.LoopData = EqualsMaskHelper.EqualsHelper(
                 item.LoopData,
                 rhs.LoopData,
@@ -1622,11 +1662,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
             {
-                if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
+                if (!object.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
             {
-                if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
+                if (!object.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
             {
@@ -1747,6 +1787,26 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMusicTrackGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.TrackFilename != null)
+                {
+                    yield return obj.TrackFilename;
+                }
+                if (obj.FinaleFilename != null)
+                {
+                    yield return obj.FinaleFilename;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public MusicTrack Duplicate(
             IMusicTrackGetter item,
@@ -1852,14 +1912,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FadeOut = rhs.FadeOut;
             }
-            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
-            {
-                item.TrackFilename = rhs.TrackFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
-            {
-                item.FinaleFilename = rhs.FinaleFilename;
-            }
+            item.TrackFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.TrackFilename, rhs.TrackFilename);
+            item.FinaleFilename = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FinaleFilename, rhs.FinaleFilename);
             if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
             {
                 errorMask?.PushIndex((int)MusicTrack_FieldIndex.LoopData);
@@ -2155,12 +2209,12 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TrackFilename,
+                item: item.TrackFilename?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FinaleFilename,
+                item: item.FinaleFilename?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.LoopData is {} LoopDataItem)
@@ -2289,19 +2343,13 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TrackFilename = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.TrackFilename = AssetLinkBinaryTranslation.Instance.Parse<Fallout4MusicAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FinaleFilename = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.FinaleFilename = AssetLinkBinaryTranslation.Instance.Parse<Fallout4MusicAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
@@ -2388,6 +2436,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => MusicTrackCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => MusicTrackCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2416,11 +2465,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
-        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4MusicAssetType>? TrackFilename => _TrackFilenameLocation.HasValue ? new AssetLinkGetter<Fallout4MusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TrackFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4MusicAssetType>?);
         #endregion
         #region FinaleFilename
         private int? _FinaleFilenameLocation;
-        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4MusicAssetType>? FinaleFilename => _FinaleFilenameLocation.HasValue ? new AssetLinkGetter<Fallout4MusicAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FinaleFilenameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4MusicAssetType>?);
         #endregion
         #region LoopData
         private RangeInt32? _LoopDataLocation;

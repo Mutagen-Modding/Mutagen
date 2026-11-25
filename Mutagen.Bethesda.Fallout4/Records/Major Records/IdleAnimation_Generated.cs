@@ -8,10 +8,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -70,9 +73,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region BehaviorGraph
-        public String? BehaviorGraph { get; set; }
+        public AssetLink<Fallout4BehaviorAssetType>? BehaviorGraph { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IIdleAnimationGetter.BehaviorGraph => this.BehaviorGraph;
+        AssetLinkGetter<Fallout4BehaviorAssetType>? IIdleAnimationGetter.BehaviorGraph => this.BehaviorGraph;
         #endregion
         #region AnimationEvent
         public String? AnimationEvent { get; set; }
@@ -852,6 +855,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IIdleAnimation);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => IdleAnimationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => IdleAnimationSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => IdleAnimationSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => IdleAnimationSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -931,6 +938,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IIdleAnimation :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IIdleAnimationGetter,
@@ -938,7 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IIdleAnimationInternal>
     {
         new ExtendedList<Condition> Conditions { get; }
-        new String? BehaviorGraph { get; set; }
+        new AssetLink<Fallout4BehaviorAssetType>? BehaviorGraph { get; set; }
         new String? AnimationEvent { get; set; }
         new ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
@@ -959,6 +967,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.IDLE)]
     public partial interface IIdleAnimationGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IIdleRelationGetter,
@@ -967,7 +976,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration StaticRegistration => IdleAnimation_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        String? BehaviorGraph { get; }
+        AssetLinkGetter<Fallout4BehaviorAssetType>? BehaviorGraph { get; }
         String? AnimationEvent { get; }
         IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         Byte LoopingSecondsMin { get; }
@@ -1290,6 +1299,32 @@ namespace Mutagen.Bethesda.Fallout4
             obj.RelatedIdles.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IIdleAnimation obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.BehaviorGraph != null)
+            {
+                yield return obj.BehaviorGraph;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IIdleAnimation obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.BehaviorGraph?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1359,7 +1394,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.BehaviorGraph = string.Equals(item.BehaviorGraph, rhs.BehaviorGraph);
+            ret.BehaviorGraph = object.Equals(item.BehaviorGraph, rhs.BehaviorGraph);
             ret.AnimationEvent = string.Equals(item.AnimationEvent, rhs.AnimationEvent);
             ret.RelatedIdles = item.RelatedIdles.CollectionEqualsHelper(
                 rhs.RelatedIdles,
@@ -1539,7 +1574,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.BehaviorGraph) ?? true))
             {
-                if (!string.Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+                if (!object.Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
             {
@@ -1661,6 +1696,22 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IIdleAnimationGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.BehaviorGraph != null)
+                {
+                    yield return obj.BehaviorGraph;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public IdleAnimation Duplicate(
             IIdleAnimationGetter item,
@@ -1778,10 +1829,7 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.BehaviorGraph) ?? true))
-            {
-                item.BehaviorGraph = rhs.BehaviorGraph;
-            }
+            item.BehaviorGraph = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.BehaviorGraph, rhs.BehaviorGraph);
             if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
             {
                 item.AnimationEvent = rhs.AnimationEvent;
@@ -2011,7 +2059,7 @@ namespace Mutagen.Bethesda.Fallout4
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BehaviorGraph,
+                item: item.BehaviorGraph?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
@@ -2126,10 +2174,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BehaviorGraph = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.BehaviorGraph = AssetLinkBinaryTranslation.Instance.Parse<Fallout4BehaviorAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleAnimation_FieldIndex.BehaviorGraph;
                 }
                 case RecordTypeInts.ENAM:
@@ -2222,6 +2267,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => IdleAnimationCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => IdleAnimationCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleAnimationBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2239,7 +2285,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
         #region BehaviorGraph
         private int? _BehaviorGraphLocation;
-        public String? BehaviorGraph => _BehaviorGraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4BehaviorAssetType>? BehaviorGraph => _BehaviorGraphLocation.HasValue ? new AssetLinkGetter<Fallout4BehaviorAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BehaviorGraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4BehaviorAssetType>?);
         #endregion
         #region AnimationEvent
         private int? _AnimationEventLocation;

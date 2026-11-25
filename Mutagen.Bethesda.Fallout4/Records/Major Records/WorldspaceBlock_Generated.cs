@@ -1465,8 +1465,7 @@ namespace Mutagen.Bethesda.Fallout4
         #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWorldspaceBlock obj, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Items.WhereCastable<IWorldspaceSubBlockGetter, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -1843,8 +1842,7 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWorldspaceBlockGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            foreach (var item in obj.Items.WhereCastable<IWorldspaceSubBlockGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+            foreach (var item in obj.Items.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
             {
                 yield return item;
             }

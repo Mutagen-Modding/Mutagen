@@ -5,8 +5,8 @@
       <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" nullable="False" />
       <Float name="Duration" recordType="FLTV" />
       <Float name="FadeOut" recordType="DNAM" />
-      <String name="TrackFilename" recordType="ANAM" />
-      <String name="FinaleFilename" recordType="BNAM" />
+      <AssetLink name="TrackFilename" recordType="ANAM" assetType="Fallout4Music" />
+      <AssetLink name="FinaleFilename" recordType="BNAM" assetType="Fallout4Music" />
       <RefDirect name="LoopData" refName="MusicTrackLoopData" />
       <List name="CuePoints" recordType="FNAM">
         <Float />

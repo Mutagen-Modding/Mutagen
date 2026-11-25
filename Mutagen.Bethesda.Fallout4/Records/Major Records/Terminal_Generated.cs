@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -267,9 +270,9 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? ITerminalGetter.WorkbenchData => this.WorkbenchData;
         #endregion
         #region MarkerModel
-        public String? MarkerModel { get; set; }
+        public AssetLink<Fallout4ModelAssetType>? MarkerModel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITerminalGetter.MarkerModel => this.MarkerModel;
+        AssetLinkGetter<Fallout4ModelAssetType>? ITerminalGetter.MarkerModel => this.MarkerModel;
         #endregion
         #region MarkerParameters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1602,6 +1605,10 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TerminalCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => TerminalSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => TerminalSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TerminalSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1681,6 +1688,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITerminal :
+        IAssetLinkContainer,
         IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
@@ -1729,7 +1737,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<TerminalHolotapeEntry>? Holotapes { get; set; }
         new Terminal.Flag? Flags { get; set; }
         new MemorySlice<Byte>? WorkbenchData { get; set; }
-        new String? MarkerModel { get; set; }
+        new AssetLink<Fallout4ModelAssetType>? MarkerModel { get; set; }
         new ExtendedList<FurnitureMarkerParameters>? MarkerParameters { get; set; }
         new ExtendedList<TerminalBodyText>? BodyTexts { get; set; }
         new ExtendedList<TerminalMenuItem>? MenuItems { get; set; }
@@ -1749,6 +1757,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.TERM)]
     public partial interface ITerminalGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
@@ -1808,7 +1817,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<ITerminalHolotapeEntryGetter>? Holotapes { get; }
         Terminal.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? WorkbenchData { get; }
-        String? MarkerModel { get; }
+        AssetLinkGetter<Fallout4ModelAssetType>? MarkerModel { get; }
         IReadOnlyList<IFurnitureMarkerParametersGetter>? MarkerParameters { get; }
         IReadOnlyList<ITerminalBodyTextGetter>? BodyTexts { get; }
         IReadOnlyList<ITerminalMenuItemGetter>? MenuItems { get; }
@@ -2183,6 +2192,48 @@ namespace Mutagen.Bethesda.Fallout4
             obj.MenuItems?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITerminal obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MarkerModel != null)
+            {
+                yield return obj.MarkerModel;
+            }
+            if (obj.MenuItems is {} MenuItemsItem)
+            {
+                foreach (var item in MenuItemsItem.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ITerminal obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.MenuItems?.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.MarkerModel?.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2280,7 +2331,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.WorkbenchData = MemorySliceExt.SequenceEqual(item.WorkbenchData, rhs.WorkbenchData);
-            ret.MarkerModel = string.Equals(item.MarkerModel, rhs.MarkerModel);
+            ret.MarkerModel = object.Equals(item.MarkerModel, rhs.MarkerModel);
             ret.MarkerParameters = item.MarkerParameters.CollectionEqualsHelper(
                 rhs.MarkerParameters,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2618,7 +2669,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Terminal_FieldIndex.MarkerModel) ?? true))
             {
-                if (!string.Equals(lhs.MarkerModel, rhs.MarkerModel)) return false;
+                if (!object.Equals(lhs.MarkerModel, rhs.MarkerModel)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Terminal_FieldIndex.MarkerParameters) ?? true))
             {
@@ -2801,6 +2852,36 @@ namespace Mutagen.Bethesda.Fallout4
                 foreach (var item in MenuItemsItem.SelectMany(f => f.EnumerateFormLinks(iterateNestedRecords)))
                 {
                     yield return FormLinkInformation.Factory(item);
+                }
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITerminalGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.MarkerModel != null)
+                {
+                    yield return obj.MarkerModel;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MenuItems is {} MenuItemsItem)
+            {
+                foreach (var item in MenuItemsItem.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+                {
+                    yield return item;
                 }
             }
             yield break;
@@ -3121,10 +3202,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.WorkbenchData = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Terminal_FieldIndex.MarkerModel) ?? true))
-            {
-                item.MarkerModel = rhs.MarkerModel;
-            }
+            item.MarkerModel = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.MarkerModel, rhs.MarkerModel);
             if ((copyMask?.GetShouldTranslate((int)Terminal_FieldIndex.MarkerParameters) ?? true))
             {
                 errorMask?.PushIndex((int)Terminal_FieldIndex.MarkerParameters);
@@ -3497,7 +3575,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.WBDT));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MarkerModel,
+                item: item.MarkerModel?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
             TerminalBinaryWriteTranslation.WriteBinaryMarkerParameters(
@@ -3775,10 +3853,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.XMRK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MarkerModel = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.MarkerModel = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Terminal_FieldIndex.MarkerModel;
                 }
                 case RecordTypeInts.SNAM:
@@ -3879,6 +3954,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => TerminalCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TerminalCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TerminalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3964,7 +4040,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MarkerModel
         private int? _MarkerModelLocation;
-        public String? MarkerModel => _MarkerModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4ModelAssetType>? MarkerModel => _MarkerModelLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4ModelAssetType>?);
         #endregion
         #region MarkerParameters
         partial void MarkerParametersCustomParse(

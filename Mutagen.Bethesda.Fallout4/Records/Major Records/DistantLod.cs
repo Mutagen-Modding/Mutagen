@@ -1,4 +1,6 @@
-﻿using Mutagen.Bethesda.Plugins.Binary.Overlay;
+﻿using Mutagen.Bethesda.Fallout4.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Translations.Binary;
@@ -10,7 +12,7 @@ internal partial class DistantLodBinaryCreateTranslation
 {
     public static partial void FillBinaryMeshCustom(MutagenFrame frame, IDistantLod item)
     {
-        item.Mesh = StringBinaryTranslation.Instance.Parse(
+        item.Mesh.GivenPath = StringBinaryTranslation.Instance.Parse(
             reader: frame,
             stringBinaryType: StringBinaryType.NullTerminate,
             parseWhole: false);
@@ -25,7 +27,7 @@ public partial class DistantLodBinaryWriteTranslation
     
     public static partial void WriteBinaryMeshCustom(MutagenWriter writer, IDistantLodGetter item)
     {
-        var mesh = item.Mesh;
+        var mesh = item.Mesh.GivenPath;
         StringBinaryTranslation.Instance.Write(
             writer: writer,
             item: mesh,
@@ -38,6 +40,6 @@ internal partial class DistantLodBinaryOverlay
 {
     partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
     {
-        Mesh = BinaryStringUtility.ParseUnknownLengthString(_structData, _package.MetaData.Encodings.NonTranslated);
+        Mesh = new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ParseUnknownLengthString(_structData, _package.MetaData.Encodings.NonTranslated));
     }
 }

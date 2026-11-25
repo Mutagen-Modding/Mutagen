@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Fallout4.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
@@ -19,7 +21,8 @@ partial class WaterNoisePropertiesBinaryOverlay
 
     public float NoiseFalloff => BinaryPrimitives.ReadSingleLittleEndian(_structData.Slice(48));
 
-    public string? Texture => _textureRec?.AsString(_package.MetaData.Encodings.NonTranslated);
+    public AssetLinkGetter<Fallout4TextureAssetType>? Texture =>
+        _textureRec is { } rec ? new AssetLinkGetter<Fallout4TextureAssetType>(rec.AsString(_package.MetaData.Encodings.NonTranslated)) : null;
 
     public WaterNoisePropertiesBinaryOverlay(ReadOnlyMemorySlice<byte> data, SubrecordFrame? textureRec, BinaryOverlayFactoryPackage package)
         : base(MemoryPair.StructMemory(data), package)

@@ -8,14 +8,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -58,9 +62,9 @@ namespace Mutagen.Bethesda.Fallout4
         String? ILensFlareSpriteGetter.LensFlareSpriteId => this.LensFlareSpriteId;
         #endregion
         #region Texture
-        public String? Texture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Texture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILensFlareSpriteGetter.Texture => this.Texture;
+        AssetLinkGetter<Fallout4TextureAssetType>? ILensFlareSpriteGetter.Texture => this.Texture;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -436,6 +440,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => LensFlareSpriteCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => LensFlareSpriteSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LensFlareSpriteSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => LensFlareSpriteSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LensFlareSpriteBinaryWriteTranslation.Instance;
@@ -495,16 +506,18 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ILensFlareSprite :
+        IAssetLinkContainer,
         ILensFlareSpriteGetter,
         ILoquiObjectSetter<ILensFlareSprite>
     {
         new String? LensFlareSpriteId { get; set; }
-        new String? Texture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Texture { get; set; }
         new LensFlareSpriteData? Data { get; set; }
     }
 
     public partial interface ILensFlareSpriteGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<ILensFlareSpriteGetter>
     {
@@ -516,7 +529,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LensFlareSprite_Registration.Instance;
         String? LensFlareSpriteId { get; }
-        String? Texture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Texture { get; }
         ILensFlareSpriteDataGetter? Data { get; }
 
     }
@@ -787,6 +800,27 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILensFlareSprite obj, bool iterateNestedRecords = true)
+        {
+            if (obj.Texture != null)
+            {
+                yield return obj.Texture;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ILensFlareSprite obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Texture?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -830,7 +864,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.LensFlareSpriteId = string.Equals(item.LensFlareSpriteId, rhs.LensFlareSpriteId);
-            ret.Texture = string.Equals(item.Texture, rhs.Texture);
+            ret.Texture = object.Equals(item.Texture, rhs.Texture);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -910,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Texture) ?? true))
             {
-                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+                if (!object.Equals(lhs.Texture, rhs.Texture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Data) ?? true))
             {
@@ -955,6 +989,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILensFlareSpriteGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Texture != null)
+                {
+                    yield return obj.Texture;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -974,10 +1020,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.LensFlareSpriteId = rhs.LensFlareSpriteId;
             }
-            if ((copyMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Texture) ?? true))
-            {
-                item.Texture = rhs.Texture;
-            }
+            item.Texture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Texture, rhs.Texture);
             if ((copyMask?.GetShouldTranslate((int)LensFlareSprite_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)LensFlareSprite_FieldIndex.Data);
@@ -1120,7 +1163,7 @@ namespace Mutagen.Bethesda.Fallout4
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Texture,
+                item: item.Texture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Data is {} DataItem)
@@ -1186,10 +1229,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)LensFlareSprite_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Texture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Texture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)LensFlareSprite_FieldIndex.Texture;
                 }
                 case RecordTypeInts.LFSD:
@@ -1252,6 +1292,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => LensFlareSpriteCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LensFlareSpriteBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1272,7 +1313,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Texture
         private int? _TextureLocation;
-        public String? Texture => _TextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Texture => _TextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

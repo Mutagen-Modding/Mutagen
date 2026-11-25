@@ -27,7 +27,7 @@
       <RefList name="Aliases" refName="AQuestAlias" binary="NoGeneration" nullable="True" />
       <String name="Description" translated="Normal" recordType="NNAM" />
       <FormLink name="QuestGroup" recordType="GNAM" refName="Keyword" />
-      <String name="SwfFile" recordType="SNAM" />
+      <AssetLink name="SwfFile" recordType="SNAM" assetType="Fallout4Interface" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="Unknown" binary="NoGeneration" />
       <RefList name="DialogBranches" binary="NoGeneration" refName="DialogBranch" />

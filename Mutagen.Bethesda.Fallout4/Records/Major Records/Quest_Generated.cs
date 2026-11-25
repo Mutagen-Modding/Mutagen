@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -252,9 +255,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IKeywordGetter> IQuestGetter.QuestGroup => this.QuestGroup;
         #endregion
         #region SwfFile
-        public String? SwfFile { get; set; }
+        public AssetLink<Fallout4InterfaceAssetType>? SwfFile { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IQuestGetter.SwfFile => this.SwfFile;
+        AssetLinkGetter<Fallout4InterfaceAssetType>? IQuestGetter.SwfFile => this.SwfFile;
         #endregion
         #region Timestamp
         public Int32 Timestamp { get; set; } = default(Int32);
@@ -1881,6 +1884,10 @@ namespace Mutagen.Bethesda.Fallout4
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => QuestSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => QuestSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => QuestSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1960,6 +1967,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IQuest :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
@@ -1992,7 +2000,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ExtendedList<AQuestAlias>? Aliases { get; set; }
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IKeywordGetter> QuestGroup { get; set; }
-        new String? SwfFile { get; set; }
+        new AssetLink<Fallout4InterfaceAssetType>? SwfFile { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
         new ExtendedList<DialogBranch> DialogBranches { get; }
@@ -2014,6 +2022,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.QUST)]
     public partial interface IQuestGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
@@ -2051,7 +2060,7 @@ namespace Mutagen.Bethesda.Fallout4
         IReadOnlyList<IAQuestAliasGetter>? Aliases { get; }
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IKeywordGetter> QuestGroup { get; }
-        String? SwfFile { get; }
+        AssetLinkGetter<Fallout4InterfaceAssetType>? SwfFile { get; }
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
         IReadOnlyList<IDialogBranchGetter> DialogBranches { get; }
@@ -2875,6 +2884,32 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         #pragma warning restore CS0618
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IQuest obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.SwfFile != null)
+            {
+                yield return obj.SwfFile;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IQuest obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.SwfFile?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -2984,7 +3019,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.QuestGroup = item.QuestGroup.Equals(rhs.QuestGroup);
-            ret.SwfFile = string.Equals(item.SwfFile, rhs.SwfFile);
+            ret.SwfFile = object.Equals(item.SwfFile, rhs.SwfFile);
             ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.DialogBranches = item.DialogBranches.CollectionEqualsHelper(
@@ -3351,7 +3386,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.SwfFile) ?? true))
             {
-                if (!string.Equals(lhs.SwfFile, rhs.SwfFile)) return false;
+                if (!object.Equals(lhs.SwfFile, rhs.SwfFile)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Timestamp) ?? true))
             {
@@ -4089,6 +4124,22 @@ namespace Mutagen.Bethesda.Fallout4
             }
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IQuestGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.SwfFile != null)
+                {
+                    yield return obj.SwfFile;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Quest Duplicate(
             IQuestGetter item,
@@ -4417,10 +4468,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.QuestGroup.SetTo(rhs.QuestGroup.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.SwfFile) ?? true))
-            {
-                item.SwfFile = rhs.SwfFile;
-            }
+            item.SwfFile = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SwfFile, rhs.SwfFile);
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Timestamp) ?? true))
             {
                 item.Timestamp = rhs.Timestamp;
@@ -4769,7 +4817,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SwfFile,
+                item: item.SwfFile?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -5020,10 +5068,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SwfFile = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.SwfFile = AssetLinkBinaryTranslation.Instance.Parse<Fallout4InterfaceAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Quest_FieldIndex.SwfFile;
                 }
                 case RecordTypeInts.XXXX:
@@ -5095,6 +5140,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => QuestCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => QuestCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -5187,7 +5233,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region SwfFile
         private int? _SwfFileLocation;
-        public String? SwfFile => _SwfFileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfFileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4InterfaceAssetType>? SwfFile => _SwfFileLocation.HasValue ? new AssetLinkGetter<Fallout4InterfaceAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SwfFileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4InterfaceAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

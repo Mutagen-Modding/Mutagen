@@ -5,7 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" translated="DL" nullable="False" />
-      <String name="Icon" recordType="ICON" />
+      <AssetLink name="Icon" recordType="ICON" assetType="Fallout4Texture" />
       <RefList name="Conditions" refName="Condition" />
       <Data>
         <Fields>
@@ -18,7 +18,7 @@
       </Data>
       <FormLink name="Sound" recordType="SNAM" refName="SoundDescriptor" />
       <FormLink name="NextPerk" recordType="NNAM" refName="Perk" />
-      <String name="Swf" recordType="FNAM" />
+      <AssetLink name="Swf" recordType="FNAM" assetType="Fallout4Interface" />
       <RefList name="Effects" refName="APerkEffect" binary="Custom" />
     </Fields>
     <LinkInterface>IFurnitureAssociation</LinkInterface>

@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -55,7 +59,8 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte Percentage { get; set; } = default(Byte);
         #endregion
         #region ModelFilename
-        public String ModelFilename { get; set; } = string.Empty;
+        public AssetLink<Fallout4ModelAssetType> ModelFilename { get; set; } = new AssetLink<Fallout4ModelAssetType>();
+        AssetLinkGetter<Fallout4ModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -508,6 +513,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             Break0 = 1
         }
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DebrisModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => DebrisModelSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => DebrisModelSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => DebrisModelSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -569,11 +578,12 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IDebrisModel :
+        IAssetLinkContainer,
         IDebrisModelGetter,
         ILoquiObjectSetter<IDebrisModel>
     {
         new Byte Percentage { get; set; }
-        new String ModelFilename { get; set; }
+        new AssetLink<Fallout4ModelAssetType> ModelFilename { get; set; }
         new DebrisModel.Flag Flags { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
         new DebrisModel.DATADataType DATADataTypeState { get; set; }
@@ -581,6 +591,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface IDebrisModelGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IDebrisModelGetter>
     {
@@ -592,7 +603,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         Byte Percentage { get; }
-        String ModelFilename { get; }
+        AssetLinkGetter<Fallout4ModelAssetType> ModelFilename { get; }
         DebrisModel.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
         DebrisModel.DATADataType DATADataTypeState { get; }
@@ -861,7 +872,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.Percentage = default(Byte);
-            item.ModelFilename = string.Empty;
+            item.ModelFilename.SetToNull();
             item.Flags = default(DebrisModel.Flag);
             item.TextureFileHashes = default;
             item.DATADataTypeState = default(DebrisModel.DATADataType);
@@ -870,6 +881,24 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public void RemapLinks(IDebrisModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDebrisModel obj, bool iterateNestedRecords = true)
+        {
+            yield return obj.ModelFilename;
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IDebrisModel obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.ModelFilename.Relink(mapping);
+            }
         }
         
         #endregion
@@ -916,7 +945,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Percentage = item.Percentage == rhs.Percentage;
-            ret.ModelFilename = string.Equals(item.ModelFilename, rhs.ModelFilename);
+            ret.ModelFilename = object.Equals(item.ModelFilename, rhs.ModelFilename);
             ret.Flags = item.Flags == rhs.Flags;
             ret.TextureFileHashes = MemorySliceExt.SequenceEqual(item.TextureFileHashes, rhs.TextureFileHashes);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -1000,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
             {
-                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+                if (!object.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
@@ -1045,6 +1074,15 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDebrisModelGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.ModelFilename;
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1064,10 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Percentage = rhs.Percentage;
             }
-            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
-            {
-                item.ModelFilename = rhs.ModelFilename;
-            }
+            item.ModelFilename.GivenPath = rhs.ModelFilename.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -1207,7 +1242,7 @@ namespace Mutagen.Bethesda.Fallout4
                 writer.Write(item.Percentage);
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ModelFilename,
+                    item: item.ModelFilename.GivenPath,
                     binaryType: StringBinaryType.NullTerminate);
                 if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
                 {
@@ -1279,7 +1314,7 @@ namespace Mutagen.Bethesda.Fallout4
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
                     item.Percentage = dataFrame.ReadUInt8();
-                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                    item.ModelFilename.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
@@ -1354,6 +1389,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => DebrisModelCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => DebrisModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1376,7 +1412,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte Percentage => _Percentage_IsSet ? _recordData.Span[_PercentageLocation] : default(Byte);
         #endregion
         #region ModelFilename
-        public String ModelFilename { get; private set; } = string.Empty;
+        public AssetLinkGetter<Fallout4ModelAssetType> ModelFilename { get; private set; } = null!;
         protected int ModelFilenameEndingPos;
         #endregion
         #region Flags
@@ -1425,8 +1461,8 @@ namespace Mutagen.Bethesda.Fallout4
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.ModelFilename = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.Length + 1;
+            ret.ModelFilename = new AssetLink<Fallout4ModelAssetType>(BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._DATALocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated));
+            ret.ModelFilenameEndingPos = ret._DATALocation!.Value.Min + 0x1 + ret.ModelFilename.GivenPath.Length + 1;
             return ret;
         }
 

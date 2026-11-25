@@ -8,14 +8,18 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -54,9 +58,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region File
-        public String? File { get; set; }
+        public AssetLink<Fallout4ProgramAssetType>? File { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHolotapeProgramGetter.File => this.File;
+        AssetLinkGetter<Fallout4ProgramAssetType>? IHolotapeProgramGetter.File => this.File;
         #endregion
 
         #region To String
@@ -337,6 +341,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => HolotapeProgramCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => HolotapeProgramSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => HolotapeProgramSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => HolotapeProgramSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HolotapeProgramBinaryWriteTranslation.Instance;
@@ -395,19 +406,21 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IHolotapeProgram :
         IAHolotapeData,
+        IAssetLinkContainer,
         IHolotapeProgramGetter,
         ILoquiObjectSetter<IHolotapeProgram>
     {
-        new String? File { get; set; }
+        new AssetLink<Fallout4ProgramAssetType>? File { get; set; }
     }
 
     public partial interface IHolotapeProgramGetter :
         IAHolotapeDataGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IHolotapeProgramGetter>
     {
         static new ILoquiRegistration StaticRegistration => HolotapeProgram_Registration.Instance;
-        String? File { get; }
+        AssetLinkGetter<Fallout4ProgramAssetType>? File { get; }
 
     }
 
@@ -646,6 +659,32 @@ namespace Mutagen.Bethesda.Fallout4
             base.RemapLinks(obj, mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHolotapeProgram obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.File != null)
+            {
+                yield return obj.File;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IHolotapeProgram obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.File?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -699,7 +738,7 @@ namespace Mutagen.Bethesda.Fallout4
             HolotapeProgram.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.File = string.Equals(item.File, rhs.File);
+            ret.File = object.Equals(item.File, rhs.File);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -775,7 +814,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IAHolotapeDataGetter)lhs, (IAHolotapeDataGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)HolotapeProgram_FieldIndex.File) ?? true))
             {
-                if (!string.Equals(lhs.File, rhs.File)) return false;
+                if (!object.Equals(lhs.File, rhs.File)) return false;
             }
             return true;
         }
@@ -825,6 +864,22 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IHolotapeProgramGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.File != null)
+                {
+                    yield return obj.File;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -846,10 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)HolotapeProgram_FieldIndex.File) ?? true))
-            {
-                item.File = rhs.File;
-            }
+            item.File = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.File, rhs.File);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -972,7 +1024,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.File,
+                item: item.File?.GivenPath,
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -1019,10 +1071,7 @@ namespace Mutagen.Bethesda.Fallout4
             MutagenFrame frame)
         {
             if (frame.Complete) return;
-            item.File = StringBinaryTranslation.Instance.Parse(
-                reader: frame,
-                stringBinaryType: StringBinaryType.NullTerminate,
-                parseWhole: false);
+            item.File = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ProgramAssetType>(reader: frame);
         }
 
     }
@@ -1057,6 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => HolotapeProgramCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => HolotapeProgramBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1070,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region File
-        public String? File { get; private set; } = string.Empty;
+        public AssetLinkGetter<Fallout4ProgramAssetType>? File { get; private set; } = null!;
         protected int FileEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1093,8 +1143,8 @@ namespace Mutagen.Bethesda.Fallout4
             HolotapeProgramBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
-            ret.File = BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated);
-            ret.FileEndingPos = ret.File.Length + 1;
+            ret.File = new AssetLink<Fallout4ProgramAssetType>(BinaryStringUtility.ParseUnknownLengthString(ret._structData, package.MetaData.Encodings.NonTranslated));
+            ret.FileEndingPos = ret.File!.GivenPath.Length + 1;
         }
 
         public static IHolotapeProgramGetter HolotapeProgramFactory(

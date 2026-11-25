@@ -8,10 +8,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -75,9 +78,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? ITerminalMenuItemGetter.DisplayText => this.DisplayText;
         #endregion
         #region ImageFile
-        public String? ImageFile { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? ImageFile { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITerminalMenuItemGetter.ImageFile => this.ImageFile;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITerminalMenuItemGetter.ImageFile => this.ImageFile;
         #endregion
         #region Submenu
         private readonly IFormLinkNullable<ITerminalGetter> _Submenu = new FormLinkNullable<ITerminalGetter>();
@@ -679,6 +682,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => TerminalMenuItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TerminalMenuItemSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TerminalMenuItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => TerminalMenuItemSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => TerminalMenuItemSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TerminalMenuItemSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -740,6 +747,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITerminalMenuItem :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ITerminalMenuItem>,
         ITerminalMenuItemGetter
@@ -749,13 +757,14 @@ namespace Mutagen.Bethesda.Fallout4
         new TerminalMenuItem.Types Type { get; set; }
         new UInt16 ItemId { get; set; }
         new TranslatedString? DisplayText { get; set; }
-        new String? ImageFile { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? ImageFile { get; set; }
         new IFormLinkNullable<ITerminalGetter> Submenu { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface ITerminalMenuItemGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ITerminalMenuItemGetter>
@@ -772,7 +781,7 @@ namespace Mutagen.Bethesda.Fallout4
         TerminalMenuItem.Types Type { get; }
         UInt16 ItemId { get; }
         ITranslatedStringGetter? DisplayText { get; }
-        String? ImageFile { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? ImageFile { get; }
         IFormLinkNullableGetter<ITerminalGetter> Submenu { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
@@ -1067,6 +1076,27 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Conditions.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITerminalMenuItem obj, bool iterateNestedRecords = true)
+        {
+            if (obj.ImageFile != null)
+            {
+                yield return obj.ImageFile;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ITerminalMenuItem obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.ImageFile?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1114,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Type = item.Type == rhs.Type;
             ret.ItemId = item.ItemId == rhs.ItemId;
             ret.DisplayText = object.Equals(item.DisplayText, rhs.DisplayText);
-            ret.ImageFile = string.Equals(item.ImageFile, rhs.ImageFile);
+            ret.ImageFile = object.Equals(item.ImageFile, rhs.ImageFile);
             ret.Submenu = item.Submenu.Equals(rhs.Submenu);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
@@ -1240,7 +1270,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ImageFile) ?? true))
             {
-                if (!string.Equals(lhs.ImageFile, rhs.ImageFile)) return false;
+                if (!object.Equals(lhs.ImageFile, rhs.ImageFile)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Submenu) ?? true))
             {
@@ -1299,6 +1329,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITerminalMenuItemGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.ImageFile != null)
+                {
+                    yield return obj.ImageFile;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1334,10 +1376,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DisplayText = rhs.DisplayText?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.ImageFile) ?? true))
-            {
-                item.ImageFile = rhs.ImageFile;
-            }
+            item.ImageFile = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.ImageFile, rhs.ImageFile);
             if ((copyMask?.GetShouldTranslate((int)TerminalMenuItem_FieldIndex.Submenu) ?? true))
             {
                 item.Submenu.SetTo(rhs.Submenu.FormKeyNullable);
@@ -1504,7 +1543,7 @@ namespace Mutagen.Bethesda.Fallout4
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ImageFile,
+                item: item.ImageFile?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -1615,10 +1654,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageFile = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.ImageFile = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TerminalMenuItem_FieldIndex.ImageFile;
                 }
                 case RecordTypeInts.TNAM:
@@ -1692,6 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => TerminalMenuItemCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TerminalMenuItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TerminalMenuItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1728,7 +1765,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ImageFile
         private int? _ImageFileLocation;
-        public String? ImageFile => _ImageFileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageFileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? ImageFile => _ImageFileLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageFileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Submenu
         private int? _SubmenuLocation;

@@ -15,6 +15,7 @@ using Noggog.StructuredStrings;
 using Loqui.Internal;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Fallout4.Assets;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -1401,7 +1402,7 @@ internal class MergedWorldspace : IWorldspaceGetter
     public IFormLinkNullableGetter<IWaterGetter> LodWater => _primary.LodWater;
     public Single? LodWaterHeight => _primary.LodWaterHeight;
     public IWorldspaceLandDefaultsGetter? LandDefaults => _primary.LandDefaults;
-    public String? MapImage => _primary.MapImage;
+    public AssetLinkGetter<Fallout4TextureAssetType>? MapImage => _primary.MapImage;
     public IModelGetter? CloudModel => _primary.CloudModel;
     public IWorldspaceMapGetter? MapData => _primary.MapData;
     public Single WorldMapOffsetScale => _primary.WorldMapOffsetScale;
@@ -1411,10 +1412,10 @@ internal class MergedWorldspace : IWorldspaceGetter
     public P2Float ObjectBoundsMin => _primary.ObjectBoundsMin;
     public P2Float ObjectBoundsMax => _primary.ObjectBoundsMax;
     public IFormLinkNullableGetter<IMusicTypeGetter> Music => _primary.Music;
-    public String? CanopyShadow => _primary.CanopyShadow;
-    public String? WaterEnvironmentMap => _primary.WaterEnvironmentMap;
-    public String? HdLodDiffuseTexture => _primary.HdLodDiffuseTexture;
-    public String? HdLodNormalTexture => _primary.HdLodNormalTexture;
+    public AssetLinkGetter<Fallout4TextureAssetType>? CanopyShadow => _primary.CanopyShadow;
+    public AssetLinkGetter<Fallout4TextureAssetType>? WaterEnvironmentMap => _primary.WaterEnvironmentMap;
+    public AssetLinkGetter<Fallout4TextureAssetType>? HdLodDiffuseTexture => _primary.HdLodDiffuseTexture;
+    public AssetLinkGetter<Fallout4TextureAssetType>? HdLodNormalTexture => _primary.HdLodNormalTexture;
     public IWorldDefaultLevelDataGetter? DefaultLevelData => _primary.DefaultLevelData;
     public ReadOnlyMemorySlice<Byte>? OffsetData => _primary.OffsetData;
     public ReadOnlyMemorySlice<Byte>? CellSizeData => _primary.CellSizeData;
@@ -1640,7 +1641,7 @@ internal class MergedWorldspaceCell : ICellGetter
     public Int32? FactionRank => _primary.FactionRank;
     public IFormLinkNullableGetter<ILockListGetter> LockList => _primary.LockList;
     public ICellExteriorLodGetter? ExteriorLod => _primary.ExteriorLod;
-    public String? WaterEnvironmentMap => _primary.WaterEnvironmentMap;
+    public AssetLinkGetter<Fallout4TextureAssetType>? WaterEnvironmentMap => _primary.WaterEnvironmentMap;
     public IFormLinkNullableGetter<IRegionGetter> SkyAndWeatherFromRegion => _primary.SkyAndWeatherFromRegion;
     public IFormLinkNullableGetter<IAcousticSpaceGetter> AcousticSpace => _primary.AcousticSpace;
     public IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone => _primary.EncounterZone;

@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -57,9 +61,9 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? ISoundRateOfFireGetter.RotationsPerMinute => this.RotationsPerMinute;
         #endregion
         #region File
-        public String? File { get; set; }
+        public AssetLink<Fallout4SoundAssetType>? File { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISoundRateOfFireGetter.File => this.File;
+        AssetLinkGetter<Fallout4SoundAssetType>? ISoundRateOfFireGetter.File => this.File;
         #endregion
 
         #region To String
@@ -389,6 +393,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => SoundRateOfFireCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => SoundRateOfFireSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => SoundRateOfFireSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => SoundRateOfFireSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundRateOfFireBinaryWriteTranslation.Instance;
@@ -448,15 +459,17 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ISoundRateOfFire :
+        IAssetLinkContainer,
         ILoquiObjectSetter<ISoundRateOfFire>,
         ISoundRateOfFireGetter
     {
         new UInt32? RotationsPerMinute { get; set; }
-        new String? File { get; set; }
+        new AssetLink<Fallout4SoundAssetType>? File { get; set; }
     }
 
     public partial interface ISoundRateOfFireGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<ISoundRateOfFireGetter>
     {
@@ -468,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => SoundRateOfFire_Registration.Instance;
         UInt32? RotationsPerMinute { get; }
-        String? File { get; }
+        AssetLinkGetter<Fallout4SoundAssetType>? File { get; }
 
     }
 
@@ -745,6 +758,27 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ISoundRateOfFire obj, bool iterateNestedRecords = true)
+        {
+            if (obj.File != null)
+            {
+                yield return obj.File;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ISoundRateOfFire obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.File?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -788,7 +822,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.RotationsPerMinute = item.RotationsPerMinute == rhs.RotationsPerMinute;
-            ret.File = string.Equals(item.File, rhs.File);
+            ret.File = object.Equals(item.File, rhs.File);
         }
         
         public string Print(
@@ -858,7 +892,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundRateOfFire_FieldIndex.File) ?? true))
             {
-                if (!string.Equals(lhs.File, rhs.File)) return false;
+                if (!object.Equals(lhs.File, rhs.File)) return false;
             }
             return true;
         }
@@ -891,6 +925,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ISoundRateOfFireGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.File != null)
+                {
+                    yield return obj.File;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -910,10 +956,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.RotationsPerMinute = rhs.RotationsPerMinute;
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundRateOfFire_FieldIndex.File) ?? true))
-            {
-                item.File = rhs.File;
-            }
+            item.File = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.File, rhs.File);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1030,7 +1073,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.INTV));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.File,
+                item: item.File?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1092,10 +1135,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)SoundRateOfFire_FieldIndex.File, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.File = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.File = AssetLinkBinaryTranslation.Instance.Parse<Fallout4SoundAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)SoundRateOfFire_FieldIndex.File;
                 }
                 case RecordTypeInts.ITME: // End Marker
@@ -1157,6 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => SoundRateOfFireCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SoundRateOfFireBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1177,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region File
         private int? _FileLocation;
-        public String? File => _FileLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4SoundAssetType>? File => _FileLocation.HasValue ? new AssetLinkGetter<Fallout4SoundAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4SoundAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

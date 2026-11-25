@@ -8,10 +8,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -58,15 +61,15 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region CloudTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String?[] _CloudTextures = new String?[29];
-        public String?[] CloudTextures
+        private IAssetLink<Fallout4TextureAssetType>?[] _CloudTextures = new IAssetLink<Fallout4TextureAssetType>?[29];
+        public IAssetLink<Fallout4TextureAssetType>?[] CloudTextures
         {
             get => this._CloudTextures;
             init => this._CloudTextures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<String?> IWeatherGetter.CloudTextures => _CloudTextures;
+        IReadOnlyList<IAssetLinkGetter<Fallout4TextureAssetType>?> IWeatherGetter.CloudTextures => _CloudTextures;
         #endregion
 
         #endregion
@@ -3886,6 +3889,10 @@ namespace Mutagen.Bethesda.Fallout4
         {
             Break0 = 1
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => WeatherSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => WeatherSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => WeatherSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -3965,12 +3972,13 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IWeather :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IWeatherInternal>,
         IWeatherGetter
     {
-        new String?[] CloudTextures { get; }
+        new IAssetLink<Fallout4TextureAssetType>?[] CloudTextures { get; }
         new MemorySlice<Byte>? LNAM { get; set; }
         new IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; }
         new IFormLink<IVisualEffectGetter> VisualEffect { get; set; }
@@ -4064,13 +4072,14 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.WTHR)]
     public partial interface IWeatherGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IWeatherGetter>,
         IMapsToGetter<IWeatherGetter>
     {
         static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
-        ReadOnlyMemorySlice<String?> CloudTextures { get; }
+        IReadOnlyList<IAssetLinkGetter<Fallout4TextureAssetType>?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
         IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation { get; }
         IFormLinkGetter<IVisualEffectGetter> VisualEffect { get; }
@@ -4642,6 +4651,37 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Magic?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IWeather obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CloudTextures.WhereNotNull())
+            {
+                yield return item;
+            }
+            if (obj.Aurora is {} AuroraItems)
+            {
+                foreach (var item in AuroraItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IWeather obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.CloudTextures.ForEach(x => x?.Relink(mapping));
+            obj.Aurora?.RemapAssetLinks(mapping, queryCategories, linkCache);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -4707,10 +4747,9 @@ namespace Mutagen.Bethesda.Fallout4
             Weather.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<String?>(
-                item.CloudTextures,
+            ret.CloudTextures = item.CloudTextures.CollectionEqualsHelper(
                 rhs.CloudTextures,
-                (l, r) => string.Equals(l, r),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.LNAM = MemorySliceExt.SequenceEqual(item.LNAM, rhs.LNAM);
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
@@ -5310,7 +5349,7 @@ namespace Mutagen.Bethesda.Fallout4
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<String>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+                if (!lhs.CloudTextures.SequenceEqualNullable(rhs.CloudTextures)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
@@ -5941,6 +5980,29 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IWeatherGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.CloudTextures.WhereNotNull())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Aurora is {} AuroraItems)
+            {
+                foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public Weather Duplicate(
             IWeatherGetter item,
@@ -6036,7 +6098,7 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                rhs.CloudTextures.Span.CopyTo(item.CloudTextures.AsSpan());
+                item.CloudTextures.SetTo(rhs.CloudTextures.Select(x => x?.AsSetter()));
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
             {
@@ -7988,6 +8050,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => WeatherCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => WeatherCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => WeatherBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

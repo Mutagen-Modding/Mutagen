@@ -46,7 +46,7 @@
         <Interface>ILockList</Interface>
       </FormLink>
       <RefDirect name="ExteriorLod" refName="CellExteriorLod" />
-      <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <AssetLink name="WaterEnvironmentMap" recordType="XWEM" assetType="Fallout4Texture" />
       <FormLink name="SkyAndWeatherFromRegion" refName="Region" recordType="XCCM" />
       <FormLink name="AcousticSpace" refName="AcousticSpace" recordType="XCAS" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />

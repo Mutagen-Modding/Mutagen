@@ -8,7 +8,7 @@
       <FormLink name="OwnerQuest" recordType="QNAM" refName="Quest" />
       <Enum name="Flags" enumName="Message.Flag" byteLength="4" recordType="DNAM" nullable="False" />
       <UInt32 name="DisplayTime" recordType="TNAM" />
-      <String name="Swf" recordType="SNAM" />
+      <AssetLink name="Swf" recordType="SNAM" assetType="Fallout4Interface" />
       <String name="ShortTitle" recordType="NNAM" translated="Normal" />
       <RefList name="MenuButtons" refName="MessageButton" />
     </Fields>

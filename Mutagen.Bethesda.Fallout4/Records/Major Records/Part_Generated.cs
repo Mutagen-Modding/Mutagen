@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -57,9 +61,9 @@ namespace Mutagen.Bethesda.Fallout4
         Part.PartTypeEnum? IPartGetter.PartType => this.PartType;
         #endregion
         #region FileName
-        public String? FileName { get; set; }
+        public AssetLink<Fallout4DeformedModelAssetType>? FileName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPartGetter.FileName => this.FileName;
+        AssetLinkGetter<Fallout4DeformedModelAssetType>? IPartGetter.FileName => this.FileName;
         #endregion
 
         #region To String
@@ -389,6 +393,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => PartCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => PartSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => PartSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => PartSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PartBinaryWriteTranslation.Instance;
@@ -448,15 +459,17 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IPart :
+        IAssetLinkContainer,
         ILoquiObjectSetter<IPart>,
         IPartGetter
     {
         new Part.PartTypeEnum? PartType { get; set; }
-        new String? FileName { get; set; }
+        new AssetLink<Fallout4DeformedModelAssetType>? FileName { get; set; }
     }
 
     public partial interface IPartGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IPartGetter>
     {
@@ -468,7 +481,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Part_Registration.Instance;
         Part.PartTypeEnum? PartType { get; }
-        String? FileName { get; }
+        AssetLinkGetter<Fallout4DeformedModelAssetType>? FileName { get; }
 
     }
 
@@ -735,6 +748,27 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPart obj, bool iterateNestedRecords = true)
+        {
+            if (obj.FileName != null)
+            {
+                yield return obj.FileName;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IPart obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.FileName?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -778,7 +812,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.PartType = item.PartType == rhs.PartType;
-            ret.FileName = string.Equals(item.FileName, rhs.FileName);
+            ret.FileName = object.Equals(item.FileName, rhs.FileName);
         }
         
         public string Print(
@@ -848,7 +882,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Part_FieldIndex.FileName) ?? true))
             {
-                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+                if (!object.Equals(lhs.FileName, rhs.FileName)) return false;
             }
             return true;
         }
@@ -881,6 +915,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IPartGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.FileName != null)
+                {
+                    yield return obj.FileName;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -900,10 +946,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.PartType = rhs.PartType;
             }
-            if ((copyMask?.GetShouldTranslate((int)Part_FieldIndex.FileName) ?? true))
-            {
-                item.FileName = rhs.FileName;
-            }
+            item.FileName = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.FileName, rhs.FileName);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1020,7 +1063,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.NAM0));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FileName,
+                item: item.FileName?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1078,10 +1121,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)Part_FieldIndex.FileName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.FileName = AssetLinkBinaryTranslation.Instance.Parse<Fallout4DeformedModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Part_FieldIndex.FileName;
                 }
                 default:
@@ -1138,6 +1178,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => PartCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PartBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1158,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region FileName
         private int? _FileNameLocation;
-        public String? FileName => _FileNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4DeformedModelAssetType>? FileName => _FileNameLocation.HasValue ? new AssetLinkGetter<Fallout4DeformedModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FileNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4DeformedModelAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

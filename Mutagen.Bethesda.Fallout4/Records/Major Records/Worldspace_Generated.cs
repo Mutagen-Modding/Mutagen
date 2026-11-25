@@ -11,6 +11,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
@@ -213,9 +214,9 @@ namespace Mutagen.Bethesda.Fallout4
         IWorldspaceLandDefaultsGetter? IWorldspaceGetter.LandDefaults => this.LandDefaults;
         #endregion
         #region MapImage
-        public String? MapImage { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? MapImage { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.MapImage => this.MapImage;
+        AssetLinkGetter<Fallout4TextureAssetType>? IWorldspaceGetter.MapImage => this.MapImage;
         #endregion
         #region CloudModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -270,24 +271,24 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
         #endregion
         #region CanopyShadow
-        public String? CanopyShadow { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? CanopyShadow { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.CanopyShadow => this.CanopyShadow;
+        AssetLinkGetter<Fallout4TextureAssetType>? IWorldspaceGetter.CanopyShadow => this.CanopyShadow;
         #endregion
         #region WaterEnvironmentMap
-        public String? WaterEnvironmentMap { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? WaterEnvironmentMap { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
+        AssetLinkGetter<Fallout4TextureAssetType>? IWorldspaceGetter.WaterEnvironmentMap => this.WaterEnvironmentMap;
         #endregion
         #region HdLodDiffuseTexture
-        public String? HdLodDiffuseTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? HdLodDiffuseTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.HdLodDiffuseTexture => this.HdLodDiffuseTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IWorldspaceGetter.HdLodDiffuseTexture => this.HdLodDiffuseTexture;
         #endregion
         #region HdLodNormalTexture
-        public String? HdLodNormalTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? HdLodNormalTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWorldspaceGetter.HdLodNormalTexture => this.HdLodNormalTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IWorldspaceGetter.HdLodNormalTexture => this.HdLodNormalTexture;
         #endregion
         #region DefaultLevelData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1999,7 +2000,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IWaterGetter> LodWater { get; set; }
         new Single? LodWaterHeight { get; set; }
         new WorldspaceLandDefaults? LandDefaults { get; set; }
-        new String? MapImage { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? MapImage { get; set; }
         new Model? CloudModel { get; set; }
         new WorldspaceMap? MapData { get; set; }
         new Single WorldMapOffsetScale { get; set; }
@@ -2009,10 +2010,10 @@ namespace Mutagen.Bethesda.Fallout4
         new P2Float ObjectBoundsMin { get; set; }
         new P2Float ObjectBoundsMax { get; set; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new String? CanopyShadow { get; set; }
-        new String? WaterEnvironmentMap { get; set; }
-        new String? HdLodDiffuseTexture { get; set; }
-        new String? HdLodNormalTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? CanopyShadow { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? WaterEnvironmentMap { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? HdLodDiffuseTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? HdLodNormalTexture { get; set; }
         new WorldDefaultLevelData? DefaultLevelData { get; set; }
         new MemorySlice<Byte>? OffsetData { get; set; }
         new MemorySlice<Byte>? CellSizeData { get; set; }
@@ -2067,7 +2068,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IWaterGetter> LodWater { get; }
         Single? LodWaterHeight { get; }
         IWorldspaceLandDefaultsGetter? LandDefaults { get; }
-        String? MapImage { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? MapImage { get; }
         IModelGetter? CloudModel { get; }
         IWorldspaceMapGetter? MapData { get; }
         Single WorldMapOffsetScale { get; }
@@ -2077,10 +2078,10 @@ namespace Mutagen.Bethesda.Fallout4
         P2Float ObjectBoundsMin { get; }
         P2Float ObjectBoundsMax { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        String? CanopyShadow { get; }
-        String? WaterEnvironmentMap { get; }
-        String? HdLodDiffuseTexture { get; }
-        String? HdLodNormalTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? CanopyShadow { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? WaterEnvironmentMap { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? HdLodDiffuseTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? HdLodNormalTexture { get; }
         IWorldDefaultLevelDataGetter? DefaultLevelData { get; }
         ReadOnlyMemorySlice<Byte>? OffsetData { get; }
         ReadOnlyMemorySlice<Byte>? CellSizeData { get; }
@@ -3080,16 +3081,42 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            if (obj.TopCell is IAssetLinkContainer TopCelllinkCont)
-            if (iterateNestedRecords)
+            if (obj.MapImage != null)
             {
-                foreach (var item in TopCelllinkCont.EnumerateListedAssetLinks(iterateNestedRecords))
+                yield return obj.MapImage;
+            }
+            if (obj.CloudModel is {} CloudModelItems)
+            {
+                foreach (var item in CloudModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainer>()
-                .SelectMany((f) => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+            if (obj.CanopyShadow != null)
+            {
+                yield return obj.CanopyShadow;
+            }
+            if (obj.WaterEnvironmentMap != null)
+            {
+                yield return obj.WaterEnvironmentMap;
+            }
+            if (obj.HdLodDiffuseTexture != null)
+            {
+                yield return obj.HdLodDiffuseTexture;
+            }
+            if (obj.HdLodNormalTexture != null)
+            {
+                yield return obj.HdLodNormalTexture;
+            }
+            if (obj.TopCell is {} TopCellItems)
+            if (iterateNestedRecords)
+            {
+                foreach (var item in TopCellItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -3104,6 +3131,15 @@ namespace Mutagen.Bethesda.Fallout4
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.SubCells.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.MapImage?.Relink(mapping);
+                obj.CanopyShadow?.Relink(mapping);
+                obj.WaterEnvironmentMap?.Relink(mapping);
+                obj.HdLodDiffuseTexture?.Relink(mapping);
+                obj.HdLodNormalTexture?.Relink(mapping);
+            }
+            obj.CloudModel?.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.TopCell?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
@@ -3203,7 +3239,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs.LandDefaults,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MapImage = string.Equals(item.MapImage, rhs.MapImage);
+            ret.MapImage = object.Equals(item.MapImage, rhs.MapImage);
             ret.CloudModel = EqualsMaskHelper.EqualsHelper(
                 item.CloudModel,
                 rhs.CloudModel,
@@ -3221,10 +3257,10 @@ namespace Mutagen.Bethesda.Fallout4
             ret.ObjectBoundsMin = item.ObjectBoundsMin.Equals(rhs.ObjectBoundsMin);
             ret.ObjectBoundsMax = item.ObjectBoundsMax.Equals(rhs.ObjectBoundsMax);
             ret.Music = item.Music.Equals(rhs.Music);
-            ret.CanopyShadow = string.Equals(item.CanopyShadow, rhs.CanopyShadow);
-            ret.WaterEnvironmentMap = string.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
-            ret.HdLodDiffuseTexture = string.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
-            ret.HdLodNormalTexture = string.Equals(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
+            ret.CanopyShadow = object.Equals(item.CanopyShadow, rhs.CanopyShadow);
+            ret.WaterEnvironmentMap = object.Equals(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
+            ret.HdLodDiffuseTexture = object.Equals(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
+            ret.HdLodNormalTexture = object.Equals(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
             ret.DefaultLevelData = EqualsMaskHelper.EqualsHelper(
                 item.DefaultLevelData,
                 rhs.DefaultLevelData,
@@ -3582,7 +3618,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
             {
-                if (!string.Equals(lhs.MapImage, rhs.MapImage)) return false;
+                if (!object.Equals(lhs.MapImage, rhs.MapImage)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
             {
@@ -3630,19 +3666,19 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
             {
-                if (!string.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
+                if (!object.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
             {
-                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+                if (!object.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
             {
-                if (!string.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
+                if (!object.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
             {
-                if (!string.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
+                if (!object.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DefaultLevelData) ?? true))
             {
@@ -4586,16 +4622,45 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return item;
             }
-            if (obj.TopCell is IAssetLinkContainerGetter TopCelllinkCont)
-            if (iterateNestedRecords)
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in TopCelllinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                if (obj.MapImage != null)
+                {
+                    yield return obj.MapImage;
+                }
+                if (obj.CanopyShadow != null)
+                {
+                    yield return obj.CanopyShadow;
+                }
+                if (obj.WaterEnvironmentMap != null)
+                {
+                    yield return obj.WaterEnvironmentMap;
+                }
+                if (obj.HdLodDiffuseTexture != null)
+                {
+                    yield return obj.HdLodDiffuseTexture;
+                }
+                if (obj.HdLodNormalTexture != null)
+                {
+                    yield return obj.HdLodNormalTexture;
+                }
+            }
+            if (obj.CloudModel is {} CloudModelItems)
+            {
+                foreach (var item in CloudModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.SubCells.WhereCastable<IWorldspaceBlockGetter, IAssetLinkContainerGetter>()
-                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+            if (obj.TopCell is {} TopCellItems)
+            if (iterateNestedRecords)
+            {
+                foreach (var item in TopCellItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.SubCells.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
             {
                 yield return item;
             }
@@ -4833,10 +4898,7 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
-            {
-                item.MapImage = rhs.MapImage;
-            }
+            item.MapImage = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.MapImage, rhs.MapImage);
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.CloudModel);
@@ -4917,22 +4979,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
-            {
-                item.CanopyShadow = rhs.CanopyShadow;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
-            {
-                item.WaterEnvironmentMap = rhs.WaterEnvironmentMap;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
-            {
-                item.HdLodDiffuseTexture = rhs.HdLodDiffuseTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
-            {
-                item.HdLodNormalTexture = rhs.HdLodNormalTexture;
-            }
+            item.CanopyShadow = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.CanopyShadow, rhs.CanopyShadow);
+            item.WaterEnvironmentMap = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.WaterEnvironmentMap, rhs.WaterEnvironmentMap);
+            item.HdLodDiffuseTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture);
+            item.HdLodNormalTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HdLodNormalTexture, rhs.HdLodNormalTexture);
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.DefaultLevelData) ?? true))
             {
                 errorMask?.PushIndex((int)Worldspace_FieldIndex.DefaultLevelData);
@@ -5289,7 +5339,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MapImage,
+                item: item.MapImage?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.CloudModel is {} CloudModelItem)
@@ -5342,22 +5392,22 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CanopyShadow,
+                item: item.CanopyShadow?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.WaterEnvironmentMap,
+                item: item.WaterEnvironmentMap?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HdLodDiffuseTexture,
+                item: item.HdLodDiffuseTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HdLodNormalTexture,
+                item: item.HdLodNormalTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.DefaultLevelData is {} DefaultLevelDataItem)
@@ -5585,10 +5635,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapImage = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.MapImage = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.MapImage;
                 }
                 case RecordTypeInts.MODL:
@@ -5657,37 +5704,25 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CanopyShadow = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.CanopyShadow = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.CanopyShadow;
                 }
                 case RecordTypeInts.XWEM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterEnvironmentMap = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.WaterEnvironmentMap = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodDiffuseTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.HdLodDiffuseTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.HdLodDiffuseTexture;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodNormalTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.HdLodNormalTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.HdLodNormalTexture;
                 }
                 case RecordTypeInts.WLEV:
@@ -5857,7 +5892,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MapImage
         private int? _MapImageLocation;
-        public String? MapImage => _MapImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? MapImage => _MapImageLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MapImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         public IModelGetter? CloudModel { get; private set; }
         #region MapData
@@ -5903,19 +5938,19 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CanopyShadow
         private int? _CanopyShadowLocation;
-        public String? CanopyShadow => _CanopyShadowLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? CanopyShadow => _CanopyShadowLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CanopyShadowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region WaterEnvironmentMap
         private int? _WaterEnvironmentMapLocation;
-        public String? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? WaterEnvironmentMap => _WaterEnvironmentMapLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WaterEnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region HdLodDiffuseTexture
         private int? _HdLodDiffuseTextureLocation;
-        public String? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? HdLodDiffuseTexture => _HdLodDiffuseTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodDiffuseTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region HdLodNormalTexture
         private int? _HdLodNormalTextureLocation;
-        public String? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? HdLodNormalTexture => _HdLodNormalTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HdLodNormalTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         public IWorldDefaultLevelDataGetter? DefaultLevelData { get; private set; }
         #region OffsetData

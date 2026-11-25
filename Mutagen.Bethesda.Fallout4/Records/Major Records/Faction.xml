@@ -60,7 +60,7 @@
           <String translated="Normal" />
         </Fields>
       </Gendered>
-      <String name="Insignia" recordType="INAM" />
+      <AssetLink name="Insignia" recordType="INAM" assetType="Fallout4Texture" />
     </Fields>
   </Object>
 </Loqui>

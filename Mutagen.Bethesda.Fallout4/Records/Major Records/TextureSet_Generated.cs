@@ -8,15 +8,19 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -76,44 +80,44 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Diffuse
-        public String? Diffuse { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Diffuse { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Diffuse => this.Diffuse;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.Diffuse => this.Diffuse;
         #endregion
         #region NormalOrGloss
-        public String? NormalOrGloss { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? NormalOrGloss { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.NormalOrGloss => this.NormalOrGloss;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.NormalOrGloss => this.NormalOrGloss;
         #endregion
         #region Glow
-        public String? Glow { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Glow { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Glow => this.Glow;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.Glow => this.Glow;
         #endregion
         #region Height
-        public String? Height { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Height { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Height => this.Height;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.Height => this.Height;
         #endregion
         #region Environment
-        public String? Environment { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Environment { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Environment => this.Environment;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.Environment => this.Environment;
         #endregion
         #region Wrinkles
-        public String? Wrinkles { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Wrinkles { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Wrinkles => this.Wrinkles;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.Wrinkles => this.Wrinkles;
         #endregion
         #region Multilayer
-        public String? Multilayer { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Multilayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Multilayer => this.Multilayer;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.Multilayer => this.Multilayer;
         #endregion
         #region SmoothSpec
-        public String? SmoothSpec { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? SmoothSpec { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.SmoothSpec => this.SmoothSpec;
+        AssetLinkGetter<Fallout4TextureAssetType>? ITextureSetGetter.SmoothSpec => this.SmoothSpec;
         #endregion
         #region Decal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,9 +134,9 @@ namespace Mutagen.Bethesda.Fallout4
         public TextureSet.Flag Flags { get; set; } = default(TextureSet.Flag);
         #endregion
         #region Material
-        public String? Material { get; set; }
+        public AssetLink<Fallout4MaterialAssetType>? Material { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ITextureSetGetter.Material => this.Material;
+        AssetLinkGetter<Fallout4MaterialAssetType>? ITextureSetGetter.Material => this.Material;
         #endregion
 
         #region To String
@@ -809,6 +813,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(ITextureSet);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TextureSetCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => TextureSetSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => TextureSetSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TextureSetSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -888,6 +896,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITextureSet :
+        IAssetLinkContainer,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         ILoquiObjectSetter<ITextureSetInternal>,
@@ -901,17 +910,17 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new String? Diffuse { get; set; }
-        new String? NormalOrGloss { get; set; }
-        new String? Glow { get; set; }
-        new String? Height { get; set; }
-        new String? Environment { get; set; }
-        new String? Wrinkles { get; set; }
-        new String? Multilayer { get; set; }
-        new String? SmoothSpec { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Diffuse { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? NormalOrGloss { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Glow { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Height { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Environment { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Wrinkles { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Multilayer { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? SmoothSpec { get; set; }
         new Decal? Decal { get; set; }
         new TextureSet.Flag Flags { get; set; }
-        new String? Material { get; set; }
+        new AssetLink<Fallout4MaterialAssetType>? Material { get; set; }
     }
 
     public partial interface ITextureSetInternal :
@@ -924,6 +933,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.TXST)]
     public partial interface ITextureSetGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         ILoquiObject<ITextureSetGetter>,
@@ -940,17 +950,17 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        String? Diffuse { get; }
-        String? NormalOrGloss { get; }
-        String? Glow { get; }
-        String? Height { get; }
-        String? Environment { get; }
-        String? Wrinkles { get; }
-        String? Multilayer { get; }
-        String? SmoothSpec { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Diffuse { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? NormalOrGloss { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Glow { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Height { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Environment { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Wrinkles { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Multilayer { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? SmoothSpec { get; }
         IDecalGetter? Decal { get; }
         TextureSet.Flag Flags { get; }
-        String? Material { get; }
+        AssetLinkGetter<Fallout4MaterialAssetType>? Material { get; }
 
     }
 
@@ -1271,6 +1281,72 @@ namespace Mutagen.Bethesda.Fallout4
             base.RemapLinks(obj, mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITextureSet obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Diffuse != null)
+            {
+                yield return obj.Diffuse;
+            }
+            if (obj.NormalOrGloss != null)
+            {
+                yield return obj.NormalOrGloss;
+            }
+            if (obj.Glow != null)
+            {
+                yield return obj.Glow;
+            }
+            if (obj.Height != null)
+            {
+                yield return obj.Height;
+            }
+            if (obj.Environment != null)
+            {
+                yield return obj.Environment;
+            }
+            if (obj.Wrinkles != null)
+            {
+                yield return obj.Wrinkles;
+            }
+            if (obj.Multilayer != null)
+            {
+                yield return obj.Multilayer;
+            }
+            if (obj.SmoothSpec != null)
+            {
+                yield return obj.SmoothSpec;
+            }
+            if (obj.Material != null)
+            {
+                yield return obj.Material;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ITextureSet obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Diffuse?.Relink(mapping);
+                obj.NormalOrGloss?.Relink(mapping);
+                obj.Glow?.Relink(mapping);
+                obj.Height?.Relink(mapping);
+                obj.Environment?.Relink(mapping);
+                obj.Wrinkles?.Relink(mapping);
+                obj.Multilayer?.Relink(mapping);
+                obj.SmoothSpec?.Relink(mapping);
+                obj.Material?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1337,21 +1413,21 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Diffuse = string.Equals(item.Diffuse, rhs.Diffuse);
-            ret.NormalOrGloss = string.Equals(item.NormalOrGloss, rhs.NormalOrGloss);
-            ret.Glow = string.Equals(item.Glow, rhs.Glow);
-            ret.Height = string.Equals(item.Height, rhs.Height);
-            ret.Environment = string.Equals(item.Environment, rhs.Environment);
-            ret.Wrinkles = string.Equals(item.Wrinkles, rhs.Wrinkles);
-            ret.Multilayer = string.Equals(item.Multilayer, rhs.Multilayer);
-            ret.SmoothSpec = string.Equals(item.SmoothSpec, rhs.SmoothSpec);
+            ret.Diffuse = object.Equals(item.Diffuse, rhs.Diffuse);
+            ret.NormalOrGloss = object.Equals(item.NormalOrGloss, rhs.NormalOrGloss);
+            ret.Glow = object.Equals(item.Glow, rhs.Glow);
+            ret.Height = object.Equals(item.Height, rhs.Height);
+            ret.Environment = object.Equals(item.Environment, rhs.Environment);
+            ret.Wrinkles = object.Equals(item.Wrinkles, rhs.Wrinkles);
+            ret.Multilayer = object.Equals(item.Multilayer, rhs.Multilayer);
+            ret.SmoothSpec = object.Equals(item.SmoothSpec, rhs.SmoothSpec);
             ret.Decal = EqualsMaskHelper.EqualsHelper(
                 item.Decal,
                 rhs.Decal,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Material = string.Equals(item.Material, rhs.Material);
+            ret.Material = object.Equals(item.Material, rhs.Material);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1519,35 +1595,35 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
             {
-                if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
+                if (!object.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
             {
-                if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
+                if (!object.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Glow) ?? true))
             {
-                if (!string.Equals(lhs.Glow, rhs.Glow)) return false;
+                if (!object.Equals(lhs.Glow, rhs.Glow)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
             {
-                if (!string.Equals(lhs.Height, rhs.Height)) return false;
+                if (!object.Equals(lhs.Height, rhs.Height)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
             {
-                if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
+                if (!object.Equals(lhs.Environment, rhs.Environment)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Wrinkles) ?? true))
             {
-                if (!string.Equals(lhs.Wrinkles, rhs.Wrinkles)) return false;
+                if (!object.Equals(lhs.Wrinkles, rhs.Wrinkles)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
             {
-                if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
+                if (!object.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.SmoothSpec) ?? true))
             {
-                if (!string.Equals(lhs.SmoothSpec, rhs.SmoothSpec)) return false;
+                if (!object.Equals(lhs.SmoothSpec, rhs.SmoothSpec)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
@@ -1563,7 +1639,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Material) ?? true))
             {
-                if (!string.Equals(lhs.Material, rhs.Material)) return false;
+                if (!object.Equals(lhs.Material, rhs.Material)) return false;
             }
             return true;
         }
@@ -1663,6 +1739,54 @@ namespace Mutagen.Bethesda.Fallout4
             foreach (var item in base.EnumerateFormLinks(obj, iterateNestedRecords))
             {
                 yield return item;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITextureSetGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Diffuse != null)
+                {
+                    yield return obj.Diffuse;
+                }
+                if (obj.NormalOrGloss != null)
+                {
+                    yield return obj.NormalOrGloss;
+                }
+                if (obj.Glow != null)
+                {
+                    yield return obj.Glow;
+                }
+                if (obj.Height != null)
+                {
+                    yield return obj.Height;
+                }
+                if (obj.Environment != null)
+                {
+                    yield return obj.Environment;
+                }
+                if (obj.Wrinkles != null)
+                {
+                    yield return obj.Wrinkles;
+                }
+                if (obj.Multilayer != null)
+                {
+                    yield return obj.Multilayer;
+                }
+                if (obj.SmoothSpec != null)
+                {
+                    yield return obj.SmoothSpec;
+                }
+                if (obj.Material != null)
+                {
+                    yield return obj.Material;
+                }
             }
             yield break;
         }
@@ -1782,38 +1906,14 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
-            {
-                item.Diffuse = rhs.Diffuse;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
-            {
-                item.NormalOrGloss = rhs.NormalOrGloss;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Glow) ?? true))
-            {
-                item.Glow = rhs.Glow;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
-            {
-                item.Height = rhs.Height;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
-            {
-                item.Environment = rhs.Environment;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Wrinkles) ?? true))
-            {
-                item.Wrinkles = rhs.Wrinkles;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
-            {
-                item.Multilayer = rhs.Multilayer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.SmoothSpec) ?? true))
-            {
-                item.SmoothSpec = rhs.SmoothSpec;
-            }
+            item.Diffuse = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Diffuse, rhs.Diffuse);
+            item.NormalOrGloss = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.NormalOrGloss, rhs.NormalOrGloss);
+            item.Glow = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Glow, rhs.Glow);
+            item.Height = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Height, rhs.Height);
+            item.Environment = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Environment, rhs.Environment);
+            item.Wrinkles = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Wrinkles, rhs.Wrinkles);
+            item.Multilayer = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Multilayer, rhs.Multilayer);
+            item.SmoothSpec = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.SmoothSpec, rhs.SmoothSpec);
             if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
             {
                 errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
@@ -1844,10 +1944,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Material) ?? true))
-            {
-                item.Material = rhs.Material;
-            }
+            item.Material = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Material, rhs.Material);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -2024,42 +2121,42 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Diffuse,
+                item: item.Diffuse?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NormalOrGloss,
+                item: item.NormalOrGloss?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Glow,
+                item: item.Glow?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX03),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Height,
+                item: item.Height?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX04),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Environment,
+                item: item.Environment?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX05),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Wrinkles,
+                item: item.Wrinkles?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX02),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Multilayer,
+                item: item.Multilayer?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX06),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SmoothSpec,
+                item: item.SmoothSpec?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TX07),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Decal is {} DecalItem)
@@ -2076,7 +2173,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Material,
+                item: item.Material?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -2155,73 +2252,49 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Diffuse = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Diffuse = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NormalOrGloss = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.NormalOrGloss = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX03:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Glow = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Glow = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Glow;
                 }
                 case RecordTypeInts.TX04:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Height = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Height = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Environment = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Environment = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX02:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Wrinkles = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Wrinkles = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Wrinkles;
                 }
                 case RecordTypeInts.TX06:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Multilayer = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Multilayer = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SmoothSpec = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.SmoothSpec = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.SmoothSpec;
                 }
                 case RecordTypeInts.DODT:
@@ -2240,10 +2313,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Material = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Material = AssetLinkBinaryTranslation.Instance.Parse<Fallout4MaterialAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.Material;
                 }
                 default:
@@ -2290,6 +2360,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TextureSetCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2311,35 +2382,35 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Diffuse
         private int? _DiffuseLocation;
-        public String? Diffuse => _DiffuseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DiffuseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Diffuse => _DiffuseLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DiffuseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region NormalOrGloss
         private int? _NormalOrGlossLocation;
-        public String? NormalOrGloss => _NormalOrGlossLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NormalOrGlossLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? NormalOrGloss => _NormalOrGlossLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NormalOrGlossLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Glow
         private int? _GlowLocation;
-        public String? Glow => _GlowLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Glow => _GlowLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlowLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Height
         private int? _HeightLocation;
-        public String? Height => _HeightLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Height => _HeightLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HeightLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Environment
         private int? _EnvironmentLocation;
-        public String? Environment => _EnvironmentLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Environment => _EnvironmentLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Wrinkles
         private int? _WrinklesLocation;
-        public String? Wrinkles => _WrinklesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WrinklesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Wrinkles => _WrinklesLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WrinklesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Multilayer
         private int? _MultilayerLocation;
-        public String? Multilayer => _MultilayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MultilayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Multilayer => _MultilayerLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MultilayerLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region SmoothSpec
         private int? _SmoothSpecLocation;
-        public String? SmoothSpec => _SmoothSpecLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmoothSpecLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? SmoothSpec => _SmoothSpecLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SmoothSpecLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
@@ -2351,7 +2422,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Material
         private int? _MaterialLocation;
-        public String? Material => _MaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4MaterialAssetType>? Material => _MaterialLocation.HasValue ? new AssetLinkGetter<Fallout4MaterialAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4MaterialAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

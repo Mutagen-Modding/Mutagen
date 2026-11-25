@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -306,7 +309,8 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<IProjectileGetter> IProjectileGetter.VATSProjectile => this.VATSProjectile;
         #endregion
         #region MuzzleFlashModel
-        public String MuzzleFlashModel { get; set; } = string.Empty;
+        public AssetLink<Fallout4ModelAssetType> MuzzleFlashModel { get; set; } = new AssetLink<Fallout4ModelAssetType>();
+        AssetLinkGetter<Fallout4ModelAssetType> IProjectileGetter.MuzzleFlashModel => this.MuzzleFlashModel;
         #endregion
         #region TextureFilesHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1634,6 +1638,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IProjectile);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ProjectileCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => ProjectileSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ProjectileSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => ProjectileSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1713,6 +1721,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IProjectile :
+        IAssetLinkContainer,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -1772,7 +1781,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLink<ICollisionLayerGetter> CollisionLayer { get; set; }
         new Byte TracerFrequency { get; set; }
         new IFormLink<IProjectileGetter> VATSProjectile { get; set; }
-        new String MuzzleFlashModel { get; set; }
+        new AssetLink<Fallout4ModelAssetType> MuzzleFlashModel { get; set; }
         new MemorySlice<Byte>? TextureFilesHashes { get; set; }
         new UInt32 SoundLevel { get; set; }
     }
@@ -1787,6 +1796,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.PROJ)]
     public partial interface IProjectileGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
@@ -1855,7 +1865,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ICollisionLayerGetter> CollisionLayer { get; }
         Byte TracerFrequency { get; }
         IFormLinkGetter<IProjectileGetter> VATSProjectile { get; }
-        String MuzzleFlashModel { get; }
+        AssetLinkGetter<Fallout4ModelAssetType> MuzzleFlashModel { get; }
         ReadOnlyMemorySlice<Byte>? TextureFilesHashes { get; }
         UInt32 SoundLevel { get; }
 
@@ -2200,7 +2210,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.CollisionLayer.Clear();
             item.TracerFrequency = default(Byte);
             item.VATSProjectile.Clear();
-            item.MuzzleFlashModel = string.Empty;
+            item.MuzzleFlashModel.SetToNull();
             item.TextureFilesHashes = default;
             item.SoundLevel = default(UInt32);
             base.Clear(item);
@@ -2232,6 +2242,45 @@ namespace Mutagen.Bethesda.Fallout4
             obj.DecalData.Relink(mapping);
             obj.CollisionLayer.Relink(mapping);
             obj.VATSProjectile.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IProjectile obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.MuzzleFlashModel;
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IProjectile obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.MuzzleFlashModel.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2337,7 +2386,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.CollisionLayer = item.CollisionLayer.Equals(rhs.CollisionLayer);
             ret.TracerFrequency = item.TracerFrequency == rhs.TracerFrequency;
             ret.VATSProjectile = item.VATSProjectile.Equals(rhs.VATSProjectile);
-            ret.MuzzleFlashModel = string.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
+            ret.MuzzleFlashModel = object.Equals(item.MuzzleFlashModel, rhs.MuzzleFlashModel);
             ret.TextureFilesHashes = MemorySliceExt.SequenceEqual(item.TextureFilesHashes, rhs.TextureFilesHashes);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2710,7 +2759,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
             {
-                if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
+                if (!object.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
@@ -2849,6 +2898,33 @@ namespace Mutagen.Bethesda.Fallout4
             yield return FormLinkInformation.Factory(obj.DecalData);
             yield return FormLinkInformation.Factory(obj.CollisionLayer);
             yield return FormLinkInformation.Factory(obj.VATSProjectile);
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IProjectileGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                yield return obj.MuzzleFlashModel;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -3134,10 +3210,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.VATSProjectile.SetTo(rhs.VATSProjectile.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
-            {
-                item.MuzzleFlashModel = rhs.MuzzleFlashModel;
-            }
+            item.MuzzleFlashModel.GivenPath = rhs.MuzzleFlashModel.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
@@ -3431,7 +3504,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MuzzleFlashModel,
+                item: item.MuzzleFlashModel.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -3614,7 +3687,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MuzzleFlashModel = StringBinaryTranslation.Instance.Parse(
+                    item.MuzzleFlashModel.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
@@ -3677,6 +3750,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => ProjectileCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => ProjectileCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ProjectileBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3842,7 +3916,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;
-        public String MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public AssetLinkGetter<Fallout4ModelAssetType> MuzzleFlashModel => _MuzzleFlashModelLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MuzzleFlashModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : AssetLinkGetter<Fallout4ModelAssetType>.Null;
         #endregion
         #region TextureFilesHashes
         private int? _TextureFilesHashesLocation;

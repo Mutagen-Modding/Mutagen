@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -118,15 +121,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _Textures = new ExtendedList<String>();
-        public ExtendedList<String> Textures
+        private ExtendedList<IAssetLink<Fallout4TextureAssetType>> _Textures = new ExtendedList<IAssetLink<Fallout4TextureAssetType>>();
+        public ExtendedList<IAssetLink<Fallout4TextureAssetType>> Textures
         {
             get => this._Textures;
             init => this._Textures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<String> ITintTemplateOptionGetter.Textures => _Textures;
+        IReadOnlyList<IAssetLinkGetter<Fallout4TextureAssetType>> ITintTemplateOptionGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -892,6 +895,10 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => TintTemplateOptionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintTemplateOptionSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TintTemplateOptionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => TintTemplateOptionSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => TintTemplateOptionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => TintTemplateOptionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #endregion
 
         #region Binary Translation
@@ -953,6 +960,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface ITintTemplateOption :
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<ITintTemplateOption>,
         INamed,
@@ -969,7 +977,7 @@ namespace Mutagen.Bethesda.Fallout4
         new TranslatedString? Name { get; set; }
         new TintTemplateOption.Flag? Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<String> Textures { get; }
+        new ExtendedList<IAssetLink<Fallout4TextureAssetType>> Textures { get; }
         new BlendOperation? BlendOperation { get; set; }
         new ExtendedList<TintTemplateColor>? TemplateColors { get; set; }
         new Single? Default { get; set; }
@@ -977,6 +985,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     public partial interface ITintTemplateOptionGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ITintTemplateOptionGetter>,
@@ -1002,7 +1011,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         TintTemplateOption.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IReadOnlyList<String> Textures { get; }
+        IReadOnlyList<IAssetLinkGetter<Fallout4TextureAssetType>> Textures { get; }
         BlendOperation? BlendOperation { get; }
         IReadOnlyList<ITintTemplateColorGetter>? TemplateColors { get; }
         Single? Default { get; }
@@ -1300,6 +1309,24 @@ namespace Mutagen.Bethesda.Fallout4
             obj.TemplateColors?.RemapLinks(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ITintTemplateOption obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in obj.Textures)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ITintTemplateOption obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            obj.Textures.ForEach(x => x.Relink(mapping));
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1352,7 +1379,7 @@ namespace Mutagen.Bethesda.Fallout4
                 include);
             ret.Textures = item.Textures.CollectionEqualsHelper(
                 rhs.Textures,
-                (l, r) => string.Equals(l, r),
+                (l, r) => object.Equals(l, r),
                 include);
             ret.BlendOperation = item.BlendOperation == rhs.BlendOperation;
             ret.TemplateColors = item.TemplateColors.CollectionEqualsHelper(
@@ -1576,6 +1603,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ITintTemplateOptionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                foreach (var item in obj.Textures)
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -1636,7 +1675,9 @@ namespace Mutagen.Bethesda.Fallout4
                 errorMask?.PushIndex((int)TintTemplateOption_FieldIndex.Textures);
                 try
                 {
-                    item.Textures.SetTo(rhs.Textures);
+                    item.Textures.SetTo(
+                        rhs.Textures
+                            .Select(b => b.AsSetter()));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1827,11 +1868,17 @@ namespace Mutagen.Bethesda.Fallout4
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.WritePerItem(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAssetLinkGetter<Fallout4TextureAssetType>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
-                recordType: translationParams.ConvertToCustom(RecordTypes.TTET),
-                transl: StringBinaryTranslation.Instance.Write);
+                transl: (MutagenWriter subWriter, IAssetLinkGetter<Fallout4TextureAssetType> subItem) =>
+                {
+                    StringBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem.GivenPath,
+                        header: translationParams.ConvertToCustom(RecordTypes.TTET),
+                        binaryType: StringBinaryType.NullTerminate);
+                });
             EnumBinaryTranslation<BlendOperation, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.BlendOperation,
@@ -1940,10 +1987,15 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.TTET:
                 {
                     item.Textures.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAssetLink<Fallout4TextureAssetType>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.TTET),
-                            transl: StringBinaryTranslation.Instance.Parse));
+                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out IAssetLink<Fallout4TextureAssetType> listSubItem) =>
+                            {
+                                return AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(
+                                    r,
+                                    item: out listSubItem);
+                            }));
                     return (int)TintTemplateOption_FieldIndex.Textures;
                 }
                 case RecordTypeInts.TTEB:
@@ -2025,6 +2077,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => TintTemplateOptionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => TintTemplateOptionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintTemplateOptionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2067,7 +2120,7 @@ namespace Mutagen.Bethesda.Fallout4
         public TintTemplateOption.Flag? Flags => EnumBinaryTranslation<TintTemplateOption.Flag, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_FlagsLocation, _recordData, _package, 2);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = [];
-        public IReadOnlyList<String> Textures { get; private set; } = [];
+        public IReadOnlyList<IAssetLinkGetter<Fallout4TextureAssetType>> Textures { get; private set; } = [];
         #region BlendOperation
         private int? _BlendOperationLocation;
         public BlendOperation? BlendOperation => EnumBinaryTranslation<BlendOperation, MutagenFrame, MutagenWriter>.Instance.ParseRecordNullable(_BlendOperationLocation, _recordData, _package, 4);
@@ -2173,10 +2226,10 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.TTET:
                 {
-                    this.Textures = BinaryOverlayList.FactoryByArray<String>(
+                    this.Textures = BinaryOverlayList.FactoryByArray<IAssetLinkGetter<Fallout4TextureAssetType>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated),
+                        getter: (s, p) => new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.Subrecord(s).Content, encoding: p.MetaData.Encodings.NonTranslated)),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

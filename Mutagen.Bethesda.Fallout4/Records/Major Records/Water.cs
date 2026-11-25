@@ -1,4 +1,6 @@
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Fallout4.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -49,13 +51,13 @@ partial class WaterBinaryCreateTranslation
         switch (subRecord.RecordTypeInt)
         {
             case RecordTypeInts.NAM2:
-                item.NoiseLayerOne.Texture = BinaryStringUtility.ProcessWholeToZString(subRecord.Content, frame.MetaData.Encodings.NonLocalized);
+                item.NoiseLayerOne.Texture = new AssetLink<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(subRecord.Content, frame.MetaData.Encodings.NonLocalized));
                 return null;
             case RecordTypeInts.NAM3:
-                item.NoiseLayerTwo.Texture = BinaryStringUtility.ProcessWholeToZString(subRecord.Content, frame.MetaData.Encodings.NonLocalized);
+                item.NoiseLayerTwo.Texture = new AssetLink<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(subRecord.Content, frame.MetaData.Encodings.NonLocalized));
                 return null;
             case RecordTypeInts.NAM4:
-                item.NoiseLayerThree.Texture = BinaryStringUtility.ProcessWholeToZString(subRecord.Content, frame.MetaData.Encodings.NonLocalized);
+                item.NoiseLayerThree.Texture = new AssetLink<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(subRecord.Content, frame.MetaData.Encodings.NonLocalized));
                 return null;
             default:
                 throw new MalformedDataException($"Unexpected record type: {subRecord.RecordType}");
@@ -92,15 +94,15 @@ partial class WaterBinaryWriteTranslation
     {
         if (item.NoiseLayerOne.Texture is { } oneTexture)
         {
-            StringBinaryTranslation.Instance.Write(writer, oneTexture, RecordTypes.NAM2, StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.Write(writer, oneTexture.GivenPath, RecordTypes.NAM2, StringBinaryType.NullTerminate);
         }
         if (item.NoiseLayerTwo.Texture is { } twoTexture)
         {
-            StringBinaryTranslation.Instance.Write(writer, twoTexture, RecordTypes.NAM3, StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.Write(writer, twoTexture.GivenPath, RecordTypes.NAM3, StringBinaryType.NullTerminate);
         }
         if (item.NoiseLayerThree.Texture is { } threeTexture)
         {
-            StringBinaryTranslation.Instance.Write(writer, threeTexture, RecordTypes.NAM4, StringBinaryType.NullTerminate);
+            StringBinaryTranslation.Instance.Write(writer, threeTexture.GivenPath, RecordTypes.NAM4, StringBinaryType.NullTerminate);
         }
     }
 }

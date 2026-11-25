@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -236,9 +239,9 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedStringGetter? IAmmunitionGetter.ShortName => this.ShortName;
         #endregion
         #region CasingModel
-        public String? CasingModel { get; set; }
+        public AssetLink<Fallout4ModelAssetType>? CasingModel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAmmunitionGetter.CasingModel => this.CasingModel;
+        AssetLinkGetter<Fallout4ModelAssetType>? IAmmunitionGetter.CasingModel => this.CasingModel;
         #endregion
         #region ModelInfo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1185,6 +1188,10 @@ namespace Mutagen.Bethesda.Fallout4
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => AmmunitionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => AmmunitionSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AmmunitionSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AmmunitionSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -1265,6 +1272,7 @@ namespace Mutagen.Bethesda.Fallout4
     #region Interface
     public partial interface IAmmunition :
         IAmmunitionGetter,
+        IAssetLinkContainer,
         IConstructibleObjectTarget,
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
@@ -1317,7 +1325,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Single Damage { get; set; }
         new UInt32 Health { get; set; }
         new TranslatedString? ShortName { get; set; }
-        new String? CasingModel { get; set; }
+        new AssetLink<Fallout4ModelAssetType>? CasingModel { get; set; }
         new MemorySlice<Byte>? ModelInfo { get; set; }
         #region Mutagen
         new Ammunition.MajorFlag MajorFlags { get; set; }
@@ -1335,6 +1343,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.AMMO)]
     public partial interface IAmmunitionGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
@@ -1399,7 +1408,7 @@ namespace Mutagen.Bethesda.Fallout4
         Single Damage { get; }
         UInt32 Health { get; }
         ITranslatedStringGetter? ShortName { get; }
-        String? CasingModel { get; }
+        AssetLinkGetter<Fallout4ModelAssetType>? CasingModel { get; }
         ReadOnlyMemorySlice<Byte>? ModelInfo { get; }
 
         #region Mutagen
@@ -1752,6 +1761,48 @@ namespace Mutagen.Bethesda.Fallout4
             obj.Projectile.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAmmunition obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.CasingModel != null)
+            {
+                yield return obj.CasingModel;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAmmunition obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.CasingModel?.Relink(mapping);
+            }
+            obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -1844,7 +1895,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
             ret.Health = item.Health == rhs.Health;
             ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
-            ret.CasingModel = string.Equals(item.CasingModel, rhs.CasingModel);
+            ret.CasingModel = object.Equals(item.CasingModel, rhs.CasingModel);
             ret.ModelInfo = MemorySliceExt.SequenceEqual(item.ModelInfo, rhs.ModelInfo);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2113,7 +2164,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.CasingModel) ?? true))
             {
-                if (!string.Equals(lhs.CasingModel, rhs.CasingModel)) return false;
+                if (!object.Equals(lhs.CasingModel, rhs.CasingModel)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ModelInfo) ?? true))
             {
@@ -2249,6 +2300,36 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             yield return FormLinkInformation.Factory(obj.Projectile);
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAmmunitionGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.CasingModel != null)
+                {
+                    yield return obj.CasingModel;
+                }
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2494,10 +2575,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ShortName = rhs.ShortName?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.CasingModel) ?? true))
-            {
-                item.CasingModel = rhs.CasingModel;
-            }
+            item.CasingModel = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.CasingModel, rhs.CasingModel);
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ModelInfo) ?? true))
             {
                 if(rhs.ModelInfo is {} ModelInforhs)
@@ -2762,7 +2840,7 @@ namespace Mutagen.Bethesda.Fallout4
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CasingModel,
+                item: item.CasingModel?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -2954,10 +3032,7 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CasingModel = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.CasingModel = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Ammunition_FieldIndex.CasingModel;
                 }
                 case RecordTypeInts.NAM2:
@@ -3011,6 +3086,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => AmmunitionCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => AmmunitionCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -3103,7 +3179,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CasingModel
         private int? _CasingModelLocation;
-        public String? CasingModel => _CasingModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CasingModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4ModelAssetType>? CasingModel => _CasingModelLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CasingModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4ModelAssetType>?);
         #endregion
         #region ModelInfo
         private int? _ModelInfoLocation;

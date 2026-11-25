@@ -15,7 +15,7 @@
       <FormLink name="LodWater" refName="Water" recordType="NAM3" />
       <Float name="LodWaterHeight" recordType="NAM4" />
       <RefDirect name="LandDefaults" refName="WorldspaceLandDefaults" />
-      <String name="MapImage" recordType="ICON" />
+      <AssetLink name="MapImage" recordType="ICON" assetType="Fallout4Texture" />
       <RefDirect name="CloudModel" refName="Model" />
       <RefDirect name="MapData" refName="WorldspaceMap" />
       <Data recordType="ONAM">
@@ -37,10 +37,10 @@
         </Fields>
       </Data>
       <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
-      <String name="CanopyShadow" recordType="NNAM" />
-      <String name="WaterEnvironmentMap" recordType="XWEM" />
-      <String name="HdLodDiffuseTexture" recordType="TNAM" />
-      <String name="HdLodNormalTexture" recordType="UNAM" />
+      <AssetLink name="CanopyShadow" recordType="NNAM" assetType="Fallout4Texture" />
+      <AssetLink name="WaterEnvironmentMap" recordType="XWEM" assetType="Fallout4Texture" />
+      <AssetLink name="HdLodDiffuseTexture" recordType="TNAM" assetType="Fallout4Texture" />
+      <AssetLink name="HdLodNormalTexture" recordType="UNAM" assetType="Fallout4Texture" />
       <RefDirect name="DefaultLevelData" refName="WorldDefaultLevelData" />
       <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
       <ByteArray name="CellSizeData" recordType="CLSZ" overflowRecordType="XXXX" />

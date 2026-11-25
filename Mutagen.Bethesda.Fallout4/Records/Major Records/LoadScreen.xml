@@ -10,7 +10,7 @@
       <FormLink name="Transform" refName="Transform" recordType="TNAM" />
       <RefDirect name="Rotation" refName="LoadScreenRotation" recordType="ONAM" />
       <RefDirect name="Zoom" refName="LoadScreenZoom" recordType="ZNAM" />
-      <String name="CameraPath" recordType="MOD2" />
+      <AssetLink name="CameraPath" recordType="MOD2" assetType="Fallout4Model" />
     </Fields>
   </Object>
   <Object name="LoadScreenRotation" objType="Subrecord">

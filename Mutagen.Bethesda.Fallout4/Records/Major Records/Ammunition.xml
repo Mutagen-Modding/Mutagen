@@ -28,7 +28,7 @@
         </Fields>
       </Data>
       <String name="ShortName" recordType="ONAM" translated="Normal" />
-      <String name="CasingModel" recordType="NAM1" />
+      <AssetLink name="CasingModel" recordType="NAM1" assetType="Fallout4Model" />
       <ByteArray name="ModelInfo" recordType="NAM2" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>

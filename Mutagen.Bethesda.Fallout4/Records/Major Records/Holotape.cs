@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Fallout4.Assets;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -76,7 +78,7 @@ partial class HolotapeBinaryCreateTranslation
                 switch (item.Data)
                 {
                     case HolotapeProgram prog:
-                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate, parseWhole: true);
+                        prog.File = new AssetLink<Fallout4ProgramAssetType>(StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate, parseWhole: true));
                         break;
                     case HolotapeSound _:
                     case HolotapeVoice _:
@@ -140,7 +142,7 @@ partial class HolotapeBinaryWriteTranslation
                 if (prog.File is { } file)
                 {
                     using var header = HeaderExport.Subrecord(writer, RecordTypes.PNAM);
-                    StringBinaryTranslation.Instance.Write(writer, file);
+                    StringBinaryTranslation.Instance.Write(writer, file.GivenPath);
                 }
                 break;
             case IHolotapeTerminalGetter term:
@@ -193,7 +195,7 @@ partial class HolotapeBinaryOverlay
                     var prog = new HolotapeProgram();
                     if (_dataContentLocation.HasValue)
                     {
-                        prog.File = StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated, parseWhole: true);
+                        prog.File = new AssetLink<Fallout4ProgramAssetType>(StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated, parseWhole: true));
                     }
                     return prog;
                 case Holotape.Types.Terminal:

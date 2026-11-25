@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -82,9 +86,9 @@ namespace Mutagen.Bethesda.Fallout4
         ReadOnlyMemorySlice<Byte>? INavigationMeshObstacleManagerSubObjectGetter.INTV => this.INTV;
         #endregion
         #region Model
-        public String? Model { get; set; }
+        public AssetLink<Fallout4ModelAssetType>? Model { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? INavigationMeshObstacleManagerSubObjectGetter.Model => this.Model;
+        AssetLinkGetter<Fallout4ModelAssetType>? INavigationMeshObstacleManagerSubObjectGetter.Model => this.Model;
         #endregion
 
         #region To String
@@ -541,6 +545,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => NavigationMeshObstacleManagerSubObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => NavigationMeshObstacleManagerSubObjectSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => NavigationMeshObstacleManagerSubObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => NavigationMeshObstacleManagerSubObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation.Instance;
@@ -600,17 +611,19 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface INavigationMeshObstacleManagerSubObject :
+        IAssetLinkContainer,
         ILoquiObjectSetter<INavigationMeshObstacleManagerSubObject>,
         INavigationMeshObstacleManagerSubObjectGetter
     {
         new UInt32? Index { get; set; }
         new ExtendedList<UInt64> DATAs { get; }
         new MemorySlice<Byte>? INTV { get; set; }
-        new String? Model { get; set; }
+        new AssetLink<Fallout4ModelAssetType>? Model { get; set; }
     }
 
     public partial interface INavigationMeshObstacleManagerSubObjectGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<INavigationMeshObstacleManagerSubObjectGetter>
     {
@@ -624,7 +637,7 @@ namespace Mutagen.Bethesda.Fallout4
         UInt32? Index { get; }
         IReadOnlyList<UInt64> DATAs { get; }
         ReadOnlyMemorySlice<Byte>? INTV { get; }
-        String? Model { get; }
+        AssetLinkGetter<Fallout4ModelAssetType>? Model { get; }
 
     }
 
@@ -897,6 +910,27 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(INavigationMeshObstacleManagerSubObject obj, bool iterateNestedRecords = true)
+        {
+            if (obj.Model != null)
+            {
+                yield return obj.Model;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            INavigationMeshObstacleManagerSubObject obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Model?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -945,7 +979,7 @@ namespace Mutagen.Bethesda.Fallout4
                 (l, r) => l == r,
                 include);
             ret.INTV = MemorySliceExt.SequenceEqual(item.INTV, rhs.INTV);
-            ret.Model = string.Equals(item.Model, rhs.Model);
+            ret.Model = object.Equals(item.Model, rhs.Model);
         }
         
         public string Print(
@@ -1042,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model) ?? true))
             {
-                if (!string.Equals(lhs.Model, rhs.Model)) return false;
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
             }
             return true;
         }
@@ -1077,6 +1111,18 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INavigationMeshObstacleManagerSubObjectGetter obj, bool iterateNestedRecords = true)
         {
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(INavigationMeshObstacleManagerSubObjectGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Model != null)
+                {
+                    yield return obj.Model;
+                }
+            }
             yield break;
         }
         
@@ -1127,10 +1173,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.INTV = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model) ?? true))
-            {
-                item.Model = rhs.Model;
-            }
+            item.Model = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Model, rhs.Model);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1255,7 +1298,7 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.INTV));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Model,
+                item: item.Model?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1328,10 +1371,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Model = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Model = AssetLinkBinaryTranslation.Instance.Parse<Fallout4ModelAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)NavigationMeshObstacleManagerSubObject_FieldIndex.Model;
                 }
                 default:
@@ -1388,6 +1428,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => NavigationMeshObstacleManagerSubObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMeshObstacleManagerSubObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1413,7 +1454,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Model
         private int? _ModelLocation;
-        public String? Model => _ModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4ModelAssetType>? Model => _ModelLocation.HasValue ? new AssetLinkGetter<Fallout4ModelAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4ModelAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

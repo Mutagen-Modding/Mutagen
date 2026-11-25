@@ -9838,16 +9838,381 @@ namespace Mutagen.Bethesda.Fallout4
         #pragma warning restore CS0618
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout4Mod obj, bool iterateNestedRecords = true)
         {
-            if (obj.Cells is IAssetLinkContainer CellslinkCont)
             {
-                foreach (var item in CellslinkCont.EnumerateListedAssetLinks(iterateNestedRecords))
+                foreach (var item in obj.TextureSets.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            if (obj.Worldspaces is IAssetLinkContainer WorldspaceslinkCont)
             {
-                foreach (var item in WorldspaceslinkCont.EnumerateListedAssetLinks(iterateNestedRecords))
+                foreach (var item in obj.Classes.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Factions.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.HeadParts.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Races.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Activators.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.TalkingActivators.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Armors.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Books.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Containers.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Doors.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Ingredients.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Lights.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MiscItems.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Statics.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.StaticCollections.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MovableStatics.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Grasses.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Trees.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Florae.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Furniture.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Weapons.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Ammunitions.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Npcs.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.LeveledNpcs.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Keys.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Ingestibles.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.IdleMarkers.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Holotapes is IAssetLinkContainer HolotapeslinkCont)
+            {
+                foreach (var item in HolotapeslinkCont.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Projectiles.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Hazards.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Terminals.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Weather.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Climates.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ShaderParticleGeometries.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Regions.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Cells.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Worldspaces.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Quests.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.IdleAnimations.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.LoadScreens.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.AnimatedObjects.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Waters.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.EffectShaders.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Explosions.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Debris.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ImageSpaces.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Perks.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.BodyParts.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.AddonNodes.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.CameraShots.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MaterialTypes.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Impacts.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ArmorAddons.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.Messages.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MusicTracks.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ArtObjects.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MaterialObjects.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.SoundDescriptors.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.ObjectModifications.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MaterialSwaps.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.NavigationMeshObstacleManagers.EnumerateListedAssetLinks(iterateNestedRecords))
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.LensFlares.EnumerateListedAssetLinks(iterateNestedRecords))
                 {
                     yield return item;
                 }
@@ -9861,8 +10226,69 @@ namespace Mutagen.Bethesda.Fallout4
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
+            obj.TextureSets.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Classes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Factions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.HeadParts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Races.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Activators.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.TalkingActivators.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Armors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Books.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Containers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Doors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ingredients.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Lights.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MiscItems.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Statics.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.StaticCollections.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MovableStatics.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Grasses.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Trees.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Florae.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Furniture.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weapons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ammunitions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Npcs.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LeveledNpcs.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Keys.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Ingestibles.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.IdleMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Holotapes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Projectiles.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Hazards.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Terminals.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Weather.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Climates.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ShaderParticleGeometries.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Regions.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Cells.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Worldspaces.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Quests.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.IdleAnimations.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LoadScreens.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AnimatedObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Waters.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.EffectShaders.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Explosions.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Debris.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ImageSpaces.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Perks.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.BodyParts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AddonNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.CameraShots.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MaterialTypes.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Impacts.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ArmorAddons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Messages.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MusicTracks.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ArtObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MaterialObjects.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.SoundDescriptors.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.ObjectModifications.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MaterialSwaps.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.NavigationMeshObstacleManagers.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.LensFlares.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -18263,19 +18689,260 @@ namespace Mutagen.Bethesda.Fallout4
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout4ModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
         {
-            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            foreach (var item in obj.TextureSets.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
             {
-                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+                yield return item;
+            }
+            foreach (var item in obj.Classes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Factions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.HeadParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Activators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TalkingActivators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Armors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Books.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Containers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Doors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingredients.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Lights.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MiscItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Statics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StaticCollections.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MovableStatics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Trees.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Florae.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Furniture.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weapons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Npcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledNpcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingestibles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.Holotapes is IAssetLinkContainerGetter HolotapeslinkCont)
+            {
+                foreach (var item in HolotapeslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
                 {
                     yield return item;
                 }
             }
-            if (obj.Worldspaces is IAssetLinkContainerGetter WorldspaceslinkCont)
+            foreach (var item in obj.Projectiles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
             {
-                foreach (var item in WorldspaceslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
-                {
-                    yield return item;
-                }
+                yield return item;
+            }
+            foreach (var item in obj.Hazards.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Terminals.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weather.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Climates.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ShaderParticleGeometries.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Cells.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Worldspaces.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AnimatedObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Waters.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ImageSpaces.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialTypes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Messages.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTracks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArtObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundDescriptors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectModifications.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialSwaps.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.NavigationMeshObstacleManagers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LensFlares.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords))
+            {
+                yield return item;
             }
             yield break;
         }

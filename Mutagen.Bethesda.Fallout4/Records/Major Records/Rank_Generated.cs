@@ -8,13 +8,17 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -62,9 +66,9 @@ namespace Mutagen.Bethesda.Fallout4
         IGenderedItemGetter<ITranslatedStringGetter?>? IRankGetter.Title => this.Title;
         #endregion
         #region Insignia
-        public String? Insignia { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? Insignia { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRankGetter.Insignia => this.Insignia;
+        AssetLinkGetter<Fallout4TextureAssetType>? IRankGetter.Insignia => this.Insignia;
         #endregion
 
         #region To String
@@ -431,6 +435,13 @@ namespace Mutagen.Bethesda.Fallout4
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RankCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => RankSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RankSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RankSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
@@ -490,16 +501,18 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IRank :
+        IAssetLinkContainer,
         ILoquiObjectSetter<IRank>,
         IRankGetter
     {
         new UInt32? Number { get; set; }
         new IGenderedItem<TranslatedString?>? Title { get; set; }
-        new String? Insignia { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? Insignia { get; set; }
     }
 
     public partial interface IRankGetter :
         ILoquiObject,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         ILoquiObject<IRankGetter>
     {
@@ -512,7 +525,7 @@ namespace Mutagen.Bethesda.Fallout4
         static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         UInt32? Number { get; }
         IGenderedItemGetter<ITranslatedStringGetter?>? Title { get; }
-        String? Insignia { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? Insignia { get; }
 
     }
 
@@ -783,6 +796,27 @@ namespace Mutagen.Bethesda.Fallout4
         {
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRank obj, bool iterateNestedRecords = true)
+        {
+            if (obj.Insignia != null)
+            {
+                yield return obj.Insignia;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IRank obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.Insignia?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -831,7 +865,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs: rhs.Title,
                 maskGetter: (l, r, i) => EqualityComparer<ITranslatedStringGetter?>.Default.Equals(l, r),
                 include: include);
-            ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
+            ret.Insignia = object.Equals(item.Insignia, rhs.Insignia);
         }
         
         public string Print(
@@ -910,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
-                if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
+                if (!object.Equals(lhs.Insignia, rhs.Insignia)) return false;
             }
             return true;
         }
@@ -947,6 +981,18 @@ namespace Mutagen.Bethesda.Fallout4
             yield break;
         }
         
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRankGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.Insignia != null)
+                {
+                    yield return obj.Insignia;
+                }
+            }
+            yield break;
+        }
+        
         #endregion
         
     }
@@ -976,10 +1022,7 @@ namespace Mutagen.Bethesda.Fallout4
                     male: rhsTitleitem.Male?.DeepCopy(),
                     female: rhsTitleitem.Female?.DeepCopy());
             }
-            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
-            {
-                item.Insignia = rhs.Insignia;
-            }
+            item.Insignia = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.Insignia, rhs.Insignia);
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1108,7 +1151,7 @@ namespace Mutagen.Bethesda.Fallout4
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Insignia,
+                item: item.Insignia?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1186,10 +1229,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Insignia = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.Insignia = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
@@ -1246,6 +1286,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RankCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RankBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1270,7 +1311,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Insignia
         private int? _InsigniaLocation;
-        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? Insignia => _InsigniaLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -20,7 +20,7 @@
       <RefList name="Holotapes" refName="TerminalHolotapeEntry" counterRecType="COCT" />
       <Enum name="Flags" enumName="Terminal.Flag" recordType="MNAM" binary="Custom" />
       <ByteArray name="WorkbenchData" recordType="WBDT" />
-      <String name="MarkerModel" recordType="XMRK" />
+      <AssetLink name="MarkerModel" recordType="XMRK" assetType="Fallout4Model" />
       <RefList name="MarkerParameters" refName="FurnitureMarkerParameters" recordType="SNAM" binary="Custom" />
       <RefList name="BodyTexts" counterRecType="BSIZ" refName="TerminalBodyText" allowNoCounter="false" />
       <RefList name="MenuItems" refName="TerminalMenuItem" counterRecType="ISIZ" allowNoCounter="false" />
@@ -51,7 +51,7 @@
       <Enum name="Type" enumName="TerminalMenuItem.Types" recordType="ANAM" byteLength="1" nullable="False" />
       <UInt16 name="ItemId" recordType="ITID" nullable="False" />
       <String name="DisplayText" translated="Normal" recordType="UNAM" />
-      <String name="ImageFile" recordType="VNAM" />
+      <AssetLink name="ImageFile" recordType="VNAM" assetType="Fallout4Texture" />
       <FormLink name="Submenu" recordType="TNAM" refName="Terminal" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>

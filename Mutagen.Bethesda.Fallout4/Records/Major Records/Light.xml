@@ -36,7 +36,7 @@
         </Fields>
       </Data>
       <Float name="FadeValue" recordType="FNAM" nullable="False" />
-      <String name="Gobo" recordType="NAM0" />
+      <AssetLink name="Gobo" recordType="NAM0" assetType="Fallout4Texture" />
       <FormLink name="Lens" refName="LensFlare" recordType="LNAM" />
       <FormLink name="GodRays" refName="GodRays" recordType="WGDR" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />

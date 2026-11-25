@@ -19,7 +19,7 @@
   <Object name="Part" objType="Subrecord">
     <Fields>
       <Enum name="PartType" enumName="Part.PartTypeEnum" byteLength="4" recordType="NAM0" />
-      <String name="FileName" recordType="NAM1" />
+      <AssetLink name="FileName" recordType="NAM1" assetType="Fallout4DeformedModel" />
     </Fields>
   </Object>
 </Loqui>

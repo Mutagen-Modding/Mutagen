@@ -1452,8 +1452,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (iterateNestedRecords)
             {
-                foreach (var item in obj.Items.WhereCastable<ICellGetter, IAssetLinkContainer>()
-                    .SelectMany((f) => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+                foreach (var item in obj.Items.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
                 {
                     yield return item;
                 }
@@ -1850,8 +1849,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             if (iterateNestedRecords)
             {
-                foreach (var item in obj.Items.WhereCastable<ICellGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+                foreach (var item in obj.Items.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
                 {
                     yield return item;
                 }

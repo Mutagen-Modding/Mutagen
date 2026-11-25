@@ -8,11 +8,14 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
+using Mutagen.Bethesda.Fallout4.Assets;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -734,14 +737,14 @@ namespace Mutagen.Bethesda.Fallout4
         Int32? IRaceGetter.MorphValuesLastIndex => this.MorphValuesLastIndex;
         #endregion
         #region HairColorLookupTexture
-        public String? HairColorLookupTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? HairColorLookupTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRaceGetter.HairColorLookupTexture => this.HairColorLookupTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IRaceGetter.HairColorLookupTexture => this.HairColorLookupTexture;
         #endregion
         #region HairColorExtendedLookupTexture
-        public String? HairColorExtendedLookupTexture { get; set; }
+        public AssetLink<Fallout4TextureAssetType>? HairColorExtendedLookupTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRaceGetter.HairColorExtendedLookupTexture => this.HairColorExtendedLookupTexture;
+        AssetLinkGetter<Fallout4TextureAssetType>? IRaceGetter.HairColorExtendedLookupTexture => this.HairColorExtendedLookupTexture;
         #endregion
         #region DialogueQuest
         private readonly IFormLinkNullable<IQuestGetter> _DialogueQuest = new FormLinkNullable<IQuestGetter>();
@@ -4611,6 +4614,10 @@ namespace Mutagen.Bethesda.Fallout4
 
         protected override Type LinkType => typeof(IRace);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks(bool iterateNestedRecords = true) => RaceSetterCommon.Instance.EnumerateListedAssetLinks(this, iterateNestedRecords);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => RaceSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -4690,6 +4697,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     public partial interface IRace :
+        IAssetLinkContainer,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IKeyworded<IKeywordGetter>,
@@ -4794,8 +4802,8 @@ namespace Mutagen.Bethesda.Fallout4
         new Single? IdleChatterTimeMax { get; set; }
         new ExtendedList<MorphValue> MorphValues { get; }
         new Int32? MorphValuesLastIndex { get; set; }
-        new String? HairColorLookupTexture { get; set; }
-        new String? HairColorExtendedLookupTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? HairColorLookupTexture { get; set; }
+        new AssetLink<Fallout4TextureAssetType>? HairColorExtendedLookupTexture { get; set; }
         new IFormLinkNullable<IQuestGetter> DialogueQuest { get; set; }
         new IGenderedItem<ExtendedList<Bone>?> BoneData { get; set; }
     }
@@ -4820,6 +4828,7 @@ namespace Mutagen.Bethesda.Fallout4
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts.RACE)]
     public partial interface IRaceGetter :
         IFallout4MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -4929,8 +4938,8 @@ namespace Mutagen.Bethesda.Fallout4
         Single? IdleChatterTimeMax { get; }
         IReadOnlyList<IMorphValueGetter> MorphValues { get; }
         Int32? MorphValuesLastIndex { get; }
-        String? HairColorLookupTexture { get; }
-        String? HairColorExtendedLookupTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? HairColorLookupTexture { get; }
+        AssetLinkGetter<Fallout4TextureAssetType>? HairColorExtendedLookupTexture { get; }
         IFormLinkNullableGetter<IQuestGetter> DialogueQuest { get; }
         IGenderedItemGetter<IReadOnlyList<IBoneGetter>?> BoneData { get; }
 
@@ -5545,6 +5554,68 @@ namespace Mutagen.Bethesda.Fallout4
             obj.DialogueQuest.Relink(mapping);
         }
         
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IRace obj, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (obj.SkeletalModel is {} SkeletalModelItem)
+            {
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+            {
+                yield return item;
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Subgraphs.SelectMany(f => f.EnumerateListedAssetLinks(iterateNestedRecords)))
+            {
+                yield return item;
+            }
+            if (obj.HairColorLookupTexture != null)
+            {
+                yield return obj.HairColorLookupTexture;
+            }
+            if (obj.HairColorExtendedLookupTexture != null)
+            {
+                yield return obj.HairColorExtendedLookupTexture;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IRace obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.SkeletalModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.BodyData.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.BehaviorGraph.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.HeadData?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Subgraphs.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                obj.HairColorLookupTexture?.Relink(mapping);
+                obj.HairColorExtendedLookupTexture?.Relink(mapping);
+            }
+        }
+        
         #endregion
         
         #region Binary Translation
@@ -5763,8 +5834,8 @@ namespace Mutagen.Bethesda.Fallout4
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.MorphValuesLastIndex = item.MorphValuesLastIndex == rhs.MorphValuesLastIndex;
-            ret.HairColorLookupTexture = string.Equals(item.HairColorLookupTexture, rhs.HairColorLookupTexture);
-            ret.HairColorExtendedLookupTexture = string.Equals(item.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture);
+            ret.HairColorLookupTexture = object.Equals(item.HairColorLookupTexture, rhs.HairColorLookupTexture);
+            ret.HairColorExtendedLookupTexture = object.Equals(item.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture);
             ret.DialogueQuest = item.DialogueQuest.Equals(rhs.DialogueQuest);
             ret.BoneData = new GenderedItem<bool>(
                 male: item.BoneData.Male.SequenceEqualNullable(rhs.BoneData.Male),
@@ -6718,11 +6789,11 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
             {
-                if (!string.Equals(lhs.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
+                if (!object.Equals(lhs.HairColorLookupTexture, rhs.HairColorLookupTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorExtendedLookupTexture) ?? true))
             {
-                if (!string.Equals(lhs.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
+                if (!object.Equals(lhs.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.DialogueQuest) ?? true))
             {
@@ -7090,6 +7161,52 @@ namespace Mutagen.Bethesda.Fallout4
             if (FormLinkInformation.TryFactory(obj.DialogueQuest, out var DialogueQuestInfo))
             {
                 yield return DialogueQuestInfo;
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IRaceGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType, bool iterateNestedRecords = true)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType, iterateNestedRecords))
+            {
+                yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            {
+                if (obj.HairColorLookupTexture != null)
+                {
+                    yield return obj.HairColorLookupTexture;
+                }
+                if (obj.HairColorExtendedLookupTexture != null)
+                {
+                    yield return obj.HairColorExtendedLookupTexture;
+                }
+            }
+            if (obj.SkeletalModel is {} SkeletalModelItem)
+            {
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+            {
+                yield return item;
+            }
+            if (obj.HeadData is {} HeadDataItem)
+            {
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Subgraphs.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType, iterateNestedRecords: iterateNestedRecords)))
+            {
+                yield return item;
             }
             yield break;
         }
@@ -7826,14 +7943,8 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.MorphValuesLastIndex = rhs.MorphValuesLastIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorLookupTexture) ?? true))
-            {
-                item.HairColorLookupTexture = rhs.HairColorLookupTexture;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairColorExtendedLookupTexture) ?? true))
-            {
-                item.HairColorExtendedLookupTexture = rhs.HairColorExtendedLookupTexture;
-            }
+            item.HairColorLookupTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HairColorLookupTexture, rhs.HairColorLookupTexture);
+            item.HairColorExtendedLookupTexture = PluginUtilityTranslation.AssetNullableDeepCopyIn(item.HairColorExtendedLookupTexture, rhs.HairColorExtendedLookupTexture);
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DialogueQuest) ?? true))
             {
                 item.DialogueQuest.SetTo(rhs.DialogueQuest.FormKeyNullable);
@@ -8509,12 +8620,12 @@ namespace Mutagen.Bethesda.Fallout4
                 header: translationParams.ConvertToCustom(RecordTypes.MLSI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HairColorLookupTexture,
+                item: item.HairColorLookupTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.HNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HairColorExtendedLookupTexture,
+                item: item.HairColorExtendedLookupTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.HLTX),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -9242,19 +9353,13 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HairColorLookupTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.HairColorLookupTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Race_FieldIndex.HairColorLookupTexture;
                 }
                 case RecordTypeInts.HLTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HairColorExtendedLookupTexture = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
+                    item.HairColorExtendedLookupTexture = AssetLinkBinaryTranslation.Instance.Parse<Fallout4TextureAssetType>(reader: frame.SpawnWithLength(contentLength));
                     return (int)Race_FieldIndex.HairColorExtendedLookupTexture;
                 }
                 case RecordTypeInts.QSTI:
@@ -9352,6 +9457,7 @@ namespace Mutagen.Bethesda.Fallout4
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks(bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateFormLinks(this, iterateNestedRecords);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache = null, Type? assetType = null, bool iterateNestedRecords = true) => RaceCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType, iterateNestedRecords);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -9812,11 +9918,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region HairColorLookupTexture
         private int? _HairColorLookupTextureLocation;
-        public String? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? HairColorLookupTexture => _HairColorLookupTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region HairColorExtendedLookupTexture
         private int? _HairColorExtendedLookupTextureLocation;
-        public String? HairColorExtendedLookupTexture => _HairColorExtendedLookupTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorExtendedLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public AssetLinkGetter<Fallout4TextureAssetType>? HairColorExtendedLookupTexture => _HairColorExtendedLookupTextureLocation.HasValue ? new AssetLinkGetter<Fallout4TextureAssetType>(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _HairColorExtendedLookupTextureLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated)) : default(AssetLinkGetter<Fallout4TextureAssetType>?);
         #endregion
         #region DialogueQuest
         private int? _DialogueQuestLocation;
