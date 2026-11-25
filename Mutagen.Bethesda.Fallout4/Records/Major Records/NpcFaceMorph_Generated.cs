@@ -66,11 +66,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Scale
         public Single Scale { get; set; } = default(Single);
         #endregion
-        #region Unknown1
-        public Single Unknown1 { get; set; } = default(Single);
-        #endregion
-        #region Unknown2
-        public Single Unknown2 { get; set; } = default(Single);
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unknown = new byte[8];
+        public MemorySlice<Byte> Unknown
+        {
+            get => _Unknown;
+            set => this._Unknown = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> INpcFaceMorphGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -115,8 +120,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = initialValue;
                 this.Rotation = initialValue;
                 this.Scale = initialValue;
-                this.Unknown1 = initialValue;
-                this.Unknown2 = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
@@ -124,15 +128,13 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Position,
                 TItem Rotation,
                 TItem Scale,
-                TItem Unknown1,
-                TItem Unknown2)
+                TItem Unknown)
             {
                 this.Index = Index;
                 this.Position = Position;
                 this.Rotation = Rotation;
                 this.Scale = Scale;
-                this.Unknown1 = Unknown1;
-                this.Unknown2 = Unknown2;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -148,8 +150,7 @@ namespace Mutagen.Bethesda.Fallout4
             public TItem Position;
             public TItem Rotation;
             public TItem Scale;
-            public TItem Unknown1;
-            public TItem Unknown2;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -166,8 +167,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Position, rhs.Position)) return false;
                 if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -177,8 +177,7 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Position);
                 hash.Add(this.Rotation);
                 hash.Add(this.Scale);
-                hash.Add(this.Unknown1);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -191,8 +190,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!eval(this.Position)) return false;
                 if (!eval(this.Rotation)) return false;
                 if (!eval(this.Scale)) return false;
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -204,8 +202,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (eval(this.Position)) return true;
                 if (eval(this.Rotation)) return true;
                 if (eval(this.Scale)) return true;
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -224,8 +221,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Position = eval(this.Position);
                 obj.Rotation = eval(this.Rotation);
                 obj.Scale = eval(this.Scale);
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -260,13 +256,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendItem(Scale, "Scale");
                     }
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
-                    }
-                    if (printMask?.Unknown2 ?? true)
-                    {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -296,8 +288,7 @@ namespace Mutagen.Bethesda.Fallout4
             public Exception? Position;
             public Exception? Rotation;
             public Exception? Scale;
-            public Exception? Unknown1;
-            public Exception? Unknown2;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -314,10 +305,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Rotation;
                     case NpcFaceMorph_FieldIndex.Scale:
                         return Scale;
-                    case NpcFaceMorph_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case NpcFaceMorph_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case NpcFaceMorph_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -340,11 +329,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case NpcFaceMorph_FieldIndex.Scale:
                         this.Scale = ex;
                         break;
-                    case NpcFaceMorph_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
-                        break;
-                    case NpcFaceMorph_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case NpcFaceMorph_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -368,11 +354,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case NpcFaceMorph_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
                         break;
-                    case NpcFaceMorph_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
-                        break;
-                    case NpcFaceMorph_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case NpcFaceMorph_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -386,8 +369,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Position != null) return true;
                 if (Rotation != null) return true;
                 if (Scale != null) return true;
-                if (Unknown1 != null) return true;
-                if (Unknown2 != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -426,10 +408,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Scale, "Scale");
                 }
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
-                }
-                {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -443,8 +422,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Position = this.Position.Combine(rhs.Position);
                 ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -472,8 +450,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Position;
             public bool Rotation;
             public bool Scale;
-            public bool Unknown1;
-            public bool Unknown2;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -487,8 +464,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Position = defaultOn;
                 this.Rotation = defaultOn;
                 this.Scale = defaultOn;
-                this.Unknown1 = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -508,8 +484,7 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Position, null));
                 ret.Add((Rotation, null));
                 ret.Add((Scale, null));
-                ret.Add((Unknown1, null));
-                ret.Add((Unknown2, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -587,8 +562,7 @@ namespace Mutagen.Bethesda.Fallout4
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
         new Single Scale { get; set; }
-        new Single Unknown1 { get; set; }
-        new Single Unknown2 { get; set; }
+        new MemorySlice<Byte> Unknown { get; set; }
     }
 
     public partial interface INpcFaceMorphGetter :
@@ -608,8 +582,7 @@ namespace Mutagen.Bethesda.Fallout4
         P3Float Position { get; }
         P3Float Rotation { get; }
         Single Scale { get; }
-        Single Unknown1 { get; }
-        Single Unknown2 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
 
     }
 
@@ -783,8 +756,7 @@ namespace Mutagen.Bethesda.Fallout4
         Position = 1,
         Rotation = 2,
         Scale = 3,
-        Unknown1 = 4,
-        Unknown2 = 5,
+        Unknown = 4,
     }
     #endregion
 
@@ -795,9 +767,9 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(NpcFaceMorph.Mask<>);
 
@@ -875,8 +847,7 @@ namespace Mutagen.Bethesda.Fallout4
             item.Position = default(P3Float);
             item.Rotation = default(P3Float);
             item.Scale = default(Single);
-            item.Unknown1 = default(Single);
-            item.Unknown2 = default(Single);
+            item.Unknown = new byte[8];
         }
         
         #region Mutagen
@@ -930,8 +901,7 @@ namespace Mutagen.Bethesda.Fallout4
             ret.Position = item.Position.Equals(rhs.Position);
             ret.Rotation = item.Rotation.Equals(rhs.Rotation);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
-            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
-            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
         }
         
         public string Print(
@@ -993,13 +963,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 sb.AppendItem(item.Scale, "Scale");
             }
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
-            }
-            if (printMask?.Unknown2 ?? true)
-            {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
         }
         
@@ -1026,13 +992,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown) ?? true))
             {
-                if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown2) ?? true))
-            {
-                if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
             return true;
         }
@@ -1047,8 +1009,7 @@ namespace Mutagen.Bethesda.Fallout4
             hash.Add(item.Position);
             hash.Add(item.Rotation);
             hash.Add(item.Scale);
-            hash.Add(item.Unknown1);
-            hash.Add(item.Unknown2);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -1097,13 +1058,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Scale = rhs.Scale;
             }
-            if ((copyMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
-            }
-            if ((copyMask?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown2) ?? true))
-            {
-                item.Unknown2 = rhs.Unknown2;
+                item.Unknown = rhs.Unknown.ToArray();
             }
             DeepCopyInCustom(
                 item: item,
@@ -1229,12 +1186,9 @@ namespace Mutagen.Bethesda.Fallout4
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Scale);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown1);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.Unknown2);
+                    item: item.Unknown);
             }
         }
 
@@ -1287,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FMRS:
                 {
-                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Unknown2, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Unknown, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 12) return null;
@@ -1296,11 +1250,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.Unknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.Unknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)NpcFaceMorph_FieldIndex.Unknown2;
+                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(8));
+                    return (int)NpcFaceMorph_FieldIndex.Unknown;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1390,15 +1341,10 @@ namespace Mutagen.Bethesda.Fallout4
         private bool _Scale_IsSet => _FMRSLocation.HasValue;
         public Single Scale => _Scale_IsSet ? _recordData.Slice(_ScaleLocation, 4).Float() : default(Single);
         #endregion
-        #region Unknown1
-        private int _Unknown1Location => _FMRSLocation!.Value.Min + 0x1C;
-        private bool _Unknown1_IsSet => _FMRSLocation.HasValue;
-        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default(Single);
-        #endregion
-        #region Unknown2
-        private int _Unknown2Location => _FMRSLocation!.Value.Min + 0x20;
-        private bool _Unknown2_IsSet => _FMRSLocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default(Single);
+        #region Unknown
+        private int _UnknownLocation => _FMRSLocation!.Value.Min + 0x1C;
+        private bool _Unknown_IsSet => _FMRSLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _recordData.Span.Slice(_UnknownLocation, 8).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1471,9 +1417,9 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.FMRS:
                 {
-                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Unknown2, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)NpcFaceMorph_FieldIndex.Unknown, translationParams)) return ParseResult.Stop;
                     _FMRSLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)NpcFaceMorph_FieldIndex.Unknown2;
+                    return (int)NpcFaceMorph_FieldIndex.Unknown;
                 }
                 default:
                     return ParseResult.Stop;
