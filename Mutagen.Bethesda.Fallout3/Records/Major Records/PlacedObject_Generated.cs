@@ -434,7 +434,9 @@ namespace Mutagen.Bethesda.Fallout3
         Byte? IPlacedObjectGetter.SpeedTreeSeed => this.SpeedTreeSeed;
         #endregion
         #region Unknown
-        public Int16 Unknown { get; set; } = default(Int16);
+        public Int16? Unknown { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Int16? IPlacedObjectGetter.Unknown => this.Unknown;
         #endregion
         #region LinkedRooms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3003,7 +3005,7 @@ namespace Mutagen.Bethesda.Fallout3
         new ExtendedList<Portal>? Portals { get; set; }
         new Bounding? PortalRoom { get; set; }
         new Byte? SpeedTreeSeed { get; set; }
-        new Int16 Unknown { get; set; }
+        new Int16? Unknown { get; set; }
         new ExtendedList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         new Bounding? OcclusionPlane { get; set; }
         new LinkedOcclusionPlanes? LinkedOcclusionPlanes { get; set; }
@@ -3077,7 +3079,7 @@ namespace Mutagen.Bethesda.Fallout3
         IReadOnlyList<IPortalGetter>? Portals { get; }
         IBoundingGetter? PortalRoom { get; }
         Byte? SpeedTreeSeed { get; }
-        Int16 Unknown { get; }
+        Int16? Unknown { get; }
         IReadOnlyList<IFormLinkGetter<IPlacedObjectGetter>> LinkedRooms { get; }
         IBoundingGetter? OcclusionPlane { get; }
         ILinkedOcclusionPlanesGetter? LinkedOcclusionPlanes { get; }
@@ -3504,7 +3506,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.Portals = null;
             item.PortalRoom = null;
             item.SpeedTreeSeed = default;
-            item.Unknown = default(Int16);
+            item.Unknown = default;
             item.LinkedRooms.Clear();
             item.OcclusionPlane = null;
             item.LinkedOcclusionPlanes = null;
@@ -4060,9 +4062,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(SpeedTreeSeedItem, "SpeedTreeSeed");
             }
-            if (printMask?.Unknown ?? true)
+            if ((printMask?.Unknown ?? true)
+                && item.Unknown is {} UnknownItem)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(UnknownItem, "Unknown");
             }
             if (printMask?.LinkedRooms?.Overall ?? true)
             {
@@ -4590,7 +4593,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 hash.Add(SpeedTreeSeeditem);
             }
-            hash.Add(item.Unknown);
+            if (item.Unknown is {} Unknownitem)
+            {
+                hash.Add(Unknownitem);
+            }
             hash.Add(item.LinkedRooms);
             if (item.OcclusionPlane is {} OcclusionPlaneitem)
             {
